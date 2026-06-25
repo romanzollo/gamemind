@@ -1,3 +1,4 @@
 export type AuthFormState = {
-  error?: string;
+    error?: string;
+    success?: boolean;
 };

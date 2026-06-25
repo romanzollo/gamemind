@@ -1,1 +1,2 @@
-// Auth feature helpers (credentials validation wrappers, etc.)
+// публичный API
+export { registerSchema, type RegisterInput } from './validation';
