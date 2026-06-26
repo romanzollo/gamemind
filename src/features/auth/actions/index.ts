@@ -8,8 +8,17 @@ import { registerSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
 import type { AuthFormState } from '@/features/auth/types';
 import { loginSchema } from '@/features/auth/lib/validation';
+import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 const BCRYPT_ROUNDS = 12; // Соль для bcrypt (стандарт: 10-12)
+
+function getLocaleFromFormData(formData: FormData): Locale {
+    const locale = formData.get('locale');
+
+    return typeof locale === 'string' && isLocale(locale)
+        ? locale
+        : defaultLocale;
+}
 
 export async function registerAction(
     _prevState: AuthFormState,
@@ -75,6 +84,7 @@ export async function loginAction(
         email: formData.get('email'),
         password: formData.get('password'),
     });
+    const locale = getLocaleFromFormData(formData);
 
     // Если валидация не прошла, возвращаем ошибку
     if (!parsed.success) {
@@ -87,7 +97,7 @@ export async function loginAction(
         await signIn('credentials', {
             email: parsed.data.email,
             password: parsed.data.password,
-            redirectTo: '/profile',
+            redirectTo: `/${locale}/profile`,
         });
     } catch (error) {
         // Обработка ошибок
@@ -105,7 +115,9 @@ export async function loginAction(
 }
 
 // Действие для выхода из системы
-export async function logoutAction() {
+export async function logoutAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+
     // Выходим из системы и перенаправляем на главную страницу
-    await signOut({ redirectTo: '/' });
+    await signOut({ redirectTo: `/${locale}` });
 }

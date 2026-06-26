@@ -45,3 +45,8 @@ next-env.d.ts
 AGENTS.md
 CLAUDE.md
 
+# local project continuity notes
+docs/PROJECT_CONTEXT.md
+docs/ROADMAP.md
+docs/DECISIONS.md
+

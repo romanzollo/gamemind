@@ -1,0 +1,67 @@
+export const ruDictionary = {
+    metadata: {
+        title: 'GameMind',
+        description: 'Платформа викторин о видеоиграх',
+    },
+    nav: {
+        home: 'Главная',
+        quiz: 'Квиз',
+        leaderboard: 'Рейтинг',
+        profile: 'Профиль',
+        admin: 'Админ',
+        login: 'Войти',
+        register: 'Регистрация',
+    },
+    language: {
+        label: 'Язык',
+        ru: 'RU',
+        en: 'EN',
+    },
+    theme: {
+        theme: 'Тема',
+        light: 'Светлая',
+        dark: 'Тёмная',
+        switchToLight: 'Переключить на светлую тему',
+        switchToDark: 'Переключить на тёмную тему',
+    },
+    home: {
+        title: 'GameMind',
+        description: 'Платформа викторин о видеоиграх.',
+    },
+    auth: {
+        loginTitle: 'Вход',
+        registerTitle: 'Регистрация',
+        email: 'Email',
+        password: 'Пароль',
+        username: 'Имя пользователя',
+        loginButton: 'Войти',
+        registerButton: 'Создать аккаунт',
+        noAccount: 'Нет аккаунта?',
+        haveAccount: 'Уже есть аккаунт?',
+        registerLink: 'Зарегистрироваться',
+        loginLink: 'Войти',
+        accountCreated: 'Аккаунт создан.',
+    },
+    profile: {
+        title: 'Профиль',
+        username: 'Имя пользователя',
+        email: 'Email',
+        role: 'Роль',
+        logout: 'Выйти',
+    },
+    admin: {
+        questionsTitle: 'Управление вопросами',
+        signedInAs: 'Админ-зона. Вы вошли как',
+    },
+    quiz: {
+        setupTitle: 'Настройка квиза',
+        setupDescription: 'Выбери сложность и количество вопросов.',
+        sessionTitle: 'Квиз-сессия',
+        resultTitle: 'Результат квиза',
+        session: 'Сессия',
+    },
+    leaderboard: {
+        title: 'Рейтинг',
+        description: 'Лучший результат каждого пользователя за всё время.',
+    },
+};
