@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { registerAction } from '@/features/auth/actions';
+import Link from 'next/link';
 
 export default function RegisterPage() {
     const [state, formAction] = useActionState(registerAction, {});
@@ -23,7 +24,7 @@ export default function RegisterPage() {
             {state.error && <p className="mt-2 text-red-600">{state.error}</p>}
             {state.success && (
                 <p>
-                    Account created. <a href="/login">Log in</a>
+                    Account created. <Link href="/login">Log in</Link>
                 </p>
             )}
         </main>

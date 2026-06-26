@@ -13,12 +13,23 @@ export const authConfig = {
     },
     callbacks: {
         authorized({ auth, request: { nextUrl } }) {
+            // Проверяем, авторизован ли пользователь
             const isLoggedIn = Boolean(auth?.user);
-            const isProtected =
+
+            // Проверяем, является ли маршрут админской зоной
+            const isAdminRoute = nextUrl.pathname.startsWith('/admin');
+
+            // Проверяем, является ли маршрут защищенной зоной
+            const isProtectedRoute =
                 nextUrl.pathname.startsWith('/profile') ||
                 nextUrl.pathname.startsWith('/admin');
 
-            if (isProtected) {
+            // Если маршрут админской зоны, проверяем, является ли пользователь админом
+            if (isAdminRoute) {
+                return auth?.user?.role === 'ADMIN';
+            }
+            // Если маршрут защищенной зоны, проверяем, авторизован ли пользователь
+            if (isProtectedRoute) {
                 return isLoggedIn;
             }
 

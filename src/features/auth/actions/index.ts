@@ -2,7 +2,7 @@
 
 import bcrypt from 'bcryptjs'; // Библиотека для хеширования паролей
 import { AuthError } from 'next-auth'; // Типы ошибок NextAuth
-import { signIn } from '@/lib/auth'; // Функция входа в систему
+import { signIn, signOut } from '@/lib/auth'; // Функции входа и выхода из системы
 
 import { registerSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
@@ -102,4 +102,10 @@ export async function loginAction(
         throw error;
     }
     return {};
+}
+
+// Действие для выхода из системы
+export async function logoutAction() {
+    // Выходим из системы и перенаправляем на главную страницу
+    await signOut({ redirectTo: '/' });
 }

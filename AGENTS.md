@@ -82,6 +82,18 @@ When I ask how to do something, answer as a mentor:
 
 Prefer practical guidance over long theory.
 
+When I ask to move to the next implementation step and do not explicitly ask the AI to implement it directly, provide a detailed file-by-file guide so I can write the code myself:
+
+1. Name the exact files to create or edit.
+2. Show the code that should be written in each file.
+3. Explain why each file exists and what responsibility it has.
+4. Explain important security, TypeScript, Next.js, Prisma, and architecture reasons behind the choices.
+5. Mention common mistakes for that step.
+6. Give a short verification checklist.
+7. Ask me to send the changed files or diff for review.
+
+This "write after me" workflow is preferred for normal feature work because the goal is learning. Only modify the code directly when I explicitly ask with words such as "реализуй", "исправь сам", "измени файл", "добавь в проект", or "сделай сам".
+
 ## Working modes
 
 ### Mentor mode
