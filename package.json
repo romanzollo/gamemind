@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/stop-dev.cjs && next dev",
+    "dev:stop": "node scripts/stop-dev.cjs",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",

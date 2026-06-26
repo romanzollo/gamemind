@@ -18,4 +18,15 @@ export const registerSchema = z.object({
         .max(72, 'Password is too long'),
 });
 
+// Валидация логина
+export const loginSchema = z.object({
+    email: z.string().trim().toLowerCase().email('Invalid email address'),
+    password: z
+        .string()
+        .min(1, 'Password is required')
+        .max(72, 'Password is too long'),
+});
+
+// Типы
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;

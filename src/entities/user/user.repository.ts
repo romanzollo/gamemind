@@ -13,14 +13,17 @@ export type SafeUser = {
 
 // Репозиторий для работы с пользователями
 export const userRepository = {
+    // Поиск пользователя по email
     findByEmail(email: string) {
         return prisma.user.findUnique({ where: { email } });
     },
 
+    // Поиск пользователя по username
     findByUsername(username: string) {
         return prisma.user.findUnique({ where: { username } });
     },
 
+    // Поиск пользователя по id
     findById(id: string) {
         return prisma.user.findUnique({
             where: { id },
@@ -34,6 +37,21 @@ export const userRepository = {
         });
     },
 
+    // Поиск пользователя по email для логина
+    findByEmailForLogin(email: string) {
+        return prisma.user.findUnique({
+            where: { email },
+            select: {
+                id: true,
+                email: true,
+                username: true,
+                role: true,
+                passwordHash: true, // passwordHash для логина
+            },
+        });
+    },
+
+    // Создание пользователя
     async create(data: {
         username: string;
         email: string;

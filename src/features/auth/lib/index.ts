@@ -1,2 +1,7 @@
 // публичный API
-export { registerSchema, type RegisterInput } from './validation';
+export {
+    registerSchema,
+    loginSchema,
+    type RegisterInput,
+    type LoginInput,
+} from './validation';
