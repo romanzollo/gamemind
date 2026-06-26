@@ -1,4 +1,4 @@
-import type { Dictionary } from './types';
+import type { Dictionary } from './ru';
 
 export const enDictionary = {
     metadata: {

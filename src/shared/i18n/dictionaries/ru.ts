@@ -1,4 +1,72 @@
-export const ruDictionary = {
+export type Dictionary = {
+    metadata: {
+        title: string;
+        description: string;
+    };
+    nav: {
+        home: string;
+        quiz: string;
+        leaderboard: string;
+        profile: string;
+        admin: string;
+        login: string;
+        register: string;
+    };
+    language: {
+        label: string;
+        ru: string;
+        en: string;
+    };
+    theme: {
+        theme: string;
+        light: string;
+        dark: string;
+        switchToLight: string;
+        switchToDark: string;
+    };
+    home: {
+        title: string;
+        description: string;
+    };
+    auth: {
+        loginTitle: string;
+        registerTitle: string;
+        email: string;
+        password: string;
+        username: string;
+        loginButton: string;
+        registerButton: string;
+        noAccount: string;
+        haveAccount: string;
+        registerLink: string;
+        loginLink: string;
+        accountCreated: string;
+    };
+    profile: {
+        title: string;
+        username: string;
+        email: string;
+        role: string;
+        logout: string;
+    };
+    admin: {
+        questionsTitle: string;
+        signedInAs: string;
+    };
+    quiz: {
+        setupTitle: string;
+        setupDescription: string;
+        sessionTitle: string;
+        resultTitle: string;
+        session: string;
+    };
+    leaderboard: {
+        title: string;
+        description: string;
+    };
+};
+
+export const ruDictionary: Dictionary = {
     metadata: {
         title: 'GameMind',
         description: 'Платформа викторин о видеоиграх',
