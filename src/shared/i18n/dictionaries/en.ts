@@ -58,6 +58,12 @@ export const enDictionary = {
     quiz: {
         setupTitle: 'Quiz setup',
         setupDescription: 'Choose difficulty and question count.',
+        difficultyLabel: 'Difficulty',
+        questionCountLabel: 'Question count',
+        easy: 'Easy',
+        medium: 'Medium',
+        hard: 'Hard',
+        startButton: 'Start quiz',
         sessionTitle: 'Quiz session',
         resultTitle: 'Quiz result',
         session: 'Session',

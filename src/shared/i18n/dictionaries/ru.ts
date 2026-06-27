@@ -56,6 +56,12 @@ export type Dictionary = {
     quiz: {
         setupTitle: string;
         setupDescription: string;
+        difficultyLabel: string;
+        questionCountLabel: string;
+        easy: string;
+        medium: string;
+        hard: string;
+        startButton: string;
         sessionTitle: string;
         resultTitle: string;
         session: string;
@@ -124,6 +130,12 @@ export const ruDictionary: Dictionary = {
     quiz: {
         setupTitle: 'Настройка квиза',
         setupDescription: 'Выбери сложность и количество вопросов.',
+        difficultyLabel: 'Сложность',
+        questionCountLabel: 'Количество вопросов',
+        easy: 'Легко',
+        medium: 'Средне',
+        hard: 'Сложно',
+        startButton: 'Начать квиз',
         sessionTitle: 'Квиз-сессия',
         resultTitle: 'Результат квиза',
         session: 'Сессия',

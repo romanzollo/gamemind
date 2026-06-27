@@ -4,16 +4,19 @@ export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = 'ru';
 
+// проверяет, является ли значение локалью
 export function isLocale(value: string): value is Locale {
     return locales.includes(value as Locale);
 }
 
+// получает локаль из пути
 export function getLocaleFromPathname(pathname: string): Locale | null {
     const locale = pathname.split('/')[1];
 
     return locale && isLocale(locale) ? locale : null;
 }
 
+// удаляет локаль из пути
 export function removeLocaleFromPathname(pathname: string) {
     const locale = getLocaleFromPathname(pathname);
 
