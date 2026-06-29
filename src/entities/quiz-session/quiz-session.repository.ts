@@ -1,5 +1,5 @@
 import type { Difficulty } from '@/types';
-import { prisma } from '@/lib/prisma';
+import { prisma, withDatabaseRetry } from '@/lib/prisma';
 
 // тип для входных данных для создания сессии викторины
 type CreateQuizSessionInput = {
@@ -19,5 +19,18 @@ export const quizSessionRepository = {
                 questionCount: input.questionCount,
             },
         });
+    },
+
+    // поиск незавершенной сессии по ID и ID пользователя
+    findInProgressByIdForUser(sessionId: string, userId: string) {
+        return withDatabaseRetry(() =>
+            prisma.quizSession.findFirst({
+                where: {
+                    id: sessionId,
+                    userId,
+                    status: 'IN_PROGRESS',
+                },
+            }),
+        );
     },
 };

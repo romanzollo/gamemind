@@ -40,7 +40,7 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
                 applyTheme(nextTheme);
                 setTheme(nextTheme);
             }}
-            className="rounded border border-(--border) px-3 py-1 text-sm text-neutral-700 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-white"
+            className="rounded border border-(--border) px-3 py-1 text-sm text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-100 hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-white dark:focus-visible:outline-neutral-100"
             aria-label={
                 nextTheme === 'dark' ? labels.switchToDark : labels.switchToLight
             }

@@ -1,23 +1,51 @@
 // Репозиторий для работы с вопросами в БД
 
 import type { Difficulty } from '@/types';
-import { prisma } from '@/lib/prisma';
+import { prisma, withDatabaseRetry } from '@/lib/prisma';
 
 // репозиторий для работы с вопросами
 export const questionRepository = {
     // поиск активных вопросов по сложности
     findActiveByDifficulty(difficulty: Difficulty, limit: number) {
-        return prisma.question.findMany({
-            where: { difficulty, isActive: true },
-            include: { options: { orderBy: { order: 'asc' } } },
-            take: limit,
-        });
+        return withDatabaseRetry(() =>
+            prisma.question.findMany({
+                where: { difficulty, isActive: true },
+                include: { options: { orderBy: { order: 'asc' } } },
+                take: limit,
+            }),
+        );
     },
 
     // подсчет активных вопросов по сложности
     countActiveByDifficulty(difficulty: Difficulty) {
-        return prisma.question.count({
-            where: { difficulty, isActive: true },
-        });
+        return withDatabaseRetry(() =>
+            prisma.question.count({
+                where: { difficulty, isActive: true },
+            }),
+        );
+    },
+
+    // поиск активных публичных вопросов по сложности
+    findActivePublicByDifficulty(difficulty: Difficulty, limit: number) {
+        return withDatabaseRetry(() =>
+            prisma.question.findMany({
+                where: { difficulty, isActive: true },
+                orderBy: { createdAt: 'asc' },
+                take: limit,
+                select: {
+                    id: true,
+                    text: true,
+                    difficulty: true,
+                    options: {
+                        orderBy: { order: 'asc' },
+                        select: {
+                            id: true,
+                            text: true,
+                            order: true,
+                        },
+                    },
+                },
+            }),
+        );
     },
 };
