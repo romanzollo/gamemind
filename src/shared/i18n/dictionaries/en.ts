@@ -74,5 +74,10 @@ export const enDictionary = {
     leaderboard: {
         title: 'Leaderboard',
         description: 'Best score per user (all time).',
+        rank: 'Rank',
+        player: 'Player',
+        score: 'Score',
+        correct: 'Correct',
+        empty: 'No results yet. Be the first to complete a quiz!',
     },
 } satisfies Dictionary;

@@ -72,6 +72,11 @@ export type Dictionary = {
     leaderboard: {
         title: string;
         description: string;
+        rank: string;
+        player: string;
+        score: string;
+        correct: string;
+        empty: string;
     };
 };
 
@@ -149,5 +154,10 @@ export const ruDictionary: Dictionary = {
     leaderboard: {
         title: 'Рейтинг',
         description: 'Лучший результат каждого пользователя за всё время.',
+        rank: 'Место',
+        player: 'Игрок',
+        score: 'Очки',
+        correct: 'Правильно',
+        empty: 'Пока нет результатов. Пройди квиз первым!',
     },
 };

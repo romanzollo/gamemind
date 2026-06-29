@@ -1,5 +1,5 @@
 // Работа с пользователями в БД
-import { prisma } from '@/lib/prisma';
+import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import type { Role } from '@prisma/client';
 
 // Тип безопасного пользователя
@@ -15,40 +15,48 @@ export type SafeUser = {
 export const userRepository = {
     // Поиск пользователя по email
     findByEmail(email: string) {
-        return prisma.user.findUnique({ where: { email } });
+        return withDatabaseRetry(() =>
+            prisma.user.findUnique({ where: { email } }),
+        );
     },
 
     // Поиск пользователя по username
     findByUsername(username: string) {
-        return prisma.user.findUnique({ where: { username } });
+        return withDatabaseRetry(() =>
+            prisma.user.findUnique({ where: { username } }),
+        );
     },
 
     // Поиск пользователя по id
     findById(id: string) {
-        return prisma.user.findUnique({
-            where: { id },
-            select: {
-                id: true,
-                username: true,
-                email: true,
-                role: true,
-                createdAt: true,
-            },
-        });
+        return withDatabaseRetry(() =>
+            prisma.user.findUnique({
+                where: { id },
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    role: true,
+                    createdAt: true,
+                },
+            }),
+        );
     },
 
     // Поиск пользователя по email для логина
     findByEmailForLogin(email: string) {
-        return prisma.user.findUnique({
-            where: { email },
-            select: {
-                id: true,
-                email: true,
-                username: true,
-                role: true,
-                passwordHash: true, // passwordHash для логина
-            },
-        });
+        return withDatabaseRetry(() =>
+            prisma.user.findUnique({
+                where: { email },
+                select: {
+                    id: true,
+                    email: true,
+                    username: true,
+                    role: true,
+                    passwordHash: true, // passwordHash для логина
+                },
+            }),
+        );
     },
 
     // Создание пользователя
