@@ -4,6 +4,7 @@ import { questionRepository } from '@/entities/question/question.repository';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
+import { submitQuizAction } from '@/features/quiz/actions';
 
 // пропсы страницы сессии викторины
 type QuizSessionPageProps = {
@@ -50,7 +51,10 @@ export default async function QuizSessionPage({
                 {dictionary.quiz.session}: {quizSession.id}
             </p>
 
-            <div className="mt-6 space-y-6">
+            <form action={submitQuizAction} className="mt-6 space-y-6">
+                <input type="hidden" name="locale" value={safeLocale} />
+                <input type="hidden" name="sessionId" value={quizSession.id} />
+
                 {questions.map((question, index) => (
                     <section
                         key={question.id}
@@ -68,8 +72,9 @@ export default async function QuizSessionPage({
                                 >
                                     <input
                                         type="radio"
-                                        name={question.id}
-                                        value={option.id}
+                                        name={question.id} // ключ для formData.get(question.id) в submitQuizAction
+                                        value={option.id} // id выбранного варианта
+                                        required
                                     />
                                     <span>{option.text}</span>
                                 </label>
@@ -77,7 +82,14 @@ export default async function QuizSessionPage({
                         </div>
                     </section>
                 ))}
-            </div>
+
+                <button
+                    type="submit"
+                    className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
+                >
+                    {dictionary.quiz.submitButton}
+                </button>
+            </form>
         </main>
     );
 }

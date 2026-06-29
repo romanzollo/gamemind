@@ -65,6 +65,9 @@ export type Dictionary = {
         sessionTitle: string;
         resultTitle: string;
         session: string;
+        submitButton: string;
+        scoreLabel: string;
+        correctAnswersLabel: string;
     };
     leaderboard: {
         title: string;
@@ -139,6 +142,9 @@ export const ruDictionary: Dictionary = {
         sessionTitle: 'Квиз-сессия',
         resultTitle: 'Результат квиза',
         session: 'Сессия',
+        submitButton: 'Завершить квиз',
+        scoreLabel: 'Результат',
+        correctAnswersLabel: 'Правильных ответов',
     },
     leaderboard: {
         title: 'Рейтинг',

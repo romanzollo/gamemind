@@ -2,11 +2,15 @@
 
 import { redirect } from 'next/navigation';
 
-import { questionRepository } from '@/entities/question/question.repository'; // репозиторий для работы с вопросами
-import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository'; // репозиторий для работы с сессиями викторины
+import { questionRepository } from '@/entities/question/question.repository';
+import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { requireUser } from '@/lib/auth/guards';
-import { defaultLocale, isLocale, type Locale } from '@/shared/i18n'; // функция для получения локали из формы
-import { quizSetupSchema } from '@/features/quiz/lib/validation'; // схема для валидации настроек викторины
+import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
+import { quizSetupSchema } from '@/features/quiz/lib/validation';
+import { calculateQuizScore } from '@/features/quiz/lib/scoring';
+import { quizAnswerRepository } from '@/entities/quiz-answer/quiz-answer.repository';
+import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
+import { prisma } from '@/lib/prisma';
 
 // получение локали из формы
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -55,4 +59,119 @@ export async function startQuizAction(formData: FormData) {
 
     // перенаправляем на страницу викторины
     redirect(`/${locale}/quiz/${quizSession.id}`);
+}
+
+// Action для отправки результатов викторины
+export async function submitQuizAction(formData: FormData) {
+    // получаем локаль из формы
+    const locale = getLocaleFromFormData(formData);
+    // получаем ID сессии из формы
+    const sessionId = formData.get('sessionId');
+
+    // проверяем, что sessionId передан и является строкой
+    if (typeof sessionId !== 'string' || sessionId.length === 0) {
+        redirect(`/${locale}/quiz/setup`);
+    }
+
+    // получаем сессию пользователя
+    const authSession = await requireUser(locale);
+
+    // получаем активную сессию викторины для пользователя
+    const quizSession = await quizSessionRepository.findInProgressByIdForUser(
+        sessionId,
+        authSession.user.id,
+    );
+
+    // если сессия не найдена или уже завершена, перенаправляем на страницу результатов
+    if (!quizSession) {
+        redirect(`/${locale}/result/${sessionId}`);
+    }
+
+    // получаем вопросы для викторины
+    const questions = await questionRepository.findActiveForScoring(
+        quizSession.difficulty,
+        quizSession.questionCount,
+    );
+
+    // проверяем, что количество вопросов соответствует ожидаемому
+    if (questions.length !== quizSession.questionCount) {
+        redirect(`/${locale}/quiz/${sessionId}`);
+    }
+
+    // собираем ответы пользователя из формы
+    const answers = questions.map((question) => {
+        const selectedOptionId = formData.get(question.id);
+
+        return {
+            questionId: question.id,
+            selectedOptionId:
+                typeof selectedOptionId === 'string' ? selectedOptionId : '',
+        };
+    });
+
+    // проверяем, что на все вопросы даны ответы
+    const allAnswered = answers.every(
+        (answer) => answer.selectedOptionId.length > 0,
+    );
+
+    if (!allAnswered) {
+        redirect(`/${locale}/quiz/${sessionId}`);
+    }
+
+    // проверяем, что все выбранные варианты ответов существуют
+    const allValid = answers.every((answer) => {
+        const question = questions.find(
+            (item) => item.id === answer.questionId,
+        );
+
+        return question?.options.some(
+            (option) => option.id === answer.selectedOptionId,
+        );
+    });
+
+    if (!allValid) {
+        redirect(`/${locale}/quiz/${sessionId}`);
+    }
+
+    // вычисляем результаты викторины
+    const scoreResult = calculateQuizScore(questions, answers);
+
+    // подготавливаем данные для сохранения ответов
+    const answerRows = answers.map((answer) => {
+        const question = questions.find(
+            (item) => item.id === answer.questionId,
+        );
+
+        const selectedOption = question?.options.find(
+            (option) => option.id === answer.selectedOptionId,
+        );
+
+        return {
+            sessionId: quizSession.id,
+            questionId: answer.questionId,
+            selectedOptionId: answer.selectedOptionId,
+            isCorrect: selectedOption?.isCorrect ?? false,
+        };
+    });
+
+    // сохраняем все данные в транзакции
+    await prisma.$transaction(async () => {
+        // сохраняем ответы пользователя
+        await quizAnswerRepository.createMany(answerRows);
+
+        // сохраняем результаты викторины
+        await quizResultRepository.create({
+            sessionId: quizSession.id,
+            userId: authSession.user.id,
+            score: scoreResult.score,
+            totalQuestions: scoreResult.totalQuestions,
+            correctCount: scoreResult.correctCount,
+        });
+
+        // завершаем сессию викторины
+        await quizSessionRepository.complete(quizSession.id);
+    });
+
+    // перенаправляем на страницу с результатами
+    redirect(`/${locale}/result/${sessionId}`);
 }

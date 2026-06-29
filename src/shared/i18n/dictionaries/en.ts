@@ -67,6 +67,9 @@ export const enDictionary = {
         sessionTitle: 'Quiz session',
         resultTitle: 'Quiz result',
         session: 'Session',
+        submitButton: 'Finish quiz',
+        scoreLabel: 'Score',
+        correctAnswersLabel: 'Correct answers',
     },
     leaderboard: {
         title: 'Leaderboard',

@@ -48,4 +48,20 @@ export const questionRepository = {
             }),
         );
     },
+
+    // поиск активных вопросов для scoring
+    findActiveForScoring(difficulty: Difficulty, limit: number) {
+        return withDatabaseRetry(() =>
+            prisma.question.findMany({
+                where: { difficulty, isActive: true },
+                orderBy: { createdAt: 'asc' },
+                take: limit,
+                include: {
+                    options: {
+                        orderBy: { order: 'asc' }, // страница квиза уже использует такой же порядок в findActivePublicByDifficulty
+                    },
+                },
+            }),
+        );
+    },
 };

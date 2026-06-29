@@ -33,4 +33,15 @@ export const quizSessionRepository = {
             }),
         );
     },
+
+    // завершение сессии викторины
+    complete(sessionId: string) {
+        return prisma.quizSession.update({
+            where: { id: sessionId },
+            data: {
+                status: 'COMPLETED',
+                completedAt: new Date(),
+            },
+        });
+    },
 };
