@@ -10,6 +10,7 @@ import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
 import { quizAnswerRepository } from '@/entities/quiz-answer/quiz-answer.repository';
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
+import type { QuizFormState } from '@/features/quiz/types';
 import { prisma } from '@/lib/prisma';
 
 // получение локали из формы
@@ -23,7 +24,10 @@ function getLocaleFromFormData(formData: FormData): Locale {
 }
 
 // Action для начала викторины
-export async function startQuizAction(formData: FormData) {
+export async function startQuizAction(
+    _prevState: QuizFormState,
+    formData: FormData,
+): Promise<QuizFormState> {
     // получаем локаль из формы
     const locale = getLocaleFromFormData(formData);
     // получаем сессию пользователя
@@ -37,7 +41,7 @@ export async function startQuizAction(formData: FormData) {
 
     // проверяем, являются ли данные валидными
     if (!parsed.success) {
-        redirect(`/${locale}/quiz/setup`);
+        return { errorCode: 'INVALID_SETUP' };
     }
 
     // получаем количество активных вопросов по сложности
@@ -47,7 +51,7 @@ export async function startQuizAction(formData: FormData) {
 
     // проверяем, является ли количество активных вопросов больше или равно количеству вопросов для викторины
     if (availableQuestions < parsed.data.questionCount) {
-        redirect(`/${locale}/quiz/setup`);
+        return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
     }
 
     // создаем сессию викторины
@@ -62,7 +66,10 @@ export async function startQuizAction(formData: FormData) {
 }
 
 // Action для отправки результатов викторины
-export async function submitQuizAction(formData: FormData) {
+export async function submitQuizAction(
+    _prevState: QuizFormState,
+    formData: FormData,
+): Promise<QuizFormState> {
     // получаем локаль из формы
     const locale = getLocaleFromFormData(formData);
     // получаем ID сессии из формы
@@ -95,7 +102,7 @@ export async function submitQuizAction(formData: FormData) {
 
     // проверяем, что количество вопросов соответствует ожидаемому
     if (questions.length !== quizSession.questionCount) {
-        redirect(`/${locale}/quiz/${sessionId}`);
+        return { errorCode: 'INVALID_ANSWER' };
     }
 
     // собираем ответы пользователя из формы
@@ -115,7 +122,7 @@ export async function submitQuizAction(formData: FormData) {
     );
 
     if (!allAnswered) {
-        redirect(`/${locale}/quiz/${sessionId}`);
+        return { errorCode: 'ANSWER_ALL' };
     }
 
     // проверяем, что все выбранные варианты ответов существуют
@@ -130,7 +137,7 @@ export async function submitQuizAction(formData: FormData) {
     });
 
     if (!allValid) {
-        redirect(`/${locale}/quiz/${sessionId}`);
+        return { errorCode: 'INVALID_ANSWER' };
     }
 
     // вычисляем результаты викторины
@@ -155,22 +162,27 @@ export async function submitQuizAction(formData: FormData) {
     });
 
     // сохраняем все данные в транзакции
-    await prisma.$transaction(async () => {
-        // сохраняем ответы пользователя
-        await quizAnswerRepository.createMany(answerRows);
+    try {
+        await prisma.$transaction(async () => {
+            // сохраняем ответы пользователя
+            await quizAnswerRepository.createMany(answerRows);
 
-        // сохраняем результаты викторины
-        await quizResultRepository.create({
-            sessionId: quizSession.id,
-            userId: authSession.user.id,
-            score: scoreResult.score,
-            totalQuestions: scoreResult.totalQuestions,
-            correctCount: scoreResult.correctCount,
+            // сохраняем результаты викторины
+            await quizResultRepository.create({
+                sessionId: quizSession.id,
+                userId: authSession.user.id,
+                score: scoreResult.score,
+                totalQuestions: scoreResult.totalQuestions,
+                correctCount: scoreResult.correctCount,
+            });
+
+            // завершаем сессию викторины
+            await quizSessionRepository.complete(quizSession.id);
         });
-
-        // завершаем сессию викторины
-        await quizSessionRepository.complete(quizSession.id);
-    });
+    } catch (error) {
+        console.error('Quiz submit failed:', error);
+        return { errorCode: 'SUBMIT_FAILED' };
+    }
 
     // перенаправляем на страницу с результатами
     redirect(`/${locale}/result/${sessionId}`);

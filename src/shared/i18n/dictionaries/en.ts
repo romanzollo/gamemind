@@ -1,4 +1,4 @@
-import type { Dictionary } from './ru';
+import type { Dictionary } from './dictionary';
 
 export const enDictionary = {
     metadata: {
@@ -70,6 +70,15 @@ export const enDictionary = {
         submitButton: 'Finish quiz',
         scoreLabel: 'Score',
         correctAnswersLabel: 'Correct answers',
+        errors: {
+            invalidSetup: 'Check difficulty and question count.',
+            notEnoughQuestions:
+                'Not enough questions for the selected difficulty. Try a different difficulty or fewer questions.',
+            answerAll: 'Answer all questions before submitting.',
+            invalidAnswer:
+                'One or more answers are invalid. Refresh the page and try again.',
+            submitFailed: 'Failed to submit the result. Try again.',
+        },
     },
     leaderboard: {
         title: 'Leaderboard',

@@ -1,6 +1,6 @@
 import { enDictionary } from './en';
 import { ruDictionary } from './ru';
-import type { Dictionary } from './ru';
+import type { Dictionary } from './dictionary';
 import type { Locale } from '../config';
 
 const dictionaries: Record<Locale, Dictionary> = {
