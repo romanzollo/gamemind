@@ -64,6 +64,27 @@ export const ruDictionary: Dictionary = {
         statusActive: 'Активен',
         statusInactive: 'Неактивен',
         empty: 'Пока нет вопросов.',
+        formQuestionText: 'Текст вопроса',
+        formCategory: 'Категория',
+        formOptions: 'Варианты ответов',
+        formCorrectOptionHint: 'Отметь ровно один правильный вариант.',
+        formOption: 'Вариант',
+        createButton: 'Создать вопрос',
+        createTitle: 'Создать вопрос',
+        createLink: 'Создать вопрос',
+        deleteButton: 'Удалить',
+        tableActions: 'Действия',
+        errors: {
+            invalidInput:
+                'Проверь текст вопроса, сложность, категорию и варианты ответов.',
+            notFound: 'Вопрос не найден.',
+            exactlyOneCorrectRequired:
+                'Должен быть ровно один правильный вариант ответа.',
+            saveFailed: 'Не удалось сохранить вопрос. Попробуй ещё раз.',
+            deleteFailed: 'Не удалось удалить вопрос. Попробуй ещё раз.',
+            deactivateFailed:
+                'Не удалось деактивировать вопрос. Попробуй ещё раз.',
+        },
     },
     quiz: {
         setupTitle: 'Настройка квиза',

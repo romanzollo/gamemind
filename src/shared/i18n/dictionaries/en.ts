@@ -64,6 +64,26 @@ export const enDictionary = {
         statusActive: 'Active',
         statusInactive: 'Inactive',
         empty: 'No questions yet.',
+        formQuestionText: 'Question text',
+        formCategory: 'Category',
+        formOptions: 'Answer options',
+        formCorrectOptionHint: 'Mark exactly one correct option.',
+        formOption: 'Option',
+        createButton: 'Create question',
+        createTitle: 'Create question',
+        createLink: 'Create question',
+        deleteButton: 'Delete',
+        tableActions: 'Actions',
+        errors: {
+            invalidInput:
+                'Check question text, difficulty, category, and answer options.',
+            notFound: 'Question not found.',
+            exactlyOneCorrectRequired:
+                'Exactly one correct answer option is required.',
+            saveFailed: 'Failed to save the question. Try again.',
+            deleteFailed: 'Failed to delete the question. Try again.',
+            deactivateFailed: 'Failed to deactivate the question. Try again.',
+        },
     },
     quiz: {
         setupTitle: 'Quiz setup',

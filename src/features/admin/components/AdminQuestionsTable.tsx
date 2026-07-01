@@ -1,16 +1,17 @@
-import type { Dictionary } from '@/shared/i18n';
+import { deleteQuestionAction } from '@/features/admin/actions';
+import type { Dictionary, Locale } from '@/shared/i18n';
 import type { AdminQuestionListItem } from '../types';
 
-// тип пропсов компонента таблицы вопросов для админ-панели
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
     labels: Dictionary['admin'];
+    locale: Locale;
 };
 
-// компонент таблицы вопросов для админ-панели
 export function AdminQuestionsTable({
     entries,
     labels,
+    locale,
 }: AdminQuestionsTableProps) {
     if (entries.length === 0) {
         return (
@@ -30,7 +31,8 @@ export function AdminQuestionsTable({
                         <th className="py-2 pr-4">{labels.tableCategory}</th>
                         <th className="py-2 pr-4">{labels.tableOptions}</th>
                         <th className="py-2 pr-4">{labels.tableStatus}</th>
-                        <th className="py-2">{labels.tableCreated}</th>
+                        <th className="py-2 pr-4">{labels.tableCreated}</th>
+                        <th className="py-2">{labels.tableActions}</th>
                     </tr>
                 </thead>
 
@@ -49,8 +51,28 @@ export function AdminQuestionsTable({
                                     ? labels.statusActive
                                     : labels.statusInactive}
                             </td>
-                            <td className="py-3">
+                            <td className="py-3 pr-4">
                                 {entry.createdAt.toLocaleDateString()}
+                            </td>
+                            <td className="py-3">
+                                <form action={deleteQuestionAction}>
+                                    <input
+                                        type="hidden"
+                                        name="locale"
+                                        value={locale}
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="questionId"
+                                        value={entry.id}
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                    >
+                                        {labels.deleteButton}
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     ))}

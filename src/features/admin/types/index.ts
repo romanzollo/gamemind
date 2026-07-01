@@ -17,6 +17,7 @@ export type AdminErrorCode =
     | 'NOT_FOUND'
     | 'EXACTLY_ONE_CORRECT_REQUIRED'
     | 'SAVE_FAILED'
+    | 'DELETE_FAILED'
     | 'DEACTIVATE_FAILED';
 
 /** Состояние формы для useActionState (как в quiz). */

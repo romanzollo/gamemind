@@ -86,4 +86,44 @@ export const questionRepository = {
             }),
         );
     },
+
+    // создание вопроса с вариантами ответа (admin create flow)
+    createWithOptions(input: {
+        text: string;
+        difficulty: Difficulty;
+        category: string;
+        options: Array<{
+            text: string;
+            isCorrect: boolean;
+            order: number;
+        }>;
+    }) {
+        return withDatabaseRetry(() =>
+            prisma.question.create({
+                data: {
+                    text: input.text,
+                    difficulty: input.difficulty,
+                    category: input.category,
+                    isActive: true,
+                    options: {
+                        create: input.options.map((option) => ({
+                            text: option.text,
+                            isCorrect: option.isCorrect,
+                            order: option.order,
+                        })),
+                    },
+                },
+                select: { id: true },
+            }),
+        );
+    },
+
+    deleteById(id: string) {
+        return withDatabaseRetry(() =>
+            prisma.question.delete({
+                where: { id },
+                select: { id: true },
+            }),
+        );
+    },
 };

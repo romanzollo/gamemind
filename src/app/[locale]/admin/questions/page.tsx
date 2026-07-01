@@ -1,38 +1,52 @@
+import Link from 'next/link';
+
 import { questionRepository } from '@/entities/question/question.repository';
 import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
 import { mapAdminQuestions } from '@/features/admin/lib';
 import { requireAdmin } from '@/lib/auth/guards';
-import { getDictionary, isLocale } from '@/shared/i18n';
+import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
 
-// тип пропсов страницы администрирования вопросов
 type AdminQuestionsPageProps = {
     params: Promise<{ locale: string }>;
+    searchParams: Promise<{ error?: string }>;
 };
 
-// страница для администрирования вопросов
+function localizedHref(locale: Locale, href: string) {
+    return `/${locale}${href}`;
+}
+
 export default async function AdminQuestionsPage({
     params,
+    searchParams,
 }: AdminQuestionsPageProps) {
-    // получаем параметры из URL
     const { locale } = await params;
-    // проверяем локаль
+    const { error } = await searchParams;
     const safeLocale = isLocale(locale) ? locale : 'ru';
-    // получаем словарь
     const dictionary = getDictionary(safeLocale);
-    // получаем сессию администратора
     const session = await requireAdmin(safeLocale);
 
-    // получаем все вопросы из базы данных
     const rows = await questionRepository.findAllForAdmin();
-    // преобразуем строки вопросов в список вопросов для админ-панели
     const entries = mapAdminQuestions(rows);
 
-    // возвращаем страницу администрирования вопросов
+    const deleteErrorMessage =
+        error === 'DELETE_FAILED'
+            ? dictionary.admin.errors.deleteFailed
+            : undefined;
+
     return (
         <main className="mx-auto max-w-5xl p-8">
-            <h1 className="text-2xl font-semibold">
-                {dictionary.admin.questionsTitle}
-            </h1>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <h1 className="text-2xl font-semibold">
+                    {dictionary.admin.questionsTitle}
+                </h1>
+
+                <Link
+                    href={localizedHref(safeLocale, '/admin/questions/new')}
+                    className="rounded bg-neutral-900 px-4 py-2 text-sm text-white transition hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
+                >
+                    {dictionary.admin.createLink}
+                </Link>
+            </div>
 
             <p className="mt-2 text-neutral-600 dark:text-neutral-400">
                 {dictionary.admin.signedInAs} {session.user.username}.
@@ -42,7 +56,17 @@ export default async function AdminQuestionsPage({
                 {dictionary.admin.listDescription}
             </p>
 
-            <AdminQuestionsTable entries={entries} labels={dictionary.admin} />
+            {deleteErrorMessage && (
+                <p className="mt-4 text-red-600" role="alert">
+                    {deleteErrorMessage}
+                </p>
+            )}
+
+            <AdminQuestionsTable
+                entries={entries}
+                labels={dictionary.admin}
+                locale={safeLocale}
+            />
         </main>
     );
 }

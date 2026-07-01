@@ -62,6 +62,24 @@ export type Dictionary = {
         statusActive: string;
         statusInactive: string;
         empty: string;
+        formQuestionText: string;
+        formCategory: string;
+        formOptions: string;
+        formCorrectOptionHint: string;
+        formOption: string;
+        createButton: string;
+        createTitle: string;
+        createLink: string;
+        deleteButton: string;
+        tableActions: string;
+        errors: {
+            invalidInput: string;
+            notFound: string;
+            exactlyOneCorrectRequired: string;
+            saveFailed: string;
+            deleteFailed: string;
+            deactivateFailed: string;
+        };
     };
     quiz: {
         setupTitle: string;

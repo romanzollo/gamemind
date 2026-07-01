@@ -5,6 +5,7 @@ import { Pool } from 'pg';
 // сообщения о временных ошибках базы данных
 const TRANSIENT_DATABASE_ERROR_MESSAGES = [
     'Connection terminated unexpectedly',
+    'Connection terminated due to connection timeout',
     'Connection ended unexpectedly',
     'ECONNRESET',
     'ETIMEDOUT',
@@ -26,7 +27,7 @@ const pool =
         max: 5,
         keepAlive: true,
         idleTimeoutMillis: 5_000,
-        connectionTimeoutMillis: 5_000,
+        connectionTimeoutMillis: 15_000,
     });
 
 // адаптер для Prisma
