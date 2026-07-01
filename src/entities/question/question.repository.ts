@@ -64,4 +64,26 @@ export const questionRepository = {
             }),
         );
     },
+
+    // список вопросов для админ-панели
+    findAllForAdmin() {
+        return withDatabaseRetry(() =>
+            prisma.question.findMany({
+                orderBy: { createdAt: 'desc' },
+                select: {
+                    id: true,
+                    text: true,
+                    difficulty: true,
+                    category: true,
+                    isActive: true,
+                    createdAt: true,
+                    _count: {
+                        select: {
+                            options: true,
+                        },
+                    },
+                },
+            }),
+        );
+    },
 };

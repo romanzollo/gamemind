@@ -54,6 +54,16 @@ export const enDictionary = {
     admin: {
         questionsTitle: 'Manage questions',
         signedInAs: 'Admin-only area. Signed in as',
+        listDescription: 'List of all questions in the database.',
+        tableQuestion: 'Question',
+        tableDifficulty: 'Difficulty',
+        tableCategory: 'Category',
+        tableOptions: 'Options',
+        tableStatus: 'Status',
+        tableCreated: 'Created',
+        statusActive: 'Active',
+        statusInactive: 'Inactive',
+        empty: 'No questions yet.',
     },
     quiz: {
         setupTitle: 'Quiz setup',

@@ -54,6 +54,16 @@ export const ruDictionary: Dictionary = {
     admin: {
         questionsTitle: 'Управление вопросами',
         signedInAs: 'Админ-зона. Вы вошли как',
+        listDescription: 'Список всех вопросов в базе.',
+        tableQuestion: 'Вопрос',
+        tableDifficulty: 'Сложность',
+        tableCategory: 'Категория',
+        tableOptions: 'Варианты',
+        tableStatus: 'Статус',
+        tableCreated: 'Создан',
+        statusActive: 'Активен',
+        statusInactive: 'Неактивен',
+        empty: 'Пока нет вопросов.',
     },
     quiz: {
         setupTitle: 'Настройка квиза',

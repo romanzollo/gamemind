@@ -52,6 +52,16 @@ export type Dictionary = {
     admin: {
         questionsTitle: string;
         signedInAs: string;
+        listDescription: string;
+        tableQuestion: string;
+        tableDifficulty: string;
+        tableCategory: string;
+        tableOptions: string;
+        tableStatus: string;
+        tableCreated: string;
+        statusActive: string;
+        statusInactive: string;
+        empty: string;
     };
     quiz: {
         setupTitle: string;
