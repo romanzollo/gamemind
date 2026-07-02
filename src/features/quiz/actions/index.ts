@@ -42,7 +42,7 @@ export async function startQuizAction(
         return { errorCode: 'INVALID_SETUP' };
     }
 
-    // получаем случайные вопросы
+    // получаем случайные вопросы отдельным read-запросом, чтобы write-транзакция была короткой
     const pickedQuestions =
         await questionRepository.pickRandomActiveForSnapshot(
             parsed.data.difficulty,
@@ -71,7 +71,7 @@ export async function startQuizAction(
     let quizSession: { id: string };
 
     try {
-        // создаем сессию викторины с snapshot вопросами и порядка вариантов
+        // создаем сессию викторины с snapshot вопросов и порядка вариантов
         quizSession = await quizSessionRepository.createWithSnapshot({
             userId: session.user.id,
             difficulty: parsed.data.difficulty,
@@ -192,7 +192,14 @@ export async function submitQuizAction(
             })),
         });
 
-        if (submitResult === 'not_found') {
+        if (
+            submitResult === 'not_found' ||
+            submitResult === 'already_completed'
+        ) {
+            if (submitResult === 'already_completed') {
+                redirect(`/${locale}/result/${sessionId}`);
+            }
+
             return { errorCode: 'SUBMIT_FAILED' };
         }
     } catch (error) {

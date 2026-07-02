@@ -2,6 +2,7 @@
 
 import type { Difficulty } from '@/types';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
+import { withDirectPgClient } from '@/lib/db/direct-pg';
 import { shuffleArray } from '@/shared/utils';
 
 // кандидат для snapshot: id вопроса + id вариантов
@@ -9,6 +10,52 @@ export type QuestionSnapshotCandidate = {
     id: string;
     options: Array<{ id: string }>;
 };
+
+type QuestionSnapshotCandidateRow = {
+    question_id: string;
+    option_id: string | null;
+};
+
+async function loadSnapshotCandidatesByDifficulty(
+    difficulty: Difficulty,
+): Promise<QuestionSnapshotCandidate[]> {
+    const result = await withDirectPgClient((client) => {
+        return client.query<QuestionSnapshotCandidateRow>(
+            `
+                SELECT
+                    q."id" AS "question_id",
+                    ao."id" AS "option_id"
+                FROM "Question" q
+                LEFT JOIN "AnswerOption" ao
+                    ON ao."questionId" = q."id"
+                WHERE
+                    q."difficulty" = $1::"Difficulty"
+                    AND q."isActive" = true
+                ORDER BY q."createdAt" ASC, ao."order" ASC
+            `,
+            [difficulty],
+        );
+    });
+
+    const questions = new Map<string, QuestionSnapshotCandidate>();
+
+    for (const row of result.rows) {
+        const existing = questions.get(row.question_id);
+
+        if (existing) {
+            if (row.option_id) {
+                existing.options.push({ id: row.option_id });
+            }
+        } else {
+            questions.set(row.question_id, {
+                id: row.question_id,
+                options: row.option_id ? [{ id: row.option_id }] : [],
+            });
+        }
+    }
+
+    return Array.from(questions.values());
+}
 
 // репозиторий для работы с вопросами
 export const questionRepository = {
@@ -37,18 +84,7 @@ export const questionRepository = {
         difficulty: Difficulty,
         limit: number,
     ): Promise<QuestionSnapshotCandidate[]> {
-        const questions = await withDatabaseRetry(() =>
-            prisma.question.findMany({
-                where: { difficulty, isActive: true },
-                select: {
-                    id: true,
-                    options: {
-                        select: { id: true },
-                        orderBy: { order: 'asc' },
-                    },
-                },
-            }),
-        );
+        const questions = await loadSnapshotCandidatesByDifficulty(difficulty);
 
         // перемешиваем вопросы
         const shuffled = shuffleArray(questions);

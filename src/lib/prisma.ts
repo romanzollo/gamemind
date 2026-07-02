@@ -23,15 +23,9 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function getDatabaseUrl() {
-    const pooled = process.env.DATABASE_URL;
-    const unpooled = process.env.DATABASE_URL_UNPOOLED;
-
-    // In local dev, prefer direct Neon connection for Prisma interactive writes.
-    if (process.env.NODE_ENV !== 'production' && unpooled) {
-        return unpooled;
-    }
-
-    return pooled;
+    // Prisma reads/admin use the pooled Neon URL when available.
+    // Critical quiz writes use direct pg via DATABASE_URL_UNPOOLED separately.
+    return process.env.DATABASE_URL ?? process.env.DATABASE_URL_UNPOOLED;
 }
 
 function createPool() {
