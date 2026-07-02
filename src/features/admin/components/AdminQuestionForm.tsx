@@ -45,16 +45,17 @@ export function AdminQuestionForm({
 }: AdminQuestionFormProps) {
     const isEdit = mode === 'edit';
 
-    if (isEdit && !initialValues) {
-        return null;
-    }
-    // получаем значения для редактирования вопроса
-    const editValues = isEdit ? initialValues : undefined;
-
     // выбираем действие в зависимости от режима
     const action = isEdit ? updateQuestionAction : createQuestionAction;
     const [state, formAction] = useActionState(action, {});
     const errorMessage = getAdminErrorMessage(dictionary, state.errorCode);
+
+    if (isEdit && !initialValues) {
+        return null;
+    }
+
+    // получаем значения для редактирования вопроса
+    const editValues = isEdit ? initialValues : undefined;
 
     // получаем варианты ответа в зависимости от режима
     const options = isEdit

@@ -36,7 +36,8 @@ export type AdminErrorCode =
     | 'EXACTLY_ONE_CORRECT_REQUIRED'
     | 'SAVE_FAILED'
     | 'DELETE_FAILED'
-    | 'DEACTIVATE_FAILED';
+    | 'DEACTIVATE_FAILED'
+    | 'ACTIVATE_FAILED';
 
 /** Состояние формы для useActionState (как в quiz). */
 export type AdminFormState = {

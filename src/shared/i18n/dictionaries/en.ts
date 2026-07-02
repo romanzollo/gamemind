@@ -75,9 +75,13 @@ export const enDictionary = {
         editButton: 'Save changes',
         editTitle: 'Edit question',
         editLink: 'Edit',
+        deactivateButton: 'Deactivate',
+        activateButton: 'Activate',
         deleteButton: 'Delete',
         tableActions: 'Actions',
         errors: {
+            loadFailed:
+                'Failed to load questions. Check the database connection and refresh the page.',
             invalidInput:
                 'Check question text, difficulty, category, and answer options.',
             notFound: 'Question not found.',
@@ -86,6 +90,7 @@ export const enDictionary = {
             saveFailed: 'Failed to save the question. Try again.',
             deleteFailed: 'Failed to delete the question. Try again.',
             deactivateFailed: 'Failed to deactivate the question. Try again.',
+            activateFailed: 'Failed to activate the question. Try again.',
         },
     },
     quiz: {
@@ -121,5 +126,7 @@ export const enDictionary = {
         score: 'Score',
         correct: 'Correct',
         empty: 'No results yet. Be the first to complete a quiz!',
+        loadFailed:
+            'Failed to load leaderboard. Check the database connection and refresh the page.',
     },
 } satisfies Dictionary;

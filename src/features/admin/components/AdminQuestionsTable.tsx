@@ -1,6 +1,10 @@
 import Link from 'next/link';
 
-import { deleteQuestionAction } from '@/features/admin/actions';
+import {
+    activateQuestionAction,
+    deactivateQuestionAction,
+    deleteQuestionAction,
+} from '@/features/admin/actions';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import type { AdminQuestionListItem } from '../types';
 
@@ -74,6 +78,46 @@ export function AdminQuestionsTable({
                                         {labels.editLink}
                                     </Link>
 
+                                    {entry.isActive ? (
+                                        <form action={deactivateQuestionAction}>
+                                            <input
+                                                type="hidden"
+                                                name="locale"
+                                                value={locale}
+                                            />
+                                            <input
+                                                type="hidden"
+                                                name="questionId"
+                                                value={entry.id}
+                                            />
+                                            <button
+                                                type="submit"
+                                                className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300"
+                                            >
+                                                {labels.deactivateButton}
+                                            </button>
+                                        </form>
+                                    ) : (
+                                        <form action={activateQuestionAction}>
+                                            <input
+                                                type="hidden"
+                                                name="locale"
+                                                value={locale}
+                                            />
+                                            <input
+                                                type="hidden"
+                                                name="questionId"
+                                                value={entry.id}
+                                            />
+                                            <button
+                                                type="submit"
+                                                className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300"
+                                            >
+                                                {labels.activateButton}
+                                            </button>
+                                        </form>
+                                    )}
+
                                     <form action={deleteQuestionAction}>
                                         <input
                                             type="hidden"
@@ -87,7 +131,7 @@ export function AdminQuestionsTable({
                                         />
                                         <button
                                             type="submit"
-                                            className="text-red-600 transition-colors hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                            className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300"
                                         >
                                             {labels.deleteButton}
                                         </button>

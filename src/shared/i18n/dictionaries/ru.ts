@@ -75,9 +75,13 @@ export const ruDictionary: Dictionary = {
         editButton: 'Сохранить изменения',
         editTitle: 'Редактировать вопрос',
         editLink: 'Редактировать',
+        deactivateButton: 'Деактивировать',
+        activateButton: 'Активировать',
         deleteButton: 'Удалить',
         tableActions: 'Действия',
         errors: {
+            loadFailed:
+                'Не удалось загрузить вопросы. Проверь подключение к базе данных и попробуй обновить страницу.',
             invalidInput:
                 'Проверь текст вопроса, сложность, категорию и варианты ответов.',
             notFound: 'Вопрос не найден.',
@@ -87,6 +91,8 @@ export const ruDictionary: Dictionary = {
             deleteFailed: 'Не удалось удалить вопрос. Попробуй ещё раз.',
             deactivateFailed:
                 'Не удалось деактивировать вопрос. Попробуй ещё раз.',
+            activateFailed:
+                'Не удалось активировать вопрос. Попробуй ещё раз.',
         },
     },
     quiz: {
@@ -122,5 +128,7 @@ export const ruDictionary: Dictionary = {
         score: 'Очки',
         correct: 'Правильно',
         empty: 'Пока нет результатов. Пройди квиз первым!',
+        loadFailed:
+            'Не удалось загрузить рейтинг. Проверь подключение к базе данных и попробуй обновить страницу.',
     },
 };

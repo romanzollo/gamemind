@@ -135,10 +135,78 @@ export async function createQuestionAction(
     redirect(`/${locale}/admin/questions`);
 }
 
-export async function deleteQuestionAction(formData: FormData) {
+// Action для деактивации вопроса
+export async function deactivateQuestionAction(formData: FormData) {
+    // получаем локаль из формы
+    const locale = getLocaleFromFormData(formData);
+    // проверяем, является ли пользователь администратором
+    await requireAdmin(locale);
+
+    // получаем id вопроса из формы
+    const questionId = formData.get('questionId');
+    // проверяем, является ли id вопроса строкой и не пустой
+
+    if (typeof questionId !== 'string' || questionId.trim() === '') {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    let result: Awaited<
+        ReturnType<typeof questionRepository.deactivateById>
+    > | null = null;
+
+    try {
+        result = await questionRepository.deactivateById(questionId);
+    } catch {
+        redirect(`/${locale}/admin/questions?error=DEACTIVATE_FAILED`);
+    }
+
+    if (!result || result.status === 'not_found') {
+        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+    }
+
+    // перевалидируем путь к странице администрирования вопросов
+    revalidatePath(`/${locale}/admin/questions`);
+    // перенаправляем на страницу администрирования вопросов
+    redirect(`/${locale}/admin/questions`);
+}
+
+// Action для активации вопроса
+export async function activateQuestionAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
 
+    const questionId = formData.get('questionId');
+
+    if (typeof questionId !== 'string' || questionId.trim() === '') {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    let result: Awaited<
+        ReturnType<typeof questionRepository.activateById>
+    > | null = null;
+
+    try {
+        result = await questionRepository.activateById(questionId);
+    } catch {
+        redirect(`/${locale}/admin/questions?error=ACTIVATE_FAILED`);
+    }
+
+    if (!result || result.status === 'not_found') {
+        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+    redirect(`/${locale}/admin/questions`);
+}
+
+// Action для удаления вопроса
+export async function deleteQuestionAction(formData: FormData) {
+    // получаем локаль из формы
+    const locale = getLocaleFromFormData(formData);
+    // проверяем, является ли пользователь администратором
+    await requireAdmin(locale);
+
+    // получаем id вопроса из формы
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {

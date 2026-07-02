@@ -73,15 +73,19 @@ export type Dictionary = {
         editButton: string;
         editTitle: string;
         editLink: string;
+        deactivateButton: string;
+        activateButton: string;
         deleteButton: string;
         tableActions: string;
         errors: {
+            loadFailed: string;
             invalidInput: string;
             notFound: string;
             exactlyOneCorrectRequired: string;
             saveFailed: string;
             deleteFailed: string;
             deactivateFailed: string;
+            activateFailed: string;
         };
     };
     quiz: {
@@ -115,5 +119,6 @@ export type Dictionary = {
         score: string;
         correct: string;
         empty: string;
+        loadFailed: string;
     };
 };

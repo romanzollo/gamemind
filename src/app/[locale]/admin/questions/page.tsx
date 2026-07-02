@@ -25,13 +25,27 @@ export default async function AdminQuestionsPage({
     const dictionary = getDictionary(safeLocale);
     const session = await requireAdmin(safeLocale);
 
-    const rows = await questionRepository.findAllForAdmin();
-    const entries = mapAdminQuestions(rows);
+    let entries: ReturnType<typeof mapAdminQuestions> = [];
+    let loadErrorMessage: string | undefined;
 
-    const deleteErrorMessage =
+    try {
+        const rows = await questionRepository.findAllForAdmin();
+        entries = mapAdminQuestions(rows);
+    } catch {
+        loadErrorMessage = dictionary.admin.errors.loadFailed;
+    }
+
+    const actionErrorMessage =
         error === 'DELETE_FAILED'
             ? dictionary.admin.errors.deleteFailed
-            : undefined;
+            : error === 'DEACTIVATE_FAILED'
+              ? dictionary.admin.errors.deactivateFailed
+              : error === 'ACTIVATE_FAILED'
+                ? dictionary.admin.errors.activateFailed
+                : error === 'NOT_FOUND'
+                  ? dictionary.admin.errors.notFound
+                  : undefined;
+    const adminErrorMessage = actionErrorMessage ?? loadErrorMessage;
 
     return (
         <main className="mx-auto max-w-5xl p-8">
@@ -56,9 +70,9 @@ export default async function AdminQuestionsPage({
                 {dictionary.admin.listDescription}
             </p>
 
-            {deleteErrorMessage && (
+            {adminErrorMessage && (
                 <p className="mt-4 text-red-600" role="alert">
-                    {deleteErrorMessage}
+                    {adminErrorMessage}
                 </p>
             )}
 

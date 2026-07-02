@@ -9,6 +9,7 @@ const ERROR_MAP: Record<AdminErrorCode, keyof Dictionary['admin']['errors']> = {
     SAVE_FAILED: 'saveFailed',
     DELETE_FAILED: 'deleteFailed',
     DEACTIVATE_FAILED: 'deactivateFailed',
+    ACTIVATE_FAILED: 'activateFailed',
 };
 
 // функция для получения сообщения об ошибке для админ-панели

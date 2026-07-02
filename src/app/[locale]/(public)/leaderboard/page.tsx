@@ -21,10 +21,18 @@ export default async function LeaderboardPage({
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
 
-    // получаем результаты лидеров
-    const rows = await leaderboardRepository.findBestScores(LEADERBOARD_LIMIT);
-    // преобразуем результаты в тип LeaderboardEntry
-    const entries = mapLeaderboardEntries(rows);
+    let entries: ReturnType<typeof mapLeaderboardEntries> = [];
+    let loadErrorMessage: string | undefined;
+
+    try {
+        // получаем результаты лидеров
+        const rows =
+            await leaderboardRepository.findBestScores(LEADERBOARD_LIMIT);
+        // преобразуем результаты в тип LeaderboardEntry
+        entries = mapLeaderboardEntries(rows);
+    } catch {
+        loadErrorMessage = dictionary.leaderboard.loadFailed;
+    }
 
     // возвращаем страницу лидеров
     return (
@@ -35,6 +43,12 @@ export default async function LeaderboardPage({
             <p className="mt-2 text-neutral-600 dark:text-neutral-400">
                 {dictionary.leaderboard.description}
             </p>
+
+            {loadErrorMessage && (
+                <p className="mt-4 text-red-600" role="alert">
+                    {loadErrorMessage}
+                </p>
+            )}
 
             <LeaderboardTable
                 entries={entries}

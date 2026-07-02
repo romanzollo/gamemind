@@ -201,6 +201,63 @@ export const questionRepository = {
         );
     },
 
+    // деактивация вопроса по id (admin deactivate flow)
+    deactivateById(id: string) {
+        return withDatabaseRetry(() =>
+            prisma.$transaction(async (tx) => {
+                const question = await tx.question.findUnique({
+                    where: { id },
+                    select: { id: true, isActive: true },
+                });
+
+                if (!question) {
+                    return { status: 'not_found' } as const;
+                }
+
+                if (!question.isActive) {
+                    return { status: 'already_in_target_state' } as const;
+                }
+
+                await tx.question.update({
+                    where: { id },
+                    data: { isActive: false },
+                    select: { id: true },
+                });
+
+                return { status: 'updated' } as const;
+            }),
+        );
+    },
+
+    // активация вопроса по id (admin activate flow)
+    activateById(id: string) {
+        return withDatabaseRetry(() =>
+            prisma.$transaction(async (tx) => {
+                const question = await tx.question.findUnique({
+                    where: { id },
+                    select: { id: true, isActive: true },
+                });
+
+                if (!question) {
+                    return { status: 'not_found' } as const;
+                }
+
+                if (question.isActive) {
+                    return { status: 'already_in_target_state' } as const;
+                }
+
+                await tx.question.update({
+                    where: { id },
+                    data: { isActive: true },
+                    select: { id: true },
+                });
+
+                return { status: 'updated' } as const;
+            }),
+        );
+    },
+
+    // удаление вопроса по id (admin delete flow)
     deleteById(id: string) {
         return withDatabaseRetry(() =>
             prisma.question.delete({
