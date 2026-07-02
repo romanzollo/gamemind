@@ -48,6 +48,16 @@ export type SessionSnapshotScoringQuestion = {
     }>;
 };
 
+// результат одного read для submit: сессия + snapshot для scoring
+export type SessionForSubmitResult =
+    | { status: 'not_found' }
+    | { status: 'invalid_snapshot' }
+    | {
+          status: 'ready';
+          sessionId: string;
+          questions: SessionSnapshotScoringQuestion[];
+      };
+
 type SessionSnapshotCreateResult = {
     id: string;
 };
@@ -309,6 +319,64 @@ async function completeQuizSessionWithPgClient(
     }
 }
 
+async function loadSessionForSubmit(
+    sessionId: string,
+    userId: string,
+): Promise<SessionForSubmitResult> {
+    const session = await prisma.quizSession.findFirst({
+        where: {
+            id: sessionId,
+            userId,
+            status: 'IN_PROGRESS',
+        },
+        select: {
+            id: true,
+            questionCount: true,
+            sessionQuestions: {
+                orderBy: { position: 'asc' },
+                select: {
+                    question: {
+                        select: {
+                            id: true,
+                        },
+                    },
+                    options: {
+                        orderBy: { displayOrder: 'asc' },
+                        select: {
+                            option: {
+                                select: {
+                                    id: true,
+                                    isCorrect: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!session) {
+        return { status: 'not_found' };
+    }
+
+    if (session.sessionQuestions.length !== session.questionCount) {
+        return { status: 'invalid_snapshot' };
+    }
+
+    return {
+        status: 'ready',
+        sessionId: session.id,
+        questions: session.sessionQuestions.map((sessionQuestion) => ({
+            id: sessionQuestion.question.id,
+            options: sessionQuestion.options.map((sessionOption) => ({
+                id: sessionOption.option.id,
+                isCorrect: sessionOption.option.isCorrect,
+            })),
+        })),
+    };
+}
+
 // репозиторий для работы с сессиями викторины
 export const quizSessionRepository = {
     // создание сессии викторины (legacy, пока не переключим startQuizAction)
@@ -408,54 +476,21 @@ export const quizSessionRepository = {
     // вопросы из snapshot для server-side scoring
     findSnapshotForScoring(sessionId: string, userId: string) {
         return withDatabaseRetry(async () => {
-            const session = await prisma.quizSession.findFirst({
-                where: {
-                    id: sessionId,
-                    userId,
-                    status: 'IN_PROGRESS',
-                },
-                select: {
-                    questionCount: true,
-                    sessionQuestions: {
-                        orderBy: { position: 'asc' },
-                        select: {
-                            question: {
-                                select: {
-                                    id: true,
-                                },
-                            },
-                            options: {
-                                orderBy: { displayOrder: 'asc' },
-                                select: {
-                                    option: {
-                                        select: {
-                                            id: true,
-                                            isCorrect: true,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            });
+            const result = await loadSessionForSubmit(sessionId, userId);
 
-            if (!session) {
+            if (result.status !== 'ready') {
                 return null;
             }
 
-            if (session.sessionQuestions.length !== session.questionCount) {
-                return null;
-            }
-
-            return session.sessionQuestions.map((sessionQuestion) => ({
-                id: sessionQuestion.question.id,
-                options: sessionQuestion.options.map((sessionOption) => ({
-                    id: sessionOption.option.id,
-                    isCorrect: sessionOption.option.isCorrect,
-                })),
-            }));
+            return result.questions;
         });
+    },
+
+    // одна read-операция для submit: проверка сессии + snapshot для scoring
+    findSessionForSubmit(sessionId: string, userId: string) {
+        return withDatabaseRetry(() =>
+            loadSessionForSubmit(sessionId, userId),
+        );
     },
 
     // завершение сессии викторины

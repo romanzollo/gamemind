@@ -41,14 +41,25 @@ function createPool() {
         throw new Error('DATABASE_URL is not set');
     }
 
-    return new Pool({
+    const pool = new Pool({
         connectionString,
         ssl: { rejectUnauthorized: true },
         max: 5,
         keepAlive: true,
-        idleTimeoutMillis: 5_000,
+        idleTimeoutMillis:
+            process.env.NODE_ENV === 'production' ? 5_000 : 30_000,
         connectionTimeoutMillis: 15_000,
     });
+
+    pool.on('error', (error) => {
+        if (process.env.NODE_ENV === 'development') {
+            console.warn('Prisma pg pool error:', error.message);
+        }
+    });
+
+    void pool.query('SELECT 1').catch(() => undefined);
+
+    return pool;
 }
 
 function createPrismaClient(pool: Pool) {
@@ -76,14 +87,17 @@ function getPrismaClient(): PrismaClient {
 }
 
 async function resetDatabaseConnection() {
+    const pool = globalForPrisma.pool;
+
     if (globalForPrisma.prisma) {
         await globalForPrisma.prisma.$disconnect().catch(() => undefined);
         globalForPrisma.prisma = undefined;
     }
 
-    if (globalForPrisma.pool) {
-        await globalForPrisma.pool.end().catch(() => undefined);
-        globalForPrisma.pool = undefined;
+    globalForPrisma.pool = undefined;
+
+    if (pool) {
+        await pool.end().catch(() => undefined);
     }
 }
 

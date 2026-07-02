@@ -42,16 +42,6 @@ export async function startQuizAction(
         return { errorCode: 'INVALID_SETUP' };
     }
 
-    // получаем количество активных вопросов по сложности
-    const availableQuestions = await questionRepository.countActiveByDifficulty(
-        parsed.data.difficulty,
-    );
-
-    // проверяем, является ли количество активных вопросов больше или равно количеству вопросов для викторины
-    if (availableQuestions < parsed.data.questionCount) {
-        return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
-    }
-
     // получаем случайные вопросы
     const pickedQuestions =
         await questionRepository.pickRandomActiveForSnapshot(
@@ -115,27 +105,21 @@ export async function submitQuizAction(
     // получаем сессию пользователя
     const authSession = await requireUser(locale);
 
-    // получаем активную сессию викторины для пользователя
-    const quizSession = await quizSessionRepository.findInProgressByIdForUser(
+    // одна read-операция: активная сессия + snapshot для scoring
+    const sessionForSubmit = await quizSessionRepository.findSessionForSubmit(
         sessionId,
         authSession.user.id,
     );
 
-    // если сессия не найдена или уже завершена, перенаправляем на страницу результатов
-    if (!quizSession) {
+    if (sessionForSubmit.status === 'not_found') {
         redirect(`/${locale}/result/${sessionId}`);
     }
 
-    // получаем вопросы для scoring из snapshot этой сессии
-    const questions = await quizSessionRepository.findSnapshotForScoring(
-        sessionId,
-        authSession.user.id,
-    );
-
-    // если snapshot неполный или сессия недоступна, отклоняем submit
-    if (!questions) {
+    if (sessionForSubmit.status === 'invalid_snapshot') {
         return { errorCode: 'INVALID_ANSWER' };
     }
+
+    const { sessionId: quizSessionId, questions } = sessionForSubmit;
 
     // собираем ответы пользователя из формы
     const answers = questions.map((question) => {
@@ -186,7 +170,7 @@ export async function submitQuizAction(
         );
 
         return {
-            sessionId: quizSession.id,
+            sessionId: quizSessionId,
             questionId: answer.questionId,
             selectedOptionId: answer.selectedOptionId,
             isCorrect: selectedOption?.isCorrect ?? false,
@@ -196,7 +180,7 @@ export async function submitQuizAction(
     // сохраняем все данные одной короткой SQL-транзакцией
     try {
         const submitResult = await quizSessionRepository.completeWithResult({
-            sessionId: quizSession.id,
+            sessionId: quizSessionId,
             userId: authSession.user.id,
             score: scoreResult.score,
             totalQuestions: scoreResult.totalQuestions,
