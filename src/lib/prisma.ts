@@ -7,10 +7,14 @@ const TRANSIENT_DATABASE_ERROR_MESSAGES = [
     'Connection terminated unexpectedly',
     'Connection terminated due to connection timeout',
     'Connection ended unexpectedly',
+    'not queryable',
+    'Transaction already closed',
     'ECONNRESET',
     'ETIMEDOUT',
     'timeout exceeded when trying to connect',
 ];
+
+const TRANSIENT_DATABASE_ERROR_CODES = new Set(['P1017', 'P2028']);
 
 // глобальный объект для Prisma
 const globalForPrisma = globalThis as unknown as {
@@ -18,39 +22,94 @@ const globalForPrisma = globalThis as unknown as {
     pool: Pool | undefined;
 };
 
-// пул соединений с базой данных
-const pool =
-    globalForPrisma.pool ??
-    new Pool({
-        connectionString: process.env.DATABASE_URL,
+function getDatabaseUrl() {
+    const pooled = process.env.DATABASE_URL;
+    const unpooled = process.env.DATABASE_URL_UNPOOLED;
+
+    // In local dev, prefer direct Neon connection for Prisma interactive writes.
+    if (process.env.NODE_ENV !== 'production' && unpooled) {
+        return unpooled;
+    }
+
+    return pooled;
+}
+
+function createPool() {
+    const connectionString = getDatabaseUrl();
+
+    if (!connectionString) {
+        throw new Error('DATABASE_URL is not set');
+    }
+
+    return new Pool({
+        connectionString,
         ssl: { rejectUnauthorized: true },
         max: 5,
         keepAlive: true,
         idleTimeoutMillis: 5_000,
         connectionTimeoutMillis: 15_000,
     });
+}
 
-// адаптер для Prisma
-const adapter = new PrismaPg(pool);
+function createPrismaClient(pool: Pool) {
+    const adapter = new PrismaPg(pool);
 
-// экземпляр Prisma
-export const prisma =
-    globalForPrisma.prisma ??
-    new PrismaClient({
+    return new PrismaClient({
         adapter,
         log:
             process.env.NODE_ENV === 'development'
                 ? ['query', 'error', 'warn']
                 : ['error'],
     });
-
-if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = prisma;
-    globalForPrisma.pool = pool;
 }
+
+function getPrismaClient(): PrismaClient {
+    if (!globalForPrisma.pool) {
+        globalForPrisma.pool = createPool();
+    }
+
+    if (!globalForPrisma.prisma) {
+        globalForPrisma.prisma = createPrismaClient(globalForPrisma.pool);
+    }
+
+    return globalForPrisma.prisma;
+}
+
+async function resetDatabaseConnection() {
+    if (globalForPrisma.prisma) {
+        await globalForPrisma.prisma.$disconnect().catch(() => undefined);
+        globalForPrisma.prisma = undefined;
+    }
+
+    if (globalForPrisma.pool) {
+        await globalForPrisma.pool.end().catch(() => undefined);
+        globalForPrisma.pool = undefined;
+    }
+}
+
+export const prisma = new Proxy({} as PrismaClient, {
+    get(_target, property, receiver) {
+        const client = getPrismaClient();
+        const value = Reflect.get(client, property, receiver);
+
+        return typeof value === 'function'
+            ? (value as (...args: unknown[]) => unknown).bind(client)
+            : value;
+    },
+});
 
 // проверка на временную ошибку базы данных
 function isTransientDatabaseError(error: unknown) {
+    if (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        typeof error.code === 'string' &&
+        TRANSIENT_DATABASE_ERROR_CODES.has(error.code)
+    ) {
+        return true;
+    }
+
     return (
         error instanceof Error &&
         TRANSIENT_DATABASE_ERROR_MESSAGES.some((message) =>
@@ -67,7 +126,7 @@ function wait(milliseconds: number) {
 // повторная попытка операции с базой данных
 export async function withDatabaseRetry<T>(
     operation: () => Promise<T>,
-    attempts = 2,
+    attempts = 3,
 ) {
     let lastError: unknown;
 
@@ -81,7 +140,8 @@ export async function withDatabaseRetry<T>(
                 throw error;
             }
 
-            await wait(100 * attempt);
+            await resetDatabaseConnection();
+            await wait(250 * attempt);
         }
     }
 

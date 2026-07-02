@@ -2,6 +2,13 @@
 
 import type { Difficulty } from '@/types';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
+import { shuffleArray } from '@/shared/utils';
+
+// кандидат для snapshot: id вопроса + id вариантов
+export type QuestionSnapshotCandidate = {
+    id: string;
+    options: Array<{ id: string }>;
+};
 
 // репозиторий для работы с вопросами
 export const questionRepository = {
@@ -23,6 +30,42 @@ export const questionRepository = {
                 where: { difficulty, isActive: true },
             }),
         );
+    },
+
+    // случайный выбор активных вопросов для snapshot сессии
+    async pickRandomActiveForSnapshot(
+        difficulty: Difficulty,
+        limit: number,
+    ): Promise<QuestionSnapshotCandidate[]> {
+        const questions = await withDatabaseRetry(() =>
+            prisma.question.findMany({
+                where: { difficulty, isActive: true },
+                select: {
+                    id: true,
+                    options: {
+                        select: { id: true },
+                        orderBy: { order: 'asc' },
+                    },
+                },
+            }),
+        );
+
+        // перемешиваем вопросы
+        const shuffled = shuffleArray(questions);
+
+        // возвращаем случайные вопросы
+        return shuffled.slice(0, limit).map((question) => {
+            if (question.options.length === 0) {
+                throw new Error(
+                    `Question ${question.id} has no answer options`,
+                );
+            }
+
+            return {
+                id: question.id,
+                options: question.options,
+            };
+        });
     },
 
     // поиск активных публичных вопросов по сложности

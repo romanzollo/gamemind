@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 
-import { questionRepository } from '@/entities/question/question.repository';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { QuizSessionForm } from '@/features/quiz/components/QuizSessionForm';
 import { requireUser } from '@/lib/auth/guards';
@@ -24,22 +23,16 @@ export default async function QuizSessionPage({
     // получаем сессию пользователя
     const authSession = await requireUser(safeLocale);
 
-    // поиск незавершенной сессии по ID и ID пользователя
-    const quizSession = await quizSessionRepository.findInProgressByIdForUser(
-        sessionId,
-        authSession.user.id,
-    );
+    // получаем публичные вопросы из snapshot сессии
+    const questions =
+        await quizSessionRepository.findSnapshotPublicQuestionsForUser(
+            sessionId,
+            authSession.user.id,
+        );
 
-    // если сессия не найдена, возвращаем 404
-    if (!quizSession) {
+    if (!questions) {
         notFound();
     }
-
-    // поиск активных публичных вопросов по сложности
-    const questions = await questionRepository.findActivePublicByDifficulty(
-        quizSession.difficulty,
-        quizSession.questionCount,
-    );
 
     return (
         <main className="mx-auto max-w-2xl p-8">
@@ -48,12 +41,12 @@ export default async function QuizSessionPage({
             </h1>
 
             <p className="mt-2 text-neutral-600 dark:text-neutral-400">
-                {dictionary.quiz.session}: {quizSession.id}
+                {dictionary.quiz.session}: {sessionId}
             </p>
 
             <QuizSessionForm
                 locale={safeLocale}
-                sessionId={quizSession.id}
+                sessionId={sessionId}
                 questions={questions}
                 dictionary={dictionary}
             />

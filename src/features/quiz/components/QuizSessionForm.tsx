@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 
 import { submitQuizAction } from '@/features/quiz/actions';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
@@ -23,6 +23,9 @@ export function QuizSessionForm({
     dictionary,
 }: QuizSessionFormProps) {
     const [state, formAction] = useActionState(submitQuizAction, {});
+    const [selectedAnswers, setSelectedAnswers] = useState<
+        Record<string, string>
+    >({});
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
 
     return (
@@ -50,6 +53,16 @@ export function QuizSessionForm({
                                         type="radio"
                                         name={question.id}
                                         value={option.id}
+                                        checked={
+                                            selectedAnswers[question.id] ===
+                                            option.id
+                                        }
+                                        onChange={() => {
+                                            setSelectedAnswers((current) => ({
+                                                ...current,
+                                                [question.id]: option.id,
+                                            }));
+                                        }}
                                         required
                                     />
                                     <span>{option.text}</span>

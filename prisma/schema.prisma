@@ -93,6 +93,7 @@ model Question {
 
   options     AnswerOption[]
   quizAnswers QuizAnswer[]
+  sessionQuestions QuizSessionQuestion[]
 
   @@index([difficulty, isActive])
 }
@@ -106,6 +107,7 @@ model AnswerOption {
 
   question    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
   quizAnswers QuizAnswer[]
+  sessionQuestionOptions QuizSessionQuestionOption[]
 
   @@index([questionId])
 }
@@ -122,6 +124,7 @@ model QuizSession {
   user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   answers QuizAnswer[]
   result  QuizResult?
+  sessionQuestions QuizSessionQuestion[]
 
   @@index([userId, status])
 }
@@ -156,4 +159,33 @@ model QuizResult {
 
   @@index([userId])
   @@index([score(sort: Desc), completedAt(sort: Asc)])
+}
+
+model QuizSessionQuestion {
+  id         String @id @default(cuid())
+  sessionId  String
+  questionId String
+  position   Int
+
+  session  QuizSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  options  QuizSessionQuestionOption[]
+
+  @@unique([sessionId, questionId])
+  @@unique([sessionId, position])
+  @@index([sessionId])
+}
+
+model QuizSessionQuestionOption {
+  id                String @id @default(cuid())
+  sessionQuestionId String
+  optionId          String
+  displayOrder      Int
+
+  sessionQuestion QuizSessionQuestion @relation(fields: [sessionQuestionId], references: [id], onDelete: Cascade)
+  option          AnswerOption        @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionQuestionId, optionId])
+  @@unique([sessionQuestionId, displayOrder])
+  @@index([sessionQuestionId])
 }

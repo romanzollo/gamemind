@@ -8,10 +8,8 @@ import { requireUser } from '@/lib/auth/guards';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
-import { quizAnswerRepository } from '@/entities/quiz-answer/quiz-answer.repository';
-import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import type { QuizFormState } from '@/features/quiz/types';
-import { prisma } from '@/lib/prisma';
+import { shuffleArray } from '@/shared/utils';
 
 // получение локали из формы
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -54,12 +52,46 @@ export async function startQuizAction(
         return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
     }
 
-    // создаем сессию викторины
-    const quizSession = await quizSessionRepository.create({
-        userId: session.user.id,
-        difficulty: parsed.data.difficulty,
-        questionCount: parsed.data.questionCount,
+    // получаем случайные вопросы
+    const pickedQuestions =
+        await questionRepository.pickRandomActiveForSnapshot(
+            parsed.data.difficulty,
+            parsed.data.questionCount,
+        );
+
+    // проверяем, является ли количество полученных вопросов больше или равно количеству вопросов для викторины
+    if (pickedQuestions.length < parsed.data.questionCount) {
+        return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
+    }
+
+    // собираем данные для snapshot вопросов и порядка вариантов
+    const snapshotQuestions = pickedQuestions.map((question, index) => {
+        const shuffledOptions = shuffleArray(question.options);
+
+        return {
+            questionId: question.id,
+            position: index,
+            options: shuffledOptions.map((option, optionIndex) => ({
+                optionId: option.id,
+                displayOrder: optionIndex,
+            })),
+        };
     });
+
+    let quizSession: { id: string };
+
+    try {
+        // создаем сессию викторины с snapshot вопросами и порядка вариантов
+        quizSession = await quizSessionRepository.createWithSnapshot({
+            userId: session.user.id,
+            difficulty: parsed.data.difficulty,
+            questionCount: parsed.data.questionCount,
+            questions: snapshotQuestions,
+        });
+    } catch (error) {
+        console.error('Quiz session snapshot create failed:', error);
+        return { errorCode: 'INVALID_SETUP' };
+    }
 
     // перенаправляем на страницу викторины
     redirect(`/${locale}/quiz/${quizSession.id}`);
@@ -94,14 +126,14 @@ export async function submitQuizAction(
         redirect(`/${locale}/result/${sessionId}`);
     }
 
-    // получаем вопросы для викторины
-    const questions = await questionRepository.findActiveForScoring(
-        quizSession.difficulty,
-        quizSession.questionCount,
+    // получаем вопросы для scoring из snapshot этой сессии
+    const questions = await quizSessionRepository.findSnapshotForScoring(
+        sessionId,
+        authSession.user.id,
     );
 
-    // проверяем, что количество вопросов соответствует ожидаемому
-    if (questions.length !== quizSession.questionCount) {
+    // если snapshot неполный или сессия недоступна, отклоняем submit
+    if (!questions) {
         return { errorCode: 'INVALID_ANSWER' };
     }
 
@@ -161,24 +193,24 @@ export async function submitQuizAction(
         };
     });
 
-    // сохраняем все данные в транзакции
+    // сохраняем все данные одной короткой SQL-транзакцией
     try {
-        await prisma.$transaction(async () => {
-            // сохраняем ответы пользователя
-            await quizAnswerRepository.createMany(answerRows);
-
-            // сохраняем результаты викторины
-            await quizResultRepository.create({
-                sessionId: quizSession.id,
-                userId: authSession.user.id,
-                score: scoreResult.score,
-                totalQuestions: scoreResult.totalQuestions,
-                correctCount: scoreResult.correctCount,
-            });
-
-            // завершаем сессию викторины
-            await quizSessionRepository.complete(quizSession.id);
+        const submitResult = await quizSessionRepository.completeWithResult({
+            sessionId: quizSession.id,
+            userId: authSession.user.id,
+            score: scoreResult.score,
+            totalQuestions: scoreResult.totalQuestions,
+            correctCount: scoreResult.correctCount,
+            answers: answerRows.map((answer) => ({
+                questionId: answer.questionId,
+                selectedOptionId: answer.selectedOptionId,
+                isCorrect: answer.isCorrect,
+            })),
         });
+
+        if (submitResult === 'not_found') {
+            return { errorCode: 'SUBMIT_FAILED' };
+        }
     } catch (error) {
         console.error('Quiz submit failed:', error);
         return { errorCode: 'SUBMIT_FAILED' };
