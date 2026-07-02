@@ -11,6 +11,24 @@ export type AdminQuestionListItem = {
     createdAt: Date;
 };
 
+/** Вариант ответа для формы редактирования (нужен id для update, не delete+recreate). */
+export type AdminQuestionOptionDetail = {
+    id: string;
+    text: string;
+    isCorrect: boolean;
+    order: number;
+};
+
+/** Полный вопрос для страницы edit: все поля формы + options с id. */
+export type AdminQuestionDetail = {
+    id: string;
+    text: string;
+    difficulty: Difficulty;
+    category: string;
+    isActive: boolean;
+    options: AdminQuestionOptionDetail[];
+};
+
 /** Стабильные коды ошибок для Server Actions (локализация в UI). */
 export type AdminErrorCode =
     | 'INVALID_INPUT'

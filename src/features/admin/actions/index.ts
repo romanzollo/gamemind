@@ -4,7 +4,10 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
-import { createQuestionSchema } from '@/features/admin/lib/validation';
+import {
+    createQuestionSchema,
+    updateQuestionSchema,
+} from '@/features/admin/lib/validation';
 import type { AdminFormState } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
@@ -36,6 +39,52 @@ function parseOptionsFromFormData(formData: FormData) {
         }
 
         options.push({
+            text,
+            isCorrect: i === correctOptionIndex,
+            order: options.length,
+        });
+    }
+
+    return options;
+}
+
+// парсинг вариантов для edit: нужны optionId-${i} из hidden inputs
+function parseOptionsForUpdateFromFormData(formData: FormData) {
+    // получаем индекс правильного варианта ответа из формы
+    const correctOptionIndexRaw = formData.get('correctOptionIndex');
+    // преобразуем индекс в число
+    const correctOptionIndex =
+        typeof correctOptionIndexRaw === 'string'
+            ? Number(correctOptionIndexRaw)
+            : NaN;
+    // создаем массив вариантов ответа
+    const options: Array<{
+        id: string;
+        text: string;
+        isCorrect: boolean;
+        order: number;
+    }> = [];
+
+    // проходим по всем вариантам ответа
+    for (let i = 0; i < 6; i++) {
+        // получаем id варианта ответа из формы
+        const id = formData.get(`optionId-${i}`);
+        // получаем текст варианта ответа из формы
+        const text = formData.get(`optionText-${i}`);
+
+        // проверяем, является ли id варианта ответа строкой и не пустой
+        if (typeof id !== 'string' || id.trim() === '') {
+            continue;
+        }
+
+        // проверяем, является ли текст варианта ответа строкой и не пустой
+        if (typeof text !== 'string' || text.trim() === '') {
+            continue;
+        }
+
+        // добавляем вариант ответа в массив
+        options.push({
+            id,
             text,
             isCorrect: i === correctOptionIndex,
             order: options.length,
@@ -102,6 +151,67 @@ export async function deleteQuestionAction(formData: FormData) {
         redirect(`/${locale}/admin/questions?error=DELETE_FAILED`);
     }
 
+    // перевалидируем путь к странице администрирования вопросов
     revalidatePath(`/${locale}/admin/questions`);
+    // перенаправляем на страницу администрирования вопросов
+    redirect(`/${locale}/admin/questions`);
+}
+
+// Action для редактирования вопроса
+export async function updateQuestionAction(
+    _prevState: AdminFormState,
+    formData: FormData,
+): Promise<AdminFormState> {
+    // получаем локаль из формы
+    const locale = getLocaleFromFormData(formData);
+    // проверяем, является ли пользователь администратором
+    await requireAdmin(locale);
+
+    // парсим данные из формы
+    const parsed = updateQuestionSchema.safeParse({
+        // получаем id вопроса из формы
+        questionId: formData.get('questionId'),
+        // получаем текст вопроса из формы
+        text: formData.get('text'),
+        // получаем сложность вопроса из формы
+        difficulty: formData.get('difficulty'),
+        // получаем категорию вопроса из формы
+        category: formData.get('category') ?? 'video-games',
+        // парсим варианты ответа из формы
+        options: parseOptionsForUpdateFromFormData(formData),
+    });
+
+    // проверяем, являются ли данные валидными
+    if (!parsed.success) {
+        // проверяем, есть ли ошибка в вариантах ответа
+        const hasCorrectOptionError = parsed.error.issues.some(
+            (issue) => issue.path[0] === 'options',
+        );
+
+        // возвращаем ошибку
+        return {
+            errorCode: hasCorrectOptionError
+                ? 'EXACTLY_ONE_CORRECT_REQUIRED'
+                : 'INVALID_INPUT',
+        };
+    }
+
+    // пытаемся обновить вопрос и варианты ответа
+    try {
+        // обновляем вопрос и варианты ответа
+        const result = await questionRepository.updateWithOptions(parsed.data);
+
+        if (!result) {
+            return { errorCode: 'NOT_FOUND' };
+        }
+    } catch {
+        return { errorCode: 'SAVE_FAILED' };
+    }
+
+    // перевалидируем путь к странице администрирования вопросов
+    revalidatePath(`/${locale}/admin/questions`);
+    // перевалидируем путь к странице редактирования вопроса
+    revalidatePath(`/${locale}/admin/questions/${parsed.data.questionId}/edit`);
+    // перенаправляем на страницу администрирования вопросов
     redirect(`/${locale}/admin/questions`);
 }

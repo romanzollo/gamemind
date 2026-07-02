@@ -1,13 +1,17 @@
+import Link from 'next/link';
+
 import { deleteQuestionAction } from '@/features/admin/actions';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import type { AdminQuestionListItem } from '../types';
 
+// тип пропсов компонента таблицы вопросов для администрирования
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
     labels: Dictionary['admin'];
     locale: Locale;
 };
 
+// компонент таблицы вопросов для администрирования
 export function AdminQuestionsTable({
     entries,
     labels,
@@ -19,6 +23,11 @@ export function AdminQuestionsTable({
                 {labels.empty}
             </p>
         );
+    }
+
+    // функция для получения локализованного href
+    function localizedHref(href: string) {
+        return `/${locale}${href}`;
     }
 
     return (
@@ -55,24 +64,35 @@ export function AdminQuestionsTable({
                                 {entry.createdAt.toLocaleDateString()}
                             </td>
                             <td className="py-3">
-                                <form action={deleteQuestionAction}>
-                                    <input
-                                        type="hidden"
-                                        name="locale"
-                                        value={locale}
-                                    />
-                                    <input
-                                        type="hidden"
-                                        name="questionId"
-                                        value={entry.id}
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                <div className="flex items-center gap-3">
+                                    <Link
+                                        href={localizedHref(
+                                            `/admin/questions/${entry.id}/edit`,
+                                        )}
+                                        className="text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                                     >
-                                        {labels.deleteButton}
-                                    </button>
-                                </form>
+                                        {labels.editLink}
+                                    </Link>
+
+                                    <form action={deleteQuestionAction}>
+                                        <input
+                                            type="hidden"
+                                            name="locale"
+                                            value={locale}
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="questionId"
+                                            value={entry.id}
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="text-red-600 transition-colors hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                        >
+                                            {labels.deleteButton}
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     ))}

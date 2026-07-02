@@ -70,6 +70,9 @@ export type Dictionary = {
         createButton: string;
         createTitle: string;
         createLink: string;
+        editButton: string;
+        editTitle: string;
+        editLink: string;
         deleteButton: string;
         tableActions: string;
         errors: {

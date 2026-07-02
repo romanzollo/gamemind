@@ -72,6 +72,9 @@ export const ruDictionary: Dictionary = {
         createButton: 'Создать вопрос',
         createTitle: 'Создать вопрос',
         createLink: 'Создать вопрос',
+        editButton: 'Сохранить изменения',
+        editTitle: 'Редактировать вопрос',
+        editLink: 'Редактировать',
         deleteButton: 'Удалить',
         tableActions: 'Действия',
         errors: {

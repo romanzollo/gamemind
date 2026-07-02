@@ -72,6 +72,9 @@ export const enDictionary = {
         createButton: 'Create question',
         createTitle: 'Create question',
         createLink: 'Create question',
+        editButton: 'Save changes',
+        editTitle: 'Edit question',
+        editLink: 'Edit',
         deleteButton: 'Delete',
         tableActions: 'Actions',
         errors: {

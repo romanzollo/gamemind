@@ -87,6 +87,31 @@ export const questionRepository = {
         );
     },
 
+    // один вопрос для страницы редактирования (admin edit flow)
+    findByIdForAdmin(id: string) {
+        return withDatabaseRetry(() =>
+            prisma.question.findUnique({
+                where: { id },
+                select: {
+                    id: true,
+                    text: true,
+                    difficulty: true,
+                    category: true,
+                    isActive: true,
+                    options: {
+                        orderBy: { order: 'asc' },
+                        select: {
+                            id: true,
+                            text: true,
+                            isCorrect: true,
+                            order: true,
+                        },
+                    },
+                },
+            }),
+        );
+    },
+
     // создание вопроса с вариантами ответа (admin create flow)
     createWithOptions(input: {
         text: string;
@@ -114,6 +139,64 @@ export const questionRepository = {
                     },
                 },
                 select: { id: true },
+            }),
+        );
+    },
+
+    // обновление вопроса и вариантов по id (admin edit flow)
+    updateWithOptions(input: {
+        questionId: string;
+        text: string;
+        difficulty: Difficulty;
+        category: string;
+        options: Array<{
+            id: string;
+            text: string;
+            isCorrect: boolean;
+            order: number;
+        }>;
+    }) {
+        return withDatabaseRetry(() =>
+            prisma.$transaction(async (tx) => {
+                const existing = await tx.question.findUnique({
+                    where: { id: input.questionId },
+                    select: { id: true },
+                });
+
+                if (!existing) {
+                    return null;
+                }
+
+                await tx.question.update({
+                    where: { id: input.questionId },
+                    data: {
+                        text: input.text,
+                        difficulty: input.difficulty,
+                        category: input.category,
+                    },
+                });
+
+                for (const option of input.options) {
+                    const result = await tx.answerOption.updateMany({
+                        where: {
+                            id: option.id,
+                            questionId: input.questionId,
+                        },
+                        data: {
+                            text: option.text,
+                            isCorrect: option.isCorrect,
+                            order: option.order,
+                        },
+                    });
+
+                    if (result.count === 0) {
+                        throw new Error(
+                            `Option ${option.id} not found for question ${input.questionId}`,
+                        );
+                    }
+                }
+
+                return { id: input.questionId };
             }),
         );
     },
