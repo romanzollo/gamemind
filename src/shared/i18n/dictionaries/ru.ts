@@ -65,6 +65,10 @@ export const ruDictionary: Dictionary = {
         statusInactive: 'Неактивен',
         empty: 'Пока нет вопросов.',
         formQuestionText: 'Текст вопроса',
+        formQuestionTextRu: 'Текст вопроса (русский)',
+        formQuestionTextEn: 'Текст вопроса (английский)',
+        formOptionTextRu: 'Текст варианта (русский)',
+        formOptionTextEn: 'Текст варианта (английский)',
         formCategory: 'Категория',
         formOptions: 'Варианты ответов',
         formCorrectOptionHint: 'Отметь ровно один правильный вариант.',
@@ -83,7 +87,7 @@ export const ruDictionary: Dictionary = {
             loadFailed:
                 'Не удалось загрузить вопросы. Проверь подключение к базе данных и попробуй обновить страницу.',
             invalidInput:
-                'Проверь текст вопроса, сложность, категорию и варианты ответов.',
+                'Проверь текст вопроса на русском и английском, сложность, категорию и варианты ответов.',
             notFound: 'Вопрос не найден.',
             exactlyOneCorrectRequired:
                 'Должен быть ровно один правильный вариант ответа.',

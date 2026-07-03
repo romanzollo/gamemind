@@ -54,19 +54,46 @@ export async function startQuizAction(
         return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
     }
 
-    // собираем данные для snapshot вопросов и порядка вариантов
-    const snapshotQuestions = pickedQuestions.map((question, index) => {
-        const shuffledOptions = shuffleArray(question.options);
+    const displayTexts =
+        await questionRepository.findSnapshotDisplayTextsByCandidates(
+            locale,
+            pickedQuestions,
+        );
 
-        return {
-            questionId: question.id,
-            position: index,
-            options: shuffledOptions.map((option, optionIndex) => ({
+    // собираем данные для snapshot вопросов, порядка вариантов и frozen display text
+    const snapshotQuestions = [];
+
+    for (const [index, question] of pickedQuestions.entries()) {
+        const texts = displayTexts.get(question.id);
+
+        if (!texts) {
+            return { errorCode: 'INVALID_SETUP' };
+        }
+
+        const shuffledOptions = shuffleArray(question.options);
+        const snapshotOptions = [];
+
+        for (const [optionIndex, option] of shuffledOptions.entries()) {
+            const optionText = texts.options.get(option.id);
+
+            if (!optionText) {
+                return { errorCode: 'INVALID_SETUP' };
+            }
+
+            snapshotOptions.push({
                 optionId: option.id,
                 displayOrder: optionIndex,
-            })),
-        };
-    });
+                displayText: optionText,
+            });
+        }
+
+        snapshotQuestions.push({
+            questionId: question.id,
+            position: index,
+            displayText: texts.displayText,
+            options: snapshotOptions,
+        });
+    }
 
     let quizSession: { id: string };
 
@@ -76,6 +103,7 @@ export async function startQuizAction(
             userId: session.user.id,
             difficulty: parsed.data.difficulty,
             questionCount: parsed.data.questionCount,
+            sessionLocale: locale,
             questions: snapshotQuestions,
         });
     } catch (error) {

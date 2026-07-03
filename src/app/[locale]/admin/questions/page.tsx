@@ -29,7 +29,7 @@ export default async function AdminQuestionsPage({
     let loadErrorMessage: string | undefined;
 
     try {
-        const rows = await questionRepository.findAllForAdmin();
+        const rows = await questionRepository.findAllForAdmin(safeLocale);
         entries = mapAdminQuestions(rows);
     } catch {
         loadErrorMessage = dictionary.admin.errors.loadFailed;

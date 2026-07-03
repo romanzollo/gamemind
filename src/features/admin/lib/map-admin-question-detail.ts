@@ -1,24 +1,8 @@
-import type { Difficulty } from '@/types';
+import type { AdminQuestionForEdit } from '@/entities/question/question.repository';
 import type { AdminQuestionDetail } from '../types';
 
-// сырой результат findByIdForAdmin (форма select в repository)
-type RawAdminQuestionDetailRow = {
-    id: string;
-    text: string;
-    difficulty: Difficulty;
-    category: string;
-    isActive: boolean;
-    options: Array<{
-        id: string;
-        text: string;
-        isCorrect: boolean;
-        order: number;
-    }>;
-};
-
-// Prisma-строка → DTO для edit-страницы; null если вопрос не найден
 export function mapAdminQuestionDetail(
-    row: RawAdminQuestionDetailRow | null,
+    row: AdminQuestionForEdit | null,
 ): AdminQuestionDetail | null {
     if (!row) {
         return null;
@@ -26,13 +10,13 @@ export function mapAdminQuestionDetail(
 
     return {
         id: row.id,
-        text: row.text,
+        translations: row.translations,
         difficulty: row.difficulty,
         category: row.category,
         isActive: row.isActive,
         options: row.options.map((option) => ({
             id: option.id,
-            text: option.text,
+            translations: option.translations,
             isCorrect: option.isCorrect,
             order: option.order,
         })),

@@ -25,6 +25,11 @@ enum QuizSessionStatus {
   ABANDONED
 }
 
+enum ContentLocale {
+  ru
+  en
+}
+
 model User {
   id            String    @id @default(cuid())
   username      String    @unique
@@ -91,9 +96,10 @@ model Question {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 
-  options     AnswerOption[]
-  quizAnswers QuizAnswer[]
+  options          AnswerOption[]
+  quizAnswers      QuizAnswer[]
   sessionQuestions QuizSessionQuestion[]
+  translations     QuestionTranslation[]
 
   @@index([difficulty, isActive])
 }
@@ -105,9 +111,10 @@ model AnswerOption {
   isCorrect  Boolean @default(false)
   order      Int     @default(0)
 
-  question    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  quizAnswers QuizAnswer[]
+  question               Question                    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  quizAnswers            QuizAnswer[]
   sessionQuestionOptions QuizSessionQuestionOption[]
+  translations           AnswerOptionTranslation[]
 
   @@index([questionId])
 }
@@ -118,6 +125,7 @@ model QuizSession {
   status        QuizSessionStatus @default(IN_PROGRESS)
   difficulty    Difficulty
   questionCount Int
+  sessionLocale ContentLocale     @default(ru)
   startedAt     DateTime          @default(now())
   completedAt   DateTime?
 
@@ -162,10 +170,11 @@ model QuizResult {
 }
 
 model QuizSessionQuestion {
-  id         String @id @default(cuid())
-  sessionId  String
-  questionId String
-  position   Int
+  id          String  @id @default(cuid())
+  sessionId   String
+  questionId  String
+  position    Int
+  displayText String?
 
   session  QuizSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   question Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
@@ -177,10 +186,11 @@ model QuizSessionQuestion {
 }
 
 model QuizSessionQuestionOption {
-  id                String @id @default(cuid())
+  id                String  @id @default(cuid())
   sessionQuestionId String
   optionId          String
   displayOrder      Int
+  displayText       String?
 
   sessionQuestion QuizSessionQuestion @relation(fields: [sessionQuestionId], references: [id], onDelete: Cascade)
   option          AnswerOption        @relation(fields: [optionId], references: [id], onDelete: Cascade)
@@ -188,4 +198,28 @@ model QuizSessionQuestionOption {
   @@unique([sessionQuestionId, optionId])
   @@unique([sessionQuestionId, displayOrder])
   @@index([sessionQuestionId])
+}
+
+model QuestionTranslation {
+  id         String        @id @default(cuid())
+  questionId String
+  locale     ContentLocale
+  text       String
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, locale])
+  @@index([locale])
+}
+
+model AnswerOptionTranslation {
+  id       String        @id @default(cuid())
+  optionId String
+  locale   ContentLocale
+  text     String
+
+  option AnswerOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@unique([optionId, locale])
+  @@index([locale])
 }

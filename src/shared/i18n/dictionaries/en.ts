@@ -65,6 +65,10 @@ export const enDictionary = {
         statusInactive: 'Inactive',
         empty: 'No questions yet.',
         formQuestionText: 'Question text',
+        formQuestionTextRu: 'Question text (Russian)',
+        formQuestionTextEn: 'Question text (English)',
+        formOptionTextRu: 'Option text (Russian)',
+        formOptionTextEn: 'Option text (English)',
         formCategory: 'Category',
         formOptions: 'Answer options',
         formCorrectOptionHint: 'Mark exactly one correct option.',
@@ -83,7 +87,7 @@ export const enDictionary = {
             loadFailed:
                 'Failed to load questions. Check the database connection and refresh the page.',
             invalidInput:
-                'Check question text, difficulty, category, and answer options.',
+                'Check question text in Russian and English, difficulty, category, and answer options.',
             notFound: 'Question not found.',
             exactlyOneCorrectRequired:
                 'Exactly one correct answer option is required.',

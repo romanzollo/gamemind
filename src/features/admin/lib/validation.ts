@@ -1,39 +1,72 @@
 import { z } from 'zod';
 
-// схема для валидации сложности вопроса
+// схема для сложности вопроса
 const difficultySchema = z.enum(['EASY', 'MEDIUM', 'HARD']);
 
-// схема для валидации варианта ответа
+// схема для локалей
+const locales = ['ru', 'en'] as const;
+
+// схема для перевода текста вопроса
+const localizedQuestionTextSchema = z
+    .string()
+    .trim()
+    .min(10, 'Question text must be at least 10 characters')
+    .max(500, 'Question text is too long');
+
+// схема для перевода текста варианта ответа
+const localizedOptionTextSchema = z
+    .string()
+    .trim()
+    .min(1, 'Option text is required')
+    .max(200, 'Option text is too long');
+
+// схема для перевода текста вопроса и вариантов ответа
+const questionTranslationsSchema = z.object({
+    ru: z.object({ text: localizedQuestionTextSchema }),
+    en: z.object({ text: localizedQuestionTextSchema }),
+});
+
+// схема для перевода текста вариантов ответа
+const answerOptionTranslationsSchema = z.object({
+    ru: z.object({ text: localizedOptionTextSchema }),
+    en: z.object({ text: localizedOptionTextSchema }),
+});
+
+// схема для варианта ответа
 const answerOptionSchema = z.object({
-    text: z
-        .string()
-        .trim()
-        .min(1, 'Option text is required')
-        .max(200, 'Option text is too long'),
+    translations: answerOptionTranslationsSchema,
     isCorrect: z.boolean(),
     order: z.number().int().min(0).max(20),
 });
 
-// схема для варианта ответа при редактировании (нужен id существующей строки)
+// схема для обновления варианта ответа
 const answerOptionUpdateSchema = z.object({
     id: z.string().trim().min(1, 'Option id is required'),
-    text: z
-        .string()
-        .trim()
-        .min(1, 'Option text is required')
-        .max(200, 'Option text is too long'),
+    translations: answerOptionTranslationsSchema,
     isCorrect: z.boolean(),
     order: z.number().int().min(0).max(20),
 });
 
-// схема для валидации создания вопроса
+// функция для проверки, что в варианте ответа есть ровно один правильный ответ
+function assertExactlyOneCorrectOption(
+    options: Array<{ isCorrect: boolean }>,
+    ctx: z.RefinementCtx,
+) {
+    const correctCount = options.filter((option) => option.isCorrect).length;
+
+    if (correctCount !== 1) {
+        ctx.addIssue({
+            code: 'custom',
+            path: ['options'],
+            message: 'Exactly one correct option is required',
+        });
+    }
+}
+
+// схема для создания вопроса
 export const createQuestionSchema = z
     .object({
-        text: z
-            .string()
-            .trim()
-            .min(10, 'Question text must be at least 10 characters')
-            .max(500, 'Question text is too long'),
+        translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z
             .string()
@@ -47,31 +80,16 @@ export const createQuestionSchema = z
             .max(6, 'At most 6 options are allowed'),
     })
     .superRefine((data, ctx) => {
-        const correctCount = data.options.filter(
-            (option) => option.isCorrect,
-        ).length;
-
-        if (correctCount !== 1) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['options'],
-                message: 'Exactly one correct option is required',
-            });
-        }
+        assertExactlyOneCorrectOption(data.options, ctx);
     });
 
-// тип для ввода создания вопроса
 export type CreateQuestionInput = z.infer<typeof createQuestionSchema>;
 
-// схема для валидации редактирования вопроса
+// схема для обновления вопроса
 export const updateQuestionSchema = z
     .object({
         questionId: z.string().trim().min(1, 'Question id is required'),
-        text: z
-            .string()
-            .trim()
-            .min(10, 'Question text must be at least 10 characters')
-            .max(500, 'Question text is too long'),
+        translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z
             .string()
@@ -85,18 +103,10 @@ export const updateQuestionSchema = z
             .max(6, 'At most 6 options are allowed'),
     })
     .superRefine((data, ctx) => {
-        const correctCount = data.options.filter(
-            (option) => option.isCorrect,
-        ).length;
-
-        if (correctCount !== 1) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['options'],
-                message: 'Exactly one correct option is required',
-            });
-        }
+        assertExactlyOneCorrectOption(data.options, ctx);
     });
 
-// тип для ввода редактирования вопроса
 export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;
+
+// локали для админ-панели
+export const adminContentLocales = locales;

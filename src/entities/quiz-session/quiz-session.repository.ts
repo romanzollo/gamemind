@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import type { Client } from 'pg';
 
 import type { Difficulty } from '@/types';
+import type { Locale } from '@/shared/i18n';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import {
     isTransientDirectPgError,
@@ -21,14 +22,17 @@ type CreateQuizSessionInput = {
 export type SessionSnapshotQuestionInput = {
     questionId: string;
     position: number;
+    displayText: string;
     options: Array<{
         optionId: string;
         displayOrder: number;
+        displayText: string;
     }>;
 };
 
 // создание сессии вместе с snapshot вопросов и порядка вариантов
 export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
+    sessionLocale: Locale;
     questions: SessionSnapshotQuestionInput[];
 };
 
@@ -159,21 +163,35 @@ async function cleanupQuizSessionById(sessionId: string) {
     ).catch(() => undefined);
 }
 
+function assertSnapshotDisplayTexts(input: CreateQuizSessionWithSnapshotInput) {
+    for (const question of input.questions) {
+        if (!question.displayText.trim()) {
+            throw new Error(
+                `Missing displayText for question ${question.questionId}`,
+            );
+        }
+
+        for (const option of question.options) {
+            if (!option.displayText.trim()) {
+                throw new Error(
+                    `Missing displayText for option ${option.optionId}`,
+                );
+            }
+        }
+    }
+}
+
 async function insertSnapshotRows(
     client: Client,
     sessionId: string,
-    input: {
-        userId: string;
-        difficulty: Difficulty;
-        questionCount: number;
-        questions: SessionSnapshotQuestionInput[];
-    },
+    input: CreateQuizSessionWithSnapshotInput,
 ) {
     const sessionQuestionRows = input.questions.map((question) => ({
         id: randomUUID(),
         sessionId,
         questionId: question.questionId,
         position: question.position,
+        displayText: question.displayText,
         options: question.options,
     }));
 
@@ -183,6 +201,7 @@ async function insertSnapshotRows(
             sessionQuestionId: sessionQuestion.id,
             optionId: option.optionId,
             displayOrder: option.displayOrder,
+            displayText: option.displayText,
         })),
     );
 
@@ -194,9 +213,18 @@ async function insertSnapshotRows(
                 "status",
                 "difficulty",
                 "questionCount",
+                "sessionLocale",
                 "startedAt"
             )
-            VALUES ($1, $2, $3::"QuizSessionStatus", $4::"Difficulty", $5, NOW())
+            VALUES (
+                $1,
+                $2,
+                $3::"QuizSessionStatus",
+                $4::"Difficulty",
+                $5,
+                $6::"ContentLocale",
+                NOW()
+            )
         `,
         [
             sessionId,
@@ -204,6 +232,7 @@ async function insertSnapshotRows(
             'IN_PROGRESS',
             input.difficulty,
             input.questionCount,
+            input.sessionLocale,
         ],
     );
 
@@ -213,15 +242,17 @@ async function insertSnapshotRows(
                 "id",
                 "sessionId",
                 "questionId",
-                "position"
+                "position",
+                "displayText"
             )
-            VALUES ${buildValuesPlaceholder(sessionQuestionRows.length, 4)}
+            VALUES ${buildValuesPlaceholder(sessionQuestionRows.length, 5)}
         `,
         sessionQuestionRows.flatMap((row) => [
             row.id,
             row.sessionId,
             row.questionId,
             row.position,
+            row.displayText,
         ]),
     );
 
@@ -232,15 +263,17 @@ async function insertSnapshotRows(
                     "id",
                     "sessionQuestionId",
                     "optionId",
-                    "displayOrder"
+                    "displayOrder",
+                    "displayText"
                 )
-                VALUES ${buildValuesPlaceholder(optionRows.length, 4)}
+                VALUES ${buildValuesPlaceholder(optionRows.length, 5)}
             `,
             optionRows.flatMap((row) => [
                 row.id,
                 row.sessionQuestionId,
                 row.optionId,
                 row.displayOrder,
+                row.displayText,
             ]),
         );
     }
@@ -249,6 +282,8 @@ async function insertSnapshotRows(
 async function createSnapshotWithPgClient(
     input: CreateQuizSessionWithSnapshotInput,
 ): Promise<SessionSnapshotCreateResult> {
+    assertSnapshotDisplayTexts(input);
+
     const expectedOptionCount = input.questions.reduce(
         (total, question) => total + question.options.length,
         0,
@@ -529,20 +564,42 @@ async function loadSnapshotPublicQuestions(
                     s."id" AS "session_id",
                     s."questionCount" AS "question_count",
                     q."id" AS "question_id",
-                    q."text" AS "question_text",
+                    COALESCE(
+                        ssq."displayText",
+                        qt_session."text",
+                        qt_ru."text",
+                        q."text"
+                    ) AS "question_text",
                     q."difficulty"::text AS "difficulty",
                     ao."id" AS "option_id",
-                    ao."text" AS "option_text",
+                    COALESCE(
+                        ssqo."displayText",
+                        aot_session."text",
+                        aot_ru."text",
+                        ao."text"
+                    ) AS "option_text",
                     ssqo."displayOrder" AS "display_order"
                 FROM "QuizSession" s
                 LEFT JOIN "QuizSessionQuestion" ssq
                     ON ssq."sessionId" = s."id"
                 LEFT JOIN "Question" q
                     ON q."id" = ssq."questionId"
+                LEFT JOIN "QuestionTranslation" qt_session
+                    ON qt_session."questionId" = q."id"
+                    AND qt_session."locale" = s."sessionLocale"
+                LEFT JOIN "QuestionTranslation" qt_ru
+                    ON qt_ru."questionId" = q."id"
+                    AND qt_ru."locale" = 'ru'::"ContentLocale"
                 LEFT JOIN "QuizSessionQuestionOption" ssqo
                     ON ssqo."sessionQuestionId" = ssq."id"
                 LEFT JOIN "AnswerOption" ao
                     ON ao."id" = ssqo."optionId"
+                LEFT JOIN "AnswerOptionTranslation" aot_session
+                    ON aot_session."optionId" = ao."id"
+                    AND aot_session."locale" = s."sessionLocale"
+                LEFT JOIN "AnswerOptionTranslation" aot_ru
+                    ON aot_ru."optionId" = ao."id"
+                    AND aot_ru."locale" = 'ru'::"ContentLocale"
                 WHERE
                     s."id" = $1
                     AND s."userId" = $2

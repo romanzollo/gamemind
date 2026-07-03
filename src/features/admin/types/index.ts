@@ -1,5 +1,10 @@
 import type { Difficulty } from '@/types';
 
+export type LocalizedAdminText = {
+    ru: { text: string };
+    en: { text: string };
+};
+
 /** Строка списка вопросов в админке (без isCorrect и без лишних полей). */
 export type AdminQuestionListItem = {
     id: string;
@@ -14,7 +19,7 @@ export type AdminQuestionListItem = {
 /** Вариант ответа для формы редактирования (нужен id для update, не delete+recreate). */
 export type AdminQuestionOptionDetail = {
     id: string;
-    text: string;
+    translations: LocalizedAdminText;
     isCorrect: boolean;
     order: number;
 };
@@ -22,7 +27,7 @@ export type AdminQuestionOptionDetail = {
 /** Полный вопрос для страницы edit: все поля формы + options с id. */
 export type AdminQuestionDetail = {
     id: string;
-    text: string;
+    translations: LocalizedAdminText;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;

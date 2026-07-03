@@ -8,8 +8,26 @@ const TRANSIENT_DIRECT_PG_ERROR_MESSAGES = [
     'Query read timeout',
     'ECONNRESET',
     'ETIMEDOUT',
+    'timeout expired',
     'timeout exceeded when trying to connect',
 ];
+
+const DEPRECATED_SSL_MODES = new Set(['prefer', 'require', 'verify-ca']);
+
+export function normalizePgConnectionString(connectionString: string) {
+    try {
+        const url = new URL(connectionString);
+        const sslmode = url.searchParams.get('sslmode');
+
+        if (!sslmode || DEPRECATED_SSL_MODES.has(sslmode)) {
+            url.searchParams.set('sslmode', 'verify-full');
+        }
+
+        return url.toString();
+    } catch {
+        return connectionString;
+    }
+}
 
 function getDirectDatabaseUrl() {
     const connectionString =
@@ -19,7 +37,7 @@ function getDirectDatabaseUrl() {
         throw new Error('DATABASE_URL_UNPOOLED or DATABASE_URL is required');
     }
 
-    return connectionString;
+    return normalizePgConnectionString(connectionString);
 }
 
 function createDirectClient() {
@@ -27,7 +45,7 @@ function createDirectClient() {
         connectionString: getDirectDatabaseUrl(),
         ssl: { rejectUnauthorized: true },
         keepAlive: true,
-        connectionTimeoutMillis: 10_000,
+        connectionTimeoutMillis: 15_000,
     });
 
     client.on('error', (error) => {
@@ -82,7 +100,7 @@ async function withDirectPgReadRetry<T>(
                 throw error;
             }
 
-            await wait(200 * attempt);
+            await wait(250 * attempt);
         }
     }
 
@@ -101,4 +119,28 @@ export async function withDirectPgWriteClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
     return withFreshClient(operation);
+}
+
+// Writes with one guarded retry for transient Neon connect/socket errors.
+export async function withDirectPgWriteRetry<T>(
+    operation: (client: Client) => Promise<T>,
+    attempts = 2,
+) {
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+            return await withFreshClient(operation);
+        } catch (error) {
+            lastError = error;
+
+            if (!isTransientDirectPgError(error) || attempt === attempts) {
+                throw error;
+            }
+
+            await wait(300 * attempt);
+        }
+    }
+
+    throw lastError;
 }

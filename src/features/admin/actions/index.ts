@@ -21,6 +21,32 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
+// получение строки из FormData
+function getFormString(formData: FormData, name: string): string {
+    const value = formData.get(name);
+
+    return typeof value === 'string' ? value : '';
+}
+
+// парсинг переводов текста вопроса из формы
+function parseQuestionTranslationsFromFormData(formData: FormData) {
+    return {
+        ru: { text: getFormString(formData, 'questionTextRu') },
+        en: { text: getFormString(formData, 'questionTextEn') },
+    };
+}
+
+// парсинг переводов текста варианта ответа из формы
+function parseOptionTranslationsFromFormData(
+    formData: FormData,
+    index: number,
+) {
+    return {
+        ru: { text: getFormString(formData, `optionTextRu-${index}`) },
+        en: { text: getFormString(formData, `optionTextEn-${index}`) },
+    };
+}
+
 // функция для парсинга вариантов ответа из формы
 function parseOptionsFromFormData(formData: FormData) {
     const correctOptionIndexRaw = formData.get('correctOptionIndex');
@@ -28,18 +54,27 @@ function parseOptionsFromFormData(formData: FormData) {
         typeof correctOptionIndexRaw === 'string'
             ? Number(correctOptionIndexRaw)
             : NaN;
-    const options: Array<{ text: string; isCorrect: boolean; order: number }> =
-        [];
+    const options: Array<{
+        translations: {
+            ru: { text: string };
+            en: { text: string };
+        };
+        isCorrect: boolean;
+        order: number;
+    }> = [];
 
     for (let i = 0; i < 6; i++) {
-        const text = formData.get(`optionText-${i}`);
+        const translations = parseOptionTranslationsFromFormData(formData, i);
 
-        if (typeof text !== 'string' || text.trim() === '') {
+        if (
+            translations.ru.text.trim() === '' &&
+            translations.en.text.trim() === ''
+        ) {
             continue;
         }
 
         options.push({
-            text,
+            translations,
             isCorrect: i === correctOptionIndex,
             order: options.length,
         });
@@ -50,42 +85,39 @@ function parseOptionsFromFormData(formData: FormData) {
 
 // парсинг вариантов для edit: нужны optionId-${i} из hidden inputs
 function parseOptionsForUpdateFromFormData(formData: FormData) {
-    // получаем индекс правильного варианта ответа из формы
     const correctOptionIndexRaw = formData.get('correctOptionIndex');
-    // преобразуем индекс в число
     const correctOptionIndex =
         typeof correctOptionIndexRaw === 'string'
             ? Number(correctOptionIndexRaw)
             : NaN;
-    // создаем массив вариантов ответа
     const options: Array<{
         id: string;
-        text: string;
+        translations: {
+            ru: { text: string };
+            en: { text: string };
+        };
         isCorrect: boolean;
         order: number;
     }> = [];
 
-    // проходим по всем вариантам ответа
     for (let i = 0; i < 6; i++) {
-        // получаем id варианта ответа из формы
         const id = formData.get(`optionId-${i}`);
-        // получаем текст варианта ответа из формы
-        const text = formData.get(`optionText-${i}`);
+        const translations = parseOptionTranslationsFromFormData(formData, i);
 
-        // проверяем, является ли id варианта ответа строкой и не пустой
         if (typeof id !== 'string' || id.trim() === '') {
             continue;
         }
 
-        // проверяем, является ли текст варианта ответа строкой и не пустой
-        if (typeof text !== 'string' || text.trim() === '') {
+        if (
+            translations.ru.text.trim() === '' &&
+            translations.en.text.trim() === ''
+        ) {
             continue;
         }
 
-        // добавляем вариант ответа в массив
         options.push({
             id,
-            text,
+            translations,
             isCorrect: i === correctOptionIndex,
             order: options.length,
         });
@@ -105,7 +137,7 @@ export async function createQuestionAction(
     await requireAdmin(locale);
 
     const parsed = createQuestionSchema.safeParse({
-        text: formData.get('text'),
+        translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
         category: formData.get('category') ?? 'video-games',
         options: parseOptionsFromFormData(formData),
@@ -237,15 +269,10 @@ export async function updateQuestionAction(
 
     // парсим данные из формы
     const parsed = updateQuestionSchema.safeParse({
-        // получаем id вопроса из формы
         questionId: formData.get('questionId'),
-        // получаем текст вопроса из формы
-        text: formData.get('text'),
-        // получаем сложность вопроса из формы
+        translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
-        // получаем категорию вопроса из формы
         category: formData.get('category') ?? 'video-games',
-        // парсим варианты ответа из формы
         options: parseOptionsForUpdateFromFormData(formData),
     });
 
@@ -266,13 +293,16 @@ export async function updateQuestionAction(
 
     // пытаемся обновить вопрос и варианты ответа
     try {
-        // обновляем вопрос и варианты ответа
         const result = await questionRepository.updateWithOptions(parsed.data);
 
         if (!result) {
             return { errorCode: 'NOT_FOUND' };
         }
-    } catch {
+    } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+            console.error('updateQuestionAction failed:', error);
+        }
+
         return { errorCode: 'SAVE_FAILED' };
     }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 
 import {
     createQuestionAction,
@@ -10,33 +11,47 @@ import { getAdminErrorMessage } from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 
-// количество вариантов ответа
 const OPTION_COUNT = 4;
 
-// тип пропсов компонента формы вопроса для администрирования
+const emptyTranslations = () => ({
+    ru: { text: '' },
+    en: { text: '' },
+});
+
 type BaseAdminQuestionFormProps = {
     locale: Locale;
     dictionary: Dictionary;
 };
 
-// тип пропсов компонента формы вопроса для создания вопроса
 type AdminQuestionFormCreateProps = BaseAdminQuestionFormProps & {
     mode?: 'create';
     initialValues?: never;
 };
 
-// тип пропсов компонента формы вопроса для редактирования вопроса
 type AdminQuestionFormEditProps = BaseAdminQuestionFormProps & {
     mode: 'edit';
     initialValues: AdminQuestionDetail;
 };
 
-// тип пропсов компонента формы вопроса для администрирования
 type AdminQuestionFormProps =
     | AdminQuestionFormCreateProps
     | AdminQuestionFormEditProps;
 
-// компонент формы вопроса для администрирования
+function AdminQuestionSubmitButton({ label }: { label: string }) {
+    const { pending } = useFormStatus();
+
+    return (
+        <button
+            type="submit"
+            disabled={pending}
+            aria-busy={pending}
+            className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 disabled:cursor-wait disabled:opacity-70 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
+        >
+            {pending ? `${label}...` : label}
+        </button>
+    );
+}
+
 export function AdminQuestionForm({
     locale,
     dictionary,
@@ -44,8 +59,6 @@ export function AdminQuestionForm({
     initialValues,
 }: AdminQuestionFormProps) {
     const isEdit = mode === 'edit';
-
-    // выбираем действие в зависимости от режима
     const action = isEdit ? updateQuestionAction : createQuestionAction;
     const [state, formAction] = useActionState(action, {});
     const errorMessage = getAdminErrorMessage(dictionary, state.errorCode);
@@ -54,33 +67,27 @@ export function AdminQuestionForm({
         return null;
     }
 
-    // получаем значения для редактирования вопроса
     const editValues = isEdit ? initialValues : undefined;
 
-    // получаем варианты ответа в зависимости от режима
     const options = isEdit
         ? editValues!.options
         : Array.from({ length: OPTION_COUNT }, (_, index) => ({
               id: '',
-              text: '',
+              translations: emptyTranslations(),
               isCorrect: index === 0,
               order: index,
           }));
 
-    // получаем индекс правильного варианта ответа
     const selectedCorrectIndex = options.findIndex(
         (option) => option.isCorrect,
     );
-    // получаем индекс правильного варианта ответа по умолчанию
     const defaultCorrectIndex =
         selectedCorrectIndex >= 0 ? selectedCorrectIndex : 0;
 
     return (
         <>
             <form action={formAction} className="mt-6 flex flex-col gap-4">
-                {/* добавляем скрытое поле для локали */}
                 <input type="hidden" name="locale" value={locale} />
-                {/* добавляем скрытое поле для id вопроса в режиме редактирования */}
                 {isEdit ? (
                     <input
                         type="hidden"
@@ -89,18 +96,41 @@ export function AdminQuestionForm({
                     />
                 ) : null}
 
-                <label className="flex flex-col gap-2">
-                    <span>{dictionary.admin.formQuestionText}</span>
-                    <textarea
-                        name="text"
-                        required
-                        minLength={10}
-                        maxLength={500}
-                        rows={3}
-                        defaultValue={editValues?.text ?? ''}
-                        className="rounded border border-(--border) p-3"
-                    />
-                </label>
+                <fieldset className="flex flex-col gap-3">
+                    <legend className="font-medium">
+                        {dictionary.admin.formQuestionText}
+                    </legend>
+
+                    <label className="flex flex-col gap-2">
+                        <span>{dictionary.admin.formQuestionTextRu}</span>
+                        <textarea
+                            name="questionTextRu"
+                            required
+                            minLength={10}
+                            maxLength={500}
+                            rows={3}
+                            defaultValue={
+                                editValues?.translations.ru.text ?? ''
+                            }
+                            className="rounded border border-(--border) p-3"
+                        />
+                    </label>
+
+                    <label className="flex flex-col gap-2">
+                        <span>{dictionary.admin.formQuestionTextEn}</span>
+                        <textarea
+                            name="questionTextEn"
+                            required
+                            minLength={10}
+                            maxLength={500}
+                            rows={3}
+                            defaultValue={
+                                editValues?.translations.en.text ?? ''
+                            }
+                            className="rounded border border-(--border) p-3"
+                        />
+                    </label>
+                </fieldset>
 
                 <label className="flex flex-col gap-2">
                     <span>{dictionary.quiz.difficultyLabel}</span>
@@ -164,26 +194,40 @@ export function AdminQuestionForm({
                                 </span>
                             </label>
 
-                            <input
-                                type="text"
-                                name={`optionText-${index}`}
-                                required
-                                maxLength={200}
-                                defaultValue={option.text}
-                                className="rounded border border-(--border) p-3"
-                            />
+                            <label className="flex flex-col gap-2">
+                                <span>{dictionary.admin.formOptionTextRu}</span>
+                                <input
+                                    type="text"
+                                    name={`optionTextRu-${index}`}
+                                    required
+                                    maxLength={200}
+                                    defaultValue={option.translations.ru.text}
+                                    className="rounded border border-(--border) p-3"
+                                />
+                            </label>
+
+                            <label className="flex flex-col gap-2">
+                                <span>{dictionary.admin.formOptionTextEn}</span>
+                                <input
+                                    type="text"
+                                    name={`optionTextEn-${index}`}
+                                    required
+                                    maxLength={200}
+                                    defaultValue={option.translations.en.text}
+                                    className="rounded border border-(--border) p-3"
+                                />
+                            </label>
                         </div>
                     ))}
                 </fieldset>
 
-                <button
-                    type="submit"
-                    className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
-                >
-                    {isEdit
-                        ? dictionary.admin.editButton
-                        : dictionary.admin.createButton}
-                </button>
+                <AdminQuestionSubmitButton
+                    label={
+                        isEdit
+                            ? dictionary.admin.editButton
+                            : dictionary.admin.createButton
+                    }
+                />
             </form>
 
             {errorMessage ? (

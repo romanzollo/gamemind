@@ -63,6 +63,10 @@ export type Dictionary = {
         statusInactive: string;
         empty: string;
         formQuestionText: string;
+        formQuestionTextRu: string;
+        formQuestionTextEn: string;
+        formOptionTextRu: string;
+        formOptionTextEn: string;
         formCategory: string;
         formOptions: string;
         formCorrectOptionHint: string;

@@ -2,6 +2,8 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 
+import { normalizePgConnectionString } from '@/lib/db/direct-pg';
+
 // сообщения о временных ошибках базы данных
 const TRANSIENT_DATABASE_ERROR_MESSAGES = [
     'Connection terminated unexpectedly',
@@ -11,6 +13,7 @@ const TRANSIENT_DATABASE_ERROR_MESSAGES = [
     'Transaction already closed',
     'ECONNRESET',
     'ETIMEDOUT',
+    'timeout expired',
     'timeout exceeded when trying to connect',
 ];
 
@@ -36,7 +39,7 @@ function createPool() {
     }
 
     const pool = new Pool({
-        connectionString,
+        connectionString: normalizePgConnectionString(connectionString),
         ssl: { rejectUnauthorized: true },
         max: 5,
         keepAlive: true,
