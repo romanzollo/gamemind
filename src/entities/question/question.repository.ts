@@ -400,6 +400,275 @@ async function recoverAdminUpdateAfterWriteError(
     return { id: input.questionId };
 }
 
+async function applyAdminQuestionCreateWithPg(
+    client: Client,
+    questionId: string,
+    input: CreateQuestionInput,
+): Promise<{ id: string }> {
+    const promptImageUrl = input.promptImageUrl?.trim() ?? '';
+    const assetId = `qa-${questionId}-prompt`;
+    const optionRows = input.options.map((option) => ({
+        id: `${questionId}-opt-${option.order}`,
+        text: option.translations.ru.text,
+        isCorrect: option.isCorrect,
+        order: option.order,
+    }));
+    const questionTranslationRows = [
+        {
+            id: `qt-${questionId}-ru`,
+            questionId,
+            locale: 'ru' as const,
+            text: input.translations.ru.text,
+        },
+        {
+            id: `qt-${questionId}-en`,
+            questionId,
+            locale: 'en' as const,
+            text: input.translations.en.text,
+        },
+    ];
+    const optionTranslationRows = input.options.flatMap((option, index) => {
+        const optionId = optionRows[index].id;
+
+        return [
+            {
+                id: `aot-${optionId}-ru`,
+                optionId,
+                locale: 'ru' as const,
+                text: option.translations.ru.text,
+            },
+            {
+                id: `aot-${optionId}-en`,
+                optionId,
+                locale: 'en' as const,
+                text: option.translations.en.text,
+            },
+        ];
+    });
+
+    const questionParams = [
+        questionId,
+        input.translations.ru.text,
+        input.type,
+        input.difficulty,
+        input.category,
+        promptImageUrl,
+        assetId,
+    ];
+    const questionTranslationParams = questionTranslationRows.flatMap((row) => [
+        row.id,
+        row.questionId,
+        row.locale,
+        row.text,
+    ]);
+    const optionParams = optionRows.flatMap((row) => [
+        row.id,
+        questionId,
+        row.text,
+        row.isCorrect,
+        row.order,
+    ]);
+    const optionTranslationParams = optionTranslationRows.flatMap((row) => [
+        row.id,
+        row.optionId,
+        row.locale,
+        row.text,
+    ]);
+    const allParams = [
+        ...questionParams,
+        ...questionTranslationParams,
+        ...optionParams,
+        ...optionTranslationParams,
+    ];
+
+    const questionTranslationStart = questionParams.length + 1;
+    const optionStart =
+        questionTranslationStart + questionTranslationParams.length;
+    const optionTranslationStart = optionStart + optionParams.length;
+
+    const result = await client.query<{
+        question_count: number;
+        option_count: number;
+        question_translation_count: number;
+        option_translation_count: number;
+    }>(
+        `
+            WITH upsert_question AS (
+                INSERT INTO "Question" (
+                    "id",
+                    "text",
+                    "type",
+                    "difficulty",
+                    "category",
+                    "isActive",
+                    "createdAt",
+                    "updatedAt"
+                )
+                VALUES (
+                    $1,
+                    $2,
+                    $3::"QuestionType",
+                    $4::"Difficulty",
+                    $5,
+                    true,
+                    NOW(),
+                    NOW()
+                )
+                ON CONFLICT ("id") DO UPDATE SET
+                    "text" = EXCLUDED."text",
+                    "type" = EXCLUDED."type",
+                    "difficulty" = EXCLUDED."difficulty",
+                    "category" = EXCLUDED."category",
+                    "isActive" = true,
+                    "updatedAt" = NOW()
+                RETURNING "id"
+            ),
+            upsert_prompt_asset AS (
+                INSERT INTO "QuestionAsset" (
+                    "id",
+                    "questionId",
+                    "role",
+                    "url",
+                    "order"
+                )
+                SELECT
+                    $7,
+                    uq."id",
+                    'PROMPT'::"QuestionAssetRole",
+                    $6,
+                    0
+                FROM upsert_question uq
+                WHERE
+                    $3::"QuestionType" = 'IMAGE_GUESS'::"QuestionType"
+                    AND NULLIF(BTRIM($6), '') IS NOT NULL
+                ON CONFLICT ("id") DO UPDATE SET
+                    "url" = EXCLUDED."url",
+                    "role" = EXCLUDED."role"
+                RETURNING "id"
+            ),
+            question_translation_input("id", "questionId", "locale", "text") AS (
+                VALUES ${buildValuesPlaceholder(
+                    questionTranslationRows.length,
+                    4,
+                    questionTranslationStart,
+                )}
+            ),
+            upsert_question_translations AS (
+                INSERT INTO "QuestionTranslation" (
+                    "id",
+                    "questionId",
+                    "locale",
+                    "text"
+                )
+                SELECT
+                    qti."id",
+                    qti."questionId",
+                    qti."locale"::"ContentLocale",
+                    qti."text"
+                FROM question_translation_input qti
+                INNER JOIN upsert_question uq
+                    ON uq."id" = qti."questionId"
+                ON CONFLICT ("questionId", "locale")
+                DO UPDATE SET "text" = EXCLUDED."text"
+                RETURNING "id"
+            ),
+            option_input("id", "questionId", "text", "isCorrect", "order") AS (
+                VALUES ${buildValuesPlaceholder(
+                    optionRows.length,
+                    5,
+                    optionStart,
+                )}
+            ),
+            upsert_options AS (
+                INSERT INTO "AnswerOption" (
+                    "id",
+                    "questionId",
+                    "text",
+                    "isCorrect",
+                    "order"
+                )
+                SELECT
+                    oi."id",
+                    oi."questionId",
+                    oi."text",
+                    oi."isCorrect"::boolean,
+                    oi."order"::int
+                FROM option_input oi
+                INNER JOIN upsert_question uq
+                    ON uq."id" = oi."questionId"
+                ON CONFLICT ("id") DO UPDATE SET
+                    "text" = EXCLUDED."text",
+                    "isCorrect" = EXCLUDED."isCorrect",
+                    "order" = EXCLUDED."order"
+                RETURNING "id"
+            ),
+            option_translation_input("id", "optionId", "locale", "text") AS (
+                VALUES ${buildValuesPlaceholder(
+                    optionTranslationRows.length,
+                    4,
+                    optionTranslationStart,
+                )}
+            ),
+            upsert_option_translations AS (
+                INSERT INTO "AnswerOptionTranslation" (
+                    "id",
+                    "optionId",
+                    "locale",
+                    "text"
+                )
+                SELECT
+                    oti."id",
+                    oti."optionId",
+                    oti."locale"::"ContentLocale",
+                    oti."text"
+                FROM option_translation_input oti
+                INNER JOIN upsert_options uo
+                    ON uo."id" = oti."optionId"
+                ON CONFLICT ("optionId", "locale")
+                DO UPDATE SET "text" = EXCLUDED."text"
+                RETURNING "id"
+            )
+            SELECT
+                (SELECT COUNT(*)::int FROM upsert_question) AS "question_count",
+                (SELECT COUNT(*)::int FROM upsert_options) AS "option_count",
+                (
+                    SELECT COUNT(*)::int
+                    FROM upsert_question_translations
+                ) AS "question_translation_count",
+                (
+                    SELECT COUNT(*)::int
+                    FROM upsert_option_translations
+                ) AS "option_translation_count"
+        `,
+        allParams,
+    );
+
+    const summary = result.rows[0];
+
+    if (
+        !summary ||
+        summary.question_count !== 1 ||
+        summary.option_count !== optionRows.length ||
+        summary.question_translation_count !== questionTranslationRows.length ||
+        summary.option_translation_count !== optionTranslationRows.length
+    ) {
+        throw new Error(`Incomplete question create for ${questionId}`);
+    }
+
+    return { id: questionId };
+}
+
+async function createWithOptionsWithDirectPg(
+    input: CreateQuestionInput,
+): Promise<{ id: string }> {
+    const questionId = randomUUID();
+
+    return withDirectPgWriteRetry(
+        (client) => applyAdminQuestionCreateWithPg(client, questionId, input),
+        2,
+    );
+}
+
 async function applyAdminQuestionUpdateWithPg(
     client: Client,
     input: UpdateQuestionInput,
@@ -984,64 +1253,7 @@ export const questionRepository = {
 
     // создание вопроса с вариантами ответа (admin create flow)
     createWithOptions(input: CreateQuestionInput) {
-        const ruQuestionText = input.translations.ru.text;
-        const promptImageUrl = input.promptImageUrl?.trim();
-
-        return withDatabaseRetry(() =>
-            prisma.question.create({
-                data: {
-                    text: ruQuestionText,
-                    type: input.type,
-                    difficulty: input.difficulty,
-                    category: input.category,
-                    isActive: true,
-                    translations: {
-                        create: [
-                            {
-                                locale: 'ru',
-                                text: input.translations.ru.text,
-                            },
-                            {
-                                locale: 'en',
-                                text: input.translations.en.text,
-                            },
-                        ],
-                    },
-                    assets:
-                        input.type === 'IMAGE_GUESS' && promptImageUrl
-                            ? {
-                                  create: [
-                                      {
-                                          role: 'PROMPT',
-                                          url: promptImageUrl,
-                                          order: 0,
-                                      },
-                                  ],
-                              }
-                            : undefined,
-                    options: {
-                        create: input.options.map((option) => ({
-                            text: option.translations.ru.text,
-                            isCorrect: option.isCorrect,
-                            order: option.order,
-                            translations: {
-                                create: [
-                                    {
-                                        locale: 'ru',
-                                        text: option.translations.ru.text,
-                                    },
-                                    {
-                                        locale: 'en',
-                                        text: option.translations.en.text,
-                                    },
-                                ],
-                            },
-                        })),
-                    },
-                },
-                select: { id: true },
-            }),
-        );
+        return createWithOptionsWithDirectPg(input);
     },
 
     // обновление вопроса и вариантов по id (admin edit flow)

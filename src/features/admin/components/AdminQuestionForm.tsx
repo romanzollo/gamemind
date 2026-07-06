@@ -13,6 +13,10 @@ import type { Dictionary, Locale } from '@/shared/i18n';
 import type { QuestionType } from '@/types';
 
 const OPTION_COUNT = 4;
+const IMAGE_GUESS_DEFAULT_TEXT = {
+    ru: 'Угадай игру по изображению.',
+    en: 'Guess the game from the image.',
+};
 
 const emptyTranslations = () => ({
     ru: { text: '' },
@@ -63,6 +67,12 @@ export function AdminQuestionForm({
     const action = isEdit ? updateQuestionAction : createQuestionAction;
     const [state, formAction] = useActionState(action, {});
     const errorMessage = getAdminErrorMessage(dictionary, state.errorCode);
+    const [questionTextRu, setQuestionTextRu] = useState(
+        isEdit ? initialValues!.translations.ru.text : '',
+    );
+    const [questionTextEn, setQuestionTextEn] = useState(
+        isEdit ? initialValues!.translations.en.text : '',
+    );
     const [questionType, setQuestionType] = useState<QuestionType>(
         isEdit ? initialValues!.type : 'TEXT',
     );
@@ -113,9 +123,10 @@ export function AdminQuestionForm({
                             minLength={10}
                             maxLength={500}
                             rows={3}
-                            defaultValue={
-                                editValues?.translations.ru.text ?? ''
-                            }
+                            value={questionTextRu}
+                            onChange={(event) => {
+                                setQuestionTextRu(event.target.value);
+                            }}
                             className="rounded border border-border p-3"
                         />
                     </label>
@@ -128,9 +139,10 @@ export function AdminQuestionForm({
                             minLength={10}
                             maxLength={500}
                             rows={3}
-                            defaultValue={
-                                editValues?.translations.en.text ?? ''
-                            }
+                            value={questionTextEn}
+                            onChange={(event) => {
+                                setQuestionTextEn(event.target.value);
+                            }}
                             className="rounded border border-border p-3"
                         />
                     </label>
@@ -142,11 +154,25 @@ export function AdminQuestionForm({
                         name="questionType"
                         value={questionType}
                         onChange={(event) => {
-                            setQuestionType(
+                            const nextType =
                                 event.target.value === 'IMAGE_GUESS'
                                     ? 'IMAGE_GUESS'
-                                    : 'TEXT',
-                            );
+                                    : 'TEXT';
+
+                            setQuestionType(nextType);
+
+                            if (nextType === 'IMAGE_GUESS' && !isEdit) {
+                                setQuestionTextRu((current) =>
+                                    current.trim()
+                                        ? current
+                                        : IMAGE_GUESS_DEFAULT_TEXT.ru,
+                                );
+                                setQuestionTextEn((current) =>
+                                    current.trim()
+                                        ? current
+                                        : IMAGE_GUESS_DEFAULT_TEXT.en,
+                                );
+                            }
                         }}
                         required
                         className="rounded border border-border p-3"
