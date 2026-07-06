@@ -3,7 +3,10 @@
 import { redirect } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
-import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
+import {
+    quizSessionRepository,
+    QuizSessionStartError,
+} from '@/entities/quiz-session/quiz-session.repository';
 import { requireUser } from '@/lib/auth/guards';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
@@ -42,71 +45,48 @@ export async function startQuizAction(
         return { errorCode: 'INVALID_SETUP' };
     }
 
-    // получаем случайные вопросы отдельным read-запросом, чтобы write-транзакция была короткой
     const pickedQuestions =
-        await questionRepository.pickRandomActiveForSnapshot(
+        await questionRepository.pickRandomActiveSnapshotBundle(
             parsed.data.difficulty,
             parsed.data.questionCount,
+            locale,
         );
 
-    // проверяем, является ли количество полученных вопросов больше или равно количеству вопросов для викторины
     if (pickedQuestions.length < parsed.data.questionCount) {
         return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
     }
 
-    const displayTexts =
-        await questionRepository.findSnapshotDisplayTextsByCandidates(
-            locale,
-            pickedQuestions,
-        );
-
-    // собираем данные для snapshot вопросов, порядка вариантов и frozen display text
-    const snapshotQuestions = [];
-
-    for (const [index, question] of pickedQuestions.entries()) {
-        const texts = displayTexts.get(question.id);
-
-        if (!texts) {
-            return { errorCode: 'INVALID_SETUP' };
-        }
-
+    const snapshotQuestions = pickedQuestions.map((question, index) => {
         const shuffledOptions = shuffleArray(question.options);
-        const snapshotOptions = [];
 
-        for (const [optionIndex, option] of shuffledOptions.entries()) {
-            const optionText = texts.options.get(option.id);
-
-            if (!optionText) {
-                return { errorCode: 'INVALID_SETUP' };
-            }
-
-            snapshotOptions.push({
-                optionId: option.id,
-                displayOrder: optionIndex,
-                displayText: optionText,
-            });
-        }
-
-        snapshotQuestions.push({
+        return {
             questionId: question.id,
             position: index,
-            displayText: texts.displayText,
-            options: snapshotOptions,
-        });
-    }
+            displayText: question.displayText,
+            options: shuffledOptions.map((option, optionIndex) => ({
+                optionId: option.id,
+                displayOrder: optionIndex,
+                displayText: option.displayText,
+            })),
+        };
+    });
 
     let quizSession: { id: string };
 
     try {
-        // создаем сессию викторины с snapshot вопросов и порядка вариантов
-        quizSession = await quizSessionRepository.createWithSnapshot({
+        quizSession = await quizSessionRepository.createWithJsonSnapshot({
             userId: session.user.id,
             difficulty: parsed.data.difficulty,
             questionCount: parsed.data.questionCount,
             sessionLocale: locale,
             questions: snapshotQuestions,
+            pickedQuestions,
         });
     } catch (error) {
+        if (error instanceof QuizSessionStartError) {
+            return { errorCode: error.code };
+        }
+
         console.error('Quiz session snapshot create failed:', error);
         return { errorCode: 'INVALID_SETUP' };
     }

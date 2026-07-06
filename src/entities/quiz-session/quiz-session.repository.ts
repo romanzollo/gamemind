@@ -9,7 +9,11 @@ import {
     isTransientDirectPgError,
     withDirectPgClient,
     withDirectPgWriteClient,
+    withDirectPgWriteRetry,
+    withPooledPgQuizStartClient,
 } from '@/lib/db/direct-pg';
+import { loadRandomSnapshotBundleWithPgClient } from '@/entities/question/question.repository';
+import type { QuestionSnapshotBundleItem } from '@/entities/question/question.repository';
 
 // тип для входных данных для создания сессии викторины
 type CreateQuizSessionInput = {
@@ -71,6 +75,22 @@ type SessionSnapshotCreateResult = {
     id: string;
 };
 
+type QuizSessionSnapshotData = {
+    version: 1;
+    questions: Array<{
+        id: string;
+        text: string;
+        difficulty: Difficulty;
+        position: number;
+        options: Array<{
+            id: string;
+            text: string;
+            order: number;
+            isCorrect: boolean;
+        }>;
+    }>;
+};
+
 type CompleteQuizAnswerInput = {
     questionId: string;
     selectedOptionId: string;
@@ -91,6 +111,30 @@ type CompleteQuizSessionWithResultStatus =
     | 'already_completed'
     | 'not_found';
 
+export class QuizSessionStartError extends Error {
+    readonly code: 'NOT_ENOUGH_QUESTIONS';
+
+    constructor(code: 'NOT_ENOUGH_QUESTIONS') {
+        super(code);
+        this.code = code;
+    }
+}
+
+type StartQuizSessionWithPickInput = {
+    userId: string;
+    difficulty: Difficulty;
+    questionCount: number;
+    sessionLocale: Locale;
+    locale: Locale;
+    buildSnapshotQuestions: (
+        picked: QuestionSnapshotBundleItem[],
+    ) => SessionSnapshotQuestionInput[];
+};
+
+type CreateQuizSessionWithJsonSnapshotInput = CreateQuizSessionWithSnapshotInput & {
+    pickedQuestions: QuestionSnapshotBundleItem[];
+};
+
 type SnapshotPublicRow = {
     session_id: string;
     question_count: number;
@@ -108,6 +152,12 @@ type SnapshotScoringRow = {
     question_id: string | null;
     option_id: string | null;
     is_correct: boolean | null;
+};
+
+type SessionSnapshotJsonRow = {
+    session_id: string;
+    question_count: number;
+    snapshot_data: QuizSessionSnapshotData | string | null;
 };
 
 function buildValuesPlaceholder(
@@ -153,7 +203,7 @@ async function isSnapshotComplete(
 
     return (
         row?.question_count === expectedQuestionCount &&
-        row.option_count === expectedOptionCount
+        row?.option_count === expectedOptionCount
     );
 }
 
@@ -161,6 +211,41 @@ async function cleanupQuizSessionById(sessionId: string) {
     await withDirectPgWriteClient((client) =>
         client.query('DELETE FROM "QuizSession" WHERE "id" = $1', [sessionId]),
     ).catch(() => undefined);
+}
+
+async function loadQuizSessionSnapshotData(
+    sessionId: string,
+    userId: string,
+): Promise<SessionSnapshotJsonRow | null> {
+    const result = await withDirectPgClient((client) =>
+        client.query<SessionSnapshotJsonRow>(
+            `
+                SELECT
+                    "id" AS "session_id",
+                    "questionCount" AS "question_count",
+                    "snapshotData" AS "snapshot_data"
+                FROM "QuizSession"
+                WHERE
+                    "id" = $1
+                    AND "userId" = $2
+                    AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+            `,
+            [sessionId, userId],
+        ),
+    );
+
+    return result.rows[0] ?? null;
+}
+
+async function isJsonSnapshotComplete(
+    sessionId: string,
+    userId: string,
+    expectedQuestionCount: number,
+) {
+    const session = await loadQuizSessionSnapshotData(sessionId, userId);
+    const snapshotData = parseSnapshotData(session?.snapshot_data ?? null);
+
+    return snapshotData?.questions.length === expectedQuestionCount;
 }
 
 function assertSnapshotDisplayTexts(input: CreateQuizSessionWithSnapshotInput) {
@@ -179,6 +264,164 @@ function assertSnapshotDisplayTexts(input: CreateQuizSessionWithSnapshotInput) {
             }
         }
     }
+}
+
+function buildSnapshotData(
+    input: CreateQuizSessionWithSnapshotInput,
+    pickedQuestions: QuestionSnapshotBundleItem[],
+): QuizSessionSnapshotData {
+    const pickedById = new Map(
+        pickedQuestions.map((question) => [question.id, question]),
+    );
+
+    return {
+        version: 1,
+        questions: input.questions.map((question) => {
+            const picked = pickedById.get(question.questionId);
+
+            if (!picked) {
+                throw new Error(
+                    `Missing picked question ${question.questionId}`,
+                );
+            }
+
+            const pickedOptions = new Map(
+                picked.options.map((option) => [option.id, option]),
+            );
+
+            return {
+                id: question.questionId,
+                text: question.displayText,
+                difficulty: picked.difficulty,
+                position: question.position,
+                options: question.options.map((option) => {
+                    const pickedOption = pickedOptions.get(option.optionId);
+
+                    if (!pickedOption) {
+                        throw new Error(
+                            `Missing picked option ${option.optionId}`,
+                        );
+                    }
+
+                    return {
+                        id: option.optionId,
+                        text: option.displayText,
+                        order: option.displayOrder,
+                        isCorrect: pickedOption.isCorrect,
+                    };
+                }),
+            };
+        }),
+    };
+}
+
+function parseSnapshotData(
+    value: QuizSessionSnapshotData | string | null,
+): QuizSessionSnapshotData | null {
+    if (!value) {
+        return null;
+    }
+
+    const data = typeof value === 'string' ? JSON.parse(value) : value;
+
+    if (
+        typeof data !== 'object' ||
+        data === null ||
+        data.version !== 1 ||
+        !Array.isArray(data.questions)
+    ) {
+        return null;
+    }
+
+    return data as QuizSessionSnapshotData;
+}
+
+function mapSnapshotDataToPublicQuestions(
+    snapshotData: QuizSessionSnapshotData,
+    expectedQuestionCount: number,
+): SessionSnapshotPublicQuestion[] | null {
+    if (snapshotData.questions.length !== expectedQuestionCount) {
+        return null;
+    }
+
+    return [...snapshotData.questions]
+        .sort((left, right) => left.position - right.position)
+        .map((question) => ({
+            id: question.id,
+            text: question.text,
+            difficulty: question.difficulty,
+            options: [...question.options]
+                .sort((left, right) => left.order - right.order)
+                .map((option) => ({
+                    id: option.id,
+                    text: option.text,
+                    order: option.order,
+                })),
+        }));
+}
+
+function mapSnapshotDataToScoringQuestions(
+    snapshotData: QuizSessionSnapshotData,
+    expectedQuestionCount: number,
+): SessionSnapshotScoringQuestion[] | null {
+    if (snapshotData.questions.length !== expectedQuestionCount) {
+        return null;
+    }
+
+    return [...snapshotData.questions]
+        .sort((left, right) => left.position - right.position)
+        .map((question) => ({
+            id: question.id,
+            options: [...question.options]
+                .sort((left, right) => left.order - right.order)
+                .map((option) => ({
+                    id: option.id,
+                    isCorrect: option.isCorrect,
+                })),
+        }));
+}
+
+async function insertQuizSessionWithSnapshotData(
+    client: Client,
+    sessionId: string,
+    input: CreateQuizSessionWithSnapshotInput,
+    snapshotData: QuizSessionSnapshotData,
+) {
+    assertSnapshotDisplayTexts(input);
+
+    await client.query(
+        `
+            INSERT INTO "QuizSession" (
+                "id",
+                "userId",
+                "status",
+                "difficulty",
+                "questionCount",
+                "sessionLocale",
+                "snapshotData",
+                "startedAt"
+            )
+            VALUES (
+                $1,
+                $2,
+                $3::"QuizSessionStatus",
+                $4::"Difficulty",
+                $5,
+                $6::"ContentLocale",
+                $7::jsonb,
+                NOW()
+            )
+        `,
+        [
+            sessionId,
+            input.userId,
+            'IN_PROGRESS',
+            input.difficulty,
+            input.questionCount,
+            input.sessionLocale,
+            JSON.stringify(snapshotData),
+        ],
+    );
 }
 
 async function insertSnapshotRows(
@@ -279,25 +522,29 @@ async function insertSnapshotRows(
     }
 }
 
+async function insertSnapshotOnClient(
+    client: Client,
+    sessionId: string,
+    input: CreateQuizSessionWithSnapshotInput,
+) {
+    assertSnapshotDisplayTexts(input);
+    await insertSnapshotRows(client, sessionId, input);
+    return { id: sessionId };
+}
+
 async function createSnapshotWithPgClient(
     input: CreateQuizSessionWithSnapshotInput,
 ): Promise<SessionSnapshotCreateResult> {
-    assertSnapshotDisplayTexts(input);
-
     const expectedOptionCount = input.questions.reduce(
         (total, question) => total + question.options.length,
         0,
     );
 
-    for (let attempt = 1; attempt <= 2; attempt += 1) {
+    return withDirectPgWriteRetry(async (client) => {
         const sessionId = randomUUID();
 
         try {
-            await withDirectPgWriteClient(async (client) => {
-                await insertSnapshotRows(client, sessionId, input);
-            });
-
-            return { id: sessionId };
+            return await insertSnapshotOnClient(client, sessionId, input);
         } catch (error) {
             const recovered =
                 isTransientDirectPgError(error) &&
@@ -312,14 +559,100 @@ async function createSnapshotWithPgClient(
             }
 
             await cleanupQuizSessionById(sessionId);
-
-            if (!isTransientDirectPgError(error) || attempt === 2) {
-                throw error;
-            }
+            throw error;
         }
-    }
+    }, 2);
+}
 
-    throw new Error('Quiz session snapshot create retry exhausted');
+async function startQuizSessionWithPick(
+    input: StartQuizSessionWithPickInput,
+): Promise<SessionSnapshotCreateResult> {
+    return withPooledPgQuizStartClient(async (client) => {
+        const picked = await loadRandomSnapshotBundleWithPgClient(
+            client,
+            input.difficulty,
+            input.questionCount,
+            input.locale,
+        );
+
+        if (picked.length < input.questionCount) {
+            throw new QuizSessionStartError('NOT_ENOUGH_QUESTIONS');
+        }
+
+        const questions = input.buildSnapshotQuestions(picked);
+        const snapshotInput: CreateQuizSessionWithSnapshotInput = {
+            userId: input.userId,
+            difficulty: input.difficulty,
+            questionCount: input.questionCount,
+            sessionLocale: input.sessionLocale,
+            questions,
+        };
+
+        const snapshotData = buildSnapshotData(snapshotInput, picked);
+
+        const sessionId = randomUUID();
+
+        try {
+            await insertQuizSessionWithSnapshotData(
+                client,
+                sessionId,
+                snapshotInput,
+                snapshotData,
+            );
+
+            return { id: sessionId };
+        } catch (error) {
+            const recovered =
+                isTransientDirectPgError(error) &&
+                (await isJsonSnapshotComplete(
+                    sessionId,
+                    input.userId,
+                    input.questionCount,
+                ).catch(() => false));
+
+            if (recovered) {
+                return { id: sessionId };
+            }
+
+            await cleanupQuizSessionById(sessionId);
+            throw error;
+        }
+    }, 2);
+}
+
+async function createJsonSnapshotSession(
+    input: CreateQuizSessionWithJsonSnapshotInput,
+): Promise<SessionSnapshotCreateResult> {
+    return withPooledPgQuizStartClient(async (client) => {
+        const sessionId = randomUUID();
+        const snapshotData = buildSnapshotData(input, input.pickedQuestions);
+
+        try {
+            await insertQuizSessionWithSnapshotData(
+                client,
+                sessionId,
+                input,
+                snapshotData,
+            );
+
+            return { id: sessionId };
+        } catch (error) {
+            const recovered =
+                isTransientDirectPgError(error) &&
+                (await isJsonSnapshotComplete(
+                    sessionId,
+                    input.userId,
+                    input.questionCount,
+                ).catch(() => false));
+
+            if (recovered) {
+                return { id: sessionId };
+            }
+
+            await cleanupQuizSessionById(sessionId);
+            throw error;
+        }
+    }, 2);
 }
 
 async function recoverSubmitStatusAfterWriteError(
@@ -487,6 +820,27 @@ async function loadSessionForSubmit(
     sessionId: string,
     userId: string,
 ): Promise<SessionForSubmitResult> {
+    const jsonSnapshot = await loadQuizSessionSnapshotData(sessionId, userId);
+
+    if (jsonSnapshot) {
+        const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);
+
+        if (snapshotData) {
+            const questions = mapSnapshotDataToScoringQuestions(
+                snapshotData,
+                jsonSnapshot.question_count,
+            );
+
+            return questions
+                ? {
+                      status: 'ready',
+                      sessionId: jsonSnapshot.session_id,
+                      questions,
+                  }
+                : { status: 'invalid_snapshot' };
+        }
+    }
+
     const result = await withDirectPgClient((client) => {
         return client.query<SnapshotScoringRow>(
             `
@@ -557,49 +911,38 @@ async function loadSnapshotPublicQuestions(
     sessionId: string,
     userId: string,
 ): Promise<SessionSnapshotPublicQuestion[] | null> {
+    const jsonSnapshot = await loadQuizSessionSnapshotData(sessionId, userId);
+
+    if (jsonSnapshot) {
+        const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);
+
+        if (snapshotData) {
+            return mapSnapshotDataToPublicQuestions(
+                snapshotData,
+                jsonSnapshot.question_count,
+            );
+        }
+    }
+
     const result = await withDirectPgClient((client) => {
         return client.query<SnapshotPublicRow>(
             `
                 SELECT
                     s."id" AS "session_id",
                     s."questionCount" AS "question_count",
-                    q."id" AS "question_id",
-                    COALESCE(
-                        ssq."displayText",
-                        qt_session."text",
-                        qt_ru."text",
-                        q."text"
-                    ) AS "question_text",
+                    ssq."questionId" AS "question_id",
+                    ssq."displayText" AS "question_text",
                     q."difficulty"::text AS "difficulty",
-                    ao."id" AS "option_id",
-                    COALESCE(
-                        ssqo."displayText",
-                        aot_session."text",
-                        aot_ru."text",
-                        ao."text"
-                    ) AS "option_text",
+                    ssqo."optionId" AS "option_id",
+                    ssqo."displayText" AS "option_text",
                     ssqo."displayOrder" AS "display_order"
                 FROM "QuizSession" s
-                LEFT JOIN "QuizSessionQuestion" ssq
+                INNER JOIN "QuizSessionQuestion" ssq
                     ON ssq."sessionId" = s."id"
-                LEFT JOIN "Question" q
+                INNER JOIN "Question" q
                     ON q."id" = ssq."questionId"
-                LEFT JOIN "QuestionTranslation" qt_session
-                    ON qt_session."questionId" = q."id"
-                    AND qt_session."locale" = s."sessionLocale"
-                LEFT JOIN "QuestionTranslation" qt_ru
-                    ON qt_ru."questionId" = q."id"
-                    AND qt_ru."locale" = 'ru'::"ContentLocale"
-                LEFT JOIN "QuizSessionQuestionOption" ssqo
+                INNER JOIN "QuizSessionQuestionOption" ssqo
                     ON ssqo."sessionQuestionId" = ssq."id"
-                LEFT JOIN "AnswerOption" ao
-                    ON ao."id" = ssqo."optionId"
-                LEFT JOIN "AnswerOptionTranslation" aot_session
-                    ON aot_session."optionId" = ao."id"
-                    AND aot_session."locale" = s."sessionLocale"
-                LEFT JOIN "AnswerOptionTranslation" aot_ru
-                    ON aot_ru."optionId" = ao."id"
-                    AND aot_ru."locale" = 'ru'::"ContentLocale"
                 WHERE
                     s."id" = $1
                     AND s."userId" = $2
@@ -662,15 +1005,20 @@ async function loadSnapshotPublicQuestions(
 
 // репозиторий для работы с сессиями викторины
 export const quizSessionRepository = {
-    // создание сессии викторины (legacy, пока не переключим startQuizAction)
-    create(input: CreateQuizSessionInput) {
-        return prisma.quizSession.create({
-            data: {
-                userId: input.userId,
-                difficulty: input.difficulty,
-                questionCount: input.questionCount,
-            },
-        });
+    // pick + snapshot write на одном direct pg соединении (quiz start hot path)
+    startWithRandomQuestions(input: StartQuizSessionWithPickInput) {
+        return startQuizSessionWithPick(input);
+    },
+
+    // создание только QuizSession + JSON snapshot (fast start path)
+    createWithJsonSnapshot(input: CreateQuizSessionWithJsonSnapshotInput) {
+        if (input.questions.length !== input.questionCount) {
+            throw new Error(
+                `Snapshot question count mismatch: expected ${input.questionCount}, got ${input.questions.length}`,
+            );
+        }
+
+        return createJsonSnapshotSession(input);
     },
 
     // создание сессии + snapshot вопросов и порядка вариантов

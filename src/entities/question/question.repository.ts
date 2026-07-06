@@ -30,6 +30,70 @@ export type QuestionSnapshotDisplayText = {
     options: Map<string, string>;
 };
 
+export type QuestionSnapshotBundleItem = {
+    id: string;
+    difficulty: Difficulty;
+    displayText: string;
+    options: Array<{
+        id: string;
+        displayText: string;
+        isCorrect: boolean;
+    }>;
+};
+
+type SnapshotDisplayTextRow = {
+    question_id: string;
+    difficulty: Difficulty;
+    question_text: string;
+    option_id: string | null;
+    option_text: string | null;
+    is_correct: boolean | null;
+};
+
+const RESOLVED_QUESTION_TEXT_SQL = `
+    COALESCE(
+        NULLIF(TRIM(qt_active."text"), ''),
+        NULLIF(TRIM(qt_default."text"), ''),
+        q."text"
+    )
+`;
+
+const RESOLVED_OPTION_TEXT_SQL = `
+    COALESCE(
+        NULLIF(TRIM(aot_active."text"), ''),
+        NULLIF(TRIM(aot_default."text"), ''),
+        ao."text"
+    )
+`;
+
+function snapshotQuestionTranslationJoinsSql(
+    activeLocaleParam: string,
+    defaultLocaleParam: string,
+) {
+    return `
+    LEFT JOIN "QuestionTranslation" qt_active
+        ON qt_active."questionId" = q."id"
+        AND qt_active."locale" = ${activeLocaleParam}::"ContentLocale"
+    LEFT JOIN "QuestionTranslation" qt_default
+        ON qt_default."questionId" = q."id"
+        AND qt_default."locale" = ${defaultLocaleParam}::"ContentLocale"
+`;
+}
+
+function snapshotOptionTranslationJoinsSql(
+    activeLocaleParam: string,
+    defaultLocaleParam: string,
+) {
+    return `
+    LEFT JOIN "AnswerOptionTranslation" aot_active
+        ON aot_active."optionId" = ao."id"
+        AND aot_active."locale" = ${activeLocaleParam}::"ContentLocale"
+    LEFT JOIN "AnswerOptionTranslation" aot_default
+        ON aot_default."optionId" = ao."id"
+        AND aot_default."locale" = ${defaultLocaleParam}::"ContentLocale"
+`;
+}
+
 type QuestionSnapshotCandidateRow = {
     question_id: string;
     option_id: string | null;
@@ -47,14 +111,14 @@ function pickTranslationText(
     legacyText?: string,
 ): string {
     const preferred = translations.find((row) => row.locale === locale)?.text;
-    if (preferred) {
+    if (preferred?.trim()) {
         return preferred;
     }
 
     const fallback = translations.find(
         (row) => row.locale === defaultLocale,
     )?.text;
-    if (fallback) {
+    if (fallback?.trim()) {
         return fallback;
     }
 
@@ -95,7 +159,10 @@ function buildAdminTranslations(
                 legacyText,
         },
         en: {
-            text: translations.find((row) => row.locale === 'en')?.text ?? '',
+            text:
+                translations.find((row) => row.locale === 'en')?.text?.trim() ||
+                translations.find((row) => row.locale === 'ru')?.text?.trim() ||
+                legacyText,
         },
     };
 }
@@ -518,33 +585,6 @@ async function updateWithOptionsWithDirectPg(
     }
 }
 
-// публичный вопрос для API (без переводов)
-type PublicQuestionRow = {
-    id: string;
-    text: string;
-    difficulty: Difficulty;
-    translations: TranslationRow[];
-    options: Array<{
-        id: string;
-        text: string;
-        order: number;
-        translations: TranslationRow[];
-    }>;
-};
-
-function mapPublicQuestion(row: PublicQuestionRow, locale: Locale) {
-    return {
-        id: row.id,
-        text: pickTranslationText(row.translations, locale, row.text),
-        difficulty: row.difficulty,
-        options: row.options.map((option) => ({
-            id: option.id,
-            text: pickTranslationText(option.translations, locale, option.text),
-            order: option.order,
-        })),
-    };
-}
-
 // загрузка кандидатов для snapshot сессии по сложности
 async function loadSnapshotCandidatesByDifficulty(
     difficulty: Difficulty,
@@ -588,28 +628,164 @@ async function loadSnapshotCandidatesByDifficulty(
     return Array.from(questions.values());
 }
 
+function groupSnapshotBundleRows(
+    rows: SnapshotDisplayTextRow[],
+): QuestionSnapshotBundleItem[] {
+    const questions: QuestionSnapshotBundleItem[] = [];
+    const byId = new Map<string, QuestionSnapshotBundleItem>();
+
+    for (const row of rows) {
+        if (!row.option_id || !row.option_text) {
+            continue;
+        }
+
+        let question = byId.get(row.question_id);
+
+        if (!question) {
+            question = {
+                id: row.question_id,
+                difficulty: row.difficulty,
+                displayText: row.question_text,
+                options: [],
+            };
+            byId.set(row.question_id, question);
+            questions.push(question);
+        }
+
+        question.options.push({
+            id: row.option_id,
+            displayText: row.option_text,
+            isCorrect: row.is_correct ?? false,
+        });
+    }
+
+    for (const question of questions) {
+        if (question.options.length === 0) {
+            throw new Error(`Question ${question.id} has no answer options`);
+        }
+    }
+
+    return questions;
+}
+
+function mapSnapshotBundleToDisplayTexts(
+    bundle: QuestionSnapshotBundleItem[],
+): Map<string, QuestionSnapshotDisplayText> {
+    const displayTexts = new Map<string, QuestionSnapshotDisplayText>();
+
+    for (const question of bundle) {
+        const optionTexts = new Map<string, string>();
+
+        for (const option of question.options) {
+            optionTexts.set(option.id, option.displayText);
+        }
+
+        displayTexts.set(question.id, {
+            questionId: question.id,
+            displayText: question.displayText,
+            options: optionTexts,
+        });
+    }
+
+    return displayTexts;
+}
+
+async function loadSnapshotDisplayTextRowsByQuestionIds(
+    locale: Locale,
+    questionIds: string[],
+): Promise<SnapshotDisplayTextRow[]> {
+    if (questionIds.length === 0) {
+        return [];
+    }
+
+    const result = await withDirectPgClient((client) =>
+        client.query<SnapshotDisplayTextRow>(
+            `
+                SELECT
+                    q."id" AS question_id,
+                    q."difficulty"::text AS difficulty,
+                    ${RESOLVED_QUESTION_TEXT_SQL} AS question_text,
+                    ao."id" AS option_id,
+                    ${RESOLVED_OPTION_TEXT_SQL} AS option_text,
+                    ao."isCorrect" AS is_correct
+                FROM "Question" q
+                INNER JOIN "AnswerOption" ao
+                    ON ao."questionId" = q."id"
+                ${snapshotQuestionTranslationJoinsSql('$1', '$2')}
+                ${snapshotOptionTranslationJoinsSql('$1', '$2')}
+                WHERE q."id" = ANY($3::text[])
+                ORDER BY array_position($3::text[], q."id"), ao."order" ASC
+            `,
+            [locale, defaultLocale, questionIds],
+        ),
+    );
+
+    return result.rows;
+}
+
+async function loadRandomSnapshotBundleWithPgClient(
+    client: Client,
+    difficulty: Difficulty,
+    limit: number,
+    locale: Locale,
+): Promise<QuestionSnapshotBundleItem[]> {
+    const result = await client.query<SnapshotDisplayTextRow>(
+        `
+                WITH random_ids AS (
+                    SELECT id, ord::int - 1 AS pick_position
+                    FROM unnest((
+                        SELECT ARRAY(
+                            SELECT q."id"
+                            FROM "Question" q
+                            WHERE
+                                q."difficulty" = $1::"Difficulty"
+                                AND q."isActive" = true
+                            ORDER BY RANDOM()
+                            LIMIT $2
+                        )
+                    )::text[]) WITH ORDINALITY AS t(id, ord)
+                )
+                SELECT
+                    q."id" AS question_id,
+                    q."difficulty"::text AS difficulty,
+                    ${RESOLVED_QUESTION_TEXT_SQL} AS question_text,
+                    ao."id" AS option_id,
+                    ${RESOLVED_OPTION_TEXT_SQL} AS option_text,
+                    ao."isCorrect" AS is_correct
+                FROM random_ids ri
+                INNER JOIN "Question" q
+                    ON q."id" = ri.id
+                INNER JOIN "AnswerOption" ao
+                    ON ao."questionId" = q."id"
+                ${snapshotQuestionTranslationJoinsSql('$3', '$4')}
+                ${snapshotOptionTranslationJoinsSql('$3', '$4')}
+                ORDER BY ri.pick_position, ao."order" ASC
+            `,
+        [difficulty, limit, locale, defaultLocale],
+    );
+
+    return groupSnapshotBundleRows(result.rows);
+}
+
+async function loadRandomSnapshotBundleWithDirectPg(
+    difficulty: Difficulty,
+    limit: number,
+    locale: Locale,
+): Promise<QuestionSnapshotBundleItem[]> {
+    return withDirectPgClient((client) =>
+        loadRandomSnapshotBundleWithPgClient(
+            client,
+            difficulty,
+            limit,
+            locale,
+        ),
+    );
+}
+
+export { loadRandomSnapshotBundleWithPgClient };
+
 // репозиторий для работы с вопросами
 export const questionRepository = {
-    // поиск активных вопросов по сложности
-    findActiveByDifficulty(difficulty: Difficulty, limit: number) {
-        return withDatabaseRetry(() =>
-            prisma.question.findMany({
-                where: { difficulty, isActive: true },
-                include: { options: { orderBy: { order: 'asc' } } },
-                take: limit,
-            }),
-        );
-    },
-
-    // подсчет активных вопросов по сложности
-    countActiveByDifficulty(difficulty: Difficulty) {
-        return withDatabaseRetry(() =>
-            prisma.question.count({
-                where: { difficulty, isActive: true },
-            }),
-        );
-    },
-
     // случайный выбор активных вопросов для snapshot сессии
     async pickRandomActiveForSnapshot(
         difficulty: Difficulty,
@@ -635,6 +811,15 @@ export const questionRepository = {
         });
     },
 
+    // один direct pg read: random pick + resolved display text (quiz start hot path)
+    pickRandomActiveSnapshotBundle(
+        difficulty: Difficulty,
+        limit: number,
+        locale: Locale,
+    ): Promise<QuestionSnapshotBundleItem[]> {
+        return loadRandomSnapshotBundleWithDirectPg(difficulty, limit, locale);
+    },
+
     // resolved display text для snapshot сессии (locale + fallback ru + legacy text)
     async findSnapshotDisplayTextsByCandidates(
         locale: Locale,
@@ -645,120 +830,13 @@ export const questionRepository = {
         }
 
         const questionIds = candidates.map((candidate) => candidate.id);
-
-        const rows = await withDatabaseRetry(() =>
-            prisma.question.findMany({
-                where: { id: { in: questionIds } },
-                select: {
-                    id: true,
-                    text: true,
-                    translations: {
-                        select: {
-                            locale: true,
-                            text: true,
-                        },
-                    },
-                    options: {
-                        select: {
-                            id: true,
-                            text: true,
-                            translations: {
-                                select: {
-                                    locale: true,
-                                    text: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            }),
+        const rows = await loadSnapshotDisplayTextRowsByQuestionIds(
+            locale,
+            questionIds,
         );
 
-        const displayTexts = new Map<string, QuestionSnapshotDisplayText>();
-
-        for (const row of rows) {
-            const optionTexts = new Map<string, string>();
-
-            for (const option of row.options) {
-                optionTexts.set(
-                    option.id,
-                    pickTranslationText(
-                        option.translations,
-                        locale,
-                        option.text,
-                    ),
-                );
-            }
-
-            displayTexts.set(row.id, {
-                questionId: row.id,
-                displayText: pickTranslationText(
-                    row.translations,
-                    locale,
-                    row.text,
-                ),
-                options: optionTexts,
-            });
-        }
-
-        return displayTexts;
-    },
-
-    // поиск активных публичных вопросов по сложности
-    async findActivePublicByDifficulty(
-        locale: Locale,
-        difficulty: Difficulty,
-        limit: number,
-    ) {
-        const rows = await withDatabaseRetry(() =>
-            prisma.question.findMany({
-                where: { difficulty, isActive: true },
-                orderBy: { createdAt: 'asc' },
-                take: limit,
-                select: {
-                    id: true,
-                    text: true,
-                    difficulty: true,
-                    translations: {
-                        select: {
-                            locale: true,
-                            text: true,
-                        },
-                    },
-                    options: {
-                        orderBy: { order: 'asc' },
-                        select: {
-                            id: true,
-                            text: true,
-                            order: true,
-                            translations: {
-                                select: {
-                                    locale: true,
-                                    text: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            }),
-        );
-
-        return rows.map((row) => mapPublicQuestion(row, locale));
-    },
-
-    // поиск активных вопросов для scoring
-    findActiveForScoring(difficulty: Difficulty, limit: number) {
-        return withDatabaseRetry(() =>
-            prisma.question.findMany({
-                where: { difficulty, isActive: true },
-                orderBy: { createdAt: 'asc' },
-                take: limit,
-                include: {
-                    options: {
-                        orderBy: { order: 'asc' }, // страница квиза уже использует такой же порядок в findActivePublicByDifficulty
-                    },
-                },
-            }),
+        return mapSnapshotBundleToDisplayTexts(
+            groupSnapshotBundleRows(rows),
         );
     },
 

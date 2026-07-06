@@ -40,9 +40,20 @@ function getDirectDatabaseUrl() {
     return normalizePgConnectionString(connectionString);
 }
 
-function createDirectClient() {
+function getPooledDatabaseUrl() {
+    const connectionString =
+        process.env.DATABASE_URL ?? process.env.DATABASE_URL_UNPOOLED;
+
+    if (!connectionString) {
+        throw new Error('DATABASE_URL or DATABASE_URL_UNPOOLED is required');
+    }
+
+    return normalizePgConnectionString(connectionString);
+}
+
+function createClient(connectionString: string) {
     const client = new Client({
-        connectionString: getDirectDatabaseUrl(),
+        connectionString,
         ssl: { rejectUnauthorized: true },
         keepAlive: true,
         connectionTimeoutMillis: 15_000,
@@ -55,6 +66,14 @@ function createDirectClient() {
     });
 
     return client;
+}
+
+function createDirectClient() {
+    return createClient(getDirectDatabaseUrl());
+}
+
+function createPooledClient() {
+    return createClient(getPooledDatabaseUrl());
 }
 
 export function isTransientDirectPgError(error: unknown) {
@@ -71,16 +90,17 @@ function wait(milliseconds: number) {
 }
 
 async function withFreshClient<T>(
+    createClient: () => Client,
     operation: (client: Client) => Promise<T>,
 ): Promise<T> {
-    const client = createDirectClient();
+    const client = createClient();
 
     await client.connect();
 
     try {
         return await operation(client);
     } finally {
-        await client.end().catch(() => undefined);
+        void client.end().catch(() => undefined);
     }
 }
 
@@ -111,14 +131,14 @@ async function withDirectPgReadRetry<T>(
 export async function withDirectPgClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
-    return withDirectPgReadRetry(() => withFreshClient(operation));
+    return withDirectPgReadRetry(() => withFreshClient(createDirectClient, operation));
 }
 
 // Writes: fresh direct client without automatic retry.
 export async function withDirectPgWriteClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
-    return withFreshClient(operation);
+    return withFreshClient(createDirectClient, operation);
 }
 
 // Writes with one guarded retry for transient Neon connect/socket errors.
@@ -130,7 +150,31 @@ export async function withDirectPgWriteRetry<T>(
 
     for (let attempt = 1; attempt <= attempts; attempt += 1) {
         try {
-            return await withFreshClient(operation);
+            return await withFreshClient(createDirectClient, operation);
+        } catch (error) {
+            lastError = error;
+
+            if (!isTransientDirectPgError(error) || attempt === attempts) {
+                throw error;
+            }
+
+            await wait(300 * attempt);
+        }
+    }
+
+    throw lastError;
+}
+
+/** Quiz start: one connection for question pick + snapshot write (avoids double Neon handshake). */
+export async function withPooledPgQuizStartClient<T>(
+    operation: (client: Client) => Promise<T>,
+    attempts = 2,
+) {
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+        try {
+            return await withFreshClient(createPooledClient, operation);
         } catch (error) {
             lastError = error;
 

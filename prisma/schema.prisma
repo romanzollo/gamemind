@@ -126,6 +126,7 @@ model QuizSession {
   difficulty    Difficulty
   questionCount Int
   sessionLocale ContentLocale     @default(ru)
+  snapshotData  Json?
   startedAt     DateTime          @default(now())
   completedAt   DateTime?
 
