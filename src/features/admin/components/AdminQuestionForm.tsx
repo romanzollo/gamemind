@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import {
@@ -10,6 +10,7 @@ import {
 import { getAdminErrorMessage } from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
+import type { QuestionType } from '@/types';
 
 const OPTION_COUNT = 4;
 
@@ -62,6 +63,9 @@ export function AdminQuestionForm({
     const action = isEdit ? updateQuestionAction : createQuestionAction;
     const [state, formAction] = useActionState(action, {});
     const errorMessage = getAdminErrorMessage(dictionary, state.errorCode);
+    const [questionType, setQuestionType] = useState<QuestionType>(
+        isEdit ? initialValues!.type : 'TEXT',
+    );
 
     if (isEdit && !initialValues) {
         return null;
@@ -131,6 +135,50 @@ export function AdminQuestionForm({
                         />
                     </label>
                 </fieldset>
+
+                <label className="flex flex-col gap-2">
+                    <span>{dictionary.admin.formQuestionType}</span>
+                    <select
+                        name="questionType"
+                        value={questionType}
+                        onChange={(event) => {
+                            setQuestionType(
+                                event.target.value === 'IMAGE_GUESS'
+                                    ? 'IMAGE_GUESS'
+                                    : 'TEXT',
+                            );
+                        }}
+                        required
+                        className="rounded border border-border p-3"
+                    >
+                        <option value="TEXT">
+                            {dictionary.admin.formQuestionTypeText}
+                        </option>
+                        <option value="IMAGE_GUESS">
+                            {dictionary.admin.formQuestionTypeImageGuess}
+                        </option>
+                    </select>
+                </label>
+
+                {questionType === 'IMAGE_GUESS' ? (
+                    <label className="flex flex-col gap-2">
+                        <span>{dictionary.admin.formPromptImageUrl}</span>
+                        <input
+                            type="text"
+                            name="promptImageUrl"
+                            required
+                            maxLength={2048}
+                            placeholder="/quiz-images/easy/example.svg"
+                            defaultValue={editValues?.promptImageUrl ?? ''}
+                            className="rounded border border-border p-3"
+                        />
+                        <span className="text-sm text-muted">
+                            {dictionary.admin.formPromptImageUrlHint}
+                        </span>
+                    </label>
+                ) : (
+                    <input type="hidden" name="promptImageUrl" value="" />
+                )}
 
                 <label className="flex flex-col gap-2">
                     <span>{dictionary.quiz.difficultyLabel}</span>

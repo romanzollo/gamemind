@@ -5,22 +5,22 @@ type QuizSetupPageProps = {
     params: Promise<{ locale: string }>;
 };
 
-// Страница настройки викторины
 export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
     const { locale } = await params;
-    // получаем локаль из параметров
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
 
     return (
-        <main className="mx-auto max-w-2xl p-8">
-            <h1 className="text-2xl font-semibold">
-                {dictionary.quiz.setupTitle}
-            </h1>
+        <main className="mx-auto max-w-2xl px-4 py-6 sm:px-8 sm:py-8">
+            <header className="pb-4 sm:pb-6">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                    {dictionary.quiz.setupTitle}
+                </h1>
 
-            <p className="mt-2 text-neutral-600 dark:text-neutral-400">
-                {dictionary.quiz.setupDescription}
-            </p>
+                <p className="mt-2 text-sm text-muted sm:text-base">
+                    {dictionary.quiz.setupDescription}
+                </p>
+            </header>
 
             <QuizSetupForm locale={safeLocale} dictionary={dictionary} />
         </main>

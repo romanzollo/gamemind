@@ -10,6 +10,7 @@ function readEnv(name) {
 }
 
 const { questions } = require('./seed-questions.cjs');
+const { ensurePlaceholders } = require('./generate-quiz-placeholders.cjs');
 
 const TEST_QUESTION_IDS = [
     'q-test-write',
@@ -71,6 +72,20 @@ function validateQuestions(seedQuestions) {
                     );
                 }
             }
+        }
+
+        const questionType = question.type ?? 'TEXT';
+
+        if (questionType === 'IMAGE_GUESS') {
+            if (!question.promptImage?.url?.trim()) {
+                throw new Error(
+                    `Question "${question.id}" IMAGE_GUESS requires promptImage.url.`,
+                );
+            }
+        } else if (questionType !== 'TEXT') {
+            throw new Error(
+                `Question "${question.id}" has unsupported type "${questionType}".`,
+            );
         }
     }
 }
@@ -138,14 +153,16 @@ async function cleanupTestQuestions(client) {
 
 async function seedQuestion(client, question) {
     const ruText = question.translations.ru.text;
+    const questionType = question.type ?? 'TEXT';
 
     await client.query(
         `INSERT INTO "Question" (
-        id, text, difficulty, category, metadata, "isActive", "createdAt", "updatedAt"
+        id, text, type, difficulty, category, metadata, "isActive", "createdAt", "updatedAt"
       )
-      VALUES ($1, $2, $3::"Difficulty", $4, $5::jsonb, true, NOW(), NOW())
+      VALUES ($1, $2, $3::"QuestionType", $4::"Difficulty", $5, $6::jsonb, true, NOW(), NOW())
       ON CONFLICT (id) DO UPDATE SET
         text = EXCLUDED.text,
+        type = EXCLUDED.type,
         difficulty = EXCLUDED.difficulty,
         category = EXCLUDED.category,
         metadata = EXCLUDED.metadata,
@@ -154,6 +171,7 @@ async function seedQuestion(client, question) {
         [
             question.id,
             ruText,
+            questionType,
             question.difficulty,
             'video-games',
             JSON.stringify(question.metadata ?? null),
@@ -240,10 +258,50 @@ async function seedQuestion(client, question) {
          text = EXCLUDED.text`,
         translationParams,
     );
+
+    if (questionType === 'IMAGE_GUESS' && question.promptImage) {
+        const assetId = `qa-${question.id}-prompt`;
+
+        await client.query(
+            `INSERT INTO "QuestionAsset" (
+                id,
+                "questionId",
+                role,
+                url,
+                "mimeType",
+                width,
+                height,
+                "order"
+            )
+            VALUES ($1, $2, 'PROMPT'::"QuestionAssetRole", $3, $4, $5, $6, 0)
+            ON CONFLICT (id) DO UPDATE SET
+                url = EXCLUDED.url,
+                "mimeType" = EXCLUDED."mimeType",
+                width = EXCLUDED.width,
+                height = EXCLUDED.height,
+                role = EXCLUDED.role`,
+            [
+                assetId,
+                question.id,
+                question.promptImage.url,
+                question.promptImage.mimeType ?? null,
+                question.promptImage.width ?? null,
+                question.promptImage.height ?? null,
+            ],
+        );
+    } else {
+        await client.query(
+            `DELETE FROM "QuestionAsset"
+             WHERE "questionId" = $1
+               AND role = 'PROMPT'::"QuestionAssetRole"`,
+            [question.id],
+        );
+    }
 }
 
 async function main() {
     validateQuestions(questions);
+    ensurePlaceholders();
 
     await withRetry(async (client) => {
         await cleanupTestQuestions(client);

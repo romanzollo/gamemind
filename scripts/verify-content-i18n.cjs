@@ -190,6 +190,59 @@ async function runCoreChecks(client) {
         console.log('OK: QuizSession.sessionLocale exists');
     }
 
+    printSection('Question media schema');
+    const mediaTables = await client.query(`
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+          AND table_name IN ('QuestionAsset')
+        ORDER BY table_name
+    `);
+
+    const questionTypeColumn = await client.query(`
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_schema = 'public'
+          AND table_name = 'Question'
+          AND column_name = 'type'
+    `);
+
+    if (mediaTables.rows.length === 0 || questionTypeColumn.rows.length === 0) {
+        hasErrors = true;
+        console.error(
+            'FAIL: question media schema is missing (run migration 20260706180000_question_media)',
+        );
+    } else {
+        console.log('OK: Question.type and QuestionAsset exist');
+    }
+
+    if (mediaTables.rows.length > 0 && questionTypeColumn.rows.length > 0) {
+        const missingPromptAssets = await client.query(`
+            SELECT q."id", q."difficulty"::text AS difficulty
+            FROM "Question" q
+            LEFT JOIN "QuestionAsset" qa
+                ON qa."questionId" = q."id"
+                AND qa."role" = 'PROMPT'::"QuestionAssetRole"
+            WHERE
+                q."isActive" = true
+                AND q."type" = 'IMAGE_GUESS'::"QuestionType"
+                AND qa."id" IS NULL
+            ORDER BY q."id"
+        `);
+
+        if (missingPromptAssets.rows.length > 0) {
+            hasErrors = true;
+            console.error(
+                `FAIL: ${missingPromptAssets.rows.length} IMAGE_GUESS question(s) without PROMPT asset`,
+            );
+            for (const row of missingPromptAssets.rows) {
+                console.error(`  - ${row.id} [${row.difficulty}]`);
+            }
+        } else {
+            console.log('OK: every active IMAGE_GUESS question has a PROMPT asset');
+        }
+    }
+
     printSection('Active questions — translations');
     const missingQuestionTranslations = await client.query(`
         SELECT
@@ -315,6 +368,24 @@ async function runSummaryChecks(client) {
         );
     }
 
+    try {
+        const typeSummary = await client.query(`
+            SELECT
+                COALESCE("type"::text, 'TEXT') AS question_type,
+                COUNT(*)::int AS total
+            FROM "Question"
+            WHERE "isActive" = true
+            GROUP BY "type"
+            ORDER BY question_type
+        `);
+
+        for (const row of typeSummary.rows) {
+            console.log(`${row.question_type}: active=${row.total}`);
+        }
+    } catch {
+        console.warn('WARN: Question.type summary skipped (column may be missing)');
+    }
+
     printSection('Sample texts for manual check');
     const samples = await client.query(`
         SELECT DISTINCT ON (qt."locale")
@@ -344,16 +415,20 @@ async function main() {
         await withPgClient(repairEmptyTranslations);
     }
 
-    const hasErrors = await withPgClient(runCoreChecks);
+    const hasErrors = await withPgClient(async (client) => {
+        const coreErrors = await runCoreChecks(client);
 
-    try {
-        await withPgClient(runSummaryChecks);
-    } catch (error) {
-        console.warn(
-            'Summary section skipped due to transient DB connection issue:',
-            error.message,
-        );
-    }
+        try {
+            await runSummaryChecks(client);
+        } catch (error) {
+            console.warn(
+                'Summary section skipped due to transient DB connection issue:',
+                error.message,
+            );
+        }
+
+        return coreErrors;
+    });
 
     printSection('Result');
     if (hasErrors) {

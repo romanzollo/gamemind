@@ -67,6 +67,12 @@ export const ruDictionary: Dictionary = {
         formQuestionText: 'Текст вопроса',
         formQuestionTextRu: 'Текст вопроса (русский)',
         formQuestionTextEn: 'Текст вопроса (английский)',
+        formQuestionType: 'Тип вопроса',
+        formQuestionTypeText: 'Текстовый',
+        formQuestionTypeImageGuess: 'Угадай по изображению',
+        formPromptImageUrl: 'URL изображения (prompt)',
+        formPromptImageUrlHint:
+            'Путь из public/ (например /quiz-images/...) или HTTPS URL из CDN.',
         formOptionTextRu: 'Текст варианта (русский)',
         formOptionTextEn: 'Текст варианта (английский)',
         formCategory: 'Категория',

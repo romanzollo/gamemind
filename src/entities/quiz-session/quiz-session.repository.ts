@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import type { Client } from 'pg';
 
-import type { Difficulty } from '@/types';
+import type { Difficulty, QuestionType } from '@/types';
 import type { Locale } from '@/shared/i18n';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import {
@@ -27,6 +27,7 @@ export type SessionSnapshotQuestionInput = {
     questionId: string;
     position: number;
     displayText: string;
+    displayImageUrl?: string | null;
     options: Array<{
         optionId: string;
         displayOrder: number;
@@ -45,6 +46,8 @@ export type SessionSnapshotPublicQuestion = {
     id: string;
     text: string;
     difficulty: Difficulty;
+    type?: QuestionType;
+    imageUrl?: string | null;
     options: Array<{
         id: string;
         text: string;
@@ -81,6 +84,8 @@ type QuizSessionSnapshotData = {
         id: string;
         text: string;
         difficulty: Difficulty;
+        type?: QuestionType;
+        imageUrl?: string | null;
         position: number;
         options: Array<{
             id: string;
@@ -140,6 +145,7 @@ type SnapshotPublicRow = {
     question_count: number;
     question_id: string | null;
     question_text: string | null;
+    display_image_url: string | null;
     difficulty: Difficulty | null;
     option_id: string | null;
     option_text: string | null;
@@ -293,6 +299,8 @@ function buildSnapshotData(
                 id: question.questionId,
                 text: question.displayText,
                 difficulty: picked.difficulty,
+                type: picked.type,
+                imageUrl: question.displayImageUrl ?? null,
                 position: question.position,
                 options: question.options.map((option) => {
                     const pickedOption = pickedOptions.get(option.optionId);
@@ -350,6 +358,8 @@ function mapSnapshotDataToPublicQuestions(
             id: question.id,
             text: question.text,
             difficulty: question.difficulty,
+            type: question.type,
+            imageUrl: question.imageUrl ?? null,
             options: [...question.options]
                 .sort((left, right) => left.order - right.order)
                 .map((option) => ({
@@ -435,6 +445,7 @@ async function insertSnapshotRows(
         questionId: question.questionId,
         position: question.position,
         displayText: question.displayText,
+        displayImageUrl: question.displayImageUrl ?? null,
         options: question.options,
     }));
 
@@ -486,9 +497,10 @@ async function insertSnapshotRows(
                 "sessionId",
                 "questionId",
                 "position",
-                "displayText"
+                "displayText",
+                "displayImageUrl"
             )
-            VALUES ${buildValuesPlaceholder(sessionQuestionRows.length, 5)}
+            VALUES ${buildValuesPlaceholder(sessionQuestionRows.length, 6)}
         `,
         sessionQuestionRows.flatMap((row) => [
             row.id,
@@ -496,6 +508,7 @@ async function insertSnapshotRows(
             row.questionId,
             row.position,
             row.displayText,
+            row.displayImageUrl,
         ]),
     );
 
@@ -932,6 +945,7 @@ async function loadSnapshotPublicQuestions(
                     s."questionCount" AS "question_count",
                     ssq."questionId" AS "question_id",
                     ssq."displayText" AS "question_text",
+                    ssq."displayImageUrl" AS "display_image_url",
                     q."difficulty"::text AS "difficulty",
                     ssqo."optionId" AS "option_id",
                     ssqo."displayText" AS "option_text",
@@ -985,6 +999,7 @@ async function loadSnapshotPublicQuestions(
                 id: row.question_id,
                 text: row.question_text,
                 difficulty: row.difficulty,
+                imageUrl: row.display_image_url,
                 options: [
                     {
                         id: row.option_id,

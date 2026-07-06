@@ -13,6 +13,7 @@ function Q(num, difficulty, metadata, ru, en, options) {
 
     return {
         id,
+        type: 'TEXT',
         difficulty,
         metadata,
         translations: { ru: { text: ru }, en: { text: en } },
@@ -27,32 +28,62 @@ function Q(num, difficulty, metadata, ru, en, options) {
     };
 }
 
+/** Image-guess question — reuses the same id slot as a text question when replacing. */
+function QI(num, difficulty, metadata, ru, en, imageUrl, options) {
+    const slug = { EASY: 'easy', MEDIUM: 'medium', HARD: 'hard' }[difficulty];
+    const id = `q-vg-${slug}-${String(num).padStart(3, '0')}`;
+
+    return {
+        id,
+        type: 'IMAGE_GUESS',
+        difficulty,
+        metadata: { ...metadata, mediaSource: 'placeholder' },
+        translations: { ru: { text: ru }, en: { text: en } },
+        promptImage: {
+            url: imageUrl,
+            mimeType: 'image/svg+xml',
+            width: 1280,
+            height: 720,
+        },
+        options: options.map((option, index) => ({
+            order: index + 1,
+            isCorrect: option.isCorrect,
+            translations: {
+                ru: { text: option.ru },
+                en: { text: option.en },
+            },
+        })),
+    };
+}
+
 const questions = [
     // ─── EASY (20) ───────────────────────────────────────────────────────────
-    Q(
+    QI(
         1,
         'EASY',
-        { franchise: 'Super Mario', topic: 'developer' },
-        'Какая компания создала серию Super Mario?',
-        'Which company created the Super Mario series?',
+        { franchise: 'Super Mario', topic: 'image-guess', game: 'Super Mario Bros.' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/easy/super-mario-bros.svg',
         [
-            opt(true, 'Nintendo', 'Nintendo'),
-            opt(false, 'Sega', 'Sega'),
-            opt(false, 'Sony', 'Sony'),
-            opt(false, 'Capcom', 'Capcom'),
+            opt(true, 'Super Mario Bros.', 'Super Mario Bros.'),
+            opt(false, 'The Legend of Zelda', 'The Legend of Zelda'),
+            opt(false, 'Sonic the Hedgehog', 'Sonic the Hedgehog'),
+            opt(false, 'Mega Man', 'Mega Man'),
         ],
     ),
-    Q(
+    QI(
         2,
         'EASY',
-        { franchise: 'The Legend of Zelda', topic: 'character' },
-        'Как зовут главного героя серии The Legend of Zelda?',
-        'What is the name of the main playable hero in The Legend of Zelda series?',
+        { franchise: 'The Legend of Zelda', topic: 'image-guess', game: 'The Legend of Zelda' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/easy/legend-of-zelda.svg',
         [
-            opt(true, 'Link', 'Link'),
-            opt(false, 'Zelda', 'Zelda'),
-            opt(false, 'Ganondorf', 'Ganondorf'),
-            opt(false, 'Epona', 'Epona'),
+            opt(true, 'The Legend of Zelda', 'The Legend of Zelda'),
+            opt(false, 'Super Mario Bros.', 'Super Mario Bros.'),
+            opt(false, 'Metroid', 'Metroid'),
+            opt(false, 'Castlevania', 'Castlevania'),
         ],
     ),
     Q(
@@ -81,17 +112,18 @@ const questions = [
             opt(false, 'Йоши', 'Yoshi'),
         ],
     ),
-    Q(
+    QI(
         5,
         'EASY',
-        { franchise: 'Pokémon', topic: 'type' },
-        'Какой тип у Пикачу в серии Pokémon?',
-        'What type is Pikachu in the Pokémon series?',
+        { franchise: 'Pokémon', topic: 'image-guess', game: 'Pokémon Red / Blue' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/easy/pokemon-red-blue.svg',
         [
-            opt(true, 'Электрический', 'Electric'),
-            opt(false, 'Огненный', 'Fire'),
-            opt(false, 'Нормальный', 'Normal'),
-            opt(false, 'Психический', 'Psychic'),
+            opt(true, 'Pokémon Red / Blue', 'Pokémon Red / Blue'),
+            opt(false, 'Digimon World', 'Digimon World'),
+            opt(false, 'Dragon Quest', 'Dragon Quest'),
+            opt(false, 'Final Fantasy', 'Final Fantasy'),
         ],
     ),
     Q(
@@ -291,17 +323,18 @@ const questions = [
     ),
 
     // ─── MEDIUM (20) ─────────────────────────────────────────────────────────
-    Q(
+    QI(
         1,
         'MEDIUM',
-        { game: 'The Witcher 3: Wild Hunt', topic: 'developer' },
-        'Какая студия разработала The Witcher 3: Wild Hunt?',
-        'Which studio developed The Witcher 3: Wild Hunt?',
+        { game: 'The Witcher 3: Wild Hunt', topic: 'image-guess' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/medium/the-witcher-3.svg',
         [
-            opt(true, 'CD Projekt Red', 'CD Projekt Red'),
-            opt(false, 'BioWare', 'BioWare'),
-            opt(false, 'Bethesda Game Studios', 'Bethesda Game Studios'),
-            opt(false, 'Larian Studios', 'Larian Studios'),
+            opt(true, 'The Witcher 3: Wild Hunt', 'The Witcher 3: Wild Hunt'),
+            opt(false, 'Skyrim', 'Skyrim'),
+            opt(false, 'Dragon Age: Inquisition', 'Dragon Age: Inquisition'),
+            opt(false, 'Horizon Zero Dawn', 'Horizon Zero Dawn'),
         ],
     ),
     Q(
@@ -317,17 +350,18 @@ const questions = [
             opt(false, 'Дженова', 'Junon'),
         ],
     ),
-    Q(
+    QI(
         3,
         'MEDIUM',
-        { game: 'Elden Ring', topic: 'developer' },
-        'Какая японская студия разработала Elden Ring?',
-        'Which Japanese studio developed Elden Ring?',
+        { game: 'Elden Ring', topic: 'image-guess' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/medium/elden-ring.svg',
         [
-            opt(true, 'FromSoftware', 'FromSoftware'),
-            opt(false, 'Capcom', 'Capcom'),
-            opt(false, 'Square Enix', 'Square Enix'),
-            opt(false, 'PlatinumGames', 'PlatinumGames'),
+            opt(true, 'Elden Ring', 'Elden Ring'),
+            opt(false, 'Dark Souls III', 'Dark Souls III'),
+            opt(false, 'Bloodborne', 'Bloodborne'),
+            opt(false, 'Sekiro: Shadows Die Twice', 'Sekiro: Shadows Die Twice'),
         ],
     ),
     Q(
@@ -369,17 +403,18 @@ const questions = [
             opt(false, 'Аркадия', 'Arcadia'),
         ],
     ),
-    Q(
+    QI(
         7,
         'MEDIUM',
-        { game: 'Final Fantasy VII', topic: 'character' },
-        'Как зовут главного героя оригинальной Final Fantasy VII?',
-        'What is the name of the main protagonist of the original Final Fantasy VII?',
+        { game: 'Final Fantasy VII', topic: 'image-guess' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/medium/final-fantasy-vii.svg',
         [
-            opt(true, 'Клауд Страйф', 'Cloud Strife'),
-            opt(false, 'Сефирот', 'Sephiroth'),
-            opt(false, 'Тифа Локхарт', 'Tifa Lockhart'),
-            opt(false, 'Баррет Уоллес', 'Barret Wallace'),
+            opt(true, 'Final Fantasy VII', 'Final Fantasy VII'),
+            opt(false, 'Final Fantasy X', 'Final Fantasy X'),
+            opt(false, 'Chrono Trigger', 'Chrono Trigger'),
+            opt(false, 'Kingdom Hearts', 'Kingdom Hearts'),
         ],
     ),
     Q(
@@ -579,43 +614,46 @@ const questions = [
             opt(false, 'ColecoVision', 'ColecoVision'),
         ],
     ),
-    Q(
+    QI(
         3,
         'HARD',
-        { game: 'Tetris', topic: 'history' },
-        'Кто создал Tetris в СССР в 1984 году?',
-        'Who created Tetris in the USSR in 1984?',
+        { game: 'Tetris', topic: 'image-guess' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/hard/tetris.svg',
         [
-            opt(true, 'Алексей Пажитнов', 'Alexey Pajitnov'),
-            opt(false, 'Сигэру Миямото', 'Shigeru Miyamoto'),
-            opt(false, 'Сид Мейер', 'Sid Meier'),
-            opt(false, 'Тодд Говард', 'Todd Howard'),
+            opt(true, 'Tetris', 'Tetris'),
+            opt(false, 'Dr. Mario', 'Dr. Mario'),
+            opt(false, 'Lumines', 'Lumines'),
+            opt(false, 'Puyo Puyo', 'Puyo Puyo'),
         ],
     ),
-    Q(
+    QI(
         4,
         'HARD',
-        { game: 'DOOM', topic: 'history' },
-        'Какая студия выпустила оригинальный DOOM в 1993 году?',
-        'Which studio released the original DOOM in 1993?',
+        { game: 'DOOM', topic: 'image-guess' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/hard/doom-1993.svg',
         [
-            opt(true, 'id Software', 'id Software'),
-            opt(false, '3D Realms', '3D Realms'),
-            opt(false, 'Epic Games', 'Epic Games'),
-            opt(false, 'Valve', 'Valve'),
+            opt(true, 'DOOM (1993)', 'DOOM (1993)'),
+            opt(false, 'Quake', 'Quake'),
+            opt(false, 'Duke Nukem 3D', 'Duke Nukem 3D'),
+            opt(false, 'Wolfenstein 3D', 'Wolfenstein 3D'),
         ],
     ),
-    Q(
+    QI(
         5,
         'HARD',
-        { franchise: 'Metal Gear', topic: 'creator' },
-        'Кто является создателем серии Metal Gear?',
-        'Who is the creator of the Metal Gear series?',
+        { franchise: 'Metal Gear', topic: 'image-guess', game: 'Metal Gear Solid' },
+        'Угадай игру по изображению.',
+        'Guess the game from the image.',
+        '/quiz-images/hard/metal-gear-solid.svg',
         [
-            opt(true, 'Хидэо Кодзима', 'Hideo Kojima'),
-            opt(false, 'Хиронобу Сакагучи', 'Hironobu Sakaguchi'),
-            opt(false, 'Юдзи Хории', 'Yuji Horii'),
-            opt(false, 'Гоити Суда', 'Goichi Suda'),
+            opt(true, 'Metal Gear Solid', 'Metal Gear Solid'),
+            opt(false, 'Splinter Cell', 'Splinter Cell'),
+            opt(false, 'Hitman', 'Hitman'),
+            opt(false, 'Deus Ex', 'Deus Ex'),
         ],
     ),
     Q(
@@ -831,6 +869,30 @@ for (const difficulty of ['EASY', 'MEDIUM', 'HARD']) {
     if (counts[difficulty] !== 20) {
         throw new Error(
             `Expected 20 ${difficulty} questions, got ${counts[difficulty] ?? 0}`,
+        );
+    }
+}
+
+const imageQuestionCount = questions.filter(
+    (question) => question.type === 'IMAGE_GUESS',
+).length;
+
+if (imageQuestionCount !== 9) {
+    throw new Error(
+        `Expected 9 IMAGE_GUESS seed questions, got ${imageQuestionCount}`,
+    );
+}
+
+for (const difficulty of ['EASY', 'MEDIUM', 'HARD']) {
+    const perDifficultyImage = questions.filter(
+        (question) =>
+            question.difficulty === difficulty &&
+            question.type === 'IMAGE_GUESS',
+    ).length;
+
+    if (perDifficultyImage !== 3) {
+        throw new Error(
+            `Expected 3 IMAGE_GUESS ${difficulty} questions, got ${perDifficultyImage}`,
         );
     }
 }

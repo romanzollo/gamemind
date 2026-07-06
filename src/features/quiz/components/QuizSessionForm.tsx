@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useMemo, useState } from 'react';
 
 import { submitQuizAction } from '@/features/quiz/actions';
 import { QuestionCard } from '@/features/quiz/components/QuestionCard';
@@ -8,7 +8,6 @@ import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message'
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 
-// тип для пропсов компонента QuizSessionForm
 type QuizSessionFormProps = {
     locale: Locale;
     sessionId: string;
@@ -16,7 +15,6 @@ type QuizSessionFormProps = {
     dictionary: Dictionary;
 };
 
-// компонент для формы сессии викторины
 export function QuizSessionForm({
     locale,
     sessionId,
@@ -27,21 +25,59 @@ export function QuizSessionForm({
     const [selectedAnswers, setSelectedAnswers] = useState<
         Record<string, string>
     >({});
+
+    const answeredCount = useMemo(
+        () =>
+            questions.filter((question) => selectedAnswers[question.id])
+                .length,
+        [questions, selectedAnswers],
+    );
+
+    const totalQuestions = questions.length;
+    const allAnswered = answeredCount === totalQuestions;
+    const progressPercent =
+        totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
 
     return (
-        <>
-            <form action={formAction} className="mt-6 space-y-6">
-                <input type="hidden" name="locale" value={locale} />
-                <input type="hidden" name="sessionId" value={sessionId} />
+        <form action={formAction} className="mt-6">
+            <input type="hidden" name="locale" value={locale} />
+            <input type="hidden" name="sessionId" value={sessionId} />
 
-                {/* карточки вопросов */}
+            <div className="mb-6 rounded-lg bg-surface-muted p-4">
+                <div className="flex items-center justify-between gap-3 text-sm">
+                    <span className="font-medium text-foreground">
+                        {dictionary.quiz.questionCountLabel}
+                    </span>
+                    <span className="tabular-nums text-muted">
+                        {answeredCount} / {totalQuestions}
+                    </span>
+                </div>
+
+                <div
+                    className="mt-3 h-1.5 overflow-hidden rounded-full bg-border"
+                    role="progressbar"
+                    aria-valuenow={answeredCount}
+                    aria-valuemin={0}
+                    aria-valuemax={totalQuestions}
+                    aria-label={`${answeredCount} / ${totalQuestions}`}
+                >
+                    <div
+                        className="h-full rounded-full bg-primary motion-safe:transition-[width]"
+                        style={{ width: `${progressPercent}%` }}
+                    />
+                </div>
+            </div>
+
+            <div className="space-y-6 pb-28 sm:pb-32">
                 {questions.map((question, index) => (
                     <QuestionCard
                         key={question.id}
                         index={index + 1}
                         question={question}
                         selectedOptionId={selectedAnswers[question.id]}
+                        imageUrl={question.imageUrl}
+                        imagePriority={index === 0 && Boolean(question.imageUrl)}
                         onSelectOption={(optionId) => {
                             setSelectedAnswers((current) => ({
                                 ...current,
@@ -50,23 +86,26 @@ export function QuizSessionForm({
                         }}
                     />
                 ))}
+            </div>
+
+            <div className="sticky bottom-0 -mx-4 border-t border-border bg-background/95 px-4 py-4 backdrop-blur-sm sm:mx-0 sm:px-0">
+                {errorMessage ? (
+                    <p
+                        className="mb-3 rounded-md bg-danger-muted px-3 py-2 text-sm text-danger"
+                        role="alert"
+                    >
+                        {errorMessage}
+                    </p>
+                ) : null}
 
                 <button
                     type="submit"
-                    className="min-h-11 rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    disabled={!allAnswered}
+                    className="min-h-11 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                 >
                     {dictionary.quiz.submitButton}
                 </button>
-            </form>
-
-            {errorMessage && (
-                <p
-                    className="mt-2 rounded-sm bg-danger-muted px-3 py-2 text-sm text-danger"
-                    role="alert"
-                >
-                    {errorMessage}
-                </p>
-            )}
-        </>
+            </div>
+        </form>
     );
 }

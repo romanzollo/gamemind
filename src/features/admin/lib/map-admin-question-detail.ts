@@ -10,6 +10,8 @@ export function mapAdminQuestionDetail(
 
     return {
         id: row.id,
+        type: row.type,
+        promptImageUrl: row.promptImageUrl,
         translations: row.translations,
         difficulty: row.difficulty,
         category: row.category,

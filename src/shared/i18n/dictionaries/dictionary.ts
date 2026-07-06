@@ -65,6 +65,11 @@ export type Dictionary = {
         formQuestionText: string;
         formQuestionTextRu: string;
         formQuestionTextEn: string;
+        formQuestionType: string;
+        formQuestionTypeText: string;
+        formQuestionTypeImageGuess: string;
+        formPromptImageUrl: string;
+        formPromptImageUrlHint: string;
         formOptionTextRu: string;
         formOptionTextEn: string;
         formCategory: string;

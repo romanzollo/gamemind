@@ -1,4 +1,4 @@
-import type { Difficulty } from '@/types';
+import type { Difficulty, QuestionType } from '@/types';
 
 export type LocalizedAdminText = {
     ru: { text: string };
@@ -27,6 +27,8 @@ export type AdminQuestionOptionDetail = {
 /** Полный вопрос для страницы edit: все поля формы + options с id. */
 export type AdminQuestionDetail = {
     id: string;
+    type: QuestionType;
+    promptImageUrl: string | null;
     translations: LocalizedAdminText;
     difficulty: Difficulty;
     category: string;

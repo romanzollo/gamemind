@@ -36,6 +36,15 @@ function parseQuestionTranslationsFromFormData(formData: FormData) {
     };
 }
 
+function parseQuestionMediaFromFormData(formData: FormData) {
+    const typeRaw = getFormString(formData, 'questionType');
+
+    return {
+        type: typeRaw === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT',
+        promptImageUrl: getFormString(formData, 'promptImageUrl'),
+    } as const;
+}
+
 // парсинг переводов текста варианта ответа из формы
 function parseOptionTranslationsFromFormData(
     formData: FormData,
@@ -137,6 +146,7 @@ export async function createQuestionAction(
     await requireAdmin(locale);
 
     const parsed = createQuestionSchema.safeParse({
+        ...parseQuestionMediaFromFormData(formData),
         translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
         category: formData.get('category') ?? 'video-games',
@@ -270,6 +280,7 @@ export async function updateQuestionAction(
     // парсим данные из формы
     const parsed = updateQuestionSchema.safeParse({
         questionId: formData.get('questionId'),
+        ...parseQuestionMediaFromFormData(formData),
         translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
         category: formData.get('category') ?? 'video-games',

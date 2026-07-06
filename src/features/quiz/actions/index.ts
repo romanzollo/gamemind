@@ -63,6 +63,7 @@ export async function startQuizAction(
             questionId: question.id,
             position: index,
             displayText: question.displayText,
+            displayImageUrl: question.displayImageUrl,
             options: shuffledOptions.map((option, optionIndex) => ({
                 optionId: option.id,
                 displayOrder: optionIndex,

@@ -67,6 +67,12 @@ export const enDictionary = {
         formQuestionText: 'Question text',
         formQuestionTextRu: 'Question text (Russian)',
         formQuestionTextEn: 'Question text (English)',
+        formQuestionType: 'Question type',
+        formQuestionTypeText: 'Text',
+        formQuestionTypeImageGuess: 'Image guess',
+        formPromptImageUrl: 'Prompt image URL',
+        formPromptImageUrlHint:
+            'Path under public/ (e.g. /quiz-images/...) or an HTTPS CDN URL.',
         formOptionTextRu: 'Option text (Russian)',
         formOptionTextEn: 'Option text (English)',
         formCategory: 'Category',

@@ -1,6 +1,9 @@
 // тип для сложности вопросов
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 
+// тип вопроса (совпадает с Prisma enum QuestionType)
+export type QuestionType = 'TEXT' | 'IMAGE_GUESS';
+
 // тип для входных данных для настройки викторины
 export type QuizSetupInput = {
     difficulty: Difficulty;
@@ -12,6 +15,8 @@ export type QuizPublicQuestion = {
     id: string;
     text: string;
     difficulty: Difficulty;
+    type?: QuestionType;
+    imageUrl?: string | null;
     options: {
         id: string;
         text: string;

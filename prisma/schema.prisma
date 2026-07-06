@@ -30,6 +30,17 @@ enum ContentLocale {
   en
 }
 
+enum QuestionType {
+  TEXT
+  IMAGE_GUESS
+}
+
+enum QuestionAssetRole {
+  PROMPT
+  HINT
+  THUMBNAIL
+}
+
 model User {
   id            String    @id @default(cuid())
   username      String    @unique
@@ -87,16 +98,18 @@ model VerificationToken {
 }
 
 model Question {
-  id         String     @id @default(cuid())
+  id         String       @id @default(cuid())
   text       String
+  type       QuestionType @default(TEXT)
   difficulty Difficulty
-  category   String     @default("video-games")
+  category   String       @default("video-games")
   metadata   Json?
-  isActive   Boolean    @default(true)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  isActive   Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 
   options          AnswerOption[]
+  assets           QuestionAsset[]
   quizAnswers      QuizAnswer[]
   sessionQuestions QuizSessionQuestion[]
   translations     QuestionTranslation[]
@@ -171,11 +184,12 @@ model QuizResult {
 }
 
 model QuizSessionQuestion {
-  id          String  @id @default(cuid())
-  sessionId   String
-  questionId  String
-  position    Int
-  displayText String?
+  id              String  @id @default(cuid())
+  sessionId       String
+  questionId      String
+  position        Int
+  displayText     String?
+  displayImageUrl String?
 
   session  QuizSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   question Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
@@ -184,6 +198,23 @@ model QuizSessionQuestion {
   @@unique([sessionId, questionId])
   @@unique([sessionId, position])
   @@index([sessionId])
+}
+
+model QuestionAsset {
+  id         String            @id @default(cuid())
+  questionId String
+  role       QuestionAssetRole @default(PROMPT)
+  url        String
+  storageKey String?
+  mimeType   String?
+  width      Int?
+  height     Int?
+  byteSize   Int?
+  order      Int               @default(0)
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId, role])
 }
 
 model QuizSessionQuestionOption {

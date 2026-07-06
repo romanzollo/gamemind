@@ -9,7 +9,7 @@ import type {
     CreateQuestionInput,
     UpdateQuestionInput,
 } from '@/features/admin/lib/validation';
-import type { Difficulty } from '@/types';
+import type { Difficulty, QuestionType } from '@/types';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import {
     isTransientDirectPgError,
@@ -33,7 +33,9 @@ export type QuestionSnapshotDisplayText = {
 export type QuestionSnapshotBundleItem = {
     id: string;
     difficulty: Difficulty;
+    type: QuestionType;
     displayText: string;
+    displayImageUrl: string | null;
     options: Array<{
         id: string;
         displayText: string;
@@ -45,6 +47,8 @@ type SnapshotDisplayTextRow = {
     question_id: string;
     difficulty: Difficulty;
     question_text: string;
+    question_type: string;
+    prompt_image_url: string | null;
     option_id: string | null;
     option_text: string | null;
     is_correct: boolean | null;
@@ -65,6 +69,21 @@ const RESOLVED_OPTION_TEXT_SQL = `
         ao."text"
     )
 `;
+
+const PROMPT_IMAGE_URL_SQL = `
+    (
+        SELECT qa."url"
+        FROM "QuestionAsset" qa
+        WHERE qa."questionId" = q."id"
+            AND qa."role" = 'PROMPT'::"QuestionAssetRole"
+        ORDER BY qa."order" ASC, qa."id" ASC
+        LIMIT 1
+    )
+`;
+
+function toQuestionType(value: string): QuestionType {
+    return value === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
+}
 
 function snapshotQuestionTranslationJoinsSql(
     activeLocaleParam: string,
@@ -136,6 +155,8 @@ export type LocalizedAdminText = {
 
 export type AdminQuestionForEdit = {
     id: string;
+    type: QuestionType;
+    promptImageUrl: string | null;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
@@ -210,6 +231,8 @@ function adminQuestionMatchesUpdateInput(
     input: UpdateQuestionInput,
 ) {
     if (
+        question.type !== input.type ||
+        (question.promptImageUrl ?? '') !== (input.promptImageUrl?.trim() ?? '') ||
         question.difficulty !== input.difficulty ||
         question.category !== input.category ||
         question.translations.ru.text !== input.translations.ru.text ||
@@ -250,19 +273,31 @@ async function findByIdForAdminWithDirectPg(
         const questionResult = await client.query<{
             id: string;
             text: string;
+            type: QuestionType;
+            promptImageUrl: string | null;
             difficulty: Difficulty;
             category: string;
             isActive: boolean;
         }>(
             `
                 SELECT
-                    "id",
-                    "text",
-                    "difficulty"::text AS "difficulty",
-                    "category",
-                    "isActive"
-                FROM "Question"
-                WHERE "id" = $1
+                    q."id",
+                    q."text",
+                    q."type"::text AS "type",
+                    (
+                        SELECT qa."url"
+                        FROM "QuestionAsset" qa
+                        WHERE
+                            qa."questionId" = q."id"
+                            AND qa."role" = 'PROMPT'::"QuestionAssetRole"
+                        ORDER BY qa."order" ASC, qa."id" ASC
+                        LIMIT 1
+                    ) AS "promptImageUrl",
+                    q."difficulty"::text AS "difficulty",
+                    q."category",
+                    q."isActive"
+                FROM "Question" q
+                WHERE q."id" = $1
             `,
             [id],
         );
@@ -324,6 +359,8 @@ async function findByIdForAdminWithDirectPg(
 
         return {
             id: row.id,
+            type: row.type,
+            promptImageUrl: row.promptImageUrl,
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,
@@ -402,11 +439,17 @@ async function applyAdminQuestionUpdateWithPg(
         },
     ]);
 
+    const promptImageUrl = input.promptImageUrl?.trim() ?? '';
+    const assetId = `qa-${input.questionId}-prompt`;
+
     const questionParams = [
         input.translations.ru.text,
+        input.type,
         input.difficulty,
         input.category,
         input.questionId,
+        promptImageUrl,
+        assetId,
     ];
     const questionTranslationParams = questionTranslationRows.flatMap((row) => [
         row.id,
@@ -449,10 +492,43 @@ async function applyAdminQuestionUpdateWithPg(
                 UPDATE "Question"
                 SET
                     "text" = $1,
-                    "difficulty" = $2::"Difficulty",
-                    "category" = $3,
+                    "type" = $2::"QuestionType",
+                    "difficulty" = $3::"Difficulty",
+                    "category" = $4,
                     "updatedAt" = NOW()
-                WHERE "id" = $4
+                WHERE "id" = $5
+                RETURNING "id"
+            ),
+            removed_prompt_assets AS (
+                DELETE FROM "QuestionAsset" qa
+                USING updated_question uq
+                WHERE
+                    qa."questionId" = uq."id"
+                    AND qa."role" = 'PROMPT'::"QuestionAssetRole"
+                    AND $2::"QuestionType" = 'TEXT'::"QuestionType"
+                RETURNING qa."id"
+            ),
+            upsert_prompt_asset AS (
+                INSERT INTO "QuestionAsset" (
+                    "id",
+                    "questionId",
+                    "role",
+                    "url",
+                    "order"
+                )
+                SELECT
+                    $7,
+                    uq."id",
+                    'PROMPT'::"QuestionAssetRole",
+                    $6,
+                    0
+                FROM updated_question uq
+                WHERE
+                    $2::"QuestionType" = 'IMAGE_GUESS'::"QuestionType"
+                    AND NULLIF(BTRIM($6), '') IS NOT NULL
+                ON CONFLICT ("id") DO UPDATE SET
+                    "url" = EXCLUDED."url",
+                    "role" = EXCLUDED."role"
                 RETURNING "id"
             ),
             question_translation_input("id", "questionId", "locale", "text") AS (
@@ -645,7 +721,9 @@ function groupSnapshotBundleRows(
             question = {
                 id: row.question_id,
                 difficulty: row.difficulty,
+                type: toQuestionType(row.question_type),
                 displayText: row.question_text,
+                displayImageUrl: row.prompt_image_url,
                 options: [],
             };
             byId.set(row.question_id, question);
@@ -704,7 +782,9 @@ async function loadSnapshotDisplayTextRowsByQuestionIds(
                 SELECT
                     q."id" AS question_id,
                     q."difficulty"::text AS difficulty,
+                    q."type"::text AS question_type,
                     ${RESOLVED_QUESTION_TEXT_SQL} AS question_text,
+                    ${PROMPT_IMAGE_URL_SQL} AS prompt_image_url,
                     ao."id" AS option_id,
                     ${RESOLVED_OPTION_TEXT_SQL} AS option_text,
                     ao."isCorrect" AS is_correct
@@ -748,7 +828,9 @@ async function loadRandomSnapshotBundleWithPgClient(
                 SELECT
                     q."id" AS question_id,
                     q."difficulty"::text AS difficulty,
+                    q."type"::text AS question_type,
                     ${RESOLVED_QUESTION_TEXT_SQL} AS question_text,
+                    ${PROMPT_IMAGE_URL_SQL} AS prompt_image_url,
                     ao."id" AS option_id,
                     ${RESOLVED_OPTION_TEXT_SQL} AS option_text,
                     ao."isCorrect" AS is_correct
@@ -903,11 +985,13 @@ export const questionRepository = {
     // создание вопроса с вариантами ответа (admin create flow)
     createWithOptions(input: CreateQuestionInput) {
         const ruQuestionText = input.translations.ru.text;
+        const promptImageUrl = input.promptImageUrl?.trim();
 
         return withDatabaseRetry(() =>
             prisma.question.create({
                 data: {
                     text: ruQuestionText,
+                    type: input.type,
                     difficulty: input.difficulty,
                     category: input.category,
                     isActive: true,
@@ -923,6 +1007,18 @@ export const questionRepository = {
                             },
                         ],
                     },
+                    assets:
+                        input.type === 'IMAGE_GUESS' && promptImageUrl
+                            ? {
+                                  create: [
+                                      {
+                                          role: 'PROMPT',
+                                          url: promptImageUrl,
+                                          order: 0,
+                                      },
+                                  ],
+                              }
+                            : undefined,
                     options: {
                         create: input.options.map((option) => ({
                             text: option.translations.ru.text,

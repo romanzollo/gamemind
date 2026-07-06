@@ -3,6 +3,20 @@ import { z } from 'zod';
 // схема для сложности вопроса
 const difficultySchema = z.enum(['EASY', 'MEDIUM', 'HARD']);
 
+const questionTypeSchema = z.enum(['TEXT', 'IMAGE_GUESS']);
+
+const promptImageUrlSchema = z
+    .string()
+    .trim()
+    .max(2048, 'Image URL is too long')
+    .refine(
+        (value) =>
+            value === '' ||
+            value.startsWith('/') ||
+            value.startsWith('https://'),
+        'Image URL must be a site path or HTTPS URL',
+    );
+
 // схема для локалей
 const locales = ['ru', 'en'] as const;
 
@@ -63,9 +77,24 @@ function assertExactlyOneCorrectOption(
     }
 }
 
+function assertImageGuessHasPromptUrl(
+    data: { type: z.infer<typeof questionTypeSchema>; promptImageUrl?: string },
+    ctx: z.RefinementCtx,
+) {
+    if (data.type === 'IMAGE_GUESS' && !data.promptImageUrl?.trim()) {
+        ctx.addIssue({
+            code: 'custom',
+            path: ['promptImageUrl'],
+            message: 'Prompt image URL is required for image guess questions',
+        });
+    }
+}
+
 // схема для создания вопроса
 export const createQuestionSchema = z
     .object({
+        type: questionTypeSchema.default('TEXT'),
+        promptImageUrl: promptImageUrlSchema.optional(),
         translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z
@@ -81,6 +110,7 @@ export const createQuestionSchema = z
     })
     .superRefine((data, ctx) => {
         assertExactlyOneCorrectOption(data.options, ctx);
+        assertImageGuessHasPromptUrl(data, ctx);
     });
 
 export type CreateQuestionInput = z.infer<typeof createQuestionSchema>;
@@ -89,6 +119,8 @@ export type CreateQuestionInput = z.infer<typeof createQuestionSchema>;
 export const updateQuestionSchema = z
     .object({
         questionId: z.string().trim().min(1, 'Question id is required'),
+        type: questionTypeSchema.default('TEXT'),
+        promptImageUrl: promptImageUrlSchema.optional(),
         translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z
@@ -104,6 +136,7 @@ export const updateQuestionSchema = z
     })
     .superRefine((data, ctx) => {
         assertExactlyOneCorrectOption(data.options, ctx);
+        assertImageGuessHasPromptUrl(data, ctx);
     });
 
 export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;
