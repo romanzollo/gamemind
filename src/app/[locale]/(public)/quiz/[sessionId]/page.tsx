@@ -55,12 +55,12 @@ export default async function QuizSessionPage({
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-6 sm:px-8 sm:py-8">
-            <header className="border-b border-(--border) pb-4 sm:pb-6">
-                <h1 className="text-2xl font-semibold tracking-tight text-(--foreground) sm:text-3xl">
+            <header className="border-b border-border pb-4 sm:pb-6">
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                     {dictionary.quiz.sessionTitle}
                 </h1>
 
-                <p className="mt-2 text-sm text-(--muted) sm:text-base">
+                <p className="mt-2 text-sm text-muted sm:text-base">
                     {dictionary.quiz.questionCountLabel}: {questions.length}
                 </p>
             </header>

@@ -112,7 +112,7 @@ export function AdminQuestionForm({
                             defaultValue={
                                 editValues?.translations.ru.text ?? ''
                             }
-                            className="rounded border border-(--border) p-3"
+                            className="rounded border border-border p-3"
                         />
                     </label>
 
@@ -127,7 +127,7 @@ export function AdminQuestionForm({
                             defaultValue={
                                 editValues?.translations.en.text ?? ''
                             }
-                            className="rounded border border-(--border) p-3"
+                            className="rounded border border-border p-3"
                         />
                     </label>
                 </fieldset>
@@ -138,7 +138,7 @@ export function AdminQuestionForm({
                         name="difficulty"
                         defaultValue={editValues?.difficulty ?? 'EASY'}
                         required
-                        className="rounded border border-(--border) p-3"
+                        className="rounded border border-border p-3"
                     >
                         <option value="EASY">{dictionary.quiz.easy}</option>
                         <option value="MEDIUM">{dictionary.quiz.medium}</option>
@@ -154,7 +154,7 @@ export function AdminQuestionForm({
                         defaultValue={editValues?.category ?? 'video-games'}
                         required
                         maxLength={100}
-                        className="rounded border border-(--border) p-3"
+                        className="rounded border border-border p-3"
                     />
                 </label>
 
@@ -169,7 +169,7 @@ export function AdminQuestionForm({
                     {options.map((option, index) => (
                         <div
                             key={option.id || index}
-                            className="flex flex-col gap-2 rounded border border-(--border) p-3"
+                            className="flex flex-col gap-2 rounded border border-border p-3"
                         >
                             {isEdit ? (
                                 <input
@@ -202,7 +202,7 @@ export function AdminQuestionForm({
                                     required
                                     maxLength={200}
                                     defaultValue={option.translations.ru.text}
-                                    className="rounded border border-(--border) p-3"
+                                    className="rounded border border-border p-3"
                                 />
                             </label>
 
@@ -214,7 +214,7 @@ export function AdminQuestionForm({
                                     required
                                     maxLength={200}
                                     defaultValue={option.translations.en.text}
-                                    className="rounded border border-(--border) p-3"
+                                    className="rounded border border-border p-3"
                                 />
                             </label>
                         </div>

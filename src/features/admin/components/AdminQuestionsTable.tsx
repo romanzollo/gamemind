@@ -38,7 +38,7 @@ export function AdminQuestionsTable({
         <div className="mt-6 overflow-x-auto">
             <table className="w-full border-collapse text-left text-sm">
                 <thead>
-                    <tr className="border-b border-(--border) text-neutral-500 dark:text-neutral-400">
+                    <tr className="border-b border-border text-neutral-500 dark:text-neutral-400">
                         <th className="py-2 pr-4">{labels.tableQuestion}</th>
                         <th className="py-2 pr-4">{labels.tableDifficulty}</th>
                         <th className="py-2 pr-4">{labels.tableCategory}</th>
@@ -53,7 +53,7 @@ export function AdminQuestionsTable({
                     {entries.map((entry) => (
                         <tr
                             key={entry.id}
-                            className="border-b border-(--border)"
+                            className="border-b border-border"
                         >
                             <td className="py-3 pr-4">{entry.text}</td>
                             <td className="py-3 pr-4">{entry.difficulty}</td>

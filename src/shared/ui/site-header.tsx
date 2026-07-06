@@ -28,7 +28,7 @@ function localizedHref(locale: Locale, href: string) {
 
 export function SiteHeader({ locale, dictionary }: SiteHeaderProps) {
     return (
-        <header className="border-b border-(--border)">
+        <header className="border-b border-border">
             <nav className="mx-auto flex max-w-5xl flex-wrap items-center gap-4 p-4 text-sm">
                 {links.map((link) => (
                     <Link

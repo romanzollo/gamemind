@@ -53,7 +53,7 @@ export function QuizSessionForm({
 
                 <button
                     type="submit"
-                    className="min-h-11 rounded-(--radius-md) bg-(--primary) px-4 py-2 text-(--primary-foreground) transition hover:bg-(--primary-hover) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--ring)"
+                    className="min-h-11 rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
                     {dictionary.quiz.submitButton}
                 </button>
@@ -61,7 +61,7 @@ export function QuizSessionForm({
 
             {errorMessage && (
                 <p
-                    className="mt-2 rounded-(--radius-sm) bg-(--danger-muted) px-3 py-2 text-sm text-(--danger)"
+                    className="mt-2 rounded-sm bg-danger-muted px-3 py-2 text-sm text-danger"
                     role="alert"
                 >
                     {errorMessage}
