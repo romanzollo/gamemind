@@ -10,7 +10,6 @@ import type {
     UpdateQuestionInput,
 } from '@/features/admin/lib/validation';
 import type { Difficulty, QuestionType } from '@/types';
-import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import {
     isTransientDirectPgError,
     withDirectPgClient,
@@ -1262,68 +1261,71 @@ export const questionRepository = {
     },
 
     // деактивация вопроса по id (admin deactivate flow)
-    deactivateById(id: string) {
-        return withDatabaseRetry(() =>
-            prisma.$transaction(async (tx) => {
-                const question = await tx.question.findUnique({
-                    where: { id },
-                    select: { id: true, isActive: true },
-                });
+    async deactivateById(id: string) {
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{ isActive: boolean }>(
+                `SELECT "isActive" FROM "Question" WHERE "id" = $1`,
+                [id],
+            );
+            const question = current.rows[0];
 
-                if (!question) {
-                    return { status: 'not_found' } as const;
-                }
+            if (!question) {
+                return { status: 'not_found' } as const;
+            }
 
-                if (!question.isActive) {
-                    return { status: 'already_in_target_state' } as const;
-                }
+            if (!question.isActive) {
+                return { status: 'already_in_target_state' } as const;
+            }
 
-                await tx.question.update({
-                    where: { id },
-                    data: { isActive: false },
-                    select: { id: true },
-                });
+            await client.query(
+                `UPDATE "Question" SET "isActive" = false WHERE "id" = $1`,
+                [id],
+            );
 
-                return { status: 'updated' } as const;
-            }),
-        );
+            return { status: 'updated' } as const;
+        });
     },
 
     // активация вопроса по id (admin activate flow)
-    activateById(id: string) {
-        return withDatabaseRetry(() =>
-            prisma.$transaction(async (tx) => {
-                const question = await tx.question.findUnique({
-                    where: { id },
-                    select: { id: true, isActive: true },
-                });
+    async activateById(id: string) {
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{ isActive: boolean }>(
+                `SELECT "isActive" FROM "Question" WHERE "id" = $1`,
+                [id],
+            );
+            const question = current.rows[0];
 
-                if (!question) {
-                    return { status: 'not_found' } as const;
-                }
+            if (!question) {
+                return { status: 'not_found' } as const;
+            }
 
-                if (question.isActive) {
-                    return { status: 'already_in_target_state' } as const;
-                }
+            if (question.isActive) {
+                return { status: 'already_in_target_state' } as const;
+            }
 
-                await tx.question.update({
-                    where: { id },
-                    data: { isActive: true },
-                    select: { id: true },
-                });
+            await client.query(
+                `UPDATE "Question" SET "isActive" = true WHERE "id" = $1`,
+                [id],
+            );
 
-                return { status: 'updated' } as const;
-            }),
-        );
+            return { status: 'updated' } as const;
+        });
     },
 
     // удаление вопроса по id (admin delete flow)
-    deleteById(id: string) {
-        return withDatabaseRetry(() =>
-            prisma.question.delete({
-                where: { id },
-                select: { id: true },
-            }),
-        );
+    async deleteById(id: string) {
+        return withDirectPgWriteRetry(async (client) => {
+            const result = await client.query<{ id: string }>(
+                `DELETE FROM "Question" WHERE "id" = $1 RETURNING "id"`,
+                [id],
+            );
+            const deleted = result.rows[0];
+
+            if (!deleted) {
+                throw new Error(`Question not found: ${id}`);
+            }
+
+            return deleted;
+        });
     },
 };

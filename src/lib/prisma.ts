@@ -85,16 +85,19 @@ function getPrismaClient(): PrismaClient {
 
 async function resetDatabaseConnection() {
     const pool = globalForPrisma.pool;
+    const client = globalForPrisma.prisma;
 
-    if (globalForPrisma.prisma) {
-        await globalForPrisma.prisma.$disconnect().catch(() => undefined);
-        globalForPrisma.prisma = undefined;
-    }
-
+    globalForPrisma.prisma = undefined;
     globalForPrisma.pool = undefined;
 
+    // Neon socket teardown can take ~19s — do not await on the request path.
+    // Awaiting pool.end() previously turned one transient error into multi-minute hangs.
+    if (client) {
+        void client.$disconnect().catch(() => undefined);
+    }
+
     if (pool) {
-        await pool.end().catch(() => undefined);
+        void pool.end().catch(() => undefined);
     }
 }
 

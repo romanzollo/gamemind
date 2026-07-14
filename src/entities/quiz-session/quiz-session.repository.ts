@@ -14,6 +14,7 @@ import {
 } from '@/lib/db/direct-pg';
 import { loadRandomSnapshotBundleWithPgClient } from '@/entities/question/question.repository';
 import type { QuestionSnapshotBundleItem } from '@/entities/question/question.repository';
+import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
 // тип для входных данных для создания сессии викторины
 type CreateQuizSessionInput = {
@@ -300,7 +301,7 @@ function buildSnapshotData(
                 text: question.displayText,
                 difficulty: picked.difficulty,
                 type: picked.type,
-                imageUrl: question.displayImageUrl ?? null,
+                imageUrl: normalizeQuizImageUrl(question.displayImageUrl),
                 position: question.position,
                 options: question.options.map((option) => {
                     const pickedOption = pickedOptions.get(option.optionId);
@@ -359,7 +360,7 @@ function mapSnapshotDataToPublicQuestions(
             text: question.text,
             difficulty: question.difficulty,
             type: question.type,
-            imageUrl: question.imageUrl ?? null,
+            imageUrl: normalizeQuizImageUrl(question.imageUrl),
             options: [...question.options]
                 .sort((left, right) => left.order - right.order)
                 .map((option) => ({
@@ -999,7 +1000,7 @@ async function loadSnapshotPublicQuestions(
                 id: row.question_id,
                 text: row.question_text,
                 difficulty: row.difficulty,
-                imageUrl: row.display_image_url,
+                imageUrl: normalizeQuizImageUrl(row.display_image_url),
                 options: [
                     {
                         id: row.option_id,

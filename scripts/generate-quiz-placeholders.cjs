@@ -3,6 +3,10 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..', 'public', 'quiz-images');
 
+/**
+ * SVG placeholders for bootstrap only. Prefer real WebP from
+ * `npm run images:optimize` — see docs/QUIZ_IMAGES.md.
+ */
 const PLACEHOLDERS = [
     {
         file: 'easy/super-mario-bros.svg',
@@ -38,45 +42,40 @@ const PLACEHOLDERS = [
         file: 'medium/final-fantasy-vii.svg',
         title: 'Final Fantasy VII',
         from: '#7c3aed',
-        to: '#312e81',
-    },
-    {
-        file: 'hard/doom-1993.svg',
-        title: 'DOOM (1993)',
-        from: '#991b1b',
-        to: '#1c1917',
+        to: '#4c1d95',
     },
     {
         file: 'hard/tetris.svg',
         title: 'Tetris',
-        from: '#0891b2',
-        to: '#164e63',
+        from: '#0ea5e9',
+        to: '#0c4a6e',
+    },
+    {
+        file: 'hard/doom-1993.svg',
+        title: 'Doom (1993)',
+        from: '#ef4444',
+        to: '#7f1d1d',
     },
     {
         file: 'hard/metal-gear-solid.svg',
         title: 'Metal Gear Solid',
-        from: '#4b5563',
-        to: '#111827',
+        from: '#64748b',
+        to: '#1e293b',
     },
 ];
 
-function escapeXml(value) {
-    return value
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;');
-}
-
-function buildSvg({ title, from, to }) {
-    const safeTitle = escapeXml(title);
+function buildSvg(item) {
+    const safeTitle = item.title
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="${safeTitle}">
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${from}" />
-      <stop offset="100%" stop-color="${to}" />
+      <stop offset="0%" stop-color="${item.from}" />
+      <stop offset="100%" stop-color="${item.to}" />
     </linearGradient>
   </defs>
   <rect width="1280" height="720" fill="url(#bg)" />
@@ -87,10 +86,25 @@ function buildSvg({ title, from, to }) {
 `;
 }
 
+function webpPathForSvg(svgRelativePath) {
+    return path.join(ROOT, svgRelativePath.replace(/\.svg$/i, '.webp'));
+}
+
+/**
+ * Prefer existing WebP screenshots. Only create SVG if WebP is missing
+ * (bootstrap for fresh clones without optimized assets).
+ */
 function ensurePlaceholders({ log = true } = {}) {
     let created = 0;
+    let webpReady = 0;
 
     for (const item of PLACEHOLDERS) {
+        const webpPath = webpPathForSvg(item.file);
+        if (fs.existsSync(webpPath)) {
+            webpReady += 1;
+            continue;
+        }
+
         const targetPath = path.join(ROOT, item.file);
         fs.mkdirSync(path.dirname(targetPath), { recursive: true });
 
@@ -98,20 +112,59 @@ function ensurePlaceholders({ log = true } = {}) {
             fs.writeFileSync(targetPath, buildSvg(item), 'utf8');
             created += 1;
             if (log) {
-                console.log(`Created ${path.relative(process.cwd(), targetPath)}`);
+                console.log(`Created SVG fallback ${path.relative(process.cwd(), targetPath)}`);
             }
         }
     }
 
-    if (log && created === 0) {
-        console.log('Quiz image placeholders already exist');
+    if (log) {
+        console.log(
+            `Quiz images: ${webpReady} WebP ready, ${created} SVG fallback(s) created`,
+        );
     }
 
-    return created;
+    return { created, webpReady };
+}
+
+/**
+ * Fail seed if IMAGE_GUESS questions point at missing public files.
+ */
+function assertPromptImageFilesExist(questions, { log = true } = {}) {
+    const publicRoot = path.join(__dirname, '..', 'public');
+    const missing = [];
+
+    for (const question of questions) {
+        if (question.type !== 'IMAGE_GUESS') {
+            continue;
+        }
+        const url = question.promptImage?.url;
+        if (!url || !url.startsWith('/')) {
+            missing.push(`${question.id}: invalid promptImage.url`);
+            continue;
+        }
+        const filePath = path.join(publicRoot, url.replace(/^\//, ''));
+        if (!fs.existsSync(filePath)) {
+            missing.push(`${question.id}: missing ${url}`);
+        }
+    }
+
+    if (missing.length > 0) {
+        throw new Error(
+            `Missing quiz image files:\n- ${missing.join('\n- ')}\nRun: npm run images:optimize`,
+        );
+    }
+
+    if (log) {
+        console.log('Quiz IMAGE_GUESS prompt files exist on disk');
+    }
 }
 
 if (require.main === module) {
     ensurePlaceholders();
 }
 
-module.exports = { ensurePlaceholders, PLACEHOLDERS };
+module.exports = {
+    ensurePlaceholders,
+    assertPromptImageFilesExist,
+    PLACEHOLDERS,
+};

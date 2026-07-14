@@ -10,6 +10,7 @@ type QuestionCardProps = {
     onSelectOption: (optionId: string) => void;
     imageUrl?: string | null;
     imageAlt?: string;
+    imageUnavailableLabel: string;
     /** Eager-load image for the first card (usually question 1). */
     imagePriority?: boolean;
 };
@@ -43,6 +44,7 @@ export function QuestionCard({
     onSelectOption,
     imageUrl,
     imageAlt,
+    imageUnavailableLabel,
     imagePriority = false,
 }: QuestionCardProps) {
     return (
@@ -51,10 +53,11 @@ export function QuestionCard({
             aria-labelledby={`question-${question.id}-title`}
         >
             {imageUrl ? (
-                <div className="mb-4 overflow-hidden rounded-lg">
+                <div className="mb-4">
                     <QuestionImage
                         src={imageUrl}
                         alt={imageAlt ?? question.text}
+                        unavailableLabel={imageUnavailableLabel}
                         priority={imagePriority}
                     />
                 </div>

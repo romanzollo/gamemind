@@ -13,6 +13,7 @@ export const ruDictionary: Dictionary = {
         admin: 'Админ',
         login: 'Войти',
         register: 'Регистрация',
+        logout: 'Выйти',
     },
     language: {
         label: 'Язык',
@@ -120,6 +121,7 @@ export const ruDictionary: Dictionary = {
         submitButton: 'Завершить квиз',
         scoreLabel: 'Результат',
         correctAnswersLabel: 'Правильных ответов',
+        imageUnavailable: 'Изображение недоступно',
         errors: {
             invalidSetup: 'Проверь сложность и количество вопросов.',
             notEnoughQuestions:

@@ -31,7 +31,13 @@ export default async function AdminQuestionsPage({
     try {
         const rows = await questionRepository.findAllForAdmin(safeLocale);
         entries = mapAdminQuestions(rows);
-    } catch {
+    } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+            console.error(
+                '[admin/questions] findAllForAdmin failed:',
+                error instanceof Error ? error.message : error,
+            );
+        }
         loadErrorMessage = dictionary.admin.errors.loadFailed;
     }
 

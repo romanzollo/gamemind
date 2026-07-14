@@ -1,32 +1,102 @@
-import Image from 'next/image';
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
 type QuestionImageProps = {
     src: string;
     alt: string;
+    unavailableLabel: string;
     /** First visible image in the session — skip lazy load. */
     priority?: boolean;
 };
 
-function isSvgSource(src: string) {
-    const path = src.split('?')[0]?.toLowerCase() ?? '';
-    return path.endsWith('.svg');
+type LoadState = 'loading' | 'ready' | 'error';
+
+/** Retro easy-tier shots are upscaled pixel art — keep edges crisp. */
+function isPixelArtPath(src: string) {
+    return src.includes('/quiz-images/easy/');
 }
 
-export function QuestionImage({ src, alt, priority = false }: QuestionImageProps) {
-    const unoptimized = isSvgSource(src);
+function readImageState(img: HTMLImageElement | null): LoadState | null {
+    if (!img) {
+        return null;
+    }
+
+    if (img.complete) {
+        return img.naturalWidth > 0 ? 'ready' : 'error';
+    }
+
+    return null;
+}
+
+/**
+ * Native <img> keeps real aspect ratio (next/image fixed 16:9 box was cropping).
+ * Soft theme surface behind the frame — no cinema black bars.
+ */
+export function QuestionImage({
+    src,
+    alt,
+    unavailableLabel,
+    priority = false,
+}: QuestionImageProps) {
+    const resolvedSrc = normalizeQuizImageUrl(src) ?? src;
+    const [loadState, setLoadState] = useState<LoadState>('loading');
+    const imgRef = useRef<HTMLImageElement | null>(null);
+    const pixelArt = isPixelArtPath(resolvedSrc);
+
+    useEffect(() => {
+        setLoadState('loading');
+
+        // Cached images may already be complete before onLoad is attached.
+        const cached = readImageState(imgRef.current);
+        if (cached) {
+            setLoadState(cached);
+        }
+    }, [resolvedSrc]);
+
+    if (loadState === 'error') {
+        return (
+            <figure
+                className="flex min-h-28 items-center justify-center rounded-lg border border-dashed border-border bg-surface-muted px-4 py-6"
+                role="img"
+                aria-label={alt}
+            >
+                <p className="text-center text-sm text-muted">{unavailableLabel}</p>
+            </figure>
+        );
+    }
 
     return (
-        <div className="relative aspect-video w-full bg-surface-muted">
-            <Image
-                src={src}
-                alt={alt}
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 768px) 100vw, 672px"
-                priority={priority}
-                loading={priority ? undefined : 'lazy'}
-                unoptimized={unoptimized}
-            />
-        </div>
+        <figure className="overflow-hidden rounded-lg border border-border/70 bg-surface-muted shadow-sm">
+            <div className="relative flex items-center justify-center px-3 py-3 sm:px-4 sm:py-4">
+                {loadState === 'loading' ? (
+                    <div
+                        className="absolute inset-3 animate-pulse rounded-md bg-border/40 sm:inset-4"
+                        aria-hidden
+                    />
+                ) : null}
+
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    key={resolvedSrc}
+                    ref={imgRef}
+                    src={resolvedSrc}
+                    alt={alt}
+                    loading={priority ? 'eager' : 'lazy'}
+                    decoding="async"
+                    onLoad={() => setLoadState('ready')}
+                    onError={() => setLoadState('error')}
+                    className={[
+                        'relative z-10 mx-auto block h-auto w-auto max-w-full',
+                        'max-h-[min(52vh,22rem)] sm:max-h-[min(58vh,26rem)]',
+                        pixelArt ? '[image-rendering:pixelated]' : '',
+                        loadState === 'ready' ? 'opacity-100' : 'opacity-0',
+                        'motion-safe:transition-opacity duration-200',
+                    ].join(' ')}
+                />
+            </div>
+        </figure>
     );
 }

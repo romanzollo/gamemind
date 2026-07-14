@@ -6,13 +6,24 @@ const TRANSIENT_DIRECT_PG_ERROR_MESSAGES = [
     'Connection ended unexpectedly',
     'not queryable',
     'Query read timeout',
+    'canceling statement due to statement timeout',
     'ECONNRESET',
     'ETIMEDOUT',
     'timeout expired',
     'timeout exceeded when trying to connect',
+    'Direct pg operation timed out',
 ];
 
 const DEPRECATED_SSL_MODES = new Set(['prefer', 'require', 'verify-ca']);
+
+/**
+ * Hard wall-clock budget per read attempt.
+ * Must stay above typical Neon cold-wake, but far below the old ~2.5min hangs.
+ * Do NOT use a ~12s admin-only budget on pooled URLs — in Next.js that path
+ * repeatedly timed out while the same SQL via unpooled (quiz) stayed healthy.
+ */
+const READ_ATTEMPT_TIMEOUT_MS = 30_000;
+const READ_MAX_ATTEMPTS = 2;
 
 export function normalizePgConnectionString(connectionString: string) {
     try {
@@ -56,6 +67,8 @@ function createClient(connectionString: string) {
         connectionString,
         ssl: { rejectUnauthorized: true },
         keepAlive: true,
+        // Best-effort only — on Windows + Neon this often does not abort a stuck
+        // TLS handshake. Read paths also use Promise.race + client.end().
         connectionTimeoutMillis: 15_000,
     });
 
@@ -89,24 +102,84 @@ function wait(milliseconds: number) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-async function withFreshClient<T>(
-    createClient: () => Client,
-    operation: (client: Client) => Promise<T>,
-): Promise<T> {
-    const client = createClient();
-
-    await client.connect();
-
-    try {
-        return await operation(client);
-    } finally {
-        void client.end().catch(() => undefined);
+class DirectPgTimeoutError extends Error {
+    constructor(timeoutMs: number) {
+        super(`Direct pg operation timed out after ${timeoutMs}ms`);
+        this.name = 'DirectPgTimeoutError';
     }
 }
 
-async function withDirectPgReadRetry<T>(
+async function withTimeout<T>(
+    promise: Promise<T>,
+    timeoutMs: number,
+): Promise<T> {
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    try {
+        return await Promise.race([
+            promise,
+            new Promise<T>((_resolve, reject) => {
+                timeoutId = setTimeout(() => {
+                    reject(new DirectPgTimeoutError(timeoutMs));
+                }, timeoutMs);
+            }),
+        ]);
+    } finally {
+        if (timeoutId !== undefined) {
+            clearTimeout(timeoutId);
+        }
+    }
+}
+
+function endClient(client: Client) {
+    // Neon socket close can take ~19s — never await it on the response path.
+    void client.end().catch(() => undefined);
+}
+
+async function withFreshClient<T>(
+    createClientFn: () => Client,
+    operation: (client: Client) => Promise<T>,
+    options?: {
+        attemptTimeoutMs?: number;
+    },
+): Promise<T> {
+    const client = createClientFn();
+    let settled = false;
+
+    try {
+        const run = async () => {
+            await client.connect();
+
+            if (settled) {
+                throw new DirectPgTimeoutError(
+                    options?.attemptTimeoutMs ?? READ_ATTEMPT_TIMEOUT_MS,
+                );
+            }
+
+            return await operation(client);
+        };
+
+        if (options?.attemptTimeoutMs !== undefined) {
+            const result = await withTimeout(run(), options.attemptTimeoutMs);
+            settled = true;
+            return result;
+        }
+
+        const result = await run();
+        settled = true;
+        return result;
+    } catch (error) {
+        settled = true;
+        endClient(client);
+        throw error;
+    } finally {
+        endClient(client);
+    }
+}
+
+async function withPgReadRetry<T>(
     operation: () => Promise<T>,
-    attempts = 3,
+    attempts = READ_MAX_ATTEMPTS,
 ) {
     let lastError: unknown;
 
@@ -120,6 +193,13 @@ async function withDirectPgReadRetry<T>(
                 throw error;
             }
 
+            if (process.env.NODE_ENV === 'development') {
+                console.warn(
+                    `Direct pg read retry ${attempt}/${attempts}:`,
+                    error instanceof Error ? error.message : error,
+                );
+            }
+
             await wait(250 * attempt);
         }
     }
@@ -127,14 +207,40 @@ async function withDirectPgReadRetry<T>(
     throw lastError;
 }
 
-// Reads: fresh direct client per attempt (same pattern as scripts/seed.cjs).
+const readClientOptions = {
+    attemptTimeoutMs: READ_ATTEMPT_TIMEOUT_MS,
+} as const;
+
+/**
+ * Reads via unpooled Neon host. Prefer for admin list/detail and critical
+ * quiz reads. Hard attempt timeout prevents multi-minute hangs; budget is
+ * wide enough for Neon cold wake (unlike the previous 12s admin budget).
+ *
+ * Note: do not rely on `SET statement_timeout` here — a wall-clock race is
+ * enough, and avoids an extra round-trip on every read.
+ */
 export async function withDirectPgClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
-    return withDirectPgReadRetry(() => withFreshClient(createDirectClient, operation));
+    return withPgReadRetry(() =>
+        withFreshClient(createDirectClient, operation, readClientOptions),
+    );
 }
 
-// Writes: fresh direct client without automatic retry.
+/**
+ * Optional pooled reads for simple SELECTs. Prefer `withDirectPgClient` when
+ * the same Next.js process already shows unpooled (quiz) healthy and pooled
+ * admin reads timing out — that pattern was observed July 14, 2026.
+ */
+export async function withPooledPgReadClient<T>(
+    operation: (client: Client) => Promise<T>,
+) {
+    return withPgReadRetry(() =>
+        withFreshClient(createPooledClient, operation, readClientOptions),
+    );
+}
+
+// Writes: fresh direct client without automatic retry / hard timeout.
 export async function withDirectPgWriteClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
@@ -174,7 +280,9 @@ export async function withPooledPgQuizStartClient<T>(
 
     for (let attempt = 1; attempt <= attempts; attempt += 1) {
         try {
-            return await withFreshClient(createPooledClient, operation);
+            return await withFreshClient(createPooledClient, operation, {
+                attemptTimeoutMs: READ_ATTEMPT_TIMEOUT_MS,
+            });
         } catch (error) {
             lastError = error;
 

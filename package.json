@@ -14,7 +14,9 @@
         "db:seed": "prisma db seed",
         "db:verify-i18n": "node scripts/verify-content-i18n.cjs",
         "db:fix-i18n": "node scripts/verify-content-i18n.cjs --fix",
-        "db:studio": "prisma studio"
+        "db:studio": "prisma studio",
+        "images:optimize": "node scripts/optimize-quiz-images.cjs",
+        "images:update-db": "node scripts/update-quiz-image-assets.cjs"
     },
     "dependencies": {
         "@auth/prisma-adapter": "^2.9.1",
@@ -38,6 +40,7 @@
         "eslint": "^9",
         "eslint-config-next": "16.2.9",
         "prisma": "^6.9.0",
+        "sharp": "^0.35.3",
         "tailwindcss": "^4",
         "tsx": "^4.20.3",
         "typescript": "^5"

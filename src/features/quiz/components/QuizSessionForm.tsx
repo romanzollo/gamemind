@@ -77,6 +77,7 @@ export function QuizSessionForm({
                         question={question}
                         selectedOptionId={selectedAnswers[question.id]}
                         imageUrl={question.imageUrl}
+                        imageUnavailableLabel={dictionary.quiz.imageUnavailable}
                         imagePriority={index === 0 && Boolean(question.imageUrl)}
                         onSelectOption={(optionId) => {
                             setSelectedAnswers((current) => ({

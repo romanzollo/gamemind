@@ -37,11 +37,11 @@ function QI(num, difficulty, metadata, ru, en, imageUrl, options) {
         id,
         type: 'IMAGE_GUESS',
         difficulty,
-        metadata: { ...metadata, mediaSource: 'placeholder' },
+        metadata: { ...metadata, mediaSource: 'screenshot' },
         translations: { ru: { text: ru }, en: { text: en } },
         promptImage: {
             url: imageUrl,
-            mimeType: 'image/svg+xml',
+            mimeType: 'image/webp',
             width: 1280,
             height: 720,
         },
@@ -64,7 +64,7 @@ const questions = [
         { franchise: 'Super Mario', topic: 'image-guess', game: 'Super Mario Bros.' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/easy/super-mario-bros.svg',
+        '/quiz-images/easy/super-mario-bros.webp',
         [
             opt(true, 'Super Mario Bros.', 'Super Mario Bros.'),
             opt(false, 'The Legend of Zelda', 'The Legend of Zelda'),
@@ -78,7 +78,7 @@ const questions = [
         { franchise: 'The Legend of Zelda', topic: 'image-guess', game: 'The Legend of Zelda' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/easy/legend-of-zelda.svg',
+        '/quiz-images/easy/legend-of-zelda.webp',
         [
             opt(true, 'The Legend of Zelda', 'The Legend of Zelda'),
             opt(false, 'Super Mario Bros.', 'Super Mario Bros.'),
@@ -118,7 +118,7 @@ const questions = [
         { franchise: 'Pokémon', topic: 'image-guess', game: 'Pokémon Red / Blue' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/easy/pokemon-red-blue.svg',
+        '/quiz-images/easy/pokemon-red-blue.webp',
         [
             opt(true, 'Pokémon Red / Blue', 'Pokémon Red / Blue'),
             opt(false, 'Digimon World', 'Digimon World'),
@@ -329,7 +329,7 @@ const questions = [
         { game: 'The Witcher 3: Wild Hunt', topic: 'image-guess' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/medium/the-witcher-3.svg',
+        '/quiz-images/medium/the-witcher-3.webp',
         [
             opt(true, 'The Witcher 3: Wild Hunt', 'The Witcher 3: Wild Hunt'),
             opt(false, 'Skyrim', 'Skyrim'),
@@ -356,7 +356,7 @@ const questions = [
         { game: 'Elden Ring', topic: 'image-guess' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/medium/elden-ring.svg',
+        '/quiz-images/medium/elden-ring.webp',
         [
             opt(true, 'Elden Ring', 'Elden Ring'),
             opt(false, 'Dark Souls III', 'Dark Souls III'),
@@ -409,7 +409,7 @@ const questions = [
         { game: 'Final Fantasy VII', topic: 'image-guess' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/medium/final-fantasy-vii.svg',
+        '/quiz-images/medium/final-fantasy-vii.webp',
         [
             opt(true, 'Final Fantasy VII', 'Final Fantasy VII'),
             opt(false, 'Final Fantasy X', 'Final Fantasy X'),
@@ -620,7 +620,7 @@ const questions = [
         { game: 'Tetris', topic: 'image-guess' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/hard/tetris.svg',
+        '/quiz-images/hard/tetris.webp',
         [
             opt(true, 'Tetris', 'Tetris'),
             opt(false, 'Dr. Mario', 'Dr. Mario'),
@@ -634,7 +634,7 @@ const questions = [
         { game: 'DOOM', topic: 'image-guess' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/hard/doom-1993.svg',
+        '/quiz-images/hard/doom-1993.webp',
         [
             opt(true, 'DOOM (1993)', 'DOOM (1993)'),
             opt(false, 'Quake', 'Quake'),
@@ -648,7 +648,7 @@ const questions = [
         { franchise: 'Metal Gear', topic: 'image-guess', game: 'Metal Gear Solid' },
         'Угадай игру по изображению.',
         'Guess the game from the image.',
-        '/quiz-images/hard/metal-gear-solid.svg',
+        '/quiz-images/hard/metal-gear-solid.webp',
         [
             opt(true, 'Metal Gear Solid', 'Metal Gear Solid'),
             opt(false, 'Splinter Cell', 'Splinter Cell'),

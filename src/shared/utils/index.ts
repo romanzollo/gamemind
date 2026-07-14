@@ -14,3 +14,6 @@ export function shuffleArray<T>(items: readonly T[]): T[] {
 
   return result;
 }
+
+export { normalizeQuizImageUrl } from './normalize-quiz-image-url';
+

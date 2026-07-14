@@ -10,7 +10,10 @@ function readEnv(name) {
 }
 
 const { questions } = require('./seed-questions.cjs');
-const { ensurePlaceholders } = require('./generate-quiz-placeholders.cjs');
+const {
+    ensurePlaceholders,
+    assertPromptImageFilesExist,
+} = require('./generate-quiz-placeholders.cjs');
 
 const TEST_QUESTION_IDS = [
     'q-test-write',
@@ -302,6 +305,7 @@ async function seedQuestion(client, question) {
 async function main() {
     validateQuestions(questions);
     ensurePlaceholders();
+    assertPromptImageFilesExist(questions);
 
     await withRetry(async (client) => {
         await cleanupTestQuestions(client);

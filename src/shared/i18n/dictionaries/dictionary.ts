@@ -11,6 +11,7 @@ export type Dictionary = {
         admin: string;
         login: string;
         register: string;
+        logout: string;
     };
     language: {
         label: string;
@@ -112,6 +113,7 @@ export type Dictionary = {
         submitButton: string;
         scoreLabel: string;
         correctAnswersLabel: string;
+        imageUnavailable: string;
         errors: {
             invalidSetup: string;
             notEnoughQuestions: string;

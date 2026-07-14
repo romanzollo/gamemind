@@ -13,6 +13,7 @@ export const enDictionary = {
         admin: 'Admin',
         login: 'Login',
         register: 'Register',
+        logout: 'Log out',
     },
     language: {
         label: 'Language',
@@ -118,6 +119,7 @@ export const enDictionary = {
         submitButton: 'Finish quiz',
         scoreLabel: 'Score',
         correctAnswersLabel: 'Correct answers',
+        imageUnavailable: 'Image unavailable',
         errors: {
             invalidSetup: 'Check difficulty and question count.',
             notEnoughQuestions:

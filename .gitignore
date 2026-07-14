@@ -50,3 +50,8 @@ docs/PROJECT_CONTEXT.md
 docs/ROADMAP.md
 docs/DECISIONS.md
 
+# raw screenshot sources before WebP optimize (keep structure + README)
+/raw-quiz-images/**
+!/raw-quiz-images/README.md
+!/raw-quiz-images/**/.gitkeep
+

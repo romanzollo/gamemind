@@ -3,6 +3,8 @@ import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { HeaderAuthControls } from '@/features/auth/components/HeaderAuthControls';
+import { auth } from '@/lib/auth';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
 import { SiteHeader } from '@/shared/ui';
 
@@ -73,13 +75,32 @@ export default async function LocaleLayout({
     const cookieStore = await cookies();
     // получаем тему из куки
     const theme = getThemeCookie(cookieStore.get('theme')?.value);
+    const session = await auth();
+    const navUser = session?.user
+        ? {
+              username: session.user.username,
+              role: session.user.role,
+          }
+        : null;
 
     return (
         <html lang={locale} data-theme={theme} suppressHydrationWarning>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                suppressHydrationWarning
             >
-                <SiteHeader locale={locale} dictionary={dictionary} />
+                <SiteHeader
+                    locale={locale}
+                    dictionary={dictionary}
+                    user={navUser}
+                    authControls={
+                        <HeaderAuthControls
+                            locale={locale}
+                            dictionary={dictionary}
+                            user={navUser}
+                        />
+                    }
+                />
                 {children}
             </body>
         </html>
