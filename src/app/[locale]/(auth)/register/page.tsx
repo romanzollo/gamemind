@@ -7,14 +7,17 @@ import { useActionState } from 'react';
 import { registerAction } from '@/features/auth/actions';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
 
+// Получение локали из параметров URL
 function getLocale(value: string | string[] | undefined): Locale {
     return typeof value === 'string' && isLocale(value) ? value : 'ru';
 }
 
+// Страница регистрации
 export default function RegisterPage() {
     const params = useParams<{ locale: string }>();
     const locale = getLocale(params.locale);
     const dictionary = getDictionary(locale);
+    // Состояние формы и действие регистрации
     const [state, formAction] = useActionState(registerAction, {});
 
     return (
@@ -27,19 +30,31 @@ export default function RegisterPage() {
                 <input
                     name="username"
                     placeholder={dictionary.auth.username}
+                    autoComplete="username"
                     required
                 />
                 <input
                     name="email"
                     type="email"
                     placeholder={dictionary.auth.email}
+                    autoComplete="email"
                     required
                 />
                 <input
                     name="password"
                     type="password"
                     placeholder={dictionary.auth.password}
+                    autoComplete="new-password"
                     required
+                    minLength={8}
+                />
+                <input
+                    name="confirmPassword"
+                    type="password"
+                    placeholder={dictionary.auth.confirmPassword}
+                    autoComplete="new-password"
+                    required
+                    minLength={8}
                 />
                 <button
                     type="submit"
@@ -49,14 +64,12 @@ export default function RegisterPage() {
                 </button>
             </form>
             {state.error && <p className="mt-2 text-red-600">{state.error}</p>}
-            {state.success && (
-                <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
-                    {dictionary.auth.accountCreated}{' '}
-                    <Link href={`/${locale}/login`} className="underline">
-                        {dictionary.auth.loginLink}
-                    </Link>
-                </p>
-            )}
+            <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+                {dictionary.auth.haveAccount}{' '}
+                <Link href={`/${locale}/login`} className="underline">
+                    {dictionary.auth.loginLink}
+                </Link>
+            </p>
         </main>
     );
 }

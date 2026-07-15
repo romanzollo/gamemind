@@ -24,14 +24,17 @@ export async function registerAction(
     _prevState: AuthFormState,
     formData: FormData,
 ): Promise<AuthFormState> {
+    const locale = getLocaleFromFormData(formData);
+
     // Получаем данные из формы
     const raw = {
         username: formData.get('username'),
         email: formData.get('email'),
         password: formData.get('password'),
+        confirmPassword: formData.get('confirmPassword'),
     };
 
-    // Валидируем данные
+    // Валидируем данные (включая совпадение паролей)
     const parsed = registerSchema.safeParse(raw);
 
     // Если валидация не прошла, возвращаем ошибку
@@ -65,13 +68,30 @@ export async function registerAction(
             email,
             passwordHash,
         });
-
-        // Возвращаем успешный результат
-        return { success: true };
     } catch (error) {
         console.error('Register failed:', error);
         return { error: 'Could not create account. Please try again.' };
     }
+
+    // Сразу логиним — без повторного ввода пароля
+    try {
+        await signIn('credentials', {
+            email,
+            password,
+            redirectTo: `/${locale}`,
+        });
+    } catch (error) {
+        if (error instanceof AuthError) {
+            // Аккаунт уже создан; просим войти вручную
+            return {
+                error: 'Account created, but automatic login failed. Please sign in.',
+            };
+        }
+        // signIn с redirectTo бросает NEXT_REDIRECT — это нормальный редирект
+        throw error;
+    }
+
+    return {};
 }
 
 // Действие для входа в систему

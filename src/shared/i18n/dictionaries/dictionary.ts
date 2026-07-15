@@ -34,6 +34,7 @@ export type Dictionary = {
         registerTitle: string;
         email: string;
         password: string;
+        confirmPassword: string;
         username: string;
         loginButton: string;
         registerButton: string;

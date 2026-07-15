@@ -36,6 +36,7 @@ export const enDictionary = {
         registerTitle: 'Register',
         email: 'Email',
         password: 'Password',
+        confirmPassword: 'Confirm password',
         username: 'Username',
         loginButton: 'Log in',
         registerButton: 'Create account',

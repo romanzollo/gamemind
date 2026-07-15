@@ -36,6 +36,7 @@ export const ruDictionary: Dictionary = {
         registerTitle: 'Регистрация',
         email: 'Email',
         password: 'Пароль',
+        confirmPassword: 'Повторите пароль',
         username: 'Имя пользователя',
         loginButton: 'Войти',
         registerButton: 'Создать аккаунт',
@@ -102,8 +103,7 @@ export const ruDictionary: Dictionary = {
             deleteFailed: 'Не удалось удалить вопрос. Попробуй ещё раз.',
             deactivateFailed:
                 'Не удалось деактивировать вопрос. Попробуй ещё раз.',
-            activateFailed:
-                'Не удалось активировать вопрос. Попробуй ещё раз.',
+            activateFailed: 'Не удалось активировать вопрос. Попробуй ещё раз.',
         },
     },
     quiz: {
