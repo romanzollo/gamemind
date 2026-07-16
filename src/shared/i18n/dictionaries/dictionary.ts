@@ -115,6 +115,18 @@ export type Dictionary = {
         scoreLabel: string;
         correctAnswersLabel: string;
         imageUnavailable: string;
+        reviewTitle: string;
+        yourAnswer: string;
+        correctAnswer: string;
+        statusCorrect: string;
+        statusWrong: string;
+        filterAll: string;
+        filterWrong: string;
+        filterCorrect: string;
+        playAgain: string;
+        toLeaderboard: string;
+        backHome: string;
+        reviewEmpty: string;
         errors: {
             invalidSetup: string;
             notEnoughQuestions: string;

@@ -110,11 +110,13 @@ See **`docs/DEPLOY.md`**. Summary:
 
 Planned post-launch slice (details in local `docs/PROJECT_CONTEXT.md` / `ROADMAP.md` §11):
 
-1. Auto sign-in after registration  
-2. Result page — review wrong/right answers from snapshot  
-3. Weighted points by difficulty (EASY/MEDIUM/HARD)  
-4. Profile — change password, avatar, result history  
-5. Admin — user list / role / delete (and soft-disable)  
+1. ~~Auto sign-in after registration~~
+2. ~~Result page — review wrong/right answers from snapshot~~
+3. Weighted points by difficulty (EASY/MEDIUM/HARD) — **next**
+4. Profile — change password, avatar, result history
+5. Admin — user list / role / delete (and soft-disable)
+
+Quiz setup URL: `/:locale/quiz` (not `/quiz/setup`).  
 
 ## Neon setup notes
 

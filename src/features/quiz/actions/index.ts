@@ -109,7 +109,7 @@ export async function submitQuizAction(
 
     // проверяем, что sessionId передан и является строкой
     if (typeof sessionId !== 'string' || sessionId.length === 0) {
-        redirect(`/${locale}/quiz/setup`);
+        redirect(`/${locale}/quiz`);
     }
 
     // получаем сессию пользователя

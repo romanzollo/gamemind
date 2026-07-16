@@ -122,6 +122,18 @@ export const ruDictionary: Dictionary = {
         scoreLabel: 'Результат',
         correctAnswersLabel: 'Правильных ответов',
         imageUnavailable: 'Изображение недоступно',
+        reviewTitle: 'Разбор ответов',
+        yourAnswer: 'Ваш ответ',
+        correctAnswer: 'Правильный ответ',
+        statusCorrect: 'Верно',
+        statusWrong: 'Неверно',
+        filterAll: 'Все',
+        filterWrong: 'Ошибки',
+        filterCorrect: 'Верные',
+        playAgain: 'Пройти ещё раз',
+        toLeaderboard: 'К рейтингу',
+        backHome: 'На главную',
+        reviewEmpty: 'Нет данных для разбора.',
         errors: {
             invalidSetup: 'Проверь сложность и количество вопросов.',
             notEnoughQuestions:

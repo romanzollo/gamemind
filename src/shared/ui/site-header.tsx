@@ -30,7 +30,7 @@ function localizedHref(locale: Locale, href: string) {
 function getMainLinks(user: NavUser | null): ReadonlyArray<NavLinkItem> {
     const links: NavLinkItem[] = [
         { href: '/', labelKey: 'home' },
-        { href: '/quiz/setup', labelKey: 'quiz' },
+        { href: '/quiz', labelKey: 'quiz' },
     ];
 
     if (user) {

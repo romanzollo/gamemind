@@ -1,3 +1,5 @@
+/* жизненный цикл QuizSession (start → snapshot → quiz page → submit → review). */
+
 import { randomUUID } from 'node:crypto';
 
 import type { Client } from 'pg';
@@ -75,10 +77,12 @@ export type SessionForSubmitResult =
           questions: SessionSnapshotScoringQuestion[];
       };
 
+// тип для результата создания snapshot сессии
 type SessionSnapshotCreateResult = {
     id: string;
 };
 
+// тип для данных snapshot сессии
 type QuizSessionSnapshotData = {
     version: 1;
     questions: Array<{
@@ -97,12 +101,14 @@ type QuizSessionSnapshotData = {
     }>;
 };
 
+// тип для входных данных для завершения сессии с ответом
 type CompleteQuizAnswerInput = {
     questionId: string;
     selectedOptionId: string;
     isCorrect: boolean;
 };
 
+// тип для входных данных для завершения сессии с результатом
 type CompleteQuizSessionWithResultInput = {
     sessionId: string;
     userId: string;
@@ -112,6 +118,7 @@ type CompleteQuizSessionWithResultInput = {
     answers: CompleteQuizAnswerInput[];
 };
 
+// тип для статуса завершения сессии с результатом
 type CompleteQuizSessionWithResultStatus =
     | 'completed'
     | 'already_completed'
@@ -126,6 +133,7 @@ export class QuizSessionStartError extends Error {
     }
 }
 
+// тип для входных данных для начала сессии с выбором вопросов
 type StartQuizSessionWithPickInput = {
     userId: string;
     difficulty: Difficulty;
@@ -137,10 +145,13 @@ type StartQuizSessionWithPickInput = {
     ) => SessionSnapshotQuestionInput[];
 };
 
-type CreateQuizSessionWithJsonSnapshotInput = CreateQuizSessionWithSnapshotInput & {
-    pickedQuestions: QuestionSnapshotBundleItem[];
-};
+// тип для входных данных для создания сессии с json snapshot
+type CreateQuizSessionWithJsonSnapshotInput =
+    CreateQuizSessionWithSnapshotInput & {
+        pickedQuestions: QuestionSnapshotBundleItem[];
+    };
 
+// тип для строки в public snapshot сессии
 type SnapshotPublicRow = {
     session_id: string;
     question_count: number;
@@ -153,6 +164,7 @@ type SnapshotPublicRow = {
     display_order: number | null;
 };
 
+// тип для строки в scoring snapshot сессии
 type SnapshotScoringRow = {
     session_id: string;
     question_count: number;
@@ -161,10 +173,36 @@ type SnapshotScoringRow = {
     is_correct: boolean | null;
 };
 
+// тип для строки в json snapshot сессии
 type SessionSnapshotJsonRow = {
     session_id: string;
     question_count: number;
     snapshot_data: QuizSessionSnapshotData | string | null;
+};
+
+// тип для payload результатов обзора сессии
+export type SessionReviewPayload = {
+    sessionId: string;
+    questionCount: number;
+    questions: Array<{
+        id: string;
+        text: string;
+        difficulty: Difficulty;
+        type?: QuestionType;
+        imageUrl?: string | null;
+        position: number;
+        options: Array<{
+            id: string;
+            text: string;
+            order: number;
+            isCorrect: boolean;
+        }>;
+    }>;
+    answers: Array<{
+        questionId: string;
+        selectedOptionId: string;
+        isCorrect: boolean;
+    }>;
 };
 
 function buildValuesPlaceholder(
@@ -173,9 +211,12 @@ function buildValuesPlaceholder(
     startIndex = 1,
 ) {
     return Array.from({ length: rowCount }, (_, rowIndex) => {
-        const columns = Array.from({ length: columnCount }, (_, columnIndex) => {
-            return `$${startIndex + rowIndex * columnCount + columnIndex}`;
-        });
+        const columns = Array.from(
+            { length: columnCount },
+            (_, columnIndex) => {
+                return `$${startIndex + rowIndex * columnCount + columnIndex}`;
+            },
+        );
 
         return `(${columns.join(', ')})`;
     }).join(', ');
@@ -921,6 +962,87 @@ async function loadSessionForSubmit(
     };
 }
 
+// тип для строки в результатах обзора сессии
+type ReviewAnswerRow = {
+    question_id: string;
+    selected_option_id: string;
+    is_correct: boolean;
+};
+
+// функция для загрузки результатов обзора сессии
+async function loadCompletedSessionReview(
+    sessionId: string,
+    userId: string,
+): Promise<SessionReviewPayload | null> {
+    return withDirectPgClient(async (client) => {
+        const sessionResult = await client.query<SessionSnapshotJsonRow>(
+            `
+                SELECT
+                    "id" AS "session_id",
+                    "questionCount" AS "question_count",
+                    "snapshotData" AS "snapshot_data"
+                FROM "QuizSession"
+                WHERE
+                    "id" = $1
+                    AND "userId" = $2
+                    AND "status" = 'COMPLETED'::"QuizSessionStatus"
+                LIMIT 1
+            `,
+            [sessionId, userId],
+        );
+
+        const session = sessionResult.rows[0];
+
+        if (!session) {
+            return null;
+        }
+
+        const snapshotData = parseSnapshotData(session.snapshot_data);
+
+        if (
+            !snapshotData ||
+            snapshotData.questions.length !== session.question_count
+        ) {
+            return null;
+        }
+
+        const answersResult = await client.query<ReviewAnswerRow>(
+            `
+                SELECT
+                    "questionId" AS "question_id",
+                    "selectedOptionId" AS "selected_option_id",
+                    "isCorrect" AS "is_correct"
+                FROM "QuizAnswer"
+                WHERE "sessionId" = $1
+            `,
+            [sessionId],
+        );
+
+        return {
+            sessionId: session.session_id,
+            questionCount: session.question_count,
+            questions: [...snapshotData.questions]
+                .sort((left, right) => left.position - right.position)
+                .map((question) => ({
+                    id: question.id,
+                    text: question.text,
+                    difficulty: question.difficulty,
+                    type: question.type,
+                    imageUrl: normalizeQuizImageUrl(question.imageUrl),
+                    position: question.position,
+                    options: [...question.options].sort(
+                        (left, right) => left.order - right.order,
+                    ),
+                })),
+            answers: answersResult.rows.map((row) => ({
+                questionId: row.question_id,
+                selectedOptionId: row.selected_option_id,
+                isCorrect: row.is_correct,
+            })),
+        };
+    });
+}
+
 async function loadSnapshotPublicQuestions(
     sessionId: string,
     userId: string,
@@ -1096,5 +1218,10 @@ export const quizSessionRepository = {
     // атомарное сохранение ответов, результата и завершение сессии
     completeWithResult(input: CompleteQuizSessionWithResultInput) {
         return completeQuizSessionWithPgClient(input);
+    },
+
+    // результаты обзора сессии
+    findReviewForUser(sessionId: string, userId: string) {
+        return loadCompletedSessionReview(sessionId, userId);
     },
 };

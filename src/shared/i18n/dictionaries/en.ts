@@ -121,6 +121,18 @@ export const enDictionary = {
         scoreLabel: 'Score',
         correctAnswersLabel: 'Correct answers',
         imageUnavailable: 'Image unavailable',
+        reviewTitle: 'Answer review',
+        yourAnswer: 'Your answer',
+        correctAnswer: 'Correct answer',
+        statusCorrect: 'Correct',
+        statusWrong: 'Wrong',
+        filterAll: 'All',
+        filterWrong: 'Wrong only',
+        filterCorrect: 'Correct only',
+        playAgain: 'Play again',
+        toLeaderboard: 'Leaderboard',
+        backHome: 'Home',
+        reviewEmpty: 'No review data available.',
         errors: {
             invalidSetup: 'Check difficulty and question count.',
             notEnoughQuestions:

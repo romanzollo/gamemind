@@ -24,6 +24,14 @@ export const proxy = auth((request) => {
     }
 
     const pathnameWithoutLocale = removeLocaleFromPathname(nextUrl.pathname);
+
+    // Legacy URL: /:locale/quiz/setup → /:locale/quiz
+    if (pathnameWithoutLocale === '/quiz/setup') {
+        const redirectUrl = nextUrl.clone();
+        redirectUrl.pathname = `/${locale}/quiz`;
+        return NextResponse.redirect(redirectUrl);
+    }
+
     const isAdminRoute = pathnameWithoutLocale.startsWith('/admin');
     const isProtectedRoute =
         pathnameWithoutLocale.startsWith('/profile') || isAdminRoute;

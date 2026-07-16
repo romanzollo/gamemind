@@ -39,3 +39,23 @@ export type QuizErrorCode =
 export type QuizFormState = {
     errorCode?: QuizErrorCode;
 };
+
+// тип для одной строки в списке результатов обзора
+export type QuizResultReviewItem = {
+    questionId: string;
+    position: number;
+    text: string;
+    type?: QuestionType;
+    imageUrl?: string | null;
+    isCorrect: boolean;
+    selectedOption: {
+        id: string;
+        text: string;
+    };
+    correctOption: {
+        id: string;
+        text: string;
+    };
+};
+
+export type QuizResultReviewFilter = 'all' | 'wrong' | 'correct';
