@@ -1,8 +1,5 @@
 // Работа с пользователями в БД
-import {
-    withDirectPgClient,
-    withDirectPgWriteRetry,
-} from '@/lib/db/direct-pg';
+import { withDirectPgClient, withDirectPgWriteRetry } from '@/lib/db/direct-pg';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import type { Role } from '@prisma/client';
 
@@ -119,14 +116,10 @@ export const userRepository = {
     async changePasswordHash(
         id: string,
         options: {
-            isCurrentPasswordValid: (
-                passwordHash: string,
-            ) => Promise<boolean>;
+            isCurrentPasswordValid: (passwordHash: string) => Promise<boolean>;
             hashNewPassword: () => Promise<string>;
         },
-    ): Promise<
-        'updated' | 'not_found' | 'wrong_password' | 'missing_hash'
-    > {
+    ): Promise<'updated' | 'not_found' | 'wrong_password' | 'missing_hash'> {
         return withDirectPgWriteRetry(async (client) => {
             const current = await client.query<{
                 passwordHash: string | null;
@@ -172,4 +165,64 @@ export const userRepository = {
             return 'updated';
         });
     },
+
+    /**
+     * Смена username в одном unpooled connect.
+     * Unique violation (23505) → 'taken'; same value → 'unchanged'.
+     */
+    async updateUsername(
+        id: string,
+        username: string,
+    ): Promise<'updated' | 'not_found' | 'taken' | 'unchanged'> {
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{ username: string }>(
+                `
+                    SELECT "username"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [id],
+            );
+
+            const row = current.rows[0];
+
+            if (!row) {
+                return 'not_found';
+            }
+
+            if (row.username === username) {
+                return 'unchanged';
+            }
+
+            try {
+                await client.query(
+                    `
+                        UPDATE "User"
+                        SET "username" = $1, "updatedAt" = NOW()
+                        WHERE "id" = $2
+                    `,
+                    [username, id],
+                );
+
+                return 'updated';
+            } catch (error) {
+                if (isPgUniqueViolation(error)) {
+                    return 'taken';
+                }
+
+                throw error;
+            }
+        });
+    },
 };
+
+// Проверка на уникальность username
+function isPgUniqueViolation(error: unknown): boolean {
+    return (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        (error as { code: unknown }).code === '23505'
+    );
+}

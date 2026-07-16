@@ -17,11 +17,25 @@ export const authConfig = {
             return true;
         },
 
-        jwt({ token, user }) {
+        jwt({ token, user, trigger, session }) {
             if (user) {
                 token.id = user.id!;
                 token.role = user.role as Role;
                 token.username = user.name ?? '';
+            }
+
+            // Session update after profile username change (unstable_update).
+            if (trigger === 'update' && session) {
+                const nextUsername =
+                    typeof session.username === 'string'
+                        ? session.username
+                        : typeof session.user?.username === 'string'
+                          ? session.user.username
+                          : undefined;
+
+                if (nextUsername) {
+                    token.username = nextUsername;
+                }
             }
 
             return token;

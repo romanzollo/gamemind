@@ -61,6 +61,10 @@ export const ruDictionary: Dictionary = {
         historyView: 'Обзор',
         historyLoadFailed:
             'Не удалось загрузить историю. Попробуйте обновить страницу.',
+        changeUsernameTitle: 'Смена имени пользователя',
+        newUsername: 'Новое имя пользователя',
+        changeUsernameSubmit: 'Сменить имя',
+        changeUsernameSuccess: 'Имя пользователя успешно изменено.',
         changePasswordTitle: 'Смена пароля',
         currentPassword: 'Текущий пароль',
         newPassword: 'Новый пароль',
@@ -71,7 +75,9 @@ export const ruDictionary: Dictionary = {
             invalidInput: 'Проверьте поля формы и попробуйте снова.',
             wrongCurrentPassword: 'Неверный текущий пароль.',
             samePassword: 'Новый пароль должен отличаться от текущего.',
-            updateFailed: 'Не удалось сменить пароль. Попробуйте позже.',
+            usernameTaken: 'Это имя пользователя уже занято.',
+            sameUsername: 'Новое имя должно отличаться от текущего.',
+            updateFailed: 'Не удалось сохранить изменения. Попробуйте позже.',
         },
     },
     admin: {

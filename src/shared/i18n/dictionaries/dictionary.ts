@@ -58,6 +58,10 @@ export type Dictionary = {
         historyCorrect: string;
         historyView: string;
         historyLoadFailed: string;
+        changeUsernameTitle: string;
+        newUsername: string;
+        changeUsernameSubmit: string;
+        changeUsernameSuccess: string;
         changePasswordTitle: string;
         currentPassword: string;
         newPassword: string;
@@ -68,6 +72,8 @@ export type Dictionary = {
             invalidInput: string;
             wrongCurrentPassword: string;
             samePassword: string;
+            usernameTaken: string;
+            sameUsername: string;
             updateFailed: string;
         };
     };

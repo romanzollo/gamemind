@@ -8,6 +8,8 @@ const ERROR_MAP: Record<
     INVALID_INPUT: 'invalidInput',
     WRONG_CURRENT_PASSWORD: 'wrongCurrentPassword',
     SAME_PASSWORD: 'samePassword',
+    USERNAME_TAKEN: 'usernameTaken',
+    SAME_USERNAME: 'sameUsername',
     UPDATE_FAILED: 'updateFailed',
 };
 

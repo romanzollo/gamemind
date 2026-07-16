@@ -1,1 +1,2 @@
 export { changePasswordAction } from './change-password';
+export { changeUsernameAction } from './change-username';

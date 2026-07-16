@@ -1,10 +1,25 @@
 import { z } from 'zod';
 
+// те же правила, что в registerSchema (auth/lib/validation.ts)
+const usernameField = z
+    .string()
+    .trim()
+    .min(3, 'Username must be at least 3 characters')
+    .max(20, 'Username must be at most 20 characters')
+    .regex(
+        /^[a-zA-Z0-9_]+$/,
+        'Username can only contain letters, numbers, and underscore',
+    );
+
 // поле для валидации пароля
 const passwordField = z
     .string()
     .min(8, 'Password must be at least 8 characters')
     .max(72, 'Password is too long');
+
+export const changeUsernameSchema = z.object({
+    username: usernameField,
+});
 
 // схема для изменения пароля пользователя
 export const changePasswordSchema = z
@@ -28,5 +43,5 @@ export const changePasswordSchema = z
         path: ['newPassword'],
     });
 
-// тип для валидации изменения пароля пользователя
+export type ChangeUsernameInput = z.infer<typeof changeUsernameSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
