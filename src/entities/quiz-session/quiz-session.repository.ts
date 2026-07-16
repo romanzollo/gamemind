@@ -61,6 +61,7 @@ export type SessionSnapshotPublicQuestion = {
 // вопрос из snapshot для server-side scoring (с isCorrect, без текста)
 export type SessionSnapshotScoringQuestion = {
     id: string;
+    difficulty: Difficulty;
     options: Array<{
         id: string;
         isCorrect: boolean;
@@ -169,6 +170,7 @@ type SnapshotScoringRow = {
     session_id: string;
     question_count: number;
     question_id: string | null;
+    difficulty: Difficulty | null;
     option_id: string | null;
     is_correct: boolean | null;
 };
@@ -424,6 +426,7 @@ function mapSnapshotDataToScoringQuestions(
         .sort((left, right) => left.position - right.position)
         .map((question) => ({
             id: question.id,
+            difficulty: question.difficulty,
             options: [...question.options]
                 .sort((left, right) => left.order - right.order)
                 .map((option) => ({
@@ -903,6 +906,7 @@ async function loadSessionForSubmit(
                     s."id" AS "session_id",
                     s."questionCount" AS "question_count",
                     q."id" AS "question_id",
+                    q."difficulty"::text AS "difficulty",
                     ao."id" AS "option_id",
                     ao."isCorrect" AS "is_correct"
                 FROM "QuizSession" s
@@ -932,7 +936,12 @@ async function loadSessionForSubmit(
     const questions = new Map<string, SessionSnapshotScoringQuestion>();
 
     for (const row of result.rows) {
-        if (!row.question_id || !row.option_id || row.is_correct === null) {
+        if (
+            !row.question_id ||
+            !row.difficulty ||
+            !row.option_id ||
+            row.is_correct === null
+        ) {
             return { status: 'invalid_snapshot' };
         }
 
@@ -946,6 +955,7 @@ async function loadSessionForSubmit(
         } else {
             questions.set(row.question_id, {
                 id: row.question_id,
+                difficulty: row.difficulty,
                 options: [{ id: row.option_id, isCorrect: row.is_correct }],
             });
         }

@@ -112,6 +112,7 @@ export type Dictionary = {
         resultTitle: string;
         session: string;
         submitButton: string;
+        /** Подпись для взвешенных очков (не число верных ответов) */
         scoreLabel: string;
         correctAnswersLabel: string;
         imageUnavailable: string;
@@ -140,6 +141,7 @@ export type Dictionary = {
         description: string;
         rank: string;
         player: string;
+        /** Колонка взвешенных очков */
         score: string;
         correct: string;
         empty: string;

@@ -118,7 +118,7 @@ export const enDictionary = {
         resultTitle: 'Quiz result',
         session: 'Session',
         submitButton: 'Finish quiz',
-        scoreLabel: 'Score',
+        scoreLabel: 'Points',
         correctAnswersLabel: 'Correct answers',
         imageUnavailable: 'Image unavailable',
         reviewTitle: 'Answer review',
@@ -145,10 +145,11 @@ export const enDictionary = {
     },
     leaderboard: {
         title: 'Leaderboard',
-        description: 'Best score per user (all time).',
+        description:
+            'Best score per user (all time). Points depend on difficulty: easy 1, medium 2, hard 3.',
         rank: 'Rank',
         player: 'Player',
-        score: 'Score',
+        score: 'Points',
         correct: 'Correct',
         empty: 'No results yet. Be the first to complete a quiz!',
         loadFailed:

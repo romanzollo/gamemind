@@ -119,7 +119,7 @@ export const ruDictionary: Dictionary = {
         resultTitle: 'Результат квиза',
         session: 'Сессия',
         submitButton: 'Завершить квиз',
-        scoreLabel: 'Результат',
+        scoreLabel: 'Очки',
         correctAnswersLabel: 'Правильных ответов',
         imageUnavailable: 'Изображение недоступно',
         reviewTitle: 'Разбор ответов',
@@ -146,7 +146,8 @@ export const ruDictionary: Dictionary = {
     },
     leaderboard: {
         title: 'Рейтинг',
-        description: 'Лучший результат каждого пользователя за всё время.',
+        description:
+            'Лучший результат каждого пользователя за всё время. Очки зависят от сложности: легко 1, средне 2, сложно 3.',
         rank: 'Место',
         player: 'Игрок',
         score: 'Очки',

@@ -41,10 +41,10 @@ export function LeaderboardTable({ entries, labels }: LeaderboardTableProps) {
                                 {entry.rank}
                             </td>
                             <td className="py-3 pr-4">{entry.username}</td>
-                            <td className="py-3 pr-4">
-                                {entry.score} / {entry.totalQuestions}
+                            <td className="py-3 pr-4 tabular-nums">
+                                {entry.score}
                             </td>
-                            <td className="py-3">
+                            <td className="py-3 tabular-nums">
                                 {entry.correctCount} / {entry.totalQuestions}
                             </td>
                         </tr>

@@ -5,6 +5,7 @@ import { quizResultRepository } from '@/entities/quiz-result/quiz-result.reposit
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { QuizResultReview } from '@/features/quiz/components/QuizResultReview';
 import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review';
+import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
 
@@ -37,6 +38,12 @@ export default async function QuizResultPage({ params }: QuizResultPageProps) {
     // преобразование результатов обзора сессии в тип QuizResultReviewItem
     const reviewItems = mapQuizResultReview(reviewPayload);
 
+    const maxPossibleScore = reviewPayload
+        ? getMaxPossibleScore(
+              reviewPayload.questions.map((question) => question.difficulty),
+          )
+        : null;
+
     return (
         <main className="mx-auto max-w-2xl p-8">
             <h1 className="text-2xl font-semibold text-foreground">
@@ -45,11 +52,14 @@ export default async function QuizResultPage({ params }: QuizResultPageProps) {
 
             <div className="mt-4 space-y-2 text-muted">
                 <p>
-                    {dictionary.quiz.scoreLabel}: {result.score} /{' '}
-                    {result.totalQuestions}
+                    {dictionary.quiz.scoreLabel}:{' '}
+                    {maxPossibleScore != null && maxPossibleScore > 0
+                        ? `${result.score} / ${maxPossibleScore}`
+                        : result.score}
                 </p>
                 <p>
-                    {dictionary.quiz.correctAnswersLabel}: {result.correctCount}
+                    {dictionary.quiz.correctAnswersLabel}:{' '}
+                    {result.correctCount} / {result.totalQuestions}
                 </p>
             </div>
 
