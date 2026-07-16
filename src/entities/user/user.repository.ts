@@ -1,4 +1,8 @@
 // Работа с пользователями в БД
+import {
+    withDirectPgClient,
+    withDirectPgWriteRetry,
+} from '@/lib/db/direct-pg';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import type { Role } from '@prisma/client';
 
@@ -59,6 +63,32 @@ export const userRepository = {
         );
     },
 
+    // Поиск по id с passwordHash (только для серверной проверки пароля)
+    async findByIdForAuth(id: string) {
+        const result = await withDirectPgClient((client) =>
+            client.query<{ id: string; passwordHash: string | null }>(
+                `
+                    SELECT "id", "passwordHash"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [id],
+            ),
+        );
+
+        const row = result.rows[0];
+
+        if (!row) {
+            return null;
+        }
+
+        return {
+            id: row.id,
+            passwordHash: row.passwordHash,
+        };
+    },
+
     // Создание пользователя
     async create(data: {
         username: string;
@@ -78,6 +108,68 @@ export const userRepository = {
                 role: true,
                 createdAt: true,
             },
+        });
+    },
+
+    /**
+     * Смена пароля в одном unpooled connect:
+     * SELECT hash → verify/hash в JS → UPDATE.
+     * bcrypt остаётся снаружи SQL.
+     */
+    async changePasswordHash(
+        id: string,
+        options: {
+            isCurrentPasswordValid: (
+                passwordHash: string,
+            ) => Promise<boolean>;
+            hashNewPassword: () => Promise<string>;
+        },
+    ): Promise<
+        'updated' | 'not_found' | 'wrong_password' | 'missing_hash'
+    > {
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{
+                passwordHash: string | null;
+            }>(
+                `
+                    SELECT "passwordHash"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [id],
+            );
+
+            const row = current.rows[0];
+
+            if (!row) {
+                return 'not_found';
+            }
+
+            if (!row.passwordHash) {
+                return 'missing_hash';
+            }
+
+            const isValid = await options.isCurrentPasswordValid(
+                row.passwordHash,
+            );
+
+            if (!isValid) {
+                return 'wrong_password';
+            }
+
+            const passwordHash = await options.hashNewPassword();
+
+            await client.query(
+                `
+                    UPDATE "User"
+                    SET "passwordHash" = $1, "updatedAt" = NOW()
+                    WHERE "id" = $2
+                `,
+                [passwordHash, id],
+            );
+
+            return 'updated';
         });
     },
 };

@@ -58,6 +58,18 @@ export type Dictionary = {
         historyCorrect: string;
         historyView: string;
         historyLoadFailed: string;
+        changePasswordTitle: string;
+        currentPassword: string;
+        newPassword: string;
+        confirmNewPassword: string;
+        changePasswordSubmit: string;
+        changePasswordSuccess: string;
+        errors: {
+            invalidInput: string;
+            wrongCurrentPassword: string;
+            samePassword: string;
+            updateFailed: string;
+        };
     };
     admin: {
         questionsTitle: string;

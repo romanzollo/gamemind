@@ -1,4 +1,5 @@
 import { logoutAction } from '@/features/auth/actions';
+import { ChangePasswordForm } from '@/features/profile/components/ChangePasswordForm';
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
 import {
     PROFILE_RESULT_HISTORY_LIMIT,
@@ -59,6 +60,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     {dictionary.profile.logout}
                 </button>
             </form>
+
+            <ChangePasswordForm locale={safeLocale} dictionary={dictionary} />
 
             <section className="mt-10">
                 <h2 className="text-xl font-semibold">

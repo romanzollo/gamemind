@@ -60,6 +60,18 @@ export const enDictionary = {
         historyCorrect: 'Correct',
         historyView: 'Review',
         historyLoadFailed: 'Could not load history. Try refreshing the page.',
+        changePasswordTitle: 'Change password',
+        currentPassword: 'Current password',
+        newPassword: 'New password',
+        confirmNewPassword: 'Confirm new password',
+        changePasswordSubmit: 'Change password',
+        changePasswordSuccess: 'Password updated successfully.',
+        errors: {
+            invalidInput: 'Check the form fields and try again.',
+            wrongCurrentPassword: 'Current password is incorrect.',
+            samePassword: 'New password must be different from the current one.',
+            updateFailed: 'Could not change password. Please try again later.',
+        },
     },
     admin: {
         questionsTitle: 'Manage questions',

@@ -1,5 +1,4 @@
 // Работа с результатами викторин
-import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import { withDirectPgClient } from '@/lib/db/direct-pg';
 
 type QuizResultRow = {
@@ -10,6 +9,24 @@ type QuizResultRow = {
     total_questions: number;
     correct_count: number;
     completed_at: Date;
+};
+
+type LeaderboardScoreRow = {
+    user_id: string;
+    username: string;
+    score: number;
+    total_questions: number;
+    correct_count: number;
+    completed_at: Date;
+};
+
+type RecentResultRow = {
+    session_id: string;
+    score: number;
+    total_questions: number;
+    correct_count: number;
+    completed_at: Date;
+    difficulty: 'EASY' | 'MEDIUM' | 'HARD';
 };
 
 async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
@@ -51,46 +68,52 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
 
 // репозиторий для работы с результатами викторины
 export const quizResultRepository = {
-    // поиск лучших результатов викторины
+    // лучший результат на пользователя — unpooled pg (Neon-friendly)
     async findBestScores(limit: number) {
-        const bestPerUser = await withDatabaseRetry(() =>
-            prisma.quizResult.findMany({
-            distinct: ['userId'],
-            orderBy: [
-                { userId: 'asc' },
-                { score: 'desc' },
-                { completedAt: 'asc' },
-            ],
-            include: {
-                user: {
-                    select: { id: true, username: true },
-                },
-            },
-            }),
+        const result = await withDirectPgClient((client) =>
+            client.query<LeaderboardScoreRow>(
+                `
+                    SELECT
+                        best."userId" AS "user_id",
+                        u."username" AS "username",
+                        best."score" AS "score",
+                        best."totalQuestions" AS "total_questions",
+                        best."correctCount" AS "correct_count",
+                        best."completedAt" AS "completed_at"
+                    FROM (
+                        SELECT DISTINCT ON ("userId")
+                            "userId",
+                            "score",
+                            "totalQuestions",
+                            "correctCount",
+                            "completedAt"
+                        FROM "QuizResult"
+                        ORDER BY
+                            "userId" ASC,
+                            "score" DESC,
+                            "completedAt" ASC
+                    ) AS best
+                    INNER JOIN "User" AS u ON u."id" = best."userId"
+                    ORDER BY
+                        best."score" DESC,
+                        best."completedAt" ASC
+                    LIMIT $1
+                `,
+                [limit],
+            ),
         );
 
-        return bestPerUser
-            .sort((a, b) => {
-                if (b.score !== a.score) {
-                    return b.score - a.score;
-                }
-
-                return a.completedAt.getTime() - b.completedAt.getTime();
-            })
-            .slice(0, limit);
-    },
-
-    // создание результата викторины
-    create(input: {
-        sessionId: string;
-        userId: string;
-        score: number;
-        totalQuestions: number;
-        correctCount: number;
-    }) {
-        return prisma.quizResult.create({
-            data: input,
-        });
+        return result.rows.map((row) => ({
+            userId: row.user_id,
+            score: row.score,
+            totalQuestions: row.total_questions,
+            correctCount: row.correct_count,
+            completedAt: row.completed_at,
+            user: {
+                id: row.user_id,
+                username: row.username,
+            },
+        }));
     },
 
     // поиск результата викторины по ID сессии и ID пользователя
@@ -98,24 +121,37 @@ export const quizResultRepository = {
         return loadResultBySessionIdForUser(sessionId, userId);
     },
 
-    // последние результаты пользователя (для профиля)
-    findRecentByUserId(userId: string, limit: number) {
-        return withDatabaseRetry(() =>
-            prisma.quizResult.findMany({
-                where: { userId },
-                orderBy: { completedAt: 'desc' },
-                take: limit,
-                select: {
-                    sessionId: true,
-                    score: true,
-                    totalQuestions: true,
-                    correctCount: true,
-                    completedAt: true,
-                    session: {
-                        select: { difficulty: true },
-                    },
-                },
-            }),
+    // последние результаты пользователя (профиль) — unpooled pg
+    async findRecentByUserId(userId: string, limit: number) {
+        const result = await withDirectPgClient((client) =>
+            client.query<RecentResultRow>(
+                `
+                    SELECT
+                        r."sessionId" AS "session_id",
+                        r."score" AS "score",
+                        r."totalQuestions" AS "total_questions",
+                        r."correctCount" AS "correct_count",
+                        r."completedAt" AS "completed_at",
+                        s."difficulty" AS "difficulty"
+                    FROM "QuizResult" AS r
+                    INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
+                    WHERE r."userId" = $1
+                    ORDER BY r."completedAt" DESC
+                    LIMIT $2
+                `,
+                [userId, limit],
+            ),
         );
+
+        return result.rows.map((row) => ({
+            sessionId: row.session_id,
+            score: row.score,
+            totalQuestions: row.total_questions,
+            correctCount: row.correct_count,
+            completedAt: row.completed_at,
+            session: {
+                difficulty: row.difficulty,
+            },
+        }));
     },
 };
