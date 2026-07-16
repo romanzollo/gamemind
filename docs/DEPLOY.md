@@ -77,10 +77,12 @@ npm run build
 
 ## Свой домен
 
+**Статус (июль 2026):** `game-mind.ru` / `www.game-mind.ru` привязаны к Vercel (Valid). Production primary — **www**. Друзьям: `https://www.game-mind.ru`.
+
 1. Vercel → Project → Domains → добавить домен.
 2. У регистратора **или** в Cloudflare: CNAME/A по инструкции Vercel. Если `*.vercel.app` плохо открывается у друзей — Cloudflare Free NS + оранжевое облако (proxy).
-3. Дождись SSL.
-4. Поставь `AUTH_URL` = `https://your-domain.com` (без `/` в конце) и **сделай redeploy**.
+3. Дождись SSL / Valid Configuration (DNS может «догнать» через минуты–часы).
+4. Поставь `AUTH_URL` = `https://www.game-mind.ru` (без `/` в конце; совпадать с primary) и **сделай redeploy**.
 5. Друзьям давай только кастомный домен.
 
 ## Явно позже (когда URL уже работает)
