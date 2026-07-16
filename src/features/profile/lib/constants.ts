@@ -1,0 +1,1 @@
+export const PROFILE_RESULT_HISTORY_LIMIT = 20;

@@ -50,6 +50,14 @@ export type Dictionary = {
         email: string;
         role: string;
         logout: string;
+        historyTitle: string;
+        historyEmpty: string;
+        historyDate: string;
+        historyDifficulty: string;
+        historyScore: string;
+        historyCorrect: string;
+        historyView: string;
+        historyLoadFailed: string;
     };
     admin: {
         questionsTitle: string;

@@ -97,4 +97,25 @@ export const quizResultRepository = {
     findBySessionIdForUser(sessionId: string, userId: string) {
         return loadResultBySessionIdForUser(sessionId, userId);
     },
+
+    // последние результаты пользователя (для профиля)
+    findRecentByUserId(userId: string, limit: number) {
+        return withDatabaseRetry(() =>
+            prisma.quizResult.findMany({
+                where: { userId },
+                orderBy: { completedAt: 'desc' },
+                take: limit,
+                select: {
+                    sessionId: true,
+                    score: true,
+                    totalQuestions: true,
+                    correctCount: true,
+                    completedAt: true,
+                    session: {
+                        select: { difficulty: true },
+                    },
+                },
+            }),
+        );
+    },
 };

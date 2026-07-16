@@ -52,6 +52,15 @@ export const ruDictionary: Dictionary = {
         email: 'Email',
         role: 'Роль',
         logout: 'Выйти',
+        historyTitle: 'История результатов',
+        historyEmpty: 'Пока нет завершённых квизов. Сыграйте первую викторину!',
+        historyDate: 'Дата',
+        historyDifficulty: 'Сложность',
+        historyScore: 'Очки',
+        historyCorrect: 'Верно',
+        historyView: 'Обзор',
+        historyLoadFailed:
+            'Не удалось загрузить историю. Попробуйте обновить страницу.',
     },
     admin: {
         questionsTitle: 'Управление вопросами',
