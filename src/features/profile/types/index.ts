@@ -4,11 +4,17 @@ export type ProfileErrorCode =
     | 'SAME_PASSWORD'
     | 'USERNAME_TAKEN'
     | 'SAME_USERNAME'
+    | 'SAME_AVATAR'
     | 'UPDATE_FAILED';
 
 export type ProfileFormState = {
     errorCode?: ProfileErrorCode;
     success?: boolean;
-    /** Present after successful username change; changes each update so UI can refresh. */
+    /** После успешной смены username — меняется каждый раз, чтобы UI сделал refresh. */
     username?: string;
+    /**
+     * После успешной смены аватара — URL или '' при сбросе.
+     * Нужен, чтобы useEffect зависел от значения, а не только от success.
+     */
+    imageUrl?: string;
 };

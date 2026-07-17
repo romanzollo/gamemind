@@ -43,5 +43,34 @@ export const changePasswordSchema = z
         path: ['newPassword'],
     });
 
+/**
+ * Временный аватар: в User.image храним URL-строку (загрузка в R2 — позже).
+ * Пустая строка = сброс аватара (репозиторий запишет NULL).
+ */
+const avatarUrlField = z
+    .string()
+    .trim()
+    .max(2048, 'Avatar URL is too long')
+    .refine(
+        (value) =>
+            value === '' ||
+            value.startsWith('/') ||
+            value.startsWith('https://'),
+        'Avatar URL must be empty, a site path, or an https URL',
+    )
+    .refine(
+        (value) => !/^javascript:/i.test(value) && !/^data:/i.test(value),
+        'Avatar URL scheme is not allowed',
+    )
+    .refine(
+        (value) => value === '' || !/\.svg(\?|#|$)/i.test(value),
+        'SVG avatars are not allowed',
+    );
+
+export const changeAvatarSchema = z.object({
+    imageUrl: avatarUrlField,
+});
+
 export type ChangeUsernameInput = z.infer<typeof changeUsernameSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type ChangeAvatarInput = z.infer<typeof changeAvatarSchema>;

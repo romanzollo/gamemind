@@ -1,4 +1,5 @@
 import { logoutAction } from '@/features/auth/actions';
+import { ChangeAvatarForm } from '@/features/profile/components/ChangeAvatarForm';
 import { ChangePasswordForm } from '@/features/profile/components/ChangePasswordForm';
 import { ChangeUsernameForm } from '@/features/profile/components/ChangeUsernameForm';
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
@@ -66,6 +67,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 locale={safeLocale}
                 dictionary={dictionary}
                 currentUsername={session.user.username}
+            />
+
+            <ChangeAvatarForm
+                locale={safeLocale}
+                dictionary={dictionary}
+                currentImageUrl={session.user.image ?? null}
             />
 
             <ChangePasswordForm locale={safeLocale} dictionary={dictionary} />

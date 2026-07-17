@@ -3,10 +3,12 @@ import type { Role } from '@prisma/client';
 
 import { logoutAction } from '@/features/auth/actions';
 import type { Dictionary, Locale } from '@/shared/i18n';
+import { UserAvatar } from '@/shared/ui';
 
 type NavUser = {
     username: string;
     role: Role;
+    image?: string | null;
 };
 
 type HeaderAuthControlsProps = {
@@ -30,9 +32,19 @@ export function HeaderAuthControls({
     if (user) {
         return (
             <>
-                <span className="hidden text-sm text-muted sm:inline">
-                    {user.username}
-                </span>
+                <Link
+                    href={localizedHref(locale, '/profile')}
+                    className="flex items-center gap-2 rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                >
+                    <UserAvatar
+                        src={user.image}
+                        size="sm"
+                        alt={user.username}
+                    />
+                    <span className="hidden text-sm text-muted sm:inline">
+                        {user.username}
+                    </span>
+                </Link>
                 <form action={logoutAction}>
                     <input type="hidden" name="locale" value={locale} />
                     <button

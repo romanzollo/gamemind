@@ -44,6 +44,7 @@ export const credentialsProvider = Credentials({
             id: user.id,
             email: user.email,
             name: user.username,
+            image: user.image,
             role: user.role,
         };
     },

@@ -1,6 +1,9 @@
 import type { ProfileErrorCode } from '../types';
 import type { Dictionary } from '@/shared/i18n';
 
+/**
+ * Маппинг ошибок на сообщения
+ */
 const ERROR_MAP: Record<
     ProfileErrorCode,
     keyof Dictionary['profile']['errors']
@@ -10,9 +13,13 @@ const ERROR_MAP: Record<
     SAME_PASSWORD: 'samePassword',
     USERNAME_TAKEN: 'usernameTaken',
     SAME_USERNAME: 'sameUsername',
+    SAME_AVATAR: 'sameAvatar',
     UPDATE_FAILED: 'updateFailed',
 };
 
+/**
+ * Получение сообщения об ошибке
+ */
 export function getProfileErrorMessage(
     dictionary: Dictionary,
     errorCode?: ProfileErrorCode,

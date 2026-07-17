@@ -68,12 +68,20 @@ export type Dictionary = {
         confirmNewPassword: string;
         changePasswordSubmit: string;
         changePasswordSuccess: string;
+        changeAvatarTitle: string;
+        avatarUrl: string;
+        avatarUrlHint: string;
+        avatarPreviewFailed: string;
+        changeAvatarSubmit: string;
+        clearAvatar: string;
+        changeAvatarSuccess: string;
         errors: {
             invalidInput: string;
             wrongCurrentPassword: string;
             samePassword: string;
             usernameTaken: string;
             sameUsername: string;
+            sameAvatar: string;
             updateFailed: string;
         };
     };

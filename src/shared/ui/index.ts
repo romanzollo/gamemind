@@ -2,3 +2,4 @@
 export { LanguageSwitcher } from './language-switcher';
 export { SiteHeader } from './site-header';
 export { ThemeToggle } from './theme-toggle';
+export { UserAvatar } from './user-avatar';

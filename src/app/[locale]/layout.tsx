@@ -80,6 +80,7 @@ export default async function LocaleLayout({
         ? {
               username: session.user.username,
               role: session.user.role,
+              image: session.user.image ?? null,
           }
         : null;
 

@@ -22,14 +22,21 @@ export const authConfig = {
                 token.id = user.id!;
                 token.role = user.role as Role;
                 token.username = user.name ?? '';
+                // Auth.js хранит аватар в JWT как picture
+                token.picture = user.image ?? undefined;
             }
 
-            // Session update after profile username change (unstable_update).
-            if (
-                trigger === 'update' &&
-                typeof session?.user?.username === 'string'
-            ) {
-                token.username = session.user.username;
+            // Обновление сессии после смены профиля (unstable_update)
+            if (trigger === 'update' && session?.user) {
+                if (typeof session.user.username === 'string') {
+                    token.username = session.user.username;
+                }
+
+                // image может быть string | null (сброс аватара) —
+                // проверяем наличие ключа, а не truthy
+                if ('image' in session.user) {
+                    token.picture = session.user.image ?? undefined;
+                }
             }
 
             return token;
@@ -40,6 +47,8 @@ export const authConfig = {
                 session.user.id = token.id as string;
                 session.user.role = token.role as Role;
                 session.user.username = token.username as string;
+                session.user.image =
+                    (token.picture as string | undefined) ?? null;
             }
 
             return session;

@@ -54,6 +54,7 @@ export const userRepository = {
                     email: true,
                     username: true,
                     role: true,
+                    image: true, // аватар для JWT при логине
                     passwordHash: true, // passwordHash для логина
                 },
             }),
@@ -213,6 +214,55 @@ export const userRepository = {
 
                 throw error;
             }
+        });
+    },
+
+    /**
+     * Смена аватара (User.image) в одном unpooled connect.
+     * Пустая строка imageUrl → NULL в БД (сброс).
+     * То же значение, что уже в БД → 'unchanged'.
+     */
+    async updateImage(
+        id: string,
+        imageUrl: string,
+    ): Promise<'updated' | 'not_found' | 'unchanged'> {
+        const nextImage = imageUrl === '' ? null : imageUrl;
+
+        // Смена аватара в одном unpooled connect
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{ image: string | null }>(
+                `
+                SELECT "image"
+                FROM "User"
+                WHERE "id" = $1
+                LIMIT 1
+            `,
+                [id],
+            );
+
+            // Получение текущего аватара
+            const row = current.rows[0];
+
+            if (!row) {
+                return 'not_found';
+            }
+
+            // Проверка на то, что аватар не изменился
+            if (row.image === nextImage) {
+                return 'unchanged';
+            }
+
+            // Смена аватара в БД
+            await client.query(
+                `
+                UPDATE "User"
+                SET "image" = $1, "updatedAt" = NOW()
+                WHERE "id" = $2
+            `,
+                [nextImage, id],
+            );
+
+            return 'updated';
         });
     },
 };
