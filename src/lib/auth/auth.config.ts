@@ -25,17 +25,11 @@ export const authConfig = {
             }
 
             // Session update after profile username change (unstable_update).
-            if (trigger === 'update' && session) {
-                const nextUsername =
-                    typeof session.username === 'string'
-                        ? session.username
-                        : typeof session.user?.username === 'string'
-                          ? session.user.username
-                          : undefined;
-
-                if (nextUsername) {
-                    token.username = nextUsername;
-                }
+            if (
+                trigger === 'update' &&
+                typeof session?.user?.username === 'string'
+            ) {
+                token.username = session.user.username;
             }
 
             return token;

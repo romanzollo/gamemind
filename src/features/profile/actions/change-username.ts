@@ -61,7 +61,7 @@ export async function changeUsernameAction(
     }
 
     try {
-        await unstable_update({ username });
+        await unstable_update({ user: { username } });
     } catch (error) {
         console.error('Session username update failed:', error);
         // DB already updated; profile revalidate still helps on next full reload.
