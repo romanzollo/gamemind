@@ -11,6 +11,7 @@ import {
 import type { ProfileResultHistoryEntry } from '@/features/profile/types/result-history-entry';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
+import { SubmitButton } from '@/shared/ui';
 
 type ProfilePageProps = {
     params: Promise<{ locale: string }>;
@@ -55,12 +56,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
             <form action={logoutAction} className="mt-6">
                 <input type="hidden" name="locale" value={safeLocale} />
-                <button
-                    type="submit"
+                <SubmitButton
+                    pendingLabel={dictionary.common.working}
                     className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
                 >
                     {dictionary.profile.logout}
-                </button>
+                </SubmitButton>
             </form>
 
             <ChangeUsernameForm

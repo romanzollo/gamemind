@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { changeAvatarAction } from '@/features/profile/actions';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { UserAvatar } from '@/shared/ui';
+import { SubmitButton, UserAvatar } from '@/shared/ui';
 
 type ChangeAvatarFormProps = {
     locale: Locale;
@@ -26,7 +26,10 @@ export function ChangeAvatarForm({
     currentImageUrl,
 }: ChangeAvatarFormProps) {
     const router = useRouter();
-    const [state, formAction] = useActionState(changeAvatarAction, {});
+    const [state, formAction, isPending] = useActionState(
+        changeAvatarAction,
+        {},
+    );
     const errorMessage = getProfileErrorMessage(dictionary, state.errorCode);
 
     // Как у username: refresh после cookie update.
@@ -79,28 +82,32 @@ export function ChangeAvatarForm({
                 </label>
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <button
-                        type="submit"
+                    <SubmitButton
+                        pendingLabel={dictionary.common.submitting}
+                        disabled={isPending}
                         className="min-h-11 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
                     >
                         {dictionary.profile.changeAvatarSubmit}
-                    </button>
+                    </SubmitButton>
 
                     {currentImageUrl ? (
                         <button
                             type="button"
+                            disabled={isPending}
+                            aria-busy={isPending}
                             onClick={() => {
                                 const fd = new FormData();
                                 fd.set('locale', locale);
                                 fd.set('imageUrl', '');
-                                // useActionState требует вызов внутри transition
                                 startTransition(() => {
                                     formAction(fd);
                                 });
                             }}
-                            className="min-h-11 w-full rounded-md border border-border px-4 py-2 text-foreground transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
+                            className="min-h-11 w-full rounded-md border border-border px-4 py-2 text-foreground transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-wait disabled:opacity-70 sm:w-auto"
                         >
-                            {dictionary.profile.clearAvatar}
+                            {isPending
+                                ? dictionary.common.working
+                                : dictionary.profile.clearAvatar}
                         </button>
                     ) : null}
                 </div>

@@ -5,6 +5,7 @@ import { useActionState, useEffect, useRef } from 'react';
 import { changePasswordAction } from '@/features/profile/actions';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
+import { SubmitButton } from '@/shared/ui';
 
 type ChangePasswordFormProps = {
     locale: Locale;
@@ -89,12 +90,12 @@ export function ChangePasswordForm({
                     />
                 </label>
 
-                <button
-                    type="submit"
+                <SubmitButton
+                    pendingLabel={dictionary.common.submitting}
                     className="min-h-11 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
                 >
                     {dictionary.profile.changePasswordSubmit}
-                </button>
+                </SubmitButton>
             </form>
 
             {errorMessage && (

@@ -6,6 +6,7 @@ import {
     deleteQuestionAction,
 } from '@/features/admin/actions/questions';
 import type { Dictionary, Locale } from '@/shared/i18n';
+import { SubmitButton } from '@/shared/ui';
 import type { AdminQuestionListItem } from '../types';
 
 // тип пропсов компонента таблицы вопросов для администрирования
@@ -90,12 +91,9 @@ export function AdminQuestionsTable({
                                                 name="questionId"
                                                 value={entry.id}
                                             />
-                                            <button
-                                                type="submit"
-                                                className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300"
-                                            >
+                                            <SubmitButton className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300">
                                                 {labels.deactivateButton}
-                                            </button>
+                                            </SubmitButton>
                                         </form>
                                     ) : (
                                         <form action={activateQuestionAction}>
@@ -109,12 +107,11 @@ export function AdminQuestionsTable({
                                                 name="questionId"
                                                 value={entry.id}
                                             />
-                                            <button
-                                                type="submit"
+                                            <SubmitButton
                                                 className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300"
                                             >
                                                 {labels.activateButton}
-                                            </button>
+                                            </SubmitButton>
                                         </form>
                                     )}
 
@@ -129,12 +126,9 @@ export function AdminQuestionsTable({
                                             name="questionId"
                                             value={entry.id}
                                         />
-                                        <button
-                                            type="submit"
-                                            className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300"
-                                        >
+                                        <SubmitButton className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300">
                                             {labels.deleteButton}
-                                        </button>
+                                        </SubmitButton>
                                     </form>
                                 </div>
                             </td>

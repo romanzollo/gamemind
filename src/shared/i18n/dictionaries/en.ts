@@ -27,6 +27,11 @@ export const enDictionary = {
         switchToLight: 'Switch to light theme',
         switchToDark: 'Switch to dark theme',
     },
+    common: {
+        loading: 'Loading…',
+        submitting: 'Submitting…',
+        working: 'Please wait…',
+    },
     home: {
         title: 'GameMind',
         description: 'Video game quiz platform.',

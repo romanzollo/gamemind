@@ -1,7 +1,6 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { useFormStatus } from 'react-dom';
 
 import {
     createQuestionAction,
@@ -10,6 +9,7 @@ import {
 import { getAdminErrorMessage } from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
+import { SubmitButton } from '@/shared/ui';
 import type { QuestionType } from '@/types';
 
 const OPTION_COUNT = 4;
@@ -42,18 +42,20 @@ type AdminQuestionFormProps =
     | AdminQuestionFormCreateProps
     | AdminQuestionFormEditProps;
 
-function AdminQuestionSubmitButton({ label }: { label: string }) {
-    const { pending } = useFormStatus();
-
+function AdminQuestionSubmitButton({
+    label,
+    pendingLabel,
+}: {
+    label: string;
+    pendingLabel: string;
+}) {
     return (
-        <button
-            type="submit"
-            disabled={pending}
-            aria-busy={pending}
-            className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 disabled:cursor-wait disabled:opacity-70 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
+        <SubmitButton
+            pendingLabel={pendingLabel}
+            className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
         >
-            {pending ? `${label}...` : label}
-        </button>
+            {label}
+        </SubmitButton>
     );
 }
 
@@ -301,6 +303,7 @@ export function AdminQuestionForm({
                             ? dictionary.admin.editButton
                             : dictionary.admin.createButton
                     }
+                    pendingLabel={dictionary.common.submitting}
                 />
             </form>
 

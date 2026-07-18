@@ -1,9 +1,9 @@
-import Link from 'next/link';
 import type { Role } from '@prisma/client';
 import type { ReactNode } from 'react';
 
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { LanguageSwitcher } from './language-switcher';
+import { PendingLink } from './pending-link';
 import { ThemeToggle } from './theme-toggle';
 
 type NavUser = {
@@ -61,22 +61,22 @@ export function SiteHeader({
     return (
         <header className="border-b border-border bg-surface/80 backdrop-blur-sm">
             <nav className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-3 gap-y-3 px-4 py-3">
-                <Link
+                <PendingLink
                     href={localizedHref(locale, '/')}
                     className="shrink-0 text-base font-semibold tracking-tight text-foreground"
                 >
                     GameMind
-                </Link>
+                </PendingLink>
 
                 <div className="flex flex-wrap items-center gap-1">
                     {mainLinks.map((link) => (
-                        <Link
+                        <PendingLink
                             key={link.href}
                             href={localizedHref(locale, link.href)}
                             className={navLinkClassName}
                         >
                             {dictionary.nav[link.labelKey]}
-                        </Link>
+                        </PendingLink>
                     ))}
                 </div>
 

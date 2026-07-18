@@ -25,6 +25,11 @@ export type Dictionary = {
         switchToLight: string;
         switchToDark: string;
     };
+    common: {
+        loading: string;
+        submitting: string;
+        working: string;
+    };
     home: {
         title: string;
         description: string;

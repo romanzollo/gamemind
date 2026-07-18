@@ -27,6 +27,11 @@ export const ruDictionary: Dictionary = {
         switchToLight: 'Переключить на светлую тему',
         switchToDark: 'Переключить на тёмную тему',
     },
+    common: {
+        loading: 'Загрузка…',
+        submitting: 'Отправка…',
+        working: 'Подождите…',
+    },
     home: {
         title: 'GameMind',
         description: 'Платформа викторин о видеоиграх.',

@@ -6,18 +6,16 @@ import { useActionState } from 'react';
 
 import { registerAction } from '@/features/auth/actions';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
+import { SubmitButton } from '@/shared/ui';
 
-// Получение локали из параметров URL
 function getLocale(value: string | string[] | undefined): Locale {
     return typeof value === 'string' && isLocale(value) ? value : 'ru';
 }
 
-// Страница регистрации
 export default function RegisterPage() {
     const params = useParams<{ locale: string }>();
     const locale = getLocale(params.locale);
     const dictionary = getDictionary(locale);
-    // Состояние формы и действие регистрации
     const [state, formAction] = useActionState(registerAction, {});
 
     return (
@@ -56,12 +54,12 @@ export default function RegisterPage() {
                     required
                     minLength={8}
                 />
-                <button
-                    type="submit"
+                <SubmitButton
+                    pendingLabel={dictionary.common.submitting}
                     className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
                 >
                     {dictionary.auth.registerButton}
-                </button>
+                </SubmitButton>
             </form>
             {state.error && <p className="mt-2 text-red-600">{state.error}</p>}
             <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">

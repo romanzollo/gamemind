@@ -6,6 +6,7 @@ import {
 } from '@/features/admin/actions/users';
 import { ConfirmForm } from '@/features/admin/components/ConfirmForm';
 import type { Dictionary, Locale } from '@/shared/i18n';
+import { SubmitButton } from '@/shared/ui';
 import type { AdminUserListItem } from '../types';
 
 type AdminUsersTableProps = {
@@ -102,12 +103,9 @@ export function AdminUsersTable({
                                                         name="role"
                                                         value="ADMIN"
                                                     />
-                                                    <button
-                                                        type="submit"
-                                                        className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
-                                                    >
+                                                    <SubmitButton className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                                                         {labels.makeAdminButton}
-                                                    </button>
+                                                    </SubmitButton>
                                                 </ConfirmForm>
                                             ) : (
                                                 <ConfirmForm
@@ -131,12 +129,9 @@ export function AdminUsersTable({
                                                         name="role"
                                                         value="USER"
                                                     />
-                                                    <button
-                                                        type="submit"
-                                                        className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
-                                                    >
+                                                    <SubmitButton className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                                                         {labels.makeUserButton}
-                                                    </button>
+                                                    </SubmitButton>
                                                 </ConfirmForm>
                                             )}
 
@@ -154,14 +149,11 @@ export function AdminUsersTable({
                                                         name="userId"
                                                         value={entry.id}
                                                     />
-                                                    <button
-                                                        type="submit"
-                                                        className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300"
-                                                    >
+                                                    <SubmitButton className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300">
                                                         {
                                                             labels.deactivateButton
                                                         }
-                                                    </button>
+                                                    </SubmitButton>
                                                 </form>
                                             ) : (
                                                 <form
@@ -177,12 +169,9 @@ export function AdminUsersTable({
                                                         name="userId"
                                                         value={entry.id}
                                                     />
-                                                    <button
-                                                        type="submit"
-                                                        className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300"
-                                                    >
+                                                    <SubmitButton className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300">
                                                         {labels.activateButton}
-                                                    </button>
+                                                    </SubmitButton>
                                                 </form>
                                             )}
 
@@ -202,12 +191,9 @@ export function AdminUsersTable({
                                                     name="userId"
                                                     value={entry.id}
                                                 />
-                                                <button
-                                                    type="submit"
-                                                    className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300"
-                                                >
+                                                <SubmitButton className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300">
                                                     {labels.deleteButton}
-                                                </button>
+                                                </SubmitButton>
                                             </ConfirmForm>
                                         </div>
                                     )}
