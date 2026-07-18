@@ -87,17 +87,26 @@ export type Dictionary = {
     };
     admin: {
         questionsTitle: string;
+        usersTitle: string;
         signedInAs: string;
         listDescription: string;
+        usersListDescription: string;
+        questionsLink: string;
+        usersLink: string;
         tableQuestion: string;
         tableDifficulty: string;
         tableCategory: string;
         tableOptions: string;
         tableStatus: string;
         tableCreated: string;
+        tableUsername: string;
+        tableEmail: string;
+        tableRole: string;
+        tableQuizResults: string;
         statusActive: string;
         statusInactive: string;
         empty: string;
+        usersEmpty: string;
         formQuestionText: string;
         formQuestionTextRu: string;
         formQuestionTextEn: string;
@@ -121,9 +130,16 @@ export type Dictionary = {
         deactivateButton: string;
         activateButton: string;
         deleteButton: string;
+        makeAdminButton: string;
+        makeUserButton: string;
+        roleUser: string;
+        roleAdmin: string;
+        confirmDeleteUser: string;
+        confirmChangeRole: string;
         tableActions: string;
         errors: {
             loadFailed: string;
+            usersLoadFailed: string;
             invalidInput: string;
             notFound: string;
             exactlyOneCorrectRequired: string;
@@ -131,6 +147,12 @@ export type Dictionary = {
             deleteFailed: string;
             deactivateFailed: string;
             activateFailed: string;
+            cannotModifySelf: string;
+            cannotDeleteLastAdmin: string;
+            userUpdateFailed: string;
+            userRoleUpdateFailed: string;
+            userDeactivateFailed: string;
+            userActivateFailed: string;
         };
     };
     quiz: {

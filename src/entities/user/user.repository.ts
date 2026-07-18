@@ -1,4 +1,5 @@
 // Работа с пользователями в БД
+import type { Client } from 'pg';
 import { withDirectPgClient, withDirectPgWriteRetry } from '@/lib/db/direct-pg';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import type { Role } from '@prisma/client';
@@ -11,6 +12,25 @@ export type SafeUser = {
     role: Role;
     createdAt: Date;
 };
+
+/** Строка списка пользователей для админки (без passwordHash). */
+export type AdminUserRow = {
+    id: string;
+    username: string;
+    email: string;
+    role: Role;
+    isActive: boolean;
+    createdAt: Date;
+    quizResultCount: number;
+};
+
+export type AdminUserMutationResult =
+    | 'updated'
+    | 'deleted'
+    | 'not_found'
+    | 'unchanged'
+    | 'cannot_modify_self'
+    | 'cannot_delete_last_admin';
 
 // Репозиторий для работы с пользователями
 export const userRepository = {
@@ -55,10 +75,225 @@ export const userRepository = {
                     username: true,
                     role: true,
                     image: true, // аватар для JWT при логине
+                    isActive: true, // soft-disable блокирует вход
                     passwordHash: true, // passwordHash для логина
                 },
             }),
         );
+    },
+
+    /**
+     * Список пользователей для админки (unpooled direct pg).
+     * Без passwordHash; quizResultCount через LEFT JOIN агрегата.
+     */
+    async findAllForAdmin(): Promise<AdminUserRow[]> {
+        const result = await withDirectPgClient((client) =>
+            client.query<{
+                id: string;
+                username: string;
+                email: string;
+                role: Role;
+                isActive: boolean;
+                createdAt: Date;
+                quizResultCount: number;
+            }>(
+                `
+                    SELECT
+                        u."id",
+                        u."username",
+                        u."email",
+                        u."role",
+                        u."isActive",
+                        u."createdAt",
+                        COALESCE(r."quizResultCount", 0)::int AS "quizResultCount"
+                    FROM "User" u
+                    LEFT JOIN (
+                        SELECT "userId", COUNT(*)::int AS "quizResultCount"
+                        FROM "QuizResult"
+                        GROUP BY "userId"
+                    ) r ON r."userId" = u."id"
+                    ORDER BY u."createdAt" DESC
+                `,
+            ),
+        );
+
+        return result.rows.map((row) => ({
+            id: row.id,
+            username: row.username,
+            email: row.email,
+            role: row.role,
+            isActive: row.isActive,
+            createdAt: row.createdAt,
+            quizResultCount: Number(row.quizResultCount),
+        }));
+    },
+
+    /**
+     * Смена роли USER ↔ ADMIN.
+     * Нельзя менять себя; нельзя снять роль с последнего ADMIN.
+     */
+    async updateRoleForAdmin(
+        targetUserId: string,
+        nextRole: Role,
+        actorUserId: string,
+    ): Promise<AdminUserMutationResult> {
+        if (targetUserId === actorUserId) {
+            return 'cannot_modify_self';
+        }
+
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{
+                role: Role;
+            }>(
+                `
+                    SELECT "role"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [targetUserId],
+            );
+
+            const row = current.rows[0];
+
+            if (!row) {
+                return 'not_found';
+            }
+
+            if (row.role === nextRole) {
+                return 'unchanged';
+            }
+
+            if (row.role === 'ADMIN' && nextRole === 'USER') {
+                const adminCount = await countAdmins(client);
+
+                if (adminCount <= 1) {
+                    return 'cannot_delete_last_admin';
+                }
+            }
+
+            await client.query(
+                `
+                    UPDATE "User"
+                    SET "role" = $1, "updatedAt" = NOW()
+                    WHERE "id" = $2
+                `,
+                [nextRole, targetUserId],
+            );
+
+            return 'updated';
+        });
+    },
+
+    /**
+     * Soft-disable / enable пользователя.
+     * Нельзя менять себя; нельзя деактивировать последнего ADMIN.
+     */
+    async setActiveForAdmin(
+        targetUserId: string,
+        isActive: boolean,
+        actorUserId: string,
+    ): Promise<AdminUserMutationResult> {
+        if (targetUserId === actorUserId) {
+            return 'cannot_modify_self';
+        }
+
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{
+                role: Role;
+                isActive: boolean;
+            }>(
+                `
+                    SELECT "role", "isActive"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [targetUserId],
+            );
+
+            const row = current.rows[0];
+
+            if (!row) {
+                return 'not_found';
+            }
+
+            if (row.isActive === isActive) {
+                return 'unchanged';
+            }
+
+            if (!isActive && row.role === 'ADMIN') {
+                const activeAdminCount = await countAdmins(client, {
+                    activeOnly: true,
+                });
+
+                if (activeAdminCount <= 1) {
+                    return 'cannot_delete_last_admin';
+                }
+            }
+
+            await client.query(
+                `
+                    UPDATE "User"
+                    SET "isActive" = $1, "updatedAt" = NOW()
+                    WHERE "id" = $2
+                `,
+                [isActive, targetUserId],
+            );
+
+            return 'updated';
+        });
+    },
+
+    /**
+     * Hard-delete пользователя (cascade через FK).
+     * Нельзя удалить себя; нельзя удалить последнего ADMIN.
+     */
+    async deleteByIdForAdmin(
+        targetUserId: string,
+        actorUserId: string,
+    ): Promise<AdminUserMutationResult> {
+        if (targetUserId === actorUserId) {
+            return 'cannot_modify_self';
+        }
+
+        return withDirectPgWriteRetry(async (client) => {
+            const current = await client.query<{
+                role: Role;
+            }>(
+                `
+                    SELECT "role"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [targetUserId],
+            );
+
+            const row = current.rows[0];
+
+            if (!row) {
+                return 'not_found';
+            }
+
+            if (row.role === 'ADMIN') {
+                const adminCount = await countAdmins(client);
+
+                if (adminCount <= 1) {
+                    return 'cannot_delete_last_admin';
+                }
+            }
+
+            await client.query(
+                `
+                    DELETE FROM "User"
+                    WHERE "id" = $1
+                `,
+                [targetUserId],
+            );
+
+            return 'deleted';
+        });
     },
 
     // Поиск по id с passwordHash (только для серверной проверки пароля)
@@ -275,4 +510,26 @@ function isPgUniqueViolation(error: unknown): boolean {
         'code' in error &&
         (error as { code: unknown }).code === '23505'
     );
+}
+
+async function countAdmins(
+    client: Client,
+    options?: { activeOnly?: boolean },
+): Promise<number> {
+    const activeOnly = options?.activeOnly === true;
+    const result = await client.query<{ count: number }>(
+        activeOnly
+            ? `
+                SELECT COUNT(*)::int AS "count"
+                FROM "User"
+                WHERE "role" = 'ADMIN' AND "isActive" = true
+              `
+            : `
+                SELECT COUNT(*)::int AS "count"
+                FROM "User"
+                WHERE "role" = 'ADMIN'
+              `,
+    );
+
+    return Number(result.rows[0]?.count ?? 0);
 }

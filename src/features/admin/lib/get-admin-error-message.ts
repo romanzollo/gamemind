@@ -10,6 +10,12 @@ const ERROR_MAP: Record<AdminErrorCode, keyof Dictionary['admin']['errors']> = {
     DELETE_FAILED: 'deleteFailed',
     DEACTIVATE_FAILED: 'deactivateFailed',
     ACTIVATE_FAILED: 'activateFailed',
+    CANNOT_MODIFY_SELF: 'cannotModifySelf',
+    CANNOT_DELETE_LAST_ADMIN: 'cannotDeleteLastAdmin',
+    USER_UPDATE_FAILED: 'userUpdateFailed',
+    USER_ROLE_UPDATE_FAILED: 'userRoleUpdateFailed',
+    USER_DEACTIVATE_FAILED: 'userDeactivateFailed',
+    USER_ACTIVATE_FAILED: 'userActivateFailed',
 };
 
 // функция для получения сообщения об ошибке для админ-панели
@@ -17,11 +23,8 @@ export function getAdminErrorMessage(
     dictionary: Dictionary,
     errorCode?: AdminErrorCode,
 ): string | undefined {
-    // если ошибка не передана, возвращаем undefined
     if (!errorCode) return undefined;
 
-    // получаем ключ ошибки из карты ошибок
     const key = ERROR_MAP[errorCode];
-    // возвращаем сообщение об ошибке из словаря
     return dictionary.admin.errors[key];
 }

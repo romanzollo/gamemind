@@ -29,6 +29,11 @@ export const credentialsProvider = Credentials({
             return null;
         }
 
+        // Soft-disable: неактивный пользователь не входит
+        if (!user.isActive) {
+            return null;
+        }
+
         // Шаг 5: Сравнение паролей
         const isPasswordValid = await bcrypt.compare(
             password,

@@ -44,9 +44,27 @@ export type AdminErrorCode =
     | 'SAVE_FAILED'
     | 'DELETE_FAILED'
     | 'DEACTIVATE_FAILED'
-    | 'ACTIVATE_FAILED';
+    | 'ACTIVATE_FAILED'
+    | 'CANNOT_MODIFY_SELF'
+    | 'CANNOT_DELETE_LAST_ADMIN'
+    | 'USER_UPDATE_FAILED'
+    | 'USER_ROLE_UPDATE_FAILED'
+    | 'USER_DEACTIVATE_FAILED'
+    | 'USER_ACTIVATE_FAILED';
 
 /** Состояние формы для useActionState (как в quiz). */
 export type AdminFormState = {
     errorCode?: AdminErrorCode;
+};
+
+/** Строка списка пользователей в админке (без passwordHash). */
+export type AdminUserListItem = {
+    id: string;
+    username: string;
+    email: string;
+    role: 'USER' | 'ADMIN';
+    isActive: boolean;
+    /** ISO string — безопасно для Client Components */
+    createdAt: string;
+    quizResultCount: number;
 };

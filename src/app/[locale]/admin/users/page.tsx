@@ -1,12 +1,16 @@
 import Link from 'next/link';
 
-import { questionRepository } from '@/entities/question/question.repository';
-import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
-import { mapAdminQuestions } from '@/features/admin/lib';
+import { userRepository } from '@/entities/user/user.repository';
+import { AdminUsersTable } from '@/features/admin/components/AdminUsersTable';
+import {
+    getAdminErrorMessage,
+    mapAdminUsers,
+} from '@/features/admin/lib';
+import type { AdminErrorCode } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
 
-type AdminQuestionsPageProps = {
+type AdminUsersPageProps = {
     params: Promise<{ locale: string }>;
     searchParams: Promise<{ error?: string }>;
 };
@@ -15,63 +19,70 @@ function localizedHref(locale: Locale, href: string) {
     return `/${locale}${href}`;
 }
 
-export default async function AdminQuestionsPage({
+function parseAdminErrorCode(error: string | undefined): AdminErrorCode | undefined {
+    if (!error) return undefined;
+
+    const known: AdminErrorCode[] = [
+        'NOT_FOUND',
+        'DELETE_FAILED',
+        'CANNOT_MODIFY_SELF',
+        'CANNOT_DELETE_LAST_ADMIN',
+        'USER_UPDATE_FAILED',
+        'USER_ROLE_UPDATE_FAILED',
+        'USER_DEACTIVATE_FAILED',
+        'USER_ACTIVATE_FAILED',
+    ];
+
+    return known.includes(error as AdminErrorCode)
+        ? (error as AdminErrorCode)
+        : undefined;
+}
+
+export default async function AdminUsersPage({
     params,
     searchParams,
-}: AdminQuestionsPageProps) {
+}: AdminUsersPageProps) {
     const { locale } = await params;
     const { error } = await searchParams;
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
     const session = await requireAdmin(safeLocale);
 
-    let entries: ReturnType<typeof mapAdminQuestions> = [];
+    let entries: ReturnType<typeof mapAdminUsers> = [];
     let loadErrorMessage: string | undefined;
 
     try {
-        const rows = await questionRepository.findAllForAdmin(safeLocale);
-        entries = mapAdminQuestions(rows);
-    } catch (error) {
+        const rows = await userRepository.findAllForAdmin();
+        entries = mapAdminUsers(rows);
+    } catch (loadError) {
         if (process.env.NODE_ENV === 'development') {
             console.error(
-                '[admin/questions] findAllForAdmin failed:',
-                error instanceof Error ? error.message : error,
+                '[admin/users] findAllForAdmin failed:',
+                loadError instanceof Error ? loadError.message : loadError,
             );
         }
-        loadErrorMessage = dictionary.admin.errors.loadFailed;
+        loadErrorMessage = dictionary.admin.errors.usersLoadFailed;
     }
 
-    const actionErrorMessage =
-        error === 'DELETE_FAILED'
-            ? dictionary.admin.errors.deleteFailed
-            : error === 'DEACTIVATE_FAILED'
-              ? dictionary.admin.errors.deactivateFailed
-              : error === 'ACTIVATE_FAILED'
-                ? dictionary.admin.errors.activateFailed
-                : error === 'NOT_FOUND'
-                  ? dictionary.admin.errors.notFound
-                  : undefined;
+    const actionErrorMessage = getAdminErrorMessage(
+        dictionary,
+        parseAdminErrorCode(error),
+    );
     const adminErrorMessage = actionErrorMessage ?? loadErrorMessage;
 
     return (
         <main className="mx-auto max-w-5xl p-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <h1 className="text-2xl font-semibold">
-                    {dictionary.admin.questionsTitle}
+                    {dictionary.admin.usersTitle}
                 </h1>
 
                 <div className="flex flex-wrap gap-3">
                     <Link
-                        href={localizedHref(safeLocale, '/admin/users')}
+                        href={localizedHref(safeLocale, '/admin/questions')}
                         className="rounded border border-border px-4 py-2 text-sm transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     >
-                        {dictionary.admin.usersLink}
-                    </Link>
-                    <Link
-                        href={localizedHref(safeLocale, '/admin/questions/new')}
-                        className="rounded bg-neutral-900 px-4 py-2 text-sm text-white transition hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
-                    >
-                        {dictionary.admin.createLink}
+                        {dictionary.admin.questionsLink}
                     </Link>
                 </div>
             </div>
@@ -81,7 +92,7 @@ export default async function AdminQuestionsPage({
             </p>
 
             <p className="mt-1 text-neutral-600 dark:text-neutral-400">
-                {dictionary.admin.listDescription}
+                {dictionary.admin.usersListDescription}
             </p>
 
             {adminErrorMessage && (
@@ -90,10 +101,11 @@ export default async function AdminQuestionsPage({
                 </p>
             )}
 
-            <AdminQuestionsTable
+            <AdminUsersTable
                 entries={entries}
                 labels={dictionary.admin}
                 locale={safeLocale}
+                currentUserId={session.user.id}
             />
         </main>
     );

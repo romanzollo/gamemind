@@ -5,6 +5,11 @@ const fs = require('fs');
 const path = require('path');
 
 function readEnv(name) {
+    const fromProcess = process.env[name];
+    if (typeof fromProcess === 'string' && fromProcess.trim() !== '') {
+        return fromProcess.trim();
+    }
+
     const env = fs.readFileSync(path.join(__dirname, '..', '.env'), 'utf8');
     const match = env.match(new RegExp(`${name}="([^"]+)"`));
     if (!match) throw new Error(`Missing ${name}`);
@@ -13,10 +18,13 @@ function readEnv(name) {
 
 async function main() {
     const migrationName = process.argv[2];
+    // Optional 3rd arg: env key for connection string (default local unpooled).
+    // Example prod: node scripts/apply-named-migration.cjs 20260718190000_user_is_active PROD_DATABASE_URL_UNPOOLED
+    const connectionEnvKey = process.argv[3] || 'DATABASE_URL_UNPOOLED';
 
     if (!migrationName) {
         throw new Error(
-            'Usage: node scripts/apply-named-migration.cjs <migration_folder_name>',
+            'Usage: node scripts/apply-named-migration.cjs <migration_folder_name> [CONNECTION_ENV_KEY]',
         );
     }
 
@@ -35,9 +43,14 @@ async function main() {
 
     const sql = fs.readFileSync(migrationPath, 'utf8');
     const checksum = crypto.createHash('sha256').update(sql).digest('hex');
+    const connectionString = readEnv(connectionEnvKey);
+
+    console.log(
+        `Applying ${migrationName} using ${connectionEnvKey} (host redacted)...`,
+    );
 
     const client = new Client({
-        connectionString: readEnv('DATABASE_URL_UNPOOLED'),
+        connectionString,
         ssl: { rejectUnauthorized: true },
     });
 

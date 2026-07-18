@@ -91,17 +91,26 @@ export const ruDictionary: Dictionary = {
     },
     admin: {
         questionsTitle: 'Управление вопросами',
+        usersTitle: 'Управление пользователями',
         signedInAs: 'Админ-зона. Вы вошли как',
         listDescription: 'Список всех вопросов в базе.',
+        usersListDescription: 'Список пользователей: роли, статус, результаты.',
+        questionsLink: 'Вопросы',
+        usersLink: 'Пользователи',
         tableQuestion: 'Вопрос',
         tableDifficulty: 'Сложность',
         tableCategory: 'Категория',
         tableOptions: 'Варианты',
         tableStatus: 'Статус',
         tableCreated: 'Создан',
+        tableUsername: 'Имя',
+        tableEmail: 'Email',
+        tableRole: 'Роль',
+        tableQuizResults: 'Результатов',
         statusActive: 'Активен',
         statusInactive: 'Неактивен',
         empty: 'Пока нет вопросов.',
+        usersEmpty: 'Пока нет пользователей.',
         formQuestionText: 'Текст вопроса',
         formQuestionTextRu: 'Текст вопроса (русский)',
         formQuestionTextEn: 'Текст вопроса (английский)',
@@ -126,20 +135,40 @@ export const ruDictionary: Dictionary = {
         deactivateButton: 'Деактивировать',
         activateButton: 'Активировать',
         deleteButton: 'Удалить',
+        makeAdminButton: 'Сделать ADMIN',
+        makeUserButton: 'Сделать USER',
+        roleUser: 'USER',
+        roleAdmin: 'ADMIN',
+        confirmDeleteUser:
+            'Удалить пользователя навсегда? Связанные квизы и результаты тоже удалятся.',
+        confirmChangeRole: 'Изменить роль этого пользователя?',
         tableActions: 'Действия',
         errors: {
             loadFailed:
                 'Не удалось загрузить вопросы. Проверь подключение к базе данных и попробуй обновить страницу.',
+            usersLoadFailed:
+                'Не удалось загрузить пользователей. Проверь подключение к базе данных и попробуй обновить страницу.',
             invalidInput:
                 'Проверь текст вопроса на русском и английском, сложность, категорию и варианты ответов.',
-            notFound: 'Вопрос не найден.',
+            notFound: 'Запись не найдена.',
             exactlyOneCorrectRequired:
                 'Должен быть ровно один правильный вариант ответа.',
             saveFailed: 'Не удалось сохранить вопрос. Попробуй ещё раз.',
-            deleteFailed: 'Не удалось удалить вопрос. Попробуй ещё раз.',
+            deleteFailed: 'Не удалось удалить. Попробуй ещё раз.',
             deactivateFailed:
                 'Не удалось деактивировать вопрос. Попробуй ещё раз.',
             activateFailed: 'Не удалось активировать вопрос. Попробуй ещё раз.',
+            cannotModifySelf: 'Нельзя изменить или удалить свой аккаунт.',
+            cannotDeleteLastAdmin:
+                'Нельзя удалить, понизить или деактивировать последнего ADMIN.',
+            userUpdateFailed:
+                'Не удалось обновить пользователя. Попробуй ещё раз.',
+            userRoleUpdateFailed:
+                'Не удалось изменить роль. Попробуй ещё раз.',
+            userDeactivateFailed:
+                'Не удалось деактивировать пользователя. Попробуй ещё раз.',
+            userActivateFailed:
+                'Не удалось активировать пользователя. Попробуй ещё раз.',
         },
     },
     quiz: {
