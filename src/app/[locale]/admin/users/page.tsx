@@ -2,10 +2,7 @@ import Link from 'next/link';
 
 import { userRepository } from '@/entities/user/user.repository';
 import { AdminUsersTable } from '@/features/admin/components/AdminUsersTable';
-import {
-    getAdminErrorMessage,
-    mapAdminUsers,
-} from '@/features/admin/lib';
+import { getAdminErrorMessage, mapAdminUsers } from '@/features/admin/lib';
 import type { AdminErrorCode } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
@@ -19,7 +16,9 @@ function localizedHref(locale: Locale, href: string) {
     return `/${locale}${href}`;
 }
 
-function parseAdminErrorCode(error: string | undefined): AdminErrorCode | undefined {
+function parseAdminErrorCode(
+    error: string | undefined,
+): AdminErrorCode | undefined {
     if (!error) return undefined;
 
     const known: AdminErrorCode[] = [
@@ -79,6 +78,12 @@ export default async function AdminUsersPage({
 
                 <div className="flex flex-wrap gap-3">
                     <Link
+                        href={localizedHref(safeLocale, '/admin')}
+                        className="rounded border border-border px-4 py-2 text-sm transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                        {dictionary.admin.backToAdminHome}
+                    </Link>
+                    <Link
                         href={localizedHref(safeLocale, '/admin/questions')}
                         className="rounded border border-border px-4 py-2 text-sm transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     >
@@ -96,9 +101,20 @@ export default async function AdminUsersPage({
             </p>
 
             {adminErrorMessage && (
-                <p className="mt-4 text-red-600" role="alert">
-                    {adminErrorMessage}
-                </p>
+                <div
+                    className="mt-4 flex flex-wrap items-center gap-3"
+                    role="alert"
+                >
+                    <p className="text-red-600">{adminErrorMessage}</p>
+                    {loadErrorMessage && (
+                        <Link
+                            href={localizedHref(safeLocale, '/admin/users')}
+                            className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
+                        >
+                            {dictionary.admin.retryLoad}
+                        </Link>
+                    )}
+                </div>
             )}
 
             <AdminUsersTable

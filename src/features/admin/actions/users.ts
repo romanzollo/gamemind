@@ -7,7 +7,6 @@ import { userRepository } from '@/entities/user/user.repository';
 import { requireAdmin } from '@/lib/auth/guards';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
-/** Получение локали из формы */
 function getLocaleFromFormData(formData: FormData): Locale {
     const locale = formData.get('locale');
 
@@ -16,7 +15,6 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
-/** Получение ID пользователя из формы */
 function getUserIdFromFormData(formData: FormData): string | null {
     const userId = formData.get('userId');
 
@@ -27,7 +25,6 @@ function getUserIdFromFormData(formData: FormData): string | null {
     return userId;
 }
 
-/** Генерация пути для админки пользователей с ошибкой (если есть) */
 function usersPath(locale: Locale, error?: string) {
     if (error) {
         return `/${locale}/admin/users?error=${error}`;
@@ -36,7 +33,16 @@ function usersPath(locale: Locale, error?: string) {
     return `/${locale}/admin/users`;
 }
 
-/** Перенаправление после успешной или неудачной операции */
+function isNextRedirectError(error: unknown): boolean {
+    return (
+        typeof error === 'object' &&
+        error !== null &&
+        'digest' in error &&
+        typeof (error as { digest: unknown }).digest === 'string' &&
+        (error as { digest: string }).digest.startsWith('NEXT_REDIRECT')
+    );
+}
+
 function redirectMutationResult(
     locale: Locale,
     result:
@@ -64,7 +70,6 @@ function redirectMutationResult(
     redirect(usersPath(locale));
 }
 
-/** Действие для обновления роли пользователя */
 export async function updateUserRoleAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     const session = await requireAdmin(locale);
@@ -87,14 +92,14 @@ export async function updateUserRoleAction(formData: FormData) {
             nextRole,
             session.user.id,
         );
-    } catch {
+    } catch (error) {
+        if (isNextRedirectError(error)) throw error;
         redirect(usersPath(locale, 'USER_ROLE_UPDATE_FAILED'));
     }
 
     redirectMutationResult(locale, result);
 }
 
-/** Действие для деактивации пользователя */
 export async function deactivateUserAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     const session = await requireAdmin(locale);
@@ -114,14 +119,20 @@ export async function deactivateUserAction(formData: FormData) {
             false,
             session.user.id,
         );
-    } catch {
+    } catch (error) {
+        if (isNextRedirectError(error)) throw error;
+        if (process.env.NODE_ENV === 'development') {
+            console.error(
+                '[deactivateUserAction]',
+                error instanceof Error ? error.message : error,
+            );
+        }
         redirect(usersPath(locale, 'USER_DEACTIVATE_FAILED'));
     }
 
     redirectMutationResult(locale, result);
 }
 
-/** Действие для активации пользователя */
 export async function activateUserAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     const session = await requireAdmin(locale);
@@ -141,14 +152,14 @@ export async function activateUserAction(formData: FormData) {
             true,
             session.user.id,
         );
-    } catch {
+    } catch (error) {
+        if (isNextRedirectError(error)) throw error;
         redirect(usersPath(locale, 'USER_ACTIVATE_FAILED'));
     }
 
     redirectMutationResult(locale, result);
 }
 
-/** Действие для удаления пользователя */
 export async function deleteUserAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     const session = await requireAdmin(locale);
@@ -167,7 +178,8 @@ export async function deleteUserAction(formData: FormData) {
             userId,
             session.user.id,
         );
-    } catch {
+    } catch (error) {
+        if (isNextRedirectError(error)) throw error;
         redirect(usersPath(locale, 'DELETE_FAILED'));
     }
 

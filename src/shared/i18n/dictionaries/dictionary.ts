@@ -86,6 +86,12 @@ export type Dictionary = {
         };
     };
     admin: {
+        homeTitle: string;
+        homeDescription: string;
+        questionsCardDescription: string;
+        usersCardDescription: string;
+        retryLoad: string;
+        backToAdminHome: string;
         questionsTitle: string;
         usersTitle: string;
         signedInAs: string;

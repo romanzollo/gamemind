@@ -90,6 +90,15 @@ export const ruDictionary: Dictionary = {
         },
     },
     admin: {
+        homeTitle: 'Админ-панель',
+        homeDescription:
+            'Выберите раздел: вопросы для квиза или управление пользователями.',
+        questionsCardDescription:
+            'Список, создание, редактирование и активация вопросов.',
+        usersCardDescription:
+            'Роли, деактивация и удаление аккаунтов.',
+        retryLoad: 'Повторить загрузку',
+        backToAdminHome: 'В админ-панель',
         questionsTitle: 'Управление вопросами',
         usersTitle: 'Управление пользователями',
         signedInAs: 'Админ-зона. Вы вошли как',

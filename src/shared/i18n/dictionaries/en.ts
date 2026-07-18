@@ -89,6 +89,14 @@ export const enDictionary = {
         },
     },
     admin: {
+        homeTitle: 'Admin panel',
+        homeDescription:
+            'Choose a section: quiz questions or user management.',
+        questionsCardDescription:
+            'List, create, edit, and activate quiz questions.',
+        usersCardDescription: 'Roles, deactivation, and account deletion.',
+        retryLoad: 'Retry loading',
+        backToAdminHome: 'Back to admin home',
         questionsTitle: 'Manage questions',
         usersTitle: 'Manage users',
         signedInAs: 'Admin-only area. Signed in as',

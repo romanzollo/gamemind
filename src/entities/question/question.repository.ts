@@ -1205,12 +1205,20 @@ export const questionRepository = {
                 `
                     SELECT
                         q."id",
-                        COALESCE(active_translation."text", default_translation."text", q."text") AS "text",
+                        COALESCE(
+                            active_translation."text",
+                            default_translation."text",
+                            q."text"
+                        ) AS "text",
                         q."difficulty"::text AS "difficulty",
                         q."category",
                         q."isActive",
                         q."createdAt",
-                        COALESCE(option_counts."optionsCount", 0)::int AS "optionsCount"
+                        (
+                            SELECT COUNT(*)::int
+                            FROM "AnswerOption" ao
+                            WHERE ao."questionId" = q."id"
+                        ) AS "optionsCount"
                     FROM "Question" q
                     LEFT JOIN "QuestionTranslation" active_translation
                         ON active_translation."questionId" = q."id"
@@ -1218,14 +1226,6 @@ export const questionRepository = {
                     LEFT JOIN "QuestionTranslation" default_translation
                         ON default_translation."questionId" = q."id"
                         AND default_translation."locale" = $2::"ContentLocale"
-                    LEFT JOIN (
-                        SELECT
-                            "questionId",
-                            COUNT(*)::int AS "optionsCount"
-                        FROM "AnswerOption"
-                        GROUP BY "questionId"
-                    ) option_counts
-                        ON option_counts."questionId" = q."id"
                     ORDER BY q."createdAt" DESC
                 `,
                 [locale, defaultLocale],

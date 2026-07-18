@@ -1,3 +1,13 @@
+/**
+ * Direct pg helpers for Neon.
+ *
+ * Critical rules:
+ * - Never await client.end() on the response path (Neon close can take ~19s).
+ * - On wall-clock timeout, mark aborted SYNCHRONOUSLY and destroy the socket
+ *   so a late connect cannot start a query on a half-dead client.
+ * - Prefer unpooled URL for admin/quiz reads; pooled+tight timeout was a
+ *   known false-failure regression.
+ */
 import { Client } from 'pg';
 
 const TRANSIENT_DIRECT_PG_ERROR_MESSAGES = [
@@ -17,12 +27,12 @@ const TRANSIENT_DIRECT_PG_ERROR_MESSAGES = [
 const DEPRECATED_SSL_MODES = new Set(['prefer', 'require', 'verify-ca']);
 
 /**
- * Hard wall-clock budget per read attempt.
- * Must stay above typical Neon cold-wake, but far below the old ~2.5min hangs.
- * Do NOT use a ~12s admin-only budget on pooled URLs — in Next.js that path
- * repeatedly timed out while the same SQL via unpooled (quiz) stayed healthy.
+ * Wall-clock budget per read attempt.
+ * Smoke outside Next.js: connect ~0.3–1.1s, admin list query ~50–150ms.
+ * 30s×2 (=60s page) was too painful when the first TLS attempt wedged;
+ * 12s×2 fails faster and still covers Neon cold wake.
  */
-const READ_ATTEMPT_TIMEOUT_MS = 30_000;
+const READ_ATTEMPT_TIMEOUT_MS = 12_000;
 const READ_MAX_ATTEMPTS = 2;
 
 export function normalizePgConnectionString(connectionString: string) {
@@ -63,14 +73,15 @@ function getPooledDatabaseUrl() {
 }
 
 function createClient(connectionString: string) {
+    // `family: 4` forces IPv4 — helps Windows + Neon dual-stack TLS hangs.
+    // Not in @types/pg ClientConfig, but node-pg forwards it to net.connect.
     const client = new Client({
         connectionString,
         ssl: { rejectUnauthorized: true },
         keepAlive: true,
-        // Best-effort only — on Windows + Neon this often does not abort a stuck
-        // TLS handshake. Read paths also use Promise.race + client.end().
-        connectionTimeoutMillis: 15_000,
-    });
+        connectionTimeoutMillis: 10_000,
+        family: 4,
+    } as ConstructorParameters<typeof Client>[0]);
 
     client.on('error', (error) => {
         if (process.env.NODE_ENV === 'development') {
@@ -109,9 +120,15 @@ class DirectPgTimeoutError extends Error {
     }
 }
 
+type TimeoutControl = {
+    /** Called synchronously when the wall-clock budget expires. */
+    onTimeout?: () => void;
+};
+
 async function withTimeout<T>(
     promise: Promise<T>,
     timeoutMs: number,
+    control?: TimeoutControl,
 ): Promise<T> {
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
@@ -120,6 +137,7 @@ async function withTimeout<T>(
             promise,
             new Promise<T>((_resolve, reject) => {
                 timeoutId = setTimeout(() => {
+                    control?.onTimeout?.();
                     reject(new DirectPgTimeoutError(timeoutMs));
                 }, timeoutMs);
             }),
@@ -131,8 +149,19 @@ async function withTimeout<T>(
     }
 }
 
-function endClient(client: Client) {
-    // Neon socket close can take ~19s — never await it on the response path.
+/** Fire-and-forget teardown; destroy the socket so late TLS cannot linger. */
+function destroyClient(client: Client) {
+    try {
+        const maybeConnection = (
+            client as unknown as {
+                connection?: { stream?: { destroy?: () => void } };
+            }
+        ).connection;
+        maybeConnection?.stream?.destroy?.();
+    } catch {
+        // ignore — best-effort
+    }
+
     void client.end().catch(() => undefined);
 }
 
@@ -144,13 +173,18 @@ async function withFreshClient<T>(
     },
 ): Promise<T> {
     const client = createClientFn();
-    let settled = false;
+    let aborted = false;
+
+    const abort = () => {
+        aborted = true;
+        destroyClient(client);
+    };
 
     try {
         const run = async () => {
             await client.connect();
 
-            if (settled) {
+            if (aborted) {
                 throw new DirectPgTimeoutError(
                     options?.attemptTimeoutMs ?? READ_ATTEMPT_TIMEOUT_MS,
                 );
@@ -160,20 +194,32 @@ async function withFreshClient<T>(
         };
 
         if (options?.attemptTimeoutMs !== undefined) {
-            const result = await withTimeout(run(), options.attemptTimeoutMs);
-            settled = true;
+            const result = await withTimeout(run(), options.attemptTimeoutMs, {
+                onTimeout: abort,
+            });
+
+            if (aborted) {
+                throw new DirectPgTimeoutError(options.attemptTimeoutMs);
+            }
+
             return result;
         }
 
         const result = await run();
-        settled = true;
+
+        if (aborted) {
+            throw new DirectPgTimeoutError(READ_ATTEMPT_TIMEOUT_MS);
+        }
+
         return result;
     } catch (error) {
-        settled = true;
-        endClient(client);
+        abort();
         throw error;
     } finally {
-        endClient(client);
+        // Success path: end without awaiting. Abort path: destroy already ran.
+        if (!aborted) {
+            destroyClient(client);
+        }
     }
 }
 
@@ -200,7 +246,8 @@ async function withPgReadRetry<T>(
                 );
             }
 
-            await wait(250 * attempt);
+            // Brief pause so a wedged TLS attempt can finish tearing down.
+            await wait(400 * attempt);
         }
     }
 
@@ -213,11 +260,7 @@ const readClientOptions = {
 
 /**
  * Reads via unpooled Neon host. Prefer for admin list/detail and critical
- * quiz reads. Hard attempt timeout prevents multi-minute hangs; budget is
- * wide enough for Neon cold wake (unlike the previous 12s admin budget).
- *
- * Note: do not rely on `SET statement_timeout` here — a wall-clock race is
- * enough, and avoids an extra round-trip on every read.
+ * quiz reads.
  */
 export async function withDirectPgClient<T>(
     operation: (client: Client) => Promise<T>,
@@ -230,7 +273,7 @@ export async function withDirectPgClient<T>(
 /**
  * Optional pooled reads for simple SELECTs. Prefer `withDirectPgClient` when
  * the same Next.js process already shows unpooled (quiz) healthy and pooled
- * admin reads timing out — that pattern was observed July 14, 2026.
+ * admin reads timing out.
  */
 export async function withPooledPgReadClient<T>(
     operation: (client: Client) => Promise<T>,
@@ -240,14 +283,14 @@ export async function withPooledPgReadClient<T>(
     );
 }
 
-// Writes: fresh direct client without automatic retry / hard timeout.
+/** Writes: fresh direct client without automatic retry / hard timeout. */
 export async function withDirectPgWriteClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
     return withFreshClient(createDirectClient, operation);
 }
 
-// Writes with one guarded retry for transient Neon connect/socket errors.
+/** Writes with one guarded retry for transient Neon connect/socket errors. */
 export async function withDirectPgWriteRetry<T>(
     operation: (client: Client) => Promise<T>,
     attempts = 2,
@@ -271,7 +314,7 @@ export async function withDirectPgWriteRetry<T>(
     throw lastError;
 }
 
-/** Quiz start: one connection for question pick + snapshot write (avoids double Neon handshake). */
+/** Quiz start: one connection for question pick + snapshot write. */
 export async function withPooledPgQuizStartClient<T>(
     operation: (client: Client) => Promise<T>,
     attempts = 2,

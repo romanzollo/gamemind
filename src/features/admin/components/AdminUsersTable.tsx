@@ -1,11 +1,10 @@
-'use client';
-
 import {
     activateUserAction,
     deactivateUserAction,
     deleteUserAction,
     updateUserRoleAction,
-} from '@/features/admin/actions';
+} from '@/features/admin/actions/users';
+import { ConfirmForm } from '@/features/admin/components/ConfirmForm';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import type { AdminUserListItem } from '../types';
 
@@ -82,19 +81,11 @@ export function AdminUsersTable({
                                     ) : (
                                         <div className="flex flex-wrap items-center gap-3">
                                             {entry.role === 'USER' ? (
-                                                <form
-                                                    action={
-                                                        updateUserRoleAction
+                                                <ConfirmForm
+                                                    action={updateUserRoleAction}
+                                                    message={
+                                                        labels.confirmChangeRole
                                                     }
-                                                    onSubmit={(event) => {
-                                                        if (
-                                                            !window.confirm(
-                                                                labels.confirmChangeRole,
-                                                            )
-                                                        ) {
-                                                            event.preventDefault();
-                                                        }
-                                                    }}
                                                 >
                                                     <input
                                                         type="hidden"
@@ -117,21 +108,13 @@ export function AdminUsersTable({
                                                     >
                                                         {labels.makeAdminButton}
                                                     </button>
-                                                </form>
+                                                </ConfirmForm>
                                             ) : (
-                                                <form
-                                                    action={
-                                                        updateUserRoleAction
+                                                <ConfirmForm
+                                                    action={updateUserRoleAction}
+                                                    message={
+                                                        labels.confirmChangeRole
                                                     }
-                                                    onSubmit={(event) => {
-                                                        if (
-                                                            !window.confirm(
-                                                                labels.confirmChangeRole,
-                                                            )
-                                                        ) {
-                                                            event.preventDefault();
-                                                        }
-                                                    }}
                                                 >
                                                     <input
                                                         type="hidden"
@@ -154,14 +137,12 @@ export function AdminUsersTable({
                                                     >
                                                         {labels.makeUserButton}
                                                     </button>
-                                                </form>
+                                                </ConfirmForm>
                                             )}
 
                                             {entry.isActive ? (
                                                 <form
-                                                    action={
-                                                        deactivateUserAction
-                                                    }
+                                                    action={deactivateUserAction}
                                                 >
                                                     <input
                                                         type="hidden"
@@ -205,17 +186,11 @@ export function AdminUsersTable({
                                                 </form>
                                             )}
 
-                                            <form
+                                            <ConfirmForm
                                                 action={deleteUserAction}
-                                                onSubmit={(event) => {
-                                                    if (
-                                                        !window.confirm(
-                                                            labels.confirmDeleteUser,
-                                                        )
-                                                    ) {
-                                                        event.preventDefault();
-                                                    }
-                                                }}
+                                                message={
+                                                    labels.confirmDeleteUser
+                                                }
                                             >
                                                 <input
                                                     type="hidden"
@@ -233,7 +208,7 @@ export function AdminUsersTable({
                                                 >
                                                     {labels.deleteButton}
                                                 </button>
-                                            </form>
+                                            </ConfirmForm>
                                         </div>
                                     )}
                                 </td>

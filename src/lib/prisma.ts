@@ -46,6 +46,8 @@ function createPool() {
         idleTimeoutMillis:
             process.env.NODE_ENV === 'production' ? 5_000 : 30_000,
         connectionTimeoutMillis: 15_000,
+        // Windows + Neon: prefer IPv4 (same as direct-pg).
+        ...({ family: 4 } as object),
     });
 
     pool.on('error', (error) => {

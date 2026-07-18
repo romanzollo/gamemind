@@ -4,7 +4,7 @@ import {
     activateQuestionAction,
     deactivateQuestionAction,
     deleteQuestionAction,
-} from '@/features/admin/actions';
+} from '@/features/admin/actions/questions';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import type { AdminQuestionListItem } from '../types';
 

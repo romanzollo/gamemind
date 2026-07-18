@@ -122,7 +122,7 @@ export const userRepository = {
             username: row.username,
             email: row.email,
             role: row.role,
-            isActive: row.isActive,
+            isActive: row.isActive === true,
             createdAt: row.createdAt,
             quizResultCount: Number(row.quizResultCount),
         }));
@@ -218,7 +218,9 @@ export const userRepository = {
                 return 'not_found';
             }
 
-            if (row.isActive === isActive) {
+            const currentlyActive = row.isActive === true;
+
+            if (currentlyActive === isActive) {
                 return 'unchanged';
             }
 

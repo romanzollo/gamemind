@@ -40,7 +40,7 @@ function getMainLinks(user: NavUser | null): ReadonlyArray<NavLinkItem> {
         );
 
         if (user.role === 'ADMIN') {
-            links.push({ href: '/admin/questions', labelKey: 'admin' });
+            links.push({ href: '/admin', labelKey: 'admin' });
         }
     }
 

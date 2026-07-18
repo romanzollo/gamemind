@@ -1,5 +1,3 @@
-'use server';
-
 export {
     createQuestionAction,
     deactivateQuestionAction,

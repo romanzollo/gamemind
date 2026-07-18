@@ -13,6 +13,19 @@ export const proxy = auth((request) => {
     const { auth: session, nextUrl } = request;
     const locale = getLocaleFromPathname(nextUrl.pathname);
 
+    // Server Actions POST to the page URL. A plain NextResponse.redirect() here
+    // returns HTML/login instead of an RSC action payload → client error:
+    // "An unexpected response was received from the server."
+    // Auth for mutations stays in requireUser/requireAdmin inside the actions.
+    const isServerAction =
+        request.method === 'POST' &&
+        (request.headers.has('next-action') ||
+            request.headers.has('Next-Action'));
+
+    if (isServerAction) {
+        return NextResponse.next();
+    }
+
     if (!locale) {
         const redirectUrl = nextUrl.clone();
         redirectUrl.pathname =

@@ -6,7 +6,7 @@ import { useFormStatus } from 'react-dom';
 import {
     createQuestionAction,
     updateQuestionAction,
-} from '@/features/admin/actions';
+} from '@/features/admin/actions/questions';
 import { getAdminErrorMessage } from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
 import type { Dictionary, Locale } from '@/shared/i18n';

@@ -29,13 +29,20 @@ export default async function AdminQuestionsPage({
     let loadErrorMessage: string | undefined;
 
     try {
+        const startedAt = Date.now();
         const rows = await questionRepository.findAllForAdmin(safeLocale);
         entries = mapAdminQuestions(rows);
-    } catch (error) {
+
+        if (process.env.NODE_ENV === 'development') {
+            console.info(
+                `[admin/questions] findAllForAdmin ok in ${Date.now() - startedAt}ms (rows=${rows.length})`,
+            );
+        }
+    } catch (loadError) {
         if (process.env.NODE_ENV === 'development') {
             console.error(
                 '[admin/questions] findAllForAdmin failed:',
-                error instanceof Error ? error.message : error,
+                loadError instanceof Error ? loadError.message : loadError,
             );
         }
         loadErrorMessage = dictionary.admin.errors.loadFailed;
@@ -62,6 +69,12 @@ export default async function AdminQuestionsPage({
 
                 <div className="flex flex-wrap gap-3">
                     <Link
+                        href={localizedHref(safeLocale, '/admin')}
+                        className="rounded border border-border px-4 py-2 text-sm transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                        {dictionary.admin.backToAdminHome}
+                    </Link>
+                    <Link
                         href={localizedHref(safeLocale, '/admin/users')}
                         className="rounded border border-border px-4 py-2 text-sm transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     >
@@ -85,9 +98,17 @@ export default async function AdminQuestionsPage({
             </p>
 
             {adminErrorMessage && (
-                <p className="mt-4 text-red-600" role="alert">
-                    {adminErrorMessage}
-                </p>
+                <div className="mt-4 flex flex-wrap items-center gap-3" role="alert">
+                    <p className="text-red-600">{adminErrorMessage}</p>
+                    {loadErrorMessage && (
+                        <Link
+                            href={localizedHref(safeLocale, '/admin/questions')}
+                            className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
+                        >
+                            {dictionary.admin.retryLoad}
+                        </Link>
+                    )}
+                </div>
             )}
 
             <AdminQuestionsTable
