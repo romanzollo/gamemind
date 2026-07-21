@@ -173,6 +173,8 @@ export type Dictionary = {
         setupDescription: string;
         difficultyLabel: string;
         questionCountLabel: string;
+        /** Session progress: answered / total (not setup question count). */
+        progressAnsweredLabel: string;
         easy: string;
         medium: string;
         hard: string;

@@ -187,6 +187,7 @@ export const enDictionary = {
         setupDescription: 'Choose difficulty and question count.',
         difficultyLabel: 'Difficulty',
         questionCountLabel: 'Question count',
+        progressAnsweredLabel: 'Answered',
         easy: 'Easy',
         medium: 'Medium',
         hard: 'Hard',

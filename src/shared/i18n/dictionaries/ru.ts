@@ -193,6 +193,7 @@ export const ruDictionary: Dictionary = {
         setupDescription: 'Выбери сложность и количество вопросов.',
         difficultyLabel: 'Сложность',
         questionCountLabel: 'Количество вопросов',
+        progressAnsweredLabel: 'Отвечено',
         easy: 'Легко',
         medium: 'Средне',
         hard: 'Сложно',

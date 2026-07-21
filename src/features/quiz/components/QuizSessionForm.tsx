@@ -40,38 +40,47 @@ export function QuizSessionForm({
         totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
     const submitHintId = 'quiz-submit-hint';
+    const progressLabel = `${answeredCount} / ${totalQuestions}`;
 
     return (
         <form action={formAction} className="mt-6">
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="sessionId" value={sessionId} />
 
-            <div className="mb-6 rounded-lg border border-border bg-surface p-4 shadow-sm">
-                <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="font-medium text-foreground">
-                        {dictionary.quiz.questionCountLabel}
-                    </span>
-                    <span className="tabular-nums font-semibold text-foreground">
-                        {answeredCount} / {totalQuestions}
-                    </span>
-                </div>
+            {/*
+              Sticks under SiteHeader (sticky top-0 ~py-3 + border).
+              top-14 ≈ 3.5rem covers single-row nav; solid bg so cards never show through.
+            */}
+            <div className="sticky top-14 z-30 -mx-4 mb-6 border-b border-border bg-background px-4 py-3 sm:-mx-8 sm:px-8">
+                <div className="rounded-lg border border-border bg-surface px-3 py-3 shadow-sm sm:px-4">
+                    <div className="flex items-center justify-between gap-3 text-sm">
+                        <span className="font-medium text-foreground">
+                            {dictionary.quiz.progressAnsweredLabel}
+                        </span>
+                        <span className="tabular-nums font-semibold text-foreground">
+                            {progressLabel}
+                        </span>
+                    </div>
 
-                <div
-                    className="mt-3 h-2 overflow-hidden rounded-full bg-surface-muted"
-                    role="progressbar"
-                    aria-valuenow={answeredCount}
-                    aria-valuemin={0}
-                    aria-valuemax={totalQuestions}
-                    aria-label={`${answeredCount} / ${totalQuestions}`}
-                >
                     <div
-                        className="h-full rounded-full bg-primary motion-safe:transition-[width]"
-                        style={{ width: `${progressPercent}%` }}
-                    />
+                        className="mt-2.5 h-2 overflow-hidden rounded-full bg-surface-muted"
+                        role="progressbar"
+                        aria-valuenow={answeredCount}
+                        aria-valuemin={0}
+                        aria-valuemax={totalQuestions}
+                        aria-label={progressLabel}
+                    >
+                        <div
+                            className="h-full rounded-full bg-primary motion-safe:transition-[width]"
+                            style={{ width: `${progressPercent}%` }}
+                        />
+                    </div>
+
                 </div>
             </div>
 
-            <div className="space-y-6 pb-28 sm:pb-32">
+            {/* Extra bottom padding so last cards clear the sticky submit dock + hint. */}
+            <div className="space-y-6 pb-36 sm:pb-40">
                 {questions.map((question, index) => (
                     <QuestionCard
                         key={question.id}
@@ -91,7 +100,11 @@ export function QuizSessionForm({
                 ))}
             </div>
 
-            <div className="sticky bottom-0 -mx-4 border-t border-border bg-background px-4 py-4 sm:mx-0 sm:px-0">
+            {/*
+              Full-bleed dock inside max-w column: opaque background + z-index so
+              images never paint over the button (was collapsing to button width on sm+).
+            */}
+            <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8">
                 {errorMessage ? (
                     <p
                         className="mb-3 rounded-md bg-danger-muted px-3 py-2 text-sm text-danger"
@@ -113,7 +126,7 @@ export function QuizSessionForm({
                 <SubmitButton
                     disabled={!allAnswered}
                     pendingLabel={dictionary.common.submitting}
-                    className="w-full sm:w-auto"
+                    className="w-full"
                     aria-describedby={!allAnswered ? submitHintId : undefined}
                 >
                     {dictionary.quiz.submitButton}

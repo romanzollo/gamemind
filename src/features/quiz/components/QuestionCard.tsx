@@ -47,13 +47,30 @@ export function QuestionCard({
     imageUnavailableLabel,
     imagePriority = false,
 }: QuestionCardProps) {
+    const hasImage = Boolean(imageUrl);
+
     return (
         <section
-            className="rounded-lg bg-surface p-4 shadow-sm sm:p-5"
+            className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-6"
             aria-labelledby={`question-${question.id}-title`}
         >
-            {imageUrl ? (
-                <div className="mb-4">
+            <header className="flex items-start gap-3">
+                <span
+                    className="font-display inline-flex min-h-8 min-w-8 shrink-0 items-center justify-center rounded-md bg-surface-muted px-2 text-sm font-semibold tabular-nums tracking-wide text-foreground"
+                    aria-hidden
+                >
+                    {index}
+                </span>
+                <h2
+                    id={`question-${question.id}-title`}
+                    className="flex-1 text-pretty text-base font-semibold leading-relaxed text-foreground sm:text-lg sm:leading-relaxed"
+                >
+                    {question.text}
+                </h2>
+            </header>
+
+            {hasImage && imageUrl ? (
+                <div className="mt-4 sm:mt-5">
                     <QuestionImage
                         src={imageUrl}
                         alt={imageAlt ?? question.text}
@@ -63,23 +80,11 @@ export function QuestionCard({
                 </div>
             ) : null}
 
-            <header className="mb-4 flex items-start gap-3">
-                <span
-                    className="inline-flex min-h-7 min-w-7 shrink-0 items-center justify-center rounded-md bg-surface-muted px-2 text-xs font-semibold tabular-nums text-muted sm:text-sm"
-                    aria-hidden
-                >
-                    {index}
-                </span>
-                <h2
-                    id={`question-${question.id}-title`}
-                    className="flex-1 text-base font-semibold leading-snug text-foreground sm:text-lg"
-                >
-                    {question.text}
-                </h2>
-            </header>
-
             <div
-                className="space-y-2"
+                className={[
+                    'space-y-2',
+                    hasImage ? 'mt-4 sm:mt-5' : 'mt-4',
+                ].join(' ')}
                 role="radiogroup"
                 aria-labelledby={`question-${question.id}-title`}
             >
@@ -110,7 +115,7 @@ export function QuestionCard({
                             <OptionIndicator isSelected={isSelected} />
                             <span
                                 className={[
-                                    'text-sm leading-snug text-foreground sm:text-base',
+                                    'text-pretty text-sm leading-relaxed text-foreground sm:text-base',
                                     isSelected ? 'font-semibold' : 'font-normal',
                                 ].join(' ')}
                             >

@@ -34,6 +34,7 @@ function readImageState(img: HTMLImageElement | null): LoadState | null {
 /**
  * Native <img> keeps real aspect ratio (next/image fixed 16:9 box was cropping).
  * Soft theme surface behind the frame — no cinema black bars.
+ * Never use object-cover / fixed aspect crop here.
  */
 export function QuestionImage({
     src,
@@ -59,21 +60,23 @@ export function QuestionImage({
     if (loadState === 'error') {
         return (
             <figure
-                className="flex min-h-28 items-center justify-center rounded-lg border border-dashed border-border bg-surface-muted px-4 py-6"
+                className="flex min-h-28 items-center justify-center rounded-md border border-dashed border-border bg-surface-muted px-4 py-6"
                 role="img"
                 aria-label={alt}
             >
-                <p className="text-center text-sm text-muted">{unavailableLabel}</p>
+                <p className="text-center text-sm leading-relaxed text-muted">
+                    {unavailableLabel}
+                </p>
             </figure>
         );
     }
 
     return (
-        <figure className="overflow-hidden rounded-lg border border-border/70 bg-surface-muted shadow-sm">
-            <div className="relative flex items-center justify-center px-3 py-3 sm:px-4 sm:py-4">
+        <figure className="w-full overflow-hidden rounded-md border border-border bg-surface-muted shadow-sm">
+            <div className="relative flex items-center justify-center px-3 py-4 sm:px-5 sm:py-5">
                 {loadState === 'loading' ? (
                     <div
-                        className="absolute inset-3 animate-pulse rounded-md bg-border/40 sm:inset-4"
+                        className="absolute inset-3 animate-pulse rounded-md bg-border/40 sm:inset-5"
                         aria-hidden
                     />
                 ) : null}
@@ -89,8 +92,9 @@ export function QuestionImage({
                     onLoad={() => setLoadState('ready')}
                     onError={() => setLoadState('error')}
                     className={[
-                        'relative z-10 mx-auto block h-auto w-auto max-w-full',
-                        'max-h-[min(52vh,22rem)] sm:max-h-[min(58vh,26rem)]',
+                        // Full-frame: natural ratio, scale down only — never crop.
+                        'relative z-10 mx-auto block h-auto w-auto max-w-full object-contain',
+                        'max-h-[min(48vh,20rem)] sm:max-h-[min(56vh,26rem)]',
                         pixelArt ? '[image-rendering:pixelated]' : '',
                         loadState === 'ready' ? 'opacity-100' : 'opacity-0',
                         'motion-safe:transition-opacity duration-200',
