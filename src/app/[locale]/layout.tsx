@@ -2,10 +2,9 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { HeaderAuthControls } from '@/features/auth/components/HeaderAuthControls';
+import { AppSiteHeader } from '@/features/auth/components/AppSiteHeader';
 import { auth } from '@/lib/auth';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
-import { SiteHeader } from '@/shared/ui';
 
 import '../globals.css';
 
@@ -82,26 +81,10 @@ export default async function LocaleLayout({
                 >
                     {dictionary.common.skipToContent}
                 </a>
-                <SiteHeader
+                <AppSiteHeader
                     locale={locale}
                     dictionary={dictionary}
                     user={navUser}
-                    authControls={
-                        <HeaderAuthControls
-                            locale={locale}
-                            dictionary={dictionary}
-                            user={navUser}
-                            variant="bar"
-                        />
-                    }
-                    mobileAuthControls={
-                        <HeaderAuthControls
-                            locale={locale}
-                            dictionary={dictionary}
-                            user={navUser}
-                            variant="menu"
-                        />
-                    }
                 />
                 {/*
                   Цель skip-ссылки. Страницы сами держат свой <main> —

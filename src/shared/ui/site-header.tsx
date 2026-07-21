@@ -70,11 +70,19 @@ export function SiteHeader({
         label: dictionary.nav[link.labelKey],
     }));
 
-    const utilities = (
-        <>
+    // Не переиспользовать один и тот же React element в двух местах —
+    // RSC→Client слот тогда даёт warning про unique "key".
+    const desktopUtilities = (
+        <div className="hidden items-center gap-1 sm:gap-2 lg:flex">
             <LanguageSwitcher locale={locale} labels={dictionary.language} />
             <ThemeToggle labels={dictionary.theme} />
-        </>
+        </div>
+    );
+    const menuUtilities = (
+        <div className="flex items-center gap-1 sm:gap-2">
+            <LanguageSwitcher locale={locale} labels={dictionary.language} />
+            <ThemeToggle labels={dictionary.theme} />
+        </div>
     );
 
     return (
@@ -113,13 +121,14 @@ export function SiteHeader({
                 <div className="flex-1 lg:hidden" aria-hidden />
 
                 <div className="flex shrink-0 items-center gap-2">
-                    <div className="hidden items-center gap-3 border-l border-border pl-3 lg:flex">
+                    {/*
+                      Один экземпляр authControls: на mobile bar — аватар,
+                      login/logout прячутся классами внутри HeaderAuthControls.
+                    */}
+                    <div className="flex items-center gap-2 lg:gap-3 lg:border-l lg:border-border lg:pl-3">
                         {authControls}
-                        {utilities}
+                        {desktopUtilities}
                     </div>
-
-                    {/* Mobile / tablet: только аватар; ссылки и logout в ☰ */}
-                    <div className="lg:hidden">{authControls}</div>
 
                     <SiteMobileMenu
                         locale={locale}
@@ -128,7 +137,7 @@ export function SiteHeader({
                         closeLabel={dictionary.common.closeMenu}
                         mainNavLabel={dictionary.common.mainNav}
                         menuAuth={mobileAuthControls}
-                        menuUtilities={utilities}
+                        menuUtilities={menuUtilities}
                     />
                 </div>
             </div>

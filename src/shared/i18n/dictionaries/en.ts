@@ -72,6 +72,7 @@ export const enDictionary = {
         historyDifficulty: 'Difficulty',
         historyScore: 'Points',
         historyCorrect: 'Correct',
+        historyOf: 'of',
         historyView: 'Review',
         historyLoadFailed: 'Could not load history. Try refreshing the page.',
         changeUsernameTitle: 'Change username',

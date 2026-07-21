@@ -71,6 +71,8 @@ export type Dictionary = {
         historyDifficulty: string;
         historyScore: string;
         historyCorrect: string;
+        /** Connector in «1 из 3» / «1 of 3» (mobile + table cells). */
+        historyOf: string;
         historyView: string;
         historyLoadFailed: string;
         changeUsernameTitle: string;

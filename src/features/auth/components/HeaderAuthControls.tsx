@@ -54,8 +54,9 @@ export function HeaderAuthControls({
 
     if (variant === 'menu') {
         if (user) {
+            // Один корень — иначе RSC→Client slot даёт warning про key.
             return (
-                <>
+                <div className="flex flex-col gap-2">
                     <p className="px-3 text-sm text-muted">
                         <span className="font-medium text-foreground">
                             {user.username}
@@ -71,20 +72,17 @@ export function HeaderAuthControls({
                             {dictionary.nav.logout}
                         </SubmitButton>
                     </form>
-                </>
+                </div>
             );
         }
 
         return (
-            <>
+            <div className="flex flex-col gap-2">
                 <PendingLink
                     href={localizedHref(locale, '/login')}
                     className={buttonClassName({
                         variant: 'secondary',
-                        className: navActiveClassName(
-                            loginActive,
-                            'w-full',
-                        ),
+                        className: navActiveClassName(loginActive, 'w-full'),
                     })}
                     aria-current={loginActive ? 'page' : undefined}
                 >
@@ -93,22 +91,19 @@ export function HeaderAuthControls({
                 <PendingLink
                     href={localizedHref(locale, '/register')}
                     className={buttonClassName({
-                        className: navActiveClassName(
-                            registerActive,
-                            'w-full',
-                        ),
+                        className: navActiveClassName(registerActive, 'w-full'),
                     })}
                     aria-current={registerActive ? 'page' : undefined}
                 >
                     {dictionary.nav.register}
                 </PendingLink>
-            </>
+            </div>
         );
     }
 
     if (user) {
         return (
-            <>
+            <div className="flex items-center gap-2">
                 <PendingLink
                     href={localizedHref(locale, '/profile')}
                     className={navActiveClassName(
@@ -137,12 +132,12 @@ export function HeaderAuthControls({
                         {dictionary.nav.logout}
                     </SubmitButton>
                 </form>
-            </>
+            </div>
         );
     }
 
     return (
-        <>
+        <div className="flex items-center gap-2">
             <PendingLink
                 href={localizedHref(locale, '/login')}
                 className={navActiveClassName(
@@ -165,6 +160,6 @@ export function HeaderAuthControls({
             >
                 {dictionary.nav.register}
             </PendingLink>
-        </>
+        </div>
     );
 }

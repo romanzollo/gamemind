@@ -134,7 +134,7 @@ export function SiteMobileMenu({
             </button>
 
             {open ? (
-                <>
+                <div>
                     <button
                         type="button"
                         style={lockStyle}
@@ -192,7 +192,7 @@ export function SiteMobileMenu({
                             </div>
                         </div>
                     </div>
-                </>
+                </div>
             ) : null}
         </div>
     );

@@ -72,6 +72,7 @@ export const ruDictionary: Dictionary = {
         historyDifficulty: 'Сложность',
         historyScore: 'Очки',
         historyCorrect: 'Верно',
+        historyOf: 'из',
         historyView: 'Обзор',
         historyLoadFailed:
             'Не удалось загрузить историю. Попробуйте обновить страницу.',
