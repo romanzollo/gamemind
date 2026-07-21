@@ -85,6 +85,15 @@ export default async function LocaleLayout({
                             locale={locale}
                             dictionary={dictionary}
                             user={navUser}
+                            variant="bar"
+                        />
+                    }
+                    mobileAuthControls={
+                        <HeaderAuthControls
+                            locale={locale}
+                            dictionary={dictionary}
+                            user={navUser}
+                            variant="menu"
                         />
                     }
                 />

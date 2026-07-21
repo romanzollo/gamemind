@@ -43,16 +43,12 @@ export function QuizSessionForm({
     const progressLabel = `${answeredCount} / ${totalQuestions}`;
 
     return (
-        <form action={formAction} className="mt-6">
+        <form action={formAction} className="mt-4 sm:mt-6">
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="sessionId" value={sessionId} />
 
-            {/*
-              Sticks under SiteHeader (sticky top-0 ~py-3 + border).
-              top-14 ≈ 3.5rem covers single-row nav; solid bg so cards never show through.
-            */}
-            <div className="sticky top-14 z-30 -mx-4 mb-6 border-b border-border bg-background px-4 py-3 sm:-mx-8 sm:px-8">
-                <div className="rounded-lg border border-border bg-surface px-3 py-3 shadow-sm sm:px-4">
+            <div className="sticky top-[var(--site-header-sticky-offset)] z-30 -mx-4 mb-4 border-b border-border bg-background px-4 py-2.5 sm:-mx-8 sm:mb-6 sm:px-8 sm:py-3">
+                <div className="rounded-lg border border-border bg-surface px-3 py-2.5 shadow-sm sm:px-4 sm:py-3">
                     <div className="flex items-center justify-between gap-3 text-sm">
                         <span className="font-medium text-foreground">
                             {dictionary.quiz.progressAnsweredLabel}
@@ -63,7 +59,7 @@ export function QuizSessionForm({
                     </div>
 
                     <div
-                        className="mt-2.5 h-2 overflow-hidden rounded-full bg-surface-muted"
+                        className="mt-2 h-2 overflow-hidden rounded-full bg-surface-muted"
                         role="progressbar"
                         aria-valuenow={answeredCount}
                         aria-valuemin={0}
@@ -75,12 +71,10 @@ export function QuizSessionForm({
                             style={{ width: `${progressPercent}%` }}
                         />
                     </div>
-
                 </div>
             </div>
 
-            {/* Extra bottom padding so last cards clear the sticky submit dock + hint. */}
-            <div className="space-y-6 pb-36 sm:pb-40">
+            <div className="space-y-4 pb-40 sm:space-y-6 sm:pb-40">
                 {questions.map((question, index) => (
                     <QuestionCard
                         key={question.id}
@@ -100,11 +94,7 @@ export function QuizSessionForm({
                 ))}
             </div>
 
-            {/*
-              Full-bleed dock inside max-w column: opaque background + z-index so
-              images never paint over the button (was collapsing to button width on sm+).
-            */}
-            <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8">
+            <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pb-[max(1rem,env(safe-area-inset-bottom))]">
                 {errorMessage ? (
                     <p
                         className="mb-3 rounded-md bg-danger-muted px-3 py-2 text-sm text-danger"
@@ -117,7 +107,7 @@ export function QuizSessionForm({
                 {!allAnswered ? (
                     <p
                         id={submitHintId}
-                        className="mb-3 text-sm text-muted"
+                        className="mb-2 text-sm leading-snug text-muted sm:mb-3"
                     >
                         {dictionary.quiz.errors.answerAll}
                     </p>

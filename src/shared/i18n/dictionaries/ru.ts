@@ -31,6 +31,8 @@ export const ruDictionary: Dictionary = {
         loading: 'Загрузка…',
         submitting: 'Отправка…',
         working: 'Подождите…',
+        openMenu: 'Открыть меню',
+        closeMenu: 'Закрыть меню',
     },
     home: {
         title: 'GameMind',

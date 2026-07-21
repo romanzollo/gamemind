@@ -29,6 +29,8 @@ export type Dictionary = {
         loading: string;
         submitting: string;
         working: string;
+        openMenu: string;
+        closeMenu: string;
     };
     home: {
         title: string;

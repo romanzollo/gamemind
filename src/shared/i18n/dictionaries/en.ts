@@ -31,6 +31,8 @@ export const enDictionary = {
         loading: 'Loading…',
         submitting: 'Submitting…',
         working: 'Please wait…',
+        openMenu: 'Open menu',
+        closeMenu: 'Close menu',
     },
     home: {
         title: 'GameMind',

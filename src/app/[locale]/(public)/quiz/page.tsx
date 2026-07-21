@@ -11,13 +11,13 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
     const dictionary = getDictionary(safeLocale);
 
     return (
-        <main className="mx-auto max-w-2xl px-4 py-6 sm:px-8 sm:py-8">
-            <header className="pb-4 sm:pb-6">
-                <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+        <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
+            <header className="border-b border-border pb-4 sm:pb-5">
+                <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
                     {dictionary.quiz.setupTitle}
                 </h1>
 
-                <p className="mt-2 text-sm text-muted sm:text-base">
+                <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted sm:text-base">
                     {dictionary.quiz.setupDescription}
                 </p>
             </header>

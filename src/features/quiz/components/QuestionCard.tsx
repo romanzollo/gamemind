@@ -51,7 +51,7 @@ export function QuestionCard({
 
     return (
         <section
-            className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-6"
+            className="rounded-lg border border-border bg-surface p-3.5 shadow-sm sm:p-6"
             aria-labelledby={`question-${question.id}-title`}
         >
             <header className="flex items-start gap-3">
@@ -95,7 +95,7 @@ export function QuestionCard({
                         <label
                             key={option.id}
                             className={[
-                                'flex min-h-11 cursor-pointer items-start gap-3 rounded-md border-2 p-3 motion-safe:transition-colors',
+                                'flex min-h-12 cursor-pointer items-start gap-3 rounded-md border-2 p-3 motion-safe:transition-colors sm:min-h-11',
                                 'hover:bg-surface-hover',
                                 'focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring',
                                 isSelected

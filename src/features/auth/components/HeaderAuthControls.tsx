@@ -19,6 +19,12 @@ type HeaderAuthControlsProps = {
     locale: Locale;
     dictionary: Dictionary;
     user: NavUser | null;
+    /**
+     * `bar` — compact chrome (desktop full / mobile avatar-only).
+     * `menu` — stacked controls for the mobile slide-down panel (no avatar —
+     * avatar already sits in the header bar; Profile is in the nav list).
+     */
+    variant?: 'bar' | 'menu';
 };
 
 function localizedHref(locale: Locale, href: string) {
@@ -32,24 +38,70 @@ export function HeaderAuthControls({
     locale,
     dictionary,
     user,
+    variant = 'bar',
 }: HeaderAuthControlsProps) {
+    if (variant === 'menu') {
+        if (user) {
+            return (
+                <>
+                    <p className="px-3 text-sm text-muted">
+                        <span className="font-medium text-foreground">
+                            {user.username}
+                        </span>
+                    </p>
+                    <form action={logoutAction}>
+                        <input type="hidden" name="locale" value={locale} />
+                        <SubmitButton
+                            variant="secondary"
+                            pendingLabel={dictionary.common.working}
+                            className="w-full"
+                        >
+                            {dictionary.nav.logout}
+                        </SubmitButton>
+                    </form>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <PendingLink
+                    href={localizedHref(locale, '/login')}
+                    className={buttonClassName({
+                        variant: 'secondary',
+                        className: 'w-full',
+                    })}
+                >
+                    {dictionary.nav.login}
+                </PendingLink>
+                <PendingLink
+                    href={localizedHref(locale, '/register')}
+                    className={buttonClassName({ className: 'w-full' })}
+                >
+                    {dictionary.nav.register}
+                </PendingLink>
+            </>
+        );
+    }
+
     if (user) {
         return (
             <>
                 <PendingLink
                     href={localizedHref(locale, '/profile')}
-                    className="flex items-center gap-2 rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className="inline-flex items-center gap-2 rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    title={user.username}
                 >
                     <UserAvatar
                         src={user.image}
                         size="sm"
                         alt={user.username}
                     />
-                    <span className="hidden text-sm text-muted sm:inline">
+                    <span className="hidden max-w-28 truncate text-sm text-muted xl:inline">
                         {user.username}
                     </span>
                 </PendingLink>
-                <form action={logoutAction}>
+                <form action={logoutAction} className="hidden lg:block">
                     <input type="hidden" name="locale" value={locale} />
                     <SubmitButton
                         variant="secondary"
@@ -67,14 +119,14 @@ export function HeaderAuthControls({
         <>
             <PendingLink
                 href={localizedHref(locale, '/login')}
-                className={linkClassName}
+                className={`${linkClassName} hidden lg:inline-flex`}
             >
                 {dictionary.nav.login}
             </PendingLink>
             <PendingLink
                 href={localizedHref(locale, '/register')}
                 className={buttonClassName({
-                    className: 'min-h-9 px-3 py-1.5',
+                    className: 'hidden min-h-9 px-3 py-1.5 lg:inline-flex',
                 })}
             >
                 {dictionary.nav.register}

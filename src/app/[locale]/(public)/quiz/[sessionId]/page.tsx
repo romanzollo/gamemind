@@ -30,9 +30,9 @@ export default async function QuizSessionPage({
     }
 
     return (
-        <main className="mx-auto max-w-2xl px-4 py-6 sm:px-8 sm:py-10">
-            <header className="border-b border-border pb-4 sm:pb-5">
-                <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
+            <header className="border-b border-border pb-3 sm:pb-5">
+                <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
                     {dictionary.quiz.sessionTitle}
                 </h1>
             </header>

@@ -94,7 +94,7 @@ export function QuestionImage({
                     className={[
                         // Full-frame: natural ratio, scale down only — never crop.
                         'relative z-10 mx-auto block h-auto w-auto max-w-full object-contain',
-                        'max-h-[min(48vh,20rem)] sm:max-h-[min(56vh,26rem)]',
+                        'max-h-[min(40vh,17rem)] sm:max-h-[min(56vh,26rem)]',
                         pixelArt ? '[image-rendering:pixelated]' : '',
                         loadState === 'ready' ? 'opacity-100' : 'opacity-0',
                         'motion-safe:transition-opacity duration-200',

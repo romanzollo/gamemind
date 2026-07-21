@@ -30,20 +30,21 @@ export function LanguageSwitcher({ locale, labels }: LanguageSwitcherProps) {
 
     return (
         <div
-            className="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300"
+            className="flex items-center gap-1 text-sm text-muted sm:gap-2"
             aria-label={labels.label}
         >
-            <span>{labels.label}:</span>
+            <span className="hidden sm:inline">{labels.label}:</span>
             {locales.map((nextLocale) => (
                 <Link
                     key={nextLocale}
                     href={getLocalizedHref(pathname, nextLocale)}
                     aria-current={nextLocale === locale ? 'page' : undefined}
-                    className={
+                    className={[
+                        'rounded-md px-1.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                         nextLocale === locale
-                            ? 'font-semibold text-neutral-950 dark:text-white'
-                            : 'hover:text-neutral-950 dark:hover:text-white'
-                    }
+                            ? 'font-semibold text-foreground'
+                            : 'hover:bg-surface-muted hover:text-foreground',
+                    ].join(' ')}
                 >
                     {labels[nextLocale]}
                 </Link>

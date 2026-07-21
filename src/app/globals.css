@@ -114,6 +114,14 @@ body {
     color: var(--foreground);
     font-family: var(--font-sans);
     min-height: 100vh;
+    /* Single-row header under lg; full chrome from lg. */
+    --site-header-sticky-offset: 3.25rem;
+}
+
+@media (min-width: 1024px) {
+    body {
+        --site-header-sticky-offset: 3.5rem;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -56,17 +56,17 @@ export function QuizResultReview({
     }
 
     return (
-        <section className="mt-8" aria-labelledby="quiz-result-review-title">
+        <section className="mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8" aria-labelledby="quiz-result-review-title">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <h2
                     id="quiz-result-review-title"
-                    className="text-lg font-semibold text-foreground"
+                    className="font-display text-xl font-semibold tracking-tight text-foreground sm:text-2xl"
                 >
                     {labels.reviewTitle}
                 </h2>
 
                 <div
-                    className="flex flex-wrap gap-2"
+                    className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap"
                     role="group"
                     aria-label={labels.reviewTitle}
                 >
@@ -80,7 +80,7 @@ export function QuizResultReview({
                                 onClick={() => setFilter(entry.id)}
                                 aria-pressed={isActive}
                                 className={[
-                                    'rounded-md px-3 py-1.5 text-sm motion-safe:transition-colors',
+                                    'min-h-11 rounded-md px-2 py-2 text-center text-sm motion-safe:transition-colors sm:px-3 sm:py-1.5',
                                     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                                     isActive
                                         ? 'bg-primary text-primary-foreground'
@@ -107,14 +107,14 @@ export function QuizResultReview({
                             <li
                                 key={item.questionId}
                                 className={[
-                                    'rounded-lg border p-4 shadow-sm',
+                                    'rounded-lg border p-3.5 shadow-sm sm:p-4',
                                     item.isCorrect
                                         ? 'border-success/30 bg-success-muted/40'
                                         : 'border-danger/30 bg-danger-muted/30',
                                 ].join(' ')}
                             >
-                                <div className="flex items-start justify-between gap-3">
-                                    <p className="text-sm font-medium text-foreground sm:text-base">
+                                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+                                    <p className="text-pretty text-sm font-medium leading-relaxed text-foreground sm:text-base">
                                         <span className="mr-2 tabular-nums text-muted">
                                             {item.position + 1}.
                                         </span>
@@ -122,7 +122,7 @@ export function QuizResultReview({
                                     </p>
                                     <span
                                         className={[
-                                            'shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold',
+                                            'w-fit shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold',
                                             item.isCorrect
                                                 ? 'bg-success/15 text-success'
                                                 : 'bg-danger/15 text-danger',
@@ -135,7 +135,7 @@ export function QuizResultReview({
                                 </div>
 
                                 {item.imageUrl ? (
-                                    <div className="mt-3 max-w-md">
+                                    <div className="mt-3 w-full">
                                         <QuestionImage
                                             src={item.imageUrl}
                                             alt={item.text}
@@ -147,7 +147,7 @@ export function QuizResultReview({
                                     </div>
                                 ) : null}
 
-                                <dl className="mt-3 space-y-1 text-sm">
+                                <dl className="mt-3 space-y-1.5 text-sm leading-relaxed">
                                     <div>
                                         <dt className="inline text-muted">
                                             {labels.yourAnswer}:{' '}

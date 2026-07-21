@@ -31,6 +31,7 @@ function applyTheme(theme: Theme) {
 export function ThemeToggle({ labels }: ThemeToggleProps) {
     const [theme, setTheme] = useState<Theme>(getInitialTheme);
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    const shortLabel = theme === 'dark' ? labels.dark : labels.light;
 
     return (
         <button
@@ -40,12 +41,15 @@ export function ThemeToggle({ labels }: ThemeToggleProps) {
                 applyTheme(nextTheme);
                 setTheme(nextTheme);
             }}
-            className="rounded border border-border px-3 py-1 text-sm text-neutral-700 transition hover:border-neutral-400 hover:bg-neutral-100 hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 dark:hover:text-white dark:focus-visible:outline-neutral-100"
+            className="rounded-md border border-border px-2 py-1 text-sm text-foreground transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:px-3"
             aria-label={
                 nextTheme === 'dark' ? labels.switchToDark : labels.switchToLight
             }
         >
-            {labels.theme}: {theme === 'dark' ? labels.dark : labels.light}
+            <span className="sm:hidden">{shortLabel}</span>
+            <span className="hidden sm:inline">
+                {labels.theme}: {shortLabel}
+            </span>
         </button>
     );
 }
