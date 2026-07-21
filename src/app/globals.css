@@ -114,13 +114,31 @@ body {
     color: var(--foreground);
     font-family: var(--font-sans);
     min-height: 100vh;
-    /* Single-row header under lg; full chrome from lg. */
-    --site-header-sticky-offset: 3.25rem;
+    /*
+     * Sticky header height: py-2.5 (20) + control min-h-10 (40) + border (1) ≈ 61px.
+     * Must clear the bar so the open menu panel does not clip the hamburger.
+     */
+    --site-header-sticky-offset: 3.75rem;
+}
+
+/*
+ * Reserve scrollbar space always so overflow:hidden (mobile menu)
+ * does not shrink the sticky header and open a gap beside the panel.
+ */
+html {
+    scrollbar-gutter: stable;
+}
+
+@media (min-width: 640px) {
+    body {
+        /* py-3 (24) + control (~40) + border ≈ 65px */
+        --site-header-sticky-offset: 4rem;
+    }
 }
 
 @media (min-width: 1024px) {
     body {
-        --site-header-sticky-offset: 3.5rem;
+        --site-header-sticky-offset: 4rem;
     }
 }
 

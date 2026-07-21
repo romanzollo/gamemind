@@ -52,9 +52,6 @@ function getMainLinks(user: NavUser | null): ReadonlyArray<NavLinkItem> {
 const navLinkClassName =
     'shrink-0 rounded-md px-2 py-1 text-sm text-muted transition hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
-/** Full desktop chrome from lg (1024px); below that — hamburger. */
-const DESKTOP = 'lg';
-
 export function SiteHeader({
     locale,
     dictionary,
@@ -76,8 +73,8 @@ export function SiteHeader({
     );
 
     return (
-        <header className="sticky top-0 z-40 border-b border-border bg-surface">
-            <div className="mx-auto flex max-w-5xl items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
+        <header className="sticky top-0 z-50 border-b border-border bg-surface">
+            <div className="relative mx-auto flex max-w-5xl items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
                 <PendingLink
                     href={localizedHref(locale, '/')}
                     className="shrink-0 text-base font-semibold tracking-tight text-foreground"

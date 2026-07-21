@@ -16,7 +16,6 @@ type SiteMobileMenuProps = {
     openLabel: string;
     closeLabel: string;
     menuAuth: ReactNode;
-    /** Lang / theme controls for the mobile panel. */
     menuUtilities: ReactNode;
 };
 
@@ -24,6 +23,15 @@ function localizedHref(locale: Locale, href: string) {
     return href === '/' ? `/${locale}` : `/${locale}${href}`;
 }
 
+function getScrollbarGap() {
+    return Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+}
+
+/**
+ * Mobile nav under a persistent sticky header.
+ * Locks scroll with scrollbar-gap compensation so header and panel
+ * stay the same width (no dark slit when the menu opens).
+ */
 export function SiteMobileMenu({
     locale,
     links,
@@ -33,6 +41,7 @@ export function SiteMobileMenu({
     menuUtilities,
 }: SiteMobileMenuProps) {
     const [open, setOpen] = useState(false);
+    const [scrollbarGap, setScrollbarGap] = useState(0);
     const panelId = useId();
 
     useEffect(() => {
@@ -43,77 +52,108 @@ export function SiteMobileMenu({
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setOpen(false);
+                setScrollbarGap(0);
             }
         };
 
         const previousOverflow = document.body.style.overflow;
+        const previousPaddingRight = document.body.style.paddingRight;
+
         document.body.style.overflow = 'hidden';
+        if (scrollbarGap > 0) {
+            document.body.style.paddingRight = `${scrollbarGap}px`;
+        }
+
         document.addEventListener('keydown', onKeyDown);
 
         return () => {
             document.body.style.overflow = previousOverflow;
+            document.body.style.paddingRight = previousPaddingRight;
             document.removeEventListener('keydown', onKeyDown);
         };
-    }, [open]);
+    }, [open, scrollbarGap]);
+
+    function closeMenu() {
+        setOpen(false);
+        setScrollbarGap(0);
+    }
+
+    function toggleMenu() {
+        setOpen((wasOpen) => {
+            if (wasOpen) {
+                setScrollbarGap(0);
+                return false;
+            }
+
+            setScrollbarGap(getScrollbarGap());
+            return true;
+        });
+    }
+
+    const lockStyle =
+        scrollbarGap > 0 ? ({ right: scrollbarGap } as const) : undefined;
 
     return (
         <div className="lg:hidden">
             <button
                 type="button"
-                className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-md border border-border text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className="relative z-50 inline-flex size-10 shrink-0 items-center justify-center overflow-visible rounded-md border border-border text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 aria-expanded={open}
                 aria-controls={panelId}
                 aria-label={open ? closeLabel : openLabel}
-                onClick={() => setOpen((current) => !current)}
+                onClick={toggleMenu}
             >
-                <span aria-hidden className="flex flex-col gap-1">
-                    <span className="block h-0.5 w-4 bg-current" />
-                    <span className="block h-0.5 w-4 bg-current" />
-                    <span className="block h-0.5 w-4 bg-current" />
+                <span
+                    aria-hidden
+                    className="flex h-3.5 w-4 flex-col justify-between"
+                >
+                    <span className="block h-0.5 w-full rounded-full bg-current" />
+                    <span className="block h-0.5 w-full rounded-full bg-current" />
+                    <span className="block h-0.5 w-full rounded-full bg-current" />
                 </span>
             </button>
 
             {open ? (
                 <>
-                    {/*
-                      Editorial scrim: soft page tint + blur (not flat gray slab).
-                      Works in light/dark via --background; content stays faintly readable.
-                    */}
                     <button
                         type="button"
-                        className="fixed inset-0 z-40 bg-background/50 backdrop-blur-md supports-backdrop-filter:bg-background/35"
+                        style={lockStyle}
+                        className="fixed inset-x-0 bottom-0 top-[var(--site-header-sticky-offset)] z-40 bg-background/50 backdrop-blur-md supports-backdrop-filter:bg-background/35"
                         aria-label={closeLabel}
-                        onClick={() => setOpen(false)}
+                        onClick={closeMenu}
                     />
 
                     <div
                         id={panelId}
                         role="dialog"
                         aria-modal="true"
-                        className="absolute inset-x-0 top-full z-50 border-b border-border bg-surface px-3 py-3 shadow-md"
+                        style={lockStyle}
+                        className="fixed inset-x-0 top-[var(--site-header-sticky-offset)] z-50 max-h-[min(70vh,calc(100dvh-var(--site-header-sticky-offset)))] overflow-y-auto border-b border-border bg-surface px-3 py-3 shadow-md sm:px-4"
                     >
-                        <nav
-                            className="flex flex-col gap-1"
-                            aria-label={openLabel}
-                        >
-                            {links.map((link) => (
-                                <PendingLink
-                                    key={link.href}
-                                    href={localizedHref(locale, link.href)}
-                                    className="rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                                    onClick={() => setOpen(false)}
-                                >
-                                    {link.label}
-                                </PendingLink>
-                            ))}
-                        </nav>
+                        <div className="mx-auto max-w-5xl">
+                            <nav
+                                className="flex flex-col gap-1"
+                                aria-label={openLabel}
+                            >
+                                {links.map((link) => (
+                                    <PendingLink
+                                        key={link.href}
+                                        href={localizedHref(locale, link.href)}
+                                        className="rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                                        onClick={closeMenu}
+                                    >
+                                        {link.label}
+                                    </PendingLink>
+                                ))}
+                            </nav>
 
-                        <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
-                            {menuAuth}
-                        </div>
+                            <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
+                                {menuAuth}
+                            </div>
 
-                        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-                            {menuUtilities}
+                            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+                                {menuUtilities}
+                            </div>
                         </div>
                     </div>
                 </>
