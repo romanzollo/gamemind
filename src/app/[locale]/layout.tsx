@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { Geist, Geist_Mono } from 'next/font/google';
 
 import { HeaderAuthControls } from '@/features/auth/components/HeaderAuthControls';
 import { auth } from '@/lib/auth';
@@ -9,16 +8,6 @@ import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
 import { SiteHeader } from '@/shared/ui';
 
 import '../globals.css';
-
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin', 'cyrillic'],
-});
-
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin', 'cyrillic'],
-});
 
 type LocaleLayoutProps = Readonly<{
     children: React.ReactNode;
@@ -86,10 +75,7 @@ export default async function LocaleLayout({
 
     return (
         <html lang={locale} data-theme={theme} suppressHydrationWarning>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-                suppressHydrationWarning
-            >
+            <body className="antialiased" suppressHydrationWarning>
                 <SiteHeader
                     locale={locale}
                     dictionary={dictionary}

@@ -1,11 +1,16 @@
 @import 'tailwindcss';
+@import './fonts.css';
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /*
+ * Scoreboard Editorial — design lock (Task 1).
  * Semantic tokens live on :root / [data-theme].
  * @theme inline registers them for Tailwind and prevents Lightning CSS
  * from tree-shaking unused custom properties before components adopt them.
+ *
+ * Fonts: self-hosted via @fontsource in fonts.css (not next/font/google —
+ * Google CDN often unreachable in local/RU networks and breaks Turbopack).
  */
 @theme inline {
     --color-background: var(--background);
@@ -30,35 +35,42 @@
     --radius-sm: var(--radius-sm);
     --radius-md: var(--radius-md);
     --radius-lg: var(--radius-lg);
+
+    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Oswald', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
 :root,
 [data-theme='light'] {
     color-scheme: light;
-    --background: #ffffff;
-    --foreground: #171717;
-    --muted: #525252;
-    --border: #e5e5e5;
+
+    /* Cool paper / ink — not warm cream, not pure white slab */
+    --background: #f3f5f7;
+    --foreground: #14181f;
+    --muted: #5a6573;
+    --border: #d5dbe3;
 
     --surface: #ffffff;
-    --surface-muted: #f5f5f5;
-    --surface-hover: #f5f5f5;
+    --surface-muted: #e9eef3;
+    --surface-hover: #e1e7ee;
 
-    --primary: #171717;
-    --primary-foreground: #ffffff;
-    --primary-hover: #404040;
+    /* Competitive teal — one accent family, not purple SaaS */
+    --primary: #0b6e4f;
+    --primary-foreground: #f7fffb;
+    --primary-hover: #095c42;
 
-    --danger: #dc2626;
-    --danger-muted: #fef2f2;
-    --success: #15803d;
-    --success-muted: #f0fdf4;
-    --warning: #b45309;
-    --warning-muted: #fffbeb;
+    --danger: #c62828;
+    --danger-muted: #fdecea;
+    --success: #1b7a3d;
+    --success-muted: #e8f6ed;
+    --warning: #a16207;
+    --warning-muted: #fef6e7;
 
-    --ring: #171717;
-    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+    --ring: #0b6e4f;
+    --shadow-sm: 0 1px 2px rgb(20 24 31 / 0.06);
     --shadow-md:
-        0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        0 4px 6px -1px rgb(20 24 31 / 0.1), 0 2px 4px -2px rgb(20 24 31 / 0.08);
 
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
@@ -67,30 +79,32 @@
 
 [data-theme='dark'] {
     color-scheme: dark;
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --muted: #a3a3a3;
-    --border: #262626;
 
-    --surface: #141414;
-    --surface-muted: #1a1a1a;
-    --surface-hover: #1f1f1f;
+    /* Cool charcoal — not pure #000 */
+    --background: #0c0f14;
+    --foreground: #e8ecf1;
+    --muted: #9aa3b0;
+    --border: #2a313c;
 
-    --primary: #f5f5f5;
-    --primary-foreground: #0a0a0a;
-    --primary-hover: #d4d4d4;
+    --surface: #141922;
+    --surface-muted: #1a212c;
+    --surface-hover: #222a36;
 
-    --danger: #f87171;
-    --danger-muted: #450a0a;
-    --success: #4ade80;
-    --success-muted: #052e16;
-    --warning: #f59e0b;
-    --warning-muted: #451a03;
+    --primary: #3ecf8e;
+    --primary-foreground: #071510;
+    --primary-hover: #5dda9f;
 
-    --ring: #f5f5f5;
-    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --danger: #f07178;
+    --danger-muted: #3b1518;
+    --success: #5ecf8a;
+    --success-muted: #0d2818;
+    --warning: #e6b84d;
+    --warning-muted: #2f2410;
+
+    --ring: #3ecf8e;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.45);
     --shadow-md:
-        0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+        0 4px 6px -1px rgb(0 0 0 / 0.55), 0 2px 4px -2px rgb(0 0 0 / 0.45);
 
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
@@ -100,5 +114,12 @@
 body {
     background: var(--background);
     color: var(--foreground);
+    font-family: var(--font-sans);
     min-height: 100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+        scroll-behavior: auto;
+    }
 }
