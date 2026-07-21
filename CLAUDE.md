@@ -91,13 +91,12 @@ The project should start as a realistic MVP but be structured so that future exp
 
 ## Git commits
 
-After a discrete task is finished and verified (or you implemented a requested fix), **commit proactively** — do not wait for «закоммить» every time.
+At the end of a finished step, **propose** an English `type(scope): summary` commit message.
+Do **not** create the commit unless the user explicitly asks («закоммить», «сделай коммит», «commit»).
 
--   Format (English): `type(scope): summary` + optional body (why).
--   Examples: `feat(ui): …`, `fix(quiz): …`.
--   Feature/UI commits include code + related lockfile deps only.
--   Exclude plan/continuity churn (`ROADMAP` ticks, `PROJECT_CONTEXT` session notes) from those commits; put docs in a separate `docs:` commit if needed.
--   Ask first only if the change set is ambiguous, user said not to commit, or git would be destructive.
+-   Feature/UI commits: application code + related lockfile deps only.
+-   Local continuity docs (`docs/PROJECT_CONTEXT.md`, `ROADMAP.md`, `DECISIONS.md`, `TASTE_SKILL.md`) are gitignored — never stage them.
+-   Never commit secrets / `.env` / `.next`.
 
 ## Preferred answer style
 

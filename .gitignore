@@ -42,8 +42,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# AI instructions + project continuity are tracked in git
-# (AGENTS.md, CLAUDE.md, docs/PROJECT_CONTEXT.md, ROADMAP.md, DECISIONS.md, TASTE_SKILL.md)
+# Local working-memory / continuity docs (keep on disk, do not commit)
+docs/PROJECT_CONTEXT.md
+docs/ROADMAP.md
+docs/DECISIONS.md
+docs/TASTE_SKILL.md
 
 # raw screenshot sources before WebP optimize (keep structure + README)
 /raw-quiz-images/**

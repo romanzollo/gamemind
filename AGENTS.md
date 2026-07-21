@@ -67,17 +67,12 @@ The architecture should allow gradual growth without overengineering the MVP.
 -   Explain difficult concepts in practical terms.
 -   Do not hide important trade-offs.
 
-## Git commits (automatic after a finished task)
+## Git commits (propose only — do not create until asked)
 
-Do **not** wait for the user to type «закоммить» / «сделай коммит» after a discrete task is done.
+At the end of a finished plan step / UI task, **propose** an English Conventional Commit message with scope.
+Do **not** run `git commit` (or stage for the purpose of committing) unless the user explicitly asks (e.g. «закоммить», «сделай коммит», «commit»).
 
-**When to commit (proactively):**
-
--   A UI §14 task, bugfix, or feature step is implemented and verified (or the user confirmed it works).
--   You finished a step the user asked you to implement («сделай сам», «исправь», «реализуй»).
--   Prefer **one commit per finished task** (matches Taste: one §14 task → one chat → one code commit).
-
-**Message format (English, Conventional Commits + scope):**
+**Message format:**
 
 ```txt
 type(scope): short summary
@@ -85,30 +80,11 @@ type(scope): short summary
 Optional body: why, not a file list.
 ```
 
-Examples from this repo: `feat(ui): …`, `fix(quiz): …`, `feat(admin): …`, `docs: …`.
+Examples: `feat(ui): …`, `fix(quiz): …`, `feat(admin): …`, `chore: …`.
 
-Common types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style` (pure formatting only).
-Scopes: `ui`, `quiz`, `auth`, `admin`, `profile`, `db`, `i18n`, `agents`, etc.
+**What belongs in a feature/UI commit:** application code (`src/`, related `prisma/`), lockfile when deps changed, tests for the change.
 
-**What belongs in a feature/UI commit:**
-
--   Application code (`src/`, `prisma/` when schema is part of the task)
--   `package.json` / lockfile when dependencies changed for that task
--   Tests tied to the change
-
-**What to exclude from feature/UI commits (keep the commit “real-project” clean):**
-
--   Continuity / plan churn: `docs/ROADMAP.md` checkbox ticks, `docs/PROJECT_CONTEXT.md` “Last Session”, backlog “next step” rewrites
--   Unrelated Taste wave planning edits that are not required for the shipped code to make sense
--   Secrets, `.env`, `.next`, build artifacts
-
-Update continuity docs locally when useful, but ship them in a **separate** `docs: …` commit (or leave unstaged) — do not mix plan notes into `feat(ui)` / `fix(quiz)` commits.
-
-**Still ask first when:**
-
--   The change set is ambiguous or mixes unrelated work
--   The user said not to commit yet
--   Force push / amend / destructive git would be involved
+**What to exclude:** local continuity docs (gitignored — see below), secrets, `.env`, `.next`, build artifacts.
 
 ## Mentoring style
 
@@ -137,23 +113,25 @@ When I ask to move to the next implementation step and do not explicitly ask the
 
 This "write after me" workflow is preferred for normal feature work because the goal is learning. Only modify the code directly when I explicitly ask with words such as "реализуй", "исправь сам", "измени файл", "добавь в проект", or "сделай сам".
 
-## Local continuity files
+## Local continuity files (not in git)
 
-The project contains continuity files (tracked in git):
+These files stay on disk for chat continuity but are **gitignored** — do not stage or commit them:
 
 - `docs/PROJECT_CONTEXT.md`
 - `docs/ROADMAP.md`
 - `docs/DECISIONS.md`
 - `docs/TASTE_SKILL.md` — **UI/UX + Taste Skill**: brief, design lock, wave plan, prompt library, visual change log
-- `AGENTS.md` / `CLAUDE.md` — AI collaboration rules
 
-Use these files to preserve context between chats and context resets.
+Still tracked (repo collaboration rules / skills):
 
-When project direction, completed work, next steps, or important architecture decisions change, update these files if explicitly asked or if it is clearly useful for continuity. Keep them concise, practical, and free of secrets.
+- `AGENTS.md` / `CLAUDE.md`
+- `.cursor/skills/gamemind-taste-ui`, `.agents/skills/*` when present
+
+Use continuity files to preserve context between chats. Update them when useful for continuity; keep them concise, practical, and free of secrets.
 
 For **any visual / UI identity work**, read and update `docs/TASTE_SKILL.md` (especially §7 Change log, §14 backlog). Prefer the project skill `.cursor/skills/gamemind-taste-ui` plus installed Taste skills from https://github.com/Leonxlnx/taste-skill.
 
-At the start of a new chat, if the user asks to continue the project, read these files together with `AGENTS.md`, `README.md`, and the relevant source files before recommending the next step. If the task is UI/Taste, prioritize `docs/TASTE_SKILL.md`.
+At the start of a new chat, if the user asks to continue the project, read these local files together with `AGENTS.md`, `README.md`, and the relevant source files before recommending the next step. If the task is UI/Taste, prioritize `docs/TASTE_SKILL.md`.
 
 ## Chat prompts (how to continue between chats)
 
