@@ -6,8 +6,6 @@ import { startQuizAction } from '@/features/quiz/actions';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
-import { InlineAlert } from '@/shared/ui';
-import { EmptyState } from '@/shared/ui';
 
 // тип для пропсов компонента QuizSetupForm
 type QuizSetupFormProps = {

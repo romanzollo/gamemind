@@ -75,10 +75,13 @@ export function SiteMobileMenu({
 
             {open ? (
                 <>
-                    {/* Scrim: tap outside panel closes — standard mobile nav UX */}
+                    {/*
+                      Editorial scrim: soft page tint + blur (not flat gray slab).
+                      Works in light/dark via --background; content stays faintly readable.
+                    */}
                     <button
                         type="button"
-                        className="fixed inset-0 z-40 bg-foreground/25"
+                        className="fixed inset-0 z-40 bg-background/50 backdrop-blur-md supports-backdrop-filter:bg-background/35"
                         aria-label={closeLabel}
                         onClick={() => setOpen(false)}
                     />
