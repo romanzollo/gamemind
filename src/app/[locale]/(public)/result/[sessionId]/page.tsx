@@ -34,6 +34,7 @@ export default async function QuizResultPage({ params }: QuizResultPageProps) {
     const reviewPayload = await quizSessionRepository.findReviewForUser(
         sessionId,
         authSession.user.id,
+        safeLocale,
     );
     // преобразование результатов обзора сессии в тип QuizResultReviewItem
     const reviewItems = mapQuizResultReview(reviewPayload);

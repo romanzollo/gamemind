@@ -64,11 +64,13 @@ export async function startQuizAction(
             questionId: question.id,
             position: index,
             displayText: question.displayText,
+            displayTexts: question.displayTexts,
             displayImageUrl: normalizeQuizImageUrl(question.displayImageUrl),
             options: shuffledOptions.map((option, optionIndex) => ({
                 optionId: option.id,
                 displayOrder: optionIndex,
                 displayText: option.displayText,
+                displayTexts: option.displayTexts,
             })),
         };
     });

@@ -22,6 +22,7 @@ export default async function QuizSessionPage({
         await quizSessionRepository.findSnapshotPublicQuestionsForUser(
             sessionId,
             authSession.user.id,
+            safeLocale,
         );
 
     if (!questions) {

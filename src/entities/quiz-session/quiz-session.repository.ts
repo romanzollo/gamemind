@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import type { Client } from 'pg';
 
 import type { Difficulty, QuestionType } from '@/types';
-import type { Locale } from '@/shared/i18n';
+import { defaultLocale, type Locale } from '@/shared/i18n';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
 import {
     isTransientDirectPgError,
@@ -14,8 +14,14 @@ import {
     withDirectPgWriteRetry,
     withPooledPgQuizStartClient,
 } from '@/lib/db/direct-pg';
-import { loadRandomSnapshotBundleWithPgClient } from '@/entities/question/question.repository';
-import type { QuestionSnapshotBundleItem } from '@/entities/question/question.repository';
+import {
+    loadLocalizedTextsByQuestionIds,
+    loadRandomSnapshotBundleWithPgClient,
+} from '@/entities/question/question.repository';
+import type {
+    LocalizedSnapshotTexts,
+    QuestionSnapshotBundleItem,
+} from '@/entities/question/question.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
 // тип для входных данных для создания сессии викторины
@@ -30,11 +36,13 @@ export type SessionSnapshotQuestionInput = {
     questionId: string;
     position: number;
     displayText: string;
+    displayTexts: LocalizedSnapshotTexts;
     displayImageUrl?: string | null;
     options: Array<{
         optionId: string;
         displayOrder: number;
         displayText: string;
+        displayTexts: LocalizedSnapshotTexts;
     }>;
 };
 
@@ -83,23 +91,29 @@ type SessionSnapshotCreateResult = {
     id: string;
 };
 
-// тип для данных snapshot сессии
+type SnapshotOptionData = {
+    id: string;
+    text?: string;
+    texts?: LocalizedSnapshotTexts;
+    order: number;
+    isCorrect: boolean;
+};
+
+type SnapshotQuestionData = {
+    id: string;
+    text?: string;
+    texts?: LocalizedSnapshotTexts;
+    difficulty: Difficulty;
+    type?: QuestionType;
+    imageUrl?: string | null;
+    position: number;
+    options: SnapshotOptionData[];
+};
+
+// тип для данных snapshot сессии (v1 = single text, v2 = bilingual texts)
 type QuizSessionSnapshotData = {
-    version: 1;
-    questions: Array<{
-        id: string;
-        text: string;
-        difficulty: Difficulty;
-        type?: QuestionType;
-        imageUrl?: string | null;
-        position: number;
-        options: Array<{
-            id: string;
-            text: string;
-            order: number;
-            isCorrect: boolean;
-        }>;
-    }>;
+    version: 1 | 2;
+    questions: SnapshotQuestionData[];
 };
 
 // тип для входных данных для завершения сессии с ответом
@@ -300,20 +314,64 @@ async function isJsonSnapshotComplete(
 
 function assertSnapshotDisplayTexts(input: CreateQuizSessionWithSnapshotInput) {
     for (const question of input.questions) {
-        if (!question.displayText.trim()) {
+        if (
+            !question.displayText.trim() &&
+            !question.displayTexts.ru.trim() &&
+            !question.displayTexts.en.trim()
+        ) {
             throw new Error(
                 `Missing displayText for question ${question.questionId}`,
             );
         }
 
         for (const option of question.options) {
-            if (!option.displayText.trim()) {
+            if (
+                !option.displayText.trim() &&
+                !option.displayTexts.ru.trim() &&
+                !option.displayTexts.en.trim()
+            ) {
                 throw new Error(
                     `Missing displayText for option ${option.optionId}`,
                 );
             }
         }
     }
+}
+
+function pickSnapshotText(
+    texts: LocalizedSnapshotTexts | undefined,
+    legacyText: string | undefined,
+    locale: Locale,
+): string {
+    if (texts) {
+        const preferred = texts[locale]?.trim();
+        if (preferred) {
+            return preferred;
+        }
+
+        const fallback = texts[defaultLocale]?.trim();
+        if (fallback) {
+            return fallback;
+        }
+
+        const other = locale === 'ru' ? texts.en : texts.ru;
+        if (other?.trim()) {
+            return other.trim();
+        }
+    }
+
+    return legacyText?.trim() ?? '';
+}
+
+function hasBilingualTexts(snapshotData: QuizSessionSnapshotData) {
+    return (
+        snapshotData.version === 2 &&
+        snapshotData.questions.every(
+            (question) =>
+                question.texts &&
+                question.options.every((option) => option.texts),
+        )
+    );
 }
 
 function buildSnapshotData(
@@ -325,7 +383,7 @@ function buildSnapshotData(
     );
 
     return {
-        version: 1,
+        version: 2,
         questions: input.questions.map((question) => {
             const picked = pickedById.get(question.questionId);
 
@@ -339,9 +397,16 @@ function buildSnapshotData(
                 picked.options.map((option) => [option.id, option]),
             );
 
+            const questionTexts = question.displayTexts ?? picked.displayTexts;
+
             return {
                 id: question.questionId,
-                text: question.displayText,
+                text: pickSnapshotText(
+                    questionTexts,
+                    question.displayText,
+                    input.sessionLocale,
+                ),
+                texts: questionTexts,
                 difficulty: picked.difficulty,
                 type: picked.type,
                 imageUrl: normalizeQuizImageUrl(question.displayImageUrl),
@@ -355,9 +420,17 @@ function buildSnapshotData(
                         );
                     }
 
+                    const optionTexts =
+                        option.displayTexts ?? pickedOption.displayTexts;
+
                     return {
                         id: option.optionId,
-                        text: option.displayText,
+                        text: pickSnapshotText(
+                            optionTexts,
+                            option.displayText,
+                            input.sessionLocale,
+                        ),
+                        texts: optionTexts,
                         order: option.displayOrder,
                         isCorrect: pickedOption.isCorrect,
                     };
@@ -379,7 +452,7 @@ function parseSnapshotData(
     if (
         typeof data !== 'object' ||
         data === null ||
-        data.version !== 1 ||
+        (data.version !== 1 && data.version !== 2) ||
         !Array.isArray(data.questions)
     ) {
         return null;
@@ -391,6 +464,7 @@ function parseSnapshotData(
 function mapSnapshotDataToPublicQuestions(
     snapshotData: QuizSessionSnapshotData,
     expectedQuestionCount: number,
+    locale: Locale,
 ): SessionSnapshotPublicQuestion[] | null {
     if (snapshotData.questions.length !== expectedQuestionCount) {
         return null;
@@ -400,7 +474,7 @@ function mapSnapshotDataToPublicQuestions(
         .sort((left, right) => left.position - right.position)
         .map((question) => ({
             id: question.id,
-            text: question.text,
+            text: pickSnapshotText(question.texts, question.text, locale),
             difficulty: question.difficulty,
             type: question.type,
             imageUrl: normalizeQuizImageUrl(question.imageUrl),
@@ -408,10 +482,37 @@ function mapSnapshotDataToPublicQuestions(
                 .sort((left, right) => left.order - right.order)
                 .map((option) => ({
                     id: option.id,
-                    text: option.text,
+                    text: pickSnapshotText(option.texts, option.text, locale),
                     order: option.order,
                 })),
         }));
+}
+
+async function overlayPublicQuestionsWithLocale(
+    questions: SessionSnapshotPublicQuestion[],
+    locale: Locale,
+): Promise<SessionSnapshotPublicQuestion[]> {
+    const localized = await loadLocalizedTextsByQuestionIds(
+        locale,
+        questions.map((question) => question.id),
+    );
+
+    return questions.map((question) => {
+        const overlay = localized.get(question.id);
+
+        if (!overlay) {
+            return question;
+        }
+
+        return {
+            ...question,
+            text: overlay.displayText || question.text,
+            options: question.options.map((option) => ({
+                ...option,
+                text: overlay.options.get(option.id) || option.text,
+            })),
+        };
+    });
 }
 
 function mapSnapshotDataToScoringQuestions(
@@ -983,8 +1084,9 @@ type ReviewAnswerRow = {
 async function loadCompletedSessionReview(
     sessionId: string,
     userId: string,
+    locale: Locale,
 ): Promise<SessionReviewPayload | null> {
-    return withDirectPgClient(async (client) => {
+    const loaded = await withDirectPgClient(async (client) => {
         const sessionResult = await client.query<SessionSnapshotJsonRow>(
             `
                 SELECT
@@ -1031,19 +1133,7 @@ async function loadCompletedSessionReview(
         return {
             sessionId: session.session_id,
             questionCount: session.question_count,
-            questions: [...snapshotData.questions]
-                .sort((left, right) => left.position - right.position)
-                .map((question) => ({
-                    id: question.id,
-                    text: question.text,
-                    difficulty: question.difficulty,
-                    type: question.type,
-                    imageUrl: normalizeQuizImageUrl(question.imageUrl),
-                    position: question.position,
-                    options: [...question.options].sort(
-                        (left, right) => left.order - right.order,
-                    ),
-                })),
+            snapshotData,
             answers: answersResult.rows.map((row) => ({
                 questionId: row.question_id,
                 selectedOptionId: row.selected_option_id,
@@ -1051,11 +1141,66 @@ async function loadCompletedSessionReview(
             })),
         };
     });
+
+    if (!loaded) {
+        return null;
+    }
+
+    let questions = [...loaded.snapshotData.questions]
+        .sort((left, right) => left.position - right.position)
+        .map((question) => ({
+            id: question.id,
+            text: pickSnapshotText(question.texts, question.text, locale),
+            difficulty: question.difficulty,
+            type: question.type,
+            imageUrl: normalizeQuizImageUrl(question.imageUrl),
+            position: question.position,
+            options: [...question.options]
+                .sort((left, right) => left.order - right.order)
+                .map((option) => ({
+                    id: option.id,
+                    text: pickSnapshotText(option.texts, option.text, locale),
+                    order: option.order,
+                    isCorrect: option.isCorrect,
+                })),
+        }));
+
+    if (!hasBilingualTexts(loaded.snapshotData)) {
+        const localized = await loadLocalizedTextsByQuestionIds(
+            locale,
+            questions.map((question) => question.id),
+        );
+
+        questions = questions.map((question) => {
+            const overlay = localized.get(question.id);
+
+            if (!overlay) {
+                return question;
+            }
+
+            return {
+                ...question,
+                text: overlay.displayText || question.text,
+                options: question.options.map((option) => ({
+                    ...option,
+                    text: overlay.options.get(option.id) || option.text,
+                })),
+            };
+        });
+    }
+
+    return {
+        sessionId: loaded.sessionId,
+        questionCount: loaded.questionCount,
+        questions,
+        answers: loaded.answers,
+    };
 }
 
 async function loadSnapshotPublicQuestions(
     sessionId: string,
     userId: string,
+    locale: Locale,
 ): Promise<SessionSnapshotPublicQuestion[] | null> {
     const jsonSnapshot = await loadQuizSessionSnapshotData(sessionId, userId);
 
@@ -1063,10 +1208,21 @@ async function loadSnapshotPublicQuestions(
         const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);
 
         if (snapshotData) {
-            return mapSnapshotDataToPublicQuestions(
+            const mapped = mapSnapshotDataToPublicQuestions(
                 snapshotData,
                 jsonSnapshot.question_count,
+                locale,
             );
+
+            if (!mapped) {
+                return null;
+            }
+
+            if (!hasBilingualTexts(snapshotData)) {
+                return overlayPublicQuestionsWithLocale(mapped, locale);
+            }
+
+            return mapped;
         }
     }
 
@@ -1148,7 +1304,10 @@ async function loadSnapshotPublicQuestions(
         return null;
     }
 
-    return Array.from(questions.values());
+    return overlayPublicQuestionsWithLocale(
+        Array.from(questions.values()),
+        locale,
+    );
 }
 
 // репозиторий для работы с сессиями викторины
@@ -1194,8 +1353,12 @@ export const quizSessionRepository = {
     },
 
     // публичные вопросы из snapshot для страницы квиза
-    findSnapshotPublicQuestionsForUser(sessionId: string, userId: string) {
-        return loadSnapshotPublicQuestions(sessionId, userId);
+    findSnapshotPublicQuestionsForUser(
+        sessionId: string,
+        userId: string,
+        locale: Locale,
+    ) {
+        return loadSnapshotPublicQuestions(sessionId, userId, locale);
     },
 
     // вопросы из snapshot для server-side scoring
@@ -1231,7 +1394,7 @@ export const quizSessionRepository = {
     },
 
     // результаты обзора сессии
-    findReviewForUser(sessionId: string, userId: string) {
-        return loadCompletedSessionReview(sessionId, userId);
+    findReviewForUser(sessionId: string, userId: string, locale: Locale) {
+        return loadCompletedSessionReview(sessionId, userId, locale);
     },
 };

@@ -29,15 +29,22 @@ export type QuestionSnapshotDisplayText = {
     options: Map<string, string>;
 };
 
+export type LocalizedSnapshotTexts = {
+    ru: string;
+    en: string;
+};
+
 export type QuestionSnapshotBundleItem = {
     id: string;
     difficulty: Difficulty;
     type: QuestionType;
     displayText: string;
+    displayTexts: LocalizedSnapshotTexts;
     displayImageUrl: string | null;
     options: Array<{
         id: string;
         displayText: string;
+        displayTexts: LocalizedSnapshotTexts;
         isCorrect: boolean;
     }>;
 };
@@ -50,6 +57,19 @@ type SnapshotDisplayTextRow = {
     prompt_image_url: string | null;
     option_id: string | null;
     option_text: string | null;
+    is_correct: boolean | null;
+};
+
+type SnapshotBilingualDisplayTextRow = {
+    question_id: string;
+    difficulty: Difficulty;
+    question_type: string;
+    question_text_ru: string;
+    question_text_en: string;
+    prompt_image_url: string | null;
+    option_id: string | null;
+    option_text_ru: string | null;
+    option_text_en: string | null;
     is_correct: boolean | null;
 };
 
@@ -69,6 +89,36 @@ const RESOLVED_OPTION_TEXT_SQL = `
     )
 `;
 
+const RESOLVED_QUESTION_TEXT_RU_SQL = `
+    COALESCE(
+        NULLIF(TRIM(qt_ru."text"), ''),
+        q."text"
+    )
+`;
+
+const RESOLVED_QUESTION_TEXT_EN_SQL = `
+    COALESCE(
+        NULLIF(TRIM(qt_en."text"), ''),
+        NULLIF(TRIM(qt_ru."text"), ''),
+        q."text"
+    )
+`;
+
+const RESOLVED_OPTION_TEXT_RU_SQL = `
+    COALESCE(
+        NULLIF(TRIM(aot_ru."text"), ''),
+        ao."text"
+    )
+`;
+
+const RESOLVED_OPTION_TEXT_EN_SQL = `
+    COALESCE(
+        NULLIF(TRIM(aot_en."text"), ''),
+        NULLIF(TRIM(aot_ru."text"), ''),
+        ao."text"
+    )
+`;
+
 const PROMPT_IMAGE_URL_SQL = `
     (
         SELECT qa."url"
@@ -82,6 +132,23 @@ const PROMPT_IMAGE_URL_SQL = `
 
 function toQuestionType(value: string): QuestionType {
     return value === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
+}
+
+function pickLocalizedText(
+    texts: LocalizedSnapshotTexts,
+    locale: Locale,
+): string {
+    const preferred = texts[locale]?.trim();
+    if (preferred) {
+        return preferred;
+    }
+
+    const fallback = texts[defaultLocale]?.trim();
+    if (fallback) {
+        return fallback;
+    }
+
+    return texts.ru || texts.en || '';
 }
 
 function snapshotQuestionTranslationJoinsSql(
@@ -111,6 +178,24 @@ function snapshotOptionTranslationJoinsSql(
         AND aot_default."locale" = ${defaultLocaleParam}::"ContentLocale"
 `;
 }
+
+const BILINGUAL_QUESTION_TRANSLATION_JOINS_SQL = `
+    LEFT JOIN "QuestionTranslation" qt_ru
+        ON qt_ru."questionId" = q."id"
+        AND qt_ru."locale" = 'ru'::"ContentLocale"
+    LEFT JOIN "QuestionTranslation" qt_en
+        ON qt_en."questionId" = q."id"
+        AND qt_en."locale" = 'en'::"ContentLocale"
+`;
+
+const BILINGUAL_OPTION_TRANSLATION_JOINS_SQL = `
+    LEFT JOIN "AnswerOptionTranslation" aot_ru
+        ON aot_ru."optionId" = ao."id"
+        AND aot_ru."locale" = 'ru'::"ContentLocale"
+    LEFT JOIN "AnswerOptionTranslation" aot_en
+        ON aot_en."optionId" = ao."id"
+        AND aot_en."locale" = 'en'::"ContentLocale"
+`;
 
 type QuestionSnapshotCandidateRow = {
     question_id: string;
@@ -974,6 +1059,7 @@ async function loadSnapshotCandidatesByDifficulty(
 
 function groupSnapshotBundleRows(
     rows: SnapshotDisplayTextRow[],
+    locale: Locale = defaultLocale,
 ): QuestionSnapshotBundleItem[] {
     const questions: QuestionSnapshotBundleItem[] = [];
     const byId = new Map<string, QuestionSnapshotBundleItem>();
@@ -986,11 +1072,19 @@ function groupSnapshotBundleRows(
         let question = byId.get(row.question_id);
 
         if (!question) {
+            const displayTexts: LocalizedSnapshotTexts = {
+                ru: locale === 'ru' ? row.question_text : '',
+                en: locale === 'en' ? row.question_text : '',
+            };
+            displayTexts.ru = displayTexts.ru || row.question_text;
+            displayTexts.en = displayTexts.en || row.question_text;
+
             question = {
                 id: row.question_id,
                 difficulty: row.difficulty,
                 type: toQuestionType(row.question_type),
-                displayText: row.question_text,
+                displayText: pickLocalizedText(displayTexts, locale),
+                displayTexts,
                 displayImageUrl: row.prompt_image_url,
                 options: [],
             };
@@ -998,9 +1092,81 @@ function groupSnapshotBundleRows(
             questions.push(question);
         }
 
+        const optionTexts: LocalizedSnapshotTexts = {
+            ru: locale === 'ru' ? row.option_text : '',
+            en: locale === 'en' ? row.option_text : '',
+        };
+        optionTexts.ru = optionTexts.ru || row.option_text;
+        optionTexts.en = optionTexts.en || row.option_text;
+
         question.options.push({
             id: row.option_id,
-            displayText: row.option_text,
+            displayText: pickLocalizedText(optionTexts, locale),
+            displayTexts: optionTexts,
+            isCorrect: row.is_correct ?? false,
+        });
+    }
+
+    for (const question of questions) {
+        if (question.options.length === 0) {
+            throw new Error(`Question ${question.id} has no answer options`);
+        }
+    }
+
+    return questions;
+}
+
+function groupBilingualSnapshotBundleRows(
+    rows: SnapshotBilingualDisplayTextRow[],
+    locale: Locale,
+): QuestionSnapshotBundleItem[] {
+    const questions: QuestionSnapshotBundleItem[] = [];
+    const byId = new Map<string, QuestionSnapshotBundleItem>();
+
+    for (const row of rows) {
+        if (!row.option_id) {
+            continue;
+        }
+
+        const optionTextRu =
+            row.option_text_ru?.trim() || row.option_text_en?.trim() || '';
+        const optionTextEn =
+            row.option_text_en?.trim() || row.option_text_ru?.trim() || '';
+
+        if (!optionTextRu && !optionTextEn) {
+            continue;
+        }
+
+        let question = byId.get(row.question_id);
+
+        if (!question) {
+            const displayTexts: LocalizedSnapshotTexts = {
+                ru: row.question_text_ru,
+                en: row.question_text_en,
+            };
+
+            question = {
+                id: row.question_id,
+                difficulty: row.difficulty,
+                type: toQuestionType(row.question_type),
+                displayText: pickLocalizedText(displayTexts, locale),
+                displayTexts,
+                displayImageUrl: row.prompt_image_url,
+                options: [],
+            };
+            byId.set(row.question_id, question);
+            questions.push(question);
+        }
+
+        const optionTexts: LocalizedSnapshotTexts = {
+            ru: optionTextRu,
+            en: optionTextEn,
+        };
+
+        question.options.push({
+            id: row.option_id,
+            displayText: pickLocalizedText(optionTexts, locale),
+            displayTexts: optionTexts,
             isCorrect: row.is_correct ?? false,
         });
     }
@@ -1071,13 +1237,31 @@ async function loadSnapshotDisplayTextRowsByQuestionIds(
     return result.rows;
 }
 
+/**
+ * Resolve display texts for question/option IDs at a locale.
+ * Used as overlay for legacy v1 snapshots when the UI locale differs.
+ */
+export async function loadLocalizedTextsByQuestionIds(
+    locale: Locale,
+    questionIds: string[],
+): Promise<Map<string, QuestionSnapshotDisplayText>> {
+    const rows = await loadSnapshotDisplayTextRowsByQuestionIds(
+        locale,
+        questionIds,
+    );
+
+    return mapSnapshotBundleToDisplayTexts(
+        groupSnapshotBundleRows(rows, locale),
+    );
+}
+
 async function loadRandomSnapshotBundleWithPgClient(
     client: Client,
     difficulty: Difficulty,
     limit: number,
     locale: Locale,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    const result = await client.query<SnapshotDisplayTextRow>(
+    const result = await client.query<SnapshotBilingualDisplayTextRow>(
         `
                 WITH random_ids AS (
                     SELECT id, ord::int - 1 AS pick_position
@@ -1097,24 +1281,26 @@ async function loadRandomSnapshotBundleWithPgClient(
                     q."id" AS question_id,
                     q."difficulty"::text AS difficulty,
                     q."type"::text AS question_type,
-                    ${RESOLVED_QUESTION_TEXT_SQL} AS question_text,
+                    ${RESOLVED_QUESTION_TEXT_RU_SQL} AS question_text_ru,
+                    ${RESOLVED_QUESTION_TEXT_EN_SQL} AS question_text_en,
                     ${PROMPT_IMAGE_URL_SQL} AS prompt_image_url,
                     ao."id" AS option_id,
-                    ${RESOLVED_OPTION_TEXT_SQL} AS option_text,
+                    ${RESOLVED_OPTION_TEXT_RU_SQL} AS option_text_ru,
+                    ${RESOLVED_OPTION_TEXT_EN_SQL} AS option_text_en,
                     ao."isCorrect" AS is_correct
                 FROM random_ids ri
                 INNER JOIN "Question" q
                     ON q."id" = ri.id
                 INNER JOIN "AnswerOption" ao
                     ON ao."questionId" = q."id"
-                ${snapshotQuestionTranslationJoinsSql('$3', '$4')}
-                ${snapshotOptionTranslationJoinsSql('$3', '$4')}
+                ${BILINGUAL_QUESTION_TRANSLATION_JOINS_SQL}
+                ${BILINGUAL_OPTION_TRANSLATION_JOINS_SQL}
                 ORDER BY ri.pick_position, ao."order" ASC
             `,
-        [difficulty, limit, locale, defaultLocale],
+        [difficulty, limit],
     );
 
-    return groupSnapshotBundleRows(result.rows);
+    return groupBilingualSnapshotBundleRows(result.rows, locale);
 }
 
 async function loadRandomSnapshotBundleWithDirectPg(
@@ -1186,7 +1372,7 @@ export const questionRepository = {
         );
 
         return mapSnapshotBundleToDisplayTexts(
-            groupSnapshotBundleRows(rows),
+            groupSnapshotBundleRows(rows, locale),
         );
     },
 
