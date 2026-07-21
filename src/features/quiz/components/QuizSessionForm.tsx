@@ -39,24 +39,25 @@ export function QuizSessionForm({
     const progressPercent =
         totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
+    const submitHintId = 'quiz-submit-hint';
 
     return (
         <form action={formAction} className="mt-6">
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="sessionId" value={sessionId} />
 
-            <div className="mb-6 rounded-lg bg-surface-muted p-4">
+            <div className="mb-6 rounded-lg border border-border bg-surface p-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3 text-sm">
                     <span className="font-medium text-foreground">
                         {dictionary.quiz.questionCountLabel}
                     </span>
-                    <span className="tabular-nums text-muted">
+                    <span className="tabular-nums font-semibold text-foreground">
                         {answeredCount} / {totalQuestions}
                     </span>
                 </div>
 
                 <div
-                    className="mt-3 h-1.5 overflow-hidden rounded-full bg-border"
+                    className="mt-3 h-2 overflow-hidden rounded-full bg-surface-muted"
                     role="progressbar"
                     aria-valuenow={answeredCount}
                     aria-valuemin={0}
@@ -90,7 +91,7 @@ export function QuizSessionForm({
                 ))}
             </div>
 
-            <div className="sticky bottom-0 -mx-4 border-t border-border bg-background/95 px-4 py-4 backdrop-blur-sm sm:mx-0 sm:px-0">
+            <div className="sticky bottom-0 -mx-4 border-t border-border bg-background px-4 py-4 sm:mx-0 sm:px-0">
                 {errorMessage ? (
                     <p
                         className="mb-3 rounded-md bg-danger-muted px-3 py-2 text-sm text-danger"
@@ -100,10 +101,20 @@ export function QuizSessionForm({
                     </p>
                 ) : null}
 
+                {!allAnswered ? (
+                    <p
+                        id={submitHintId}
+                        className="mb-3 text-sm text-muted"
+                    >
+                        {dictionary.quiz.errors.answerAll}
+                    </p>
+                ) : null}
+
                 <SubmitButton
                     disabled={!allAnswered}
                     pendingLabel={dictionary.common.submitting}
                     className="w-full sm:w-auto"
+                    aria-describedby={!allAnswered ? submitHintId : undefined}
                 >
                     {dictionary.quiz.submitButton}
                 </SubmitButton>

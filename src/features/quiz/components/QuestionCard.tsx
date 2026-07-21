@@ -24,14 +24,14 @@ function OptionIndicator({ isSelected }: OptionIndicatorProps) {
         <span
             aria-hidden
             className={[
-                'flex size-4 shrink-0 items-center justify-center rounded-full border-2 motion-safe:transition-colors',
+                'mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border-2 motion-safe:transition-colors',
                 isSelected
                     ? 'border-primary bg-primary'
-                    : 'border-muted/40 bg-transparent',
+                    : 'border-muted bg-transparent',
             ].join(' ')}
         >
             {isSelected ? (
-                <span className="size-1.5 rounded-full bg-primary-foreground" />
+                <span className="size-2 rounded-full bg-primary-foreground" />
             ) : null}
         </span>
     );
@@ -90,12 +90,12 @@ export function QuestionCard({
                         <label
                             key={option.id}
                             className={[
-                                'flex min-h-11 cursor-pointer items-center gap-3 rounded-md p-3 motion-safe:transition-colors',
+                                'flex min-h-11 cursor-pointer items-start gap-3 rounded-md border-2 p-3 motion-safe:transition-colors',
                                 'hover:bg-surface-hover',
                                 'focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring',
                                 isSelected
-                                    ? 'bg-surface shadow-sm ring-1 ring-border'
-                                    : 'bg-surface-muted',
+                                    ? 'border-primary bg-primary/10 shadow-sm'
+                                    : 'border-transparent bg-surface-muted',
                             ].join(' ')}
                         >
                             <input
@@ -108,7 +108,12 @@ export function QuestionCard({
                                 className="sr-only"
                             />
                             <OptionIndicator isSelected={isSelected} />
-                            <span className="text-sm leading-snug text-foreground sm:text-base">
+                            <span
+                                className={[
+                                    'text-sm leading-snug text-foreground sm:text-base',
+                                    isSelected ? 'font-semibold' : 'font-normal',
+                                ].join(' ')}
+                            >
                                 {option.text}
                             </span>
                         </label>

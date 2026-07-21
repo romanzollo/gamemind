@@ -48,6 +48,10 @@ docs/ROADMAP.md
 docs/DECISIONS.md
 docs/TASTE_SKILL.md
 
+# Local collaboration notes (keep on disk, do not commit)
+AGENTS.md
+CLAUDE.md
+
 # raw screenshot sources before WebP optimize (keep structure + README)
 /raw-quiz-images/**
 !/raw-quiz-images/README.md
