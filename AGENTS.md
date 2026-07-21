@@ -67,6 +67,49 @@ The architecture should allow gradual growth without overengineering the MVP.
 -   Explain difficult concepts in practical terms.
 -   Do not hide important trade-offs.
 
+## Git commits (automatic after a finished task)
+
+Do **not** wait for the user to type «закоммить» / «сделай коммит» after a discrete task is done.
+
+**When to commit (proactively):**
+
+-   A UI §14 task, bugfix, or feature step is implemented and verified (or the user confirmed it works).
+-   You finished a step the user asked you to implement («сделай сам», «исправь», «реализуй»).
+-   Prefer **one commit per finished task** (matches Taste: one §14 task → one chat → one code commit).
+
+**Message format (English, Conventional Commits + scope):**
+
+```txt
+type(scope): short summary
+
+Optional body: why, not a file list.
+```
+
+Examples from this repo: `feat(ui): …`, `fix(quiz): …`, `feat(admin): …`, `docs: …`.
+
+Common types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style` (pure formatting only).
+Scopes: `ui`, `quiz`, `auth`, `admin`, `profile`, `db`, `i18n`, `agents`, etc.
+
+**What belongs in a feature/UI commit:**
+
+-   Application code (`src/`, `prisma/` when schema is part of the task)
+-   `package.json` / lockfile when dependencies changed for that task
+-   Tests tied to the change
+
+**What to exclude from feature/UI commits (keep the commit “real-project” clean):**
+
+-   Continuity / plan churn: `docs/ROADMAP.md` checkbox ticks, `docs/PROJECT_CONTEXT.md` “Last Session”, backlog “next step” rewrites
+-   Unrelated Taste wave planning edits that are not required for the shipped code to make sense
+-   Secrets, `.env`, `.next`, build artifacts
+
+Update continuity docs locally when useful, but ship them in a **separate** `docs: …` commit (or leave unstaged) — do not mix plan notes into `feat(ui)` / `fix(quiz)` commits.
+
+**Still ask first when:**
+
+-   The change set is ambiguous or mixes unrelated work
+-   The user said not to commit yet
+-   Force push / amend / destructive git would be involved
+
 ## Mentoring style
 
 When I ask how to do something, answer as a mentor:

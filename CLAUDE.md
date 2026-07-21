@@ -89,6 +89,16 @@ The project should start as a realistic MVP but be structured so that future exp
 -   Do not introduce libraries without explaining the reason.
 -   Do not make broad architectural changes without confirmation.
 
+## Git commits
+
+After a discrete task is finished and verified (or you implemented a requested fix), **commit proactively** — do not wait for «закоммить» every time.
+
+-   Format (English): `type(scope): summary` + optional body (why).
+-   Examples: `feat(ui): …`, `fix(quiz): …`.
+-   Feature/UI commits include code + related lockfile deps only.
+-   Exclude plan/continuity churn (`ROADMAP` ticks, `PROJECT_CONTEXT` session notes) from those commits; put docs in a separate `docs:` commit if needed.
+-   Ask first only if the change set is ambiguous, user said not to commit, or git would be destructive.
+
 ## Preferred answer style
 
 Be concise but useful.
