@@ -3,8 +3,16 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 
+import { buttonClassName, type ButtonVariant } from './button';
+
 type SubmitButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     children: ReactNode;
+    variant?: ButtonVariant;
+    /**
+     * Skip design-system button styles (table text actions, etc.).
+     * Prefer `variant` for normal CTAs.
+     */
+    unstyled?: boolean;
     /** Shown while the parent form Server Action is pending */
     pendingLabel?: ReactNode;
 };
@@ -17,18 +25,27 @@ export function SubmitButton({
     children,
     pendingLabel,
     disabled,
+    variant = 'primary',
+    unstyled = false,
     className = '',
     ...props
 }: SubmitButtonProps) {
     const { pending } = useFormStatus();
     const isDisabled = Boolean(disabled) || pending;
+    const pendingClassName = pending ? 'cursor-wait opacity-70' : '';
+    const resolvedClassName = unstyled
+        ? `${className} ${pendingClassName}`.trim()
+        : buttonClassName({
+              variant,
+              className: `${className} ${pendingClassName}`.trim(),
+          });
 
     return (
         <button
             type="submit"
             disabled={isDisabled}
             aria-busy={pending}
-            className={`${className} ${pending ? 'cursor-wait opacity-70' : ''}`.trim()}
+            className={resolvedClassName}
             {...props}
         >
             {pending ? (pendingLabel ?? children) : children}

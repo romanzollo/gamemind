@@ -103,7 +103,7 @@ export function QuizSessionForm({
                 <SubmitButton
                     disabled={!allAnswered}
                     pendingLabel={dictionary.common.submitting}
-                    className="min-h-11 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                    className="w-full sm:w-auto"
                 >
                     {dictionary.quiz.submitButton}
                 </SubmitButton>

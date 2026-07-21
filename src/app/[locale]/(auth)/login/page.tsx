@@ -38,10 +38,7 @@ export default function LoginPage() {
                     placeholder={dictionary.auth.password}
                     required
                 />
-                <SubmitButton
-                    pendingLabel={dictionary.common.submitting}
-                    className="rounded bg-neutral-900 px-4 py-2 text-white transition hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 dark:focus-visible:outline-neutral-100"
-                >
+                <SubmitButton pendingLabel={dictionary.common.submitting}>
                     {dictionary.auth.loginButton}
                 </SubmitButton>
             </form>

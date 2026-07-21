@@ -67,7 +67,7 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
 
                 <SubmitButton
                     pendingLabel={dictionary.common.working}
-                    className="min-h-11 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
+                    className="w-full sm:w-auto"
                 >
                     {dictionary.quiz.startButton}
                 </SubmitButton>

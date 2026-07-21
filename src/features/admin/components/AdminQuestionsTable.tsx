@@ -91,7 +91,10 @@ export function AdminQuestionsTable({
                                                 name="questionId"
                                                 value={entry.id}
                                             />
-                                            <SubmitButton className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300">
+                                            <SubmitButton
+                                                unstyled
+                                                className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300"
+                                            >
                                                 {labels.deactivateButton}
                                             </SubmitButton>
                                         </form>
@@ -108,6 +111,7 @@ export function AdminQuestionsTable({
                                                 value={entry.id}
                                             />
                                             <SubmitButton
+                                                unstyled
                                                 className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300"
                                             >
                                                 {labels.activateButton}
@@ -126,7 +130,10 @@ export function AdminQuestionsTable({
                                             name="questionId"
                                             value={entry.id}
                                         />
-                                        <SubmitButton className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300">
+                                        <SubmitButton
+                                            unstyled
+                                            className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300"
+                                        >
                                             {labels.deleteButton}
                                         </SubmitButton>
                                     </form>

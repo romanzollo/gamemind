@@ -1,5 +1,5 @@
 import { getDictionary, isLocale } from '@/shared/i18n';
-import { PendingLink } from '@/shared/ui';
+import { buttonClassName, PendingLink } from '@/shared/ui';
 
 type HomePageProps = {
     params: Promise<{ locale: string }>;
@@ -37,7 +37,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 <div className="mt-10">
                     <PendingLink
                         href={`/${safeLocale}/quiz`}
-                        className="min-h-11 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                        className={buttonClassName({ className: 'px-5' })}
                     >
                         {dictionary.home.cta}
                     </PendingLink>

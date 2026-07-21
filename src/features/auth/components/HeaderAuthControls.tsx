@@ -2,7 +2,12 @@ import type { Role } from '@prisma/client';
 
 import { logoutAction } from '@/features/auth/actions';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { PendingLink, SubmitButton, UserAvatar } from '@/shared/ui';
+import {
+    buttonClassName,
+    PendingLink,
+    SubmitButton,
+    UserAvatar,
+} from '@/shared/ui';
 
 type NavUser = {
     username: string;
@@ -47,8 +52,9 @@ export function HeaderAuthControls({
                 <form action={logoutAction}>
                     <input type="hidden" name="locale" value={locale} />
                     <SubmitButton
+                        variant="secondary"
                         pendingLabel={dictionary.common.working}
-                        className="rounded-md border border-border px-3 py-1.5 text-sm text-foreground transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                        className="min-h-9 px-3 py-1.5"
                     >
                         {dictionary.nav.logout}
                     </SubmitButton>
@@ -67,7 +73,9 @@ export function HeaderAuthControls({
             </PendingLink>
             <PendingLink
                 href={localizedHref(locale, '/register')}
-                className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className={buttonClassName({
+                    className: 'min-h-9 px-3 py-1.5',
+                })}
             >
                 {dictionary.nav.register}
             </PendingLink>

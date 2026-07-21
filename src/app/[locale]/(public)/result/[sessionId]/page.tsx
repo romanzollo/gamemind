@@ -8,6 +8,7 @@ import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review'
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
+import { buttonClassName } from '@/shared/ui';
 
 type QuizResultPageProps = {
     params: Promise<{ locale: string; sessionId: string }>;
@@ -70,19 +71,19 @@ export default async function QuizResultPage({ params }: QuizResultPageProps) {
             >
                 <Link
                     href={`/${safeLocale}/quiz`}
-                    className="rounded-md bg-primary px-3 py-2 text-primary-foreground motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className={buttonClassName()}
                 >
                     {dictionary.quiz.playAgain}
                 </Link>
                 <Link
                     href={`/${safeLocale}/leaderboard`}
-                    className="rounded-md bg-surface-muted px-3 py-2 text-foreground motion-safe:transition-colors hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className={buttonClassName({ variant: 'secondary' })}
                 >
                     {dictionary.quiz.toLeaderboard}
                 </Link>
                 <Link
                     href={`/${safeLocale}`}
-                    className="rounded-md px-3 py-2 text-muted underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className={buttonClassName({ variant: 'ghost' })}
                 >
                     {dictionary.quiz.backHome}
                 </Link>

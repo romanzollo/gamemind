@@ -85,7 +85,7 @@ export function ChangeAvatarForm({
                     <SubmitButton
                         pendingLabel={dictionary.common.submitting}
                         disabled={isPending}
-                        className="min-h-11 w-full rounded-md bg-primary px-4 py-2 text-primary-foreground transition hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
+                        className="w-full sm:w-auto"
                     >
                         {dictionary.profile.changeAvatarSubmit}
                     </SubmitButton>

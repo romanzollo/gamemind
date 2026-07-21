@@ -103,7 +103,7 @@ export function AdminUsersTable({
                                                         name="role"
                                                         value="ADMIN"
                                                     />
-                                                    <SubmitButton className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
+                                                    <SubmitButton unstyled className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                                                         {labels.makeAdminButton}
                                                     </SubmitButton>
                                                 </ConfirmForm>
@@ -129,7 +129,7 @@ export function AdminUsersTable({
                                                         name="role"
                                                         value="USER"
                                                     />
-                                                    <SubmitButton className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
+                                                    <SubmitButton unstyled className="cursor-pointer text-blue-600 transition-colors hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
                                                         {labels.makeUserButton}
                                                     </SubmitButton>
                                                 </ConfirmForm>
@@ -149,7 +149,7 @@ export function AdminUsersTable({
                                                         name="userId"
                                                         value={entry.id}
                                                     />
-                                                    <SubmitButton className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300">
+                                                    <SubmitButton unstyled className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300">
                                                         {
                                                             labels.deactivateButton
                                                         }
@@ -169,7 +169,7 @@ export function AdminUsersTable({
                                                         name="userId"
                                                         value={entry.id}
                                                     />
-                                                    <SubmitButton className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300">
+                                                    <SubmitButton unstyled className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300">
                                                         {labels.activateButton}
                                                     </SubmitButton>
                                                 </form>
@@ -191,7 +191,7 @@ export function AdminUsersTable({
                                                     name="userId"
                                                     value={entry.id}
                                                 />
-                                                <SubmitButton className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300">
+                                                <SubmitButton unstyled className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300">
                                                     {labels.deleteButton}
                                                 </SubmitButton>
                                             </ConfirmForm>
