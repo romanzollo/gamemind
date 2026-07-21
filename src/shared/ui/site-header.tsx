@@ -1,8 +1,12 @@
+'use client';
+
 import type { Role } from '@prisma/client';
+import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { LanguageSwitcher } from './language-switcher';
+import { isNavActive, navActiveClassName } from './nav-active';
 import { PendingLink } from './pending-link';
 import { SiteMobileMenu } from './site-mobile-menu';
 import { ThemeToggle } from './theme-toggle';
@@ -59,6 +63,7 @@ export function SiteHeader({
     authControls,
     mobileAuthControls,
 }: SiteHeaderProps) {
+    const pathname = usePathname();
     const mainLinks = getMainLinks(user);
     const mobileLinks = mainLinks.map((link) => ({
         href: link.href,
@@ -86,15 +91,23 @@ export function SiteHeader({
                     className="hidden min-w-0 flex-1 items-center gap-1 lg:flex"
                     aria-label={dictionary.common.mainNav}
                 >
-                    {mainLinks.map((link) => (
-                        <PendingLink
-                            key={link.href}
-                            href={localizedHref(locale, link.href)}
-                            className={navLinkClassName}
-                        >
-                            {dictionary.nav[link.labelKey]}
-                        </PendingLink>
-                    ))}
+                    {mainLinks.map((link) => {
+                        const active = isNavActive(pathname, link.href);
+
+                        return (
+                            <PendingLink
+                                key={link.href}
+                                href={localizedHref(locale, link.href)}
+                                className={navActiveClassName(
+                                    active,
+                                    navLinkClassName,
+                                )}
+                                aria-current={active ? 'page' : undefined}
+                            >
+                                {dictionary.nav[link.labelKey]}
+                            </PendingLink>
+                        );
+                    })}
                 </nav>
 
                 <div className="flex-1 lg:hidden" aria-hidden />

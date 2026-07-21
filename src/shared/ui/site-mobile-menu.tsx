@@ -1,8 +1,10 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 import type { Locale } from '@/shared/i18n';
+import { isNavActive, navActiveClassName } from './nav-active';
 import { PendingLink } from './pending-link';
 
 type MobileNavLink = {
@@ -34,6 +36,9 @@ function getScrollbarGap() {
  * Блокирует скролл с компенсацией scrollbar-gap, чтобы хедер и панель
  * оставались одной ширины (без тёмной щели при открытии меню).
  */
+const mobileNavLinkClassName =
+    'rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
 export function SiteMobileMenu({
     locale,
     links,
@@ -43,6 +48,7 @@ export function SiteMobileMenu({
     menuAuth,
     menuUtilities,
 }: SiteMobileMenuProps) {
+    const pathname = usePathname();
     const [open, setOpen] = useState(false);
     const [scrollbarGap, setScrollbarGap] = useState(0);
     const panelId = useId();
@@ -149,16 +155,32 @@ export function SiteMobileMenu({
                                 className="flex flex-col gap-1"
                                 aria-label={mainNavLabel}
                             >
-                                {links.map((link) => (
-                                    <PendingLink
-                                        key={link.href}
-                                        href={localizedHref(locale, link.href)}
-                                        className="rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                                        onClick={closeMenu}
-                                    >
-                                        {link.label}
-                                    </PendingLink>
-                                ))}
+                                {links.map((link) => {
+                                    const active = isNavActive(
+                                        pathname,
+                                        link.href,
+                                    );
+
+                                    return (
+                                        <PendingLink
+                                            key={link.href}
+                                            href={localizedHref(
+                                                locale,
+                                                link.href,
+                                            )}
+                                            className={navActiveClassName(
+                                                active,
+                                                mobileNavLinkClassName,
+                                            )}
+                                            aria-current={
+                                                active ? 'page' : undefined
+                                            }
+                                            onClick={closeMenu}
+                                        >
+                                            {link.label}
+                                        </PendingLink>
+                                    );
+                                })}
                             </nav>
 
                             <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">

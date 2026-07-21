@@ -1,4 +1,7 @@
+'use client';
+
 import type { Role } from '@prisma/client';
+import { usePathname } from 'next/navigation';
 
 import { logoutAction } from '@/features/auth/actions';
 import type { Dictionary, Locale } from '@/shared/i18n';
@@ -8,6 +11,7 @@ import {
     SubmitButton,
     UserAvatar,
 } from '@/shared/ui';
+import { isNavActive, navActiveClassName } from '@/shared/ui/nav-active';
 
 type NavUser = {
     username: string;
@@ -34,12 +38,20 @@ function localizedHref(locale: Locale, href: string) {
 const linkClassName =
     'rounded-md px-2 py-1 text-sm text-muted transition hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
+const profileLinkClassName =
+    'inline-flex items-center gap-2 rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
 export function HeaderAuthControls({
     locale,
     dictionary,
     user,
     variant = 'bar',
 }: HeaderAuthControlsProps) {
+    const pathname = usePathname();
+    const loginActive = isNavActive(pathname, '/login');
+    const registerActive = isNavActive(pathname, '/register');
+    const profileActive = isNavActive(pathname, '/profile');
+
     if (variant === 'menu') {
         if (user) {
             return (
@@ -69,14 +81,24 @@ export function HeaderAuthControls({
                     href={localizedHref(locale, '/login')}
                     className={buttonClassName({
                         variant: 'secondary',
-                        className: 'w-full',
+                        className: navActiveClassName(
+                            loginActive,
+                            'w-full',
+                        ),
                     })}
+                    aria-current={loginActive ? 'page' : undefined}
                 >
                     {dictionary.nav.login}
                 </PendingLink>
                 <PendingLink
                     href={localizedHref(locale, '/register')}
-                    className={buttonClassName({ className: 'w-full' })}
+                    className={buttonClassName({
+                        className: navActiveClassName(
+                            registerActive,
+                            'w-full',
+                        ),
+                    })}
+                    aria-current={registerActive ? 'page' : undefined}
                 >
                     {dictionary.nav.register}
                 </PendingLink>
@@ -89,7 +111,11 @@ export function HeaderAuthControls({
             <>
                 <PendingLink
                     href={localizedHref(locale, '/profile')}
-                    className="inline-flex items-center gap-2 rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className={navActiveClassName(
+                        profileActive,
+                        profileLinkClassName,
+                    )}
+                    aria-current={profileActive ? 'page' : undefined}
                     title={user.username}
                 >
                     <UserAvatar
@@ -119,15 +145,23 @@ export function HeaderAuthControls({
         <>
             <PendingLink
                 href={localizedHref(locale, '/login')}
-                className={`${linkClassName} hidden lg:inline-flex`}
+                className={navActiveClassName(
+                    loginActive,
+                    `${linkClassName} hidden lg:inline-flex`,
+                )}
+                aria-current={loginActive ? 'page' : undefined}
             >
                 {dictionary.nav.login}
             </PendingLink>
             <PendingLink
                 href={localizedHref(locale, '/register')}
                 className={buttonClassName({
-                    className: 'hidden min-h-9 px-3 py-1.5 lg:inline-flex',
+                    className: navActiveClassName(
+                        registerActive,
+                        'hidden min-h-9 px-3 py-1.5 lg:inline-flex',
+                    ),
                 })}
+                aria-current={registerActive ? 'page' : undefined}
             >
                 {dictionary.nav.register}
             </PendingLink>
