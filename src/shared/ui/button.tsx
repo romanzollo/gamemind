@@ -19,7 +19,7 @@ const variantClassName: Record<ButtonVariant, string> = {
 };
 
 const baseClassName =
-    'inline-flex min-h-11 items-center justify-center rounded-md px-4 py-2 text-sm font-medium motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
+    'inline-flex min-h-11 cursor-pointer items-center justify-center rounded-md px-4 py-2 text-sm font-medium motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
 
 /** Shared class builder for `<Button>`, `<SubmitButton>`, and link-styled CTAs. */
 export function buttonClassName({

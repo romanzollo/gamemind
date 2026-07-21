@@ -12,14 +12,12 @@ type ChangePasswordFormProps = {
     dictionary: Dictionary;
 };
 
-// класс для полей формы
 const fieldClassName =
-    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
-// класс для лейблов формы
 const labelClassName = 'text-sm font-medium text-foreground sm:text-base';
 
-// компонент для изменения пароля пользователя
+/** Форма смены пароля — только presentation; логика в changePasswordAction. */
 export function ChangePasswordForm({
     locale,
     dictionary,
@@ -35,15 +33,15 @@ export function ChangePasswordForm({
     }, [state.success]);
 
     return (
-        <section className="mt-10">
-            <h2 className="text-xl font-semibold">
+        <div className="mt-4">
+            <h3 className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
                 {dictionary.profile.changePasswordTitle}
-            </h2>
+            </h3>
 
             <form
                 ref={formRef}
                 action={formAction}
-                className="mt-4 space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
+                className="mt-3 space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
             >
                 <input type="hidden" name="locale" value={locale} />
 
@@ -111,6 +109,6 @@ export function ChangePasswordForm({
                     {dictionary.profile.changePasswordSuccess}
                 </InlineAlert>
             ) : null}
-        </section>
+        </div>
     );
 }

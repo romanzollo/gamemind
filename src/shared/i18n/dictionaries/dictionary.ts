@@ -59,6 +59,8 @@ export type Dictionary = {
     };
     profile: {
         title: string;
+        sectionAccount: string;
+        sectionSecurity: string;
         username: string;
         email: string;
         role: string;

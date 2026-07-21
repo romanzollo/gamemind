@@ -17,6 +17,12 @@ type ProfilePageProps = {
     params: Promise<{ locale: string }>;
 };
 
+const sectionClassName =
+    'mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8';
+
+const sectionHeadingClassName =
+    'font-display text-xl font-semibold tracking-tight text-foreground sm:text-2xl';
+
 export default async function ProfilePage({ params }: ProfilePageProps) {
     const { locale } = await params;
     const safeLocale = isLocale(locale) ? locale : 'ru';
@@ -37,49 +43,113 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     }
 
     return (
-        <main className="mx-auto max-w-2xl p-8">
-            <h1 className="text-2xl font-semibold">
+        <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
+            <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
                 {dictionary.profile.title}
             </h1>
 
-            <div className="mt-4 space-y-1 text-neutral-600 dark:text-neutral-400">
-                <p>
-                    {dictionary.profile.username}: {session.user.username}
-                </p>
-                <p>
-                    {dictionary.profile.email}: {session.user.email}
-                </p>
-                <p>
-                    {dictionary.profile.role}: {session.user.role}
-                </p>
-            </div>
-
-            <form action={logoutAction} className="mt-6">
-                <input type="hidden" name="locale" value={safeLocale} />
-                <SubmitButton
-                    variant="secondary"
-                    pendingLabel={dictionary.common.working}
+            {/* Аккаунт: идентичность + выход + смена имени */}
+            <section
+                className="mt-6 sm:mt-8"
+                aria-labelledby="profile-account-title"
+            >
+                <h2
+                    id="profile-account-title"
+                    className={sectionHeadingClassName}
                 >
-                    {dictionary.profile.logout}
-                </SubmitButton>
-            </form>
+                    {dictionary.profile.sectionAccount}
+                </h2>
 
-            <ChangeUsernameForm
-                locale={safeLocale}
-                dictionary={dictionary}
-                currentUsername={session.user.username}
-            />
+                <dl className="mt-4 space-y-2 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5">
+                    <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                        <dt className="text-sm font-medium text-muted sm:w-40 sm:shrink-0">
+                            {dictionary.profile.username}
+                        </dt>
+                        <dd className="text-foreground">
+                            {session.user.username}
+                        </dd>
+                    </div>
+                    <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                        <dt className="text-sm font-medium text-muted sm:w-40 sm:shrink-0">
+                            {dictionary.profile.email}
+                        </dt>
+                        <dd className="break-all text-foreground">
+                            {session.user.email}
+                        </dd>
+                    </div>
+                    <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                        <dt className="text-sm font-medium text-muted sm:w-40 sm:shrink-0">
+                            {dictionary.profile.role}
+                        </dt>
+                        <dd className="font-mono text-sm tabular-nums text-foreground">
+                            {session.user.role}
+                        </dd>
+                    </div>
+                </dl>
 
-            <ChangeAvatarForm
-                locale={safeLocale}
-                dictionary={dictionary}
-                currentImageUrl={session.user.image ?? null}
-            />
+                <form action={logoutAction} className="mt-4">
+                    <input type="hidden" name="locale" value={safeLocale} />
+                    <SubmitButton
+                        variant="secondary"
+                        pendingLabel={dictionary.common.working}
+                    >
+                        {dictionary.profile.logout}
+                    </SubmitButton>
+                </form>
 
-            <ChangePasswordForm locale={safeLocale} dictionary={dictionary} />
+                <ChangeUsernameForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    currentUsername={session.user.username}
+                />
+            </section>
 
-            <section className="mt-10">
-                <h2 className="text-xl font-semibold">
+            {/* Аватар: interim URL (не R2) */}
+            <section
+                className={sectionClassName}
+                aria-labelledby="profile-avatar-title"
+            >
+                <h2
+                    id="profile-avatar-title"
+                    className={sectionHeadingClassName}
+                >
+                    {dictionary.profile.changeAvatarTitle}
+                </h2>
+
+                <ChangeAvatarForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    currentImageUrl={session.user.image ?? null}
+                />
+            </section>
+
+            {/* Безопасность: смена пароля */}
+            <section
+                className={sectionClassName}
+                aria-labelledby="profile-security-title"
+            >
+                <h2
+                    id="profile-security-title"
+                    className={sectionHeadingClassName}
+                >
+                    {dictionary.profile.sectionSecurity}
+                </h2>
+
+                <ChangePasswordForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                />
+            </section>
+
+            {/* История результатов */}
+            <section
+                className={sectionClassName}
+                aria-labelledby="profile-history-title"
+            >
+                <h2
+                    id="profile-history-title"
+                    className={sectionHeadingClassName}
+                >
                     {dictionary.profile.historyTitle}
                 </h2>
 

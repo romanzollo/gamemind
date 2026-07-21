@@ -33,8 +33,10 @@ export function SubmitButton({
     const { pending } = useFormStatus();
     const isDisabled = Boolean(disabled) || pending;
     const pendingClassName = pending ? 'cursor-wait opacity-70' : '';
+    // unstyled: всё равно pointer (глобальный base + явный класс);
+    // pending → cursor-wait; disabled → not-allowed из globals / disabled:*.
     const resolvedClassName = unstyled
-        ? `${className} ${pendingClassName}`.trim()
+        ? `cursor-pointer ${className} ${pendingClassName}`.trim()
         : buttonClassName({
               variant,
               className: `${className} ${pendingClassName}`.trim(),

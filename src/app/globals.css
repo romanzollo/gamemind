@@ -124,6 +124,24 @@ body {
 }
 
 /*
+ * Интерактивный курсор глобально:
+ * ссылки и активные кнопки → pointer.
+ * disabled / aria-busy оставляем компонентам (disabled:cursor-not-allowed, cursor-wait).
+ */
+@layer base {
+    a[href],
+    button:not(:disabled):not([aria-disabled='true']),
+    [role='button']:not(:disabled):not([aria-disabled='true']),
+    input[type='button']:not(:disabled),
+    input[type='submit']:not(:disabled),
+    input[type='reset']:not(:disabled),
+    input[type='file']:not(:disabled),
+    summary {
+        cursor: pointer;
+    }
+}
+
+/*
  * Всегда резервируем место под scrollbar, чтобы overflow:hidden (мобильное меню)
  * не сжимал sticky-хедер и не открывал щель рядом с панелью.
  */

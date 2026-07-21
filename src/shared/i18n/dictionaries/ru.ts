@@ -60,6 +60,8 @@ export const ruDictionary: Dictionary = {
     },
     profile: {
         title: 'Профиль',
+        sectionAccount: 'Аккаунт',
+        sectionSecurity: 'Безопасность',
         username: 'Имя пользователя',
         email: 'Email',
         role: 'Роль',

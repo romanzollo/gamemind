@@ -8,21 +8,6 @@ type PendingLinkProps = ComponentProps<typeof Link> & {
     children: ReactNode;
 };
 
-function PendingCue() {
-    const { pending } = useLinkStatus();
-
-    if (!pending) {
-        return null;
-    }
-
-    return (
-        <span
-            className="ml-1 inline-block h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-current align-middle"
-            aria-hidden
-        />
-    );
-}
-
 function PendingOpacity({ children }: { children: ReactNode }) {
     const { pending } = useLinkStatus();
 
@@ -31,7 +16,10 @@ function PendingOpacity({ children }: { children: ReactNode }) {
     );
 }
 
-/** Nav Link that shows a pulse cue while soft-navigating (Next.js useLinkStatus). */
+/**
+ * Nav Link: лёгкий pending через opacity (без точки/ширины — иначе сдвиг шапки).
+ * Next.js useLinkStatus.
+ */
 export function PendingLink({
     children,
     className = '',
@@ -40,10 +28,9 @@ export function PendingLink({
     return (
         <Link
             {...props}
-            className={`${className} inline-flex items-center`.trim()}
+            className={`${className} inline-flex cursor-pointer items-center`.trim()}
         >
             <PendingOpacity>{children}</PendingOpacity>
-            <PendingCue />
         </Link>
     );
 }

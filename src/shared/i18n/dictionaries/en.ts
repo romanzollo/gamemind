@@ -60,6 +60,8 @@ export const enDictionary = {
     },
     profile: {
         title: 'Profile',
+        sectionAccount: 'Account',
+        sectionSecurity: 'Security',
         username: 'Username',
         email: 'Email',
         role: 'Role',

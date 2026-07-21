@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { changeAvatarAction } from '@/features/profile/actions';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton, UserAvatar } from '@/shared/ui';
+import { Button, InlineAlert, SubmitButton, UserAvatar } from '@/shared/ui';
 
 type ChangeAvatarFormProps = {
     locale: Locale;
@@ -16,7 +16,7 @@ type ChangeAvatarFormProps = {
 };
 
 const fieldClassName =
-    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
 const labelClassName = 'text-sm font-medium text-foreground sm:text-base';
 
@@ -41,13 +41,9 @@ export function ChangeAvatarForm({
     }, [state.success, state.imageUrl, router]);
 
     return (
-        <section className="mt-10">
-            <h2 className="text-xl font-semibold">
-                {dictionary.profile.changeAvatarTitle}
-            </h2>
-
+        <div className="mt-4">
             {currentImageUrl ? (
-                <div className="mt-4">
+                <div className="mb-4">
                     <UserAvatar
                         src={currentImageUrl}
                         size="md"
@@ -59,7 +55,7 @@ export function ChangeAvatarForm({
             <form
                 key={currentImageUrl ?? ''}
                 action={formAction}
-                className="mt-4 space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
+                className="space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
             >
                 <input type="hidden" name="locale" value={locale} />
 
@@ -91,10 +87,12 @@ export function ChangeAvatarForm({
                     </SubmitButton>
 
                     {currentImageUrl ? (
-                        <button
+                        <Button
                             type="button"
+                            variant="secondary"
                             disabled={isPending}
                             aria-busy={isPending}
+                            className="w-full sm:w-auto"
                             onClick={() => {
                                 const fd = new FormData();
                                 fd.set('locale', locale);
@@ -103,12 +101,11 @@ export function ChangeAvatarForm({
                                     formAction(fd);
                                 });
                             }}
-                            className="min-h-11 w-full rounded-md border border-border px-4 py-2 text-foreground transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-wait disabled:opacity-70 sm:w-auto"
                         >
                             {isPending
                                 ? dictionary.common.working
                                 : dictionary.profile.clearAvatar}
-                        </button>
+                        </Button>
                     ) : null}
                 </div>
             </form>
@@ -126,6 +123,6 @@ export function ChangeAvatarForm({
                     {dictionary.profile.changeAvatarSuccess}
                 </InlineAlert>
             ) : null}
-        </section>
+        </div>
     );
 }
