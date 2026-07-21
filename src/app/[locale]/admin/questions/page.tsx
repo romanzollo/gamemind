@@ -5,7 +5,7 @@ import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsT
 import { mapAdminQuestions } from '@/features/admin/lib';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
-import { InlineAlert } from '@/shared/ui';
+import { buttonClassName, InlineAlert } from '@/shared/ui';
 
 type AdminQuestionsPageProps = {
     params: Promise<{ locale: string }>;
@@ -62,41 +62,49 @@ export default async function AdminQuestionsPage({
     const adminErrorMessage = actionErrorMessage ?? loadErrorMessage;
 
     return (
-        <main className="mx-auto max-w-5xl p-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-                <h1 className="text-2xl font-semibold">
-                    {dictionary.admin.questionsTitle}
-                </h1>
+        <main className="mx-auto max-w-5xl px-4 py-5 sm:px-8 sm:py-10">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+                <div className="min-w-0">
+                    <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                        {dictionary.admin.questionsTitle}
+                    </h1>
+                    <p className="mt-2 text-sm text-muted sm:text-base">
+                        {dictionary.admin.signedInAs} {session.user.username}.
+                    </p>
+                    <p className="mt-1 text-sm text-muted sm:text-base">
+                        {dictionary.admin.listDescription}
+                    </p>
+                </div>
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                     <Link
                         href={localizedHref(safeLocale, '/admin')}
-                        className="rounded border border-border px-4 py-2 text-sm transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        className={buttonClassName({
+                            variant: 'secondary',
+                            className: 'min-h-10 px-3 text-sm sm:min-h-11',
+                        })}
                     >
                         {dictionary.admin.backToAdminHome}
                     </Link>
                     <Link
                         href={localizedHref(safeLocale, '/admin/users')}
-                        className="rounded border border-border px-4 py-2 text-sm transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                        className={buttonClassName({
+                            variant: 'ghost',
+                            className: 'min-h-10 px-3 text-sm sm:min-h-11',
+                        })}
                     >
                         {dictionary.admin.usersLink}
                     </Link>
                     <Link
                         href={localizedHref(safeLocale, '/admin/questions/new')}
-                        className="rounded bg-neutral-900 px-4 py-2 text-sm text-white transition hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300"
+                        className={buttonClassName({
+                            className: 'min-h-10 px-3 text-sm sm:min-h-11',
+                        })}
                     >
                         {dictionary.admin.createLink}
                     </Link>
                 </div>
             </div>
-
-            <p className="mt-2 text-neutral-600 dark:text-neutral-400">
-                {dictionary.admin.signedInAs} {session.user.username}.
-            </p>
-
-            <p className="mt-1 text-neutral-600 dark:text-neutral-400">
-                {dictionary.admin.listDescription}
-            </p>
 
             {adminErrorMessage ? (
                 <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -104,7 +112,7 @@ export default async function AdminQuestionsPage({
                     {loadErrorMessage ? (
                         <Link
                             href={localizedHref(safeLocale, '/admin/questions')}
-                            className="text-sm font-medium text-primary underline hover:text-primary-hover"
+                            className="rounded-sm text-sm font-medium text-primary underline-offset-2 hover:underline hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                         >
                             {dictionary.admin.retryLoad}
                         </Link>

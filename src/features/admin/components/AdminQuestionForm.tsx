@@ -18,6 +18,10 @@ const IMAGE_GUESS_DEFAULT_TEXT = {
     en: 'Guess the game from the image.',
 };
 
+/** Общий стиль полей — Scoreboard tokens + focus ring (как на Profile). */
+const fieldClassName =
+    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
 const emptyTranslations = () => ({
     ru: { text: '' },
     en: { text: '' },
@@ -108,11 +112,11 @@ export function AdminQuestionForm({
                 ) : null}
 
                 <fieldset className="flex flex-col gap-3">
-                    <legend className="font-medium">
+                    <legend className="font-medium text-foreground">
                         {dictionary.admin.formQuestionText}
                     </legend>
 
-                    <label className="flex flex-col gap-2">
+                    <label className="flex flex-col gap-2 text-sm text-foreground">
                         <span>{dictionary.admin.formQuestionTextRu}</span>
                         <textarea
                             name="questionTextRu"
@@ -124,11 +128,11 @@ export function AdminQuestionForm({
                             onChange={(event) => {
                                 setQuestionTextRu(event.target.value);
                             }}
-                            className="rounded border border-border p-3"
+                            className={fieldClassName}
                         />
                     </label>
 
-                    <label className="flex flex-col gap-2">
+                    <label className="flex flex-col gap-2 text-sm text-foreground">
                         <span>{dictionary.admin.formQuestionTextEn}</span>
                         <textarea
                             name="questionTextEn"
@@ -140,12 +144,12 @@ export function AdminQuestionForm({
                             onChange={(event) => {
                                 setQuestionTextEn(event.target.value);
                             }}
-                            className="rounded border border-border p-3"
+                            className={fieldClassName}
                         />
                     </label>
                 </fieldset>
 
-                <label className="flex flex-col gap-2">
+                <label className="flex flex-col gap-2 text-sm text-foreground">
                     <span>{dictionary.admin.formQuestionType}</span>
                     <select
                         name="questionType"
@@ -172,7 +176,7 @@ export function AdminQuestionForm({
                             }
                         }}
                         required
-                        className="rounded border border-border p-3"
+                        className={fieldClassName}
                     >
                         <option value="TEXT">
                             {dictionary.admin.formQuestionTypeText}
@@ -184,7 +188,7 @@ export function AdminQuestionForm({
                 </label>
 
                 {questionType === 'IMAGE_GUESS' ? (
-                    <label className="flex flex-col gap-2">
+                    <label className="flex flex-col gap-2 text-sm text-foreground">
                         <span>{dictionary.admin.formPromptImageUrl}</span>
                         <input
                             type="text"
@@ -193,7 +197,7 @@ export function AdminQuestionForm({
                             maxLength={2048}
                             placeholder="/quiz-images/easy/example.svg"
                             defaultValue={editValues?.promptImageUrl ?? ''}
-                            className="rounded border border-border p-3"
+                            className={fieldClassName}
                         />
                         <span className="text-sm text-muted">
                             {dictionary.admin.formPromptImageUrlHint}
@@ -203,13 +207,13 @@ export function AdminQuestionForm({
                     <input type="hidden" name="promptImageUrl" value="" />
                 )}
 
-                <label className="flex flex-col gap-2">
+                <label className="flex flex-col gap-2 text-sm text-foreground">
                     <span>{dictionary.quiz.difficultyLabel}</span>
                     <select
                         name="difficulty"
                         defaultValue={editValues?.difficulty ?? 'EASY'}
                         required
-                        className="rounded border border-border p-3"
+                        className={fieldClassName}
                     >
                         <option value="EASY">{dictionary.quiz.easy}</option>
                         <option value="MEDIUM">{dictionary.quiz.medium}</option>
@@ -217,7 +221,7 @@ export function AdminQuestionForm({
                     </select>
                 </label>
 
-                <label className="flex flex-col gap-2">
+                <label className="flex flex-col gap-2 text-sm text-foreground">
                     <span>{dictionary.admin.formCategory}</span>
                     <input
                         type="text"
@@ -225,22 +229,22 @@ export function AdminQuestionForm({
                         defaultValue={editValues?.category ?? 'video-games'}
                         required
                         maxLength={100}
-                        className="rounded border border-border p-3"
+                        className={fieldClassName}
                     />
                 </label>
 
                 <fieldset className="flex flex-col gap-3">
-                    <legend className="font-medium">
+                    <legend className="font-medium text-foreground">
                         {dictionary.admin.formOptions}
                     </legend>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    <p className="text-sm text-muted">
                         {dictionary.admin.formCorrectOptionHint}
                     </p>
 
                     {options.map((option, index) => (
                         <div
                             key={option.id || index}
-                            className="flex flex-col gap-2 rounded border border-border p-3"
+                            className="flex flex-col gap-2 rounded-md border border-border bg-surface-muted/40 p-3"
                         >
                             {isEdit ? (
                                 <input
@@ -250,7 +254,7 @@ export function AdminQuestionForm({
                                 />
                             ) : null}
 
-                            <label className="flex items-center gap-2">
+                            <label className="flex items-center gap-2 text-sm text-foreground">
                                 <input
                                     type="radio"
                                     name="correctOptionIndex"
@@ -259,13 +263,14 @@ export function AdminQuestionForm({
                                         index === defaultCorrectIndex
                                     }
                                     required
+                                    className="accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                                 />
                                 <span>
                                     {dictionary.admin.formOption} {index + 1}
                                 </span>
                             </label>
 
-                            <label className="flex flex-col gap-2">
+                            <label className="flex flex-col gap-2 text-sm text-foreground">
                                 <span>{dictionary.admin.formOptionTextRu}</span>
                                 <input
                                     type="text"
@@ -273,11 +278,11 @@ export function AdminQuestionForm({
                                     required
                                     maxLength={200}
                                     defaultValue={option.translations.ru.text}
-                                    className="rounded border border-border p-3"
+                                    className={fieldClassName}
                                 />
                             </label>
 
-                            <label className="flex flex-col gap-2">
+                            <label className="flex flex-col gap-2 text-sm text-foreground">
                                 <span>{dictionary.admin.formOptionTextEn}</span>
                                 <input
                                     type="text"
@@ -285,7 +290,7 @@ export function AdminQuestionForm({
                                     required
                                     maxLength={200}
                                     defaultValue={option.translations.en.text}
-                                    className="rounded border border-border p-3"
+                                    className={fieldClassName}
                                 />
                             </label>
                         </div>

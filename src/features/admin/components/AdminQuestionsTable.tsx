@@ -9,14 +9,16 @@ import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState, SubmitButton } from '@/shared/ui';
 import type { AdminQuestionListItem } from '../types';
 
-// тип пропсов компонента таблицы вопросов для администрирования
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
     labels: Dictionary['admin'];
     locale: Locale;
 };
 
-// компонент таблицы вопросов для администрирования
+/** Плотные текстовые действия в строке таблицы (не full Button). */
+const rowActionClassName =
+    'rounded-sm text-sm font-medium underline-offset-2 motion-safe:transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
 export function AdminQuestionsTable({
     entries,
     labels,
@@ -26,23 +28,36 @@ export function AdminQuestionsTable({
         return <EmptyState className="mt-6" title={labels.empty} />;
     }
 
-    // функция для получения локализованного href
     function localizedHref(href: string) {
         return `/${locale}${href}`;
     }
 
     return (
-        <div className="mt-6 overflow-x-auto">
+        <div className="mt-6 overflow-x-auto rounded-lg border border-border bg-surface">
             <table className="w-full border-collapse text-left text-sm">
                 <thead>
-                    <tr className="border-b border-border text-neutral-500 dark:text-neutral-400">
-                        <th className="py-2 pr-4">{labels.tableQuestion}</th>
-                        <th className="py-2 pr-4">{labels.tableDifficulty}</th>
-                        <th className="py-2 pr-4">{labels.tableCategory}</th>
-                        <th className="py-2 pr-4">{labels.tableOptions}</th>
-                        <th className="py-2 pr-4">{labels.tableStatus}</th>
-                        <th className="py-2 pr-4">{labels.tableCreated}</th>
-                        <th className="py-2">{labels.tableActions}</th>
+                    <tr className="border-b border-border bg-surface-muted/50 text-muted">
+                        <th className="px-3 py-2 font-medium sm:px-4">
+                            {labels.tableQuestion}
+                        </th>
+                        <th className="px-3 py-2 font-medium sm:px-4">
+                            {labels.tableDifficulty}
+                        </th>
+                        <th className="px-3 py-2 font-medium sm:px-4">
+                            {labels.tableCategory}
+                        </th>
+                        <th className="px-3 py-2 font-medium sm:px-4">
+                            {labels.tableOptions}
+                        </th>
+                        <th className="px-3 py-2 font-medium sm:px-4">
+                            {labels.tableStatus}
+                        </th>
+                        <th className="px-3 py-2 font-medium sm:px-4">
+                            {labels.tableCreated}
+                        </th>
+                        <th className="px-3 py-2 font-medium sm:px-4">
+                            {labels.tableActions}
+                        </th>
                     </tr>
                 </thead>
 
@@ -50,27 +65,43 @@ export function AdminQuestionsTable({
                     {entries.map((entry) => (
                         <tr
                             key={entry.id}
-                            className="border-b border-border"
+                            className="border-b border-border last:border-b-0 hover:bg-surface-hover/40"
                         >
-                            <td className="py-3 pr-4">{entry.text}</td>
-                            <td className="py-3 pr-4">{entry.difficulty}</td>
-                            <td className="py-3 pr-4">{entry.category}</td>
-                            <td className="py-3 pr-4">{entry.optionsCount}</td>
-                            <td className="py-3 pr-4">
-                                {entry.isActive
-                                    ? labels.statusActive
-                                    : labels.statusInactive}
+                            <td className="max-w-xs px-3 py-2 text-foreground sm:max-w-md sm:px-4">
+                                <span className="line-clamp-2">{entry.text}</span>
                             </td>
-                            <td className="py-3 pr-4">
+                            <td className="px-3 py-2 font-mono text-xs tabular-nums text-foreground sm:px-4 sm:text-sm">
+                                {entry.difficulty}
+                            </td>
+                            <td className="px-3 py-2 text-muted sm:px-4">
+                                {entry.category}
+                            </td>
+                            <td className="px-3 py-2 font-mono text-xs tabular-nums text-foreground sm:px-4 sm:text-sm">
+                                {entry.optionsCount}
+                            </td>
+                            <td className="px-3 py-2 sm:px-4">
+                                <span
+                                    className={
+                                        entry.isActive
+                                            ? 'font-medium text-success'
+                                            : 'font-medium text-muted'
+                                    }
+                                >
+                                    {entry.isActive
+                                        ? labels.statusActive
+                                        : labels.statusInactive}
+                                </span>
+                            </td>
+                            <td className="px-3 py-2 font-mono text-xs tabular-nums text-muted sm:px-4 sm:text-sm">
                                 {entry.createdAt.toLocaleDateString()}
                             </td>
-                            <td className="py-3">
-                                <div className="flex items-center gap-3">
+                            <td className="px-3 py-2 sm:px-4">
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                                     <Link
                                         href={localizedHref(
                                             `/admin/questions/${entry.id}/edit`,
                                         )}
-                                        className="text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                        className={`${rowActionClassName} text-primary hover:text-primary-hover`}
                                     >
                                         {labels.editLink}
                                     </Link>
@@ -89,7 +120,7 @@ export function AdminQuestionsTable({
                                             />
                                             <SubmitButton
                                                 unstyled
-                                                className="cursor-pointer text-amber-600 transition-colors hover:text-amber-800 hover:underline dark:text-amber-400 dark:hover:text-amber-300"
+                                                className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
                                             >
                                                 {labels.deactivateButton}
                                             </SubmitButton>
@@ -108,7 +139,7 @@ export function AdminQuestionsTable({
                                             />
                                             <SubmitButton
                                                 unstyled
-                                                className="cursor-pointer text-green-600 transition-colors hover:text-green-800 hover:underline dark:text-green-400 dark:hover:text-green-300"
+                                                className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
                                             >
                                                 {labels.activateButton}
                                             </SubmitButton>
@@ -128,7 +159,7 @@ export function AdminQuestionsTable({
                                         />
                                         <SubmitButton
                                             unstyled
-                                            className="cursor-pointer text-danger transition-colors hover:underline"
+                                            className={`${rowActionClassName} cursor-pointer text-danger hover:opacity-90`}
                                         >
                                             {labels.deleteButton}
                                         </SubmitButton>
