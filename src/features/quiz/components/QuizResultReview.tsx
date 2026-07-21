@@ -8,6 +8,7 @@ import type {
     QuizResultReviewItem,
 } from '@/features/quiz/types';
 import type { Dictionary } from '@/shared/i18n';
+import { EmptyState } from '@/shared/ui';
 
 type QuizResultReviewProps = {
     items: QuizResultReviewItem[];
@@ -52,7 +53,7 @@ export function QuizResultReview({
     ];
 
     if (items.length === 0) {
-        return <p className="mt-6 text-sm text-muted">{labels.reviewEmpty}</p>;
+        return <EmptyState className="mt-6" title={labels.reviewEmpty} />;
     }
 
     return (
@@ -95,7 +96,7 @@ export function QuizResultReview({
             </div>
 
             {visibleItems.length === 0 ? (
-                <p className="mt-4 text-sm text-muted">{labels.reviewEmpty}</p>
+                <EmptyState className="mt-4" title={labels.reviewEmpty} />
             ) : (
                 <ul className="mt-4 space-y-3">
                     {visibleItems.map((item, index) => {

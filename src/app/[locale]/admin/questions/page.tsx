@@ -5,6 +5,7 @@ import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsT
 import { mapAdminQuestions } from '@/features/admin/lib';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
+import { InlineAlert } from '@/shared/ui';
 
 type AdminQuestionsPageProps = {
     params: Promise<{ locale: string }>;
@@ -97,19 +98,19 @@ export default async function AdminQuestionsPage({
                 {dictionary.admin.listDescription}
             </p>
 
-            {adminErrorMessage && (
-                <div className="mt-4 flex flex-wrap items-center gap-3" role="alert">
-                    <p className="text-red-600">{adminErrorMessage}</p>
-                    {loadErrorMessage && (
+            {adminErrorMessage ? (
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                    <InlineAlert>{adminErrorMessage}</InlineAlert>
+                    {loadErrorMessage ? (
                         <Link
                             href={localizedHref(safeLocale, '/admin/questions')}
-                            className="text-sm font-medium text-blue-600 underline hover:text-blue-800 dark:text-blue-400"
+                            className="text-sm font-medium text-primary underline hover:text-primary-hover"
                         >
                             {dictionary.admin.retryLoad}
                         </Link>
-                    )}
+                    ) : null}
                 </div>
-            )}
+            ) : null}
 
             <AdminQuestionsTable
                 entries={entries}

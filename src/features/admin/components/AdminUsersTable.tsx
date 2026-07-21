@@ -6,7 +6,7 @@ import {
 } from '@/features/admin/actions/users';
 import { ConfirmForm } from '@/features/admin/components/ConfirmForm';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { EmptyState, SubmitButton } from '@/shared/ui';
 import type { AdminUserListItem } from '../types';
 
 type AdminUsersTableProps = {
@@ -23,11 +23,7 @@ export function AdminUsersTable({
     currentUserId,
 }: AdminUsersTableProps) {
     if (entries.length === 0) {
-        return (
-            <p className="mt-6 text-neutral-600 dark:text-neutral-400">
-                {labels.usersEmpty}
-            </p>
-        );
+        return <EmptyState className="mt-6" title={labels.usersEmpty} />;
     }
 
     return (
@@ -191,7 +187,7 @@ export function AdminUsersTable({
                                                     name="userId"
                                                     value={entry.id}
                                                 />
-                                                <SubmitButton unstyled className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300">
+                                                <SubmitButton unstyled className="cursor-pointer text-danger transition-colors hover:underline">
                                                     {labels.deleteButton}
                                                 </SubmitButton>
                                             </ConfirmForm>

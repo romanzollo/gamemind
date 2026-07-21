@@ -6,7 +6,7 @@ import {
     deleteQuestionAction,
 } from '@/features/admin/actions/questions';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { EmptyState, SubmitButton } from '@/shared/ui';
 import type { AdminQuestionListItem } from '../types';
 
 // тип пропсов компонента таблицы вопросов для администрирования
@@ -23,11 +23,7 @@ export function AdminQuestionsTable({
     locale,
 }: AdminQuestionsTableProps) {
     if (entries.length === 0) {
-        return (
-            <p className="mt-6 text-neutral-600 dark:text-neutral-400">
-                {labels.empty}
-            </p>
-        );
+        return <EmptyState className="mt-6" title={labels.empty} />;
     }
 
     // функция для получения локализованного href
@@ -132,7 +128,7 @@ export function AdminQuestionsTable({
                                         />
                                         <SubmitButton
                                             unstyled
-                                            className="cursor-pointer text-red-600 transition-colors hover:text-red-800 hover:underline dark:text-red-400 dark:hover:text-red-300"
+                                            className="cursor-pointer text-danger transition-colors hover:underline"
                                         >
                                             {labels.deleteButton}
                                         </SubmitButton>

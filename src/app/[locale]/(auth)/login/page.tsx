@@ -6,7 +6,7 @@ import { useActionState } from 'react';
 
 import { loginAction } from '@/features/auth/actions';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
 
 function getLocale(value: string | string[] | undefined): Locale {
     return typeof value === 'string' && isLocale(value) ? value : 'ru';
@@ -43,9 +43,11 @@ export default function LoginPage() {
                 </SubmitButton>
             </form>
 
-            {state.error && <p className="mt-2 text-red-600">{state.error}</p>}
+            {state.error ? (
+                <InlineAlert className="mt-2">{state.error}</InlineAlert>
+            ) : null}
 
-            <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+            <p className="mt-4 text-sm text-muted">
                 {dictionary.auth.noAccount}{' '}
                 <Link href={`/${locale}/register`} className="underline">
                     {dictionary.auth.registerLink}

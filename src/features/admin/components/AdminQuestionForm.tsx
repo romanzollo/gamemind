@@ -9,7 +9,7 @@ import {
 import { getAdminErrorMessage } from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
 import type { QuestionType } from '@/types';
 
 const OPTION_COUNT = 4;
@@ -303,9 +303,7 @@ export function AdminQuestionForm({
             </form>
 
             {errorMessage ? (
-                <p className="mt-2 text-red-600" role="alert">
-                    {errorMessage}
-                </p>
+                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
             ) : null}
         </>
     );

@@ -5,7 +5,7 @@ import { useActionState, useEffect, useRef } from 'react';
 import { changePasswordAction } from '@/features/profile/actions';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
 
 type ChangePasswordFormProps = {
     locale: Locale;
@@ -98,23 +98,19 @@ export function ChangePasswordForm({
                 </SubmitButton>
             </form>
 
-            {errorMessage && (
-                <p
-                    className="mt-2 rounded-sm bg-danger-muted px-3 py-2 text-sm text-danger"
-                    role="alert"
-                >
-                    {errorMessage}
-                </p>
-            )}
+            {errorMessage ? (
+                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
+            ) : null}
 
-            {state.success && (
-                <p
-                    className="mt-2 rounded-sm bg-success-muted px-3 py-2 text-sm text-success"
+            {state.success ? (
+                <InlineAlert
+                    className="mt-2"
+                    tone="success"
                     role="status"
                 >
                     {dictionary.profile.changePasswordSuccess}
-                </p>
-            )}
+                </InlineAlert>
+            ) : null}
         </section>
     );
 }

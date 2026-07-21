@@ -11,7 +11,7 @@ import {
 import type { ProfileResultHistoryEntry } from '@/features/profile/types/result-history-entry';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
 
 type ProfilePageProps = {
     params: Promise<{ locale: string }>;
@@ -83,11 +83,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     {dictionary.profile.historyTitle}
                 </h2>
 
-                {historyLoadError && (
-                    <p className="mt-4 text-red-600" role="alert">
-                        {historyLoadError}
-                    </p>
-                )}
+                {historyLoadError ? (
+                    <InlineAlert className="mt-4">{historyLoadError}</InlineAlert>
+                ) : null}
 
                 {!historyLoadError && (
                     <ProfileResultHistory

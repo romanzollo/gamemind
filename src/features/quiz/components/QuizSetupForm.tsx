@@ -5,7 +5,9 @@ import { useActionState } from 'react';
 import { startQuizAction } from '@/features/quiz/actions';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
+import { InlineAlert } from '@/shared/ui';
+import { EmptyState } from '@/shared/ui';
 
 // тип для пропсов компонента QuizSetupForm
 type QuizSetupFormProps = {
@@ -73,14 +75,9 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
                 </SubmitButton>
             </form>
 
-            {errorMessage && (
-                <p
-                    className="mt-2 rounded-sm bg-danger-muted px-3 py-2 text-sm text-danger"
-                    role="alert"
-                >
-                    {errorMessage}
-                </p>
-            )}
+            {errorMessage ? (
+                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
+            ) : null}
         </>
     );
 }

@@ -5,19 +5,16 @@ import {
     mapLeaderboardEntries,
 } from '@/features/leaderboard/lib';
 import { getDictionary, isLocale } from '@/shared/i18n';
+import { InlineAlert } from '@/shared/ui';
 
-// пропсы страницы лидеров
 type LeaderboardPageProps = {
     params: Promise<{ locale: string }>;
 };
 
-// страница лидеров
 export default async function LeaderboardPage({
     params,
 }: LeaderboardPageProps) {
-    // получаем параметры из URL
     const { locale } = await params;
-    // проверяем локаль
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
 
@@ -25,30 +22,25 @@ export default async function LeaderboardPage({
     let loadErrorMessage: string | undefined;
 
     try {
-        // получаем результаты лидеров
         const rows =
             await leaderboardRepository.findBestScores(LEADERBOARD_LIMIT);
-        // преобразуем результаты в тип LeaderboardEntry
         entries = mapLeaderboardEntries(rows);
     } catch {
         loadErrorMessage = dictionary.leaderboard.loadFailed;
     }
 
-    // возвращаем страницу лидеров
     return (
-        <main className="mx-auto max-w-2xl p-8">
-            <h1 className="text-2xl font-semibold">
+        <main className="mx-auto max-w-2xl px-4 py-6 sm:p-8">
+            <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 {dictionary.leaderboard.title}
             </h1>
-            <p className="mt-2 text-neutral-600 dark:text-neutral-400">
+            <p className="mt-2 text-sm text-muted sm:text-base">
                 {dictionary.leaderboard.description}
             </p>
 
-            {loadErrorMessage && (
-                <p className="mt-4 text-red-600" role="alert">
-                    {loadErrorMessage}
-                </p>
-            )}
+            {loadErrorMessage ? (
+                <InlineAlert className="mt-4">{loadErrorMessage}</InlineAlert>
+            ) : null}
 
             <LeaderboardTable
                 entries={entries}

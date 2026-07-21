@@ -7,7 +7,7 @@ import { QuestionCard } from '@/features/quiz/components/QuestionCard';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
 
 type QuizSessionFormProps = {
     locale: Locale;
@@ -96,12 +96,7 @@ export function QuizSessionForm({
 
             <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pb-[max(1rem,env(safe-area-inset-bottom))]">
                 {errorMessage ? (
-                    <p
-                        className="mb-3 rounded-md bg-danger-muted px-3 py-2 text-sm text-danger"
-                        role="alert"
-                    >
-                        {errorMessage}
-                    </p>
+                    <InlineAlert className="mb-3">{errorMessage}</InlineAlert>
                 ) : null}
 
                 {!allAnswered ? (
