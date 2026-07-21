@@ -1,0 +1,8 @@
+{
+  "css.validate": false,
+  "css.lint.unknownAtRules": "ignore",
+  "tailwindCSS.experimental.configFile": "src/app/globals.css",
+  "editor.quickSuggestions": {
+    "strings": true
+  }
+}
