@@ -32,7 +32,9 @@ export type Dictionary = {
     };
     home: {
         title: string;
+        headline: string;
         description: string;
+        cta: string;
     };
     auth: {
         loginTitle: string;

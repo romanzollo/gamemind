@@ -34,7 +34,10 @@ export const enDictionary = {
     },
     home: {
         title: 'GameMind',
-        description: 'Video game quiz platform.',
+        headline: 'See how well you know video games',
+        description:
+            'A sharp bilingual quiz — from classics to new releases. Answer, score, and review.',
+        cta: 'Start quiz',
     },
     auth: {
         loginTitle: 'Log in',

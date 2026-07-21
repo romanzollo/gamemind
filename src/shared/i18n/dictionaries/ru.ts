@@ -34,7 +34,10 @@ export const ruDictionary: Dictionary = {
     },
     home: {
         title: 'GameMind',
-        description: 'Платформа викторин о видеоиграх.',
+        headline: 'Проверь, насколько хорошо ты знаешь игры',
+        description:
+            'Быстрый квиз по видеоиграм — от классики до новинок. Отвечай и смотри результат.',
+        cta: 'Начать квиз',
     },
     auth: {
         loginTitle: 'Вход',
