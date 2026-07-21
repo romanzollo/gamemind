@@ -84,7 +84,7 @@ export function SiteHeader({
 
                 <nav
                     className="hidden min-w-0 flex-1 items-center gap-1 lg:flex"
-                    aria-label="Main"
+                    aria-label={dictionary.common.mainNav}
                 >
                     {mainLinks.map((link) => (
                         <PendingLink
@@ -105,7 +105,7 @@ export function SiteHeader({
                         {utilities}
                     </div>
 
-                    {/* Mobile / tablet: avatar only; links + logout in ☰ */}
+                    {/* Mobile / tablet: только аватар; ссылки и logout в ☰ */}
                     <div className="lg:hidden">{authControls}</div>
 
                     <SiteMobileMenu
@@ -113,6 +113,7 @@ export function SiteHeader({
                         links={mobileLinks}
                         openLabel={dictionary.common.openMenu}
                         closeLabel={dictionary.common.closeMenu}
+                        mainNavLabel={dictionary.common.mainNav}
                         menuAuth={mobileAuthControls}
                         menuUtilities={utilities}
                     />

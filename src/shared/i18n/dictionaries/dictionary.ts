@@ -31,6 +31,10 @@ export type Dictionary = {
         working: string;
         openMenu: string;
         closeMenu: string;
+        /** Skip-ссылка → контент после sticky-хедера (a11y). */
+        skipToContent: string;
+        /** Подпись landmark основной навигации (desktop / mobile). */
+        mainNav: string;
     };
     home: {
         title: string;
@@ -175,7 +179,7 @@ export type Dictionary = {
         setupDescription: string;
         difficultyLabel: string;
         questionCountLabel: string;
-        /** Session progress: answered / total (not setup question count). */
+        /** Прогресс сессии: отвечено / всего (не число вопросов в setup). */
         progressAnsweredLabel: string;
         easy: string;
         medium: string;

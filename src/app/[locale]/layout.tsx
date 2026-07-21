@@ -76,6 +76,12 @@ export default async function LocaleLayout({
     return (
         <html lang={locale} data-theme={theme} suppressHydrationWarning>
             <body className="antialiased" suppressHydrationWarning>
+                <a
+                    href="#main-content"
+                    className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:border focus:border-border focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-md focus:outline-2 focus:outline-offset-2 focus:outline-ring"
+                >
+                    {dictionary.common.skipToContent}
+                </a>
                 <SiteHeader
                     locale={locale}
                     dictionary={dictionary}
@@ -97,7 +103,13 @@ export default async function LocaleLayout({
                         />
                     }
                 />
-                {children}
+                {/*
+                  Цель skip-ссылки. Страницы сами держат свой <main> —
+                  не оборачивая children во второй <main>.
+                */}
+                <div id="main-content" tabIndex={-1}>
+                    {children}
+                </div>
             </body>
         </html>
     );

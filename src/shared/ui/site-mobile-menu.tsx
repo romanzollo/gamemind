@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 import type { Locale } from '@/shared/i18n';
 import { PendingLink } from './pending-link';
@@ -15,6 +15,8 @@ type SiteMobileMenuProps = {
     links: ReadonlyArray<MobileNavLink>;
     openLabel: string;
     closeLabel: string;
+    /** Подпись landmark для списка ссылок (не label кнопки открытия). */
+    mainNavLabel: string;
     menuAuth: ReactNode;
     menuUtilities: ReactNode;
 };
@@ -28,21 +30,36 @@ function getScrollbarGap() {
 }
 
 /**
- * Mobile nav under a persistent sticky header.
- * Locks scroll with scrollbar-gap compensation so header and panel
- * stay the same width (no dark slit when the menu opens).
+ * Мобильное меню под sticky-хедером.
+ * Блокирует скролл с компенсацией scrollbar-gap, чтобы хедер и панель
+ * оставались одной ширины (без тёмной щели при открытии меню).
  */
 export function SiteMobileMenu({
     locale,
     links,
     openLabel,
     closeLabel,
+    mainNavLabel,
     menuAuth,
     menuUtilities,
 }: SiteMobileMenuProps) {
     const [open, setOpen] = useState(false);
     const [scrollbarGap, setScrollbarGap] = useState(0);
     const panelId = useId();
+    const toggleRef = useRef<HTMLButtonElement>(null);
+
+    function focusToggle() {
+        // После размонтирования dialog/scrim вернуть клавиатурный фокус на ☰.
+        requestAnimationFrame(() => {
+            toggleRef.current?.focus();
+        });
+    }
+
+    function closeMenu() {
+        setOpen(false);
+        setScrollbarGap(0);
+        focusToggle();
+    }
 
     useEffect(() => {
         if (!open) {
@@ -53,6 +70,7 @@ export function SiteMobileMenu({
             if (event.key === 'Escape') {
                 setOpen(false);
                 setScrollbarGap(0);
+                focusToggle();
             }
         };
 
@@ -73,11 +91,6 @@ export function SiteMobileMenu({
         };
     }, [open, scrollbarGap]);
 
-    function closeMenu() {
-        setOpen(false);
-        setScrollbarGap(0);
-    }
-
     function toggleMenu() {
         setOpen((wasOpen) => {
             if (wasOpen) {
@@ -96,6 +109,7 @@ export function SiteMobileMenu({
     return (
         <div className="lg:hidden">
             <button
+                ref={toggleRef}
                 type="button"
                 className="relative z-50 inline-flex size-10 shrink-0 items-center justify-center overflow-visible rounded-md border border-border text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 aria-expanded={open}
@@ -133,7 +147,7 @@ export function SiteMobileMenu({
                         <div className="mx-auto max-w-5xl">
                             <nav
                                 className="flex flex-col gap-1"
-                                aria-label={openLabel}
+                                aria-label={mainNavLabel}
                             >
                                 {links.map((link) => (
                                     <PendingLink

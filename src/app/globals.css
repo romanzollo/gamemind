@@ -5,12 +5,12 @@
 
 /*
  * Scoreboard Editorial — design lock (Task 1).
- * Semantic tokens live on :root / [data-theme].
- * @theme inline registers them for Tailwind and prevents Lightning CSS
- * from tree-shaking unused custom properties before components adopt them.
+ * Семантические токены живут на :root / [data-theme].
+ * @theme inline регистрирует их для Tailwind и не даёт Lightning CSS
+ * выкинуть неиспользованные custom properties до появления в компонентах.
  *
- * Fonts: self-hosted via @fontsource in fonts.css (not next/font/google —
- * Google CDN often unreachable in local/RU networks and breaks Turbopack).
+ * Шрифты: self-hosted через @fontsource в fonts.css (не next/font/google —
+ * Google CDN часто недоступен в локальных/RU сетях и ломает Turbopack).
  */
 @theme inline {
     --color-background: var(--background);
@@ -45,7 +45,7 @@
 [data-theme='light'] {
     color-scheme: light;
 
-    /* Cool paper / ink — not warm cream, not pure white slab */
+    /* Холодная бумага / чернила — не тёплый cream, не чистый белый slab */
     --background: #f3f5f7;
     --foreground: #14181f;
     --muted: #5a6573;
@@ -55,7 +55,7 @@
     --surface-muted: #e9eef3;
     --surface-hover: #e1e7ee;
 
-    /* Competitive teal — one accent family, not purple SaaS */
+    /* Competitive teal — одно семейство акцента, не purple SaaS */
     --primary: #0b6e4f;
     --primary-foreground: #f7fffb;
     --primary-hover: #095c42;
@@ -69,7 +69,8 @@
 
     --ring: #0b6e4f;
     --shadow-sm: 0 1px 2px rgb(20 24 31 / 0.06);
-    --shadow-md: 0 4px 6px -1px rgb(20 24 31 / 0.1), 0 2px 4px -2px rgb(20 24 31 / 0.08);
+    --shadow-md:
+        0 4px 6px -1px rgb(20 24 31 / 0.1), 0 2px 4px -2px rgb(20 24 31 / 0.08);
 
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
@@ -79,7 +80,7 @@
 [data-theme='dark'] {
     color-scheme: dark;
 
-    /* Cool charcoal — not pure #000 */
+    /* Холодный charcoal — не чистый #000 */
     --background: #0c0f14;
     --foreground: #e8ecf1;
     --muted: #9aa3b0;
@@ -102,7 +103,8 @@
 
     --ring: #3ecf8e;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.45);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.55), 0 2px 4px -2px rgb(0 0 0 / 0.45);
+    --shadow-md:
+        0 4px 6px -1px rgb(0 0 0 / 0.55), 0 2px 4px -2px rgb(0 0 0 / 0.45);
 
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
@@ -115,15 +117,15 @@ body {
     font-family: var(--font-sans);
     min-height: 100vh;
     /*
-     * Sticky header height: py-2.5 (20) + control min-h-10 (40) + border (1) ≈ 61px.
-     * Must clear the bar so the open menu panel does not clip the hamburger.
+     * Высота sticky-хедера: py-2.5 (20) + control min-h-10 (40) + border (1) ≈ 61px.
+     * Нужен зазор, чтобы открытая панель меню не обрезала hamburger.
      */
     --site-header-sticky-offset: 3.75rem;
 }
 
 /*
- * Reserve scrollbar space always so overflow:hidden (mobile menu)
- * does not shrink the sticky header and open a gap beside the panel.
+ * Всегда резервируем место под scrollbar, чтобы overflow:hidden (мобильное меню)
+ * не сжимал sticky-хедер и не открывал щель рядом с панелью.
  */
 html {
     scrollbar-gutter: stable;
@@ -142,8 +144,26 @@ html {
     }
 }
 
+/*
+ * Уважаем prefers-reduced-motion:
+ * — без плавного скролла;
+ * — без бесконечного pulse (skeleton / pending cue);
+ * — короткие transitions вместо заметной анимации.
+ * motion-safe:* в компонентах уже отключается сам; этот блок ловит остальное.
+ */
 @media (prefers-reduced-motion: reduce) {
+    html,
     html:focus-within {
         scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0s !important;
+        scroll-behavior: auto !important;
     }
 }

@@ -33,6 +33,8 @@ export const ruDictionary: Dictionary = {
         working: 'Подождите…',
         openMenu: 'Открыть меню',
         closeMenu: 'Закрыть меню',
+        skipToContent: 'Перейти к содержимому',
+        mainNav: 'Основная навигация',
     },
     home: {
         title: 'GameMind',
