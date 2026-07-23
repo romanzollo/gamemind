@@ -118,7 +118,7 @@ export async function processQuizImageToWebp(
         .toBuffer({ resolveWithObject: true });
 
     return {
-        buffer: data,
+        buffer: copyToOwnedBuffer(data),
         width: info.width,
         height: info.height,
         byteSize: data.byteLength,
@@ -147,10 +147,21 @@ export async function processAvatarToWebp(
         .toBuffer({ resolveWithObject: true });
 
     return {
-        buffer: data,
+        // Owned copy: sharp Buffer на Vercel может сидеть на SharedArrayBuffer
+        buffer: copyToOwnedBuffer(data),
         width: info.width,
         height: info.height,
         byteSize: data.byteLength,
         mimeType: 'image/webp',
     };
+}
+
+/**
+ * Свежий Buffer.alloc — гарантированно не SharedArrayBuffer.
+ * Нужен перед Vercel Blob put/fetch (undici: SharedArrayBuffer is not allowed).
+ */
+function copyToOwnedBuffer(source: Buffer): Buffer {
+    const owned = Buffer.alloc(source.byteLength);
+    owned.set(source);
+    return owned;
 }

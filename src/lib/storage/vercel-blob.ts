@@ -20,11 +20,14 @@ import type {
  *
  * Токен: BLOB_READ_WRITE_TOKEN (Vercel Storage → Blob → token).
  *
- * Важно: Buffer от sharp нельзя отдавать в put()/fetch «как есть» на Vercel —
- * undici кидает `SharedArrayBuffer is not allowed`. Копируем в обычный Uint8Array.
+ * На Vercel SSR `put` → fetch/undici отвергает body, чей backing store —
+ * SharedArrayBuffer (часто так отдаёт sharp Buffer). `Uint8Array.from(buf)`
+ * оказался недостаточным в бандле; копируем в свежий `ArrayBuffer` + Blob.
  */
-function toBlobPutBody(buffer: Buffer): Uint8Array {
-    return Uint8Array.from(buffer);
+function toSafePutBody(buffer: Buffer, contentType: string): Blob {
+    const ab = new ArrayBuffer(buffer.byteLength);
+    new Uint8Array(ab).set(buffer);
+    return new Blob([ab], { type: contentType });
 }
 
 export function createVercelBlobStorage(): MediaStorage {
@@ -37,7 +40,7 @@ export function createVercelBlobStorage(): MediaStorage {
 
             // Явный token: не полагаемся только на OIDC auto-detect
             // (fallback нужен, если VERCEL_OIDC_TOKEN недоступен в runtime).
-            await put(key, toBlobPutBody(input.body), {
+            await put(key, toSafePutBody(input.body, input.contentType), {
                 access: 'public',
                 addRandomSuffix: false,
                 contentType: input.contentType,
