@@ -19,7 +19,14 @@ import type {
  * (см. next.config.ts + BLOB_PUBLIC_BASE_URL).
  *
  * Токен: BLOB_READ_WRITE_TOKEN (Vercel Storage → Blob → token).
+ *
+ * Важно: Buffer от sharp нельзя отдавать в put()/fetch «как есть» на Vercel —
+ * undici кидает `SharedArrayBuffer is not allowed`. Копируем в обычный Uint8Array.
  */
+function toBlobPutBody(buffer: Buffer): Uint8Array {
+    return Uint8Array.from(buffer);
+}
+
 export function createVercelBlobStorage(): MediaStorage {
     return {
         provider: 'vercel-blob',
@@ -30,7 +37,7 @@ export function createVercelBlobStorage(): MediaStorage {
 
             // Явный token: не полагаемся только на OIDC auto-detect
             // (fallback нужен, если VERCEL_OIDC_TOKEN недоступен в runtime).
-            await put(key, input.body, {
+            await put(key, toBlobPutBody(input.body), {
                 access: 'public',
                 addRandomSuffix: false,
                 contentType: input.contentType,
