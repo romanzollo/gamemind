@@ -54,9 +54,8 @@ export async function resolveAvatarImage(options: {
 
             return { ok: true, imageUrl: putResult.publicUrl };
         } catch (error) {
-            if (process.env.NODE_ENV === 'development') {
-                console.error('resolveAvatarImage upload failed:', error);
-            }
+            // Всегда в Runtime Logs: на prod иначе UPLOAD_FAILED без причины
+            console.error('resolveAvatarImage upload failed:', error);
 
             const message =
                 error instanceof Error ? error.message.toLowerCase() : '';

@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
             bodySizeLimit: '3mb',
         },
     },
+    // sharp — native addon; не бандлить в serverless chunk (иначе upload падает на Vercel)
+    serverExternalPackages: ['sharp'],
     images: {
         // Dev seed uses SVG placeholders from public/quiz-images/.
         dangerouslyAllowSVG: true,

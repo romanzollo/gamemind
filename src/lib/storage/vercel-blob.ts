@@ -26,11 +26,15 @@ export function createVercelBlobStorage(): MediaStorage {
 
         async put(input: PutObjectInput): Promise<PutObjectResult> {
             const key = normalizeStorageKey(input.key);
+            const token = process.env.BLOB_READ_WRITE_TOKEN;
 
+            // Явный token: не полагаемся только на OIDC auto-detect
+            // (fallback нужен, если VERCEL_OIDC_TOKEN недоступен в runtime).
             await put(key, input.body, {
                 access: 'public',
                 addRandomSuffix: false,
                 contentType: input.contentType,
+                ...(token ? { token } : {}),
                 // uuid уже в ключе — не даём SDK дописывать суффикс
             });
 
@@ -42,8 +46,9 @@ export function createVercelBlobStorage(): MediaStorage {
 
         async delete(input: DeleteObjectInput): Promise<void> {
             const key = normalizeStorageKey(input.key);
+            const token = process.env.BLOB_READ_WRITE_TOKEN;
             // SDK принимает pathname или полный Blob URL
-            await del(key);
+            await del(key, token ? { token } : undefined);
         },
 
         publicUrl(key: string): string {
