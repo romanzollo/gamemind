@@ -107,11 +107,11 @@ npm run build
 ### Smoke media (после deploy / локально)
 
 - [x] Avatar: upload jpeg/png/webp → header + profile circle (`object-cover`) — **prod OK July 23**
-- [ ] Avatar: clear → NULL
-- [ ] Admin: IMAGE_GUESS file upload → `QuestionAsset.url` вида `/media/quiz/...`
-- [ ] Прямой URL `https://www.game-mind.ru/media/...` (или localhost `/media/...`) открывается **без VPN**
-- [ ] Seed `https://www.game-mind.ru/quiz-images/easy/super-mario-bros.webp` без регрессии
-- [ ] Quiz session IMAGE_GUESS: full-frame `object-contain`; scoring/auth OK
+- [x] Avatar: clear → NULL — **prod OK July 23**
+- [x] Admin: IMAGE_GUESS file upload → `QuestionAsset.url` вида `/media/quiz/...` — **prod OK July 23**
+- [x] Прямой URL `https://www.game-mind.ru/media/...` открывается **без VPN** — **OK July 23**
+- [x] Seed `https://www.game-mind.ru/quiz-images/easy/super-mario-bros.webp` без регрессии — **OK July 23**
+- [x] Quiz session IMAGE_GUESS: full-frame; scoring/auth OK — **OK July 23**
 
 Подробности: `docs/DECISIONS.md` → Media Storage And Upload (RU-first).
 

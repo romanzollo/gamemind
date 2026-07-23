@@ -5,6 +5,7 @@ import { randomUUID } from 'node:crypto';
 import type { ContentLocale } from '@prisma/client';
 import type { Client } from 'pg';
 import { defaultLocale, type Locale } from '@/shared/i18n';
+import type { AdminQuestionListFilters } from '@/features/admin/lib/parse-admin-question-list-filters';
 import type {
     CreateQuestionInput,
     UpdateQuestionInput,
@@ -1419,12 +1420,61 @@ export const questionRepository = {
         );
     },
 
-    // список вопросов для админ-панели
-    async findAllForAdmin(locale: Locale) {
+    // список вопросов для админ-панели (опциональные фильтры из URL)
+    async findAllForAdmin(
+        locale: Locale,
+        filters?: AdminQuestionListFilters,
+    ) {
+        const params: unknown[] = [locale, defaultLocale];
+        const whereParts: string[] = [];
+
+        if (filters?.status === 'active') {
+            whereParts.push(`q."isActive" = true`);
+        } else if (filters?.status === 'inactive') {
+            whereParts.push(`q."isActive" = false`);
+        }
+
+        if (filters?.difficulty && filters.difficulty !== 'all') {
+            params.push(filters.difficulty);
+            whereParts.push(
+                `q."difficulty" = $${params.length}::"Difficulty"`,
+            );
+        }
+
+        if (filters?.type && filters.type !== 'all') {
+            params.push(filters.type);
+            whereParts.push(
+                `q."type" = $${params.length}::"QuestionType"`,
+            );
+        }
+
+        // Literal substring (position), не ILIKE: %/_ в q не становятся wildcards.
+        // Ищем legacy text + любые переводы (ru и en), не только locale страницы.
+        if (filters?.q && filters.q.length > 0) {
+            params.push(filters.q);
+            const qParam = `$${params.length}`;
+            whereParts.push(`(
+                position(lower(${qParam}) in lower(q."text")) > 0
+                OR EXISTS (
+                    SELECT 1
+                    FROM "QuestionTranslation" qt_search
+                    WHERE qt_search."questionId" = q."id"
+                      AND position(lower(${qParam}) in lower(qt_search."text")) > 0
+                )
+            )`);
+        }
+
+        const whereSql =
+            whereParts.length > 0
+                ? `WHERE ${whereParts.join(' AND ')}`
+                : '';
+
         const result = await withDirectPgClient((client) =>
             client.query<{
                 id: string;
                 text: string;
+                type: string;
+                promptImageUrl: string | null;
                 difficulty: Difficulty;
                 category: string;
                 isActive: boolean;
@@ -1439,6 +1489,8 @@ export const questionRepository = {
                             default_translation."text",
                             q."text"
                         ) AS "text",
+                        q."type"::text AS "type",
+                        ${PROMPT_IMAGE_URL_SQL} AS "promptImageUrl",
                         q."difficulty"::text AS "difficulty",
                         q."category",
                         q."isActive",
@@ -1455,15 +1507,18 @@ export const questionRepository = {
                     LEFT JOIN "QuestionTranslation" default_translation
                         ON default_translation."questionId" = q."id"
                         AND default_translation."locale" = $2::"ContentLocale"
+                    ${whereSql}
                     ORDER BY q."createdAt" DESC
                 `,
-                [locale, defaultLocale],
+                params,
             ),
         );
 
         return result.rows.map((row) => ({
             id: row.id,
             text: row.text,
+            type: toQuestionType(row.type),
+            promptImageUrl: row.promptImageUrl,
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,

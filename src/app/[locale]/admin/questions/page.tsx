@@ -1,15 +1,20 @@
 import Link from 'next/link';
 
 import { questionRepository } from '@/entities/question/question.repository';
+import { AdminQuestionsFilters } from '@/features/admin/components/AdminQuestionsFilters';
 import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
-import { mapAdminQuestions } from '@/features/admin/lib';
+import {
+    hasActiveAdminQuestionListFilters,
+    mapAdminQuestions,
+    parseAdminQuestionListFilters,
+} from '@/features/admin/lib';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
 import { buttonClassName, InlineAlert } from '@/shared/ui';
 
 type AdminQuestionsPageProps = {
     params: Promise<{ locale: string }>;
-    searchParams: Promise<{ error?: string }>;
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 function localizedHref(locale: Locale, href: string) {
@@ -21,22 +26,31 @@ export default async function AdminQuestionsPage({
     searchParams,
 }: AdminQuestionsPageProps) {
     const { locale } = await params;
-    const { error } = await searchParams;
+    const rawSearchParams = await searchParams;
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
     const session = await requireAdmin(safeLocale);
+
+    const filters = parseAdminQuestionListFilters(rawSearchParams);
+    const filtersActive = hasActiveAdminQuestionListFilters(filters);
+    const error = Array.isArray(rawSearchParams.error)
+        ? rawSearchParams.error[0]
+        : rawSearchParams.error;
 
     let entries: ReturnType<typeof mapAdminQuestions> = [];
     let loadErrorMessage: string | undefined;
 
     try {
         const startedAt = Date.now();
-        const rows = await questionRepository.findAllForAdmin(safeLocale);
+        const rows = await questionRepository.findAllForAdmin(
+            safeLocale,
+            filters,
+        );
         entries = mapAdminQuestions(rows);
 
         if (process.env.NODE_ENV === 'development') {
             console.info(
-                `[admin/questions] findAllForAdmin ok in ${Date.now() - startedAt}ms (rows=${rows.length})`,
+                `[admin/questions] findAllForAdmin ok in ${Date.now() - startedAt}ms (rows=${rows.length}, filtersActive=${filtersActive})`,
             );
         }
     } catch (loadError) {
@@ -62,7 +76,7 @@ export default async function AdminQuestionsPage({
     const adminErrorMessage = actionErrorMessage ?? loadErrorMessage;
 
     return (
-        <main className="mx-auto max-w-5xl px-4 py-5 sm:px-8 sm:py-10">
+        <main className="mx-auto max-w-6xl px-4 py-5 sm:px-8 sm:py-10">
             <div className="flex flex-wrap items-end justify-between gap-4">
                 <div className="min-w-0">
                     <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
@@ -76,7 +90,7 @@ export default async function AdminQuestionsPage({
                     </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 sm:gap-3">
+                <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:gap-3">
                     <Link
                         href={localizedHref(safeLocale, '/admin')}
                         className={buttonClassName({
@@ -98,7 +112,8 @@ export default async function AdminQuestionsPage({
                     <Link
                         href={localizedHref(safeLocale, '/admin/questions/new')}
                         className={buttonClassName({
-                            className: 'min-h-10 px-3 text-sm sm:min-h-11',
+                            className:
+                                'min-h-10 w-full px-3 text-sm sm:min-h-11 sm:w-auto',
                         })}
                     >
                         {dictionary.admin.createLink}
@@ -120,11 +135,28 @@ export default async function AdminQuestionsPage({
                 </div>
             ) : null}
 
-            <AdminQuestionsTable
-                entries={entries}
-                labels={dictionary.admin}
+            <AdminQuestionsFilters
                 locale={safeLocale}
+                labels={dictionary.admin}
+                difficultyLabels={{
+                    easy: dictionary.quiz.easy,
+                    medium: dictionary.quiz.medium,
+                    hard: dictionary.quiz.hard,
+                }}
+                filters={filters}
             />
-        </main>
+
+            {!loadErrorMessage ? (
+                <AdminQuestionsTable
+                    entries={entries}
+                    labels={dictionary.admin}
+                    locale={safeLocale}
+                    emptyTitle={
+                        filtersActive
+                            ? dictionary.admin.emptyFiltered
+                            : dictionary.admin.empty
+                    }
+                />
+            ) : null}        </main>
     );
 }

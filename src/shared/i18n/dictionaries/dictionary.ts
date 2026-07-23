@@ -133,7 +133,17 @@ export type Dictionary = {
         statusActive: string;
         statusInactive: string;
         empty: string;
+        /** Empty-state когда фильтры/поиск ничего не нашли (не пустая БД). */
+        emptyFiltered: string;
         usersEmpty: string;
+        /** Подписи GET-фильтров списка вопросов (status / difficulty / type / q). */
+        filterStatusAll: string;
+        filterDifficultyAll: string;
+        filterTypeAll: string;
+        filterSearch: string;
+        filterSearchPlaceholder: string;
+        filterApply: string;
+        filterReset: string;
         formQuestionText: string;
         formQuestionTextRu: string;
         formQuestionTextEn: string;

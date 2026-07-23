@@ -9,6 +9,9 @@ export type LocalizedAdminText = {
 export type AdminQuestionListItem = {
     id: string;
     text: string;
+    type: QuestionType;
+    /** URL prompt-изображения; только для IMAGE_GUESS (иначе null). */
+    promptImageUrl: string | null;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
