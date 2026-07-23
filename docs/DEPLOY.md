@@ -90,7 +90,7 @@ npm run build
 
 ## Явно позже (когда URL уже работает)
 
-- ~~Admin-загрузка / Avatar Phase B~~ — **код local July 23**; нужен Blob env + redeploy
+- ~~Admin-загрузка / Avatar Phase B~~ — **на prod July 23** (Blob env + SharedArrayBuffer fix)
 - Profile polish / achievements / daily challenge
 - Admin: фильтры, поиск, draft workflow
 
@@ -102,10 +102,11 @@ npm run build
 4. В БД храним относительные `/media/quiz/...` и `/media/avatars/...`; seed остаётся `/quiz-images/...`.
 5. Локально без токена: `STORAGE_PROVIDER=local-public` (или не задавать) → файлы в `public/media/` (gitignore).
 6. Next 16.2: лимит тела Server Action — `experimental.serverActions.bodySizeLimit` (напр. `3mb`). Top-level `serverActions` в этом релизе **не** принимается.
+7. sharp → Blob: на Vercel копируй в owned `ArrayBuffer`/`Buffer.alloc` перед `put` (SharedArrayBuffer); `serverExternalPackages: ['sharp','@vercel/blob']`.
 
 ### Smoke media (после deploy / локально)
 
-- [ ] Avatar: upload jpeg/png/webp → header + profile circle (`object-cover`)
+- [x] Avatar: upload jpeg/png/webp → header + profile circle (`object-cover`) — **prod OK July 23**
 - [ ] Avatar: clear → NULL
 - [ ] Admin: IMAGE_GUESS file upload → `QuestionAsset.url` вида `/media/quiz/...`
 - [ ] Прямой URL `https://www.game-mind.ru/media/...` (или localhost `/media/...`) открывается **без VPN**
@@ -124,6 +125,7 @@ npm run build
 | `IMAGE_GUESS` — битая картинка | WebP не в деплое; на prod DB не обновлены asset URL |
 | `Body exceeded 1 MB limit` на upload | Нет `experimental.serverActions.bodySizeLimit` / нужен restart после next.config |
 | `/media/...` 404 на prod | Нет `BLOB_PUBLIC_BASE_URL` или Blob store / rewrite |
+| `SharedArrayBuffer is not allowed` на upload | sharp Buffer → Blob put без owned copy; см. ADR ops note |
 | Друзьям не открывается `*.vercel.app` | Привяжи домен (уже: `www.game-mind.ru`) |
 
 ## Связанные документы
