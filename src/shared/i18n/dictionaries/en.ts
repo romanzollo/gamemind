@@ -86,9 +86,12 @@ export const enDictionary = {
         changePasswordSubmit: 'Change password',
         changePasswordSuccess: 'Password updated successfully.',
         changeAvatarTitle: 'Avatar',
-        avatarUrl: 'Image URL',
+        avatarFile: 'Upload file',
+        avatarFileHint:
+            'JPEG, PNG, or WebP, max 2 MB. Converted to a centered square WebP on the server.',
+        avatarUrl: 'Or URL (advanced)',
         avatarUrlHint:
-            'Direct file URL (https://…/photo.webp) or site path. The circle shows the image center (same as typical apps). Leave empty to clear.',
+            'Direct https link or site path (/media/...). File upload wins. Use Clear avatar to remove.',
         avatarPreviewFailed: 'Failed to load',
         changeAvatarSubmit: 'Save avatar',
         clearAvatar: 'Clear avatar',
@@ -100,6 +103,10 @@ export const enDictionary = {
             usernameTaken: 'This username is already taken.',
             sameUsername: 'New username must be different from the current one.',
             sameAvatar: 'New avatar is the same as the current one.',
+            uploadFailed:
+                'Failed to upload the avatar. Check storage settings and try again.',
+            invalidImage:
+                'Invalid image. Use JPEG/PNG/WebP (no SVG), max 2 MB.',
             updateFailed: 'Could not save changes. Please try again later.',
         },
     },
@@ -140,9 +147,14 @@ export const enDictionary = {
         formQuestionType: 'Question type',
         formQuestionTypeText: 'Text',
         formQuestionTypeImageGuess: 'Image guess',
-        formPromptImageUrl: 'Prompt image URL',
+        formPromptImage: 'Prompt image',
+        formPromptImageFile: 'Upload file',
+        formPromptImageFileHint:
+            'JPEG, PNG, or WebP, max 2 MB. Converted to WebP on the server without cropping the frame.',
+        formPromptImageCurrent: 'Current URL',
+        formPromptImageUrl: 'Or URL (advanced)',
         formPromptImageUrlHint:
-            'Path under public/ (e.g. /quiz-images/...) or an HTTPS CDN URL.',
+            'Path under public/ (e.g. /quiz-images/...) or an existing /media/... path. File upload wins over URL.',
         formOptionTextRu: 'Option text (Russian)',
         formOptionTextEn: 'Option text (English)',
         formCategory: 'Category',
@@ -177,6 +189,10 @@ export const enDictionary = {
             exactlyOneCorrectRequired:
                 'Exactly one correct answer option is required.',
             saveFailed: 'Failed to save the question. Try again.',
+            uploadFailed:
+                'Failed to upload the image. Check storage settings and try again.',
+            invalidImage:
+                'Invalid image. Use JPEG/PNG/WebP (no SVG), max 2 MB.',
             deleteFailed: 'Failed to delete. Try again.',
             deactivateFailed: 'Failed to deactivate the question. Try again.',
             activateFailed: 'Failed to activate the question. Try again.',

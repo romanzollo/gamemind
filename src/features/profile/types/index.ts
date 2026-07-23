@@ -5,6 +5,8 @@ export type ProfileErrorCode =
     | 'USERNAME_TAKEN'
     | 'SAME_USERNAME'
     | 'SAME_AVATAR'
+    | 'UPLOAD_FAILED'
+    | 'INVALID_IMAGE'
     | 'UPDATE_FAILED';
 
 export type ProfileFormState = {

@@ -14,6 +14,8 @@ const ERROR_MAP: Record<
     USERNAME_TAKEN: 'usernameTaken',
     SAME_USERNAME: 'sameUsername',
     SAME_AVATAR: 'sameAvatar',
+    UPLOAD_FAILED: 'uploadFailed',
+    INVALID_IMAGE: 'invalidImage',
     UPDATE_FAILED: 'updateFailed',
 };
 

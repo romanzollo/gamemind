@@ -3,15 +3,12 @@
 import { revalidatePath } from 'next/cache';
 
 import { userRepository } from '@/entities/user/user.repository';
-import { changeAvatarSchema } from '@/features/profile/lib/validation';
+import { resolveAvatarImage } from '@/features/profile/lib/resolve-avatar-image';
 import type { ProfileFormState } from '@/features/profile/types';
 import { unstable_update } from '@/lib/auth';
 import { requireUser } from '@/lib/auth/guards';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
-/**
- * Получение локали из формы
- */
 function getLocaleFromFormData(formData: FormData): Locale {
     const locale = formData.get('locale');
 
@@ -21,7 +18,10 @@ function getLocaleFromFormData(formData: FormData): Locale {
 }
 
 /**
- * Смена аватара
+ * Смена аватара (Phase B): file upload → `/media/avatars/...`,
+ * URL-поле остаётся advanced; пустой imageUrl = сброс.
+ *
+ * После записи в БД: unstable_update JWT + client router.refresh().
  */
 export async function changeAvatarAction(
     _prevState: ProfileFormState,
@@ -30,21 +30,21 @@ export async function changeAvatarAction(
     const locale = getLocaleFromFormData(formData);
     const session = await requireUser(locale);
 
-    // Парсинг данных из формы
-    const parsed = changeAvatarSchema.safeParse({
-        imageUrl: formData.get('imageUrl'),
+    const previousPublicUrl = session.user.image ?? null;
+
+    const resolved = await resolveAvatarImage({
+        formData,
+        userId: session.user.id,
+        previousPublicUrl,
     });
 
-    if (!parsed.success) {
-        return { errorCode: 'INVALID_INPUT' };
+    if (!resolved.ok) {
+        return { errorCode: resolved.errorCode };
     }
 
-    // Получение URL аватара из данных
-    const { imageUrl } = parsed.data;
-
-    // В JWT/session пустой аватар часто null; в форме сброс = ''
+    const { imageUrl } = resolved;
     const nextImage = imageUrl === '' ? null : imageUrl;
-    const currentImage = session.user.image ?? null;
+    const currentImage = previousPublicUrl;
 
     if (currentImage === nextImage) {
         return { errorCode: 'SAME_AVATAR' };
@@ -69,16 +69,14 @@ export async function changeAvatarAction(
     }
 
     try {
-        // image в JWT заработает после правки auth.config
         await unstable_update({ user: { image: nextImage } });
     } catch (error) {
         console.error('Session avatar update failed:', error);
-        // БД уже обновлена; полный reload всё равно покажет актуальное после JWT-правки
+        // БД уже обновлена; refresh всё равно подтянет актуальное после JWT
     }
 
     revalidatePath(`/${locale}/profile`);
     revalidatePath(`/${locale}`, 'layout');
 
-    // Возвращаем строку ('' при сбросе), чтобы useEffect зависел от значения
     return { success: true, imageUrl };
 }

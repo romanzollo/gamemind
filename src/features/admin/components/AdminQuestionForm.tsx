@@ -101,7 +101,10 @@ export function AdminQuestionForm({
 
     return (
         <>
-            <form action={formAction} className="mt-6 flex flex-col gap-4">
+            <form
+                action={formAction}
+                className="mt-6 flex flex-col gap-4"
+            >
                 <input type="hidden" name="locale" value={locale} />
                 {isEdit ? (
                     <input
@@ -188,21 +191,55 @@ export function AdminQuestionForm({
                 </label>
 
                 {questionType === 'IMAGE_GUESS' ? (
-                    <label className="flex flex-col gap-2 text-sm text-foreground">
-                        <span>{dictionary.admin.formPromptImageUrl}</span>
-                        <input
-                            type="text"
-                            name="promptImageUrl"
-                            required
-                            maxLength={2048}
-                            placeholder="/quiz-images/easy/example.svg"
-                            defaultValue={editValues?.promptImageUrl ?? ''}
-                            className={fieldClassName}
-                        />
-                        <span className="text-sm text-muted">
-                            {dictionary.admin.formPromptImageUrlHint}
-                        </span>
-                    </label>
+                    <fieldset className="flex flex-col gap-3">
+                        <legend className="font-medium text-foreground">
+                            {dictionary.admin.formPromptImage}
+                        </legend>
+
+                        <label className="flex flex-col gap-2 text-sm text-foreground">
+                            <span>{dictionary.admin.formPromptImageFile}</span>
+                            <input
+                                type="file"
+                                name="promptImageFile"
+                                accept="image/jpeg,image/png,image/webp"
+                                className={fieldClassName}
+                            />
+                            <span className="text-sm text-muted">
+                                {dictionary.admin.formPromptImageFileHint}
+                            </span>
+                        </label>
+
+                        {editValues?.promptImageUrl ? (
+                            <>
+                                <input
+                                    type="hidden"
+                                    name="previousPromptImageUrl"
+                                    value={editValues.promptImageUrl}
+                                />
+                                <p className="text-sm text-muted">
+                                    {dictionary.admin.formPromptImageCurrent}:{' '}
+                                    <span className="break-all text-foreground">
+                                        {editValues.promptImageUrl}
+                                    </span>
+                                </p>
+                            </>
+                        ) : null}
+
+                        <label className="flex flex-col gap-2 text-sm text-foreground">
+                            <span>{dictionary.admin.formPromptImageUrl}</span>
+                            <input
+                                type="text"
+                                name="promptImageUrl"
+                                maxLength={2048}
+                                placeholder="/quiz-images/easy/example.webp"
+                                defaultValue={editValues?.promptImageUrl ?? ''}
+                                className={fieldClassName}
+                            />
+                            <span className="text-sm text-muted">
+                                {dictionary.admin.formPromptImageUrlHint}
+                            </span>
+                        </label>
+                    </fieldset>
                 ) : (
                     <input type="hidden" name="promptImageUrl" value="" />
                 )}

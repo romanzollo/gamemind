@@ -86,6 +86,8 @@ export type Dictionary = {
         changePasswordSubmit: string;
         changePasswordSuccess: string;
         changeAvatarTitle: string;
+        avatarFile: string;
+        avatarFileHint: string;
         avatarUrl: string;
         avatarUrlHint: string;
         avatarPreviewFailed: string;
@@ -99,6 +101,8 @@ export type Dictionary = {
             usernameTaken: string;
             sameUsername: string;
             sameAvatar: string;
+            uploadFailed: string;
+            invalidImage: string;
             updateFailed: string;
         };
     };
@@ -136,6 +140,10 @@ export type Dictionary = {
         formQuestionType: string;
         formQuestionTypeText: string;
         formQuestionTypeImageGuess: string;
+        formPromptImage: string;
+        formPromptImageFile: string;
+        formPromptImageFileHint: string;
+        formPromptImageCurrent: string;
         formPromptImageUrl: string;
         formPromptImageUrlHint: string;
         formOptionTextRu: string;
@@ -167,6 +175,8 @@ export type Dictionary = {
             notFound: string;
             exactlyOneCorrectRequired: string;
             saveFailed: string;
+            uploadFailed: string;
+            invalidImage: string;
             deleteFailed: string;
             deactivateFailed: string;
             activateFailed: string;

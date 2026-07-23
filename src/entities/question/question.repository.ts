@@ -491,6 +491,7 @@ async function applyAdminQuestionCreateWithPg(
 ): Promise<{ id: string }> {
     const promptImageUrl = input.promptImageUrl?.trim() ?? '';
     const assetId = `qa-${questionId}-prompt`;
+    const promptAsset = input.promptAsset;
     const optionRows = input.options.map((option) => ({
         id: `${questionId}-opt-${option.order}`,
         text: option.translations.ru.text,
@@ -538,6 +539,11 @@ async function applyAdminQuestionCreateWithPg(
         input.category,
         promptImageUrl,
         assetId,
+        promptAsset?.storageKey ?? null,
+        promptAsset?.mimeType ?? null,
+        promptAsset?.width ?? null,
+        promptAsset?.height ?? null,
+        promptAsset?.byteSize ?? null,
     ];
     const questionTranslationParams = questionTranslationRows.flatMap((row) => [
         row.id,
@@ -613,6 +619,11 @@ async function applyAdminQuestionCreateWithPg(
                     "questionId",
                     "role",
                     "url",
+                    "storageKey",
+                    "mimeType",
+                    "width",
+                    "height",
+                    "byteSize",
                     "order"
                 )
                 SELECT
@@ -620,6 +631,11 @@ async function applyAdminQuestionCreateWithPg(
                     uq."id",
                     'PROMPT'::"QuestionAssetRole",
                     $6,
+                    $8,
+                    $9,
+                    $10::int,
+                    $11::int,
+                    $12::int,
                     0
                 FROM upsert_question uq
                 WHERE
@@ -627,6 +643,11 @@ async function applyAdminQuestionCreateWithPg(
                     AND NULLIF(BTRIM($6), '') IS NOT NULL
                 ON CONFLICT ("id") DO UPDATE SET
                     "url" = EXCLUDED."url",
+                    "storageKey" = COALESCE(EXCLUDED."storageKey", "QuestionAsset"."storageKey"),
+                    "mimeType" = COALESCE(EXCLUDED."mimeType", "QuestionAsset"."mimeType"),
+                    "width" = COALESCE(EXCLUDED."width", "QuestionAsset"."width"),
+                    "height" = COALESCE(EXCLUDED."height", "QuestionAsset"."height"),
+                    "byteSize" = COALESCE(EXCLUDED."byteSize", "QuestionAsset"."byteSize"),
                     "role" = EXCLUDED."role"
                 RETURNING "id"
             ),
@@ -745,7 +766,8 @@ async function applyAdminQuestionCreateWithPg(
 async function createWithOptionsWithDirectPg(
     input: CreateQuestionInput,
 ): Promise<{ id: string }> {
-    const questionId = randomUUID();
+    // id из action (после upload) или новый UUID
+    const questionId = input.id?.trim() || randomUUID();
 
     return withDirectPgWriteRetry(
         (client) => applyAdminQuestionCreateWithPg(client, questionId, input),
@@ -794,6 +816,7 @@ async function applyAdminQuestionUpdateWithPg(
 
     const promptImageUrl = input.promptImageUrl?.trim() ?? '';
     const assetId = `qa-${input.questionId}-prompt`;
+    const promptAsset = input.promptAsset;
 
     const questionParams = [
         input.translations.ru.text,
@@ -803,6 +826,11 @@ async function applyAdminQuestionUpdateWithPg(
         input.questionId,
         promptImageUrl,
         assetId,
+        promptAsset?.storageKey ?? null,
+        promptAsset?.mimeType ?? null,
+        promptAsset?.width ?? null,
+        promptAsset?.height ?? null,
+        promptAsset?.byteSize ?? null,
     ];
     const questionTranslationParams = questionTranslationRows.flatMap((row) => [
         row.id,
@@ -867,6 +895,11 @@ async function applyAdminQuestionUpdateWithPg(
                     "questionId",
                     "role",
                     "url",
+                    "storageKey",
+                    "mimeType",
+                    "width",
+                    "height",
+                    "byteSize",
                     "order"
                 )
                 SELECT
@@ -874,6 +907,11 @@ async function applyAdminQuestionUpdateWithPg(
                     uq."id",
                     'PROMPT'::"QuestionAssetRole",
                     $6,
+                    $8,
+                    $9,
+                    $10::int,
+                    $11::int,
+                    $12::int,
                     0
                 FROM updated_question uq
                 WHERE
@@ -881,6 +919,11 @@ async function applyAdminQuestionUpdateWithPg(
                     AND NULLIF(BTRIM($6), '') IS NOT NULL
                 ON CONFLICT ("id") DO UPDATE SET
                     "url" = EXCLUDED."url",
+                    "storageKey" = COALESCE(EXCLUDED."storageKey", "QuestionAsset"."storageKey"),
+                    "mimeType" = COALESCE(EXCLUDED."mimeType", "QuestionAsset"."mimeType"),
+                    "width" = COALESCE(EXCLUDED."width", "QuestionAsset"."width"),
+                    "height" = COALESCE(EXCLUDED."height", "QuestionAsset"."height"),
+                    "byteSize" = COALESCE(EXCLUDED."byteSize", "QuestionAsset"."byteSize"),
                     "role" = EXCLUDED."role"
                 RETURNING "id"
             ),

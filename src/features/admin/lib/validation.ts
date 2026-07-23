@@ -85,16 +85,31 @@ function assertImageGuessHasPromptUrl(
         ctx.addIssue({
             code: 'custom',
             path: ['promptImageUrl'],
-            message: 'Prompt image URL is required for image guess questions',
+            message:
+                'Prompt image file or URL is required for image guess questions',
         });
     }
 }
 
+/** Метаданные после upload в storage (optional — URL-only путь их не заполняет). */
+const promptAssetSchema = z
+    .object({
+        storageKey: z.string().trim().min(1).max(512),
+        mimeType: z.literal('image/webp'),
+        width: z.number().int().positive().max(10000),
+        height: z.number().int().positive().max(10000),
+        byteSize: z.number().int().positive().max(10 * 1024 * 1024),
+    })
+    .optional();
+
 // схема для создания вопроса
 export const createQuestionSchema = z
     .object({
+        /** Можно передать сгенерированный id (нужен для storage key до INSERT). */
+        id: z.string().trim().min(1).optional(),
         type: questionTypeSchema.default('TEXT'),
         promptImageUrl: promptImageUrlSchema.optional(),
+        promptAsset: promptAssetSchema,
         translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z
@@ -121,6 +136,7 @@ export const updateQuestionSchema = z
         questionId: z.string().trim().min(1, 'Question id is required'),
         type: questionTypeSchema.default('TEXT'),
         promptImageUrl: promptImageUrlSchema.optional(),
+        promptAsset: promptAssetSchema,
         translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z

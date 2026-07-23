@@ -87,9 +87,12 @@ export const ruDictionary: Dictionary = {
         changePasswordSubmit: 'Сменить пароль',
         changePasswordSuccess: 'Пароль успешно изменён.',
         changeAvatarTitle: 'Аватар',
-        avatarUrl: 'URL изображения',
+        avatarFile: 'Загрузить файл',
+        avatarFileHint:
+            'JPEG, PNG или WebP, до 2 MB. На сервере будет квадратный WebP (центр кадра).',
+        avatarUrl: 'Или URL (advanced)',
         avatarUrlHint:
-            'Прямая ссылка на файл (https://…/photo.webp) или путь сайта. В круге показывается центр картинки (как в обычных приложениях). Оставьте пустым, чтобы сбросить.',
+            'Прямая https-ссылка или путь сайта (/media/...). Файл имеет приоритет. Для сброса нажми «Сбросить аватар».',
         avatarPreviewFailed: 'Не удалось загрузить',
         changeAvatarSubmit: 'Сохранить аватар',
         clearAvatar: 'Сбросить аватар',
@@ -101,6 +104,10 @@ export const ruDictionary: Dictionary = {
             usernameTaken: 'Это имя пользователя уже занято.',
             sameUsername: 'Новое имя должно отличаться от текущего.',
             sameAvatar: 'Новый аватар совпадает с текущим.',
+            uploadFailed:
+                'Не удалось загрузить аватар. Проверь storage и попробуй ещё раз.',
+            invalidImage:
+                'Недопустимое изображение. Нужны JPEG/PNG/WebP без SVG, до 2 MB.',
             updateFailed: 'Не удалось сохранить изменения. Попробуйте позже.',
         },
     },
@@ -141,9 +148,14 @@ export const ruDictionary: Dictionary = {
         formQuestionType: 'Тип вопроса',
         formQuestionTypeText: 'Текстовый',
         formQuestionTypeImageGuess: 'Угадай по изображению',
-        formPromptImageUrl: 'URL изображения (prompt)',
+        formPromptImage: 'Изображение (prompt)',
+        formPromptImageFile: 'Загрузить файл',
+        formPromptImageFileHint:
+            'JPEG, PNG или WebP, до 2 MB. На сервере будет WebP без обрезки кадра.',
+        formPromptImageCurrent: 'Текущий URL',
+        formPromptImageUrl: 'Или URL (advanced)',
         formPromptImageUrlHint:
-            'Путь из public/ (например /quiz-images/...) или HTTPS URL из CDN.',
+            'Путь из public/ (например /quiz-images/...) или уже сохранённый /media/.... Файл имеет приоритет над URL.',
         formOptionTextRu: 'Текст варианта (русский)',
         formOptionTextEn: 'Текст варианта (английский)',
         formCategory: 'Категория',
@@ -178,6 +190,10 @@ export const ruDictionary: Dictionary = {
             exactlyOneCorrectRequired:
                 'Должен быть ровно один правильный вариант ответа.',
             saveFailed: 'Не удалось сохранить вопрос. Попробуй ещё раз.',
+            uploadFailed:
+                'Не удалось загрузить изображение. Проверь storage и попробуй ещё раз.',
+            invalidImage:
+                'Недопустимое изображение. Нужны JPEG/PNG/WebP без SVG, до 2 MB.',
             deleteFailed: 'Не удалось удалить. Попробуй ещё раз.',
             deactivateFailed:
                 'Не удалось деактивировать вопрос. Попробуй ещё раз.',

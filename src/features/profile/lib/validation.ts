@@ -44,7 +44,7 @@ export const changePasswordSchema = z
     });
 
 /**
- * Временный аватар: в User.image храним URL-строку (загрузка в R2 — позже).
+ * Interim URL-схема (advanced). Основной путь — file upload в changeAvatarAction.
  * Пустая строка = сброс аватара (репозиторий запишет NULL).
  */
 const avatarUrlField = z

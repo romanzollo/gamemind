@@ -42,6 +42,8 @@ export type AdminErrorCode =
     | 'NOT_FOUND'
     | 'EXACTLY_ONE_CORRECT_REQUIRED'
     | 'SAVE_FAILED'
+    | 'UPLOAD_FAILED'
+    | 'INVALID_IMAGE'
     | 'DELETE_FAILED'
     | 'DEACTIVATE_FAILED'
     | 'ACTIVATE_FAILED'

@@ -57,3 +57,7 @@ CLAUDE.md
 !/raw-quiz-images/README.md
 !/raw-quiz-images/**/.gitkeep
 
+# Local media uploads (STORAGE_PROVIDER=local-public) — do not commit runtime files
+/public/media/**
+!/public/media/.gitkeep
+

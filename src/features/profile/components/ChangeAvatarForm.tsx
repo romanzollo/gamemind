@@ -61,6 +61,21 @@ export function ChangeAvatarForm({
 
                 <label className="flex flex-col gap-2">
                     <span className={labelClassName}>
+                        {dictionary.profile.avatarFile}
+                    </span>
+                    <input
+                        name="avatarFile"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className={fieldClassName}
+                    />
+                    <span className="text-sm text-muted">
+                        {dictionary.profile.avatarFileHint}
+                    </span>
+                </label>
+
+                <label className="flex flex-col gap-2">
+                    <span className={labelClassName}>
                         {dictionary.profile.avatarUrl}
                     </span>
                     <input
@@ -68,8 +83,8 @@ export function ChangeAvatarForm({
                         type="text"
                         inputMode="url"
                         maxLength={2048}
-                        defaultValue={currentImageUrl ?? ''}
-                        placeholder="https://…/photo.webp"
+                        defaultValue=""
+                        placeholder="/media/avatars/… or https://…"
                         className={fieldClassName}
                     />
                     <span className="text-sm text-muted">
@@ -96,7 +111,7 @@ export function ChangeAvatarForm({
                             onClick={() => {
                                 const fd = new FormData();
                                 fd.set('locale', locale);
-                                fd.set('imageUrl', '');
+                                fd.set('clearAvatar', '1');
                                 startTransition(() => {
                                     formAction(fd);
                                 });

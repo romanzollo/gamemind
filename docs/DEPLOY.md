@@ -9,9 +9,9 @@
 |------|--------|
 | Приложение | Vercel Hobby |
 | БД | Neon (лучше отдельный production project/branch) |
-| Картинки | `public/quiz-images/*.webp` в git (тот же origin) |
-| Домен | Свой домен → Vercel (+ Cloudflare DNS/proxy рекомендуется) |
-| Загрузка картинок позже | Cloudflare R2 (не в день первого деплоя) |
+| Картинки (seed) | `public/quiz-images/*.webp` в git (тот же origin) |
+| Домен | Свой домен → Vercel (DNS у REG.RU; CF proxy не обязателен) |
+| Upload (quiz + avatars) | **Vercel Blob** + same-origin `/media/...` (см. Media Storage ADR). Yandex S3 — fallback. **R2 не default**. |
 
 ## Чеклист перед деплоем
 
@@ -30,6 +30,9 @@
 | `DATABASE_URL_UNPOOLED` | Neon **direct** (без `-pooler`) |
 | `AUTH_SECRET` | `openssl rand -base64 32` |
 | `AUTH_URL` | Сначала: `https://your-app.vercel.app` — потом: `https://your-domain.com` |
+| `STORAGE_PROVIDER` | `vercel-blob` на Production (можно не задавать — на Vercel дефолт blob) |
+| `BLOB_READ_WRITE_TOKEN` | Токен public Blob store (Vercel → Storage) |
+| `BLOB_PUBLIC_BASE_URL` | `https://<storeId>.public.blob.vercel-storage.com` — для rewrite `/media/*` |
 
 Задай их для **Production**. Preview для MVP может использовать ту же БД или отдельный Neon branch позже.
 
@@ -87,10 +90,29 @@ npm run build
 
 ## Явно позже (когда URL уже работает)
 
-- Admin-загрузка в Cloudflare R2
-- Profile / achievements / daily challenge
+- ~~Admin-загрузка / Avatar Phase B~~ — **код local July 23**; нужен Blob env + redeploy
+- Profile polish / achievements / daily challenge
 - Admin: фильтры, поиск, draft workflow
-- Полировка result / leaderboard
+
+## Media storage (кратко)
+
+1. Vercel → Storage → создать **public** Blob store → скопировать `BLOB_READ_WRITE_TOKEN`.
+2. После первого upload (или из UI store) взять host вида `https://….public.blob.vercel-storage.com` → `BLOB_PUBLIC_BASE_URL`.
+3. Redeploy, чтобы `next.config` подхватил rewrite `/media/:path* → Blob`.
+4. В БД храним относительные `/media/quiz/...` и `/media/avatars/...`; seed остаётся `/quiz-images/...`.
+5. Локально без токена: `STORAGE_PROVIDER=local-public` (или не задавать) → файлы в `public/media/` (gitignore).
+6. Next 16.2: лимит тела Server Action — `experimental.serverActions.bodySizeLimit` (напр. `3mb`). Top-level `serverActions` в этом релизе **не** принимается.
+
+### Smoke media (после deploy / локально)
+
+- [ ] Avatar: upload jpeg/png/webp → header + profile circle (`object-cover`)
+- [ ] Avatar: clear → NULL
+- [ ] Admin: IMAGE_GUESS file upload → `QuestionAsset.url` вида `/media/quiz/...`
+- [ ] Прямой URL `https://www.game-mind.ru/media/...` (или localhost `/media/...`) открывается **без VPN**
+- [ ] Seed `https://www.game-mind.ru/quiz-images/easy/super-mario-bros.webp` без регрессии
+- [ ] Quiz session IMAGE_GUESS: full-frame `object-contain`; scoring/auth OK
+
+Подробности: `docs/DECISIONS.md` → Media Storage And Upload (RU-first).
 
 ## Если что-то ломается
 
@@ -100,7 +122,9 @@ npm run build
 | Сайт есть, login сломан | Нет/неверный `AUTH_SECRET` или `AUTH_URL` |
 | Ошибки БД в quiz/admin | Перепутаны pooled/unpooled; миграции на prod не применены |
 | `IMAGE_GUESS` — битая картинка | WebP не в деплое; на prod DB не обновлены asset URL |
-| Друзьям не открывается `*.vercel.app` | Привяжи домен + Cloudflare proxy |
+| `Body exceeded 1 MB limit` на upload | Нет `experimental.serverActions.bodySizeLimit` / нужен restart после next.config |
+| `/media/...` 404 на prod | Нет `BLOB_PUBLIC_BASE_URL` или Blob store / rewrite |
+| Друзьям не открывается `*.vercel.app` | Привяжи домен (уже: `www.game-mind.ru`) |
 
 ## Связанные документы
 

@@ -1,9 +1,12 @@
 'use server';
 
+import { randomUUID } from 'node:crypto';
+
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
+import { resolveAdminPromptImage } from '@/features/admin/lib/resolve-prompt-image';
 import {
     createQuestionSchema,
     updateQuestionSchema,
@@ -12,7 +15,6 @@ import type { AdminFormState } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
-// функция для получения локаль из формы
 function getLocaleFromFormData(formData: FormData): Locale {
     const locale = formData.get('locale');
 
@@ -21,14 +23,12 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
-// получение строки из FormData
 function getFormString(formData: FormData, name: string): string {
     const value = formData.get(name);
 
     return typeof value === 'string' ? value : '';
 }
 
-// парсинг переводов текста вопроса из формы
 function parseQuestionTranslationsFromFormData(formData: FormData) {
     return {
         ru: { text: getFormString(formData, 'questionTextRu') },
@@ -36,17 +36,13 @@ function parseQuestionTranslationsFromFormData(formData: FormData) {
     };
 }
 
-/** Парсинг медиа данных вопроса из формы */
-function parseQuestionMediaFromFormData(formData: FormData) {
+/** Тип вопроса из формы; file/URL резолвятся в resolveAdminPromptImage. */
+function parseQuestionTypeFromFormData(formData: FormData) {
     const typeRaw = getFormString(formData, 'questionType');
 
-    return {
-        type: typeRaw === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT',
-        promptImageUrl: getFormString(formData, 'promptImageUrl'),
-    } as const;
+    return typeRaw === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
 }
 
-// парсинг переводов текста варианта ответа из формы
 function parseOptionTranslationsFromFormData(
     formData: FormData,
     index: number,
@@ -57,7 +53,6 @@ function parseOptionTranslationsFromFormData(
     };
 }
 
-// функция для парсинга вариантов ответа из формы
 function parseOptionsFromFormData(formData: FormData) {
     const correctOptionIndexRaw = formData.get('correctOptionIndex');
     const correctOptionIndex =
@@ -93,7 +88,6 @@ function parseOptionsFromFormData(formData: FormData) {
     return options;
 }
 
-// парсинг вариантов для edit: нужны optionId-${i} из hidden inputs
 function parseOptionsForUpdateFromFormData(formData: FormData) {
     const correctOptionIndexRaw = formData.get('correctOptionIndex');
     const correctOptionIndex =
@@ -136,26 +130,42 @@ function parseOptionsForUpdateFromFormData(formData: FormData) {
     return options;
 }
 
-/** Действие для создания вопроса */
+/**
+ * Создание вопроса.
+ * Для IMAGE_GUESS: file → sharp → storage.put → URL в QuestionAsset (или URL-поле).
+ */
 export async function createQuestionAction(
     _prevState: AdminFormState,
     formData: FormData,
 ): Promise<AdminFormState> {
-    // получаем локаль из формы
     const locale = getLocaleFromFormData(formData);
-    // проверяем, является ли пользователь администратором
     await requireAdmin(locale);
 
-    // парсим данные из формы
+    const type = parseQuestionTypeFromFormData(formData);
+    // id заранее — совпадает со storage key до INSERT
+    const questionId = randomUUID();
+
+    const resolved = await resolveAdminPromptImage({
+        formData,
+        type,
+        questionIdForKey: questionId,
+    });
+
+    if (!resolved.ok) {
+        return { errorCode: resolved.errorCode };
+    }
+
     const parsed = createQuestionSchema.safeParse({
-        ...parseQuestionMediaFromFormData(formData),
+        id: questionId,
+        type,
+        promptImageUrl: resolved.value.promptImageUrl,
+        promptAsset: resolved.value.promptAsset,
         translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
         category: formData.get('category') ?? 'video-games',
         options: parseOptionsFromFormData(formData),
     });
 
-    // проверяем, являются ли данные валидными
     if (!parsed.success) {
         const hasCorrectOptionError = parsed.error.issues.some(
             (issue) => issue.path[0] === 'options',
@@ -168,7 +178,6 @@ export async function createQuestionAction(
         };
     }
 
-    // пытаемся создать вопрос с вариантами ответа
     try {
         await questionRepository.createWithOptions(parsed.data);
     } catch {
@@ -179,16 +188,11 @@ export async function createQuestionAction(
     redirect(`/${locale}/admin/questions`);
 }
 
-// Action для деактивации вопроса
 export async function deactivateQuestionAction(formData: FormData) {
-    // получаем локаль из формы
     const locale = getLocaleFromFormData(formData);
-    // проверяем, является ли пользователь администратором
     await requireAdmin(locale);
 
-    // получаем id вопроса из формы
     const questionId = formData.get('questionId');
-    // проверяем, является ли id вопроса строкой и не пустой
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
         redirect(`/${locale}/admin/questions`);
@@ -208,13 +212,10 @@ export async function deactivateQuestionAction(formData: FormData) {
         redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
     }
 
-    // перевалидируем путь к странице администрирования вопросов
     revalidatePath(`/${locale}/admin/questions`);
-    // перенаправляем на страницу администрирования вопросов
     redirect(`/${locale}/admin/questions`);
 }
 
-// Action для активации вопроса
 export async function activateQuestionAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
@@ -243,14 +244,10 @@ export async function activateQuestionAction(formData: FormData) {
     redirect(`/${locale}/admin/questions`);
 }
 
-// Action для удаления вопроса
 export async function deleteQuestionAction(formData: FormData) {
-    // получаем локаль из формы
     const locale = getLocaleFromFormData(formData);
-    // проверяем, является ли пользователь администратором
     await requireAdmin(locale);
 
-    // получаем id вопроса из формы
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
@@ -263,40 +260,57 @@ export async function deleteQuestionAction(formData: FormData) {
         redirect(`/${locale}/admin/questions?error=DELETE_FAILED`);
     }
 
-    // перевалидируем путь к странице администрирования вопросов
     revalidatePath(`/${locale}/admin/questions`);
-    // перенаправляем на страницу администрирования вопросов
     redirect(`/${locale}/admin/questions`);
 }
 
-// Action для редактирования вопроса
+/**
+ * Редактирование вопроса.
+ * Новый file заменяет prompt URL; старый `/media/...` удаляется best-effort.
+ */
 export async function updateQuestionAction(
     _prevState: AdminFormState,
     formData: FormData,
 ): Promise<AdminFormState> {
-    // получаем локаль из формы
     const locale = getLocaleFromFormData(formData);
-    // проверяем, является ли пользователь администратором
     await requireAdmin(locale);
 
-    // парсим данные из формы
+    const questionIdRaw = formData.get('questionId');
+    if (typeof questionIdRaw !== 'string' || questionIdRaw.trim() === '') {
+        return { errorCode: 'INVALID_INPUT' };
+    }
+    const questionId = questionIdRaw.trim();
+
+    const type = parseQuestionTypeFromFormData(formData);
+    const previousPublicUrl = getFormString(formData, 'previousPromptImageUrl');
+
+    const resolved = await resolveAdminPromptImage({
+        formData,
+        type,
+        questionIdForKey: questionId,
+        previousPublicUrl: previousPublicUrl || null,
+    });
+
+    if (!resolved.ok) {
+        return { errorCode: resolved.errorCode };
+    }
+
     const parsed = updateQuestionSchema.safeParse({
-        questionId: formData.get('questionId'),
-        ...parseQuestionMediaFromFormData(formData),
+        questionId,
+        type,
+        promptImageUrl: resolved.value.promptImageUrl,
+        promptAsset: resolved.value.promptAsset,
         translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
         category: formData.get('category') ?? 'video-games',
         options: parseOptionsForUpdateFromFormData(formData),
     });
 
-    // проверяем, являются ли данные валидными
     if (!parsed.success) {
-        // проверяем, есть ли ошибка в вариантах ответа
         const hasCorrectOptionError = parsed.error.issues.some(
             (issue) => issue.path[0] === 'options',
         );
 
-        // возвращаем ошибку
         return {
             errorCode: hasCorrectOptionError
                 ? 'EXACTLY_ONE_CORRECT_REQUIRED'
@@ -304,7 +318,6 @@ export async function updateQuestionAction(
         };
     }
 
-    // пытаемся обновить вопрос и варианты ответа
     try {
         const result = await questionRepository.updateWithOptions(parsed.data);
 
@@ -319,10 +332,7 @@ export async function updateQuestionAction(
         return { errorCode: 'SAVE_FAILED' };
     }
 
-    // перевалидируем путь к странице администрирования вопросов
     revalidatePath(`/${locale}/admin/questions`);
-    // перевалидируем путь к странице редактирования вопроса
     revalidatePath(`/${locale}/admin/questions/${parsed.data.questionId}/edit`);
-    // перенаправляем на страницу администрирования вопросов
     redirect(`/${locale}/admin/questions`);
 }
