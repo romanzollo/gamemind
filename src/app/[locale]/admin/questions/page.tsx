@@ -54,8 +54,10 @@ export default async function AdminQuestionsPage({
             );
         }
     } catch (loadError) {
+        // console.warn: console.error в Server Component поднимает Next redbox
+        // даже когда ошибка уже обработана (InlineAlert + retry).
         if (process.env.NODE_ENV === 'development') {
-            console.error(
+            console.warn(
                 '[admin/questions] findAllForAdmin failed:',
                 loadError instanceof Error ? loadError.message : loadError,
             );
@@ -127,6 +129,7 @@ export default async function AdminQuestionsPage({
                     {loadErrorMessage ? (
                         <Link
                             href={localizedHref(safeLocale, '/admin/questions')}
+                            prefetch={false}
                             className="rounded-sm text-sm font-medium text-primary underline-offset-2 hover:underline hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                         >
                             {dictionary.admin.retryLoad}

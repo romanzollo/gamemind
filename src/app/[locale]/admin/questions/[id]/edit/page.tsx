@@ -38,6 +38,7 @@ export default async function AdminEditQuestionPage({
                 </h1>
                 <Link
                     href={localizedHref(safeLocale, '/admin/questions')}
+                    prefetch={false}
                     className={buttonClassName({
                         variant: 'secondary',
                         className: 'min-h-10 px-3 text-sm sm:min-h-11',

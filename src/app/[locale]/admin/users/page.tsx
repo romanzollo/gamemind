@@ -97,6 +97,7 @@ export default async function AdminUsersPage({
                     </Link>
                     <Link
                         href={localizedHref(safeLocale, '/admin/questions')}
+                        prefetch={false}
                         className={buttonClassName({
                             variant: 'ghost',
                             className: 'min-h-10 px-3 text-sm sm:min-h-11',

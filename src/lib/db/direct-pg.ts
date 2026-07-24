@@ -7,6 +7,8 @@
  *   so a late connect cannot start a query on a half-dead client.
  * - Prefer unpooled URL for admin/quiz reads; pooled+tight timeout was a
  *   known false-failure regression.
+ * - In development on Windows, soften SSL and serialize reads: parallel
+ *   fresh-Client TLS to Neon is a known wedge (admin full list timeouts).
  */
 import { Client } from 'pg';
 
@@ -35,9 +37,24 @@ const DEPRECATED_SSL_MODES = new Set(['prefer', 'require', 'verify-ca']);
 const READ_ATTEMPT_TIMEOUT_MS = 12_000;
 const READ_MAX_ATTEMPTS = 2;
 
+const isDev = process.env.NODE_ENV === 'development';
+
+/**
+ * Normalize Neon connection strings for node-pg.
+ *
+ * Production: upgrade weak sslmode → verify-full.
+ * Development (Windows): strip sslmode — node-pg treats `require` as
+ * verify-full and that combination often wedges TLS inside `next dev`.
+ */
 export function normalizePgConnectionString(connectionString: string) {
     try {
         const url = new URL(connectionString);
+
+        if (isDev) {
+            url.searchParams.delete('sslmode');
+            return url.toString();
+        }
+
         const sslmode = url.searchParams.get('sslmode');
 
         if (!sslmode || DEPRECATED_SSL_MODES.has(sslmode)) {
@@ -75,16 +92,17 @@ function getPooledDatabaseUrl() {
 function createClient(connectionString: string) {
     // `family: 4` forces IPv4 — helps Windows + Neon dual-stack TLS hangs.
     // Not in @types/pg ClientConfig, but node-pg forwards it to net.connect.
+    // Dev: rejectUnauthorized false — matches working minimal Next smoke on Windows.
     const client = new Client({
         connectionString,
-        ssl: { rejectUnauthorized: true },
+        ssl: { rejectUnauthorized: !isDev },
         keepAlive: true,
         connectionTimeoutMillis: 10_000,
         family: 4,
     } as ConstructorParameters<typeof Client>[0]);
 
     client.on('error', (error) => {
-        if (process.env.NODE_ENV === 'development') {
+        if (isDev) {
             console.warn('Direct pg client error:', error.message);
         }
     });
@@ -239,7 +257,7 @@ async function withPgReadRetry<T>(
                 throw error;
             }
 
-            if (process.env.NODE_ENV === 'development') {
+            if (isDev) {
                 console.warn(
                     `Direct pg read retry ${attempt}/${attempts}:`,
                     error instanceof Error ? error.message : error,

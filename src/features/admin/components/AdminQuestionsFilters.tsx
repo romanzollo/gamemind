@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useTransition, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type {
     AdminQuestionListFilters,
@@ -17,9 +15,12 @@ import { buttonClassName } from '@/shared/ui';
 import type { Difficulty, QuestionType } from '@/types';
 
 /**
- * Фильтры списка вопросов: смена select → сразу router.replace.
+ * Фильтры списка вопросов.
+ *
+ * Все переходы — hard navigation (`location.assign`), не soft `router.replace`.
+ * Soft RSC после list-read в next dev (Windows + Neon) клинил connect
+ * (Reset / смена фильтра выглядели как зависание).
  * Поиск — debounce, чтобы не бить Neon на каждый символ.
- * Apply не нужен; Reset очищает URL.
  */
 
 const fieldClassName =
@@ -44,10 +45,7 @@ export function AdminQuestionsFilters({
     difficultyLabels,
     filters,
 }: AdminQuestionsFiltersProps) {
-    const router = useRouter();
-    const [isPending, startTransition] = useTransition();
     const [searchText, setSearchText] = useState(filters.q);
-    const listHref = `/${locale}/admin/questions`;
     const showReset = hasActiveAdminQuestionListFilters(filters);
 
     useEffect(() => {
@@ -55,10 +53,19 @@ export function AdminQuestionsFilters({
     }, [filters.q]);
 
     function navigate(next: AdminQuestionListFilters) {
-        const href = buildAdminQuestionListHref(locale, next);
-        startTransition(() => {
-            router.replace(href);
-        });
+        window.location.assign(buildAdminQuestionListHref(locale, next));
+    }
+
+    function resetFilters() {
+        setSearchText('');
+        window.location.assign(
+            buildAdminQuestionListHref(locale, {
+                status: 'all',
+                difficulty: 'all',
+                type: 'all',
+                q: '',
+            }),
+        );
     }
 
     useEffect(() => {
@@ -68,26 +75,21 @@ export function AdminQuestionsFilters({
         }
 
         const timer = setTimeout(() => {
-            startTransition(() => {
-                router.replace(
-                    buildAdminQuestionListHref(locale, {
-                        ...filters,
-                        q: trimmed.slice(0, 200),
-                    }),
-                );
-            });
+            window.location.assign(
+                buildAdminQuestionListHref(locale, {
+                    ...filters,
+                    q: trimmed.slice(0, 200),
+                }),
+            );
         }, SEARCH_DEBOUNCE_MS);
 
         return () => clearTimeout(timer);
-    }, [searchText, filters, locale, router]);
+    }, [searchText, filters, locale]);
 
     return (
         <div
-            className={`mt-6 rounded-lg border border-border bg-surface p-3 sm:p-4 motion-safe:transition-opacity ${
-                isPending ? 'opacity-70' : ''
-            }`}
+            className="mt-6 rounded-lg border border-border bg-surface p-3 sm:p-4"
             aria-label={labels.questionsTitle}
-            aria-busy={isPending}
         >
             {/*
               Реальный admin-паттерн: selects равной ширины в одном ряду,
@@ -101,7 +103,6 @@ export function AdminQuestionsFilters({
                     <select
                         name="status"
                         value={filters.status}
-                        disabled={isPending}
                         className={fieldClassName}
                         onChange={(event) => {
                             navigate({
@@ -127,7 +128,6 @@ export function AdminQuestionsFilters({
                     <select
                         name="difficulty"
                         value={filters.difficulty}
-                        disabled={isPending}
                         className={fieldClassName}
                         onChange={(event) => {
                             navigate({
@@ -156,7 +156,6 @@ export function AdminQuestionsFilters({
                     <select
                         name="type"
                         value={filters.type}
-                        disabled={isPending}
                         className={fieldClassName}
                         onChange={(event) => {
                             navigate({
@@ -186,7 +185,6 @@ export function AdminQuestionsFilters({
                     type="search"
                     name="q"
                     value={searchText}
-                    disabled={isPending}
                     placeholder={labels.filterSearchPlaceholder}
                     maxLength={200}
                     autoComplete="off"
@@ -199,15 +197,16 @@ export function AdminQuestionsFilters({
 
             {showReset ? (
                 <div className="mt-3 flex flex-wrap gap-2">
-                    <Link
-                        href={listHref}
+                    <button
+                        type="button"
                         className={buttonClassName({
                             variant: 'secondary',
                             className: 'min-h-10 px-3 text-sm sm:min-h-11',
                         })}
+                        onClick={resetFilters}
                     >
                         {labels.filterReset}
-                    </Link>
+                    </button>
                 </div>
             ) : null}
         </div>

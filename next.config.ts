@@ -24,8 +24,9 @@ const nextConfig: NextConfig = {
             bodySizeLimit: '3mb',
         },
     },
-    // Native / Node fetch: не бандлить в SSR chunk (иначе Blob put ловит SharedArrayBuffer)
-    serverExternalPackages: ['sharp', '@vercel/blob'],
+    // Native / Node fetch: не бандлить в SSR chunk (иначе Blob put ловит SharedArrayBuffer).
+    // pg — тоже external: Turbopack-бандл коррелировал с TLS hang к Neon в next dev.
+    serverExternalPackages: ['sharp', '@vercel/blob', 'pg'],
     images: {
         // Dev seed uses SVG placeholders from public/quiz-images/.
         dangerouslyAllowSVG: true,

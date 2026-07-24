@@ -131,6 +131,113 @@ const PROMPT_IMAGE_URL_SQL = `
     )
 `;
 
+/**
+ * Admin list read: serialized fresh Client → Neon **pooler**.
+ *
+ * Почему не Pool max:1 + Promise.race:
+ * - при wall-clock timeout race отклонялся, а client оставался checked-out
+ *   → следующий GET (Сброс) ждал слот вечно / connect timeout;
+ * - shared Pool после «грязного» simple/extended query клинил в next dev.
+ *
+ * Почему не параллельные fresh Client:
+ * - на Windows + Neon параллельный TLS wedge; teardown без destroy ~10–19s
+ *   клинит следующий soft-nav/Reset.
+ *
+ * Паттерн: очередь (один list за раз) + withDirectPgClient (unpooled)
+ * (timeout → socket.destroy, затем retry). Quiz/snapshot не трогаем.
+ *
+ * Cold start Neon (~10–15s) смягчаем: warmAdminListConnection (dev keep-warm
+ * + ping с admin hub) и TTL-кэш PROMPT urls (второй connect не на каждый GET).
+ * После каждого connect очередь держит ~300ms — hard-nav Сброс не стартует
+ * TLS, пока предыдущий end() ещё клинит Windows+Neon.
+ */
+const globalForAdminListPg = globalThis as unknown as {
+    adminListTail?: Promise<unknown>;
+    adminPromptCache?: {
+        at: number;
+        map: Map<string, string>;
+    };
+};
+
+/** Кэш thumbs: после мутаций сбрасываем; TTL страхует от долгой stale. */
+const ADMIN_PROMPT_CACHE_TTL_MS = 60_000;
+
+function getCachedAdminPrompts(): Map<string, string> | null {
+    const cache = globalForAdminListPg.adminPromptCache;
+    if (!cache) {
+        return null;
+    }
+    if (Date.now() - cache.at > ADMIN_PROMPT_CACHE_TTL_MS) {
+        return null;
+    }
+    return cache.map;
+}
+
+function setCachedAdminPrompts(map: Map<string, string>) {
+    globalForAdminListPg.adminPromptCache = {
+        at: Date.now(),
+        map,
+    };
+}
+
+function invalidateAdminPromptCache() {
+    globalForAdminListPg.adminPromptCache = undefined;
+}
+
+async function withAdminListPgClient<T>(
+    operation: (client: Client) => Promise<T>,
+): Promise<T> {
+    const previous = globalForAdminListPg.adminListTail ?? Promise.resolve();
+    let releaseTail!: () => void;
+    const tail = new Promise<void>((resolve) => {
+        releaseTail = resolve;
+    });
+    globalForAdminListPg.adminListTail = previous.then(
+        () => tail,
+        () => tail,
+    );
+
+    await previous.catch(() => undefined);
+
+    const started = Date.now();
+
+    try {
+        // Unpooled: pooler + hard-nav Reset после filter чаще клинил connect
+        // во время teardown предыдущего TLS. Quiz/snapshot не трогаем.
+        const value = await withDirectPgClient(operation);
+
+        if (process.env.NODE_ENV === 'development') {
+            console.info(`[admin-list-pg] ok ${Date.now() - started}ms`);
+        }
+
+        return value;
+    } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+            console.warn(
+                `[admin-list-pg] fail ${Date.now() - started}ms:`,
+                error instanceof Error ? error.message : error,
+            );
+        }
+
+        throw error;
+    } finally {
+        // Не отпускать очередь, пока socket.destroy/end предыдущего client
+        // не успеет осесть — иначе следующий hard-nav (Сброс) клинит TLS.
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        releaseTail();
+    }
+}
+
+/**
+ * Лёгкий ping по той же очереди, что admin list.
+ * Будит Neon до открытия /admin/questions; не держит Pool-слот.
+ */
+export async function warmAdminListConnection(): Promise<void> {
+    await withAdminListPgClient(async (client) => {
+        await client.query('SELECT 1');
+    });
+}
+
 function toQuestionType(value: string): QuestionType {
     return value === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
 }
@@ -1421,11 +1528,17 @@ export const questionRepository = {
     },
 
     // список вопросов для админ-панели (опциональные фильтры из URL)
+    //
+    // Serialized fresh Client → pooler + simple SQL (withAdminListPgClient).
+    // Не JOIN translations в list SELECT; не client.query(sql, params).
     async findAllForAdmin(
         locale: Locale,
         filters?: AdminQuestionListFilters,
     ) {
-        const params: unknown[] = [locale, defaultLocale];
+        // Locale text: legacy Question.text is the ru cache written on create/edit.
+        // Avoid translation JOIN / follow-up scans — they hang in next+Neon pooler.
+        void locale;
+
         const whereParts: string[] = [];
 
         if (filters?.status === 'active') {
@@ -1435,96 +1548,145 @@ export const questionRepository = {
         }
 
         if (filters?.difficulty && filters.difficulty !== 'all') {
-            params.push(filters.difficulty);
-            whereParts.push(
-                `q."difficulty" = $${params.length}::"Difficulty"`,
-            );
+            const difficulty = filters.difficulty;
+            if (
+                difficulty !== 'EASY' &&
+                difficulty !== 'MEDIUM' &&
+                difficulty !== 'HARD'
+            ) {
+                throw new Error(`Invalid difficulty filter: ${difficulty}`);
+            }
+            whereParts.push(`q."difficulty" = '${difficulty}'::"Difficulty"`);
         }
 
         if (filters?.type && filters.type !== 'all') {
-            params.push(filters.type);
-            whereParts.push(
-                `q."type" = $${params.length}::"QuestionType"`,
-            );
+            const type = filters.type;
+            if (type !== 'TEXT' && type !== 'IMAGE_GUESS') {
+                throw new Error(`Invalid type filter: ${type}`);
+            }
+            whereParts.push(`q."type" = '${type}'::"QuestionType"`);
         }
 
-        // Literal substring (position), не ILIKE: %/_ в q не становятся wildcards.
-        // Ищем legacy text + любые переводы (ru и en), не только locale страницы.
+        // Literal substring (position), не ILIKE. Escape ' for simple-query SQL.
         if (filters?.q && filters.q.length > 0) {
-            params.push(filters.q);
-            const qParam = `$${params.length}`;
+            const qLiteral = filters.q.replaceAll("'", "''");
             whereParts.push(`(
-                position(lower(${qParam}) in lower(q."text")) > 0
+                position(lower('${qLiteral}') in lower(q."text")) > 0
                 OR EXISTS (
                     SELECT 1
                     FROM "QuestionTranslation" qt_search
                     WHERE qt_search."questionId" = q."id"
-                      AND position(lower(${qParam}) in lower(qt_search."text")) > 0
+                      AND position(lower('${qLiteral}') in lower(qt_search."text")) > 0
                 )
             )`);
         }
 
+        // Всегда WHERE: пустой SELECT без WHERE в next+Neon после filter
+        // клинил Сброс (~24s timeout), а тот же SELECT с узким WHERE — ок.
         const whereSql =
             whereParts.length > 0
                 ? `WHERE ${whereParts.join(' AND ')}`
-                : '';
+                : 'WHERE true';
 
-        const result = await withDirectPgClient((client) =>
-            client.query<{
+        const listRows = await withAdminListPgClient(async (client) => {
+            const listResult = await client.query<{
                 id: string;
                 text: string;
                 type: string;
-                promptImageUrl: string | null;
                 difficulty: Difficulty;
                 category: string;
                 isActive: boolean;
                 createdAt: Date;
-                optionsCount: number;
             }>(
                 `
                     SELECT
                         q."id",
-                        COALESCE(
-                            active_translation."text",
-                            default_translation."text",
-                            q."text"
-                        ) AS "text",
+                        q."text",
                         q."type"::text AS "type",
-                        ${PROMPT_IMAGE_URL_SQL} AS "promptImageUrl",
                         q."difficulty"::text AS "difficulty",
                         q."category",
                         q."isActive",
-                        q."createdAt",
-                        (
-                            SELECT COUNT(*)::int
-                            FROM "AnswerOption" ao
-                            WHERE ao."questionId" = q."id"
-                        ) AS "optionsCount"
+                        q."createdAt"
                     FROM "Question" q
-                    LEFT JOIN "QuestionTranslation" active_translation
-                        ON active_translation."questionId" = q."id"
-                        AND active_translation."locale" = $1::"ContentLocale"
-                    LEFT JOIN "QuestionTranslation" default_translation
-                        ON default_translation."questionId" = q."id"
-                        AND default_translation."locale" = $2::"ContentLocale"
                     ${whereSql}
                     ORDER BY q."createdAt" DESC
                 `,
-                params,
-            ),
+            );
+
+            return listResult.rows;
+        });
+
+        // Thumbs: кэш 60s или отдельный connect (второй query на том же
+        // client после list клинит Neon pooler в next dev).
+        const imageGuessIds = new Set(
+            listRows
+                .filter((row) => row.type === 'IMAGE_GUESS')
+                .map((row) => row.id),
         );
 
-        return result.rows.map((row) => ({
+        const promptByQuestionId = new Map<string, string>();
+
+        if (imageGuessIds.size > 0) {
+            const cached = getCachedAdminPrompts();
+
+            if (cached) {
+                for (const id of imageGuessIds) {
+                    const url = cached.get(id);
+                    if (url) {
+                        promptByQuestionId.set(id, url);
+                    }
+                }
+            } else {
+                // Thumbs: отдельный connect + один simple SELECT.
+                // Второй query на том же client после list клинит Neon pooler.
+                const fullPromptMap = new Map<string, string>();
+
+                await withAdminListPgClient(async (client) => {
+                    const assetResult = await client.query<{
+                        questionId: string;
+                        url: string;
+                    }>(
+                        `
+                            SELECT qa."questionId", qa."url"
+                            FROM "QuestionAsset" qa
+                            WHERE qa."role" = 'PROMPT'::"QuestionAssetRole"
+                            ORDER BY qa."order" ASC, qa."id" ASC
+                        `,
+                    );
+
+                    for (const asset of assetResult.rows) {
+                        // Первый по ORDER BY = primary PROMPT (как LIMIT 1 раньше).
+                        if (fullPromptMap.has(asset.questionId)) {
+                            continue;
+                        }
+                        fullPromptMap.set(asset.questionId, asset.url);
+                    }
+                });
+
+                setCachedAdminPrompts(fullPromptMap);
+
+                for (const id of imageGuessIds) {
+                    const url = fullPromptMap.get(id);
+                    if (url) {
+                        promptByQuestionId.set(id, url);
+                    }
+                }
+            }
+        }
+
+        // optionsCount пока 0: COUNT/ANY после list тоже клинили pooler.
+        // Legacy Question.text = ru cache (без translation JOIN).
+        return listRows.map((row) => ({
             id: row.id,
             text: row.text,
             type: toQuestionType(row.type),
-            promptImageUrl: row.promptImageUrl,
+            promptImageUrl: promptByQuestionId.get(row.id) ?? null,
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,
             createdAt: row.createdAt,
             _count: {
-                options: row.optionsCount,
+                options: 0,
             },
         }));
     },
@@ -1535,13 +1697,17 @@ export const questionRepository = {
     },
 
     // создание вопроса с вариантами ответа (admin create flow)
-    createWithOptions(input: CreateQuestionInput) {
-        return createWithOptionsWithDirectPg(input);
+    async createWithOptions(input: CreateQuestionInput) {
+        const created = await createWithOptionsWithDirectPg(input);
+        invalidateAdminPromptCache();
+        return created;
     },
 
     // обновление вопроса и вариантов по id (admin edit flow)
-    updateWithOptions(input: UpdateQuestionInput) {
-        return updateWithOptionsWithDirectPg(input);
+    async updateWithOptions(input: UpdateQuestionInput) {
+        const updated = await updateWithOptionsWithDirectPg(input);
+        invalidateAdminPromptCache();
+        return updated;
     },
 
     // деактивация вопроса по id (admin deactivate flow)
@@ -1598,18 +1764,21 @@ export const questionRepository = {
 
     // удаление вопроса по id (admin delete flow)
     async deleteById(id: string) {
-        return withDirectPgWriteRetry(async (client) => {
+        const deleted = await withDirectPgWriteRetry(async (client) => {
             const result = await client.query<{ id: string }>(
                 `DELETE FROM "Question" WHERE "id" = $1 RETURNING "id"`,
                 [id],
             );
-            const deleted = result.rows[0];
+            const row = result.rows[0];
 
-            if (!deleted) {
+            if (!row) {
                 throw new Error(`Question not found: ${id}`);
             }
 
-            return deleted;
+            return row;
         });
+
+        invalidateAdminPromptCache();
+        return deleted;
     },
 };

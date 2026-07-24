@@ -40,7 +40,10 @@ function createPool() {
 
     const pool = new Pool({
         connectionString: normalizePgConnectionString(connectionString),
-        ssl: { rejectUnauthorized: true },
+        // Dev (Windows + Neon): soft SSL — same rationale as direct-pg.
+        ssl: {
+            rejectUnauthorized: process.env.NODE_ENV === 'production',
+        },
         max: 5,
         keepAlive: true,
         idleTimeoutMillis:
@@ -56,7 +59,8 @@ function createPool() {
         }
     });
 
-    void pool.query('SELECT 1').catch(() => undefined);
+    // Не делаем fire-and-forget SELECT 1: зависший warm-up держит client
+    // пула и усугубляет admin-list timeouts на Windows + Neon.
 
     return pool;
 }
