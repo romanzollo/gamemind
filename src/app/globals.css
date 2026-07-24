@@ -29,6 +29,9 @@
     --color-success-muted: var(--success-muted);
     --color-warning: var(--warning);
     --color-warning-muted: var(--warning-muted);
+    /* Холодный info — ссылки / secondary accent, не конкурирует с success/primary teal */
+    --color-info: var(--info);
+    --color-info-muted: var(--info-muted);
     --color-ring: var(--ring);
     --shadow-sm: var(--shadow-sm);
     --shadow-md: var(--shadow-md);
@@ -66,6 +69,8 @@
     --success-muted: #e8f6ed;
     --warning: #a16207;
     --warning-muted: #fef6e7;
+    --info: #1f5f8b;
+    --info-muted: #e4eef6;
 
     --ring: #0b6e4f;
     --shadow-sm: 0 1px 2px rgb(20 24 31 / 0.06);
@@ -100,6 +105,8 @@
     --success-muted: #0d2818;
     --warning: #e6b84d;
     --warning-muted: #2f2410;
+    --info: #7eb6d9;
+    --info-muted: #143044;
 
     --ring: #3ecf8e;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.45);

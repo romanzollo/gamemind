@@ -6,6 +6,14 @@ import { EmptyState } from '@/shared/ui';
 
 import type { ProfileResultHistoryEntry } from '../types/result-history-entry';
 
+/**
+ * История результатов профиля: Scoreboard Editorial.
+ *
+ * Узкий экран (&lt;640px): строка-мета (дата + difficulty chip + «Обзор»)
+ * и две подписанные метрики. Шире — таблица с той же плашкой сложности.
+ * Presentation only — без изменений scoring / snapshot.
+ */
+
 type ProfileResultHistoryProps = {
     entries: ProfileResultHistoryEntry[];
     locale: string;
@@ -30,6 +38,34 @@ function difficultyLabel(
     }
 }
 
+/**
+ * Плашка сложности: `bg-surface-muted` + тон по уровню.
+ * EASY = foreground (не success): зелёный в блоке только у «Верно».
+ * MEDIUM/HARD = warning/danger. Текст всегда есть — не status-by-color-only.
+ */
+function DifficultyChip({
+    difficulty,
+    label,
+}: {
+    difficulty: Difficulty;
+    label: string;
+}) {
+    const toneClassName =
+        difficulty === 'EASY'
+            ? 'text-foreground'
+            : difficulty === 'MEDIUM'
+              ? 'text-warning'
+              : 'text-danger';
+
+    return (
+        <span
+            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${toneClassName}`}
+        >
+            {label}
+        </span>
+    );
+}
+
 function formatCorrect(
     correctCount: number,
     totalQuestions: number,
@@ -38,11 +74,12 @@ function formatCorrect(
     return `${correctCount} ${ofWord} ${totalQuestions}`;
 }
 
+/** Info blue — отделяет действие «Обзор» от success/primary teal. */
 const reviewLinkClassName =
-    'text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+    'text-info underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
 const phoneRowClassName =
-    'block px-3 py-3 motion-safe:transition-colors hover:bg-surface-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+    'block px-3 py-3.5 motion-safe:transition-colors hover:bg-surface-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
 export function ProfileResultHistory({
     entries,
@@ -59,10 +96,10 @@ export function ProfileResultHistory({
     return (
         <div className="mt-4">
             {/*
-              Phone (&lt;480px): padded row + scoreboard metrics (Верно выделен).
-              480px+: table.
+              Phone / узкий tablet (&lt;640px): scoreboard-stack.
+              640px+: таблица (как раньше, но с difficulty chip).
             */}
-            <ul className="divide-y divide-border min-[480px]:hidden">
+            <ul className="divide-y divide-border sm:hidden">
                 {entries.map((entry) => {
                     const difficulty = difficultyLabel(
                         entry.difficulty,
@@ -78,47 +115,42 @@ export function ProfileResultHistory({
                     return (
                         <li key={entry.sessionId}>
                             <Link href={href} className={phoneRowClassName}>
-                                <div className="flex items-baseline justify-between gap-3">
-                                    <p className="min-w-0 truncate text-sm text-foreground">
+                                <div className="flex items-center justify-between gap-3">
+                                    <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
                                         <time
                                             dateTime={entry.completedAt.toISOString()}
-                                            className="font-mono tabular-nums"
+                                            className="shrink-0 font-mono text-xs tabular-nums text-muted"
                                         >
                                             {entry.completedAt.toLocaleDateString(
                                                 locale,
                                             )}
                                         </time>
-                                        <span
-                                            aria-hidden
-                                            className="mx-1.5 text-muted"
-                                        >
-                                            ·
-                                        </span>
-                                        <span className="text-muted">
-                                            {difficulty}
-                                        </span>
-                                    </p>
+                                        <DifficultyChip
+                                            difficulty={entry.difficulty}
+                                            label={difficulty}
+                                        />
+                                    </div>
                                     <span
-                                        className={`${reviewLinkClassName} shrink-0 text-sm`}
+                                        className={`${reviewLinkClassName} shrink-0 text-sm font-medium`}
                                     >
                                         {labels.historyView}
                                     </span>
                                 </div>
 
-                                <div className="mt-2.5 grid grid-cols-2 gap-4">
+                                <div className="mt-3 grid grid-cols-2 gap-4">
                                     <p>
-                                        <span className="block text-xs font-medium text-muted">
+                                        <span className="block text-[11px] font-medium uppercase tracking-wide text-muted">
                                             {labels.historyScore}
                                         </span>
-                                        <span className="font-display text-xl font-semibold tabular-nums tracking-wide text-foreground">
+                                        <span className="mt-0.5 block font-display text-2xl font-semibold tabular-nums tracking-wide text-foreground">
                                             {entry.score}
                                         </span>
                                     </p>
                                     <p>
-                                        <span className="block text-xs font-medium text-muted">
+                                        <span className="block text-[11px] font-medium uppercase tracking-wide text-muted">
                                             {labels.historyCorrect}
                                         </span>
-                                        <span className="font-display text-xl font-semibold tabular-nums tracking-wide text-success">
+                                        <span className="mt-0.5 block font-display text-2xl font-semibold tabular-nums tracking-wide text-success">
                                             {correctText}
                                         </span>
                                     </p>
@@ -129,23 +161,23 @@ export function ProfileResultHistory({
                 })}
             </ul>
 
-            <div className="hidden overflow-x-auto min-[480px]:block">
+            <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full border-collapse text-left text-sm">
                     <thead>
-                        <tr className="border-b border-border text-muted">
-                            <th className="whitespace-nowrap py-2 pr-3 font-medium sm:pr-4">
+                        <tr className="border-b border-border bg-surface-muted/60 text-[11px] font-medium uppercase tracking-wide text-muted">
+                            <th className="whitespace-nowrap py-2.5 pl-3 pr-3 sm:pr-4">
                                 {labels.historyDate}
                             </th>
-                            <th className="whitespace-nowrap py-2 pr-3 font-medium sm:pr-4">
+                            <th className="whitespace-nowrap py-2.5 pr-3 sm:pr-4">
                                 {labels.historyDifficulty}
                             </th>
-                            <th className="whitespace-nowrap py-2 pr-3 font-medium sm:pr-4">
+                            <th className="whitespace-nowrap py-2.5 pr-3 sm:pr-4">
                                 {labels.historyScore}
                             </th>
-                            <th className="whitespace-nowrap py-2 pr-3 font-medium sm:pr-4">
+                            <th className="whitespace-nowrap py-2.5 pr-3 sm:pr-4">
                                 {labels.historyCorrect}
                             </th>
-                            <th className="whitespace-nowrap py-2 font-medium">
+                            <th className="whitespace-nowrap py-2.5 pr-3 font-medium sm:pr-4">
                                 {labels.historyView}
                             </th>
                         </tr>
@@ -154,23 +186,26 @@ export function ProfileResultHistory({
                         {entries.map((entry) => (
                             <tr
                                 key={entry.sessionId}
-                                className="border-b border-border"
+                                className="border-b border-border motion-safe:transition-colors hover:bg-surface-muted/40"
                             >
-                                <td className="whitespace-nowrap py-3 pr-3 font-mono tabular-nums text-foreground sm:pr-4">
+                                <td className="whitespace-nowrap py-3 pl-3 pr-3 font-mono text-xs tabular-nums text-muted sm:pr-4">
                                     {entry.completedAt.toLocaleDateString(
                                         locale,
                                     )}
                                 </td>
-                                <td className="whitespace-nowrap py-3 pr-3 text-foreground sm:pr-4">
-                                    {difficultyLabel(
-                                        entry.difficulty,
-                                        difficultyLabels,
-                                    )}
+                                <td className="whitespace-nowrap py-3 pr-3 sm:pr-4">
+                                    <DifficultyChip
+                                        difficulty={entry.difficulty}
+                                        label={difficultyLabel(
+                                            entry.difficulty,
+                                            difficultyLabels,
+                                        )}
+                                    />
                                 </td>
-                                <td className="whitespace-nowrap py-3 pr-3 font-mono tabular-nums text-foreground sm:pr-4">
+                                <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-foreground sm:pr-4">
                                     {entry.score}
                                 </td>
-                                <td className="whitespace-nowrap py-3 pr-3 font-mono tabular-nums text-foreground sm:pr-4">
+                                <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-success sm:pr-4">
                                     {formatCorrect(
                                         entry.correctCount,
                                         entry.totalQuestions,
@@ -180,7 +215,7 @@ export function ProfileResultHistory({
                                 <td className="whitespace-nowrap py-3">
                                     <Link
                                         href={`/${locale}/result/${entry.sessionId}`}
-                                        className={reviewLinkClassName}
+                                        className={`${reviewLinkClassName} font-medium`}
                                     >
                                         {labels.historyView}
                                     </Link>
