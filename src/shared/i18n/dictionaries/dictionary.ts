@@ -122,6 +122,13 @@ export type Dictionary = {
         homeDescription: string;
         questionsCardDescription: string;
         usersCardDescription: string;
+        /** Подписи агрегатов на хабе `/admin` (числа подставляются в JSX). */
+        homeStatUsers: string;
+        homeStatQuestionsActive: string;
+        homeStatQuestionsInactive: string;
+        homeStatSessionsToday: string;
+        /** Когда COUNT на Neon не удался — хаб всё равно открывается. */
+        homeCountsUnavailable: string;
         retryLoad: string;
         backToAdminHome: string;
         questionsTitle: string;

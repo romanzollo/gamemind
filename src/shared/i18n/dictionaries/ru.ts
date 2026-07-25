@@ -133,6 +133,11 @@ export const ruDictionary: Dictionary = {
             'Список, создание, редактирование и активация вопросов.',
         usersCardDescription:
             'Роли, деактивация и удаление аккаунтов.',
+        homeStatUsers: 'Пользователи',
+        homeStatQuestionsActive: 'Активные',
+        homeStatQuestionsInactive: 'Неактивные',
+        homeStatSessionsToday: 'Сессий сегодня',
+        homeCountsUnavailable: 'Статистика временно недоступна.',
         retryLoad: 'Повторить загрузку',
         backToAdminHome: 'В админ-панель',
         questionsTitle: 'Управление вопросами',

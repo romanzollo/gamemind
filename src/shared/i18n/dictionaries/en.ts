@@ -129,6 +129,11 @@ export const enDictionary = {
         questionsCardDescription:
             'List, create, edit, and activate quiz questions.',
         usersCardDescription: 'Roles, deactivation, and account deletion.',
+        homeStatUsers: 'Users',
+        homeStatQuestionsActive: 'Active',
+        homeStatQuestionsInactive: 'Inactive',
+        homeStatSessionsToday: 'Sessions today',
+        homeCountsUnavailable: 'Stats temporarily unavailable.',
         retryLoad: 'Retry loading',
         backToAdminHome: 'Back to admin home',
         questionsTitle: 'Manage questions',
