@@ -142,6 +142,20 @@ export const ruDictionary: Dictionary = {
         backToAdminHome: 'В админ-панель',
         questionsTitle: 'Управление вопросами',
         usersTitle: 'Управление пользователями',
+        userDetailDescription:
+            'Карточка для поддержки: статус и недавние результаты (только просмотр).',
+        backToUsers: 'К списку пользователей',
+        viewUserLink: 'Карточка',
+        userHistoryTitle: 'Недавние результаты',
+        userHistoryEmpty:
+            'У этого пользователя ещё нет завершённых квизов.',
+        userHistoryLoadFailed:
+            'Не удалось загрузить историю результатов. Попробуйте обновить страницу.',
+        userHistoryDate: 'Дата',
+        userHistoryDifficulty: 'Сложность',
+        userHistoryScore: 'Очки',
+        userHistoryCorrect: 'Верно',
+        userHistoryOf: 'из',
         signedInAs: 'Админ-зона. Вы вошли как',
         listDescription: 'Список всех вопросов в базе.',
         usersListDescription: 'Список пользователей: роли, статус, результаты.',

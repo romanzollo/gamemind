@@ -71,8 +71,8 @@ export default async function AdminUsersPage({
     const adminErrorMessage = actionErrorMessage ?? loadErrorMessage;
 
     return (
-        <main className="mx-auto max-w-5xl px-4 py-5 sm:px-8 sm:py-10">
-            <div className="flex flex-wrap items-end justify-between gap-4">
+        <main className="mx-auto max-w-6xl px-4 py-5 sm:px-8 sm:py-10">
+            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
                 <div className="min-w-0">
                     <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                         {dictionary.admin.usersTitle}
@@ -85,12 +85,15 @@ export default async function AdminUsersPage({
                     </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 sm:gap-3">
+                {/* На узком экране кнопки на всю ширину — не обрезаются у края */}
+                {/* Ряд из двух равных CTA — меньше вертикального «хвоста» на 320px */}
+                <div className="flex w-full gap-2 sm:w-auto sm:flex-wrap sm:gap-3">
                     <Link
                         href={localizedHref(safeLocale, '/admin')}
                         className={buttonClassName({
                             variant: 'secondary',
-                            className: 'min-h-10 px-3 text-sm sm:min-h-11',
+                            className:
+                                'min-h-10 flex-1 justify-center px-3 text-sm sm:min-h-11 sm:flex-none',
                         })}
                     >
                         {dictionary.admin.backToAdminHome}
@@ -100,7 +103,8 @@ export default async function AdminUsersPage({
                         prefetch={false}
                         className={buttonClassName({
                             variant: 'ghost',
-                            className: 'min-h-10 px-3 text-sm sm:min-h-11',
+                            className:
+                                'min-h-10 flex-1 justify-center px-3 text-sm sm:min-h-11 sm:flex-none',
                         })}
                     >
                         {dictionary.admin.questionsLink}

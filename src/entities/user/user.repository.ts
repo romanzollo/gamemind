@@ -178,6 +178,62 @@ export const userRepository = {
     },
 
     /**
+     * Карточка одного пользователя для админ-support (read-only detail).
+     * Тот же безопасный набор полей, что и в списке — без passwordHash.
+     * Unpooled direct pg: тот же Neon-friendly путь, что findAllForAdmin.
+     */
+    async findByIdForAdmin(userId: string): Promise<AdminUserRow | null> {
+        const result = await withDirectPgClient((client) =>
+            client.query<{
+                id: string;
+                username: string;
+                email: string;
+                role: Role;
+                isActive: boolean;
+                createdAt: Date;
+                quizResultCount: number;
+            }>(
+                `
+                    SELECT
+                        u."id",
+                        u."username",
+                        u."email",
+                        u."role",
+                        u."isActive",
+                        u."createdAt",
+                        COALESCE(r."quizResultCount", 0)::int AS "quizResultCount"
+                    FROM "User" u
+                    LEFT JOIN (
+                        SELECT "userId", COUNT(*)::int AS "quizResultCount"
+                        FROM "QuizResult"
+                        WHERE "userId" = $1
+                        GROUP BY "userId"
+                    ) r ON r."userId" = u."id"
+                    WHERE u."id" = $1
+                    LIMIT 1
+                `,
+                [userId],
+            ),
+        );
+
+        const row = result.rows[0];
+
+        if (!row) {
+            return null;
+        }
+
+        return {
+            id: row.id,
+            username: row.username,
+            email: row.email,
+            role: row.role,
+            isActive: row.isActive === true,
+            createdAt: row.createdAt,
+            quizResultCount: Number(row.quizResultCount),
+        };
+    },
+
+    /**
      * Смена роли USER ↔ ADMIN.
      * Нельзя менять себя; нельзя снять роль с последнего ADMIN.
      */

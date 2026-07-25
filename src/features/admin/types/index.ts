@@ -75,3 +75,20 @@ export type AdminUserListItem = {
     createdAt: string;
     quizResultCount: number;
 };
+
+/**
+ * Карточка пользователя для admin support (read-only).
+ * Тот же безопасный контракт, что список — без passwordHash и без секретов.
+ */
+export type AdminUserDetail = AdminUserListItem;
+
+/** Одна строка истории результатов на карточке пользователя (read-only). */
+export type AdminUserResultHistoryEntry = {
+    sessionId: string;
+    score: number;
+    totalQuestions: number;
+    correctCount: number;
+    difficulty: Difficulty;
+    /** ISO string — безопасно для Client Components */
+    completedAt: string;
+};

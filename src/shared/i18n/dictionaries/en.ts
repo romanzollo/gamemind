@@ -138,6 +138,19 @@ export const enDictionary = {
         backToAdminHome: 'Back to admin home',
         questionsTitle: 'Manage questions',
         usersTitle: 'Manage users',
+        userDetailDescription:
+            'Support card: status and recent results (read-only).',
+        backToUsers: 'Back to users',
+        viewUserLink: 'View',
+        userHistoryTitle: 'Recent results',
+        userHistoryEmpty: 'This user has no completed quizzes yet.',
+        userHistoryLoadFailed:
+            'Could not load result history. Try refreshing the page.',
+        userHistoryDate: 'Date',
+        userHistoryDifficulty: 'Difficulty',
+        userHistoryScore: 'Points',
+        userHistoryCorrect: 'Correct',
+        userHistoryOf: 'of',
         signedInAs: 'Admin-only area. Signed in as',
         listDescription: 'List of all questions in the database.',
         usersListDescription:

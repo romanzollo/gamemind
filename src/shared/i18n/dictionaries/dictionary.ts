@@ -133,6 +133,20 @@ export type Dictionary = {
         backToAdminHome: string;
         questionsTitle: string;
         usersTitle: string;
+        /** Карточка пользователя (support, read-only). */
+        userDetailDescription: string;
+        backToUsers: string;
+        /** Ссылка на read-only карточку пользователя из списка. */
+        viewUserLink: string;
+        userHistoryTitle: string;
+        userHistoryEmpty: string;
+        userHistoryLoadFailed: string;
+        userHistoryDate: string;
+        userHistoryDifficulty: string;
+        userHistoryScore: string;
+        userHistoryCorrect: string;
+        /** Соединитель в «1 из 3» / «1 of 3». */
+        userHistoryOf: string;
         signedInAs: string;
         listDescription: string;
         usersListDescription: string;
