@@ -3,7 +3,7 @@
 import { startTransition, useActionState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { changeAvatarAction } from '@/features/profile/actions';
+import { changeAvatarAction } from '@/features/profile/actions/change-avatar';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { Button, InlineAlert, SubmitButton, UserAvatar } from '@/shared/ui';

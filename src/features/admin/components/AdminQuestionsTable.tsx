@@ -121,6 +121,7 @@ function PromptThumb({
     // Desktop table only: compact fixed frame.
     return (
         <div className="h-11 w-16 shrink-0 overflow-hidden rounded-md border border-border bg-surface-muted">
+            {/* eslint-disable-next-line @next/next/no-img-element -- компактный admin preview, не LCP-контент */}
             <img
                 src={url}
                 alt={alt}
@@ -158,6 +159,7 @@ function CardHeroImage({
     return (
         <div className="flex w-full items-center justify-center bg-surface-muted">
             {url ? (
+                /* eslint-disable-next-line @next/next/no-img-element -- admin list preview должен сохранять весь кадр через object-contain */
                 <img
                     src={url}
                     alt={alt}

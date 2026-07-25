@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 type UserAvatarSize = 'sm' | 'md';
 
@@ -27,11 +27,8 @@ export function UserAvatar({
     size = 'sm',
     className = '',
 }: UserAvatarProps) {
-    const [failed, setFailed] = useState(false);
-
-    useEffect(() => {
-        setFailed(false);
-    }, [src]);
+    const [failedSrc, setFailedSrc] = useState<string | null>(null);
+    const failed = Boolean(src) && failedSrc === src;
 
     const shellClassName = [
         'shrink-0 overflow-hidden rounded-full border border-border bg-surface-muted',
@@ -58,7 +55,7 @@ export function UserAvatar({
                 src={src}
                 alt={alt}
                 className="h-full w-full object-cover object-center"
-                onError={() => setFailed(true)}
+                onError={() => setFailedSrc(src)}
             />
         </div>
     );

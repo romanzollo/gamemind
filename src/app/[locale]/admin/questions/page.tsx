@@ -41,7 +41,6 @@ export default async function AdminQuestionsPage({
     let loadErrorMessage: string | undefined;
 
     try {
-        const startedAt = Date.now();
         const rows = await questionRepository.findAllForAdmin(
             safeLocale,
             filters,
@@ -50,7 +49,7 @@ export default async function AdminQuestionsPage({
 
         if (process.env.NODE_ENV === 'development') {
             console.info(
-                `[admin/questions] findAllForAdmin ok in ${Date.now() - startedAt}ms (rows=${rows.length}, filtersActive=${filtersActive})`,
+                `[admin/questions] findAllForAdmin ok (rows=${rows.length}, filtersActive=${filtersActive})`,
             );
         }
     } catch (loadError) {
@@ -160,6 +159,7 @@ export default async function AdminQuestionsPage({
                             : dictionary.admin.empty
                     }
                 />
-            ) : null}        </main>
+            ) : null}
+        </main>
     );
 }

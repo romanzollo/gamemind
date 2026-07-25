@@ -57,6 +57,16 @@ export const enDictionary = {
         registerLink: 'Register',
         loginLink: 'Log in',
         accountCreated: 'Account created.',
+        errors: {
+            invalidInput: 'Check the form fields.',
+            emailTaken: 'This email is already registered.',
+            usernameTaken: 'This username is already taken.',
+            createFailed: 'Could not create account. Please try again.',
+            autoLoginFailed:
+                'Account created, but automatic login failed. Please sign in.',
+            invalidCredentials: 'Invalid email or password.',
+            loginFailed: 'Could not sign in. Please try again.',
+        },
     },
     profile: {
         title: 'Profile',

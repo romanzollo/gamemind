@@ -315,31 +315,6 @@ type TranslationRow = {
     text: string;
 };
 
-// перевод текста вопроса или варианта ответа
-function pickTranslationText(
-    translations: TranslationRow[],
-    locale: Locale,
-    legacyText?: string,
-): string {
-    const preferred = translations.find((row) => row.locale === locale)?.text;
-    if (preferred?.trim()) {
-        return preferred;
-    }
-
-    const fallback = translations.find(
-        (row) => row.locale === defaultLocale,
-    )?.text;
-    if (fallback?.trim()) {
-        return fallback;
-    }
-
-    if (legacyText) {
-        return legacyText;
-    }
-
-    return translations[0]?.text ?? '';
-}
-
 export type LocalizedAdminText = {
     ru: { text: string };
     en: { text: string };

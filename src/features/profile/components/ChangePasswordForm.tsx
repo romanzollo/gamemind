@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef } from 'react';
 
-import { changePasswordAction } from '@/features/profile/actions';
+import { changePasswordAction } from '@/features/profile/actions/change-password';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';

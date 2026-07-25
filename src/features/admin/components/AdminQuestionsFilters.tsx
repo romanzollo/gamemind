@@ -48,10 +48,6 @@ export function AdminQuestionsFilters({
     const [searchText, setSearchText] = useState(filters.q);
     const showReset = hasActiveAdminQuestionListFilters(filters);
 
-    useEffect(() => {
-        setSearchText(filters.q);
-    }, [filters.q]);
-
     function navigate(next: AdminQuestionListFilters) {
         window.location.assign(buildAdminQuestionListHref(locale, next));
     }

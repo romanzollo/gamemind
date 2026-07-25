@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
@@ -19,18 +19,6 @@ function isPixelArtPath(src: string) {
     return src.includes('/quiz-images/easy/');
 }
 
-function readImageState(img: HTMLImageElement | null): LoadState | null {
-    if (!img) {
-        return null;
-    }
-
-    if (img.complete) {
-        return img.naturalWidth > 0 ? 'ready' : 'error';
-    }
-
-    return null;
-}
-
 /**
  * Native <img> keeps real aspect ratio (next/image fixed 16:9 box was cropping).
  * Soft theme surface behind the frame — no cinema black bars.
@@ -44,18 +32,7 @@ export function QuestionImage({
 }: QuestionImageProps) {
     const resolvedSrc = normalizeQuizImageUrl(src) ?? src;
     const [loadState, setLoadState] = useState<LoadState>('loading');
-    const imgRef = useRef<HTMLImageElement | null>(null);
     const pixelArt = isPixelArtPath(resolvedSrc);
-
-    useEffect(() => {
-        setLoadState('loading');
-
-        // Cached images may already be complete before onLoad is attached.
-        const cached = readImageState(imgRef.current);
-        if (cached) {
-            setLoadState(cached);
-        }
-    }, [resolvedSrc]);
 
     if (loadState === 'error') {
         return (
@@ -84,7 +61,6 @@ export function QuestionImage({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     key={resolvedSrc}
-                    ref={imgRef}
                     src={resolvedSrc}
                     alt={alt}
                     loading={priority ? 'eager' : 'lazy'}

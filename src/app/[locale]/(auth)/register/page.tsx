@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useActionState } from 'react';
 
 import { registerAction } from '@/features/auth/actions';
+import { getAuthErrorMessage } from '@/features/auth/lib/get-auth-error-message';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
 
@@ -17,6 +18,7 @@ export default function RegisterPage() {
     const locale = getLocale(params.locale);
     const dictionary = getDictionary(locale);
     const [state, formAction] = useActionState(registerAction, {});
+    const errorMessage = getAuthErrorMessage(dictionary, state.errorCode);
 
     return (
         <main className="mx-auto max-w-md p-8">
@@ -58,8 +60,8 @@ export default function RegisterPage() {
                     {dictionary.auth.registerButton}
                 </SubmitButton>
             </form>
-            {state.error ? (
-                <InlineAlert className="mt-2">{state.error}</InlineAlert>
+            {errorMessage ? (
+                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
             ) : null}
             <p className="mt-4 text-sm text-muted">
                 {dictionary.auth.haveAccount}{' '}

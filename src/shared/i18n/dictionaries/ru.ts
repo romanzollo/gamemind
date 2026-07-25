@@ -57,6 +57,16 @@ export const ruDictionary: Dictionary = {
         registerLink: 'Зарегистрироваться',
         loginLink: 'Войти',
         accountCreated: 'Аккаунт создан.',
+        errors: {
+            invalidInput: 'Проверьте данные формы.',
+            emailTaken: 'Этот email уже зарегистрирован.',
+            usernameTaken: 'Это имя пользователя уже занято.',
+            createFailed: 'Не удалось создать аккаунт. Попробуйте ещё раз.',
+            autoLoginFailed:
+                'Аккаунт создан, но автоматический вход не сработал. Войдите вручную.',
+            invalidCredentials: 'Неверный email или пароль.',
+            loginFailed: 'Не удалось войти. Попробуйте ещё раз.',
+        },
     },
     profile: {
         title: 'Профиль',

@@ -24,6 +24,16 @@ export type AdminUserRow = {
     quizResultCount: number;
 };
 
+/** Минимальный авторитетный профиль для server-side guards. */
+export type SessionUserRow = {
+    id: string;
+    username: string;
+    email: string;
+    role: Role;
+    image: string | null;
+    isActive: boolean;
+};
+
 export type AdminUserMutationResult =
     | 'updated'
     | 'deleted'
@@ -80,6 +90,45 @@ export const userRepository = {
                 },
             }),
         );
+    },
+
+    /**
+     * Актуальное состояние пользователя для protected/admin guards.
+     * JWT хранит role/isActive косвенно и может устареть после действий админа.
+     */
+    async findSessionUserById(id: string): Promise<SessionUserRow | null> {
+        const result = await withDirectPgClient((client) =>
+            client.query<SessionUserRow>(
+                `
+                    SELECT
+                        "id",
+                        "username",
+                        "email",
+                        "role"::text AS "role",
+                        "image",
+                        "isActive"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [id],
+            ),
+        );
+
+        const row = result.rows[0];
+
+        if (!row) {
+            return null;
+        }
+
+        return {
+            id: row.id,
+            username: row.username,
+            email: row.email,
+            role: row.role,
+            image: row.image,
+            isActive: row.isActive === true,
+        };
     },
 
     /**

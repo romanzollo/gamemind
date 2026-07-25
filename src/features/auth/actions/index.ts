@@ -39,8 +39,7 @@ export async function registerAction(
 
     // Если валидация не прошла, возвращаем ошибку
     if (!parsed.success) {
-        const firstError = parsed.error.errors[0]?.message;
-        return { error: firstError ?? 'Invalid form data' };
+        return { errorCode: 'INVALID_INPUT' };
     }
 
     // Деструктуризация из валидированных данных
@@ -49,13 +48,13 @@ export async function registerAction(
     // Проверяем, не зарегистрирован ли email
     const existingByEmail = await userRepository.findByEmail(email);
     if (existingByEmail) {
-        return { error: 'Email is already registered' };
+        return { errorCode: 'EMAIL_TAKEN' };
     }
 
     // Проверяем, не зарегистрирован ли username
     const existingByUsername = await userRepository.findByUsername(username);
     if (existingByUsername) {
-        return { error: 'Username is already taken' };
+        return { errorCode: 'USERNAME_TAKEN' };
     }
 
     // Хешируем пароль
@@ -70,7 +69,7 @@ export async function registerAction(
         });
     } catch (error) {
         console.error('Register failed:', error);
-        return { error: 'Could not create account. Please try again.' };
+        return { errorCode: 'CREATE_FAILED' };
     }
 
     // Сразу логиним — без повторного ввода пароля
@@ -83,9 +82,7 @@ export async function registerAction(
     } catch (error) {
         if (error instanceof AuthError) {
             // Аккаунт уже создан; просим войти вручную
-            return {
-                error: 'Account created, but automatic login failed. Please sign in.',
-            };
+            return { errorCode: 'AUTO_LOGIN_FAILED' };
         }
         // signIn с redirectTo бросает NEXT_REDIRECT — это нормальный редирект
         throw error;
@@ -108,8 +105,7 @@ export async function loginAction(
 
     // Если валидация не прошла, возвращаем ошибку
     if (!parsed.success) {
-        const firstError = parsed.error.errors[0]?.message;
-        return { error: firstError ?? 'Invalid form data' };
+        return { errorCode: 'INVALID_INPUT' };
     }
 
     try {
@@ -124,9 +120,9 @@ export async function loginAction(
         if (error instanceof AuthError) {
             if (error.type === 'CredentialsSignin') {
                 // Не раскрываем, существует ли email — базовая security-практика.
-                return { error: 'Invalid email or password' };
+                return { errorCode: 'INVALID_CREDENTIALS' };
             }
-            return { error: 'Something went wrong. Please try again.' };
+            return { errorCode: 'LOGIN_FAILED' };
         }
         // signIn с redirectTo бросает NEXT_REDIRECT — это не ошибка, а нормальный редирект. Его нужно пробросить дальше.
         throw error;

@@ -112,9 +112,10 @@ Planned post-launch slice (details in local `docs/PROJECT_CONTEXT.md` / `ROADMAP
 
 1. ~~Auto sign-in after registration~~
 2. ~~Result page — review wrong/right answers from snapshot~~
-3. Weighted points by difficulty (EASY/MEDIUM/HARD) — **next**
-4. Profile — change password, avatar, result history
-5. Admin — user list / role / delete (and soft-disable)
+3. ~~Weighted points by difficulty (EASY/MEDIUM/HARD)~~
+4. ~~Profile — password, username, avatar upload, result history~~
+5. ~~Admin — users and questions ops~~
+6. Security/account hardening — authoritative guards, rate limiting, then admin QoL/repo split
 
 Quiz setup URL: `/:locale/quiz` (not `/quiz/setup`).  
 

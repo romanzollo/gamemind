@@ -56,6 +56,15 @@ export type Dictionary = {
         registerLink: string;
         loginLink: string;
         accountCreated: string;
+        errors: {
+            invalidInput: string;
+            emailTaken: string;
+            usernameTaken: string;
+            createFailed: string;
+            autoLoginFailed: string;
+            invalidCredentials: string;
+            loginFailed: string;
+        };
     };
     profile: {
         title: string;
