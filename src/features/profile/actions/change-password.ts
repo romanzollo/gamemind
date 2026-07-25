@@ -7,6 +7,8 @@ import { userRepository } from '@/entities/user/user.repository';
 import { changePasswordSchema } from '@/features/profile/lib/validation';
 import type { ProfileFormState } from '@/features/profile/types';
 import { requireUser } from '@/lib/auth/guards';
+import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 const BCRYPT_ROUNDS = 12;
@@ -19,12 +21,24 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
+/**
+ * Смена пароля. Rate limit по userId (не IP): после requireUser,
+ * до bcrypt — чтобы перебор текущего пароля не жёг CPU без потолка.
+ */
 export async function changePasswordAction(
     _prevState: ProfileFormState,
     formData: FormData,
 ): Promise<ProfileFormState> {
     const locale = getLocaleFromFormData(formData);
     const session = await requireUser(locale);
+
+    const rate = checkPresetRateLimit(
+        'password',
+        getUserRateLimitIdentity(session.user.id),
+    );
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
 
     const parsed = changePasswordSchema.safeParse({
         currentPassword: formData.get('currentPassword'),

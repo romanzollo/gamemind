@@ -17,6 +17,7 @@ const ERROR_MAP: Record<
     UPLOAD_FAILED: 'uploadFailed',
     INVALID_IMAGE: 'invalidImage',
     UPDATE_FAILED: 'updateFailed',
+    RATE_LIMITED: 'rateLimited',
 };
 
 /**

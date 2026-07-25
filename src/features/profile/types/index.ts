@@ -7,7 +7,9 @@ export type ProfileErrorCode =
     | 'SAME_AVATAR'
     | 'UPLOAD_FAILED'
     | 'INVALID_IMAGE'
-    | 'UPDATE_FAILED';
+    | 'UPDATE_FAILED'
+    /** Слишком много попыток смены пароля / аватара для этого userId. */
+    | 'RATE_LIMITED';
 
 export type ProfileFormState = {
     errorCode?: ProfileErrorCode;

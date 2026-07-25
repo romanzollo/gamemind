@@ -7,6 +7,8 @@ import { resolveAvatarImage } from '@/features/profile/lib/resolve-avatar-image'
 import type { ProfileFormState } from '@/features/profile/types';
 import { unstable_update } from '@/lib/auth';
 import { requireUser } from '@/lib/auth/guards';
+import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -21,6 +23,7 @@ function getLocaleFromFormData(formData: FormData): Locale {
  * Смена аватара (Phase B): file upload → `/media/avatars/...`,
  * URL-поле остаётся advanced; пустой imageUrl = сброс.
  *
+ * Rate limit по userId — до sharp/Blob, чтобы спам-загрузки не жгли CPU и квоту.
  * После записи в БД: unstable_update JWT + client router.refresh().
  */
 export async function changeAvatarAction(
@@ -29,6 +32,14 @@ export async function changeAvatarAction(
 ): Promise<ProfileFormState> {
     const locale = getLocaleFromFormData(formData);
     const session = await requireUser(locale);
+
+    const rate = checkPresetRateLimit(
+        'avatar',
+        getUserRateLimitIdentity(session.user.id),
+    );
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
 
     const previousPublicUrl = session.user.image ?? null;
 

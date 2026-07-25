@@ -64,6 +64,7 @@ export type Dictionary = {
             autoLoginFailed: string;
             invalidCredentials: string;
             loginFailed: string;
+            rateLimited: string;
         };
     };
     profile: {
@@ -113,6 +114,7 @@ export type Dictionary = {
             uploadFailed: string;
             invalidImage: string;
             updateFailed: string;
+            rateLimited: string;
         };
     };
     admin: {
@@ -205,6 +207,7 @@ export type Dictionary = {
             userRoleUpdateFailed: string;
             userDeactivateFailed: string;
             userActivateFailed: string;
+            rateLimited: string;
         };
     };
     quiz: {
@@ -244,6 +247,7 @@ export type Dictionary = {
             answerAll: string;
             invalidAnswer: string;
             submitFailed: string;
+            rateLimited: string;
         };
     };
     leaderboard: {

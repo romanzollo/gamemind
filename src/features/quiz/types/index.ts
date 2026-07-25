@@ -33,7 +33,9 @@ export type QuizErrorCode =
     | 'NOT_ENOUGH_QUESTIONS'
     | 'ANSWER_ALL'
     | 'INVALID_ANSWER'
-    | 'SUBMIT_FAILED';
+    | 'SUBMIT_FAILED'
+    /** Слишком много start/submit для этого userId за окно. */
+    | 'RATE_LIMITED';
 
 // тип для состояния формы викторины
 export type QuizFormState = {

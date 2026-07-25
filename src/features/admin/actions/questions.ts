@@ -13,6 +13,8 @@ import {
 } from '@/features/admin/lib/validation';
 import type { AdminFormState } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
+import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -133,13 +135,22 @@ function parseOptionsForUpdateFromFormData(formData: FormData) {
 /**
  * Создание вопроса.
  * Для IMAGE_GUESS: file → sharp → storage.put → URL в QuestionAsset (или URL-поле).
+ * Rate limit по admin userId — до sharp/Blob и до записи в Neon.
  */
 export async function createQuestionAction(
     _prevState: AdminFormState,
     formData: FormData,
 ): Promise<AdminFormState> {
     const locale = getLocaleFromFormData(formData);
-    await requireAdmin(locale);
+    const session = await requireAdmin(locale);
+
+    const rate = checkPresetRateLimit(
+        'upload',
+        getUserRateLimitIdentity(session.user.id),
+    );
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
 
     const type = parseQuestionTypeFromFormData(formData);
     // id заранее — совпадает со storage key до INSERT
@@ -267,13 +278,22 @@ export async function deleteQuestionAction(formData: FormData) {
 /**
  * Редактирование вопроса.
  * Новый file заменяет prompt URL; старый `/media/...` удаляется best-effort.
+ * Rate limit по admin userId — до sharp/Blob и до записи в Neon.
  */
 export async function updateQuestionAction(
     _prevState: AdminFormState,
     formData: FormData,
 ): Promise<AdminFormState> {
     const locale = getLocaleFromFormData(formData);
-    await requireAdmin(locale);
+    const session = await requireAdmin(locale);
+
+    const rate = checkPresetRateLimit(
+        'upload',
+        getUserRateLimitIdentity(session.user.id),
+    );
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
 
     const questionIdRaw = formData.get('questionId');
     if (typeof questionIdRaw !== 'string' || questionIdRaw.trim() === '') {

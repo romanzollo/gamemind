@@ -8,6 +8,8 @@ import { registerSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
 import type { AuthFormState } from '@/features/auth/types';
 import { loginSchema } from '@/features/auth/lib/validation';
+import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { getIpRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 const BCRYPT_ROUNDS = 12; // Соль для bcrypt (стандарт: 10-12)
@@ -20,10 +22,20 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
+/**
+ * Регистрация. Rate limit по IP — до bcrypt/БД, чтобы спам аккаунтов
+ * и перебор форм не жгли CPU и Neon.
+ */
 export async function registerAction(
     _prevState: AuthFormState,
     formData: FormData,
 ): Promise<AuthFormState> {
+    const identity = await getIpRateLimitIdentity();
+    const rate = checkPresetRateLimit('auth', identity);
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
+
     const locale = getLocaleFromFormData(formData);
 
     // Получаем данные из формы
@@ -91,11 +103,20 @@ export async function registerAction(
     return {};
 }
 
-// Действие для входа в систему
+/**
+ * Вход. Rate limit по IP — до проверки пароля, чтобы brute-force
+ * не гонял bcrypt на каждый запрос без ограничений.
+ */
 export async function loginAction(
     _prevState: AuthFormState,
     formData: FormData,
 ): Promise<AuthFormState> {
+    const identity = await getIpRateLimitIdentity();
+    const rate = checkPresetRateLimit('auth', identity);
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
+
     // Валидируем данные
     const parsed = loginSchema.safeParse({
         email: formData.get('email'),

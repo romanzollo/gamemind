@@ -18,6 +18,7 @@ const ERROR_MAP: Record<AdminErrorCode, keyof Dictionary['admin']['errors']> = {
     USER_ROLE_UPDATE_FAILED: 'userRoleUpdateFailed',
     USER_DEACTIVATE_FAILED: 'userDeactivateFailed',
     USER_ACTIVATE_FAILED: 'userActivateFailed',
+    RATE_LIMITED: 'rateLimited',
 };
 
 // функция для получения сообщения об ошибке для админ-панели

@@ -9,6 +9,7 @@ const ERROR_MAP: Record<AuthErrorCode, keyof Dictionary['auth']['errors']> = {
     AUTO_LOGIN_FAILED: 'autoLoginFailed',
     INVALID_CREDENTIALS: 'invalidCredentials',
     LOGIN_FAILED: 'loginFailed',
+    RATE_LIMITED: 'rateLimited',
 };
 
 /** Auth actions возвращают стабильные коды, UI выбирает текст по текущей локали. */

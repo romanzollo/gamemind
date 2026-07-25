@@ -8,6 +8,8 @@ import {
     QuizSessionStartError,
 } from '@/entities/quiz-session/quiz-session.repository';
 import { requireUser } from '@/lib/auth/guards';
+import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
@@ -25,7 +27,10 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
-// Action для начала викторины
+/**
+ * Старт квиза. Rate limit по userId — до pick/snapshot на Neon,
+ * чтобы спам «Начать» не плодил сессии и не жёг unpooled путь.
+ */
 export async function startQuizAction(
     _prevState: QuizFormState,
     formData: FormData,
@@ -34,6 +39,14 @@ export async function startQuizAction(
     const locale = getLocaleFromFormData(formData);
     // получаем сессию пользователя
     const session = await requireUser(locale);
+
+    const rate = checkPresetRateLimit(
+        'quiz',
+        getUserRateLimitIdentity(session.user.id),
+    );
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
 
     // парсим данные из формы
     const parsed = quizSetupSchema.safeParse({
@@ -99,7 +112,10 @@ export async function startQuizAction(
     redirect(`/${locale}/quiz/${quizSession.id}`);
 }
 
-// Action для отправки результатов викторины
+/**
+ * Submit квиза. Rate limit по userId — до read snapshot / scoring / write.
+ * Логика scoring и snapshot не менялась: лимит только у входа в action.
+ */
 export async function submitQuizAction(
     _prevState: QuizFormState,
     formData: FormData,
@@ -116,6 +132,14 @@ export async function submitQuizAction(
 
     // получаем сессию пользователя
     const authSession = await requireUser(locale);
+
+    const rate = checkPresetRateLimit(
+        'quiz',
+        getUserRateLimitIdentity(authSession.user.id),
+    );
+    if (!rate.ok) {
+        return { errorCode: 'RATE_LIMITED' };
+    }
 
     // одна read-операция: активная сессия + snapshot для scoring
     const sessionForSubmit = await quizSessionRepository.findSessionForSubmit(

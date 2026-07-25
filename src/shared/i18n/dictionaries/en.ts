@@ -66,6 +66,7 @@ export const enDictionary = {
                 'Account created, but automatic login failed. Please sign in.',
             invalidCredentials: 'Invalid email or password.',
             loginFailed: 'Could not sign in. Please try again.',
+            rateLimited: 'Too many attempts. Please wait a bit and try again.',
         },
     },
     profile: {
@@ -118,6 +119,7 @@ export const enDictionary = {
             invalidImage:
                 'Invalid image. Use JPEG/PNG/WebP (no SVG), max 2 MB.',
             updateFailed: 'Could not save changes. Please try again later.',
+            rateLimited: 'Too many attempts. Please wait a bit and try again.',
         },
     },
     admin: {
@@ -221,6 +223,7 @@ export const enDictionary = {
             userRoleUpdateFailed: 'Failed to change the role. Try again.',
             userDeactivateFailed: 'Failed to deactivate the user. Try again.',
             userActivateFailed: 'Failed to activate the user. Try again.',
+            rateLimited: 'Too many attempts. Please wait a bit and try again.',
         },
     },
     quiz: {
@@ -260,6 +263,7 @@ export const enDictionary = {
             invalidAnswer:
                 'One or more answers are invalid. Refresh the page and try again.',
             submitFailed: 'Failed to submit the result. Try again.',
+            rateLimited: 'Too many attempts. Please wait a bit and try again.',
         },
     },
     leaderboard: {

@@ -55,7 +55,9 @@ export type AdminErrorCode =
     | 'USER_UPDATE_FAILED'
     | 'USER_ROLE_UPDATE_FAILED'
     | 'USER_DEACTIVATE_FAILED'
-    | 'USER_ACTIVATE_FAILED';
+    | 'USER_ACTIVATE_FAILED'
+    /** Слишком много create/update вопросов (в т.ч. upload) для этого admin. */
+    | 'RATE_LIMITED';
 
 /** Состояние формы для useActionState (как в quiz). */
 export type AdminFormState = {
