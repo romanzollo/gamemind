@@ -2,6 +2,8 @@
 
 Video game quiz platform — bilingual (`ru` / `en`), with image-guess questions, leaderboard, and an admin panel.
 
+**Stage:** **public beta** (live portfolio product — not a private MVP prototype).
+
 **Live:** [https://www.game-mind.ru](https://www.game-mind.ru) (also `game-mind.ru` → www)
 
 ## Stack
@@ -13,17 +15,19 @@ Video game quiz platform — bilingual (`ru` / `en`), with image-guess questions
 - **Tailwind CSS** — light/dark theme via CSS variables
 - **Deploy:** Vercel Hobby + custom domain (REG.RU DNS)
 
-## What works today (MVP+)
+## What works today (public beta)
 
 - Register / login / logout; roles `USER` | `ADMIN`
 - Quiz setup → session with frozen JSON snapshot (anti-cheat) → submit → result
 - Question types: `TEXT`, `IMAGE_GUESS` (WebP under `public/quiz-images/`)
 - 60 bilingual seed questions (20 per difficulty; 9 with images)
-- Leaderboard (best score per user)
-- Admin: create / edit / deactivate / activate / delete questions (ru + en)
+- Leaderboard (best score per user) + Scoreboard Editorial UI
+- Profile: history, password, username, avatar upload
+- Admin: questions CRUD + draft/review/publish list workflow; users ops hub
 - Locale routes `/ru/...`, `/en/...` for UI **and** quiz content
+- Media: Vercel Blob + same-origin `/media` on prod
 
-## MVP decisions
+## Core product decisions
 
 | Decision | Choice |
 |----------|--------|
@@ -108,14 +112,12 @@ See **`docs/DEPLOY.md`**. Summary:
 
 ## Next product work
 
-Planned post-launch slice (details in local `docs/PROJECT_CONTEXT.md` / `ROADMAP.md` §11):
+Stage = **public beta**. Grow the product (details in local `docs/PROJECT_CONTEXT.md` / `ROADMAP.md`):
 
-1. ~~Auto sign-in after registration~~
-2. ~~Result page — review wrong/right answers from snapshot~~
-3. ~~Weighted points by difficulty (EASY/MEDIUM/HARD)~~
-4. ~~Profile — password, username, avatar upload, result history~~
-5. ~~Admin — users and questions ops~~
-6. Security/account hardening — authoritative guards, rate limiting, then admin QoL/repo split
+1. ~~Post-launch UX slice 11.1–11.5 + Taste foundation~~ — on prod
+2. Finish admin draft/review/publish (edit-page controls + publication filter) → commit + prod migration
+3. Admin questions primary action + “more” menu (UI density)
+4. Optional: §11.7 quiz-session repo split; §11.9 remainder; Phase 5 modes later
 
 Quiz setup URL: `/:locale/quiz` (not `/quiz/setup`).  
 
