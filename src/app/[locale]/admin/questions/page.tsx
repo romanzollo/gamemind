@@ -71,9 +71,18 @@ export default async function AdminQuestionsPage({
               ? dictionary.admin.errors.deactivateFailed
               : error === 'ACTIVATE_FAILED'
                 ? dictionary.admin.errors.activateFailed
-                : error === 'NOT_FOUND'
-                  ? dictionary.admin.errors.notFound
-                  : undefined;
+                : error === 'PUBLISH_FAILED'
+                  ? dictionary.admin.errors.publishFailed
+                  : error === 'SUBMIT_FOR_REVIEW_FAILED'
+                    ? dictionary.admin.errors.submitForReviewFailed
+                    : error === 'RETURN_TO_DRAFT_FAILED'
+                      ? dictionary.admin.errors.returnToDraftFailed
+                      : error === 'INVALID_PUBLICATION_TRANSITION'
+                        ? dictionary.admin.errors
+                              .invalidPublicationTransition
+                        : error === 'NOT_FOUND'
+                          ? dictionary.admin.errors.notFound
+                          : undefined;
     const adminErrorMessage = actionErrorMessage ?? loadErrorMessage;
 
     return (

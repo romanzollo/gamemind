@@ -3,6 +3,9 @@ export {
     deactivateQuestionAction,
     activateQuestionAction,
     deleteQuestionAction,
+    publishQuestionAction,
+    submitQuestionForReviewAction,
+    returnQuestionToDraftAction,
     updateQuestionAction,
 } from './questions';
 

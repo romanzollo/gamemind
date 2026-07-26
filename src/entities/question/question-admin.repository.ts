@@ -71,19 +71,6 @@ const PUBLICATION_TRANSITIONS: Record<
  * После каждого connect очередь держит ~300ms — hard-nav Сброс не стартует
  * TLS, пока предыдущий end() ещё клинит Windows+Neon.
  */
-const globalForAdminListPg = globalThis as unknown as {
-    adminListTail?: Promise<unknown>;
-    adminPromptCache?: {
-        at: number;
-        map: Map<string, string>;
-    };
-    adminListResultCache?: {
-        at: number;
-        key: string;
-        rows: AdminListResultRow[];
-    };
-};
-
 /** Строка результата findAllForAdmin (для TTL-кэша списка). */
 type AdminListResultRow = {
     id: string;
@@ -98,7 +85,20 @@ type AdminListResultRow = {
     _count: { options: number };
 };
 
-/** Кэш thumbs / list: после мутаций сбрасываем; TTL страхует от долгой stale. */
+const globalForAdminListPg = globalThis as unknown as {
+    adminListTail?: Promise<unknown>;
+    adminPromptCache?: {
+        at: number;
+        map: Map<string, string>;
+    };
+    adminListResultCache?: {
+        at: number;
+        key: string;
+        rows: AdminListResultRow[];
+    };
+};
+
+/** Кэш thumbs / list: после мутаций сбрасываем; TTL страхует stale. */
 const ADMIN_PROMPT_CACHE_TTL_MS = 60_000;
 const ADMIN_LIST_RESULT_CACHE_TTL_MS = 60_000;
 
@@ -120,6 +120,9 @@ function setCachedAdminPrompts(map: Map<string, string>) {
     };
 }
 
+/**
+ * Ключ кэша списка включает locale: текст выбирается в основном SELECT.
+ */
 function buildAdminListCacheKey(
     locale: Locale,
     filters?: AdminQuestionListFilters,
@@ -1107,9 +1110,9 @@ export const questionAdminMethods = {
         locale: Locale,
         filters?: AdminQuestionListFilters,
     ) {
-        // Locale text: legacy Question.text is the ru cache written on create/edit.
-        // Avoid translation JOIN / follow-up scans — they hang in next+Neon pooler.
-        // locale участвует только в cache key (на будущее locale list text).
+        // List SELECT без JOIN (hang class). Для EN используем scalar subquery
+        // по уникальному questionId+locale; это один основной read, без второго
+        // connect и без блокировки фильтров.
 
         const whereParts: string[] = [];
 
@@ -1168,10 +1171,24 @@ export const questionAdminMethods = {
             createdAt: Date;
         };
 
+        const listTextSql =
+            locale === 'en'
+                ? `COALESCE(
+                    (
+                        SELECT qt_en."text"
+                        FROM "QuestionTranslation" qt_en
+                        WHERE qt_en."questionId" = q."id"
+                          AND qt_en."locale" = 'en'::"ContentLocale"
+                        LIMIT 1
+                    ),
+                    q."text"
+                )`
+                : `q."text"`;
+
         const listSelectSql = `
             SELECT
                 q."id",
-                q."text",
+                ${listTextSql} AS "text",
                 q."type"::text AS "type",
                 q."difficulty"::text AS "difficulty",
                 q."category",
@@ -1292,7 +1309,6 @@ export const questionAdminMethods = {
         }
 
         // optionsCount пока 0: COUNT/ANY после list тоже клинили pooler.
-        // Legacy Question.text = ru cache (без translation JOIN).
         const result: AdminListResultRow[] = listRows.map((row) => ({
             id: row.id,
             text: row.text,

@@ -169,10 +169,18 @@ export const enDictionary = {
         tableQuizResults: 'Results',
         statusActive: 'Active',
         statusInactive: 'Inactive',
+        tablePublication: 'Publication',
+        publicationDraft: 'Draft',
+        publicationInReview: 'In review',
+        publicationPublished: 'Published',
+        publishButton: 'Publish',
+        submitForReviewButton: 'Submit for review',
+        returnToDraftButton: 'Return to draft',
         empty: 'No questions yet.',
         emptyFiltered: 'No questions match these filters.',
         usersEmpty: 'No users yet.',
         filterStatusAll: 'All statuses',
+        filterPublicationAll: 'Any publication',
         filterDifficultyAll: 'Any difficulty',
         filterTypeAll: 'Any type',
         filterSearch: 'Search',
@@ -234,6 +242,13 @@ export const enDictionary = {
             deleteFailed: 'Failed to delete. Try again.',
             deactivateFailed: 'Failed to deactivate the question. Try again.',
             activateFailed: 'Failed to activate the question. Try again.',
+            publishFailed: 'Failed to publish the question. Try again.',
+            submitForReviewFailed:
+                'Failed to submit the question for review. Try again.',
+            returnToDraftFailed:
+                'Failed to return the question to draft. Try again.',
+            invalidPublicationTransition:
+                'This publication status transition is not allowed from the current state.',
             cannotModifySelf: 'You cannot modify or delete your own account.',
             cannotDeleteLastAdmin:
                 'You cannot delete, demote, or deactivate the last ADMIN.',

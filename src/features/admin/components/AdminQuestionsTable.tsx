@@ -4,10 +4,13 @@ import {
     activateQuestionAction,
     deactivateQuestionAction,
     deleteQuestionAction,
+    publishQuestionAction,
+    returnQuestionToDraftAction,
+    submitQuestionForReviewAction,
 } from '@/features/admin/actions/questions';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState, SubmitButton } from '@/shared/ui';
-import type { Difficulty } from '@/types';
+import type { Difficulty, QuestionPublicationStatus } from '@/types';
 import type { AdminQuestionListItem } from '../types';
 
 /**
@@ -15,6 +18,9 @@ import type { AdminQuestionListItem } from '../types';
  *
  * Mobile/tablet: отдельные surface-блоки; IMAGE — full-bleed hero сверху
  * (16:10), текст и actions ниже. Desktop: таблица + difficulty chip.
+ *
+ * Две оси статуса: isActive (витрина) и publicationStatus (редактура).
+ * Кнопки публикации только для разрешённых переходов (см. DECISIONS).
  */
 
 type AdminQuestionsTableProps = {
@@ -36,23 +42,160 @@ function DifficultyChip({ difficulty }: { difficulty: Difficulty }) {
     );
 }
 
-function QuestionRowActions({
+function publicationStatusLabel(
+    status: QuestionPublicationStatus,
+    labels: Dictionary['admin'],
+): string {
+    switch (status) {
+        case 'DRAFT':
+            return labels.publicationDraft;
+        case 'IN_REVIEW':
+            return labels.publicationInReview;
+        case 'PUBLISHED':
+            return labels.publicationPublished;
+    }
+}
+
+/**
+ * Badge publicationStatus: muted = draft, warning = review, success = live path.
+ * Только токены Scoreboard — без one-off цветов.
+ */
+function PublicationBadge({
+    status,
+    labels,
+}: {
+    status: QuestionPublicationStatus;
+    labels: Dictionary['admin'];
+}) {
+    const toneClassName =
+        status === 'PUBLISHED'
+            ? 'text-success'
+            : status === 'IN_REVIEW'
+              ? 'text-warning'
+              : 'text-muted';
+
+    return (
+        <span
+            className={`inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium tracking-wide ${toneClassName}`}
+        >
+            {publicationStatusLabel(status, labels)}
+        </span>
+    );
+}
+
+function PublicationRowActions({
     entry,
     labels,
     locale,
-    nowrap = false,
 }: {
     entry: AdminQuestionListItem;
     labels: Dictionary['admin'];
     locale: Locale;
-    nowrap?: boolean;
+}) {
+    // Новый JSX на каждый form — не переиспользовать один fragment (React key warning).
+    const fields = () => (
+        <>
+            <input type="hidden" name="locale" value={locale} />
+            <input type="hidden" name="questionId" value={entry.id} />
+        </>
+    );
+
+    return (
+        <>
+            {entry.publicationStatus === 'DRAFT' ? (
+                <>
+                    <form
+                        action={submitQuestionForReviewAction}
+                        className="inline-flex"
+                    >
+                        {fields()}
+                        <SubmitButton
+                            unstyled
+                            className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
+                        >
+                            {labels.submitForReviewButton}
+                        </SubmitButton>
+                    </form>
+                    <form
+                        action={publishQuestionAction}
+                        className="inline-flex"
+                    >
+                        {fields()}
+                        <SubmitButton
+                            unstyled
+                            className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
+                        >
+                            {labels.publishButton}
+                        </SubmitButton>
+                    </form>
+                </>
+            ) : null}
+
+            {entry.publicationStatus === 'IN_REVIEW' ? (
+                <>
+                    <form
+                        action={publishQuestionAction}
+                        className="inline-flex"
+                    >
+                        {fields()}
+                        <SubmitButton
+                            unstyled
+                            className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
+                        >
+                            {labels.publishButton}
+                        </SubmitButton>
+                    </form>
+                    <form
+                        action={returnQuestionToDraftAction}
+                        className="inline-flex"
+                    >
+                        {fields()}
+                        <SubmitButton
+                            unstyled
+                            className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
+                        >
+                            {labels.returnToDraftButton}
+                        </SubmitButton>
+                    </form>
+                </>
+            ) : null}
+
+            {entry.publicationStatus === 'PUBLISHED' ? (
+                <form
+                    action={returnQuestionToDraftAction}
+                    className="inline-flex"
+                >
+                    {fields()}
+                    <SubmitButton
+                        unstyled
+                        className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
+                    >
+                        {labels.returnToDraftButton}
+                    </SubmitButton>
+                </form>
+            ) : null}
+        </>
+    );
+}
+
+function QuestionRowActions({
+    entry,
+    labels,
+    locale,
+    layout = 'wrap',
+}: {
+    entry: AdminQuestionListItem;
+    labels: Dictionary['admin'];
+    locale: Locale;
+    /** wrap = mobile cards; compact = desktop queue row. */
+    layout?: 'wrap' | 'compact';
 }) {
     return (
         <div
             className={
-                nowrap
-                    ? 'flex flex-nowrap items-center gap-x-3'
-                    : 'flex flex-wrap items-center gap-x-4 gap-y-0.5'
+                layout === 'compact'
+                    ? 'flex max-w-64 flex-wrap items-center gap-x-3 gap-y-1'
+                    : 'flex flex-wrap items-center gap-x-4 gap-y-1'
             }
         >
             <Link
@@ -61,6 +204,12 @@ function QuestionRowActions({
             >
                 {labels.editLink}
             </Link>
+
+            <PublicationRowActions
+                entry={entry}
+                labels={labels}
+                locale={locale}
+            />
 
             {entry.isActive ? (
                 <form
@@ -118,16 +267,17 @@ function PromptThumb({
     url: string;
     alt: string;
 }) {
-    // Desktop table only: compact fixed frame.
+    // Desktop queue preview: достаточно крупно, чтобы распознать screenshot,
+    // но всё ещё не превращает admin row в галерею.
     return (
-        <div className="h-11 w-16 shrink-0 overflow-hidden rounded-md border border-border bg-surface-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element -- компактный admin preview, не LCP-контент */}
+        <div className="h-16 w-28 shrink-0 overflow-hidden rounded-md border border-border bg-surface-muted">
+            {/* eslint-disable-next-line @next/next/no-img-element -- admin preview должен показывать весь кадр, не LCP-контент */}
             <img
                 src={url}
                 alt={alt}
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-cover object-center"
+                className="h-full w-full object-contain object-center"
             />
         </div>
     );
@@ -191,12 +341,6 @@ function ListCardMeta({
             <span aria-hidden className="mx-1.5">
                 ·
             </span>
-            <span>
-                {labels.tableOptions}: {entry.optionsCount}
-            </span>
-            <span aria-hidden className="mx-1.5">
-                ·
-            </span>
             <time className="font-mono tabular-nums">
                 {entry.createdAt.toLocaleDateString(locale)}
             </time>
@@ -218,6 +362,10 @@ function ListCardBadges({
     return (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <DifficultyChip difficulty={entry.difficulty} />
+            <PublicationBadge
+                status={entry.publicationStatus}
+                labels={labels}
+            />
             <span
                 className={
                     entry.isActive
@@ -232,6 +380,33 @@ function ListCardBadges({
             {showTypeLabel ? (
                 <span className="text-xs text-muted">{typeLabel}</span>
             ) : null}
+        </div>
+    );
+}
+
+/** Desktop: isActive + publication в одной ячейке — меньше давления на actions. */
+function StatusPublicationCell({
+    entry,
+    labels,
+}: {
+    entry: AdminQuestionListItem;
+    labels: Dictionary['admin'];
+}) {
+    return (
+        <div className="flex min-w-30 flex-col items-start gap-1">
+            <span
+                className={
+                    entry.isActive
+                        ? 'text-xs font-medium text-success'
+                        : 'text-xs font-medium text-muted'
+                }
+            >
+                {entry.isActive ? labels.statusActive : labels.statusInactive}
+            </span>
+            <PublicationBadge
+                status={entry.publicationStatus}
+                labels={labels}
+            />
         </div>
     );
 }
@@ -331,28 +506,23 @@ export function AdminQuestionsTable({
             </ul>
 
             <div className="hidden overflow-x-auto rounded-lg border border-border bg-surface lg:block">
-                <table className="w-full border-collapse text-left text-sm">
+                {/*
+                  Desktop queue row: вопрос + мета, состояние, дата, actions.
+                  Меньше колонок = стабильнее RU/EN и ближе к реальным CMS/admin.
+                */}
+                <table className="w-full min-w-3xl border-collapse text-left text-sm">
                     <thead>
-                        <tr className="border-b border-border bg-surface-muted/50 text-muted">
-                            <th className="px-4 py-2 font-medium">
+                        <tr className="border-b border-border bg-surface-muted text-muted">
+                            <th className="w-[54%] px-4 py-2.5 font-medium">
                                 {labels.tableQuestion}
                             </th>
-                            <th className="whitespace-nowrap px-3 py-2 font-medium">
-                                {labels.tableDifficulty}
-                            </th>
-                            <th className="hidden whitespace-nowrap px-3 py-2 font-medium xl:table-cell">
-                                {labels.tableCategory}
-                            </th>
-                            <th className="whitespace-nowrap px-3 py-2 font-medium">
-                                {labels.tableOptions}
-                            </th>
-                            <th className="whitespace-nowrap px-3 py-2 font-medium">
+                            <th className="w-32 whitespace-nowrap px-3 py-2.5 font-medium">
                                 {labels.tableStatus}
                             </th>
-                            <th className="hidden whitespace-nowrap px-3 py-2 font-medium xl:table-cell">
+                            <th className="w-28 whitespace-nowrap px-3 py-2.5 font-medium">
                                 {labels.tableCreated}
                             </th>
-                            <th className="sticky right-0 bg-surface-muted/50 px-4 py-2 font-medium shadow-[-6px_0_8px_-6px_rgba(0,0,0,0.12)]">
+                            <th className="w-64 px-4 py-2.5 font-medium">
                                 {labels.tableActions}
                             </th>
                         </tr>
@@ -369,8 +539,8 @@ export function AdminQuestionsTable({
                                     key={entry.id}
                                     className="group border-b border-border last:border-b-0 hover:bg-surface-hover/40"
                                 >
-                                    <td className="min-w-0 px-4 py-2.5 text-foreground">
-                                        <div className="flex items-center gap-3">
+                                    <td className="min-w-0 px-4 py-3 text-foreground">
+                                        <div className="flex items-start gap-3">
                                             {isImage ? (
                                                 entry.promptImageUrl ? (
                                                     <PromptThumb
@@ -386,52 +556,47 @@ export function AdminQuestionsTable({
                                                 )
                                             ) : (
                                                 <span
-                                                    className="shrink-0 rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-wide text-muted"
+                                                    className="mt-0.5 shrink-0 rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-wide text-muted"
                                                     title={typeLabel}
                                                 >
                                                     TEXT
                                                 </span>
                                             )}
-                                            <span className="line-clamp-2 min-w-0">
-                                                {entry.text}
-                                            </span>
+                                            <div className="min-w-0">
+                                                <span className="line-clamp-2 text-sm font-medium leading-snug">
+                                                    {entry.text}
+                                                </span>
+                                                <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
+                                                    <DifficultyChip
+                                                        difficulty={
+                                                            entry.difficulty
+                                                        }
+                                                    />
+                                                    <span>{entry.category}</span>
+                                                    {isImage ? (
+                                                        <span>{typeLabel}</span>
+                                                    ) : null}
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-2.5">
-                                        <DifficultyChip
-                                            difficulty={entry.difficulty}
+                                    <td className="px-3 py-3 align-top">
+                                        <StatusPublicationCell
+                                            entry={entry}
+                                            labels={labels}
                                         />
                                     </td>
-                                    <td className="hidden whitespace-nowrap px-3 py-2.5 text-muted xl:table-cell">
-                                        {entry.category}
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-2.5 font-mono text-sm tabular-nums text-foreground">
-                                        {entry.optionsCount}
-                                    </td>
-                                    <td className="whitespace-nowrap px-3 py-2.5">
-                                        <span
-                                            className={
-                                                entry.isActive
-                                                    ? 'font-medium text-success'
-                                                    : 'font-medium text-muted'
-                                            }
-                                        >
-                                            {entry.isActive
-                                                ? labels.statusActive
-                                                : labels.statusInactive}
-                                        </span>
-                                    </td>
-                                    <td className="hidden whitespace-nowrap px-3 py-2.5 font-mono text-sm tabular-nums text-muted xl:table-cell">
+                                    <td className="whitespace-nowrap px-3 py-3 font-mono text-sm tabular-nums text-muted">
                                         {entry.createdAt.toLocaleDateString(
                                             locale,
                                         )}
                                     </td>
-                                    <td className="sticky right-0 whitespace-nowrap bg-surface px-4 py-2.5 shadow-[-6px_0_8px_-6px_rgba(0,0,0,0.12)] group-hover:bg-surface-hover">
+                                    <td className="px-4 py-3 align-top">
                                         <QuestionRowActions
                                             entry={entry}
                                             labels={labels}
                                             locale={locale}
-                                            nowrap
+                                            layout="compact"
                                         />
                                     </td>
                                 </tr>

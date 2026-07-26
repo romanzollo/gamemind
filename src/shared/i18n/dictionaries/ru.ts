@@ -173,10 +173,18 @@ export const ruDictionary: Dictionary = {
         tableQuizResults: 'Результатов',
         statusActive: 'Активен',
         statusInactive: 'Неактивен',
+        tablePublication: 'Публикация',
+        publicationDraft: 'Черновик',
+        publicationInReview: 'На ревью',
+        publicationPublished: 'Опубликован',
+        publishButton: 'Опубликовать',
+        submitForReviewButton: 'На ревью',
+        returnToDraftButton: 'В черновик',
         empty: 'Пока нет вопросов.',
         emptyFiltered: 'Нет вопросов по выбранным фильтрам.',
         usersEmpty: 'Пока нет пользователей.',
         filterStatusAll: 'Все статусы',
+        filterPublicationAll: 'Любая публикация',
         filterDifficultyAll: 'Любая сложность',
         filterTypeAll: 'Любой тип',
         filterSearch: 'Поиск',
@@ -239,6 +247,13 @@ export const ruDictionary: Dictionary = {
             deactivateFailed:
                 'Не удалось деактивировать вопрос. Попробуй ещё раз.',
             activateFailed: 'Не удалось активировать вопрос. Попробуй ещё раз.',
+            publishFailed: 'Не удалось опубликовать вопрос. Попробуй ещё раз.',
+            submitForReviewFailed:
+                'Не удалось отправить вопрос на ревью. Попробуй ещё раз.',
+            returnToDraftFailed:
+                'Не удалось вернуть вопрос в черновик. Попробуй ещё раз.',
+            invalidPublicationTransition:
+                'Этот переход статуса публикации недоступен для текущего состояния вопроса.',
             cannotModifySelf: 'Нельзя изменить или удалить свой аккаунт.',
             cannotDeleteLastAdmin:
                 'Нельзя удалить, понизить или деактивировать последнего ADMIN.',

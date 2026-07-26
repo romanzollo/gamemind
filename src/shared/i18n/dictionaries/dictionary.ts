@@ -164,12 +164,25 @@ export type Dictionary = {
         tableQuizResults: string;
         statusActive: string;
         statusInactive: string;
+        /**
+         * Жизненный цикл контента (publicationStatus), ортогонально isActive.
+         * Не путать с statusActive/Inactive — это «выключатель витрины».
+         */
+        tablePublication: string;
+        publicationDraft: string;
+        publicationInReview: string;
+        publicationPublished: string;
+        publishButton: string;
+        submitForReviewButton: string;
+        returnToDraftButton: string;
         empty: string;
         /** Empty-state когда фильтры/поиск ничего не нашли (не пустая БД). */
         emptyFiltered: string;
         usersEmpty: string;
         /** Подписи GET-фильтров списка вопросов (status / difficulty / type / q). */
         filterStatusAll: string;
+        /** Фильтр по publicationStatus (шаг URL-фильтра; отдельно от isActive). */
+        filterPublicationAll: string;
         filterDifficultyAll: string;
         filterTypeAll: string;
         filterSearch: string;
@@ -222,6 +235,10 @@ export type Dictionary = {
             deleteFailed: string;
             deactivateFailed: string;
             activateFailed: string;
+            publishFailed: string;
+            submitForReviewFailed: string;
+            returnToDraftFailed: string;
+            invalidPublicationTransition: string;
             cannotModifySelf: string;
             cannotDeleteLastAdmin: string;
             userUpdateFailed: string;

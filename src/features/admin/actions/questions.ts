@@ -276,6 +276,122 @@ export async function deleteQuestionAction(formData: FormData) {
 }
 
 /**
+ * Публикация вопроса (DRAFT | IN_REVIEW → PUBLISHED).
+ * Idempotent: уже PUBLISHED → silent redirect (как activate).
+ * UI кнопок ещё нет — actions готовы к подключению в table/edit.
+ */
+export async function publishQuestionAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    await requireAdmin(locale);
+
+    const questionId = formData.get('questionId');
+
+    if (typeof questionId !== 'string' || questionId.trim() === '') {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    let result: Awaited<
+        ReturnType<typeof questionRepository.publishById>
+    > | null = null;
+
+    try {
+        result = await questionRepository.publishById(questionId);
+    } catch {
+        redirect(`/${locale}/admin/questions?error=PUBLISH_FAILED`);
+    }
+
+    if (!result || result.status === 'not_found') {
+        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+    }
+
+    if (result.status === 'invalid_transition') {
+        redirect(
+            `/${locale}/admin/questions?error=INVALID_PUBLICATION_TRANSITION`,
+        );
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+    redirect(`/${locale}/admin/questions`);
+}
+
+/**
+ * Отправка на ревью (DRAFT → IN_REVIEW).
+ * Idempotent: уже IN_REVIEW → silent redirect.
+ */
+export async function submitQuestionForReviewAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    await requireAdmin(locale);
+
+    const questionId = formData.get('questionId');
+
+    if (typeof questionId !== 'string' || questionId.trim() === '') {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    let result: Awaited<
+        ReturnType<typeof questionRepository.submitForReviewById>
+    > | null = null;
+
+    try {
+        result = await questionRepository.submitForReviewById(questionId);
+    } catch {
+        redirect(`/${locale}/admin/questions?error=SUBMIT_FOR_REVIEW_FAILED`);
+    }
+
+    if (!result || result.status === 'not_found') {
+        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+    }
+
+    if (result.status === 'invalid_transition') {
+        redirect(
+            `/${locale}/admin/questions?error=INVALID_PUBLICATION_TRANSITION`,
+        );
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+    redirect(`/${locale}/admin/questions`);
+}
+
+/**
+ * Возврат в черновик (IN_REVIEW | PUBLISHED → DRAFT).
+ * Idempotent: уже DRAFT → silent redirect.
+ * Снимает из quiz pool даже при isActive=true (pool требует PUBLISHED).
+ */
+export async function returnQuestionToDraftAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    await requireAdmin(locale);
+
+    const questionId = formData.get('questionId');
+
+    if (typeof questionId !== 'string' || questionId.trim() === '') {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    let result: Awaited<
+        ReturnType<typeof questionRepository.returnToDraftById>
+    > | null = null;
+
+    try {
+        result = await questionRepository.returnToDraftById(questionId);
+    } catch {
+        redirect(`/${locale}/admin/questions?error=RETURN_TO_DRAFT_FAILED`);
+    }
+
+    if (!result || result.status === 'not_found') {
+        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+    }
+
+    if (result.status === 'invalid_transition') {
+        redirect(
+            `/${locale}/admin/questions?error=INVALID_PUBLICATION_TRANSITION`,
+        );
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+    redirect(`/${locale}/admin/questions`);
+}
+
+/**
  * Редактирование вопроса.
  * Новый file заменяет prompt URL; старый `/media/...` удаляется best-effort.
  * Rate limit по admin userId — до sharp/Blob и до записи в Neon.

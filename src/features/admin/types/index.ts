@@ -56,6 +56,11 @@ export type AdminErrorCode =
     | 'DELETE_FAILED'
     | 'DEACTIVATE_FAILED'
     | 'ACTIVATE_FAILED'
+    | 'PUBLISH_FAILED'
+    | 'SUBMIT_FOR_REVIEW_FAILED'
+    | 'RETURN_TO_DRAFT_FAILED'
+    /** Repo вернул invalid_transition (кнопка не должна была быть доступна). */
+    | 'INVALID_PUBLICATION_TRANSITION'
     | 'CANNOT_MODIFY_SELF'
     | 'CANNOT_DELETE_LAST_ADMIN'
     | 'USER_UPDATE_FAILED'
