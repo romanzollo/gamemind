@@ -276,9 +276,15 @@ export type Dictionary = {
         description: string;
         rank: string;
         player: string;
-        /** Колонка взвешенных очков */
+        /** Взвешенные очки (EASY=1, MEDIUM=2, HARD=3) — не путать с correctCount */
         score: string;
-        correct: string;
+        /**
+         * Точность: correctCount / totalQuestions.
+         * Отдельно от score: очки взвешены, точность — «сколько угадал».
+         */
+        accuracy: string;
+        /** Дата лучшего результата (QuizResult.completedAt); уже в DTO, раньше не показывали */
+        date: string;
         empty: string;
         loadFailed: string;
     };

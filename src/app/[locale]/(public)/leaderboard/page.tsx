@@ -30,20 +30,21 @@ export default async function LeaderboardPage({
     }
 
     return (
-        <main className="mx-auto max-w-2xl px-4 py-6 sm:p-8">
-            <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+        <main className="mx-auto max-w-3xl px-4 py-8 sm:px-8 sm:py-12">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                 {dictionary.leaderboard.title}
             </h1>
-            <p className="mt-2 text-sm text-muted sm:text-base">
+            <p className="mt-3 text-base leading-relaxed text-muted">
                 {dictionary.leaderboard.description}
             </p>
 
             {loadErrorMessage ? (
-                <InlineAlert className="mt-4">{loadErrorMessage}</InlineAlert>
+                <InlineAlert className="mt-6">{loadErrorMessage}</InlineAlert>
             ) : null}
 
             <LeaderboardTable
                 entries={entries}
+                locale={safeLocale}
                 labels={dictionary.leaderboard}
             />
         </main>

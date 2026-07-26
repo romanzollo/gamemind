@@ -32,6 +32,13 @@
     /* Холодный info — ссылки / secondary accent, не конкурирует с success/primary teal */
     --color-info: var(--info);
     --color-info-muted: var(--info-muted);
+    /* Подиум рейтинга: gold/silver/bronze — без цифр в имени (Tailwind) */
+    --color-podium-gold: var(--podium-gold);
+    --color-podium-gold-fg: var(--podium-gold-fg);
+    --color-podium-silver: var(--podium-silver);
+    --color-podium-silver-fg: var(--podium-silver-fg);
+    --color-podium-bronze: var(--podium-bronze);
+    --color-podium-bronze-fg: var(--podium-bronze-fg);
     --color-ring: var(--ring);
     --shadow-sm: var(--shadow-sm);
     --shadow-md: var(--shadow-md);
@@ -72,6 +79,14 @@
     --info: #1f5f8b;
     --info-muted: #e4eef6;
 
+    /* Медальоны топ-3: приглушённый металл, читаемый номер */
+    --podium-gold: #e8c547;
+    --podium-gold-fg: #2a2208;
+    --podium-silver: #c5ccd6;
+    --podium-silver-fg: #1e2430;
+    --podium-bronze: #c9894a;
+    --podium-bronze-fg: #2a1808;
+
     --ring: #0b6e4f;
     --shadow-sm: 0 1px 2px rgb(20 24 31 / 0.06);
     --shadow-md:
@@ -107,6 +122,14 @@
     --warning-muted: #2f2410;
     --info: #7eb6d9;
     --info-muted: #143044;
+
+    /* Тёмный подиум: tinted plaque + светлый металл текста (без neon glow) */
+    --podium-gold: #3d3418;
+    --podium-gold-fg: #f0d56a;
+    --podium-silver: #2a3038;
+    --podium-silver-fg: #c8d0db;
+    --podium-bronze: #3a2a1c;
+    --podium-bronze-fg: #e0b080;
 
     --ring: #3ecf8e;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.45);

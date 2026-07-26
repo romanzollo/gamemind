@@ -291,7 +291,8 @@ export const enDictionary = {
         rank: 'Rank',
         player: 'Player',
         score: 'Points',
-        correct: 'Correct',
+        accuracy: 'Accuracy',
+        date: 'Date',
         empty: 'No results yet. Be the first to complete a quiz!',
         loadFailed:
             'Failed to load leaderboard. Check the database connection and refresh the page.',
