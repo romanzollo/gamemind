@@ -160,9 +160,9 @@ async function seedQuestion(client, question) {
 
     await client.query(
         `INSERT INTO "Question" (
-        id, text, type, difficulty, category, metadata, "isActive", "createdAt", "updatedAt"
+        id, text, type, difficulty, category, metadata, "isActive", "publicationStatus", "createdAt", "updatedAt"
       )
-      VALUES ($1, $2, $3::"QuestionType", $4::"Difficulty", $5, $6::jsonb, true, NOW(), NOW())
+      VALUES ($1, $2, $3::"QuestionType", $4::"Difficulty", $5, $6::jsonb, true, 'PUBLISHED'::"QuestionPublicationStatus", NOW(), NOW())
       ON CONFLICT (id) DO UPDATE SET
         text = EXCLUDED.text,
         type = EXCLUDED.type,
@@ -170,6 +170,7 @@ async function seedQuestion(client, question) {
         category = EXCLUDED.category,
         metadata = EXCLUDED.metadata,
         "isActive" = true,
+        "publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus",
         "updatedAt" = NOW()`,
         [
             question.id,

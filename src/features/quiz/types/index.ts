@@ -4,6 +4,9 @@ export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 // тип вопроса (совпадает с Prisma enum QuestionType)
 export type QuestionType = 'TEXT' | 'IMAGE_GUESS';
 
+/** Жизненный цикл контента (Prisma QuestionPublicationStatus). Не путать с isActive. */
+export type QuestionPublicationStatus = 'DRAFT' | 'IN_REVIEW' | 'PUBLISHED';
+
 // тип для входных данных для настройки викторины
 export type QuizSetupInput = {
     difficulty: Difficulty;

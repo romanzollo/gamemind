@@ -1,4 +1,8 @@
-import type { Difficulty, QuestionType } from '@/types';
+import type {
+    Difficulty,
+    QuestionPublicationStatus,
+    QuestionType,
+} from '@/types';
 
 export type LocalizedAdminText = {
     ru: { text: string };
@@ -15,6 +19,7 @@ export type AdminQuestionListItem = {
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
+    publicationStatus: QuestionPublicationStatus;
     optionsCount: number;
     createdAt: Date;
 };
@@ -36,6 +41,7 @@ export type AdminQuestionDetail = {
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
+    publicationStatus: QuestionPublicationStatus;
     options: AdminQuestionOptionDetail[];
 };
 

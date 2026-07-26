@@ -21,6 +21,7 @@ export type {
     AdminQuestionForEdit,
     LocalizedAdminText,
     LocalizedSnapshotTexts,
+    PublicationStatusMutationResult,
     QuestionSnapshotBundleItem,
     QuestionSnapshotCandidate,
     QuestionSnapshotDisplayText,

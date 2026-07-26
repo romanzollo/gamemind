@@ -7,7 +7,11 @@
  * См. docs/DECISIONS.md → Repository File Split.
  */
 
-import type { Difficulty, QuestionType } from '@/types';
+import type {
+    Difficulty,
+    QuestionPublicationStatus,
+    QuestionType,
+} from '@/types';
 
 /** Кандидат для snapshot: id вопроса + id вариантов (без текстов). */
 export type QuestionSnapshotCandidate = {
@@ -61,6 +65,8 @@ export type AdminQuestionForEdit = {
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
+    /** Черновик / ревью / опубликован — ортогонально isActive. */
+    publicationStatus: QuestionPublicationStatus;
     translations: LocalizedAdminText;
     options: Array<{
         id: string;
@@ -69,3 +75,14 @@ export type AdminQuestionForEdit = {
         translations: LocalizedAdminText;
     }>;
 };
+
+/** Результат смены publicationStatus (как deactivate/activate). */
+export type PublicationStatusMutationResult =
+    | { status: 'not_found' }
+    | { status: 'already_in_target_state' }
+    | {
+          status: 'invalid_transition';
+          from: QuestionPublicationStatus;
+          to: QuestionPublicationStatus;
+      }
+    | { status: 'updated' };

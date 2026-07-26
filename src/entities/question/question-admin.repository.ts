@@ -3,7 +3,10 @@
  *
  * Зачем отдельный модуль (§11.7): admin list queue, thumbs cache и bulk CTE
  * create/edit не должны смешиваться с quiz-pick hot path.
- * Поведение и SQL без изменений — только перенос.
+ *
+ * publicationStatus — жизненный цикл контента (DRAFT / IN_REVIEW / PUBLISHED);
+ * isActive — soft-hide. Create пишет DRAFT; edit content не меняет status;
+ * переходы — отдельные idempotent методы. Quiz snapshot/scoring не трогаем.
  *
  * Публичный фасад: question.repository.ts реэкспортирует warmAdminListConnection
  * и склеивает методы в questionRepository.
@@ -20,7 +23,7 @@ import type {
     CreateQuestionInput,
     UpdateQuestionInput,
 } from '@/features/admin/lib/validation';
-import type { Difficulty, QuestionType } from '@/types';
+import type { Difficulty, QuestionPublicationStatus, QuestionType } from '@/types';
 import {
     isTransientDirectPgError,
     withDirectPgClient,
@@ -29,7 +32,22 @@ import {
 import type {
     AdminQuestionForEdit,
     LocalizedAdminText,
+    PublicationStatusMutationResult,
 } from '@/entities/question/question.types';
+
+/**
+ * Разрешённые переходы publicationStatus.
+ * DRAFT → PUBLISHED напрямую: solo-admin может пропустить ревью.
+ * PUBLISHED → только обратно в DRAFT (снять с pool).
+ */
+const PUBLICATION_TRANSITIONS: Record<
+    QuestionPublicationStatus,
+    readonly QuestionPublicationStatus[]
+> = {
+    DRAFT: ['IN_REVIEW', 'PUBLISHED'],
+    IN_REVIEW: ['PUBLISHED', 'DRAFT'],
+    PUBLISHED: ['DRAFT'],
+};
 
 /**
  * Admin list read: serialized fresh Client → Neon **pooler**.
@@ -47,7 +65,9 @@ import type {
  * (timeout → socket.destroy, затем retry). Quiz/snapshot не трогаем.
  *
  * Cold start Neon (~10–15s) смягчаем: warmAdminListConnection (dev keep-warm
- * + ping с admin hub) и TTL-кэш PROMPT urls (второй connect не на каждый GET).
+ * + ping с admin hub) и TTL-кэш PROMPT urls + list rows (повторный GET
+ * без лишнего TLS). Unfiltered list = 3 последовательных SELECT по
+ * difficulty (UNION ALL / full scan в next+Neon клинят ~24s).
  * После каждого connect очередь держит ~300ms — hard-nav Сброс не стартует
  * TLS, пока предыдущий end() ещё клинит Windows+Neon.
  */
@@ -57,10 +77,30 @@ const globalForAdminListPg = globalThis as unknown as {
         at: number;
         map: Map<string, string>;
     };
+    adminListResultCache?: {
+        at: number;
+        key: string;
+        rows: AdminListResultRow[];
+    };
 };
 
-/** Кэш thumbs: после мутаций сбрасываем; TTL страхует от долгой stale. */
+/** Строка результата findAllForAdmin (для TTL-кэша списка). */
+type AdminListResultRow = {
+    id: string;
+    text: string;
+    type: QuestionType;
+    promptImageUrl: string | null;
+    difficulty: Difficulty;
+    category: string;
+    isActive: boolean;
+    publicationStatus: QuestionPublicationStatus;
+    createdAt: Date;
+    _count: { options: number };
+};
+
+/** Кэш thumbs / list: после мутаций сбрасываем; TTL страхует от долгой stale. */
 const ADMIN_PROMPT_CACHE_TTL_MS = 60_000;
+const ADMIN_LIST_RESULT_CACHE_TTL_MS = 60_000;
 
 function getCachedAdminPrompts(): Map<string, string> | null {
     const cache = globalForAdminListPg.adminPromptCache;
@@ -80,8 +120,44 @@ function setCachedAdminPrompts(map: Map<string, string>) {
     };
 }
 
-function invalidateAdminPromptCache() {
+function buildAdminListCacheKey(
+    locale: Locale,
+    filters?: AdminQuestionListFilters,
+): string {
+    return JSON.stringify({
+        locale,
+        status: filters?.status ?? 'all',
+        difficulty: filters?.difficulty ?? 'all',
+        type: filters?.type ?? 'all',
+        q: filters?.q ?? '',
+    });
+}
+
+function getCachedAdminListResult(
+    key: string,
+): AdminListResultRow[] | null {
+    const cache = globalForAdminListPg.adminListResultCache;
+    if (!cache || cache.key !== key) {
+        return null;
+    }
+    if (Date.now() - cache.at > ADMIN_LIST_RESULT_CACHE_TTL_MS) {
+        return null;
+    }
+    return cache.rows;
+}
+
+function setCachedAdminListResult(key: string, rows: AdminListResultRow[]) {
+    globalForAdminListPg.adminListResultCache = {
+        at: Date.now(),
+        key,
+        rows,
+    };
+}
+
+/** Сброс thumbs + list cache после create/update/delete/status. */
+function invalidateAdminListCaches() {
     globalForAdminListPg.adminPromptCache = undefined;
+    globalForAdminListPg.adminListResultCache = undefined;
 }
 
 async function withAdminListPgClient<T>(
@@ -140,6 +216,14 @@ export async function warmAdminListConnection(): Promise<void> {
 
 function toQuestionType(value: string): QuestionType {
     return value === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
+}
+
+function toPublicationStatus(value: string): QuestionPublicationStatus {
+    if (value === 'IN_REVIEW' || value === 'PUBLISHED' || value === 'DRAFT') {
+        return value;
+    }
+
+    throw new Error(`Invalid publicationStatus from DB: ${value}`);
 }
 
 type TranslationRow = {
@@ -256,6 +340,7 @@ async function findByIdForAdminWithDirectPg(
             difficulty: Difficulty;
             category: string;
             isActive: boolean;
+            publicationStatus: string;
         }>(
             `
                 SELECT
@@ -273,7 +358,8 @@ async function findByIdForAdminWithDirectPg(
                     ) AS "promptImageUrl",
                     q."difficulty"::text AS "difficulty",
                     q."category",
-                    q."isActive"
+                    q."isActive",
+                    q."publicationStatus"::text AS "publicationStatus"
                 FROM "Question" q
                 WHERE q."id" = $1
             `,
@@ -342,6 +428,7 @@ async function findByIdForAdminWithDirectPg(
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,
+            publicationStatus: toPublicationStatus(row.publicationStatus),
             translations: buildAdminTranslations(
                 questionTranslationsResult.rows,
                 row.text,
@@ -485,6 +572,7 @@ async function applyAdminQuestionCreateWithPg(
                     "difficulty",
                     "category",
                     "isActive",
+                    "publicationStatus",
                     "createdAt",
                     "updatedAt"
                 )
@@ -495,6 +583,7 @@ async function applyAdminQuestionCreateWithPg(
                     $4::"Difficulty",
                     $5,
                     true,
+                    'DRAFT'::"QuestionPublicationStatus",
                     NOW(),
                     NOW()
                 )
@@ -951,6 +1040,63 @@ async function updateWithOptionsWithDirectPg(
     }
 }
 
+/**
+ * Смена publicationStatus с проверкой переходов.
+ * Не через Prisma: тот же direct pg write path, что deactivate/activate.
+ */
+async function setPublicationStatusByIdWithDirectPg(
+    id: string,
+    target: QuestionPublicationStatus,
+): Promise<PublicationStatusMutationResult> {
+    return withDirectPgWriteRetry(async (client) => {
+        const current = await client.query<{
+            publicationStatus: string;
+        }>(
+            `SELECT "publicationStatus"::text AS "publicationStatus"
+             FROM "Question" WHERE "id" = $1`,
+            [id],
+        );
+        const question = current.rows[0];
+
+        if (!question) {
+            return { status: 'not_found' };
+        }
+
+        const from = toPublicationStatus(question.publicationStatus);
+
+        if (from === target) {
+            return { status: 'already_in_target_state' };
+        }
+
+        if (!PUBLICATION_TRANSITIONS[from].includes(target)) {
+            return { status: 'invalid_transition', from, to: target };
+        }
+
+        await client.query(
+            `UPDATE "Question"
+             SET "publicationStatus" = $2::"QuestionPublicationStatus",
+                 "updatedAt" = NOW()
+             WHERE "id" = $1`,
+            [id, target],
+        );
+
+        return { status: 'updated' };
+    });
+}
+
+async function mutatePublicationStatusById(
+    id: string,
+    target: QuestionPublicationStatus,
+): Promise<PublicationStatusMutationResult> {
+    const result = await setPublicationStatusByIdWithDirectPg(id, target);
+
+    if (result.status === 'updated') {
+        invalidateAdminListCaches();
+    }
+
+    return result;
+}
+
 /** Методы admin для фасада questionRepository (без смены сигнатур). */
 export const questionAdminMethods = {
     // список вопросов для админ-панели (опциональные фильтры из URL)
@@ -963,7 +1109,7 @@ export const questionAdminMethods = {
     ) {
         // Locale text: legacy Question.text is the ru cache written on create/edit.
         // Avoid translation JOIN / follow-up scans — they hang in next+Neon pooler.
-        void locale;
+        // locale участвует только в cache key (на будущее locale list text).
 
         const whereParts: string[] = [];
 
@@ -1007,40 +1153,85 @@ export const questionAdminMethods = {
             )`);
         }
 
-        // Всегда WHERE: пустой SELECT без WHERE в next+Neon после filter
-        // клинил Сброс (~24s timeout), а тот же SELECT с узким WHERE — ок.
-        const whereSql =
-            whereParts.length > 0
-                ? `WHERE ${whereParts.join(' AND ')}`
-                : 'WHERE true';
+        // Без пользовательского фильтра один SELECT / UNION ALL клинит
+        // next+Neon (~24s). Узкий WHERE по одному difficulty стабилен.
+        // Unfiltered = 3 последовательных SELECT (не parallel TLS).
+        // TTL-кэш результата смягчает повторные GET после первого успешного.
+        type AdminListRow = {
+            id: string;
+            text: string;
+            type: string;
+            difficulty: Difficulty;
+            category: string;
+            isActive: boolean;
+            publicationStatus: string;
+            createdAt: Date;
+        };
 
-        const listRows = await withAdminListPgClient(async (client) => {
-            const listResult = await client.query<{
-                id: string;
-                text: string;
-                type: string;
-                difficulty: Difficulty;
-                category: string;
-                isActive: boolean;
-                createdAt: Date;
-            }>(
-                `
-                    SELECT
-                        q."id",
-                        q."text",
-                        q."type"::text AS "type",
-                        q."difficulty"::text AS "difficulty",
-                        q."category",
-                        q."isActive",
-                        q."createdAt"
-                    FROM "Question" q
-                    ${whereSql}
-                    ORDER BY q."createdAt" DESC
-                `,
+        const listSelectSql = `
+            SELECT
+                q."id",
+                q."text",
+                q."type"::text AS "type",
+                q."difficulty"::text AS "difficulty",
+                q."category",
+                q."isActive",
+                q."publicationStatus"::text AS "publicationStatus",
+                q."createdAt"
+            FROM "Question" q
+        `;
+
+        const cacheKey = buildAdminListCacheKey(locale, filters);
+        const cachedList = getCachedAdminListResult(cacheKey);
+        if (cachedList) {
+            if (process.env.NODE_ENV === 'development') {
+                console.info(
+                    `[admin/questions] findAllForAdmin cache hit (rows=${cachedList.length})`,
+                );
+            }
+            return cachedList;
+        }
+
+        let listRows: AdminListRow[];
+
+        if (whereParts.length > 0) {
+            const whereSql = `WHERE ${whereParts.join(' AND ')}`;
+            listRows = await withAdminListPgClient(async (client) => {
+                const listResult = await client.query<AdminListRow>(
+                    `
+                        ${listSelectSql}
+                        ${whereSql}
+                        ORDER BY q."createdAt" DESC
+                    `,
+                );
+                return listResult.rows;
+            });
+        } else {
+            // Три узких connect подряд — UNION ALL / full scan снова ~24s.
+            const difficulties: Difficulty[] = ['EASY', 'MEDIUM', 'HARD'];
+            const merged: AdminListRow[] = [];
+
+            for (const difficulty of difficulties) {
+                const chunk = await withAdminListPgClient(async (client) => {
+                    const listResult = await client.query<AdminListRow>(
+                        `
+                            ${listSelectSql}
+                            WHERE q."difficulty" = '${difficulty}'::"Difficulty"
+                            ORDER BY q."createdAt" DESC
+                        `,
+                    );
+                    return listResult.rows;
+                });
+                merged.push(...chunk);
+            }
+
+            merged.sort(
+                (a, b) =>
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime(),
             );
-
-            return listResult.rows;
-        });
+            listRows = merged;
+        }
 
         // Thumbs: кэш 60s или отдельный connect (второй query на том же
         // client после list клинит Neon pooler в next dev).
@@ -1102,7 +1293,7 @@ export const questionAdminMethods = {
 
         // optionsCount пока 0: COUNT/ANY после list тоже клинили pooler.
         // Legacy Question.text = ru cache (без translation JOIN).
-        return listRows.map((row) => ({
+        const result: AdminListResultRow[] = listRows.map((row) => ({
             id: row.id,
             text: row.text,
             type: toQuestionType(row.type),
@@ -1110,11 +1301,15 @@ export const questionAdminMethods = {
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,
+            publicationStatus: toPublicationStatus(row.publicationStatus),
             createdAt: row.createdAt,
             _count: {
                 options: 0,
             },
         }));
+
+        setCachedAdminListResult(cacheKey, result);
+        return result;
     },
 
     // один вопрос для страницы редактирования (admin edit flow)
@@ -1125,20 +1320,20 @@ export const questionAdminMethods = {
     // создание вопроса с вариантами ответа (admin create flow)
     async createWithOptions(input: CreateQuestionInput) {
         const created = await createWithOptionsWithDirectPg(input);
-        invalidateAdminPromptCache();
+        invalidateAdminListCaches();
         return created;
     },
 
     // обновление вопроса и вариантов по id (admin edit flow)
     async updateWithOptions(input: UpdateQuestionInput) {
         const updated = await updateWithOptionsWithDirectPg(input);
-        invalidateAdminPromptCache();
+        invalidateAdminListCaches();
         return updated;
     },
 
     // деактивация вопроса по id (admin deactivate flow)
     async deactivateById(id: string) {
-        return withDirectPgWriteRetry(async (client) => {
+        const result = await withDirectPgWriteRetry(async (client) => {
             const current = await client.query<{ isActive: boolean }>(
                 `SELECT "isActive" FROM "Question" WHERE "id" = $1`,
                 [id],
@@ -1160,11 +1355,17 @@ export const questionAdminMethods = {
 
             return { status: 'updated' } as const;
         });
+
+        if (result.status === 'updated') {
+            invalidateAdminListCaches();
+        }
+
+        return result;
     },
 
     // активация вопроса по id (admin activate flow)
     async activateById(id: string) {
-        return withDirectPgWriteRetry(async (client) => {
+        const result = await withDirectPgWriteRetry(async (client) => {
             const current = await client.query<{ isActive: boolean }>(
                 `SELECT "isActive" FROM "Question" WHERE "id" = $1`,
                 [id],
@@ -1186,6 +1387,38 @@ export const questionAdminMethods = {
 
             return { status: 'updated' } as const;
         });
+
+        if (result.status === 'updated') {
+            invalidateAdminListCaches();
+        }
+
+        return result;
+    },
+
+    /**
+     * Смена publicationStatus с проверкой разрешённых переходов.
+     * Idempotent: уже target → already_in_target_state (без UPDATE).
+     */
+    setPublicationStatusById(
+        id: string,
+        target: QuestionPublicationStatus,
+    ): Promise<PublicationStatusMutationResult> {
+        return mutatePublicationStatusById(id, target);
+    },
+
+    /** DRAFT → IN_REVIEW (отправить на ревью). */
+    submitForReviewById(id: string): Promise<PublicationStatusMutationResult> {
+        return mutatePublicationStatusById(id, 'IN_REVIEW');
+    },
+
+    /** DRAFT | IN_REVIEW → PUBLISHED (в quiz pool, если isActive). */
+    publishById(id: string): Promise<PublicationStatusMutationResult> {
+        return mutatePublicationStatusById(id, 'PUBLISHED');
+    },
+
+    /** IN_REVIEW | PUBLISHED → DRAFT (отклонить / снять с публикации). */
+    returnToDraftById(id: string): Promise<PublicationStatusMutationResult> {
+        return mutatePublicationStatusById(id, 'DRAFT');
     },
 
     // удаление вопроса по id (admin delete flow)
@@ -1204,7 +1437,7 @@ export const questionAdminMethods = {
             return row;
         });
 
-        invalidateAdminPromptCache();
+        invalidateAdminListCaches();
         return deleted;
     },
 };

@@ -1,5 +1,6 @@
 export type {
   Difficulty,
+  QuestionPublicationStatus,
   QuestionType,
   QuizSessionStatus,
   QuizSetupInput,

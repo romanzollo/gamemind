@@ -41,6 +41,14 @@ enum QuestionAssetRole {
   THUMBNAIL
 }
 
+/// Жизненный цикл контента вопроса (отдельно от soft-hide `isActive`).
+/// Quiz pool берёт только PUBLISHED + isActive=true. См. DECISIONS → Question publication workflow.
+enum QuestionPublicationStatus {
+  DRAFT
+  IN_REVIEW
+  PUBLISHED
+}
+
 model User {
   id            String    @id @default(cuid())
   username      String    @unique
@@ -99,15 +107,18 @@ model VerificationToken {
 }
 
 model Question {
-  id         String       @id @default(cuid())
-  text       String
-  type       QuestionType @default(TEXT)
-  difficulty Difficulty
-  category   String       @default("video-games")
-  metadata   Json?
-  isActive   Boolean      @default(true)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id                 String                     @id @default(cuid())
+  text               String
+  type               QuestionType               @default(TEXT)
+  difficulty         Difficulty
+  category           String                     @default("video-games")
+  metadata           Json?
+  /// Soft-hide / архив: false → никогда не в quiz pool (даже если PUBLISHED).
+  isActive           Boolean                    @default(true)
+  /// Черновик → ревью → публикация. Новые вопросы = DRAFT; в pool только PUBLISHED.
+  publicationStatus  QuestionPublicationStatus  @default(DRAFT)
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
 
   options          AnswerOption[]
   assets           QuestionAsset[]
@@ -115,7 +126,7 @@ model Question {
   sessionQuestions QuizSessionQuestion[]
   translations     QuestionTranslation[]
 
-  @@index([difficulty, isActive])
+  @@index([difficulty, isActive, publicationStatus])
 }
 
 model AnswerOption {

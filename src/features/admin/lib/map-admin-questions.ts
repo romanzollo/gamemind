@@ -1,4 +1,8 @@
-import type { Difficulty, QuestionType } from '@/types';
+import type {
+    Difficulty,
+    QuestionPublicationStatus,
+    QuestionType,
+} from '@/types';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type { AdminQuestionListItem } from '../types';
 
@@ -11,6 +15,7 @@ type RawAdminQuestionRow = {
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
+    publicationStatus: QuestionPublicationStatus;
     createdAt: Date;
     _count: {
         options: number;
@@ -36,6 +41,7 @@ export function mapAdminQuestions(
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,
+            publicationStatus: row.publicationStatus,
             optionsCount: row._count.options,
             createdAt: row.createdAt,
         };

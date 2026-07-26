@@ -16,6 +16,7 @@ export function mapAdminQuestionDetail(
         difficulty: row.difficulty,
         category: row.category,
         isActive: row.isActive,
+        publicationStatus: row.publicationStatus,
         options: row.options.map((option) => ({
             id: option.id,
             translations: option.translations,

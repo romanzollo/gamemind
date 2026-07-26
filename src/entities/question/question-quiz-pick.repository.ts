@@ -3,11 +3,14 @@
  *
  * Зачем отдельный модуль (§11.7): quiz start hot path (random pick + bilingual
  * texts + prompt image URL) не должен жить в одном файле с admin CRUD/list.
- * Поведение и SQL без изменений — только перенос. Scoring / snapshot write
- * остаются в quiz-session.repository.
+ * Scoring / snapshot write остаются в quiz-session.repository.
+ *
+ * Pool rule: в квиз попадают только isActive=true И publicationStatus=PUBLISHED.
+ * DRAFT / IN_REVIEW и soft-hide (isActive=false) исключены. Snapshot write/read
+ * и scoring math не меняются — только WHERE при выборе id.
  *
  * Публичный фасад: question.repository.ts реэкспортирует функции и методы.
- * См. docs/DECISIONS.md → Repository File Split.
+ * См. docs/DECISIONS.md → Repository File Split / Question publication workflow.
  */
 
 import type { Client } from 'pg';
@@ -191,6 +194,7 @@ async function loadSnapshotCandidatesByDifficulty(
                 WHERE
                     q."difficulty" = $1::"Difficulty"
                     AND q."isActive" = true
+                    AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
                 ORDER BY q."createdAt" ASC, ao."order" ASC
             `,
             [difficulty],
@@ -432,6 +436,7 @@ export async function loadRandomSnapshotBundleWithPgClient(
                             WHERE
                                 q."difficulty" = $1::"Difficulty"
                                 AND q."isActive" = true
+                                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
                             ORDER BY RANDOM()
                             LIMIT $2
                         )
