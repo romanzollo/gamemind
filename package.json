@@ -8,6 +8,8 @@
         "build": "prisma generate && next build",
         "start": "next start",
         "lint": "eslint",
+        "test": "vitest run",
+        "test:watch": "vitest",
         "db:generate": "prisma generate",
         "db:migrate": "prisma migrate dev",
         "db:push": "prisma db push",
@@ -47,7 +49,8 @@
         "prisma": "^6.9.0",
         "tailwindcss": "^4",
         "tsx": "^4.20.3",
-        "typescript": "^5"
+        "typescript": "^5",
+        "vitest": "^3.2.4"
     },
     "prisma": {
         "seed": "node scripts/seed.cjs"
