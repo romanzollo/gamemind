@@ -130,6 +130,7 @@ function buildAdminListCacheKey(
     return JSON.stringify({
         locale,
         status: filters?.status ?? 'all',
+        publication: filters?.publication ?? 'all',
         difficulty: filters?.difficulty ?? 'all',
         type: filters?.type ?? 'all',
         q: filters?.q ?? '',
@@ -1122,6 +1123,24 @@ export const questionAdminMethods = {
             whereParts.push(`q."isActive" = false`);
         }
 
+        // publicationStatus — allowlist + inline enum (как difficulty/type).
+        // Не $1 / ANY: hang playbook admin list.
+        if (filters?.publication && filters.publication !== 'all') {
+            const publication = filters.publication;
+            if (
+                publication !== 'DRAFT' &&
+                publication !== 'IN_REVIEW' &&
+                publication !== 'PUBLISHED'
+            ) {
+                throw new Error(
+                    `Invalid publication filter: ${publication}`,
+                );
+            }
+            whereParts.push(
+                `q."publicationStatus" = '${publication}'::"QuestionPublicationStatus"`,
+            );
+        }
+
         if (filters?.difficulty && filters.difficulty !== 'all') {
             const difficulty = filters.difficulty;
             if (
@@ -1211,7 +1230,15 @@ export const questionAdminMethods = {
 
         let listRows: AdminListRow[];
 
-        if (whereParts.length > 0) {
+        // Узкий путь только когда есть difficulty (leading column индекса
+        // (difficulty, isActive, publicationStatus)). Фильтр только по
+        // publication/status/type/q без difficulty ≈ full scan → hang class
+        // в next+Neon; тогда режем по трём difficulty и AND остальные WHERE.
+        const hasDifficultyFilter = Boolean(
+            filters?.difficulty && filters.difficulty !== 'all',
+        );
+
+        if (hasDifficultyFilter) {
             const whereSql = `WHERE ${whereParts.join(' AND ')}`;
             listRows = await withAdminListPgClient(async (client) => {
                 const listResult = await client.query<AdminListRow>(
@@ -1227,13 +1254,17 @@ export const questionAdminMethods = {
             // Три узких connect подряд — UNION ALL / full scan снова ~24s.
             const difficulties: Difficulty[] = ['EASY', 'MEDIUM', 'HARD'];
             const merged: AdminListRow[] = [];
+            const extraWhere =
+                whereParts.length > 0
+                    ? ` AND ${whereParts.join(' AND ')}`
+                    : '';
 
             for (const difficulty of difficulties) {
                 const chunk = await withAdminListPgClient(async (client) => {
                     const listResult = await client.query<AdminListRow>(
                         `
                             ${listSelectSql}
-                            WHERE q."difficulty" = '${difficulty}'::"Difficulty"
+                            WHERE q."difficulty" = '${difficulty}'::"Difficulty"${extraWhere}
                             ORDER BY q."createdAt" DESC
                         `,
                     );

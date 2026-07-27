@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-import type { Difficulty, QuestionType } from '@/types';
+import type {
+    Difficulty,
+    QuestionPublicationStatus,
+    QuestionType,
+} from '@/types';
 
 /**
  * Парсинг search params списка `/admin/questions`.
@@ -8,17 +12,31 @@ import type { Difficulty, QuestionType } from '@/types';
  * Зачем отдельный модуль:
  * - URL — внешний вход (как FormData); валидируем до репозитория;
  * - невалидные значения не роняют страницу — fallback на «без фильтра»;
- * - один контракт для page → SQL WHERE (следующий шаг).
+ * - один контракт для page → SQL WHERE.
  *
- * Не смешивать с draft/published: status здесь только isActive.
+ * Две оси в URL (не путать):
+ * - `status` → isActive (витрина: active / inactive);
+ * - `publication` → publicationStatus (редактура: DRAFT / IN_REVIEW / PUBLISHED).
+ *
+ * См. DECISIONS.md → Question publication workflow.
  */
 
 /** Статус в URL: active/inactive или all (без WHERE по isActive). */
 export type AdminQuestionListStatusFilter = 'active' | 'inactive' | 'all';
 
+/**
+ * Публикация в URL: конкретный publicationStatus или all (без WHERE).
+ * Значения = enum PostgreSQL / Prisma (UPPER_SNAKE), не UI-строки.
+ */
+export type AdminQuestionListPublicationFilter =
+    | QuestionPublicationStatus
+    | 'all';
+
 /** Нормализованные фильтры списка вопросов (после parse). */
 export type AdminQuestionListFilters = {
     status: AdminQuestionListStatusFilter;
+    /** Жизненный цикл контента; ортогонально `status` (isActive). */
+    publication: AdminQuestionListPublicationFilter;
     difficulty: Difficulty | 'all';
     type: QuestionType | 'all';
     /** Подстрока поиска по тексту; пустая строка = без поиска. */
@@ -27,6 +45,7 @@ export type AdminQuestionListFilters = {
 
 const DEFAULT_FILTERS: AdminQuestionListFilters = {
     status: 'all',
+    publication: 'all',
     difficulty: 'all',
     type: 'all',
     q: '',
@@ -37,6 +56,9 @@ const SEARCH_MAX_LENGTH = 200;
 
 const adminQuestionListFiltersSchema = z.object({
     status: z.enum(['active', 'inactive', 'all']).default('all'),
+    publication: z
+        .enum(['DRAFT', 'IN_REVIEW', 'PUBLISHED', 'all'])
+        .default('all'),
     difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'all']).default('all'),
     type: z.enum(['TEXT', 'IMAGE_GUESS', 'all']).default('all'),
     q: z
@@ -74,6 +96,7 @@ export function parseAdminQuestionListFilters(
 ): AdminQuestionListFilters {
     const raw = {
         status: emptyToUndefined(firstParam(searchParams.status)),
+        publication: emptyToUndefined(firstParam(searchParams.publication)),
         difficulty: emptyToUndefined(firstParam(searchParams.difficulty)),
         type: emptyToUndefined(firstParam(searchParams.type)),
         q: emptyToUndefined(firstParam(searchParams.q)),
@@ -87,6 +110,7 @@ export function parseAdminQuestionListFilters(
 
     return {
         status: parsed.data.status,
+        publication: parsed.data.publication,
         difficulty: parsed.data.difficulty,
         type: parsed.data.type,
         q: parsed.data.q,
@@ -99,6 +123,7 @@ export function hasActiveAdminQuestionListFilters(
 ): boolean {
     return (
         filters.status !== 'all' ||
+        filters.publication !== 'all' ||
         filters.difficulty !== 'all' ||
         filters.type !== 'all' ||
         filters.q.length > 0
@@ -117,6 +142,10 @@ export function buildAdminQuestionListHref(
 
     if (filters.status !== 'all') {
         params.set('status', filters.status);
+    }
+
+    if (filters.publication !== 'all') {
+        params.set('publication', filters.publication);
     }
 
     if (filters.difficulty !== 'all') {

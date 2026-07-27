@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import type {
     AdminQuestionListFilters,
+    AdminQuestionListPublicationFilter,
     AdminQuestionListStatusFilter,
 } from '@/features/admin/lib/parse-admin-question-list-filters';
 import {
@@ -21,6 +22,10 @@ import type { Difficulty, QuestionType } from '@/types';
  * Soft RSC после list-read в next dev (Windows + Neon) клинил connect
  * (Reset / смена фильтра выглядели как зависание).
  * Поиск — debounce, чтобы не бить Neon на каждый символ.
+ *
+ * Две оси статуса в URL:
+ * - `status` → isActive (витрина);
+ * - `publication` → publicationStatus (редактура).
  */
 
 const fieldClassName =
@@ -57,6 +62,7 @@ export function AdminQuestionsFilters({
         window.location.assign(
             buildAdminQuestionListHref(locale, {
                 status: 'all',
+                publication: 'all',
                 difficulty: 'all',
                 type: 'all',
                 q: '',
@@ -88,10 +94,10 @@ export function AdminQuestionsFilters({
             aria-label={labels.questionsTitle}
         >
             {/*
-              Реальный admin-паттерн: selects равной ширины в одном ряду,
-              поиск — отдельная full-width строка (нет «осиротевшего» type на 50%).
+              4 selects: isActive + publication + difficulty + type.
+              На md — 2×2; на lg — один ряд (Scoreboard dense admin).
             */}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                 <label className="block min-w-0">
                     <span className="mb-1 block text-xs font-medium text-muted">
                         {labels.tableStatus}
@@ -113,6 +119,38 @@ export function AdminQuestionsFilters({
                         <option value="active">{labels.statusActive}</option>
                         <option value="inactive">
                             {labels.statusInactive}
+                        </option>
+                    </select>
+                </label>
+
+                <label className="block min-w-0">
+                    <span className="mb-1 block text-xs font-medium text-muted">
+                        {labels.tablePublication}
+                    </span>
+                    <select
+                        name="publication"
+                        value={filters.publication}
+                        className={fieldClassName}
+                        onChange={(event) => {
+                            navigate({
+                                ...filters,
+                                publication: event.target
+                                    .value as AdminQuestionListPublicationFilter,
+                                q: searchText.trim(),
+                            });
+                        }}
+                    >
+                        <option value="all">
+                            {labels.filterPublicationAll}
+                        </option>
+                        <option value="DRAFT">
+                            {labels.publicationDraft}
+                        </option>
+                        <option value="IN_REVIEW">
+                            {labels.publicationInReview}
+                        </option>
+                        <option value="PUBLISHED">
+                            {labels.publicationPublished}
                         </option>
                     </select>
                 </label>

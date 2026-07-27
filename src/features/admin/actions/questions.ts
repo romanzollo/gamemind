@@ -25,6 +25,38 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
+/**
+ * Куда вернуть после publication action.
+ * `returnTo=edit` — остаёмся на странице edit (кнопки панели редактирования);
+ * иначе список `/admin/questions` (кнопки в таблице).
+ */
+function getPublicationRedirectPath(
+    formData: FormData,
+    locale: Locale,
+    questionId: string,
+): string {
+    const returnTo = formData.get('returnTo');
+
+    if (returnTo === 'edit') {
+        return `/${locale}/admin/questions/${questionId}/edit`;
+    }
+
+    return `/${locale}/admin/questions`;
+}
+
+function redirectWithOptionalError(path: string, error?: string): never {
+    if (!error) {
+        redirect(path);
+    }
+
+    redirect(`${path}?error=${error}`);
+}
+
+function revalidatePublicationPaths(locale: Locale, questionId: string) {
+    revalidatePath(`/${locale}/admin/questions`);
+    revalidatePath(`/${locale}/admin/questions/${questionId}/edit`);
+}
+
 function getFormString(formData: FormData, name: string): string {
     const value = formData.get(name);
 
@@ -278,7 +310,7 @@ export async function deleteQuestionAction(formData: FormData) {
 /**
  * Публикация вопроса (DRAFT | IN_REVIEW → PUBLISHED).
  * Idempotent: уже PUBLISHED → silent redirect (как activate).
- * UI кнопок ещё нет — actions готовы к подключению в table/edit.
+ * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
  */
 export async function publishQuestionAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
@@ -290,6 +322,12 @@ export async function publishQuestionAction(formData: FormData) {
         redirect(`/${locale}/admin/questions`);
     }
 
+    const redirectPath = getPublicationRedirectPath(
+        formData,
+        locale,
+        questionId,
+    );
+
     let result: Awaited<
         ReturnType<typeof questionRepository.publishById>
     > | null = null;
@@ -297,26 +335,28 @@ export async function publishQuestionAction(formData: FormData) {
     try {
         result = await questionRepository.publishById(questionId);
     } catch {
-        redirect(`/${locale}/admin/questions?error=PUBLISH_FAILED`);
+        redirectWithOptionalError(redirectPath, 'PUBLISH_FAILED');
     }
 
     if (!result || result.status === 'not_found') {
-        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+        redirectWithOptionalError(redirectPath, 'NOT_FOUND');
     }
 
     if (result.status === 'invalid_transition') {
-        redirect(
-            `/${locale}/admin/questions?error=INVALID_PUBLICATION_TRANSITION`,
+        redirectWithOptionalError(
+            redirectPath,
+            'INVALID_PUBLICATION_TRANSITION',
         );
     }
 
-    revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
+    revalidatePublicationPaths(locale, questionId);
+    redirectWithOptionalError(redirectPath);
 }
 
 /**
  * Отправка на ревью (DRAFT → IN_REVIEW).
  * Idempotent: уже IN_REVIEW → silent redirect.
+ * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
  */
 export async function submitQuestionForReviewAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
@@ -328,6 +368,12 @@ export async function submitQuestionForReviewAction(formData: FormData) {
         redirect(`/${locale}/admin/questions`);
     }
 
+    const redirectPath = getPublicationRedirectPath(
+        formData,
+        locale,
+        questionId,
+    );
+
     let result: Awaited<
         ReturnType<typeof questionRepository.submitForReviewById>
     > | null = null;
@@ -335,27 +381,32 @@ export async function submitQuestionForReviewAction(formData: FormData) {
     try {
         result = await questionRepository.submitForReviewById(questionId);
     } catch {
-        redirect(`/${locale}/admin/questions?error=SUBMIT_FOR_REVIEW_FAILED`);
-    }
-
-    if (!result || result.status === 'not_found') {
-        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
-    }
-
-    if (result.status === 'invalid_transition') {
-        redirect(
-            `/${locale}/admin/questions?error=INVALID_PUBLICATION_TRANSITION`,
+        redirectWithOptionalError(
+            redirectPath,
+            'SUBMIT_FOR_REVIEW_FAILED',
         );
     }
 
-    revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
+    if (!result || result.status === 'not_found') {
+        redirectWithOptionalError(redirectPath, 'NOT_FOUND');
+    }
+
+    if (result.status === 'invalid_transition') {
+        redirectWithOptionalError(
+            redirectPath,
+            'INVALID_PUBLICATION_TRANSITION',
+        );
+    }
+
+    revalidatePublicationPaths(locale, questionId);
+    redirectWithOptionalError(redirectPath);
 }
 
 /**
  * Возврат в черновик (IN_REVIEW | PUBLISHED → DRAFT).
  * Idempotent: уже DRAFT → silent redirect.
  * Снимает из quiz pool даже при isActive=true (pool требует PUBLISHED).
+ * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
  */
 export async function returnQuestionToDraftAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
@@ -367,6 +418,12 @@ export async function returnQuestionToDraftAction(formData: FormData) {
         redirect(`/${locale}/admin/questions`);
     }
 
+    const redirectPath = getPublicationRedirectPath(
+        formData,
+        locale,
+        questionId,
+    );
+
     let result: Awaited<
         ReturnType<typeof questionRepository.returnToDraftById>
     > | null = null;
@@ -374,21 +431,25 @@ export async function returnQuestionToDraftAction(formData: FormData) {
     try {
         result = await questionRepository.returnToDraftById(questionId);
     } catch {
-        redirect(`/${locale}/admin/questions?error=RETURN_TO_DRAFT_FAILED`);
-    }
-
-    if (!result || result.status === 'not_found') {
-        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
-    }
-
-    if (result.status === 'invalid_transition') {
-        redirect(
-            `/${locale}/admin/questions?error=INVALID_PUBLICATION_TRANSITION`,
+        redirectWithOptionalError(
+            redirectPath,
+            'RETURN_TO_DRAFT_FAILED',
         );
     }
 
-    revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
+    if (!result || result.status === 'not_found') {
+        redirectWithOptionalError(redirectPath, 'NOT_FOUND');
+    }
+
+    if (result.status === 'invalid_transition') {
+        redirectWithOptionalError(
+            redirectPath,
+            'INVALID_PUBLICATION_TRANSITION',
+        );
+    }
+
+    revalidatePublicationPaths(locale, questionId);
+    redirectWithOptionalError(redirectPath);
 }
 
 /**

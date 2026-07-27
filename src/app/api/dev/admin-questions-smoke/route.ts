@@ -24,6 +24,7 @@ export async function GET(request: Request) {
         difficultyParam === 'HARD'
             ? {
                   status: 'all',
+                  publication: 'all',
                   difficulty: difficultyParam as Difficulty,
                   type: 'all',
                   q: '',

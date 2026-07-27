@@ -15,4 +15,5 @@ export {
 export type {
     AdminQuestionListFilters,
     AdminQuestionListStatusFilter,
+    AdminQuestionListPublicationFilter,
 } from './parse-admin-question-list-filters';
