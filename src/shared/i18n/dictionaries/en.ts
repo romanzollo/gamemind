@@ -224,6 +224,7 @@ export const enDictionary = {
             'Delete this user permanently? Related quizzes and results will also be deleted.',
         confirmChangeRole: 'Change this user’s role?',
         tableActions: 'Actions',
+        rowMoreActions: 'More',
         errors: {
             loadFailed:
                 'Failed to load questions. Check the database connection and refresh the page.',

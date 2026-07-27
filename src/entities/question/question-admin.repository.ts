@@ -96,11 +96,21 @@ const globalForAdminListPg = globalThis as unknown as {
         key: string;
         rows: AdminListResultRow[];
     };
+    /**
+     * Поколение кэша списка: invalidate++.
+     * In-flight findAll, завершившийся после мутации, не должен
+     * снова записать stale DRAFT поверх свежих данных.
+     */
+    adminListCacheGeneration?: number;
 };
 
 /** Кэш thumbs / list: после мутаций сбрасываем; TTL страхует stale. */
 const ADMIN_PROMPT_CACHE_TTL_MS = 60_000;
 const ADMIN_LIST_RESULT_CACHE_TTL_MS = 60_000;
+
+function getAdminListCacheGeneration(): number {
+    return globalForAdminListPg.adminListCacheGeneration ?? 0;
+}
 
 function getCachedAdminPrompts(): Map<string, string> | null {
     const cache = globalForAdminListPg.adminPromptCache;
@@ -150,7 +160,16 @@ function getCachedAdminListResult(
     return cache.rows;
 }
 
-function setCachedAdminListResult(key: string, rows: AdminListResultRow[]) {
+function setCachedAdminListResult(
+    key: string,
+    rows: AdminListResultRow[],
+    generationAtStart: number,
+) {
+    // Мутация во время медленного list SELECT — не травим TTL stale rows.
+    if (generationAtStart !== getAdminListCacheGeneration()) {
+        return;
+    }
+
     globalForAdminListPg.adminListResultCache = {
         at: Date.now(),
         key,
@@ -158,10 +177,82 @@ function setCachedAdminListResult(key: string, rows: AdminListResultRow[]) {
     };
 }
 
-/** Сброс thumbs + list cache после create/update/delete/status. */
+/** Сброс thumbs + list cache после create/update/delete (состав списка меняется). */
 function invalidateAdminListCaches() {
+    globalForAdminListPg.adminListCacheGeneration =
+        getAdminListCacheGeneration() + 1;
     globalForAdminListPg.adminPromptCache = undefined;
     globalForAdminListPg.adminListResultCache = undefined;
+}
+
+/**
+ * Точечное обновление одной строки в TTL list-cache после status-мутации.
+ *
+ * Зачем: полный invalidate → после redirect снова 3×SELECT + settle (~2–4s).
+ * Для publication/isActive достаточно поправить row in-memory: DB уже обновлена,
+ * prompt thumbs не меняются. Это cache coherence, не «фальшивый UI».
+ *
+ * Когда всё же invalidate: активный URL-фильтр по status/publication — строка
+ * может выпасть из выборки; безопаснее перечитать.
+ */
+function patchAdminListCacheQuestion(
+    id: string,
+    patch: {
+        publicationStatus?: QuestionPublicationStatus;
+        isActive?: boolean;
+    },
+): void {
+    const cache = globalForAdminListPg.adminListResultCache;
+    if (!cache) {
+        return;
+    }
+
+    let filterKey: {
+        status?: string;
+        publication?: string;
+    };
+    try {
+        filterKey = JSON.parse(cache.key) as {
+            status?: string;
+            publication?: string;
+        };
+    } catch {
+        invalidateAdminListCaches();
+        return;
+    }
+
+    const statusFilter = filterKey.status ?? 'all';
+    const publicationFilter = filterKey.publication ?? 'all';
+
+    if (
+        patch.publicationStatus !== undefined &&
+        publicationFilter !== 'all'
+    ) {
+        invalidateAdminListCaches();
+        return;
+    }
+
+    if (patch.isActive !== undefined && statusFilter !== 'all') {
+        invalidateAdminListCaches();
+        return;
+    }
+
+    const index = cache.rows.findIndex((row) => row.id === id);
+    if (index === -1) {
+        return;
+    }
+
+    const nextRows = cache.rows.slice();
+    nextRows[index] = {
+        ...nextRows[index],
+        ...patch,
+    };
+
+    globalForAdminListPg.adminListResultCache = {
+        at: Date.now(),
+        key: cache.key,
+        rows: nextRows,
+    };
 }
 
 async function withAdminListPgClient<T>(
@@ -1094,8 +1185,12 @@ async function mutatePublicationStatusById(
 ): Promise<PublicationStatusMutationResult> {
     const result = await setPublicationStatusByIdWithDirectPg(id, target);
 
-    if (result.status === 'updated') {
-        invalidateAdminListCaches();
+    if (
+        result.status === 'updated' ||
+        result.status === 'already_in_target_state'
+    ) {
+        // Не полный invalidate: redirect на list должен попасть в cache hit.
+        patchAdminListCacheQuestion(id, { publicationStatus: target });
     }
 
     return result;
@@ -1228,6 +1323,8 @@ export const questionAdminMethods = {
             return cachedList;
         }
 
+        const generationAtStart = getAdminListCacheGeneration();
+
         let listRows: AdminListRow[];
 
         // Узкий путь только когда есть difficulty (leading column индекса
@@ -1355,7 +1452,7 @@ export const questionAdminMethods = {
             },
         }));
 
-        setCachedAdminListResult(cacheKey, result);
+        setCachedAdminListResult(cacheKey, result, generationAtStart);
         return result;
     },
 
@@ -1403,8 +1500,11 @@ export const questionAdminMethods = {
             return { status: 'updated' } as const;
         });
 
-        if (result.status === 'updated') {
-            invalidateAdminListCaches();
+        if (
+            result.status === 'updated' ||
+            result.status === 'already_in_target_state'
+        ) {
+            patchAdminListCacheQuestion(id, { isActive: false });
         }
 
         return result;
@@ -1435,8 +1535,11 @@ export const questionAdminMethods = {
             return { status: 'updated' } as const;
         });
 
-        if (result.status === 'updated') {
-            invalidateAdminListCaches();
+        if (
+            result.status === 'updated' ||
+            result.status === 'already_in_target_state'
+        ) {
+            patchAdminListCacheQuestion(id, { isActive: true });
         }
 
         return result;

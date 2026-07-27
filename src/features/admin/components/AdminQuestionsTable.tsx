@@ -8,6 +8,7 @@ import {
     returnQuestionToDraftAction,
     submitQuestionForReviewAction,
 } from '@/features/admin/actions/questions';
+import { AdminQuestionRowMoreActions } from '@/features/admin/components/AdminQuestionRowMoreActions';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState, SubmitButton } from '@/shared/ui';
 import type { Difficulty, QuestionPublicationStatus } from '@/types';
@@ -21,6 +22,11 @@ import type { AdminQuestionListItem } from '../types';
  *
  * Две оси статуса: isActive (витрина) и publicationStatus (редактура).
  * Кнопки публикации только для разрешённых переходов (см. DECISIONS).
+ *
+ * Desktop actions density: снаружи только Edit (одинаково во всех строках);
+ * publication / activate / deactivate / delete — в «Ещё».
+ * В меню «вперёд»-шаги взаимоисключающие: DRAFT → На ревью; IN_REVIEW → Опубликовать
+ * (как Активировать ↔ Деактивировать). Прямой publish с DRAFT — на edit-панели.
  */
 
 type AdminQuestionsTableProps = {
@@ -33,6 +39,21 @@ type AdminQuestionsTableProps = {
 /** Compact для list-карточек: min-h-10 визуально раздувал низ карточки. */
 const rowActionClassName =
     'inline-flex min-h-8 items-center rounded-sm px-0.5 text-sm font-medium underline-offset-2 motion-safe:transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
+function QuestionActionFields({
+    locale,
+    questionId,
+}: {
+    locale: Locale;
+    questionId: string;
+}) {
+    return (
+        <>
+            <input type="hidden" name="locale" value={locale} />
+            <input type="hidden" name="questionId" value={questionId} />
+        </>
+    );
+}
 
 function DifficultyChip({ difficulty }: { difficulty: Difficulty }) {
     return (
@@ -83,98 +104,167 @@ function PublicationBadge({
     );
 }
 
+/**
+ * Publication CTA по статусу — взаимоисключающие «вперёд»-шаги
+ * (как Activate ↔ Deactivate): не показывать сразу «На ревью» и «Опубликовать».
+ *
+ * List UI = линейный пайплайн DRAFT → IN_REVIEW → PUBLISHED.
+ * Прямой DRAFT → PUBLISHED остаётся на edit-панели (solo-admin shortcut, ADR).
+ *
+ * Mobile: те же CTA видимы без «Ещё».
+ * Desktop: те же CTA внутри AdminRowMoreMenu (className/formClassName).
+ */
 function PublicationRowActions({
     entry,
     labels,
     locale,
+    className = rowActionClassName,
+    formClassName = 'inline-flex',
 }: {
     entry: AdminQuestionListItem;
     labels: Dictionary['admin'];
     locale: Locale;
+    className?: string;
+    formClassName?: string;
 }) {
     // Новый JSX на каждый form — не переиспользовать один fragment (React key warning).
-    const fields = () => (
-        <>
-            <input type="hidden" name="locale" value={locale} />
-            <input type="hidden" name="questionId" value={entry.id} />
-        </>
-    );
-
-    return (
-        <>
-            {entry.publicationStatus === 'DRAFT' ? (
-                <>
-                    <form
-                        action={submitQuestionForReviewAction}
-                        className="inline-flex"
-                    >
-                        {fields()}
-                        <SubmitButton
-                            unstyled
-                            className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
-                        >
-                            {labels.submitForReviewButton}
-                        </SubmitButton>
-                    </form>
-                    <form
-                        action={publishQuestionAction}
-                        className="inline-flex"
-                    >
-                        {fields()}
-                        <SubmitButton
-                            unstyled
-                            className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
-                        >
-                            {labels.publishButton}
-                        </SubmitButton>
-                    </form>
-                </>
-            ) : null}
-
-            {entry.publicationStatus === 'IN_REVIEW' ? (
-                <>
-                    <form
-                        action={publishQuestionAction}
-                        className="inline-flex"
-                    >
-                        {fields()}
-                        <SubmitButton
-                            unstyled
-                            className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
-                        >
-                            {labels.publishButton}
-                        </SubmitButton>
-                    </form>
-                    <form
-                        action={returnQuestionToDraftAction}
-                        className="inline-flex"
-                    >
-                        {fields()}
-                        <SubmitButton
-                            unstyled
-                            className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
-                        >
-                            {labels.returnToDraftButton}
-                        </SubmitButton>
-                    </form>
-                </>
-            ) : null}
-
-            {entry.publicationStatus === 'PUBLISHED' ? (
-                <form
-                    action={returnQuestionToDraftAction}
-                    className="inline-flex"
+    if (entry.publicationStatus === 'DRAFT') {
+        return (
+            <form
+                action={submitQuestionForReviewAction}
+                className={formClassName}
+            >
+                <QuestionActionFields
+                    locale={locale}
+                    questionId={entry.id}
+                />
+                <SubmitButton
+                    unstyled
+                    className={`${className} cursor-pointer text-warning hover:opacity-90`}
                 >
-                    {fields()}
+                    {labels.submitForReviewButton}
+                </SubmitButton>
+            </form>
+        );
+    }
+
+    if (entry.publicationStatus === 'IN_REVIEW') {
+        return (
+            <>
+                <form
+                    action={publishQuestionAction}
+                    className={formClassName}
+                >
+                    <QuestionActionFields
+                        locale={locale}
+                        questionId={entry.id}
+                    />
                     <SubmitButton
                         unstyled
-                        className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
+                        className={`${className} cursor-pointer text-success hover:opacity-90`}
+                    >
+                        {labels.publishButton}
+                    </SubmitButton>
+                </form>
+                <form
+                    action={returnQuestionToDraftAction}
+                    className={formClassName}
+                >
+                    <QuestionActionFields
+                        locale={locale}
+                        questionId={entry.id}
+                    />
+                    <SubmitButton
+                        unstyled
+                        className={`${className} cursor-pointer text-warning hover:opacity-90`}
                     >
                         {labels.returnToDraftButton}
                     </SubmitButton>
                 </form>
-            ) : null}
-        </>
+            </>
+        );
+    }
+
+    // PUBLISHED
+    return (
+        <form
+            action={returnQuestionToDraftAction}
+            className={formClassName}
+        >
+            <QuestionActionFields locale={locale} questionId={entry.id} />
+            <SubmitButton
+                unstyled
+                className={`${className} cursor-pointer text-warning hover:opacity-90`}
+            >
+                {labels.returnToDraftButton}
+            </SubmitButton>
+        </form>
+    );
+}
+
+function ActiveToggleAction({
+    entry,
+    labels,
+    locale,
+    className,
+    formClassName,
+}: {
+    entry: AdminQuestionListItem;
+    labels: Dictionary['admin'];
+    locale: Locale;
+    className: string;
+    formClassName: string;
+}) {
+    if (entry.isActive) {
+        return (
+            <form action={deactivateQuestionAction} className={formClassName}>
+                <QuestionActionFields locale={locale} questionId={entry.id} />
+                <SubmitButton
+                    unstyled
+                    className={`${className} cursor-pointer text-warning hover:opacity-90`}
+                >
+                    {labels.deactivateButton}
+                </SubmitButton>
+            </form>
+        );
+    }
+
+    return (
+        <form action={activateQuestionAction} className={formClassName}>
+            <QuestionActionFields locale={locale} questionId={entry.id} />
+            <SubmitButton
+                unstyled
+                className={`${className} cursor-pointer text-success hover:opacity-90`}
+            >
+                {labels.activateButton}
+            </SubmitButton>
+        </form>
+    );
+}
+
+function DeleteAction({
+    entry,
+    labels,
+    locale,
+    className,
+    formClassName,
+}: {
+    entry: AdminQuestionListItem;
+    labels: Dictionary['admin'];
+    locale: Locale;
+    className: string;
+    formClassName: string;
+}) {
+    return (
+        <form action={deleteQuestionAction} className={formClassName}>
+            <QuestionActionFields locale={locale} questionId={entry.id} />
+            <SubmitButton
+                unstyled
+                className={`${className} cursor-pointer text-danger hover:opacity-90`}
+            >
+                {labels.deleteButton}
+            </SubmitButton>
+        </form>
     );
 }
 
@@ -190,14 +280,29 @@ function QuestionRowActions({
     /** wrap = mobile cards; compact = desktop queue row. */
     layout?: 'wrap' | 'compact';
 }) {
+    if (layout === 'compact') {
+        return (
+            <div className="flex flex-nowrap items-center gap-x-3">
+                <Link
+                    href={`/${locale}/admin/questions/${entry.id}/edit`}
+                    className={`${rowActionClassName} text-primary hover:text-primary-hover`}
+                >
+                    {labels.editLink}
+                </Link>
+
+                <AdminQuestionRowMoreActions
+                    questionId={entry.id}
+                    publicationStatus={entry.publicationStatus}
+                    isActive={entry.isActive}
+                    locale={locale}
+                    labels={labels}
+                />
+            </div>
+        );
+    }
+
     return (
-        <div
-            className={
-                layout === 'compact'
-                    ? 'flex max-w-64 flex-wrap items-center gap-x-3 gap-y-1'
-                    : 'flex flex-wrap items-center gap-x-4 gap-y-1'
-            }
-        >
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <Link
                 href={`/${locale}/admin/questions/${entry.id}/edit`}
                 className={`${rowActionClassName} text-primary hover:text-primary-hover`}
@@ -211,51 +316,21 @@ function QuestionRowActions({
                 locale={locale}
             />
 
-            {entry.isActive ? (
-                <form
-                    action={deactivateQuestionAction}
-                    className="inline-flex"
-                >
-                    <input type="hidden" name="locale" value={locale} />
-                    <input
-                        type="hidden"
-                        name="questionId"
-                        value={entry.id}
-                    />
-                    <SubmitButton
-                        unstyled
-                        className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
-                    >
-                        {labels.deactivateButton}
-                    </SubmitButton>
-                </form>
-            ) : (
-                <form action={activateQuestionAction} className="inline-flex">
-                    <input type="hidden" name="locale" value={locale} />
-                    <input
-                        type="hidden"
-                        name="questionId"
-                        value={entry.id}
-                    />
-                    <SubmitButton
-                        unstyled
-                        className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
-                    >
-                        {labels.activateButton}
-                    </SubmitButton>
-                </form>
-            )}
+            <ActiveToggleAction
+                entry={entry}
+                labels={labels}
+                locale={locale}
+                className={rowActionClassName}
+                formClassName="inline-flex"
+            />
 
-            <form action={deleteQuestionAction} className="inline-flex">
-                <input type="hidden" name="locale" value={locale} />
-                <input type="hidden" name="questionId" value={entry.id} />
-                <SubmitButton
-                    unstyled
-                    className={`${rowActionClassName} cursor-pointer text-danger hover:opacity-90`}
-                >
-                    {labels.deleteButton}
-                </SubmitButton>
-            </form>
+            <DeleteAction
+                entry={entry}
+                labels={labels}
+                locale={locale}
+                className={rowActionClassName}
+                formClassName="inline-flex"
+            />
         </div>
     );
 }
@@ -522,7 +597,7 @@ export function AdminQuestionsTable({
                             <th className="w-28 whitespace-nowrap px-3 py-2.5 font-medium">
                                 {labels.tableCreated}
                             </th>
-                            <th className="w-64 px-4 py-2.5 font-medium">
+                            <th className="w-48 px-4 py-2.5 font-medium">
                                 {labels.tableActions}
                             </th>
                         </tr>

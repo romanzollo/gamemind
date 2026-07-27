@@ -167,6 +167,7 @@ export type Dictionary = {
         /**
          * Жизненный цикл контента (publicationStatus), ортогонально isActive.
          * Не путать с statusActive/Inactive — это «выключатель витрины».
+         * Badge IN_REVIEW = «На ревью»; кнопка submit ≠ badge (см. submitForReviewButton).
          */
         tablePublication: string;
         publicationDraft: string;
@@ -223,6 +224,11 @@ export type Dictionary = {
         confirmDeleteUser: string;
         confirmChangeRole: string;
         tableActions: string;
+        /**
+         * Триггер «⋯ / Ещё» в desktop row: прячет редкие actions
+         * (activate/deactivate, delete, вторичные publication CTA).
+         */
+        rowMoreActions: string;
         errors: {
             loadFailed: string;
             usersLoadFailed: string;

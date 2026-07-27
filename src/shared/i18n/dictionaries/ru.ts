@@ -178,7 +178,7 @@ export const ruDictionary: Dictionary = {
         publicationInReview: 'На ревью',
         publicationPublished: 'Опубликован',
         publishButton: 'Опубликовать',
-        submitForReviewButton: 'На ревью',
+        submitForReviewButton: 'Отправить на ревью',
         returnToDraftButton: 'В черновик',
         empty: 'Пока нет вопросов.',
         emptyFiltered: 'Нет вопросов по выбранным фильтрам.',
@@ -228,6 +228,7 @@ export const ruDictionary: Dictionary = {
             'Удалить пользователя навсегда? Связанные квизы и результаты тоже удалятся.',
         confirmChangeRole: 'Изменить роль этого пользователя?',
         tableActions: 'Действия',
+        rowMoreActions: 'Ещё',
         errors: {
             loadFailed:
                 'Не удалось загрузить вопросы. Проверь подключение к базе данных и попробуй обновить страницу.',

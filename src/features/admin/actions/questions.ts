@@ -44,17 +44,30 @@ function getPublicationRedirectPath(
     return `/${locale}/admin/questions`;
 }
 
+function getPublicationReturnTo(formData: FormData): 'edit' | 'list' {
+    return formData.get('returnTo') === 'edit' ? 'edit' : 'list';
+}
+
+/**
+ * List всегда; edit — только если action вернул на edit (иначе лишний RSC work).
+ */
+function revalidatePublicationPaths(
+    locale: Locale,
+    questionId: string,
+    returnTo: 'edit' | 'list',
+) {
+    revalidatePath(`/${locale}/admin/questions`);
+    if (returnTo === 'edit') {
+        revalidatePath(`/${locale}/admin/questions/${questionId}/edit`);
+    }
+}
+
 function redirectWithOptionalError(path: string, error?: string): never {
     if (!error) {
         redirect(path);
     }
 
     redirect(`${path}?error=${error}`);
-}
-
-function revalidatePublicationPaths(locale: Locale, questionId: string) {
-    revalidatePath(`/${locale}/admin/questions`);
-    revalidatePath(`/${locale}/admin/questions/${questionId}/edit`);
 }
 
 function getFormString(formData: FormData, name: string): string {
@@ -349,7 +362,11 @@ export async function publishQuestionAction(formData: FormData) {
         );
     }
 
-    revalidatePublicationPaths(locale, questionId);
+    revalidatePublicationPaths(
+        locale,
+        questionId,
+        getPublicationReturnTo(formData),
+    );
     redirectWithOptionalError(redirectPath);
 }
 
@@ -398,7 +415,11 @@ export async function submitQuestionForReviewAction(formData: FormData) {
         );
     }
 
-    revalidatePublicationPaths(locale, questionId);
+    revalidatePublicationPaths(
+        locale,
+        questionId,
+        getPublicationReturnTo(formData),
+    );
     redirectWithOptionalError(redirectPath);
 }
 
@@ -448,7 +469,11 @@ export async function returnQuestionToDraftAction(formData: FormData) {
         );
     }
 
-    revalidatePublicationPaths(locale, questionId);
+    revalidatePublicationPaths(
+        locale,
+        questionId,
+        getPublicationReturnTo(formData),
+    );
     redirectWithOptionalError(redirectPath);
 }
 
