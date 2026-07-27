@@ -6,6 +6,10 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
+import {
+    getQuestionPublishQualityIssues,
+    hasPublishQualityBlockers,
+} from '@/features/admin/lib/question-publish-quality';
 import { resolveAdminPromptImage } from '@/features/admin/lib/resolve-prompt-image';
 import {
     createQuestionSchema,
@@ -68,6 +72,53 @@ function redirectWithOptionalError(path: string, error?: string): never {
     }
 
     redirect(`${path}?error=${error}`);
+}
+
+/**
+ * Quality gate перед publish / submit-for-review.
+ *
+ * Blockers → всегда edit + PUBLISH_QUALITY_BLOCKED (панель видна; даже если
+ * клик был со списка). Warnings не блокируют. Уже в целевом статусе —
+ * пропускаем (idempotent no-op без лишнего отказа).
+ * returnToDraft не гейтим — вывод из пула безопасен.
+ */
+async function assertPublishQualityOrRedirect(
+    questionId: string,
+    locale: Locale,
+    options: {
+        /** Статус, при котором переход уже no-op — gate не нужен. */
+        skipIfStatus: 'PUBLISHED' | 'IN_REVIEW';
+        loadFailedError: 'PUBLISH_FAILED' | 'SUBMIT_FOR_REVIEW_FAILED';
+        fallbackRedirectPath: string;
+    },
+): Promise<void> {
+    let question: Awaited<
+        ReturnType<typeof questionRepository.findByIdForAdmin>
+    > = null;
+
+    try {
+        question = await questionRepository.findByIdForAdmin(questionId);
+    } catch {
+        redirectWithOptionalError(
+            options.fallbackRedirectPath,
+            options.loadFailedError,
+        );
+    }
+
+    if (!question) {
+        redirectWithOptionalError(options.fallbackRedirectPath, 'NOT_FOUND');
+    }
+
+    if (question.publicationStatus === options.skipIfStatus) {
+        return;
+    }
+
+    const issues = getQuestionPublishQualityIssues(question);
+    if (hasPublishQualityBlockers(issues)) {
+        redirect(
+            `/${locale}/admin/questions/${questionId}/edit?error=PUBLISH_QUALITY_BLOCKED`,
+        );
+    }
 }
 
 function getFormString(formData: FormData, name: string): string {
@@ -323,6 +374,7 @@ export async function deleteQuestionAction(formData: FormData) {
 /**
  * Публикация вопроса (DRAFT | IN_REVIEW → PUBLISHED).
  * Idempotent: уже PUBLISHED → silent redirect (как activate).
+ * Blockers quality → edit + PUBLISH_QUALITY_BLOCKED (warnings OK).
  * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
  */
 export async function publishQuestionAction(formData: FormData) {
@@ -340,6 +392,12 @@ export async function publishQuestionAction(formData: FormData) {
         locale,
         questionId,
     );
+
+    await assertPublishQualityOrRedirect(questionId, locale, {
+        skipIfStatus: 'PUBLISHED',
+        loadFailedError: 'PUBLISH_FAILED',
+        fallbackRedirectPath: redirectPath,
+    });
 
     let result: Awaited<
         ReturnType<typeof questionRepository.publishById>
@@ -373,6 +431,7 @@ export async function publishQuestionAction(formData: FormData) {
 /**
  * Отправка на ревью (DRAFT → IN_REVIEW).
  * Idempotent: уже IN_REVIEW → silent redirect.
+ * Тот же quality gate, что у publish (в ревью не пускаем сырой контент).
  * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
  */
 export async function submitQuestionForReviewAction(formData: FormData) {
@@ -390,6 +449,12 @@ export async function submitQuestionForReviewAction(formData: FormData) {
         locale,
         questionId,
     );
+
+    await assertPublishQualityOrRedirect(questionId, locale, {
+        skipIfStatus: 'IN_REVIEW',
+        loadFailedError: 'SUBMIT_FOR_REVIEW_FAILED',
+        fallbackRedirectPath: redirectPath,
+    });
 
     let result: Awaited<
         ReturnType<typeof questionRepository.submitForReviewById>

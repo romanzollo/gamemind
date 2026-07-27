@@ -61,6 +61,8 @@ export type AdminErrorCode =
     | 'RETURN_TO_DRAFT_FAILED'
     /** Repo вернул invalid_transition (кнопка не должна была быть доступна). */
     | 'INVALID_PUBLICATION_TRANSITION'
+    /** Publish/submit-for-review отклонён quality blockers. */
+    | 'PUBLISH_QUALITY_BLOCKED'
     | 'CANNOT_MODIFY_SELF'
     | 'CANNOT_DELETE_LAST_ADMIN'
     | 'USER_UPDATE_FAILED'

@@ -1,5 +1,14 @@
 'use client';
 
+/**
+ * Форма create/edit вопроса.
+ *
+ * Поля — controlled (useState): после Server Action React 19 сбрасывает
+ * uncontrolled inputs в форме; иначе при INVALID_INPUT (например IMAGE_GUESS
+ * без картинки) админ теряет весь ввод. File input восстановить нельзя
+ * (ограничение браузера) — его оставляем uncontrolled.
+ */
+
 import { useActionState, useState } from 'react';
 
 import {
@@ -10,7 +19,7 @@ import { getAdminErrorMessage } from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
-import type { QuestionType } from '@/types';
+import type { Difficulty, QuestionType } from '@/types';
 
 const OPTION_COUNT = 4;
 const IMAGE_GUESS_DEFAULT_TEXT = {
@@ -22,10 +31,11 @@ const IMAGE_GUESS_DEFAULT_TEXT = {
 const fieldClassName =
     'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
-const emptyTranslations = () => ({
-    ru: { text: '' },
-    en: { text: '' },
-});
+type OptionDraft = {
+    id: string;
+    textRu: string;
+    textEn: string;
+};
 
 type BaseAdminQuestionFormProps = {
     locale: Locale;
@@ -45,6 +55,25 @@ type AdminQuestionFormEditProps = BaseAdminQuestionFormProps & {
 type AdminQuestionFormProps =
     | AdminQuestionFormCreateProps
     | AdminQuestionFormEditProps;
+
+function buildInitialOptions(
+    isEdit: boolean,
+    initialValues?: AdminQuestionDetail,
+): OptionDraft[] {
+    if (isEdit && initialValues) {
+        return initialValues.options.map((option) => ({
+            id: option.id,
+            textRu: option.translations.ru.text,
+            textEn: option.translations.en.text,
+        }));
+    }
+
+    return Array.from({ length: OPTION_COUNT }, () => ({
+        id: '',
+        textRu: '',
+        textEn: '',
+    }));
+}
 
 function AdminQuestionSubmitButton({
     label,
@@ -68,6 +97,7 @@ export function AdminQuestionForm({
     const action = isEdit ? updateQuestionAction : createQuestionAction;
     const [state, formAction] = useActionState(action, {});
     const errorMessage = getAdminErrorMessage(dictionary, state.errorCode);
+
     const [questionTextRu, setQuestionTextRu] = useState(
         isEdit ? initialValues!.translations.ru.text : '',
     );
@@ -77,6 +107,27 @@ export function AdminQuestionForm({
     const [questionType, setQuestionType] = useState<QuestionType>(
         isEdit ? initialValues!.type : 'TEXT',
     );
+    const [promptImageUrl, setPromptImageUrl] = useState(
+        isEdit ? (initialValues!.promptImageUrl ?? '') : '',
+    );
+    const [difficulty, setDifficulty] = useState<Difficulty>(
+        isEdit ? initialValues!.difficulty : 'EASY',
+    );
+    const [category, setCategory] = useState(
+        isEdit ? initialValues!.category : 'video-games',
+    );
+    const [options, setOptions] = useState<OptionDraft[]>(() =>
+        buildInitialOptions(isEdit, initialValues),
+    );
+    const [correctOptionIndex, setCorrectOptionIndex] = useState(() => {
+        if (!isEdit || !initialValues) {
+            return 0;
+        }
+        const index = initialValues.options.findIndex(
+            (option) => option.isCorrect,
+        );
+        return index >= 0 ? index : 0;
+    });
 
     if (isEdit && !initialValues) {
         return null;
@@ -84,20 +135,19 @@ export function AdminQuestionForm({
 
     const editValues = isEdit ? initialValues : undefined;
 
-    const options = isEdit
-        ? editValues!.options
-        : Array.from({ length: OPTION_COUNT }, (_, index) => ({
-              id: '',
-              translations: emptyTranslations(),
-              isCorrect: index === 0,
-              order: index,
-          }));
-
-    const selectedCorrectIndex = options.findIndex(
-        (option) => option.isCorrect,
-    );
-    const defaultCorrectIndex =
-        selectedCorrectIndex >= 0 ? selectedCorrectIndex : 0;
+    function updateOptionText(
+        index: number,
+        field: 'textRu' | 'textEn',
+        value: string,
+    ) {
+        setOptions((current) =>
+            current.map((option, optionIndex) =>
+                optionIndex === index
+                    ? { ...option, [field]: value }
+                    : option,
+            ),
+        );
+    }
 
     return (
         <>
@@ -232,7 +282,10 @@ export function AdminQuestionForm({
                                 name="promptImageUrl"
                                 maxLength={2048}
                                 placeholder="/quiz-images/easy/example.webp"
-                                defaultValue={editValues?.promptImageUrl ?? ''}
+                                value={promptImageUrl}
+                                onChange={(event) => {
+                                    setPromptImageUrl(event.target.value);
+                                }}
                                 className={fieldClassName}
                             />
                             <span className="text-sm text-muted">
@@ -248,7 +301,17 @@ export function AdminQuestionForm({
                     <span>{dictionary.quiz.difficultyLabel}</span>
                     <select
                         name="difficulty"
-                        defaultValue={editValues?.difficulty ?? 'EASY'}
+                        value={difficulty}
+                        onChange={(event) => {
+                            const value = event.target.value;
+                            if (
+                                value === 'EASY' ||
+                                value === 'MEDIUM' ||
+                                value === 'HARD'
+                            ) {
+                                setDifficulty(value);
+                            }
+                        }}
                         required
                         className={fieldClassName}
                     >
@@ -263,7 +326,10 @@ export function AdminQuestionForm({
                     <input
                         type="text"
                         name="category"
-                        defaultValue={editValues?.category ?? 'video-games'}
+                        value={category}
+                        onChange={(event) => {
+                            setCategory(event.target.value);
+                        }}
                         required
                         maxLength={100}
                         className={fieldClassName}
@@ -280,7 +346,7 @@ export function AdminQuestionForm({
 
                     {options.map((option, index) => (
                         <div
-                            key={option.id || index}
+                            key={option.id || `option-${index}`}
                             className="flex flex-col gap-2 rounded-md border border-border bg-surface-muted/40 p-3"
                         >
                             {isEdit ? (
@@ -296,9 +362,10 @@ export function AdminQuestionForm({
                                     type="radio"
                                     name="correctOptionIndex"
                                     value={index}
-                                    defaultChecked={
-                                        index === defaultCorrectIndex
-                                    }
+                                    checked={index === correctOptionIndex}
+                                    onChange={() => {
+                                        setCorrectOptionIndex(index);
+                                    }}
                                     required
                                     className="accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                                 />
@@ -314,7 +381,14 @@ export function AdminQuestionForm({
                                     name={`optionTextRu-${index}`}
                                     required
                                     maxLength={200}
-                                    defaultValue={option.translations.ru.text}
+                                    value={option.textRu}
+                                    onChange={(event) => {
+                                        updateOptionText(
+                                            index,
+                                            'textRu',
+                                            event.target.value,
+                                        );
+                                    }}
                                     className={fieldClassName}
                                 />
                             </label>
@@ -326,7 +400,14 @@ export function AdminQuestionForm({
                                     name={`optionTextEn-${index}`}
                                     required
                                     maxLength={200}
-                                    defaultValue={option.translations.en.text}
+                                    value={option.textEn}
+                                    onChange={(event) => {
+                                        updateOptionText(
+                                            index,
+                                            'textEn',
+                                            event.target.value,
+                                        );
+                                    }}
                                     className={fieldClassName}
                                 />
                             </label>

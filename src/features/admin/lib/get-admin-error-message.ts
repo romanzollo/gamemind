@@ -16,6 +16,7 @@ const ERROR_MAP: Record<AdminErrorCode, keyof Dictionary['admin']['errors']> = {
     SUBMIT_FOR_REVIEW_FAILED: 'submitForReviewFailed',
     RETURN_TO_DRAFT_FAILED: 'returnToDraftFailed',
     INVALID_PUBLICATION_TRANSITION: 'invalidPublicationTransition',
+    PUBLISH_QUALITY_BLOCKED: 'publishQualityBlocked',
     CANNOT_MODIFY_SELF: 'cannotModifySelf',
     CANNOT_DELETE_LAST_ADMIN: 'cannotDeleteLastAdmin',
     USER_UPDATE_FAILED: 'userUpdateFailed',

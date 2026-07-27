@@ -4,7 +4,13 @@ import { notFound } from 'next/navigation';
 import { questionRepository } from '@/entities/question/question.repository';
 import { AdminQuestionForm } from '@/features/admin/components/AdminQuestionForm';
 import { AdminQuestionPublicationControls } from '@/features/admin/components/AdminQuestionPublicationControls';
-import { mapAdminQuestionDetail } from '@/features/admin/lib/map-admin-question-detail';
+import { AdminQuestionPublishQualityPanel } from '@/features/admin/components/AdminQuestionPublishQualityPanel';
+import {
+    getAdminErrorMessage,
+    getQuestionPublishQualityIssues,
+    mapAdminQuestionDetail,
+} from '@/features/admin/lib';
+import type { AdminErrorCode } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
 import { buttonClassName, InlineAlert } from '@/shared/ui';
@@ -17,6 +23,16 @@ type AdminEditQuestionPageProps = {
 function localizedHref(locale: Locale, href: string) {
     return `/${locale}${href}`;
 }
+
+/** URL ?error= только из allowlist — чужой query не мапится в сообщение. */
+const ADMIN_EDIT_ERROR_CODES = new Set<string>([
+    'PUBLISH_FAILED',
+    'SUBMIT_FOR_REVIEW_FAILED',
+    'RETURN_TO_DRAFT_FAILED',
+    'INVALID_PUBLICATION_TRANSITION',
+    'NOT_FOUND',
+    'PUBLISH_QUALITY_BLOCKED',
+]);
 
 export default async function AdminEditQuestionPage({
     params,
@@ -38,18 +54,13 @@ export default async function AdminEditQuestionPage({
         ? rawSearchParams.error[0]
         : rawSearchParams.error;
 
-    const actionErrorMessage =
-        error === 'PUBLISH_FAILED'
-            ? dictionary.admin.errors.publishFailed
-            : error === 'SUBMIT_FOR_REVIEW_FAILED'
-              ? dictionary.admin.errors.submitForReviewFailed
-              : error === 'RETURN_TO_DRAFT_FAILED'
-                ? dictionary.admin.errors.returnToDraftFailed
-                : error === 'INVALID_PUBLICATION_TRANSITION'
-                  ? dictionary.admin.errors.invalidPublicationTransition
-                  : error === 'NOT_FOUND'
-                    ? dictionary.admin.errors.notFound
-                    : undefined;
+    const errorCode =
+        typeof error === 'string' && ADMIN_EDIT_ERROR_CODES.has(error)
+            ? (error as AdminErrorCode)
+            : undefined;
+    const actionErrorMessage = getAdminErrorMessage(dictionary, errorCode);
+
+    const qualityIssues = getQuestionPublishQualityIssues(question);
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
@@ -74,6 +85,11 @@ export default async function AdminEditQuestionPage({
                     <InlineAlert>{actionErrorMessage}</InlineAlert>
                 </div>
             ) : null}
+
+            <AdminQuestionPublishQualityPanel
+                issues={qualityIssues}
+                dictionary={dictionary}
+            />
 
             <AdminQuestionPublicationControls
                 questionId={question.id}

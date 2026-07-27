@@ -229,6 +229,24 @@ export type Dictionary = {
          * (activate/deactivate, delete, вторичные publication CTA).
          */
         rowMoreActions: string;
+        /**
+         * Предупреждения/блокеры перед publish (quality gate).
+         * Коды → `getPublishQualityMessage`; UI на edit + gate в action.
+         */
+        publishQuality: {
+            title: string;
+            blockersTitle: string;
+            warningsTitle: string;
+            missingPromptImage: string;
+            notExactlyOneCorrect: string;
+            tooFewOptions: string;
+            missingQuestionText: string;
+            missingOptionText: string;
+            duplicateOptionText: string;
+            identicalQuestionLocales: string;
+            identicalOptionLocales: string;
+            inactiveWillStayHidden: string;
+        };
         errors: {
             loadFailed: string;
             usersLoadFailed: string;
@@ -245,6 +263,8 @@ export type Dictionary = {
             submitForReviewFailed: string;
             returnToDraftFailed: string;
             invalidPublicationTransition: string;
+            /** Publish/submit-for-review отклонён из‑за quality blockers. */
+            publishQualityBlocked: string;
             cannotModifySelf: string;
             cannotDeleteLastAdmin: string;
             userUpdateFailed: string;

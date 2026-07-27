@@ -229,6 +229,28 @@ export const ruDictionary: Dictionary = {
         confirmChangeRole: 'Изменить роль этого пользователя?',
         tableActions: 'Действия',
         rowMoreActions: 'Ещё',
+        publishQuality: {
+            title: 'Проверка перед публикацией',
+            blockersTitle: 'Нужно исправить',
+            warningsTitle: 'Стоит проверить',
+            missingPromptImage:
+                'Для IMAGE_GUESS нужно prompt-изображение (файл или URL).',
+            notExactlyOneCorrect:
+                'Должен быть ровно один правильный вариант ответа.',
+            tooFewOptions: 'Нужно минимум два варианта ответа.',
+            missingQuestionText:
+                'Заполни текст вопроса на русском и английском.',
+            missingOptionText:
+                'У каждого варианта должен быть текст на русском и английском.',
+            duplicateOptionText:
+                'Варианты ответа не должны дублироваться в одном языке.',
+            identicalQuestionLocales:
+                'Русский и английский текст вопроса совпадают — возможно, перевод не готов.',
+            identicalOptionLocales:
+                'У одного или нескольких вариантов RU и EN совпадают — проверь перевод.',
+            inactiveWillStayHidden:
+                'Вопрос неактивен: даже после публикации он не попадёт в квиз, пока не активируешь.',
+        },
         errors: {
             loadFailed:
                 'Не удалось загрузить вопросы. Проверь подключение к базе данных и попробуй обновить страницу.',
@@ -255,6 +277,8 @@ export const ruDictionary: Dictionary = {
                 'Не удалось вернуть вопрос в черновик. Попробуй ещё раз.',
             invalidPublicationTransition:
                 'Этот переход статуса публикации недоступен для текущего состояния вопроса.',
+            publishQualityBlocked:
+                'Публикация заблокирована: исправь проблемы качества на странице редактирования.',
             cannotModifySelf: 'Нельзя изменить или удалить свой аккаунт.',
             cannotDeleteLastAdmin:
                 'Нельзя удалить, понизить или деактивировать последнего ADMIN.',

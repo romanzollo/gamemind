@@ -225,6 +225,28 @@ export const enDictionary = {
         confirmChangeRole: 'Change this user’s role?',
         tableActions: 'Actions',
         rowMoreActions: 'More',
+        publishQuality: {
+            title: 'Pre-publish checks',
+            blockersTitle: 'Must fix',
+            warningsTitle: 'Worth checking',
+            missingPromptImage:
+                'IMAGE_GUESS needs a prompt image (file or URL).',
+            notExactlyOneCorrect:
+                'Exactly one correct answer option is required.',
+            tooFewOptions: 'At least two answer options are required.',
+            missingQuestionText:
+                'Fill in the question text in Russian and English.',
+            missingOptionText:
+                'Every option needs text in Russian and English.',
+            duplicateOptionText:
+                'Answer options must not duplicate within the same language.',
+            identicalQuestionLocales:
+                'Russian and English question text match — translation may be unfinished.',
+            identicalOptionLocales:
+                'One or more options have matching RU and EN text — check the translation.',
+            inactiveWillStayHidden:
+                'Question is inactive: even after publish it stays out of the quiz until activated.',
+        },
         errors: {
             loadFailed:
                 'Failed to load questions. Check the database connection and refresh the page.',
@@ -250,6 +272,8 @@ export const enDictionary = {
                 'Failed to return the question to draft. Try again.',
             invalidPublicationTransition:
                 'This publication status transition is not allowed from the current state.',
+            publishQualityBlocked:
+                'Publish blocked: fix the quality issues on the edit page.',
             cannotModifySelf: 'You cannot modify or delete your own account.',
             cannotDeleteLastAdmin:
                 'You cannot delete, demote, or deactivate the last ADMIN.',
