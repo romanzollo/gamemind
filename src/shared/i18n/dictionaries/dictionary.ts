@@ -216,6 +216,18 @@ export type Dictionary = {
         editLink: string;
         deactivateButton: string;
         activateButton: string;
+        /**
+         * Bulk isActive на списке вопросов (checkboxes + toolbar).
+         * Не publication bulk и не hard-delete bulk.
+         * `{count}` в bulkSelected подставляется в UI.
+         */
+        bulkSelected: string;
+        bulkSelectAll: string;
+        bulkClearSelection: string;
+        bulkDeactivateButton: string;
+        bulkActivateButton: string;
+        /** aria-label чекбокса строки. */
+        bulkSelectRow: string;
         deleteButton: string;
         makeAdminButton: string;
         makeUserButton: string;

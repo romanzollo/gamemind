@@ -86,3 +86,14 @@ export type PublicationStatusMutationResult =
           to: QuestionPublicationStatus;
       }
     | { status: 'updated' };
+
+/**
+ * Результат bulk-смены isActive (несколько id за один UPDATE).
+ *
+ * Idempotent: строки уже в целевом состоянии не трогаем (не входят в updatedCount).
+ * Несуществующие id тихо пропускаем — не валим всю операцию.
+ */
+export type BulkIsActiveMutationResult = {
+    requestedCount: number;
+    updatedCount: number;
+};

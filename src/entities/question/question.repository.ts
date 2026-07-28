@@ -19,6 +19,7 @@ import {
 
 export type {
     AdminQuestionForEdit,
+    BulkIsActiveMutationResult,
     LocalizedAdminText,
     LocalizedSnapshotTexts,
     PublicationStatusMutationResult,

@@ -1,14 +1,20 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
 import {
     activateQuestionAction,
+    activateQuestionsBulkAction,
     deactivateQuestionAction,
+    deactivateQuestionsBulkAction,
     deleteQuestionAction,
     publishQuestionAction,
     returnQuestionToDraftAction,
     submitQuestionForReviewAction,
 } from '@/features/admin/actions/questions';
 import { AdminQuestionRowMoreActions } from '@/features/admin/components/AdminQuestionRowMoreActions';
+import { BULK_QUESTION_IDS_FIELD } from '@/features/admin/lib/parse-bulk-question-ids';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState, SubmitButton } from '@/shared/ui';
 import type { Difficulty, QuestionPublicationStatus } from '@/types';
@@ -27,7 +33,16 @@ import type { AdminQuestionListItem } from '../types';
  * publication / activate / deactivate / delete — в «Ещё».
  * В меню «вперёд»-шаги взаимоисключающие: DRAFT → На ревью; IN_REVIEW → Опубликовать
  * (как Активировать ↔ Деактивировать). Прямой publish с DRAFT — на edit-панели.
+ *
+ * Bulk isActive: Client selection state + toolbar → Server Actions.
+ * publication/delete bulk здесь нет. Single-row actions сохраняем.
  */
+
+const checkboxClassName =
+    'size-4 shrink-0 cursor-pointer accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
+const bulkToolbarLinkClassName =
+    'inline-flex min-h-8 cursor-pointer items-center rounded-sm px-0.5 text-sm font-medium text-foreground underline-offset-2 motion-safe:transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 disabled:no-underline';
 
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
@@ -417,7 +432,7 @@ function ListCardMeta({
                 ·
             </span>
             <time className="font-mono tabular-nums">
-                {entry.createdAt.toLocaleDateString(locale)}
+                {new Date(entry.createdAt).toLocaleDateString(locale)}
             </time>
         </p>
     );
@@ -486,12 +501,194 @@ function StatusPublicationCell({
     );
 }
 
+/**
+ * Toolbar bulk isActive: счётчик + select all/clear + две формы.
+ * Selected ids уходят hidden inputs (name=questionIds) — как checkbox getAll.
+ */
+function BulkIsActiveToolbar({
+    selectedIds,
+    labels,
+    locale,
+    allVisibleSelected,
+    onSelectAll,
+    onClear,
+}: {
+    selectedIds: readonly string[];
+    labels: Dictionary['admin'];
+    locale: Locale;
+    allVisibleSelected: boolean;
+    onSelectAll: () => void;
+    onClear: () => void;
+}) {
+    const selectedCount = selectedIds.length;
+    const hasSelection = selectedCount > 0;
+    const selectedLabel = labels.bulkSelected.replace(
+        '{count}',
+        String(selectedCount),
+    );
+
+    return (
+        <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border pb-3">
+            <span className="font-mono text-sm tabular-nums text-muted">
+                {selectedLabel}
+            </span>
+
+            <button
+                type="button"
+                className={bulkToolbarLinkClassName}
+                onClick={onSelectAll}
+                disabled={allVisibleSelected}
+            >
+                {labels.bulkSelectAll}
+            </button>
+
+            <button
+                type="button"
+                className={bulkToolbarLinkClassName}
+                onClick={onClear}
+                disabled={!hasSelection}
+            >
+                {labels.bulkClearSelection}
+            </button>
+
+            <form
+                action={deactivateQuestionsBulkAction}
+                className="inline-flex"
+            >
+                <input type="hidden" name="locale" value={locale} />
+                {selectedIds.map((id) => (
+                    <input
+                        key={`deactivate-${id}`}
+                        type="hidden"
+                        name={BULK_QUESTION_IDS_FIELD}
+                        value={id}
+                    />
+                ))}
+                <SubmitButton
+                    unstyled
+                    disabled={!hasSelection}
+                    className={`${bulkToolbarLinkClassName} text-warning`}
+                >
+                    {labels.bulkDeactivateButton}
+                </SubmitButton>
+            </form>
+
+            <form action={activateQuestionsBulkAction} className="inline-flex">
+                <input type="hidden" name="locale" value={locale} />
+                {selectedIds.map((id) => (
+                    <input
+                        key={`activate-${id}`}
+                        type="hidden"
+                        name={BULK_QUESTION_IDS_FIELD}
+                        value={id}
+                    />
+                ))}
+                <SubmitButton
+                    unstyled
+                    disabled={!hasSelection}
+                    className={`${bulkToolbarLinkClassName} text-success`}
+                >
+                    {labels.bulkActivateButton}
+                </SubmitButton>
+            </form>
+        </div>
+    );
+}
+
+function RowSelectCheckbox({
+    id,
+    checked,
+    label,
+    onToggle,
+}: {
+    id: string;
+    checked: boolean;
+    label: string;
+    onToggle: (id: string) => void;
+}) {
+    return (
+        <input
+            type="checkbox"
+            className={checkboxClassName}
+            checked={checked}
+            aria-label={label}
+            onChange={() => onToggle(id)}
+        />
+    );
+}
+
 export function AdminQuestionsTable({
     entries,
     labels,
     locale,
     emptyTitle,
 }: AdminQuestionsTableProps) {
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(
+        () => new Set(),
+    );
+    const selectAllRef = useRef<HTMLInputElement>(null);
+
+    const visibleIds = entries.map((entry) => entry.id);
+    const allVisibleSelected =
+        entries.length > 0 &&
+        entries.every((entry) => selectedIds.has(entry.id));
+    const someVisibleSelected =
+        !allVisibleSelected &&
+        entries.some((entry) => selectedIds.has(entry.id));
+
+    // После смены фильтра URL: убрать id, которых больше нет в списке.
+    useEffect(() => {
+        const visible = new Set(visibleIds);
+        setSelectedIds((prev) => {
+            let changed = false;
+            const next = new Set<string>();
+            for (const id of prev) {
+                if (visible.has(id)) {
+                    next.add(id);
+                } else {
+                    changed = true;
+                }
+            }
+            return changed ? next : prev;
+        });
+        // visibleIds как массив каждый рендер новый — ключ по составу строк.
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- sync to entry id set
+    }, [entries]);
+
+    useEffect(() => {
+        if (selectAllRef.current) {
+            selectAllRef.current.indeterminate = someVisibleSelected;
+        }
+    }, [someVisibleSelected]);
+
+    function toggleId(id: string) {
+        setSelectedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
+            return next;
+        });
+    }
+
+    function selectAllVisible() {
+        setSelectedIds(new Set(visibleIds));
+    }
+
+    function clearSelection() {
+        setSelectedIds(new Set());
+    }
+
+    function toggleSelectAllVisible() {
+        if (allVisibleSelected) {
+            clearSelection();
+        } else {
+            selectAllVisible();
+        }
+    }
+
     if (entries.length === 0) {
         return (
             <EmptyState
@@ -501,14 +698,26 @@ export function AdminQuestionsTable({
         );
     }
 
+    const selectedList = Array.from(selectedIds);
+
     return (
         <div className="mt-6">
+            <BulkIsActiveToolbar
+                selectedIds={selectedList}
+                labels={labels}
+                locale={locale}
+                allVisibleSelected={allVisibleSelected}
+                onSelectAll={selectAllVisible}
+                onClear={clearSelection}
+            />
+
             <ul className="space-y-3 lg:hidden">
                 {entries.map((entry) => {
                     const isImage = entry.type === 'IMAGE_GUESS';
                     const typeLabel = isImage
                         ? labels.formQuestionTypeImageGuess
                         : labels.formQuestionTypeText;
+                    const isSelected = selectedIds.has(entry.id);
 
                     return (
                         <li
@@ -527,21 +736,29 @@ export function AdminQuestionsTable({
                                         emptyLabel={typeLabel}
                                     />
                                     <div className="flex flex-col gap-2 px-3.5 py-3">
-                                        <div className="min-w-0">
-                                            <ListCardBadges
-                                                entry={entry}
-                                                labels={labels}
-                                                showTypeLabel
-                                                typeLabel={typeLabel}
+                                        <div className="flex items-start gap-3">
+                                            <RowSelectCheckbox
+                                                id={entry.id}
+                                                checked={isSelected}
+                                                label={labels.bulkSelectRow}
+                                                onToggle={toggleId}
                                             />
-                                            <p className="mt-1.5 line-clamp-2 text-sm font-medium leading-snug text-foreground">
-                                                {entry.text}
-                                            </p>
-                                            <ListCardMeta
-                                                entry={entry}
-                                                labels={labels}
-                                                locale={locale}
-                                            />
+                                            <div className="min-w-0 flex-1">
+                                                <ListCardBadges
+                                                    entry={entry}
+                                                    labels={labels}
+                                                    showTypeLabel
+                                                    typeLabel={typeLabel}
+                                                />
+                                                <p className="mt-1.5 line-clamp-2 text-sm font-medium leading-snug text-foreground">
+                                                    {entry.text}
+                                                </p>
+                                                <ListCardMeta
+                                                    entry={entry}
+                                                    labels={labels}
+                                                    locale={locale}
+                                                />
+                                            </div>
                                         </div>
                                         <QuestionRowActions
                                             entry={entry}
@@ -552,21 +769,29 @@ export function AdminQuestionsTable({
                                 </>
                             ) : (
                                 <div className="flex flex-col gap-2">
-                                    <div className="min-w-0">
-                                        <ListCardBadges
-                                            entry={entry}
-                                            labels={labels}
-                                            showTypeLabel={false}
-                                            typeLabel={typeLabel}
+                                    <div className="flex items-start gap-3">
+                                        <RowSelectCheckbox
+                                            id={entry.id}
+                                            checked={isSelected}
+                                            label={labels.bulkSelectRow}
+                                            onToggle={toggleId}
                                         />
-                                        <p className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-foreground">
-                                            {entry.text}
-                                        </p>
-                                        <ListCardMeta
-                                            entry={entry}
-                                            labels={labels}
-                                            locale={locale}
-                                        />
+                                        <div className="min-w-0 flex-1">
+                                            <ListCardBadges
+                                                entry={entry}
+                                                labels={labels}
+                                                showTypeLabel={false}
+                                                typeLabel={typeLabel}
+                                            />
+                                            <p className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-foreground">
+                                                {entry.text}
+                                            </p>
+                                            <ListCardMeta
+                                                entry={entry}
+                                                labels={labels}
+                                                locale={locale}
+                                            />
+                                        </div>
                                     </div>
                                     <QuestionRowActions
                                         entry={entry}
@@ -582,13 +807,23 @@ export function AdminQuestionsTable({
 
             <div className="hidden overflow-x-auto rounded-lg border border-border bg-surface lg:block">
                 {/*
-                  Desktop queue row: вопрос + мета, состояние, дата, actions.
+                  Desktop queue row: select + вопрос + мета, состояние, дата, actions.
                   Меньше колонок = стабильнее RU/EN и ближе к реальным CMS/admin.
                 */}
                 <table className="w-full min-w-3xl border-collapse text-left text-sm">
                     <thead>
                         <tr className="border-b border-border bg-surface-muted text-muted">
-                            <th className="w-[54%] px-4 py-2.5 font-medium">
+                            <th className="w-10 px-3 py-2.5">
+                                <input
+                                    ref={selectAllRef}
+                                    type="checkbox"
+                                    className={checkboxClassName}
+                                    checked={allVisibleSelected}
+                                    aria-label={labels.bulkSelectAll}
+                                    onChange={toggleSelectAllVisible}
+                                />
+                            </th>
+                            <th className="w-[52%] px-4 py-2.5 font-medium">
                                 {labels.tableQuestion}
                             </th>
                             <th className="w-32 whitespace-nowrap px-3 py-2.5 font-medium">
@@ -608,12 +843,21 @@ export function AdminQuestionsTable({
                             const typeLabel = isImage
                                 ? labels.formQuestionTypeImageGuess
                                 : labels.formQuestionTypeText;
+                            const isSelected = selectedIds.has(entry.id);
 
                             return (
                                 <tr
                                     key={entry.id}
                                     className="group border-b border-border last:border-b-0 hover:bg-surface-hover/40"
                                 >
+                                    <td className="px-3 py-3 align-top">
+                                        <RowSelectCheckbox
+                                            id={entry.id}
+                                            checked={isSelected}
+                                            label={labels.bulkSelectRow}
+                                            onToggle={toggleId}
+                                        />
+                                    </td>
                                     <td className="min-w-0 px-4 py-3 text-foreground">
                                         <div className="flex items-start gap-3">
                                             {isImage ? (
@@ -647,7 +891,9 @@ export function AdminQuestionsTable({
                                                             entry.difficulty
                                                         }
                                                     />
-                                                    <span>{entry.category}</span>
+                                                    <span>
+                                                        {entry.category}
+                                                    </span>
                                                     {isImage ? (
                                                         <span>{typeLabel}</span>
                                                     ) : null}
@@ -662,9 +908,9 @@ export function AdminQuestionsTable({
                                         />
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3 font-mono text-sm tabular-nums text-muted">
-                                        {entry.createdAt.toLocaleDateString(
-                                            locale,
-                                        )}
+                                        {new Date(
+                                            entry.createdAt,
+                                        ).toLocaleDateString(locale)}
                                     </td>
                                     <td className="px-4 py-3 align-top">
                                         <QuestionRowActions

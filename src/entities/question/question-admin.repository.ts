@@ -19,6 +19,7 @@ import type { ContentLocale } from '@prisma/client';
 import type { Client } from 'pg';
 import { type Locale } from '@/shared/i18n';
 import type { AdminQuestionListFilters } from '@/features/admin/lib/parse-admin-question-list-filters';
+import { normalizeBulkQuestionIds } from '@/features/admin/lib/parse-bulk-question-ids';
 import type {
     CreateQuestionInput,
     UpdateQuestionInput,
@@ -31,6 +32,7 @@ import {
 } from '@/lib/db/direct-pg';
 import type {
     AdminQuestionForEdit,
+    BulkIsActiveMutationResult,
     LocalizedAdminText,
     PublicationStatusMutationResult,
 } from '@/entities/question/question.types';
@@ -1196,6 +1198,46 @@ async function mutatePublicationStatusById(
     return result;
 }
 
+/**
+ * Один UPDATE для многих id: только строки, где isActive ещё не target.
+ * Autocommit (без BEGIN/COMMIT) — см. Neon write path в DECISIONS.md.
+ * После успеха — полный invalidate list-cache (много строк + фильтр status).
+ * Нормализация id — shared pure lib (parse-bulk-question-ids).
+ */
+async function setManyIsActiveByIds(
+    ids: readonly string[],
+    isActive: boolean,
+): Promise<BulkIsActiveMutationResult> {
+    const normalized = normalizeBulkQuestionIds(ids);
+
+    if (normalized.length === 0) {
+        return { requestedCount: 0, updatedCount: 0 };
+    }
+
+    const result = await withDirectPgWriteRetry(async (client) => {
+        // cuid id → text[]; AND isActive <> target = idempotent no-op для уже готовых.
+        const updated = await client.query<{ id: string }>(
+            `UPDATE "Question"
+             SET "isActive" = $1
+             WHERE "id" = ANY($2::text[])
+               AND "isActive" = $3
+             RETURNING "id"`,
+            [isActive, normalized, !isActive],
+        );
+
+        return {
+            requestedCount: normalized.length,
+            updatedCount: updated.rowCount ?? updated.rows.length,
+        } satisfies BulkIsActiveMutationResult;
+    });
+
+    if (result.updatedCount > 0) {
+        invalidateAdminListCaches();
+    }
+
+    return result;
+}
+
 /** Методы admin для фасада questionRepository (без смены сигнатур). */
 export const questionAdminMethods = {
     // список вопросов для админ-панели (опциональные фильтры из URL)
@@ -1543,6 +1585,22 @@ export const questionAdminMethods = {
         }
 
         return result;
+    },
+
+    /**
+     * Bulk soft-hide: isActive=false для выбранных id.
+     * Один UPDATE (не цикл Prisma/$transaction). Idempotent для уже inactive.
+     */
+    deactivateManyByIds(ids: readonly string[]) {
+        return setManyIsActiveByIds(ids, false);
+    },
+
+    /**
+     * Bulk restore в витрину: isActive=true для выбранных id.
+     * Не меняет publicationStatus — PUBLISHED+active попадает в quiz pool.
+     */
+    activateManyByIds(ids: readonly string[]) {
+        return setManyIsActiveByIds(ids, true);
     },
 
     /**

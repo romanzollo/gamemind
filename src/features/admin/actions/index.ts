@@ -2,6 +2,8 @@ export {
     createQuestionAction,
     deactivateQuestionAction,
     activateQuestionAction,
+    deactivateQuestionsBulkAction,
+    activateQuestionsBulkAction,
     deleteQuestionAction,
     publishQuestionAction,
     submitQuestionForReviewAction,

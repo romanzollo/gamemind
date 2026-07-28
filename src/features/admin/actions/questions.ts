@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
+import { parseBulkQuestionIdsFromFormData } from '@/features/admin/lib/parse-bulk-question-ids';
 import {
     getQuestionPublishQualityIssues,
     hasPublishQualityBlockers,
@@ -345,6 +346,55 @@ export async function activateQuestionAction(formData: FormData) {
 
     if (!result || result.status === 'not_found') {
         redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+    redirect(`/${locale}/admin/questions`);
+}
+
+/**
+ * Bulk soft-hide: несколько questionIds → isActive=false.
+ * Пустой выбор — silent redirect (как пустой questionId у single).
+ * Idempotent: уже inactive не ломают операцию.
+ */
+export async function deactivateQuestionsBulkAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    await requireAdmin(locale);
+
+    const questionIds = parseBulkQuestionIdsFromFormData(formData);
+
+    if (questionIds.length === 0) {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    try {
+        await questionRepository.deactivateManyByIds(questionIds);
+    } catch {
+        redirect(`/${locale}/admin/questions?error=DEACTIVATE_FAILED`);
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+    redirect(`/${locale}/admin/questions`);
+}
+
+/**
+ * Bulk restore в витрину: несколько questionIds → isActive=true.
+ * publicationStatus не меняем. Пустой выбор — silent redirect.
+ */
+export async function activateQuestionsBulkAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    await requireAdmin(locale);
+
+    const questionIds = parseBulkQuestionIdsFromFormData(formData);
+
+    if (questionIds.length === 0) {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    try {
+        await questionRepository.activateManyByIds(questionIds);
+    } catch {
+        redirect(`/${locale}/admin/questions?error=ACTIVATE_FAILED`);
     }
 
     revalidatePath(`/${locale}/admin/questions`);
