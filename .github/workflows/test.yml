@@ -1,0 +1,48 @@
+# Unit CI для GameMind (Phase E).
+#
+# Зачем: на каждый push/PR в master автоматически гонять `npm run test`
+# (Vitest), чтобы сломанные pure rules не уезжали незамеченными.
+#
+# Границы этого job:
+# - только unit Vitest (`npm run test`);
+# - без Playwright / E2E;
+# - без Neon smoke и без DATABASE_URL / секретов;
+# - без `npm run build` (Prisma/env не нужны для unit).
+#
+# См. docs/TESTING.md Phase E; DECISIONS → Automated Testing Adoption.
+
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Минимальные права: job только читает код репозитория.
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Unit (Vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Совместимо с Vitest 3.x в package.json (локально Node 20).
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        # npm ci = чистая установка строго по package-lock.json (лучше для CI, чем npm install).
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test
