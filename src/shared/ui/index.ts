@@ -6,6 +6,7 @@ export { InlineAlert } from './inline-alert';
 export type { InlineAlertTone } from './inline-alert';
 export { LanguageSwitcher } from './language-switcher';
 export { PendingLink } from './pending-link';
+export { PendingSpinner } from './pending-spinner';
 export { PageSkeleton, Skeleton } from './skeleton';
 export { SiteHeader } from './site-header';
 export { SiteMobileMenu } from './site-mobile-menu';

@@ -131,6 +131,7 @@ export default async function AdminUsersPage({
                 labels={dictionary.admin}
                 locale={safeLocale}
                 currentUserId={session.user.id}
+                workingLabel={dictionary.common.working}
             />
         </main>
     );

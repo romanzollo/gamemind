@@ -97,6 +97,7 @@ export default async function AdminEditQuestionPage({
                 isActive={question.isActive}
                 locale={safeLocale}
                 labels={dictionary.admin}
+                workingLabel={dictionary.common.working}
             />
 
             <AdminQuestionForm

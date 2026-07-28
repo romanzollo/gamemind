@@ -25,6 +25,7 @@ type AdminQuestionPublicationControlsProps = {
     isActive: boolean;
     locale: Locale;
     labels: Dictionary['admin'];
+    workingLabel: string;
 };
 
 function publicationStatusLabel(
@@ -70,6 +71,7 @@ export function AdminQuestionPublicationControls({
     isActive,
     locale,
     labels,
+    workingLabel,
 }: AdminQuestionPublicationControlsProps) {
     // Новый JSX на каждый form — не переиспользовать один fragment (React key).
     const fields = () => (
@@ -107,6 +109,7 @@ export function AdminQuestionPublicationControls({
                             {fields()}
                             <SubmitButton
                                 variant="secondary"
+                                pendingLabel={workingLabel}
                                 className={`${actionClassName} text-warning`}
                             >
                                 {labels.submitForReviewButton}
@@ -114,7 +117,10 @@ export function AdminQuestionPublicationControls({
                         </form>
                         <form action={publishQuestionAction}>
                             {fields()}
-                            <SubmitButton className={actionClassName}>
+                            <SubmitButton
+                                pendingLabel={workingLabel}
+                                className={actionClassName}
+                            >
                                 {labels.publishButton}
                             </SubmitButton>
                         </form>
@@ -125,7 +131,10 @@ export function AdminQuestionPublicationControls({
                     <>
                         <form action={publishQuestionAction}>
                             {fields()}
-                            <SubmitButton className={actionClassName}>
+                            <SubmitButton
+                                pendingLabel={workingLabel}
+                                className={actionClassName}
+                            >
                                 {labels.publishButton}
                             </SubmitButton>
                         </form>
@@ -133,6 +142,7 @@ export function AdminQuestionPublicationControls({
                             {fields()}
                             <SubmitButton
                                 variant="secondary"
+                                pendingLabel={workingLabel}
                                 className={`${actionClassName} text-warning`}
                             >
                                 {labels.returnToDraftButton}
@@ -146,6 +156,7 @@ export function AdminQuestionPublicationControls({
                         {fields()}
                         <SubmitButton
                             variant="secondary"
+                            pendingLabel={workingLabel}
                             className={`${actionClassName} text-warning`}
                         >
                             {labels.returnToDraftButton}

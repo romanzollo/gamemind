@@ -28,6 +28,8 @@ type AdminUsersTableProps = {
     labels: Dictionary['admin'];
     locale: Locale;
     currentUserId: string;
+    /** common.working — pendingLabel для Server Action кнопок */
+    workingLabel: string;
 };
 
 /** Как у questions: компактный hit target, не full Button. */
@@ -72,12 +74,14 @@ function UserRowActions({
     entry,
     labels,
     locale,
+    workingLabel,
     isSelf,
     nowrap = false,
 }: {
     entry: AdminUserListItem;
     labels: Dictionary['admin'];
     locale: Locale;
+    workingLabel: string;
     isSelf: boolean;
     nowrap?: boolean;
 }) {
@@ -119,6 +123,7 @@ function UserRowActions({
                             <input type="hidden" name="role" value="ADMIN" />
                             <SubmitButton
                                 unstyled
+                                pendingLabel={workingLabel}
                                 className={`${rowActionClassName} cursor-pointer text-primary hover:text-primary-hover`}
                             >
                                 {labels.makeAdminButton}
@@ -143,6 +148,7 @@ function UserRowActions({
                             <input type="hidden" name="role" value="USER" />
                             <SubmitButton
                                 unstyled
+                                pendingLabel={workingLabel}
                                 className={`${rowActionClassName} cursor-pointer text-primary hover:text-primary-hover`}
                             >
                                 {labels.makeUserButton}
@@ -167,6 +173,7 @@ function UserRowActions({
                             />
                             <SubmitButton
                                 unstyled
+                                pendingLabel={workingLabel}
                                 className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
                             >
                                 {labels.deactivateButton}
@@ -189,6 +196,7 @@ function UserRowActions({
                             />
                             <SubmitButton
                                 unstyled
+                                pendingLabel={workingLabel}
                                 className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
                             >
                                 {labels.activateButton}
@@ -209,6 +217,7 @@ function UserRowActions({
                         />
                         <SubmitButton
                             unstyled
+                            pendingLabel={workingLabel}
                             className={`${rowActionClassName} cursor-pointer text-danger hover:opacity-90`}
                         >
                             {labels.deleteButton}
@@ -224,11 +233,13 @@ function UserListCard({
     entry,
     labels,
     locale,
+    workingLabel,
     isSelf,
 }: {
     entry: AdminUserListItem;
     labels: Dictionary['admin'];
     locale: Locale;
+    workingLabel: string;
     isSelf: boolean;
 }) {
     const detailHref = `/${locale}/admin/users/${entry.id}`;
@@ -274,6 +285,7 @@ function UserListCard({
                     entry={entry}
                     labels={labels}
                     locale={locale}
+                    workingLabel={workingLabel}
                     isSelf={isSelf}
                 />
             </div>
@@ -286,6 +298,7 @@ export function AdminUsersTable({
     labels,
     locale,
     currentUserId,
+    workingLabel,
 }: AdminUsersTableProps) {
     if (entries.length === 0) {
         return <EmptyState className="mt-6" title={labels.usersEmpty} />;
@@ -302,6 +315,7 @@ export function AdminUsersTable({
                         entry={entry}
                         labels={labels}
                         locale={locale}
+                        workingLabel={workingLabel}
                         isSelf={entry.id === currentUserId}
                     />
                 ))}
@@ -381,6 +395,7 @@ export function AdminUsersTable({
                                             entry={entry}
                                             labels={labels}
                                             locale={locale}
+                                            workingLabel={workingLabel}
                                             isSelf={isSelf}
                                             nowrap
                                         />

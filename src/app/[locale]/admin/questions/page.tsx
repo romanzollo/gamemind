@@ -162,6 +162,7 @@ export default async function AdminQuestionsPage({
                     entries={entries}
                     labels={dictionary.admin}
                     locale={safeLocale}
+                    workingLabel={dictionary.common.working}
                     emptyTitle={
                         filtersActive
                             ? dictionary.admin.emptyFiltered

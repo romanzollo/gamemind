@@ -48,6 +48,8 @@ type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
     labels: Dictionary['admin'];
     locale: Locale;
+    /** common.working — pendingLabel для Server Action кнопок списка */
+    workingLabel: string;
     emptyTitle?: string;
 };
 
@@ -133,12 +135,14 @@ function PublicationRowActions({
     entry,
     labels,
     locale,
+    workingLabel,
     className = rowActionClassName,
     formClassName = 'inline-flex',
 }: {
     entry: AdminQuestionListItem;
     labels: Dictionary['admin'];
     locale: Locale;
+    workingLabel: string;
     className?: string;
     formClassName?: string;
 }) {
@@ -155,6 +159,7 @@ function PublicationRowActions({
                 />
                 <SubmitButton
                     unstyled
+                    pendingLabel={workingLabel}
                     className={`${className} cursor-pointer text-warning hover:opacity-90`}
                 >
                     {labels.submitForReviewButton}
@@ -176,6 +181,7 @@ function PublicationRowActions({
                     />
                     <SubmitButton
                         unstyled
+                        pendingLabel={workingLabel}
                         className={`${className} cursor-pointer text-success hover:opacity-90`}
                     >
                         {labels.publishButton}
@@ -191,6 +197,7 @@ function PublicationRowActions({
                     />
                     <SubmitButton
                         unstyled
+                        pendingLabel={workingLabel}
                         className={`${className} cursor-pointer text-warning hover:opacity-90`}
                     >
                         {labels.returnToDraftButton}
@@ -209,6 +216,7 @@ function PublicationRowActions({
             <QuestionActionFields locale={locale} questionId={entry.id} />
             <SubmitButton
                 unstyled
+                pendingLabel={workingLabel}
                 className={`${className} cursor-pointer text-warning hover:opacity-90`}
             >
                 {labels.returnToDraftButton}
@@ -221,12 +229,14 @@ function ActiveToggleAction({
     entry,
     labels,
     locale,
+    workingLabel,
     className,
     formClassName,
 }: {
     entry: AdminQuestionListItem;
     labels: Dictionary['admin'];
     locale: Locale;
+    workingLabel: string;
     className: string;
     formClassName: string;
 }) {
@@ -236,6 +246,7 @@ function ActiveToggleAction({
                 <QuestionActionFields locale={locale} questionId={entry.id} />
                 <SubmitButton
                     unstyled
+                    pendingLabel={workingLabel}
                     className={`${className} cursor-pointer text-warning hover:opacity-90`}
                 >
                     {labels.deactivateButton}
@@ -249,6 +260,7 @@ function ActiveToggleAction({
             <QuestionActionFields locale={locale} questionId={entry.id} />
             <SubmitButton
                 unstyled
+                pendingLabel={workingLabel}
                 className={`${className} cursor-pointer text-success hover:opacity-90`}
             >
                 {labels.activateButton}
@@ -261,12 +273,14 @@ function DeleteAction({
     entry,
     labels,
     locale,
+    workingLabel,
     className,
     formClassName,
 }: {
     entry: AdminQuestionListItem;
     labels: Dictionary['admin'];
     locale: Locale;
+    workingLabel: string;
     className: string;
     formClassName: string;
 }) {
@@ -275,6 +289,7 @@ function DeleteAction({
             <QuestionActionFields locale={locale} questionId={entry.id} />
             <SubmitButton
                 unstyled
+                pendingLabel={workingLabel}
                 className={`${className} cursor-pointer text-danger hover:opacity-90`}
             >
                 {labels.deleteButton}
@@ -287,11 +302,13 @@ function QuestionRowActions({
     entry,
     labels,
     locale,
+    workingLabel,
     layout = 'wrap',
 }: {
     entry: AdminQuestionListItem;
     labels: Dictionary['admin'];
     locale: Locale;
+    workingLabel: string;
     /** wrap = mobile cards; compact = desktop queue row. */
     layout?: 'wrap' | 'compact';
 }) {
@@ -311,6 +328,7 @@ function QuestionRowActions({
                     isActive={entry.isActive}
                     locale={locale}
                     labels={labels}
+                    workingLabel={workingLabel}
                 />
             </div>
         );
@@ -329,12 +347,14 @@ function QuestionRowActions({
                 entry={entry}
                 labels={labels}
                 locale={locale}
+                workingLabel={workingLabel}
             />
 
             <ActiveToggleAction
                 entry={entry}
                 labels={labels}
                 locale={locale}
+                workingLabel={workingLabel}
                 className={rowActionClassName}
                 formClassName="inline-flex"
             />
@@ -343,6 +363,7 @@ function QuestionRowActions({
                 entry={entry}
                 labels={labels}
                 locale={locale}
+                workingLabel={workingLabel}
                 className={rowActionClassName}
                 formClassName="inline-flex"
             />
@@ -504,11 +525,14 @@ function StatusPublicationCell({
 /**
  * Toolbar bulk isActive: счётчик + select all/clear + две формы.
  * Selected ids уходят hidden inputs (name=questionIds) — как checkbox getAll.
+ * bulkPending: пока идёт Server Action — блокируем обе bulk-кнопки и select,
+ * чтобы не отправить второй запрос и было видно ожидание.
  */
 function BulkIsActiveToolbar({
     selectedIds,
     labels,
     locale,
+    workingLabel,
     allVisibleSelected,
     onSelectAll,
     onClear,
@@ -516,19 +540,25 @@ function BulkIsActiveToolbar({
     selectedIds: readonly string[];
     labels: Dictionary['admin'];
     locale: Locale;
+    workingLabel: string;
     allVisibleSelected: boolean;
     onSelectAll: () => void;
     onClear: () => void;
 }) {
+    const [bulkPending, setBulkPending] = useState(false);
     const selectedCount = selectedIds.length;
     const hasSelection = selectedCount > 0;
     const selectedLabel = labels.bulkSelected.replace(
         '{count}',
         String(selectedCount),
     );
+    const controlsDisabled = bulkPending;
 
     return (
-        <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border pb-3">
+        <div
+            className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border pb-3"
+            aria-busy={bulkPending}
+        >
             <span className="font-mono text-sm tabular-nums text-muted">
                 {selectedLabel}
             </span>
@@ -537,7 +567,7 @@ function BulkIsActiveToolbar({
                 type="button"
                 className={bulkToolbarLinkClassName}
                 onClick={onSelectAll}
-                disabled={allVisibleSelected}
+                disabled={allVisibleSelected || controlsDisabled}
             >
                 {labels.bulkSelectAll}
             </button>
@@ -546,7 +576,7 @@ function BulkIsActiveToolbar({
                 type="button"
                 className={bulkToolbarLinkClassName}
                 onClick={onClear}
-                disabled={!hasSelection}
+                disabled={!hasSelection || controlsDisabled}
             >
                 {labels.bulkClearSelection}
             </button>
@@ -554,6 +584,7 @@ function BulkIsActiveToolbar({
             <form
                 action={deactivateQuestionsBulkAction}
                 className="inline-flex"
+                onSubmit={() => setBulkPending(true)}
             >
                 <input type="hidden" name="locale" value={locale} />
                 {selectedIds.map((id) => (
@@ -566,14 +597,19 @@ function BulkIsActiveToolbar({
                 ))}
                 <SubmitButton
                     unstyled
-                    disabled={!hasSelection}
+                    disabled={!hasSelection || controlsDisabled}
+                    pendingLabel={workingLabel}
                     className={`${bulkToolbarLinkClassName} text-warning`}
                 >
                     {labels.bulkDeactivateButton}
                 </SubmitButton>
             </form>
 
-            <form action={activateQuestionsBulkAction} className="inline-flex">
+            <form
+                action={activateQuestionsBulkAction}
+                className="inline-flex"
+                onSubmit={() => setBulkPending(true)}
+            >
                 <input type="hidden" name="locale" value={locale} />
                 {selectedIds.map((id) => (
                     <input
@@ -585,7 +621,8 @@ function BulkIsActiveToolbar({
                 ))}
                 <SubmitButton
                     unstyled
-                    disabled={!hasSelection}
+                    disabled={!hasSelection || controlsDisabled}
+                    pendingLabel={workingLabel}
                     className={`${bulkToolbarLinkClassName} text-success`}
                 >
                     {labels.bulkActivateButton}
@@ -621,6 +658,7 @@ export function AdminQuestionsTable({
     entries,
     labels,
     locale,
+    workingLabel,
     emptyTitle,
 }: AdminQuestionsTableProps) {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -706,6 +744,7 @@ export function AdminQuestionsTable({
                 selectedIds={selectedList}
                 labels={labels}
                 locale={locale}
+                workingLabel={workingLabel}
                 allVisibleSelected={allVisibleSelected}
                 onSelectAll={selectAllVisible}
                 onClear={clearSelection}
@@ -764,6 +803,7 @@ export function AdminQuestionsTable({
                                             entry={entry}
                                             labels={labels}
                                             locale={locale}
+                                            workingLabel={workingLabel}
                                         />
                                     </div>
                                 </>
@@ -797,6 +837,7 @@ export function AdminQuestionsTable({
                                         entry={entry}
                                         labels={labels}
                                         locale={locale}
+                                        workingLabel={workingLabel}
                                     />
                                 </div>
                             )}
@@ -917,6 +958,7 @@ export function AdminQuestionsTable({
                                             entry={entry}
                                             labels={labels}
                                             locale={locale}
+                                            workingLabel={workingLabel}
                                             layout="compact"
                                         />
                                     </td>

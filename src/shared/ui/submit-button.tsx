@@ -4,6 +4,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { buttonClassName, type ButtonVariant } from './button';
+import { PendingSpinner } from './pending-spinner';
 
 type SubmitButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     children: ReactNode;
@@ -19,7 +20,10 @@ type SubmitButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 /**
  * Must be rendered inside a `<form>` that uses a Server Action.
- * Disables the control and sets aria-busy while pending.
+ * Disables the control, sets aria-busy, and shows a spinner while pending.
+ *
+ * Visual pending = spinner + (pendingLabel ?? children), не только opacity:
+ * text-link actions в admin иначе почти незаметны во время Neon wait.
  */
 export function SubmitButton({
     children,
@@ -32,7 +36,10 @@ export function SubmitButton({
 }: SubmitButtonProps) {
     const { pending } = useFormStatus();
     const isDisabled = Boolean(disabled) || pending;
-    const pendingClassName = pending ? 'cursor-wait opacity-70' : '';
+    // Лёгкое затемнение + cursor-wait; главный сигнал — spinner (см. выше).
+    const pendingClassName = pending
+        ? 'inline-flex cursor-wait items-center gap-1.5 opacity-80'
+        : '';
     // unstyled: всё равно pointer (глобальный base + явный класс);
     // pending → cursor-wait; disabled → not-allowed из globals / disabled:*.
     const resolvedClassName = unstyled
@@ -50,7 +57,14 @@ export function SubmitButton({
             className={resolvedClassName}
             {...props}
         >
-            {pending ? (pendingLabel ?? children) : children}
+            {pending ? (
+                <>
+                    <PendingSpinner />
+                    <span>{pendingLabel ?? children}</span>
+                </>
+            ) : (
+                children
+            )}
         </button>
     );
 }

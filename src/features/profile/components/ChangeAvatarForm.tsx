@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { changeAvatarAction } from '@/features/profile/actions/change-avatar';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { Button, InlineAlert, SubmitButton, UserAvatar } from '@/shared/ui';
+import { Button, InlineAlert, PendingSpinner, SubmitButton, UserAvatar } from '@/shared/ui';
 
 type ChangeAvatarFormProps = {
     locale: Locale;
@@ -107,7 +107,7 @@ export function ChangeAvatarForm({
                             variant="secondary"
                             disabled={isPending}
                             aria-busy={isPending}
-                            className="w-full sm:w-auto"
+                            className="inline-flex w-full items-center justify-center gap-1.5 sm:w-auto"
                             onClick={() => {
                                 const fd = new FormData();
                                 fd.set('locale', locale);
@@ -117,9 +117,14 @@ export function ChangeAvatarForm({
                                 });
                             }}
                         >
-                            {isPending
-                                ? dictionary.common.working
-                                : dictionary.profile.clearAvatar}
+                            {isPending ? (
+                                <>
+                                    <PendingSpinner />
+                                    <span>{dictionary.common.working}</span>
+                                </>
+                            ) : (
+                                dictionary.profile.clearAvatar
+                            )}
                         </Button>
                     ) : null}
                 </div>

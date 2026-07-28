@@ -32,6 +32,7 @@ type AdminQuestionRowMoreActionsProps = {
     isActive: boolean;
     locale: Locale;
     labels: Dictionary['admin'];
+    workingLabel: string;
 };
 
 function HiddenFields({
@@ -55,6 +56,7 @@ export function AdminQuestionRowMoreActions({
     isActive,
     locale,
     labels,
+    workingLabel,
 }: AdminQuestionRowMoreActionsProps) {
     return (
         <AdminRowMoreMenu label={labels.rowMoreActions}>
@@ -66,6 +68,7 @@ export function AdminQuestionRowMoreActions({
                     <HiddenFields locale={locale} questionId={questionId} />
                     <SubmitButton
                         unstyled
+                        pendingLabel={workingLabel}
                         className={`${menuActionClassName} text-warning hover:opacity-90`}
                     >
                         {labels.submitForReviewButton}
@@ -82,6 +85,7 @@ export function AdminQuestionRowMoreActions({
                         <HiddenFields locale={locale} questionId={questionId} />
                         <SubmitButton
                             unstyled
+                            pendingLabel={workingLabel}
                             className={`${menuActionClassName} text-success hover:opacity-90`}
                         >
                             {labels.publishButton}
@@ -94,6 +98,7 @@ export function AdminQuestionRowMoreActions({
                         <HiddenFields locale={locale} questionId={questionId} />
                         <SubmitButton
                             unstyled
+                            pendingLabel={workingLabel}
                             className={`${menuActionClassName} text-warning hover:opacity-90`}
                         >
                             {labels.returnToDraftButton}
@@ -110,6 +115,7 @@ export function AdminQuestionRowMoreActions({
                     <HiddenFields locale={locale} questionId={questionId} />
                     <SubmitButton
                         unstyled
+                        pendingLabel={workingLabel}
                         className={`${menuActionClassName} text-warning hover:opacity-90`}
                     >
                         {labels.returnToDraftButton}
@@ -125,6 +131,7 @@ export function AdminQuestionRowMoreActions({
                     <HiddenFields locale={locale} questionId={questionId} />
                     <SubmitButton
                         unstyled
+                        pendingLabel={workingLabel}
                         className={`${menuActionClassName} text-warning hover:opacity-90`}
                     >
                         {labels.deactivateButton}
@@ -135,6 +142,7 @@ export function AdminQuestionRowMoreActions({
                     <HiddenFields locale={locale} questionId={questionId} />
                     <SubmitButton
                         unstyled
+                        pendingLabel={workingLabel}
                         className={`${menuActionClassName} text-success hover:opacity-90`}
                     >
                         {labels.activateButton}
@@ -146,6 +154,7 @@ export function AdminQuestionRowMoreActions({
                 <HiddenFields locale={locale} questionId={questionId} />
                 <SubmitButton
                     unstyled
+                    pendingLabel={workingLabel}
                     className={`${menuActionClassName} text-danger hover:opacity-90`}
                 >
                     {labels.deleteButton}
