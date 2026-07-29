@@ -345,7 +345,7 @@ export const enDictionary = {
     leaderboard: {
         title: 'Leaderboard',
         description:
-            'Best score per user (all time). Points depend on difficulty: easy 1, medium 2, hard 3.',
+            'Best score per player. Narrow by period and difficulty. Points: easy 1, medium 2, hard 3.',
         rank: 'Rank',
         player: 'Player',
         score: 'Points',
@@ -353,10 +353,14 @@ export const enDictionary = {
         date: 'Date',
         empty: 'No results yet. Be the first to complete a quiz!',
         emptyFiltered:
-            'No results for this difficulty yet. Pick another filter or play a quiz.',
+            'No results for these filters yet. Change period or difficulty — or play a quiz.',
         loadFailed:
             'Failed to load leaderboard. Check the database connection and refresh the page.',
         filterDifficultyLabel: 'Difficulty',
         filterAll: 'All',
+        filterPeriodLabel: 'Period',
+        filterPeriodAll: 'All time',
+        filterPeriodWeek: 'Week',
+        filterPeriodMonth: 'Month',
     },
 } satisfies Dictionary;

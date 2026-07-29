@@ -1,6 +1,8 @@
 import { LeaderboardDifficultyFilters } from '@/features/leaderboard/components/leaderboard-difficulty-filters';
+import { LeaderboardPeriodFilters } from '@/features/leaderboard/components/leaderboard-period-filters';
 import { LeaderboardTable } from '@/features/leaderboard/components/leaderboard-table';
 import {
+    getLeaderboardPeriodCutoff,
     hasActiveLeaderboardFilters,
     LEADERBOARD_LIMIT,
     leaderboardRepository,
@@ -12,7 +14,7 @@ import { InlineAlert } from '@/shared/ui';
 
 type LeaderboardPageProps = {
     params: Promise<{ locale: string }>;
-    /** URL-фильтр рейтинга (`?difficulty=`); Next.js 15+ — Promise. */
+    /** URL-фильтры (`?difficulty=` / `?period=`); Next.js 15+ — Promise. */
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
@@ -32,9 +34,13 @@ export default async function LeaderboardPage({
     let loadErrorMessage: string | undefined;
 
     try {
+        // Feature знает week/month; entity получает только Date (или null = all-time).
         const rows = await leaderboardRepository.findBestScores(
             LEADERBOARD_LIMIT,
-            filters,
+            {
+                difficulty: filters.difficulty,
+                completedAfter: getLeaderboardPeriodCutoff(filters.period),
+            },
         );
         entries = mapLeaderboardEntries(rows);
     } catch {
@@ -56,6 +62,19 @@ export default async function LeaderboardPage({
             <p className="mt-3 text-base leading-relaxed text-muted">
                 {dictionary.leaderboard.description}
             </p>
+
+            <LeaderboardPeriodFilters
+                locale={safeLocale}
+                filters={filters}
+                labels={{
+                    filterPeriodLabel:
+                        dictionary.leaderboard.filterPeriodLabel,
+                    filterPeriodAll: dictionary.leaderboard.filterPeriodAll,
+                    filterPeriodWeek: dictionary.leaderboard.filterPeriodWeek,
+                    filterPeriodMonth:
+                        dictionary.leaderboard.filterPeriodMonth,
+                }}
+            />
 
             <LeaderboardDifficultyFilters
                 locale={safeLocale}

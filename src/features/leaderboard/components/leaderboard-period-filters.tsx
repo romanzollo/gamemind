@@ -1,58 +1,53 @@
 import {
     buildLeaderboardHref,
     type LeaderboardFilters,
+    type LeaderboardPeriod,
 } from '@/features/leaderboard/lib/parse-leaderboard-filters';
 import type { Locale } from '@/shared/i18n';
 import { PendingLink } from '@/shared/ui';
-import type { Difficulty } from '@/types';
 
 /**
- * Чипы фильтра сложности на публичном рейтинге (Scoreboard Editorial).
+ * Чипы периода на публичном рейтинге (Scoreboard Editorial).
  *
- * Навигация через URL (`?difficulty=`), не client state — можно шарить ссылку.
- * PendingLink: лёгкий opacity при soft navigation (§11.9).
- *
- * Визуал: segmented control (один ряд в рамке), не 2×2 «кнопочная панель» —
- * фильтр = вторичный chrome под заголовком, акцент остаётся у таблицы очков.
- * Подписи easy/medium/hard — из quiz dictionary (один источник правды).
+ * URL `?period=week|month` (omit = all-time) — шарибельная ссылка, не client state.
+ * Визуал = тот же segmented control, что у сложности: вторичный chrome, акцент у таблицы.
+ * Скользящее окно (7/30 суток), не календарная неделя/месяц — см. parse-leaderboard-filters.
  */
 
-type LeaderboardDifficultyFiltersProps = {
+type LeaderboardPeriodFiltersProps = {
     locale: Locale;
     filters: LeaderboardFilters;
     labels: {
-        filterDifficultyLabel: string;
-        filterAll: string;
-        easy: string;
-        medium: string;
-        hard: string;
+        filterPeriodLabel: string;
+        filterPeriodAll: string;
+        filterPeriodWeek: string;
+        filterPeriodMonth: string;
     };
 };
 
-type FilterOption = {
-    value: Difficulty | 'all';
+type PeriodOption = {
+    value: LeaderboardPeriod;
     label: string;
 };
 
-export function LeaderboardDifficultyFilters({
+export function LeaderboardPeriodFilters({
     locale,
     filters,
     labels,
-}: LeaderboardDifficultyFiltersProps) {
-    const options: FilterOption[] = [
-        { value: 'all', label: labels.filterAll },
-        { value: 'EASY', label: labels.easy },
-        { value: 'MEDIUM', label: labels.medium },
-        { value: 'HARD', label: labels.hard },
+}: LeaderboardPeriodFiltersProps) {
+    const options: PeriodOption[] = [
+        { value: 'all', label: labels.filterPeriodAll },
+        { value: 'week', label: labels.filterPeriodWeek },
+        { value: 'month', label: labels.filterPeriodMonth },
     ];
 
     return (
         <nav
-            className="mt-4 border-b border-border pb-5"
-            aria-label={labels.filterDifficultyLabel}
+            className="mt-5"
+            aria-label={labels.filterPeriodLabel}
         >
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
-                {labels.filterDifficultyLabel}
+                {labels.filterPeriodLabel}
             </p>
 
             <div
@@ -60,11 +55,11 @@ export function LeaderboardDifficultyFilters({
                 role="group"
             >
                 {options.map((option) => {
-                    const isActive = filters.difficulty === option.value;
-                    // Сохраняем period: смена сложности не должна сбрасывать окно дат.
+                    const isActive = filters.period === option.value;
+                    // Сохраняем difficulty: смена периода не сбрасывает сложность.
                     const href = buildLeaderboardHref(locale, {
-                        difficulty: option.value,
-                        period: filters.period,
+                        difficulty: filters.difficulty,
+                        period: option.value,
                     });
 
                     return (

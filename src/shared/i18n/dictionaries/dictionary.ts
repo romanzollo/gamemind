@@ -362,12 +362,20 @@ export type Dictionary = {
         /** Дата лучшего результата (QuizResult.completedAt); уже в DTO, раньше не показывали */
         date: string;
         empty: string;
-        /** Пусто при активном ?difficulty= (не путать с глобальным empty) */
+        /** Пусто при активном ?difficulty= / ?period= (не путать с глобальным empty) */
         emptyFiltered: string;
         loadFailed: string;
         /** aria-label группы чипов сложности */
         filterDifficultyLabel: string;
         /** Чип «все сложности» → URL без ?difficulty= */
         filterAll: string;
+        /** aria-label группы чипов периода */
+        filterPeriodLabel: string;
+        /** Чип all-time → URL без ?period= */
+        filterPeriodAll: string;
+        /** Скользящие 7×24ч */
+        filterPeriodWeek: string;
+        /** Скользящие 30×24ч */
+        filterPeriodMonth: string;
     };
 };

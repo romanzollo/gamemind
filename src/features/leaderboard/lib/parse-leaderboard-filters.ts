@@ -7,26 +7,36 @@ import type { Difficulty } from '@/types';
  *
  * Зачем отдельный модуль:
  * - URL — внешний вход (как FormData); валидируем до репозитория;
- * - невалидные `?difficulty=` не роняют страницу — fallback на «все сложности»;
- * - один контракт page → SQL WHERE по `QuizSession.difficulty`.
+ * - невалидные `?difficulty=` / `?period=` не роняют страницу — fallback на defaults;
+ * - один контракт page → SQL WHERE (difficulty / completedAt).
  *
- * MVP: только difficulty. Период / категория — позже, без ломки этого API.
+ * Период = скользящее окно (rolling), не календарная неделя/месяц:
+ * week = последние 7×24ч, month = 30×24ч, all = без нижней границы даты.
+ * Так проще объяснить игроку и нет споров про таймзону «чей понедельник».
  *
- * См. DECISIONS.md → Leaderboard; ROADMAP §6 later period/difficulty.
+ * См. DECISIONS.md → Leaderboard; ROADMAP §6 later period.
  */
+
+/** Период рейтинга после parse. */
+export type LeaderboardPeriod = 'week' | 'month' | 'all';
 
 /** Нормализованный фильтр рейтинга (после parse). */
 export type LeaderboardFilters = {
     /** Сессия квиза; `all` = без WHERE по difficulty (глобальный best). */
     difficulty: Difficulty | 'all';
+    /** Окно по `QuizResult.completedAt`; `all` = без нижней границы. */
+    period: LeaderboardPeriod;
 };
 
 const DEFAULT_FILTERS: LeaderboardFilters = {
     difficulty: 'all',
+    period: 'all',
 };
 
 const leaderboardFiltersSchema = z.object({
-    difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'all']).default('all'),
+    // Независимое catch: битый difficulty не должен сбрасывать валидный period (и наоборот).
+    difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'all']).catch('all'),
+    period: z.enum(['week', 'month', 'all']).catch('all'),
 });
 
 function firstParam(
@@ -57,6 +67,7 @@ export function parseLeaderboardFilters(
 ): LeaderboardFilters {
     const parsed = leaderboardFiltersSchema.safeParse({
         difficulty: emptyToUndefined(firstParam(searchParams.difficulty)),
+        period: emptyToUndefined(firstParam(searchParams.period)),
     });
 
     if (!parsed.success) {
@@ -72,12 +83,12 @@ export function parseLeaderboardFilters(
 export function hasActiveLeaderboardFilters(
     filters: LeaderboardFilters,
 ): boolean {
-    return filters.difficulty !== 'all';
+    return filters.difficulty !== 'all' || filters.period !== 'all';
 }
 
 /**
  * Собирает href рейтинга с учётом locale и фильтров.
- * `all` / пустое — не пишем в URL (чистая ссылка = глобальный рейтинг).
+ * `all` / пустое — не пишем в URL (чистая ссылка = глобальный all-time рейтинг).
  */
 export function buildLeaderboardHref(
     locale: string,
@@ -89,8 +100,33 @@ export function buildLeaderboardHref(
         params.set('difficulty', filters.difficulty);
     }
 
+    if (filters.period !== 'all') {
+        params.set('period', filters.period);
+    }
+
     const query = params.toString();
     const base = `/${locale}/leaderboard`;
 
     return query ? `${base}?${query}` : base;
+}
+
+/**
+ * Нижняя граница `completedAt` для SQL (скользящее окно).
+ * `all` → `null` (не добавляем WHERE по дате).
+ *
+ * Считаем в JS и передаём параметром в pg — предсказуемее, чем `NOW() - interval`
+ * размазанный по веткам SQL, и проще покрыть тестом без Neon.
+ */
+export function getLeaderboardPeriodCutoff(
+    period: LeaderboardPeriod,
+    now: Date = new Date(),
+): Date | null {
+    if (period === 'all') {
+        return null;
+    }
+
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const days = period === 'week' ? 7 : 30;
+
+    return new Date(now.getTime() - days * msPerDay);
 }
