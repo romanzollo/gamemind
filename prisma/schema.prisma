@@ -144,23 +144,46 @@ model AnswerOption {
   @@index([questionId])
 }
 
-model QuizSession {
-  id            String            @id @default(cuid())
-  userId        String
-  status        QuizSessionStatus @default(IN_PROGRESS)
+/// Общий набор вопросов на один календарный день (Daily Challenge MVP).
+/// `challengeDate` = DATE (день без времени); `questionIds` freeze при создании.
+/// См. DECISIONS.md → Daily Challenge MVP; feature types в daily-challenge/types.ts.
+model DailyChallenge {
+  id            String     @id @default(cuid())
+  /// Календарный день челленджа (приложение пишет Moscow YYYY-MM-DD как DATE).
+  challengeDate DateTime   @unique @db.Date
   difficulty    Difficulty
   questionCount Int
-  sessionLocale ContentLocale     @default(ru)
-  snapshotData  Json?
-  startedAt     DateTime          @default(now())
-  completedAt   DateTime?
+  /// JSON-массив question id в порядке квиза; не менять после первой записи дня.
+  questionIds   Json
+  createdAt     DateTime   @default(now())
 
-  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  answers QuizAnswer[]
-  result  QuizResult?
+  sessions QuizSession[]
+}
+
+model QuizSession {
+  id               String            @id @default(cuid())
+  userId           String
+  status           QuizSessionStatus @default(IN_PROGRESS)
+  difficulty       Difficulty
+  questionCount    Int
+  sessionLocale    ContentLocale     @default(ru)
+  snapshotData     Json?
+  /// NULL = classic quiz; non-null = попытка Daily Challenge.
+  dailyChallengeId String?
+  startedAt        DateTime          @default(now())
+  completedAt      DateTime?
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyChallenge DailyChallenge? @relation(fields: [dailyChallengeId], references: [id], onDelete: Restrict)
+  answers        QuizAnswer[]
+  result         QuizResult?
   sessionQuestions QuizSessionQuestion[]
 
   @@index([userId, status])
+  @@index([dailyChallengeId])
+  /// Одна сессия на пользователя на день челленджа.
+  /// Postgres: несколько строк с dailyChallengeId NULL допустимы (classic).
+  @@unique([userId, dailyChallengeId])
 }
 
 model QuizAnswer {
