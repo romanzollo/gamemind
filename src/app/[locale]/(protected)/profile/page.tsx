@@ -3,11 +3,13 @@ import { ChangeAvatarForm } from '@/features/profile/components/ChangeAvatarForm
 import { ChangePasswordForm } from '@/features/profile/components/ChangePasswordForm';
 import { ChangeUsernameForm } from '@/features/profile/components/ChangeUsernameForm';
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
+import { ProfileStatsSummary } from '@/features/profile/components/ProfileStatsSummary';
 import {
     PROFILE_RESULT_HISTORY_LIMIT,
     mapResultHistory,
     profileResultRepository,
 } from '@/features/profile/lib';
+import type { ProfileStats } from '@/features/profile/types/profile-stats';
 import type { ProfileResultHistoryEntry } from '@/features/profile/types/result-history-entry';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
@@ -31,15 +33,26 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
     let historyEntries: ProfileResultHistoryEntry[] = [];
     let historyLoadError: string | undefined;
+    /** null = Neon/read failed; объект с quizzesCompleted=0 = ещё не играл. */
+    let profileStats: ProfileStats | null = null;
 
-    try {
-        const rows = await profileResultRepository.findRecentByUserId(
+    // Параллельно: история и сводка независимы — падение одной не ломает другую.
+    const [historySettled, statsSettled] = await Promise.allSettled([
+        profileResultRepository.findRecentByUserId(
             session.user.id,
             PROFILE_RESULT_HISTORY_LIMIT,
-        );
-        historyEntries = mapResultHistory(rows);
-    } catch {
+        ),
+        profileResultRepository.findStatsByUserId(session.user.id),
+    ]);
+
+    if (historySettled.status === 'fulfilled') {
+        historyEntries = mapResultHistory(historySettled.value);
+    } else {
         historyLoadError = dictionary.profile.historyLoadFailed;
+    }
+
+    if (statsSettled.status === 'fulfilled') {
+        profileStats = statsSettled.value;
     }
 
     return (
@@ -104,44 +117,28 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 />
             </section>
 
-            {/* Аватар: interim URL (не R2) */}
+            {/*
+              Игровой прогресс сразу после аккаунта: на мобиле сводка/история
+              не прячутся под длинными формами аватара и пароля.
+            */}
             <section
                 className={sectionClassName}
-                aria-labelledby="profile-avatar-title"
+                aria-labelledby="profile-stats-title"
             >
                 <h2
-                    id="profile-avatar-title"
+                    id="profile-stats-title"
                     className={sectionHeadingClassName}
                 >
-                    {dictionary.profile.changeAvatarTitle}
+                    {dictionary.profile.statsTitle}
                 </h2>
 
-                <ChangeAvatarForm
+                <ProfileStatsSummary
+                    stats={profileStats}
                     locale={safeLocale}
-                    dictionary={dictionary}
-                    currentImageUrl={session.user.image ?? null}
+                    labels={dictionary.profile}
                 />
             </section>
 
-            {/* Безопасность: смена пароля */}
-            <section
-                className={sectionClassName}
-                aria-labelledby="profile-security-title"
-            >
-                <h2
-                    id="profile-security-title"
-                    className={sectionHeadingClassName}
-                >
-                    {dictionary.profile.sectionSecurity}
-                </h2>
-
-                <ChangePasswordForm
-                    locale={safeLocale}
-                    dictionary={dictionary}
-                />
-            </section>
-
-            {/* История результатов */}
             <section
                 className={sectionClassName}
                 aria-labelledby="profile-history-title"
@@ -169,6 +166,42 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                         }}
                     />
                 )}
+            </section>
+
+            {/* Настройки аккаунта ниже прогресса */}
+            <section
+                className={sectionClassName}
+                aria-labelledby="profile-avatar-title"
+            >
+                <h2
+                    id="profile-avatar-title"
+                    className={sectionHeadingClassName}
+                >
+                    {dictionary.profile.changeAvatarTitle}
+                </h2>
+
+                <ChangeAvatarForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    currentImageUrl={session.user.image ?? null}
+                />
+            </section>
+
+            <section
+                className={sectionClassName}
+                aria-labelledby="profile-security-title"
+            >
+                <h2
+                    id="profile-security-title"
+                    className={sectionHeadingClassName}
+                >
+                    {dictionary.profile.sectionSecurity}
+                </h2>
+
+                <ChangePasswordForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                />
             </section>
         </main>
     );

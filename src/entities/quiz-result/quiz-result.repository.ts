@@ -29,6 +29,14 @@ type RecentResultRow = {
     difficulty: 'EASY' | 'MEDIUM' | 'HARD';
 };
 
+/** Одна строка агрегата профиля — COUNT всегда есть; MAX/ROUND могут быть null. */
+type ProfileStatsRow = {
+    quizzes_completed: number;
+    best_score: number | null;
+    average_accuracy_percent: number | null;
+    last_played_at: Date | null;
+};
+
 async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
     const result = await withDirectPgClient((client) => {
         return client.query<QuizResultRow>(
@@ -153,5 +161,55 @@ export const quizResultRepository = {
                 difficulty: row.difficulty,
             },
         }));
+    },
+
+    /**
+     * Сводка профиля: один SELECT по QuizResult (не история, не leaderboard).
+     * Без JOIN на QuizSession — difficulty для stats не нужен.
+     * Aggregate без GROUP BY всегда возвращает 1 строку (COUNT=0, если игр не было).
+     */
+    async findStatsByUserId(userId: string) {
+        const result = await withDirectPgClient((client) =>
+            client.query<ProfileStatsRow>(
+                `
+                    SELECT
+                        COUNT(*)::int AS "quizzes_completed",
+                        MAX("score") AS "best_score",
+                        CASE
+                            WHEN COALESCE(SUM("totalQuestions"), 0) = 0 THEN NULL
+                            ELSE ROUND(
+                                100.0 * SUM("correctCount") / SUM("totalQuestions")
+                            )::int
+                        END AS "average_accuracy_percent",
+                        MAX("completedAt") AS "last_played_at"
+                    FROM "QuizResult"
+                    WHERE "userId" = $1
+                `,
+                [userId],
+            ),
+        );
+
+        const row = result.rows[0];
+        const quizzesCompleted = Number(row?.quizzes_completed ?? 0);
+
+        if (quizzesCompleted === 0) {
+            return {
+                quizzesCompleted: 0,
+                bestScore: null,
+                averageAccuracyPercent: null,
+                lastPlayedAt: null,
+            };
+        }
+
+        return {
+            quizzesCompleted,
+            bestScore:
+                row?.best_score == null ? null : Number(row.best_score),
+            averageAccuracyPercent:
+                row?.average_accuracy_percent == null
+                    ? null
+                    : Number(row.average_accuracy_percent),
+            lastPlayedAt: row?.last_played_at ?? null,
+        };
     },
 };

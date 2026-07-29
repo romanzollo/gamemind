@@ -88,6 +88,14 @@ export const ruDictionary: Dictionary = {
         historyView: 'Обзор',
         historyLoadFailed:
             'Не удалось загрузить историю. Попробуйте обновить страницу.',
+        statsTitle: 'Сводка',
+        statsQuizzesCompleted: 'Сыграно',
+        statsBestScore: 'Лучший счёт',
+        statsAverageAccuracy: 'Точность',
+        statsLastPlayed: 'Последняя',
+        statsEmpty: 'Пока нет статистики — сыграйте первую викторину.',
+        statsLoadFailed:
+            'Не удалось загрузить сводку. Попробуйте обновить страницу.',
         changeUsernameTitle: 'Смена имени пользователя',
         newUsername: 'Новое имя пользователя',
         changeUsernameSubmit: 'Сменить имя',

@@ -85,6 +85,15 @@ export type Dictionary = {
         historyOf: string;
         historyView: string;
         historyLoadFailed: string;
+        /** Заголовок секции агрегатов (не путать с историей строк). */
+        statsTitle: string;
+        statsQuizzesCompleted: string;
+        statsBestScore: string;
+        statsAverageAccuracy: string;
+        statsLastPlayed: string;
+        /** Когда QuizResult у пользователя ещё нет. */
+        statsEmpty: string;
+        statsLoadFailed: string;
         changeUsernameTitle: string;
         newUsername: string;
         changeUsernameSubmit: string;
