@@ -347,7 +347,11 @@ export const enDictionary = {
         accuracy: 'Accuracy',
         date: 'Date',
         empty: 'No results yet. Be the first to complete a quiz!',
+        emptyFiltered:
+            'No results for this difficulty yet. Pick another filter or play a quiz.',
         loadFailed:
             'Failed to load leaderboard. Check the database connection and refresh the page.',
+        filterDifficultyLabel: 'Difficulty',
+        filterAll: 'All',
     },
 } satisfies Dictionary;

@@ -1,5 +1,6 @@
 // Работа с результатами викторин
 import { withDirectPgClient } from '@/lib/db/direct-pg';
+import type { Difficulty } from '@/types';
 
 type QuizResultRow = {
     id: string;
@@ -18,6 +19,15 @@ type LeaderboardScoreRow = {
     total_questions: number;
     correct_count: number;
     completed_at: Date;
+};
+
+/**
+ * Опциональный фильтр рейтинга.
+ * `all` / omit = глобальный best (без JOIN на QuizSession).
+ * Конкретная сложность = best среди сессий этой difficulty.
+ */
+export type FindBestScoresFilters = {
+    difficulty?: Difficulty | 'all';
 };
 
 type RecentResultRow = {
@@ -76,39 +86,87 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
 
 // репозиторий для работы с результатами викторины
 export const quizResultRepository = {
-    // лучший результат на пользователя — unpooled pg (Neon-friendly)
-    async findBestScores(limit: number) {
+    /**
+     * Лучший результат на пользователя — unpooled pg (Neon-friendly).
+     *
+     * Без фильтра: DISTINCT ON по QuizResult (как раньше; без JOIN Session).
+     * С difficulty: JOIN QuizSession, WHERE s.difficulty = $2, затем тот же
+     * DISTINCT ON — best считается внутри выбранной сложности.
+     *
+     * Difficulty в SQL только как параметр ($2) из allowlist TS/Zod выше по стеку.
+     * См. DECISIONS.md → Leaderboard.
+     */
+    async findBestScores(limit: number, filters?: FindBestScoresFilters) {
+        const difficulty = filters?.difficulty;
+        const filterByDifficulty =
+            difficulty === 'EASY' ||
+            difficulty === 'MEDIUM' ||
+            difficulty === 'HARD';
+
         const result = await withDirectPgClient((client) =>
-            client.query<LeaderboardScoreRow>(
-                `
-                    SELECT
-                        best."userId" AS "user_id",
-                        u."username" AS "username",
-                        best."score" AS "score",
-                        best."totalQuestions" AS "total_questions",
-                        best."correctCount" AS "correct_count",
-                        best."completedAt" AS "completed_at"
-                    FROM (
-                        SELECT DISTINCT ON ("userId")
-                            "userId",
-                            "score",
-                            "totalQuestions",
-                            "correctCount",
-                            "completedAt"
-                        FROM "QuizResult"
+            filterByDifficulty
+                ? client.query<LeaderboardScoreRow>(
+                      `
+                        SELECT
+                            best."userId" AS "user_id",
+                            u."username" AS "username",
+                            best."score" AS "score",
+                            best."totalQuestions" AS "total_questions",
+                            best."correctCount" AS "correct_count",
+                            best."completedAt" AS "completed_at"
+                        FROM (
+                            SELECT DISTINCT ON (r."userId")
+                                r."userId",
+                                r."score",
+                                r."totalQuestions",
+                                r."correctCount",
+                                r."completedAt"
+                            FROM "QuizResult" AS r
+                            INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
+                            WHERE s."difficulty" = $2
+                            ORDER BY
+                                r."userId" ASC,
+                                r."score" DESC,
+                                r."completedAt" ASC
+                        ) AS best
+                        INNER JOIN "User" AS u ON u."id" = best."userId"
                         ORDER BY
-                            "userId" ASC,
-                            "score" DESC,
-                            "completedAt" ASC
-                    ) AS best
-                    INNER JOIN "User" AS u ON u."id" = best."userId"
-                    ORDER BY
-                        best."score" DESC,
-                        best."completedAt" ASC
-                    LIMIT $1
-                `,
-                [limit],
-            ),
+                            best."score" DESC,
+                            best."completedAt" ASC
+                        LIMIT $1
+                      `,
+                      [limit, difficulty],
+                  )
+                : client.query<LeaderboardScoreRow>(
+                      `
+                        SELECT
+                            best."userId" AS "user_id",
+                            u."username" AS "username",
+                            best."score" AS "score",
+                            best."totalQuestions" AS "total_questions",
+                            best."correctCount" AS "correct_count",
+                            best."completedAt" AS "completed_at"
+                        FROM (
+                            SELECT DISTINCT ON ("userId")
+                                "userId",
+                                "score",
+                                "totalQuestions",
+                                "correctCount",
+                                "completedAt"
+                            FROM "QuizResult"
+                            ORDER BY
+                                "userId" ASC,
+                                "score" DESC,
+                                "completedAt" ASC
+                        ) AS best
+                        INNER JOIN "User" AS u ON u."id" = best."userId"
+                        ORDER BY
+                            best."score" DESC,
+                            best."completedAt" ASC
+                        LIMIT $1
+                      `,
+                      [limit],
+                  ),
         );
 
         return result.rows.map((row) => ({

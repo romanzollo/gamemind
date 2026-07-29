@@ -99,11 +99,12 @@ export function LeaderboardTable({
     labels,
 }: LeaderboardTableProps) {
     if (entries.length === 0) {
-        return <EmptyState className="mt-6" title={labels.empty} />;
+        return <EmptyState className="mt-4" title={labels.empty} />;
     }
 
     return (
-        <div className="mt-6 sm:mt-8">
+        // mt меньше: фильтр сложности уже даёт border-b разделитель
+        <div className="mt-4 sm:mt-5">
             {/*
               MOBILE (<sm):
               max-w-md — без дыры на landscape.
