@@ -226,15 +226,27 @@ export type Dictionary = {
         deactivateButton: string;
         activateButton: string;
         /**
-         * Bulk isActive на списке вопросов (checkboxes + toolbar).
-         * Не publication bulk и не hard-delete bulk.
-         * `{count}` в bulkSelected подставляется в UI.
+         * Bulk-toolbar на списке вопросов (checkboxes).
+         * isActive: deactivate/activate. publication: submit-for-review / publish.
+         * Не hard-delete bulk. `{count}` в bulkSelected подставляется в UI.
          */
         bulkSelected: string;
         bulkSelectAll: string;
         bulkClearSelection: string;
         bulkDeactivateButton: string;
         bulkActivateButton: string;
+        /** Bulk DRAFT → IN_REVIEW (quality gate в Server Action). */
+        bulkSubmitForReviewButton: string;
+        /** Bulk DRAFT | IN_REVIEW → PUBLISHED (тот же quality gate). */
+        bulkPublishButton: string;
+        /**
+         * Подписи групп в contextual bulk toolbar (две оси статуса).
+         * Короткие scoreboard labels — не предложения.
+         */
+        bulkGroupVisibility: string;
+        bulkGroupPublication: string;
+        /** Выбор есть, но ни один переход не применим (напр. все уже PUBLISHED+active). */
+        bulkNoActionsForSelection: string;
         /** aria-label чекбокса строки. */
         bulkSelectRow: string;
         deleteButton: string;

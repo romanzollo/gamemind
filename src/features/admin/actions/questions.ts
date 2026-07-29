@@ -122,6 +122,73 @@ async function assertPublishQualityOrRedirect(
     }
 }
 
+/**
+ * Bulk quality gate: какие id можно безопасно менять publicationStatus.
+ *
+ * Для каждого id (последовательно — Neon не любит параллельные TLS):
+ * - нет строки / переход не из fromStatuses → skip (как bulk isActive);
+ * - уже target → skip (idempotent);
+ * - blockers → запоминаем первый blocked (уйдём на его edit);
+ * - иначе → eligible.
+ *
+ * Partial success: eligible обновляем SQL-ом; blocked чинит админ на edit.
+ * Не кладём quality SQL в admin list queue.
+ */
+async function collectEligibleBulkPublicationIds(
+    ids: readonly string[],
+    options: {
+        targetStatus: 'PUBLISHED' | 'IN_REVIEW';
+        fromStatuses: readonly ('DRAFT' | 'IN_REVIEW')[];
+    },
+): Promise<
+    | { ok: true; eligibleIds: string[]; firstBlockedId: string | null }
+    | { ok: false }
+> {
+    const eligibleIds: string[] = [];
+    let firstBlockedId: string | null = null;
+
+    for (const id of ids) {
+        let question: Awaited<
+            ReturnType<typeof questionRepository.findByIdForAdmin>
+        > = null;
+
+        try {
+            question = await questionRepository.findByIdForAdmin(id);
+        } catch {
+            return { ok: false };
+        }
+
+        if (!question) {
+            continue;
+        }
+
+        if (question.publicationStatus === options.targetStatus) {
+            continue;
+        }
+
+        // Только разрешённые «откуда» (как PUBLICATION_TRANSITIONS в repo).
+        const fromStatus = question.publicationStatus;
+        if (fromStatus !== 'DRAFT' && fromStatus !== 'IN_REVIEW') {
+            continue;
+        }
+        if (!options.fromStatuses.includes(fromStatus)) {
+            continue;
+        }
+
+        const issues = getQuestionPublishQualityIssues(question);
+        if (hasPublishQualityBlockers(issues)) {
+            if (firstBlockedId === null) {
+                firstBlockedId = id;
+            }
+            continue;
+        }
+
+        eligibleIds.push(id);
+    }
+
+    return { ok: true, eligibleIds, firstBlockedId };
+}
+
 function getFormString(formData: FormData, name: string): string {
     const value = formData.get(name);
 
@@ -398,6 +465,96 @@ export async function activateQuestionsBulkAction(formData: FormData) {
     }
 
     revalidatePath(`/${locale}/admin/questions`);
+    redirect(`/${locale}/admin/questions`);
+}
+
+/**
+ * Bulk DRAFT → IN_REVIEW для выбранных id.
+ * Quality blockers → eligible всё равно уходят в UPDATE; первый blocked
+ * открываем на edit (как single submit). Пустой выбор — silent redirect.
+ */
+export async function submitQuestionsForReviewBulkAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    await requireAdmin(locale);
+
+    const questionIds = parseBulkQuestionIdsFromFormData(formData);
+
+    if (questionIds.length === 0) {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    const filtered = await collectEligibleBulkPublicationIds(questionIds, {
+        targetStatus: 'IN_REVIEW',
+        fromStatuses: ['DRAFT'],
+    });
+
+    if (!filtered.ok) {
+        redirect(`/${locale}/admin/questions?error=SUBMIT_FOR_REVIEW_FAILED`);
+    }
+
+    if (filtered.eligibleIds.length > 0) {
+        try {
+            await questionRepository.submitForReviewManyByIds(
+                filtered.eligibleIds,
+            );
+        } catch {
+            redirect(
+                `/${locale}/admin/questions?error=SUBMIT_FOR_REVIEW_FAILED`,
+            );
+        }
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+
+    if (filtered.firstBlockedId) {
+        redirect(
+            `/${locale}/admin/questions/${filtered.firstBlockedId}/edit?error=PUBLISH_QUALITY_BLOCKED`,
+        );
+    }
+
+    redirect(`/${locale}/admin/questions`);
+}
+
+/**
+ * Bulk DRAFT | IN_REVIEW → PUBLISHED.
+ * Тот же quality gate + partial success, что у bulk submit-for-review.
+ * isActive не меняем (quiz pool = active + PUBLISHED).
+ */
+export async function publishQuestionsBulkAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    await requireAdmin(locale);
+
+    const questionIds = parseBulkQuestionIdsFromFormData(formData);
+
+    if (questionIds.length === 0) {
+        redirect(`/${locale}/admin/questions`);
+    }
+
+    const filtered = await collectEligibleBulkPublicationIds(questionIds, {
+        targetStatus: 'PUBLISHED',
+        fromStatuses: ['DRAFT', 'IN_REVIEW'],
+    });
+
+    if (!filtered.ok) {
+        redirect(`/${locale}/admin/questions?error=PUBLISH_FAILED`);
+    }
+
+    if (filtered.eligibleIds.length > 0) {
+        try {
+            await questionRepository.publishManyByIds(filtered.eligibleIds);
+        } catch {
+            redirect(`/${locale}/admin/questions?error=PUBLISH_FAILED`);
+        }
+    }
+
+    revalidatePath(`/${locale}/admin/questions`);
+
+    if (filtered.firstBlockedId) {
+        redirect(
+            `/${locale}/admin/questions/${filtered.firstBlockedId}/edit?error=PUBLISH_QUALITY_BLOCKED`,
+        );
+    }
+
     redirect(`/${locale}/admin/questions`);
 }
 

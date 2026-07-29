@@ -232,6 +232,12 @@ export const ruDictionary: Dictionary = {
         bulkClearSelection: 'Снять выбор',
         bulkDeactivateButton: 'Деактивировать выбранные',
         bulkActivateButton: 'Активировать выбранные',
+        bulkSubmitForReviewButton: 'На ревью выбранные',
+        bulkPublishButton: 'Опубликовать выбранные',
+        bulkGroupVisibility: 'Витрина',
+        bulkGroupPublication: 'Публикация',
+        bulkNoActionsForSelection:
+            'Для этого выбора нет доступных массовых действий',
         bulkSelectRow: 'Выбрать вопрос',
         deleteButton: 'Удалить',
         makeAdminButton: 'Сделать ADMIN',

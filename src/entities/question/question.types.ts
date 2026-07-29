@@ -97,3 +97,16 @@ export type BulkIsActiveMutationResult = {
     requestedCount: number;
     updatedCount: number;
 };
+
+/**
+ * Результат bulk-смены publicationStatus (несколько id за один UPDATE).
+ *
+ * Та же форма, что BulkIsActiveMutationResult: requested = после normalize/cap;
+ * updated = реально изменённые строки. Уже в target / запрещённый переход /
+ * несуществующий id → тихо пропускаем (не error).
+ * Quality gate — в Server Action до вызова repo (как у single publish).
+ */
+export type BulkPublicationMutationResult = {
+    requestedCount: number;
+    updatedCount: number;
+};

@@ -33,6 +33,7 @@ import {
 import type {
     AdminQuestionForEdit,
     BulkIsActiveMutationResult,
+    BulkPublicationMutationResult,
     LocalizedAdminText,
     PublicationStatusMutationResult,
 } from '@/entities/question/question.types';
@@ -1238,6 +1239,54 @@ async function setManyIsActiveByIds(
     return result;
 }
 
+/**
+ * Bulk-смена publicationStatus: один UPDATE, без цикла Prisma/$transaction.
+ *
+ * fromStatuses — allowlist «откуда можно» (как PUBLICATION_TRANSITIONS).
+ * Уже target / другой статус / нет строки → не входят в updatedCount.
+ * Autocommit; полный invalidate list-cache при updatedCount > 0
+ * (как bulk isActive: фильтр publication на list может скрыть строки).
+ * Quality gate сюда не кладём — только SQL-переход.
+ */
+async function setManyPublicationStatusByIds(
+    ids: readonly string[],
+    target: QuestionPublicationStatus,
+    fromStatuses: readonly QuestionPublicationStatus[],
+): Promise<BulkPublicationMutationResult> {
+    const normalized = normalizeBulkQuestionIds(ids);
+
+    if (normalized.length === 0 || fromStatuses.length === 0) {
+        return { requestedCount: normalized.length, updatedCount: 0 };
+    }
+
+    // Inline enum literals (не $n для enum[]) — тот же стиль, что admin list WHERE.
+    const fromSql = fromStatuses
+        .map((status) => `'${status}'::"QuestionPublicationStatus"`)
+        .join(', ');
+
+    const result = await withDirectPgWriteRetry(async (client) => {
+        const updated = await client.query<{ id: string }>(
+            `UPDATE "Question"
+             SET "publicationStatus" = '${target}'::"QuestionPublicationStatus"
+             WHERE "id" = ANY($1::text[])
+               AND "publicationStatus" IN (${fromSql})
+             RETURNING "id"`,
+            [normalized],
+        );
+
+        return {
+            requestedCount: normalized.length,
+            updatedCount: updated.rowCount ?? updated.rows.length,
+        } satisfies BulkPublicationMutationResult;
+    });
+
+    if (result.updatedCount > 0) {
+        invalidateAdminListCaches();
+    }
+
+    return result;
+}
+
 /** Методы admin для фасада questionRepository (без смены сигнатур). */
 export const questionAdminMethods = {
     // список вопросов для админ-панели (опциональные фильтры из URL)
@@ -1601,6 +1650,26 @@ export const questionAdminMethods = {
      */
     activateManyByIds(ids: readonly string[]) {
         return setManyIsActiveByIds(ids, true);
+    },
+
+    /**
+     * Bulk DRAFT → IN_REVIEW. Уже IN_REVIEW / PUBLISHED — no-op для этих строк.
+     * Quality gate — в Server Action до вызова.
+     */
+    submitForReviewManyByIds(ids: readonly string[]) {
+        return setManyPublicationStatusByIds(ids, 'IN_REVIEW', ['DRAFT']);
+    },
+
+    /**
+     * Bulk DRAFT | IN_REVIEW → PUBLISHED.
+     * PUBLISHED уже — no-op. isActive не трогаем (quiz pool = active+PUBLISHED).
+     * Quality gate — в Server Action до вызова.
+     */
+    publishManyByIds(ids: readonly string[]) {
+        return setManyPublicationStatusByIds(ids, 'PUBLISHED', [
+            'DRAFT',
+            'IN_REVIEW',
+        ]);
     },
 
     /**

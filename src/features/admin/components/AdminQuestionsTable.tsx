@@ -10,10 +10,16 @@ import {
     deactivateQuestionsBulkAction,
     deleteQuestionAction,
     publishQuestionAction,
+    publishQuestionsBulkAction,
     returnQuestionToDraftAction,
     submitQuestionForReviewAction,
+    submitQuestionsForReviewBulkAction,
 } from '@/features/admin/actions/questions';
 import { AdminQuestionRowMoreActions } from '@/features/admin/components/AdminQuestionRowMoreActions';
+import {
+    getBulkToolbarCapabilities,
+    hasBulkMutationActions,
+} from '@/features/admin/lib/bulk-toolbar-capabilities';
 import { BULK_QUESTION_IDS_FIELD } from '@/features/admin/lib/parse-bulk-question-ids';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState, SubmitButton } from '@/shared/ui';
@@ -34,8 +40,8 @@ import type { AdminQuestionListItem } from '../types';
  * В меню «вперёд»-шаги взаимоисключающие: DRAFT → На ревью; IN_REVIEW → Опубликовать
  * (как Активировать ↔ Деактивировать). Прямой publish с DRAFT — на edit-панели.
  *
- * Bulk isActive: Client selection state + toolbar → Server Actions.
- * publication/delete bulk здесь нет. Single-row actions сохраняем.
+ * Bulk toolbar: Client selection + contextual CTA (только применимые переходы)
+ * → Server Actions (isActive + publication). Single-row actions сохраняем.
  */
 
 const checkboxClassName =
@@ -43,6 +49,9 @@ const checkboxClassName =
 
 const bulkToolbarLinkClassName =
     'inline-flex min-h-8 cursor-pointer items-center rounded-sm px-0.5 text-sm font-medium text-foreground underline-offset-2 motion-safe:transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 disabled:no-underline';
+
+const bulkGroupLabelClassName =
+    'font-mono text-[11px] font-medium uppercase tracking-wide text-muted';
 
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
@@ -523,13 +532,73 @@ function StatusPublicationCell({
 }
 
 /**
- * Toolbar bulk isActive: счётчик + select all/clear + две формы.
- * Selected ids уходят hidden inputs (name=questionIds) — как checkbox getAll.
- * bulkPending: пока идёт Server Action — блокируем обе bulk-кнопки и select,
- * чтобы не отправить второй запрос и было видно ожидание.
+ * Одна bulk-форма: locale + только id, к которым применимо действие.
+ * Не слать весь selection — сервер и так фильтрует, но UI/сеть яснее.
  */
-function BulkIsActiveToolbar({
-    selectedIds,
+function BulkActionForm({
+    action,
+    locale,
+    questionIds,
+    disabled,
+    pendingLabel,
+    className,
+    children,
+    onSubmit,
+}: {
+    action: (formData: FormData) => void | Promise<void>;
+    locale: Locale;
+    questionIds: readonly string[];
+    disabled: boolean;
+    pendingLabel: string;
+    className: string;
+    children: string;
+    onSubmit: () => void;
+}) {
+    if (questionIds.length === 0) {
+        return null;
+    }
+
+    return (
+        <form
+            action={action}
+            className="inline-flex"
+            onSubmit={onSubmit}
+        >
+            <input type="hidden" name="locale" value={locale} />
+            {questionIds.map((id) => (
+                <input
+                    key={id}
+                    type="hidden"
+                    name={BULK_QUESTION_IDS_FIELD}
+                    value={id}
+                />
+            ))}
+            <SubmitButton
+                unstyled
+                disabled={disabled}
+                pendingLabel={pendingLabel}
+                className={className}
+            >
+                {children}
+            </SubmitButton>
+        </form>
+    );
+}
+
+/**
+ * Contextual bulk toolbar (Scoreboard Editorial).
+ *
+ * Ряд 1 — selection (счётчик + select all/clear).
+ * Ряд 2 — только применимые мутации, двумя группами (витрина | публикация).
+ * Уже PUBLISHED → «Опубликовать» скрыта; уже active → «Активировать» скрыта.
+ *
+ * bulkPending: на время Server Action блокируем только mutation-CTA
+ * (не select/clear — иначе после soft-redirect stuck disabled навсегда:
+ * Client state переживает revalidate, а pending никто не сбрасывал).
+ * Сброс: когда статусы выбранных строк обновились + failsafe timeout.
+ */
+function BulkQuestionsToolbar({
+    selectedEntries,
     labels,
     locale,
     workingLabel,
@@ -537,7 +606,7 @@ function BulkIsActiveToolbar({
     onSelectAll,
     onClear,
 }: {
-    selectedIds: readonly string[];
+    selectedEntries: readonly AdminQuestionListItem[];
     labels: Dictionary['admin'];
     locale: Locale;
     workingLabel: string;
@@ -546,88 +615,173 @@ function BulkIsActiveToolbar({
     onClear: () => void;
 }) {
     const [bulkPending, setBulkPending] = useState(false);
-    const selectedCount = selectedIds.length;
+    const selectedCount = selectedEntries.length;
     const hasSelection = selectedCount > 0;
     const selectedLabel = labels.bulkSelected.replace(
         '{count}',
         String(selectedCount),
     );
-    const controlsDisabled = bulkPending;
+    const capabilities = getBulkToolbarCapabilities(selectedEntries);
+    const showMutations = hasBulkMutationActions(capabilities);
+
+    const deactivateIds = selectedEntries
+        .filter((entry) => entry.isActive)
+        .map((entry) => entry.id);
+    const activateIds = selectedEntries
+        .filter((entry) => !entry.isActive)
+        .map((entry) => entry.id);
+    const submitForReviewIds = selectedEntries
+        .filter((entry) => entry.publicationStatus === 'DRAFT')
+        .map((entry) => entry.id);
+    const publishIds = selectedEntries
+        .filter(
+            (entry) =>
+                entry.publicationStatus === 'DRAFT' ||
+                entry.publicationStatus === 'IN_REVIEW',
+        )
+        .map((entry) => entry.id);
+
+    // Отпечаток статусов выбора: после deactivate/activate RSC обновит
+    // isActive → fingerprint сменится → снимем stuck pending.
+    const selectionFingerprint = selectedEntries
+        .map(
+            (entry) =>
+                `${entry.id}:${entry.isActive ? '1' : '0'}:${entry.publicationStatus}`,
+        )
+        .sort()
+        .join('|');
+
+    useEffect(() => {
+        setBulkPending(false);
+    }, [selectionFingerprint]);
+
+    // Если redirect/error не изменил статусы — не держим UI disabled вечно.
+    useEffect(() => {
+        if (!bulkPending) {
+            return;
+        }
+
+        const timer = window.setTimeout(() => {
+            setBulkPending(false);
+        }, 8_000);
+
+        return () => window.clearTimeout(timer);
+    }, [bulkPending]);
+
+    const markPending = () => setBulkPending(true);
+
+    function handleClear() {
+        setBulkPending(false);
+        onClear();
+    }
 
     return (
         <div
-            className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border pb-3"
+            className="mb-4 space-y-2 border-b border-border pb-3"
             aria-busy={bulkPending}
         >
-            <span className="font-mono text-sm tabular-nums text-muted">
-                {selectedLabel}
-            </span>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span className="font-mono text-sm tabular-nums text-muted">
+                    {selectedLabel}
+                </span>
 
-            <button
-                type="button"
-                className={bulkToolbarLinkClassName}
-                onClick={onSelectAll}
-                disabled={allVisibleSelected || controlsDisabled}
-            >
-                {labels.bulkSelectAll}
-            </button>
+                <span
+                    className="hidden h-4 w-px bg-border sm:block"
+                    aria-hidden
+                />
 
-            <button
-                type="button"
-                className={bulkToolbarLinkClassName}
-                onClick={onClear}
-                disabled={!hasSelection || controlsDisabled}
-            >
-                {labels.bulkClearSelection}
-            </button>
-
-            <form
-                action={deactivateQuestionsBulkAction}
-                className="inline-flex"
-                onSubmit={() => setBulkPending(true)}
-            >
-                <input type="hidden" name="locale" value={locale} />
-                {selectedIds.map((id) => (
-                    <input
-                        key={`deactivate-${id}`}
-                        type="hidden"
-                        name={BULK_QUESTION_IDS_FIELD}
-                        value={id}
-                    />
-                ))}
-                <SubmitButton
-                    unstyled
-                    disabled={!hasSelection || controlsDisabled}
-                    pendingLabel={workingLabel}
-                    className={`${bulkToolbarLinkClassName} text-warning`}
+                <button
+                    type="button"
+                    className={bulkToolbarLinkClassName}
+                    onClick={onSelectAll}
+                    disabled={allVisibleSelected}
                 >
-                    {labels.bulkDeactivateButton}
-                </SubmitButton>
-            </form>
+                    {labels.bulkSelectAll}
+                </button>
 
-            <form
-                action={activateQuestionsBulkAction}
-                className="inline-flex"
-                onSubmit={() => setBulkPending(true)}
-            >
-                <input type="hidden" name="locale" value={locale} />
-                {selectedIds.map((id) => (
-                    <input
-                        key={`activate-${id}`}
-                        type="hidden"
-                        name={BULK_QUESTION_IDS_FIELD}
-                        value={id}
-                    />
-                ))}
-                <SubmitButton
-                    unstyled
-                    disabled={!hasSelection || controlsDisabled}
-                    pendingLabel={workingLabel}
-                    className={`${bulkToolbarLinkClassName} text-success`}
+                <button
+                    type="button"
+                    className={bulkToolbarLinkClassName}
+                    onClick={handleClear}
+                    disabled={!hasSelection}
                 >
-                    {labels.bulkActivateButton}
-                </SubmitButton>
-            </form>
+                    {labels.bulkClearSelection}
+                </button>
+            </div>
+
+            {hasSelection ? (
+                showMutations ? (
+                    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
+                        {capabilities.canDeactivate ||
+                        capabilities.canActivate ? (
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                <span className={bulkGroupLabelClassName}>
+                                    {labels.bulkGroupVisibility}
+                                </span>
+                                <BulkActionForm
+                                    action={deactivateQuestionsBulkAction}
+                                    locale={locale}
+                                    questionIds={deactivateIds}
+                                    disabled={bulkPending}
+                                    pendingLabel={workingLabel}
+                                    className={`${bulkToolbarLinkClassName} text-warning`}
+                                    onSubmit={markPending}
+                                >
+                                    {labels.bulkDeactivateButton}
+                                </BulkActionForm>
+                                <BulkActionForm
+                                    action={activateQuestionsBulkAction}
+                                    locale={locale}
+                                    questionIds={activateIds}
+                                    disabled={bulkPending}
+                                    pendingLabel={workingLabel}
+                                    className={`${bulkToolbarLinkClassName} text-success`}
+                                    onSubmit={markPending}
+                                >
+                                    {labels.bulkActivateButton}
+                                </BulkActionForm>
+                            </div>
+                        ) : null}
+
+                        {capabilities.canSubmitForReview ||
+                        capabilities.canPublish ? (
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                <span className={bulkGroupLabelClassName}>
+                                    {labels.bulkGroupPublication}
+                                </span>
+                                <BulkActionForm
+                                    action={
+                                        submitQuestionsForReviewBulkAction
+                                    }
+                                    locale={locale}
+                                    questionIds={submitForReviewIds}
+                                    disabled={bulkPending}
+                                    pendingLabel={workingLabel}
+                                    className={`${bulkToolbarLinkClassName} text-warning`}
+                                    onSubmit={markPending}
+                                >
+                                    {labels.bulkSubmitForReviewButton}
+                                </BulkActionForm>
+                                <BulkActionForm
+                                    action={publishQuestionsBulkAction}
+                                    locale={locale}
+                                    questionIds={publishIds}
+                                    disabled={bulkPending}
+                                    pendingLabel={workingLabel}
+                                    className={`${bulkToolbarLinkClassName} text-success`}
+                                    onSubmit={markPending}
+                                >
+                                    {labels.bulkPublishButton}
+                                </BulkActionForm>
+                            </div>
+                        ) : null}
+                    </div>
+                ) : (
+                    <p className="text-sm text-muted">
+                        {labels.bulkNoActionsForSelection}
+                    </p>
+                )
+            ) : null}
         </div>
     );
 }
@@ -736,12 +890,14 @@ export function AdminQuestionsTable({
         );
     }
 
-    const selectedList = Array.from(selectedIds);
+    const selectedEntries = entries.filter((entry) =>
+        selectedIds.has(entry.id),
+    );
 
     return (
         <div className="mt-6">
-            <BulkIsActiveToolbar
-                selectedIds={selectedList}
+            <BulkQuestionsToolbar
+                selectedEntries={selectedEntries}
                 labels={labels}
                 locale={locale}
                 workingLabel={workingLabel}

@@ -4,6 +4,8 @@ export {
     activateQuestionAction,
     deactivateQuestionsBulkAction,
     activateQuestionsBulkAction,
+    submitQuestionsForReviewBulkAction,
+    publishQuestionsBulkAction,
     deleteQuestionAction,
     publishQuestionAction,
     submitQuestionForReviewAction,

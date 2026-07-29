@@ -1,3 +1,11 @@
+export {
+    getBulkToolbarCapabilities,
+    hasBulkMutationActions,
+} from './bulk-toolbar-capabilities';
+export type {
+    BulkToolbarCapabilities,
+    BulkToolbarEntry,
+} from './bulk-toolbar-capabilities';
 export { ADMIN_USER_RESULT_HISTORY_LIMIT } from './constants';
 export { mapAdminQuestions } from './map-admin-questions';
 export { mapAdminQuestionDetail } from './map-admin-question-detail';
