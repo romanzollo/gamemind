@@ -161,6 +161,7 @@ async function insertQuizSessionWithSnapshotData(
                 "questionCount",
                 "sessionLocale",
                 "snapshotData",
+                "dailyChallengeId",
                 "startedAt"
             )
             VALUES (
@@ -171,6 +172,7 @@ async function insertQuizSessionWithSnapshotData(
                 $5,
                 $6::"ContentLocale",
                 $7::jsonb,
+                $8,
                 NOW()
             )
         `,
@@ -182,6 +184,7 @@ async function insertQuizSessionWithSnapshotData(
             input.questionCount,
             input.sessionLocale,
             JSON.stringify(snapshotData),
+            input.dailyChallengeId ?? null,
         ],
     );
 }

@@ -468,6 +468,65 @@ export async function loadRandomSnapshotBundleWithPgClient(
     return groupBilingualSnapshotBundleRows(result.rows, locale);
 }
 
+/**
+ * Bilingual snapshot bundle for a frozen id list (Daily Challenge).
+ * Порядок = порядок `questionIds`. Без isActive/PUBLISHED фильтра:
+ * freeze дня важнее поздней деактивации (иначе второй игрок дня сломается).
+ */
+export async function loadSnapshotBundleByQuestionIdsWithPgClient(
+    client: Client,
+    questionIds: string[],
+    locale: Locale,
+): Promise<QuestionSnapshotBundleItem[]> {
+    if (questionIds.length === 0) {
+        return [];
+    }
+
+    const result = await client.query<SnapshotBilingualDisplayTextRow>(
+        `
+                WITH ordered_ids AS (
+                    SELECT id, ord::int - 1 AS pick_position
+                    FROM unnest($1::text[]) WITH ORDINALITY AS t(id, ord)
+                )
+                SELECT
+                    q."id" AS question_id,
+                    q."difficulty"::text AS difficulty,
+                    q."type"::text AS question_type,
+                    ${RESOLVED_QUESTION_TEXT_RU_SQL} AS question_text_ru,
+                    ${RESOLVED_QUESTION_TEXT_EN_SQL} AS question_text_en,
+                    ${PROMPT_IMAGE_URL_SQL} AS prompt_image_url,
+                    ao."id" AS option_id,
+                    ${RESOLVED_OPTION_TEXT_RU_SQL} AS option_text_ru,
+                    ${RESOLVED_OPTION_TEXT_EN_SQL} AS option_text_en,
+                    ao."isCorrect" AS is_correct
+                FROM ordered_ids oi
+                INNER JOIN "Question" q
+                    ON q."id" = oi.id
+                INNER JOIN "AnswerOption" ao
+                    ON ao."questionId" = q."id"
+                ${BILINGUAL_QUESTION_TRANSLATION_JOINS_SQL}
+                ${BILINGUAL_OPTION_TRANSLATION_JOINS_SQL}
+                ORDER BY oi.pick_position, ao."order" ASC
+            `,
+        [questionIds],
+    );
+
+    return groupBilingualSnapshotBundleRows(result.rows, locale);
+}
+
+async function loadSnapshotBundleByQuestionIdsWithDirectPg(
+    questionIds: string[],
+    locale: Locale,
+): Promise<QuestionSnapshotBundleItem[]> {
+    return withDirectPgClient((client) =>
+        loadSnapshotBundleByQuestionIdsWithPgClient(
+            client,
+            questionIds,
+            locale,
+        ),
+    );
+}
+
 async function loadRandomSnapshotBundleWithDirectPg(
     difficulty: Difficulty,
     limit: number,
@@ -513,6 +572,17 @@ export const questionQuizPickMethods = {
         locale: Locale,
     ): Promise<QuestionSnapshotBundleItem[]> {
         return loadRandomSnapshotBundleWithDirectPg(difficulty, limit, locale);
+    },
+
+    /**
+     * Bundle по фиксированному списку id (Daily Challenge freeze).
+     * Порядок вопросов сохраняется; варианты в action всё ещё shuffle.
+     */
+    pickSnapshotBundleByQuestionIds(
+        questionIds: string[],
+        locale: Locale,
+    ): Promise<QuestionSnapshotBundleItem[]> {
+        return loadSnapshotBundleByQuestionIdsWithDirectPg(questionIds, locale);
     },
 
     async findSnapshotDisplayTextsByCandidates(

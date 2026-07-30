@@ -14,6 +14,7 @@ import {
 import {
     loadLocalizedTextsByQuestionIds,
     loadRandomSnapshotBundleWithPgClient,
+    loadSnapshotBundleByQuestionIdsWithPgClient,
     questionQuizPickMethods,
 } from '@/entities/question/question-quiz-pick.repository';
 
@@ -33,6 +34,7 @@ export { warmAdminListConnection };
 export {
     loadLocalizedTextsByQuestionIds,
     loadRandomSnapshotBundleWithPgClient,
+    loadSnapshotBundleByQuestionIdsWithPgClient,
 };
 
 export const questionRepository = {

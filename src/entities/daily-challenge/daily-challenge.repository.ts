@@ -29,16 +29,29 @@ type DailyChallengeRow = {
     question_ids: unknown;
 };
 
+/**
+ * DATE из Postgres → `YYYY-MM-DD`.
+ * node-pg на Windows часто отдаёт DATE как Date на *локальной* полуночи
+ * (не UTC) — getUTC* тогда сдвигает день назад. Различаем оба варианта.
+ */
 function toDateKey(value: Date | string): string {
     if (typeof value === 'string') {
-        // pg иногда отдаёт DATE как 'YYYY-MM-DD'
         return value.slice(0, 10);
     }
 
-    // node-pg Date для DATE = UTC midnight календарного дня
-    const year = value.getUTCFullYear();
-    const month = String(value.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(value.getUTCDate()).padStart(2, '0');
+    const isUtcMidnight =
+        value.getUTCHours() === 0 &&
+        value.getUTCMinutes() === 0 &&
+        value.getUTCSeconds() === 0 &&
+        value.getUTCMilliseconds() === 0;
+
+    if (isUtcMidnight) {
+        return value.toISOString().slice(0, 10);
+    }
+
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
 }
@@ -188,8 +201,93 @@ async function createOrGetExisting(
     };
 }
 
+type DailyAttemptRow = {
+    session_id: string;
+    status: 'IN_PROGRESS' | 'COMPLETED' | 'ABANDONED';
+    score: number | null;
+    total_questions: number | null;
+    correct_count: number | null;
+};
+
+export type DailyChallengeAttempt =
+    | {
+          kind: 'in_progress';
+          sessionId: string;
+      }
+    | {
+          kind: 'completed';
+          sessionId: string;
+          score: number;
+          totalQuestions: number;
+          correctCount: number;
+      }
+    | {
+          kind: 'other';
+          sessionId: string;
+          status: 'ABANDONED';
+      };
+
+/**
+ * Одна попытка пользователя на челлендж (UNIQUE userId+dailyChallengeId).
+ * Нужна для resume / redirect на result / блокировки второго старта.
+ */
+async function findAttemptByUserAndChallenge(
+    userId: string,
+    dailyChallengeId: string,
+): Promise<DailyChallengeAttempt | null> {
+    const result = await withDirectPgClient((client) =>
+        client.query<DailyAttemptRow>(
+            `
+                SELECT
+                    s."id" AS session_id,
+                    s."status"::text AS status,
+                    r."score" AS score,
+                    r."totalQuestions" AS total_questions,
+                    r."correctCount" AS correct_count
+                FROM "QuizSession" s
+                LEFT JOIN "QuizResult" r
+                    ON r."sessionId" = s."id"
+                WHERE s."userId" = $1
+                  AND s."dailyChallengeId" = $2
+                LIMIT 1
+            `,
+            [userId, dailyChallengeId],
+        ),
+    );
+
+    const row = result.rows[0];
+
+    if (!row) {
+        return null;
+    }
+
+    if (row.status === 'COMPLETED') {
+        return {
+            kind: 'completed',
+            sessionId: row.session_id,
+            score: row.score ?? 0,
+            totalQuestions: row.total_questions ?? 0,
+            correctCount: row.correct_count ?? 0,
+        };
+    }
+
+    if (row.status === 'IN_PROGRESS') {
+        return {
+            kind: 'in_progress',
+            sessionId: row.session_id,
+        };
+    }
+
+    return {
+        kind: 'other',
+        sessionId: row.session_id,
+        status: 'ABANDONED',
+    };
+}
+
 export const dailyChallengeRepository = {
     findByChallengeDate,
     findPublishedQuestionIdsByDifficulty,
     createOrGetExisting,
+    findAttemptByUserAndChallenge,
 };

@@ -37,6 +37,8 @@ export type SessionSnapshotQuestionInput = {
 export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
     sessionLocale: Locale;
     questions: SessionSnapshotQuestionInput[];
+    /** NULL/omit = classic; set = Daily Challenge attempt (UNIQUE per user). */
+    dailyChallengeId?: string | null;
 };
 
 /** Публичный вопрос из snapshot для UI квиза (без isCorrect). */
