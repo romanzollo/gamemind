@@ -285,9 +285,65 @@ async function findAttemptByUserAndChallenge(
     };
 }
 
+type DailyScoreRow = {
+    user_id: string;
+    username: string;
+    score: number;
+    total_questions: number;
+    correct_count: number;
+    completed_at: Date;
+};
+
+/**
+ * Рейтинг одного дня: одна попытка на user → без DISTINCT ON.
+ * Только завершённые сессии с этим dailyChallengeId.
+ */
+async function findScoresByChallengeId(
+    dailyChallengeId: string,
+    limit: number,
+) {
+    const result = await withDirectPgClient((client) =>
+        client.query<DailyScoreRow>(
+            `
+                SELECT
+                    u."id" AS user_id,
+                    u."username" AS username,
+                    r."score" AS score,
+                    r."totalQuestions" AS total_questions,
+                    r."correctCount" AS correct_count,
+                    r."completedAt" AS completed_at
+                FROM "QuizResult" AS r
+                INNER JOIN "QuizSession" AS s
+                    ON s."id" = r."sessionId"
+                INNER JOIN "User" AS u
+                    ON u."id" = r."userId"
+                WHERE s."dailyChallengeId" = $1
+                ORDER BY
+                    r."score" DESC,
+                    r."completedAt" ASC
+                LIMIT $2
+            `,
+            [dailyChallengeId, limit],
+        ),
+    );
+
+    return result.rows.map((row) => ({
+        userId: row.user_id,
+        score: row.score,
+        totalQuestions: row.total_questions,
+        correctCount: row.correct_count,
+        completedAt: row.completed_at,
+        user: {
+            id: row.user_id,
+            username: row.username,
+        },
+    }));
+}
+
 export const dailyChallengeRepository = {
     findByChallengeDate,
     findPublishedQuestionIdsByDifficulty,
     createOrGetExisting,
     findAttemptByUserAndChallenge,
+    findScoresByChallengeId,
 };

@@ -63,6 +63,10 @@ export type Dictionary = {
         completedScore: string;
         /** Eyebrow над classic setup на /quiz */
         classicEyebrow: string;
+        /** Заголовок компактного рейтинга дня */
+        boardTitle: string;
+        /** Пустой рейтинг (день есть, ещё никто не финишировал) */
+        boardEmpty: string;
     };
     auth: {
         loginTitle: string;

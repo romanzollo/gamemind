@@ -58,6 +58,8 @@ export const ruDictionary: Dictionary = {
             'Сегодня челлендж недоступен — в пуле мало опубликованных вопросов.',
         completedScore: 'Очки: {score} · {correct}/{total}',
         classicEyebrow: 'Обычный квиз',
+        boardTitle: 'Рейтинг сегодня',
+        boardEmpty: 'Пока никого нет — стань первым.',
     },
     auth: {
         loginTitle: 'Вход',

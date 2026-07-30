@@ -58,6 +58,8 @@ export const enDictionary = {
             'Today’s challenge is unavailable — not enough published questions in the pool.',
         completedScore: 'Points: {score} · {correct}/{total}',
         classicEyebrow: 'Classic quiz',
+        boardTitle: 'Today’s ranking',
+        boardEmpty: 'No finishes yet — be the first.',
     },
     auth: {
         loginTitle: 'Log in',

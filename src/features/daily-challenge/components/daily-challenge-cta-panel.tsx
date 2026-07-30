@@ -25,22 +25,25 @@ type DailyChallengeCtaPanelProps = {
     locale: Locale;
     status: DailyChallengePlayerStatus;
     dictionary: Dictionary;
+    /**
+     * true = без своей рамки (родитель `DailyChallengeCta` уже surface),
+     * чтобы board мог жить в том же panel.
+     */
+    embedded?: boolean;
 };
 
 export function DailyChallengeCtaPanel({
     locale,
     status,
     dictionary,
+    embedded = false,
 }: DailyChallengeCtaPanelProps) {
     const labels = dictionary.dailyChallenge;
     const [state, formAction] = useActionState(startDailyChallengeAction, {});
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
 
-    return (
-        <section
-            aria-labelledby="daily-challenge-heading"
-            className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
-        >
+    const body = (
+        <>
             <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
                 {labels.eyebrow}
             </p>
@@ -137,6 +140,21 @@ export function DailyChallengeCtaPanel({
             {errorMessage ? (
                 <InlineAlert className="mt-3">{errorMessage}</InlineAlert>
             ) : null}
+        </>
+    );
+
+    if (embedded) {
+        return (
+            <div aria-labelledby="daily-challenge-heading">{body}</div>
+        );
+    }
+
+    return (
+        <section
+            aria-labelledby="daily-challenge-heading"
+            className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
+        >
+            {body}
         </section>
     );
 }
