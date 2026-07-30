@@ -24,7 +24,7 @@ const labelClassName =
     'text-xs font-medium uppercase leading-snug tracking-[0.06em] text-muted';
 
 const valueClassName =
-    'mt-1.5 block font-display text-xl font-semibold tabular-nums tracking-wide text-foreground sm:text-2xl';
+    'mt-1 block font-display text-lg font-semibold tabular-nums tracking-wide text-foreground sm:text-xl';
 
 const cellClassName = 'min-w-0';
 
@@ -64,7 +64,7 @@ export function ProfileStatsSummary({
 
     return (
         <dl
-            className="mt-4 grid grid-cols-2 gap-x-4 gap-y-5 border border-border border-l-4 border-l-primary bg-surface px-3.5 py-4 sm:gap-x-6 sm:px-5 sm:py-5 lg:grid-cols-4 lg:gap-x-5"
+            className="mt-3 grid grid-cols-2 gap-x-3 gap-y-4 border border-border border-l-4 border-l-primary bg-surface px-3 py-3.5 sm:gap-x-5 sm:px-4 sm:py-4 lg:grid-cols-4 lg:gap-x-4"
         >
             <div className={cellClassName}>
                 <dt className={labelClassName}>

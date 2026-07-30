@@ -114,6 +114,7 @@ export const ruDictionary: Dictionary = {
         statsEmpty: 'Пока нет статистики — сыграйте первую викторину.',
         statsLoadFailed:
             'Не удалось загрузить сводку. Попробуйте обновить страницу.',
+        sectionSettings: 'Настройки',
         changeUsernameTitle: 'Смена имени пользователя',
         newUsername: 'Новое имя пользователя',
         changeUsernameSubmit: 'Сменить имя',
@@ -393,5 +394,35 @@ export const ruDictionary: Dictionary = {
         filterPeriodAll: 'Всё время',
         filterPeriodWeek: 'Неделя',
         filterPeriodMonth: 'Месяц',
+    },
+    achievements: {
+        sectionTitle: 'Достижения',
+        loadFailed:
+            'Не удалось загрузить достижения. Попробуйте обновить страницу.',
+        locked: 'Ещё не открыто',
+        unlockedOn: 'Открыто {date}',
+        progressCount: '{unlocked} / {total}',
+        items: {
+            FIRST_QUIZ: {
+                title: 'Первый квиз',
+                description: 'Завершите любую викторину.',
+            },
+            QUIZZES_5: {
+                title: 'Разгон',
+                description: 'Завершите 5 викторин.',
+            },
+            PERFECT_QUIZ: {
+                title: 'Идеальный зачёт',
+                description: 'Ответьте верно на все вопросы в одном квизе.',
+            },
+            DAILY_COMPLETE: {
+                title: 'День зачтён',
+                description: 'Пройдите ежедневный челлендж.',
+            },
+            HARD_QUIZ: {
+                title: 'На сложном',
+                description: 'Завершите квиз на сложности Hard.',
+            },
+        },
     },
 };

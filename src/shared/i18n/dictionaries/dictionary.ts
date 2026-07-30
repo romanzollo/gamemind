@@ -120,6 +120,8 @@ export type Dictionary = {
         /** Когда QuizResult у пользователя ещё нет. */
         statsEmpty: string;
         statsLoadFailed: string;
+        /** Сворачиваемый блок: аватар, username, пароль. */
+        sectionSettings: string;
         changeUsernameTitle: string;
         newUsername: string;
         changeUsernameSubmit: string;
@@ -403,5 +405,25 @@ export type Dictionary = {
         filterPeriodWeek: string;
         /** Скользящие 30×24ч */
         filterPeriodMonth: string;
+    };
+    /**
+     * Achievements MVP на профиле.
+     * `items` ключи = AchievementCode (стабильные slug из каталога).
+     */
+    achievements: {
+        sectionTitle: string;
+        loadFailed: string;
+        locked: string;
+        /** Шаблон с `{date}` — дата уже локализована в UI. */
+        unlockedOn: string;
+        /** Счётчик в шапке: `{unlocked}` / `{total}`. */
+        progressCount: string;
+        items: {
+            FIRST_QUIZ: { title: string; description: string };
+            QUIZZES_5: { title: string; description: string };
+            PERFECT_QUIZ: { title: string; description: string };
+            DAILY_COMPLETE: { title: string; description: string };
+            HARD_QUIZ: { title: string; description: string };
+        };
     };
 };

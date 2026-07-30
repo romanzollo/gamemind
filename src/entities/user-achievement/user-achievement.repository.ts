@@ -27,8 +27,9 @@ type EvalFactsRow = {
     has_hard: boolean | null;
 };
 
-type UnlockedCodeRow = {
+type UnlockRow = {
     code: string;
+    unlocked_at: Date;
 };
 
 export const userAchievementRepository = {
@@ -75,12 +76,16 @@ export const userAchievementRepository = {
         };
     },
 
-    /** Уже сохранённые коды unlock (для diff с evaluate). */
-    async findUnlockedCodesByUserId(userId: string): Promise<string[]> {
+    /**
+     * Unlock-строки с датой — для UI профиля и diff award.
+     */
+    async findUnlockRowsByUserId(
+        userId: string,
+    ): Promise<Array<{ code: string; unlockedAt: Date }>> {
         const result = await withDirectPgClient((client) =>
-            client.query<UnlockedCodeRow>(
+            client.query<UnlockRow>(
                 `
-                    SELECT code
+                    SELECT code, "unlockedAt" AS unlocked_at
                     FROM "UserAchievement"
                     WHERE "userId" = $1
                 `,
@@ -88,7 +93,17 @@ export const userAchievementRepository = {
             ),
         );
 
-        return result.rows.map((row) => row.code);
+        return result.rows.map((row) => ({
+            code: row.code,
+            unlockedAt: row.unlocked_at,
+        }));
+    },
+
+    /** Уже сохранённые коды unlock (для diff с evaluate). */
+    async findUnlockedCodesByUserId(userId: string): Promise<string[]> {
+        const rows =
+            await userAchievementRepository.findUnlockRowsByUserId(userId);
+        return rows.map((row) => row.code);
     },
 
     /**

@@ -111,6 +111,7 @@ export const enDictionary = {
         statsLastPlayed: 'Last played',
         statsEmpty: 'No stats yet — play your first quiz.',
         statsLoadFailed: 'Could not load summary. Try refreshing the page.',
+        sectionSettings: 'Settings',
         changeUsernameTitle: 'Change username',
         newUsername: 'New username',
         changeUsernameSubmit: 'Change username',
@@ -380,5 +381,34 @@ export const enDictionary = {
         filterPeriodAll: 'All time',
         filterPeriodWeek: 'Week',
         filterPeriodMonth: 'Month',
+    },
+    achievements: {
+        sectionTitle: 'Achievements',
+        loadFailed: 'Could not load achievements. Try refreshing the page.',
+        locked: 'Locked',
+        unlockedOn: 'Unlocked {date}',
+        progressCount: '{unlocked} / {total}',
+        items: {
+            FIRST_QUIZ: {
+                title: 'First quiz',
+                description: 'Complete any quiz.',
+            },
+            QUIZZES_5: {
+                title: 'Getting started',
+                description: 'Complete 5 quizzes.',
+            },
+            PERFECT_QUIZ: {
+                title: 'Perfect run',
+                description: 'Answer every question correctly in one quiz.',
+            },
+            DAILY_COMPLETE: {
+                title: 'Daily done',
+                description: 'Finish today’s daily challenge.',
+            },
+            HARD_QUIZ: {
+                title: 'Hard mode',
+                description: 'Complete a Hard difficulty quiz.',
+            },
+        },
     },
 } satisfies Dictionary;

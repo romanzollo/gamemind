@@ -94,7 +94,7 @@ export function ProfileResultHistory({
     }
 
     return (
-        <div className="mt-4">
+        <div>
             {/*
               Phone / узкий tablet (&lt;640px): scoreboard-stack.
               640px+: таблица (как раньше, но с difficulty chip).
