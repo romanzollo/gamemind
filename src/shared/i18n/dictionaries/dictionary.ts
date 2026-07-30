@@ -42,6 +42,28 @@ export type Dictionary = {
         description: string;
         cta: string;
     };
+    /** Ежедневный челлендж — CTA на home / quiz setup (Scoreboard Editorial). */
+    dailyChallenge: {
+        /** Caps eyebrow над заголовком */
+        eyebrow: string;
+        title: string;
+        description: string;
+        /** Строка мета: сложность × число вопросов, одна попытка */
+        meta: string;
+        startButton: string;
+        continueButton: string;
+        viewResultButton: string;
+        loginPrompt: string;
+        loginLink: string;
+        unavailablePool: string;
+        /**
+         * Плейсхолдеры: {score}, {correct}, {total}.
+         * Пример: «Очки: {score} · {correct}/{total}»
+         */
+        completedScore: string;
+        /** Eyebrow над classic setup на /quiz */
+        classicEyebrow: string;
+    };
     auth: {
         loginTitle: string;
         registerTitle: string;

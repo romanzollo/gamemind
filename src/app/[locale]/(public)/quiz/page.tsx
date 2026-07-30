@@ -1,3 +1,4 @@
+import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
 import { QuizSetupForm } from '@/features/quiz/components/QuizSetupForm';
 import { getDictionary, isLocale } from '@/shared/i18n';
 
@@ -21,6 +22,16 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
                     {dictionary.quiz.setupDescription}
                 </p>
             </header>
+
+            <DailyChallengeCta
+                locale={safeLocale}
+                dictionary={dictionary}
+                className="mt-5 sm:mt-6"
+            />
+
+            <p className="mt-6 font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
+                {dictionary.dailyChallenge.classicEyebrow}
+            </p>
 
             <QuizSetupForm locale={safeLocale} dictionary={dictionary} />
         </main>

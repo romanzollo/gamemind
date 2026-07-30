@@ -1,3 +1,4 @@
+import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
 import { getDictionary, isLocale } from '@/shared/i18n';
 import { buttonClassName, PendingLink } from '@/shared/ui';
 
@@ -42,6 +43,13 @@ export default async function HomePage({ params }: HomePageProps) {
                         {dictionary.home.cta}
                     </PendingLink>
                 </div>
+
+                {/* Вторичный блок: не спорит с brand hero GameMind */}
+                <DailyChallengeCta
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    className="mt-10 max-w-lg"
+                />
             </div>
         </main>
     );

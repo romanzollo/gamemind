@@ -43,6 +43,22 @@ export const ruDictionary: Dictionary = {
             'Быстрый квиз по видеоиграм — от классики до новинок. Отвечай и смотри результат.',
         cta: 'Начать квиз',
     },
+    dailyChallenge: {
+        eyebrow: 'Ежедневный челлендж',
+        title: 'Один набор на всех',
+        description:
+            'Одинаковые вопросы для каждого игрока сегодня. Одна попытка — потом разбор результата.',
+        meta: 'Средне · 10 вопросов · 1 попытка',
+        startButton: 'Начать челлендж',
+        continueButton: 'Продолжить',
+        viewResultButton: 'Смотреть результат',
+        loginPrompt: 'Войдите, чтобы сыграть сегодняшний челлендж.',
+        loginLink: 'Войти',
+        unavailablePool:
+            'Сегодня челлендж недоступен — в пуле мало опубликованных вопросов.',
+        completedScore: 'Очки: {score} · {correct}/{total}',
+        classicEyebrow: 'Обычный квиз',
+    },
     auth: {
         loginTitle: 'Вход',
         registerTitle: 'Регистрация',

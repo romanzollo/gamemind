@@ -29,7 +29,7 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
         <>
             <form
                 action={formAction}
-                className="mt-5 space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:mt-6 sm:p-5"
+                className="mt-2 space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:mt-3 sm:p-5"
             >
                 <input type="hidden" name="locale" value={locale} />
 

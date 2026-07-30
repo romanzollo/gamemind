@@ -43,6 +43,22 @@ export const enDictionary = {
             'A sharp bilingual quiz — from classics to new releases. Answer, score, and review.',
         cta: 'Start quiz',
     },
+    dailyChallenge: {
+        eyebrow: 'Daily challenge',
+        title: 'One set for everyone',
+        description:
+            'The same questions for every player today. One attempt — then review your result.',
+        meta: 'Medium · 10 questions · 1 attempt',
+        startButton: 'Start challenge',
+        continueButton: 'Continue',
+        viewResultButton: 'View result',
+        loginPrompt: 'Sign in to play today’s challenge.',
+        loginLink: 'Sign in',
+        unavailablePool:
+            'Today’s challenge is unavailable — not enough published questions in the pool.',
+        completedScore: 'Points: {score} · {correct}/{total}',
+        classicEyebrow: 'Classic quiz',
+    },
     auth: {
         loginTitle: 'Log in',
         registerTitle: 'Register',
