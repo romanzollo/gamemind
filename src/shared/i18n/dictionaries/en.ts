@@ -359,6 +359,8 @@ export const enDictionary = {
                 'One or more answers are invalid. Refresh the page and try again.',
             submitFailed: 'Failed to submit the result. Try again.',
             rateLimited: 'Too many attempts. Please wait a bit and try again.',
+            resultLoadFailed:
+                'Could not load the result page. Please refresh.',
         },
     },
     leaderboard: {
@@ -382,12 +384,19 @@ export const enDictionary = {
         filterPeriodWeek: 'Week',
         filterPeriodMonth: 'Month',
     },
+    notifications: {
+        successSaved: 'Saved',
+        errorGeneric: 'Something went wrong. Please try again.',
+        closeToast: 'Close notification',
+    },
     achievements: {
         sectionTitle: 'Achievements',
         loadFailed: 'Could not load achievements. Try refreshing the page.',
         locked: 'Locked',
         unlockedOn: 'Unlocked {date}',
         progressCount: '{unlocked} / {total}',
+        toastUnlocked: 'Achievement unlocked',
+        toastMoreSummary: '{count} more — see your profile',
         items: {
             FIRST_QUIZ: {
                 title: 'First quiz',

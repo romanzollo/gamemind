@@ -35,10 +35,10 @@ export async function awardAchievementsForUser(
     userId: string,
 ): Promise<AwardAchievementsResult> {
     try {
-        const [facts, unlockedCodes] = await Promise.all([
-            userAchievementRepository.findEvalFactsByUserId(userId),
-            userAchievementRepository.findUnlockedCodesByUserId(userId),
-        ]);
+        // Один TLS/client на оба SELECT — не параллелить два withDirectPgClient
+        // (Windows + next dev: wedge → timeout на следующем result GET).
+        const { facts, unlockedCodes } =
+            await userAchievementRepository.findAwardContextByUserId(userId);
 
         const earnedCodes = evaluateAchievements(facts);
         const newlyEarned = getNewlyEarnedAchievementCodes(

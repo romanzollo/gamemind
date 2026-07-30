@@ -32,6 +32,38 @@ type UnlockRow = {
     unlocked_at: Date;
 };
 
+function mapEvalFactsRow(row: EvalFactsRow | undefined): AchievementEvalFacts {
+    return {
+        quizzesCompleted: Number(row?.quizzes_completed ?? 0),
+        hasPerfectQuiz: Boolean(row?.has_perfect),
+        hasDailyCompleted: Boolean(row?.has_daily),
+        hasHardCompleted: Boolean(row?.has_hard),
+    };
+}
+
+const EVAL_FACTS_SQL = `
+    SELECT
+        COUNT(r.id)::int AS quizzes_completed,
+        COALESCE(
+            BOOL_OR(
+                r."correctCount" = r."totalQuestions"
+                AND r."totalQuestions" > 0
+            ),
+            false
+        ) AS has_perfect,
+        COALESCE(
+            BOOL_OR(s."dailyChallengeId" IS NOT NULL),
+            false
+        ) AS has_daily,
+        COALESCE(
+            BOOL_OR(s.difficulty = 'HARD'),
+            false
+        ) AS has_hard
+    FROM "QuizResult" AS r
+    INNER JOIN "QuizSession" AS s ON s.id = r."sessionId"
+    WHERE r."userId" = $1
+`;
+
 export const userAchievementRepository = {
     /**
      * Агрегаты для evaluateAchievements: один SELECT + JOIN Session.
@@ -39,41 +71,42 @@ export const userAchievementRepository = {
      */
     async findEvalFactsByUserId(userId: string): Promise<AchievementEvalFacts> {
         const result = await withDirectPgClient((client) =>
-            client.query<EvalFactsRow>(
-                `
-                    SELECT
-                        COUNT(r.id)::int AS quizzes_completed,
-                        COALESCE(
-                            BOOL_OR(
-                                r."correctCount" = r."totalQuestions"
-                                AND r."totalQuestions" > 0
-                            ),
-                            false
-                        ) AS has_perfect,
-                        COALESCE(
-                            BOOL_OR(s."dailyChallengeId" IS NOT NULL),
-                            false
-                        ) AS has_daily,
-                        COALESCE(
-                            BOOL_OR(s.difficulty = 'HARD'),
-                            false
-                        ) AS has_hard
-                    FROM "QuizResult" AS r
-                    INNER JOIN "QuizSession" AS s ON s.id = r."sessionId"
-                    WHERE r."userId" = $1
-                `,
-                [userId],
-            ),
+            client.query<EvalFactsRow>(EVAL_FACTS_SQL, [userId]),
         );
 
-        const row = result.rows[0];
+        return mapEvalFactsRow(result.rows[0]);
+    },
 
-        return {
-            quizzesCompleted: Number(row?.quizzes_completed ?? 0),
-            hasPerfectQuiz: Boolean(row?.has_perfect),
-            hasDailyCompleted: Boolean(row?.has_daily),
-            hasHardCompleted: Boolean(row?.has_hard),
-        };
+    /**
+     * Facts + уже unlock’нутые коды на ОДНОМ unpooled client.
+     *
+     * Не Promise.all двух withDirectPgClient: на Windows + next dev
+     * параллельный fresh-Client TLS к Neon клинит сокет (см. direct-pg.ts),
+     * после чего result page тоже ловит DirectPgTimeoutError.
+     */
+    async findAwardContextByUserId(userId: string): Promise<{
+        facts: AchievementEvalFacts;
+        unlockedCodes: string[];
+    }> {
+        return withDirectPgClient(async (client) => {
+            const factsResult = await client.query<EvalFactsRow>(
+                EVAL_FACTS_SQL,
+                [userId],
+            );
+            const unlockResult = await client.query<{ code: string }>(
+                `
+                    SELECT code
+                    FROM "UserAchievement"
+                    WHERE "userId" = $1
+                `,
+                [userId],
+            );
+
+            return {
+                facts: mapEvalFactsRow(factsResult.rows[0]),
+                unlockedCodes: unlockResult.rows.map((row) => row.code),
+            };
+        });
     },
 
     /**

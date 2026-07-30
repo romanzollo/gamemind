@@ -373,6 +373,8 @@ export type Dictionary = {
             invalidAnswer: string;
             submitFailed: string;
             rateLimited: string;
+            /** Neon/timeout при загрузке result — не путать с submitFailed. */
+            resultLoadFailed: string;
         };
     };
     leaderboard: {
@@ -407,6 +409,17 @@ export type Dictionary = {
         filterPeriodMonth: string;
     };
     /**
+     * Ephemeral toasts (Sonner). Сообщения для helpers; call site может
+     * передать свой текст — эти ключи = общие дефолты (profile/admin later).
+     * Canon: DECISIONS → Toast Notifications MVP.
+     */
+    notifications: {
+        successSaved: string;
+        errorGeneric: string;
+        /** aria-label кнопки закрытия toast. */
+        closeToast: string;
+    };
+    /**
      * Achievements MVP на профиле.
      * `items` ключи = AchievementCode (стабильные slug из каталога).
      */
@@ -418,6 +431,13 @@ export type Dictionary = {
         unlockedOn: string;
         /** Счётчик в шапке: `{unlocked}` / `{total}`. */
         progressCount: string;
+        /** Подзаголовок unlock-toast (title = имя бейджа). */
+        toastUnlocked: string;
+        /**
+         * Когда unlock’ов больше лимита отдельных тостов.
+         * `{count}` = сколько ещё (не показаны по одному).
+         */
+        toastMoreSummary: string;
         items: {
             FIRST_QUIZ: { title: string; description: string };
             QUIZZES_5: { title: string; description: string };

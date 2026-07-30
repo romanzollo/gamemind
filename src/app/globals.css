@@ -193,6 +193,23 @@ html {
 }
 
 /*
+ * Sonner → Scoreboard Editorial.
+ * Close справа (дефолт Sonner — слева, выглядит «сломано»).
+ * Description: Sonner хардкодит #3f3f3f / #e8e8e8 — перебиваем токеном muted.
+ * Цвета фона toast уже через --normal-bg = var(--surface) в AppToaster.
+ */
+.gm-toaster [data-sonner-toast][data-styled='true'] [data-close-button] {
+    left: unset;
+    right: 0;
+    transform: translate(35%, -35%);
+}
+
+.gm-toaster [data-sonner-toast][data-styled='true'] [data-description],
+.gm-toast-description {
+    color: var(--muted) !important;
+}
+
+/*
  * Уважаем prefers-reduced-motion:
  * — без плавного скролла;
  * — без бесконечного pulse (skeleton / pending cue);

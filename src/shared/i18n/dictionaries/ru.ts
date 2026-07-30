@@ -372,6 +372,8 @@ export const ruDictionary: Dictionary = {
             submitFailed: 'Не удалось сохранить результат. Попробуй ещё раз.',
             rateLimited:
                 'Слишком много попыток. Подождите немного и попробуйте снова.',
+            resultLoadFailed:
+                'Не удалось загрузить страницу результата. Обновите страницу.',
         },
     },
     leaderboard: {
@@ -395,6 +397,11 @@ export const ruDictionary: Dictionary = {
         filterPeriodWeek: 'Неделя',
         filterPeriodMonth: 'Месяц',
     },
+    notifications: {
+        successSaved: 'Сохранено',
+        errorGeneric: 'Что-то пошло не так. Попробуйте ещё раз.',
+        closeToast: 'Закрыть уведомление',
+    },
     achievements: {
         sectionTitle: 'Достижения',
         loadFailed:
@@ -402,6 +409,8 @@ export const ruDictionary: Dictionary = {
         locked: 'Ещё не открыто',
         unlockedOn: 'Открыто {date}',
         progressCount: '{unlocked} / {total}',
+        toastUnlocked: 'Достижение открыто',
+        toastMoreSummary: 'Ещё {count} — смотрите в профиле',
         items: {
             FIRST_QUIZ: {
                 title: 'Первый квиз',

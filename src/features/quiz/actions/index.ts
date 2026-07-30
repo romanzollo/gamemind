@@ -8,6 +8,7 @@ import {
     QuizSessionStartError,
 } from '@/entities/quiz-session/quiz-session.repository';
 import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
+import { buildUnlockedQuerySuffix } from '@/features/achievements/lib/parse-unlocked-query';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -243,8 +244,11 @@ export async function submitQuizAction(
 
     // Soft-fail award после QuizResult (новый или уже существующий).
     // Не внутри completeWithResult — отдельный путь; scoring не меняем.
-    await awardAchievementsForUser(authSession.user.id);
+    // Короткая пауза: write-client teardown + следующий TLS (Windows/Neon).
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    // `awardedCodes` → flash query на result (display-only; БД = source of truth).
+    const award = await awardAchievementsForUser(authSession.user.id);
+    const unlockQuery = buildUnlockedQuerySuffix(award.awardedCodes);
 
-    // перенаправляем на страницу с результатами
-    redirect(`/${locale}/result/${sessionId}`);
+    redirect(`/${locale}/result/${sessionId}${unlockQuery}`);
 }

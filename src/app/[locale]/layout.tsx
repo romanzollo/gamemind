@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { AppSiteHeader } from '@/features/auth/components/AppSiteHeader';
 import { auth } from '@/lib/auth';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
+import { AppToaster } from '@/shared/ui/app-toaster';
 
 import '../globals.css';
 
@@ -93,6 +94,8 @@ export default async function LocaleLayout({
                 <div id="main-content" tabIndex={-1}>
                     {children}
                 </div>
+                {/* Ephemeral toasts (achievements / later form feedback). Client island. */}
+                <AppToaster theme={theme} />
             </body>
         </html>
     );
