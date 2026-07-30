@@ -106,7 +106,7 @@ export const enDictionary = {
         historyLoadFailed: 'Could not load history. Try refreshing the page.',
         statsTitle: 'Summary',
         statsQuizzesCompleted: 'Played',
-        statsBestScore: 'Best score',
+        statsBestScore: 'Record',
         statsAverageAccuracy: 'Accuracy',
         statsLastPlayed: 'Last played',
         statsEmpty: 'No stats yet — play your first quiz.',

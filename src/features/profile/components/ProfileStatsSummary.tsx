@@ -9,8 +9,13 @@ import type { ProfileStats } from '../types/profile-stats';
  * Presentation only — данные уже посчитаны на сервере (`findStatsByUserId`).
  * Заголовок секции рендерит page.tsx (как у истории).
  *
- * Вёрстка: 2×2 до lg (на 320–768px 4 колонки ломают подписи/дату),
- * lg+ — ряд из 4; акцент border-l-primary как на admin hub.
+ * Вёрстка (canon):
+ * - default/sm/md: компактный grid 2×2 на всю ширину колонки, label над value;
+ * - lg+: один ряд из 4; дата-колонка шире (`minmax`);
+ * - все value в одном ритме (`font-display` + tabular-nums) — дата не mono.
+ * - Не `max-w-*` на mid: узкая карточка слева + пустота справа хуже полного 2×2.
+ *
+ * Не list-rows «подпись | значение» на всю ширину — это регресс на mid-width.
  */
 
 type ProfileStatsSummaryProps = {
@@ -20,13 +25,16 @@ type ProfileStatsSummaryProps = {
     labels: Dictionary['profile'];
 };
 
+/** Ячейка: колонка label→value; min-w-0 чтобы длинная дата не раздувала fr. */
+const cellClassName = 'flex min-w-0 flex-col gap-0.5';
+
+/** Короткие labels (Рекорд / Record) — без min-h, иначе пустота над цифрой. */
 const labelClassName =
-    'text-xs font-medium uppercase leading-snug tracking-[0.06em] text-muted';
+    'text-[0.65rem] font-medium uppercase leading-none tracking-[0.04em] text-muted sm:text-[0.6875rem] lg:text-xs lg:leading-tight';
 
+/** Единый value-ритм для чисел и даты — без отдельного mono для lastPlayed. */
 const valueClassName =
-    'mt-1 block font-display text-lg font-semibold tabular-nums tracking-wide text-foreground sm:text-xl';
-
-const cellClassName = 'min-w-0';
+    'font-display text-[0.9375rem] font-semibold tabular-nums tracking-wide text-foreground sm:text-base lg:text-xl';
 
 export function ProfileStatsSummary({
     stats,
@@ -35,14 +43,14 @@ export function ProfileStatsSummary({
 }: ProfileStatsSummaryProps) {
     if (stats === null) {
         return (
-            <InlineAlert className="mt-4" tone="warning" role="status">
+            <InlineAlert className="mt-3" tone="warning" role="status">
                 {labels.statsLoadFailed}
             </InlineAlert>
         );
     }
 
     if (stats.quizzesCompleted === 0) {
-        return <EmptyState className="mt-4" title={labels.statsEmpty} />;
+        return <EmptyState className="mt-3" title={labels.statsEmpty} />;
     }
 
     const lastPlayedText =
@@ -62,38 +70,57 @@ export function ProfileStatsSummary({
     const bestScoreText =
         stats.bestScore === null ? '—' : String(stats.bestScore);
 
+    const rows = [
+        {
+            key: 'played',
+            label: labels.statsQuizzesCompleted,
+            value: String(stats.quizzesCompleted),
+            dateTime: null as string | null,
+        },
+        {
+            key: 'best',
+            label: labels.statsBestScore,
+            value: bestScoreText,
+            dateTime: null,
+        },
+        {
+            key: 'accuracy',
+            label: labels.statsAverageAccuracy,
+            value: accuracyText,
+            dateTime: null,
+        },
+        {
+            key: 'last',
+            label: labels.statsLastPlayed,
+            value: lastPlayedText,
+            dateTime: stats.lastPlayedAt?.toISOString() ?? null,
+        },
+    ] as const;
+
     return (
         <dl
-            className="mt-3 grid grid-cols-2 gap-x-3 gap-y-4 border border-border border-l-4 border-l-primary bg-surface px-3 py-3.5 sm:gap-x-5 sm:px-4 sm:py-4 lg:grid-cols-4 lg:gap-x-4"
+            className={[
+                'mt-3 w-full overflow-hidden border border-border border-l-4 border-l-primary bg-surface',
+                /* 2×2 до lg — на всю ширину (как identity / achievements). */
+                'grid grid-cols-2 gap-x-4 gap-y-2.5 px-3 py-2 sm:gap-x-6 sm:px-3.5 sm:py-2.5 md:gap-x-8',
+                /* lg: 4 в ряд; дата чуть шире. */
+                'lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-x-5 lg:gap-y-0 lg:px-5 lg:py-3.5',
+            ].join(' ')}
         >
-            <div className={cellClassName}>
-                <dt className={labelClassName}>
-                    {labels.statsQuizzesCompleted}
-                </dt>
-                <dd className={valueClassName}>{stats.quizzesCompleted}</dd>
-            </div>
-            <div className={cellClassName}>
-                <dt className={labelClassName}>{labels.statsBestScore}</dt>
-                <dd className={valueClassName}>{bestScoreText}</dd>
-            </div>
-            <div className={cellClassName}>
-                <dt className={labelClassName}>
-                    {labels.statsAverageAccuracy}
-                </dt>
-                <dd className={valueClassName}>{accuracyText}</dd>
-            </div>
-            <div className={cellClassName}>
-                <dt className={labelClassName}>{labels.statsLastPlayed}</dt>
-                <dd className="mt-1.5 block font-mono text-base font-medium tabular-nums tracking-tight text-foreground sm:text-lg">
-                    {stats.lastPlayedAt ? (
-                        <time dateTime={stats.lastPlayedAt.toISOString()}>
-                            {lastPlayedText}
-                        </time>
-                    ) : (
-                        lastPlayedText
-                    )}
-                </dd>
-            </div>
+            {rows.map((row) => (
+                <div key={row.key} className={cellClassName}>
+                    <dt className={labelClassName}>{row.label}</dt>
+                    <dd
+                        className={`${valueClassName}${row.key === 'last' ? ' whitespace-nowrap' : ''}`}
+                    >
+                        {row.dateTime ? (
+                            <time dateTime={row.dateTime}>{row.value}</time>
+                        ) : (
+                            row.value
+                        )}
+                    </dd>
+                </div>
+            ))}
         </dl>
     );
 }

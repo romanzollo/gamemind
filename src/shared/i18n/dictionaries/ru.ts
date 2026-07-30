@@ -108,7 +108,7 @@ export const ruDictionary: Dictionary = {
             'Не удалось загрузить историю. Попробуйте обновить страницу.',
         statsTitle: 'Сводка',
         statsQuizzesCompleted: 'Сыграно',
-        statsBestScore: 'Лучший счёт',
+        statsBestScore: 'Рекорд',
         statsAverageAccuracy: 'Точность',
         statsLastPlayed: 'Последняя',
         statsEmpty: 'Пока нет статистики — сыграйте первую викторину.',
