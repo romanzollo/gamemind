@@ -1,8 +1,19 @@
+/**
+ * Smoke: DailyChallenge schema on a chosen DB.
+ * Usage:
+ *   node scripts/smoke-daily-challenge-schema.cjs
+ *   node scripts/smoke-daily-challenge-schema.cjs PROD_DATABASE_URL_UNPOOLED
+ */
 const { Client } = require('pg');
 const fs = require('fs');
 const path = require('path');
 
 function readEnv(name) {
+    const fromProcess = process.env[name];
+    if (typeof fromProcess === 'string' && fromProcess.trim() !== '') {
+        return fromProcess.trim();
+    }
+
     const env = fs.readFileSync(path.join(__dirname, '..', '.env'), 'utf8');
     const match = env.match(new RegExp(`${name}="([^"]+)"`));
     if (!match) throw new Error(`Missing ${name}`);
@@ -10,11 +21,14 @@ function readEnv(name) {
 }
 
 async function main() {
+    const connectionEnvKey = process.argv[2] || 'DATABASE_URL_UNPOOLED';
     const client = new Client({
-        connectionString: readEnv('DATABASE_URL_UNPOOLED'),
+        connectionString: readEnv(connectionEnvKey),
         ssl: { rejectUnauthorized: true },
     });
     await client.connect();
+
+    console.log(`Checking schema via ${connectionEnvKey}...`);
 
     const columns = await client.query(`
         SELECT column_name, data_type, is_nullable
@@ -48,6 +62,15 @@ async function main() {
     console.log(
         'indexes:',
         indexes.rows.map((row) => row.indexname),
+    );
+
+    const migration = await client.query(
+        `SELECT migration_name FROM "_prisma_migrations" WHERE migration_name = $1`,
+        ['20260729234500_daily_challenge'],
+    );
+    console.log(
+        'migration registered:',
+        migration.rowCount === 1 ? 'OK' : 'MISSING',
     );
 
     await client.end();
