@@ -7,6 +7,7 @@ import {
     quizSessionRepository,
     QuizSessionStartError,
 } from '@/entities/quiz-session/quiz-session.repository';
+import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -214,6 +215,8 @@ export async function submitQuizAction(
     });
 
     // сохраняем все данные одной короткой SQL-транзакцией
+    // redirect() нельзя вызывать внутри этого try — Next бросает NEXT_REDIRECT,
+    // и catch принял бы его за SUBMIT_FAILED.
     try {
         const submitResult = await quizSessionRepository.completeWithResult({
             sessionId: quizSessionId,
@@ -228,20 +231,19 @@ export async function submitQuizAction(
             })),
         });
 
-        if (
-            submitResult === 'not_found' ||
-            submitResult === 'already_completed'
-        ) {
-            if (submitResult === 'already_completed') {
-                redirect(`/${locale}/result/${sessionId}`);
-            }
-
+        if (submitResult === 'not_found') {
             return { errorCode: 'SUBMIT_FAILED' };
         }
+
+        // already_completed: QuizResult уже есть — идём на award + result ниже.
     } catch (error) {
         console.error('Quiz submit failed:', error);
         return { errorCode: 'SUBMIT_FAILED' };
     }
+
+    // Soft-fail award после QuizResult (новый или уже существующий).
+    // Не внутри completeWithResult — отдельный путь; scoring не меняем.
+    await awardAchievementsForUser(authSession.user.id);
 
     // перенаправляем на страницу с результатами
     redirect(`/${locale}/result/${sessionId}`);
