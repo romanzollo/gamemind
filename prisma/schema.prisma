@@ -61,10 +61,11 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts     Account[]
-  sessions     Session[]
-  quizSessions QuizSession[]
-  quizResults  QuizResult[]
+  accounts          Account[]
+  sessions          Session[]
+  quizSessions      QuizSession[]
+  quizResults       QuizResult[]
+  userAchievements  UserAchievement[]
 }
 
 model Account {
@@ -216,6 +217,23 @@ model QuizResult {
 
   @@index([userId])
   @@index([score(sort: Desc), completedAt(sort: Asc)])
+}
+
+/// Факт разблокировки бейджа у пользователя (Achievements MVP, вариант A).
+/// Каталог и критерии — в коде (`ACHIEVEMENT_CATALOG`); здесь только unlock.
+/// `code` стабилен; тексты — i18n. См. DECISIONS.md → Achievements MVP.
+/// Будущие домены (movies/football/…): новые коды или опциональный scope — не сейчас.
+model UserAchievement {
+  id         String   @id @default(cuid())
+  userId     String
+  /// Стабильный slug из feature-каталога (например FIRST_QUIZ).
+  code       String
+  unlockedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, code])
+  @@index([userId])
 }
 
 model QuizSessionQuestion {
