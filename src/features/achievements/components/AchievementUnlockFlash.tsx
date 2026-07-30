@@ -7,6 +7,9 @@
  *
  * Module-level guard: React Strict Mode в dev может дважды смонтировать
  * effect — без Set один flash дал бы два тоста.
+ *
+ * Strip query с короткой задержкой — иначе soft replace на mobile может
+ * помешать первому paint toast.
  */
 'use client';
 
@@ -24,6 +27,8 @@ type AchievementUnlockFlashProps = {
 
 const firedFlashKeys = new Set<string>();
 
+const STRIP_DELAY_MS = 120;
+
 export function AchievementUnlockFlash({
     codes,
     resultPath,
@@ -37,13 +42,20 @@ export function AchievementUnlockFlash({
 
         const flashKey = `${resultPath}:${codes.join(',')}`;
         if (firedFlashKeys.has(flashKey)) {
-            router.replace(resultPath);
+            router.replace(resultPath, { scroll: false });
             return;
         }
         firedFlashKeys.add(flashKey);
 
         showAchievementUnlockToasts(codes);
-        router.replace(resultPath);
+
+        const timer = window.setTimeout(() => {
+            router.replace(resultPath, { scroll: false });
+        }, STRIP_DELAY_MS);
+
+        return () => {
+            window.clearTimeout(timer);
+        };
     }, [codes, resultPath, router]);
 
     return null;

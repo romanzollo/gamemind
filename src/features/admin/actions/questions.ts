@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
 import { parseBulkQuestionIdsFromFormData } from '@/features/admin/lib/parse-bulk-question-ids';
+import { appendAdminNotice } from '@/features/admin/lib/parse-admin-notice';
 import {
     getQuestionPublishQualityIssues,
     hasPublishQualityBlockers,
@@ -16,7 +17,10 @@ import {
     createQuestionSchema,
     updateQuestionSchema,
 } from '@/features/admin/lib/validation';
-import type { AdminFormState } from '@/features/admin/types';
+import type {
+    AdminBulkActionResult,
+    AdminFormState,
+} from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -360,9 +364,18 @@ export async function createQuestionAction(
     }
 
     revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
+    redirect(
+        appendAdminNotice(
+            `/${locale}/admin/questions`,
+            'question_saved',
+        ),
+    );
 }
 
+/**
+ * Soft-hide одного вопроса. Успех без redirect — soft revalidate
+ * сохраняет scroll списка (как bulk).
+ */
 export async function deactivateQuestionAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
@@ -388,9 +401,12 @@ export async function deactivateQuestionAction(formData: FormData) {
     }
 
     revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
 }
 
+/**
+ * Single-row restore в витрину. Успех без redirect — soft revalidate
+ * сохраняет scroll списка (как bulk).
+ */
 export async function activateQuestionAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
@@ -416,71 +432,76 @@ export async function activateQuestionAction(formData: FormData) {
     }
 
     revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
 }
 
 /**
  * Bulk soft-hide: несколько questionIds → isActive=false.
- * Пустой выбор — silent redirect (как пустой questionId у single).
+ * Успех без redirect — client toast + router.refresh (scroll на месте).
  * Idempotent: уже inactive не ломают операцию.
  */
-export async function deactivateQuestionsBulkAction(formData: FormData) {
+export async function deactivateQuestionsBulkAction(
+    formData: FormData,
+): Promise<AdminBulkActionResult> {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
 
     const questionIds = parseBulkQuestionIdsFromFormData(formData);
 
     if (questionIds.length === 0) {
-        redirect(`/${locale}/admin/questions`);
+        return { status: 'skipped' };
     }
 
     try {
         await questionRepository.deactivateManyByIds(questionIds);
     } catch {
-        redirect(`/${locale}/admin/questions?error=DEACTIVATE_FAILED`);
+        return { status: 'error', errorCode: 'DEACTIVATE_FAILED' };
     }
 
     revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
+    return { status: 'ok', notice: 'bulk_deactivated' };
 }
 
 /**
  * Bulk restore в витрину: несколько questionIds → isActive=true.
- * publicationStatus не меняем. Пустой выбор — silent redirect.
+ * publicationStatus не меняем. Успех без redirect (scroll на месте).
  */
-export async function activateQuestionsBulkAction(formData: FormData) {
+export async function activateQuestionsBulkAction(
+    formData: FormData,
+): Promise<AdminBulkActionResult> {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
 
     const questionIds = parseBulkQuestionIdsFromFormData(formData);
 
     if (questionIds.length === 0) {
-        redirect(`/${locale}/admin/questions`);
+        return { status: 'skipped' };
     }
 
     try {
         await questionRepository.activateManyByIds(questionIds);
     } catch {
-        redirect(`/${locale}/admin/questions?error=ACTIVATE_FAILED`);
+        return { status: 'error', errorCode: 'ACTIVATE_FAILED' };
     }
 
     revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
+    return { status: 'ok', notice: 'bulk_activated' };
 }
 
 /**
  * Bulk DRAFT → IN_REVIEW для выбранных id.
  * Quality blockers → eligible всё равно уходят в UPDATE; первый blocked
- * открываем на edit (как single submit). Пустой выбор — silent redirect.
+ * открываем на edit (redirect). Иначе ok без redirect.
  */
-export async function submitQuestionsForReviewBulkAction(formData: FormData) {
+export async function submitQuestionsForReviewBulkAction(
+    formData: FormData,
+): Promise<AdminBulkActionResult> {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
 
     const questionIds = parseBulkQuestionIdsFromFormData(formData);
 
     if (questionIds.length === 0) {
-        redirect(`/${locale}/admin/questions`);
+        return { status: 'skipped' };
     }
 
     const filtered = await collectEligibleBulkPublicationIds(questionIds, {
@@ -489,7 +510,7 @@ export async function submitQuestionsForReviewBulkAction(formData: FormData) {
     });
 
     if (!filtered.ok) {
-        redirect(`/${locale}/admin/questions?error=SUBMIT_FOR_REVIEW_FAILED`);
+        return { status: 'error', errorCode: 'SUBMIT_FOR_REVIEW_FAILED' };
     }
 
     if (filtered.eligibleIds.length > 0) {
@@ -498,9 +519,7 @@ export async function submitQuestionsForReviewBulkAction(formData: FormData) {
                 filtered.eligibleIds,
             );
         } catch {
-            redirect(
-                `/${locale}/admin/questions?error=SUBMIT_FOR_REVIEW_FAILED`,
-            );
+            return { status: 'error', errorCode: 'SUBMIT_FOR_REVIEW_FAILED' };
         }
     }
 
@@ -512,7 +531,7 @@ export async function submitQuestionsForReviewBulkAction(formData: FormData) {
         );
     }
 
-    redirect(`/${locale}/admin/questions`);
+    return { status: 'ok', notice: 'bulk_submitted' };
 }
 
 /**
@@ -520,14 +539,16 @@ export async function submitQuestionsForReviewBulkAction(formData: FormData) {
  * Тот же quality gate + partial success, что у bulk submit-for-review.
  * isActive не меняем (quiz pool = active + PUBLISHED).
  */
-export async function publishQuestionsBulkAction(formData: FormData) {
+export async function publishQuestionsBulkAction(
+    formData: FormData,
+): Promise<AdminBulkActionResult> {
     const locale = getLocaleFromFormData(formData);
     await requireAdmin(locale);
 
     const questionIds = parseBulkQuestionIdsFromFormData(formData);
 
     if (questionIds.length === 0) {
-        redirect(`/${locale}/admin/questions`);
+        return { status: 'skipped' };
     }
 
     const filtered = await collectEligibleBulkPublicationIds(questionIds, {
@@ -536,14 +557,14 @@ export async function publishQuestionsBulkAction(formData: FormData) {
     });
 
     if (!filtered.ok) {
-        redirect(`/${locale}/admin/questions?error=PUBLISH_FAILED`);
+        return { status: 'error', errorCode: 'PUBLISH_FAILED' };
     }
 
     if (filtered.eligibleIds.length > 0) {
         try {
             await questionRepository.publishManyByIds(filtered.eligibleIds);
         } catch {
-            redirect(`/${locale}/admin/questions?error=PUBLISH_FAILED`);
+            return { status: 'error', errorCode: 'PUBLISH_FAILED' };
         }
     }
 
@@ -555,7 +576,7 @@ export async function publishQuestionsBulkAction(formData: FormData) {
         );
     }
 
-    redirect(`/${locale}/admin/questions`);
+    return { status: 'ok', notice: 'bulk_published' };
 }
 
 export async function deleteQuestionAction(formData: FormData) {
@@ -575,14 +596,13 @@ export async function deleteQuestionAction(formData: FormData) {
     }
 
     revalidatePath(`/${locale}/admin/questions`);
-    redirect(`/${locale}/admin/questions`);
 }
 
 /**
  * Публикация вопроса (DRAFT | IN_REVIEW → PUBLISHED).
- * Idempotent: уже PUBLISHED → silent redirect (как activate).
+ * Idempotent: уже PUBLISHED → soft revalidate без redirect.
  * Blockers quality → edit + PUBLISH_QUALITY_BLOCKED (warnings OK).
- * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
+ * Успех без redirect — scroll списка/edit на месте.
  */
 export async function publishQuestionAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
@@ -632,14 +652,13 @@ export async function publishQuestionAction(formData: FormData) {
         questionId,
         getPublicationReturnTo(formData),
     );
-    redirectWithOptionalError(redirectPath);
 }
 
 /**
  * Отправка на ревью (DRAFT → IN_REVIEW).
- * Idempotent: уже IN_REVIEW → silent redirect.
+ * Idempotent: уже IN_REVIEW → soft revalidate без redirect.
  * Тот же quality gate, что у publish (в ревью не пускаем сырой контент).
- * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
+ * Успех без redirect — scroll на месте.
  */
 export async function submitQuestionForReviewAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
@@ -692,14 +711,13 @@ export async function submitQuestionForReviewAction(formData: FormData) {
         questionId,
         getPublicationReturnTo(formData),
     );
-    redirectWithOptionalError(redirectPath);
 }
 
 /**
  * Возврат в черновик (IN_REVIEW | PUBLISHED → DRAFT).
- * Idempotent: уже DRAFT → silent redirect.
+ * Idempotent: уже DRAFT → soft revalidate без redirect.
  * Снимает из quiz pool даже при isActive=true (pool требует PUBLISHED).
- * Опциональный FormData `returnTo=edit` возвращает на страницу edit.
+ * Успех без redirect — scroll на месте.
  */
 export async function returnQuestionToDraftAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
@@ -746,7 +764,6 @@ export async function returnQuestionToDraftAction(formData: FormData) {
         questionId,
         getPublicationReturnTo(formData),
     );
-    redirectWithOptionalError(redirectPath);
 }
 
 /**
@@ -828,5 +845,10 @@ export async function updateQuestionAction(
 
     revalidatePath(`/${locale}/admin/questions`);
     revalidatePath(`/${locale}/admin/questions/${parsed.data.questionId}/edit`);
-    redirect(`/${locale}/admin/questions`);
+    redirect(
+        appendAdminNotice(
+            `/${locale}/admin/questions`,
+            'question_saved',
+        ),
+    );
 }

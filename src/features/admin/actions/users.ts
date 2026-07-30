@@ -67,7 +67,6 @@ function redirectMutationResult(
     }
 
     revalidatePath(`/${locale}/admin/users`);
-    redirect(usersPath(locale));
 }
 
 export async function updateUserRoleAction(formData: FormData) {

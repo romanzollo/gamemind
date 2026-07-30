@@ -6,6 +6,7 @@ import { ChangeAvatarForm } from '@/features/profile/components/ChangeAvatarForm
 import { ChangePasswordForm } from '@/features/profile/components/ChangePasswordForm';
 import { ChangeUsernameForm } from '@/features/profile/components/ChangeUsernameForm';
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
+import { ProfileSettingsSection } from '@/features/profile/components/ProfileSettingsSection';
 import { ProfileStatsSummary } from '@/features/profile/components/ProfileStatsSummary';
 import {
     PROFILE_RESULT_HISTORY_LIMIT,
@@ -29,7 +30,7 @@ const sectionHeadingClassName =
  * Профиль: identity strip → progress (stats+achievements | history) → settings.
  *
  * IA: игровой прогресс выше форм; на lg mid = 2 колонки (меньше скролла).
- * Settings в <details>, чтобы не раздувать первый экран.
+ * Settings в Client `<details>`, чтобы soft refresh не схлопывал блок.
  */
 export default async function ProfilePage({ params }: ProfilePageProps) {
     const { locale } = await params;
@@ -205,39 +206,25 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 </section>
             </div>
 
-            {/* Настройки ниже прогресса и по умолчанию свёрнуты */}
-            <details className="group mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8">
-                <summary className="cursor-pointer list-none font-display text-xl font-semibold tracking-tight text-foreground marker:content-none sm:text-2xl [&::-webkit-details-marker]:hidden">
-                    <span className="inline-flex items-center gap-2">
-                        {dictionary.profile.sectionSettings}
-                        <span
-                            className="font-mono text-sm font-normal text-muted transition-transform group-open:rotate-90"
-                            aria-hidden
-                        >
-                            ›
-                        </span>
-                    </span>
-                </summary>
+            {/* Client details: open state переживает revalidate/refresh */}
+            <ProfileSettingsSection title={dictionary.profile.sectionSettings}>
+                <ChangeUsernameForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    currentUsername={session.user.username}
+                />
 
-                <div className="mt-6 space-y-8">
-                    <ChangeUsernameForm
-                        locale={safeLocale}
-                        dictionary={dictionary}
-                        currentUsername={session.user.username}
-                    />
+                <ChangeAvatarForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    currentImageUrl={session.user.image ?? null}
+                />
 
-                    <ChangeAvatarForm
-                        locale={safeLocale}
-                        dictionary={dictionary}
-                        currentImageUrl={session.user.image ?? null}
-                    />
-
-                    <ChangePasswordForm
-                        locale={safeLocale}
-                        dictionary={dictionary}
-                    />
-                </div>
-            </details>
+                <ChangePasswordForm
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                />
+            </ProfileSettingsSection>
         </main>
     );
 }

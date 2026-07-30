@@ -194,10 +194,15 @@ html {
 
 /*
  * Sonner → Scoreboard Editorial.
- * Close справа (дефолт Sonner — слева, выглядит «сломано»).
+ * z-index явно выше sticky header / mobile menu (z-50): на мобилке full-width
+ * top toast иначе легко оказывается «под» chrome (ощущение «не было уведомления»).
+ * Close справа (дефолт Sonner — слева).
  * Description: Sonner хардкодит #3f3f3f / #e8e8e8 — перебиваем токеном muted.
- * Цвета фона toast уже через --normal-bg = var(--surface) в AppToaster.
  */
+.gm-toaster[data-sonner-toaster] {
+    z-index: 200 !important;
+}
+
 .gm-toaster [data-sonner-toast][data-styled='true'] [data-close-button] {
     left: unset;
     right: 0;

@@ -1,11 +1,14 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 import { questionRepository } from '@/entities/question/question.repository';
+import { AdminNoticeFlash } from '@/features/admin/components/AdminNoticeFlash';
 import { AdminQuestionsFilters } from '@/features/admin/components/AdminQuestionsFilters';
 import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
 import {
     hasActiveAdminQuestionListFilters,
     mapAdminQuestions,
+    parseAdminNotice,
     parseAdminQuestionListFilters,
 } from '@/features/admin/lib';
 import { requireAdmin } from '@/lib/auth/guards';
@@ -36,6 +39,7 @@ export default async function AdminQuestionsPage({
     const error = Array.isArray(rawSearchParams.error)
         ? rawSearchParams.error[0]
         : rawSearchParams.error;
+    const notice = parseAdminNotice(rawSearchParams.notice);
 
     let entries: ReturnType<typeof mapAdminQuestions> = [];
     let loadErrorMessage: string | undefined;
@@ -87,6 +91,10 @@ export default async function AdminQuestionsPage({
 
     return (
         <main className="mx-auto max-w-6xl px-4 py-5 sm:px-8 sm:py-10">
+            <Suspense fallback={null}>
+                <AdminNoticeFlash notice={notice} />
+            </Suspense>
+
             <div className="flex flex-wrap items-end justify-between gap-4">
                 <div className="min-w-0">
                     <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
@@ -161,6 +169,7 @@ export default async function AdminQuestionsPage({
                 <AdminQuestionsTable
                     entries={entries}
                     labels={dictionary.admin}
+                    dictionary={dictionary}
                     locale={safeLocale}
                     workingLabel={dictionary.common.working}
                     emptyTitle={

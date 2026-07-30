@@ -388,6 +388,11 @@ export const enDictionary = {
         successSaved: 'Saved',
         errorGeneric: 'Something went wrong. Please try again.',
         closeToast: 'Close notification',
+        question_saved: 'Question saved',
+        bulk_deactivated: 'Selected questions deactivated',
+        bulk_activated: 'Selected questions activated',
+        bulk_submitted: 'Selected questions submitted for review',
+        bulk_published: 'Selected questions published',
     },
     achievements: {
         sectionTitle: 'Achievements',

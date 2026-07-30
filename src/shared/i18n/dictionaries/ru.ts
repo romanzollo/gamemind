@@ -401,6 +401,11 @@ export const ruDictionary: Dictionary = {
         successSaved: 'Сохранено',
         errorGeneric: 'Что-то пошло не так. Попробуйте ещё раз.',
         closeToast: 'Закрыть уведомление',
+        question_saved: 'Вопрос сохранён',
+        bulk_deactivated: 'Выбранные вопросы деактивированы',
+        bulk_activated: 'Выбранные вопросы активированы',
+        bulk_submitted: 'Выбранные вопросы отправлены на ревью',
+        bulk_published: 'Выбранные вопросы опубликованы',
     },
     achievements: {
         sectionTitle: 'Достижения',

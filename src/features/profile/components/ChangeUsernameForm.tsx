@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 import { changeUsernameAction } from '@/features/profile/actions/change-username';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton, toastSuccess } from '@/shared/ui';
+import { refreshPreservingScroll } from '@/shared/ui/refresh-preserving-scroll';
 
 type ChangeUsernameFormProps = {
     locale: Locale;
@@ -34,9 +35,15 @@ export function ChangeUsernameForm({
     // и эффект иначе не перезапустится.
     useEffect(() => {
         if (state.success && state.username) {
-            router.refresh();
+            toastSuccess(dictionary.profile.changeUsernameSuccess);
+            refreshPreservingScroll(router);
         }
-    }, [state.success, state.username, router]);
+    }, [
+        state.success,
+        state.username,
+        router,
+        dictionary.profile.changeUsernameSuccess,
+    ]);
 
     return (
         <div className="mt-6">
@@ -78,16 +85,6 @@ export function ChangeUsernameForm({
 
             {errorMessage ? (
                 <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
-            ) : null}
-
-            {state.success ? (
-                <InlineAlert
-                    className="mt-2"
-                    tone="success"
-                    role="status"
-                >
-                    {dictionary.profile.changeUsernameSuccess}
-                </InlineAlert>
             ) : null}
         </div>
     );

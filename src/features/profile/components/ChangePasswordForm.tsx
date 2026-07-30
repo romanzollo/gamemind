@@ -5,7 +5,7 @@ import { useActionState, useEffect, useRef } from 'react';
 import { changePasswordAction } from '@/features/profile/actions/change-password';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton } from '@/shared/ui';
+import { InlineAlert, SubmitButton, toastSuccess } from '@/shared/ui';
 
 type ChangePasswordFormProps = {
     locale: Locale;
@@ -29,8 +29,9 @@ export function ChangePasswordForm({
     useEffect(() => {
         if (state.success) {
             formRef.current?.reset();
+            toastSuccess(dictionary.profile.changePasswordSuccess);
         }
-    }, [state.success]);
+    }, [state.success, dictionary.profile.changePasswordSuccess]);
 
     return (
         <div className="mt-4">
@@ -98,16 +99,6 @@ export function ChangePasswordForm({
 
             {errorMessage ? (
                 <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
-            ) : null}
-
-            {state.success ? (
-                <InlineAlert
-                    className="mt-2"
-                    tone="success"
-                    role="status"
-                >
-                    {dictionary.profile.changePasswordSuccess}
-                </InlineAlert>
             ) : null}
         </div>
     );

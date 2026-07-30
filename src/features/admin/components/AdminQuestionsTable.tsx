@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import {
@@ -20,11 +21,14 @@ import {
     getBulkToolbarCapabilities,
     hasBulkMutationActions,
 } from '@/features/admin/lib/bulk-toolbar-capabilities';
+import { getAdminErrorMessage } from '@/features/admin/lib/get-admin-error-message';
 import { BULK_QUESTION_IDS_FIELD } from '@/features/admin/lib/parse-bulk-question-ids';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState, SubmitButton } from '@/shared/ui';
+import { refreshPreservingScroll } from '@/shared/ui/refresh-preserving-scroll';
+import { toastError, toastSuccess } from '@/shared/ui/toast';
 import type { Difficulty, QuestionPublicationStatus } from '@/types';
-import type { AdminQuestionListItem } from '../types';
+import type { AdminBulkActionResult, AdminQuestionListItem } from '../types';
 
 /**
  * Список вопросов admin: Scoreboard Editorial.
@@ -56,6 +60,8 @@ const bulkGroupLabelClassName =
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
     labels: Dictionary['admin'];
+    /** Нужен для bulk toast / error copy без redirect. */
+    dictionary: Dictionary;
     locale: Locale;
     /** common.working — pendingLabel для Server Action кнопок списка */
     workingLabel: string;
@@ -533,7 +539,8 @@ function StatusPublicationCell({
 
 /**
  * Одна bulk-форма: locale + только id, к которым применимо действие.
- * Не слать весь selection — сервер и так фильтрует, но UI/сеть яснее.
+ * Успех: toast + router.refresh() без redirect — scroll списка не сбрасывается.
+ * Quality-block publish/submit по-прежнему может redirect на edit.
  */
 function BulkActionForm({
     action,
@@ -544,8 +551,9 @@ function BulkActionForm({
     className,
     children,
     onSubmit,
+    dictionary,
 }: {
-    action: (formData: FormData) => void | Promise<void>;
+    action: (formData: FormData) => Promise<AdminBulkActionResult>;
     locale: Locale;
     questionIds: readonly string[];
     disabled: boolean;
@@ -553,16 +561,36 @@ function BulkActionForm({
     className: string;
     children: string;
     onSubmit: () => void;
+    dictionary: Dictionary;
 }) {
+    const router = useRouter();
+
     if (questionIds.length === 0) {
         return null;
     }
 
+    async function clientAction(formData: FormData) {
+        onSubmit();
+        const result = await action(formData);
+
+        if (result.status === 'skipped') {
+            return;
+        }
+
+        if (result.status === 'error') {
+            const message = getAdminErrorMessage(dictionary, result.errorCode);
+            toastError(message ?? dictionary.notifications.errorGeneric);
+            return;
+        }
+
+        toastSuccess(dictionary.notifications[result.notice]);
+        refreshPreservingScroll(router);
+    }
+
     return (
         <form
-            action={action}
+            action={clientAction}
             className="inline-flex"
-            onSubmit={onSubmit}
         >
             <input type="hidden" name="locale" value={locale} />
             {questionIds.map((id) => (
@@ -600,6 +628,7 @@ function BulkActionForm({
 function BulkQuestionsToolbar({
     selectedEntries,
     labels,
+    dictionary,
     locale,
     workingLabel,
     allVisibleSelected,
@@ -608,6 +637,7 @@ function BulkQuestionsToolbar({
 }: {
     selectedEntries: readonly AdminQuestionListItem[];
     labels: Dictionary['admin'];
+    dictionary: Dictionary;
     locale: Locale;
     workingLabel: string;
     allVisibleSelected: boolean;
@@ -726,6 +756,7 @@ function BulkQuestionsToolbar({
                                     pendingLabel={workingLabel}
                                     className={`${bulkToolbarLinkClassName} text-warning`}
                                     onSubmit={markPending}
+                                    dictionary={dictionary}
                                 >
                                     {labels.bulkDeactivateButton}
                                 </BulkActionForm>
@@ -737,6 +768,7 @@ function BulkQuestionsToolbar({
                                     pendingLabel={workingLabel}
                                     className={`${bulkToolbarLinkClassName} text-success`}
                                     onSubmit={markPending}
+                                    dictionary={dictionary}
                                 >
                                     {labels.bulkActivateButton}
                                 </BulkActionForm>
@@ -759,6 +791,7 @@ function BulkQuestionsToolbar({
                                     pendingLabel={workingLabel}
                                     className={`${bulkToolbarLinkClassName} text-warning`}
                                     onSubmit={markPending}
+                                    dictionary={dictionary}
                                 >
                                     {labels.bulkSubmitForReviewButton}
                                 </BulkActionForm>
@@ -770,6 +803,7 @@ function BulkQuestionsToolbar({
                                     pendingLabel={workingLabel}
                                     className={`${bulkToolbarLinkClassName} text-success`}
                                     onSubmit={markPending}
+                                    dictionary={dictionary}
                                 >
                                     {labels.bulkPublishButton}
                                 </BulkActionForm>
@@ -811,6 +845,7 @@ function RowSelectCheckbox({
 export function AdminQuestionsTable({
     entries,
     labels,
+    dictionary,
     locale,
     workingLabel,
     emptyTitle,
@@ -899,6 +934,7 @@ export function AdminQuestionsTable({
             <BulkQuestionsToolbar
                 selectedEntries={selectedEntries}
                 labels={labels}
+                dictionary={dictionary}
                 locale={locale}
                 workingLabel={workingLabel}
                 allVisibleSelected={allVisibleSelected}

@@ -1,3 +1,4 @@
+import type { AdminNoticeCode } from '@/features/admin/lib/parse-admin-notice';
 import type {
     Difficulty,
     QuestionPublicationStatus,
@@ -76,6 +77,15 @@ export type AdminErrorCode =
 export type AdminFormState = {
     errorCode?: AdminErrorCode;
 };
+
+/**
+ * Результат bulk Server Action без redirect (сохраняем scroll списка).
+ * `redirect` только для quality-block → edit.
+ */
+export type AdminBulkActionResult =
+    | { status: 'ok'; notice: AdminNoticeCode }
+    | { status: 'skipped' }
+    | { status: 'error'; errorCode: AdminErrorCode };
 
 /** Строка списка пользователей в админке (без passwordHash). */
 export type AdminUserListItem = {

@@ -418,6 +418,12 @@ export type Dictionary = {
         errorGeneric: string;
         /** aria-label кнопки закрытия toast. */
         closeToast: string;
+        /** Admin flash `?notice=` — ключи = AdminNoticeCode. */
+        question_saved: string;
+        bulk_deactivated: string;
+        bulk_activated: string;
+        bulk_submitted: string;
+        bulk_published: string;
     };
     /**
      * Achievements MVP на профиле.

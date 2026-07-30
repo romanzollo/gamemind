@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 import { changeAvatarAction } from '@/features/profile/actions/change-avatar';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { Button, InlineAlert, PendingSpinner, SubmitButton, UserAvatar } from '@/shared/ui';
+import { Button, InlineAlert, PendingSpinner, SubmitButton, UserAvatar, toastSuccess } from '@/shared/ui';
+import { refreshPreservingScroll } from '@/shared/ui/refresh-preserving-scroll';
 
 type ChangeAvatarFormProps = {
     locale: Locale;
@@ -36,9 +37,15 @@ export function ChangeAvatarForm({
     // Важно: imageUrl может быть '' (сброс) — проверяем !== undefined, не truthy.
     useEffect(() => {
         if (state.success && state.imageUrl !== undefined) {
-            router.refresh();
+            toastSuccess(dictionary.profile.changeAvatarSuccess);
+            refreshPreservingScroll(router);
         }
-    }, [state.success, state.imageUrl, router]);
+    }, [
+        state.success,
+        state.imageUrl,
+        router,
+        dictionary.profile.changeAvatarSuccess,
+    ]);
 
     return (
         <div className="mt-4">
@@ -132,16 +139,6 @@ export function ChangeAvatarForm({
 
             {errorMessage ? (
                 <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
-            ) : null}
-
-            {state.success ? (
-                <InlineAlert
-                    className="mt-2"
-                    tone="success"
-                    role="status"
-                >
-                    {dictionary.profile.changeAvatarSuccess}
-                </InlineAlert>
             ) : null}
         </div>
     );

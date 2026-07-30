@@ -2,20 +2,23 @@
  * Глобальный Toaster (Sonner) для ephemeral-уведомлений.
  *
  * Почему Client Component: Sonner нужен portal + живой DOM на клиенте.
- * Почему в shared/ui: один bus на всё приложение (DECISIONS → Toast MVP).
+ * Почему createPortal(document.body): sticky header / mobile menu (z-50) и
+ * любые stacking-context предки не должны перекрывать toast — особенно на
+ * узких экранах, где Sonner рисует full-width top strip под хедером.
  *
- * Тема:
- * - initial `theme` с SSR (cookie) для первого paint;
- * - дальше sync с `data-theme` (event + MutationObserver);
- * - Sonner CSS vars (--normal-bg и т.д.) перекинуты на токены GameMind,
- *   поэтому уже открытый toast меняет цвет при переключении темы
- *   (без этого Sonner залипает на #fff / #000).
+ * Тема: CSS vars → Scoreboard tokens + live `data-theme` sync.
+ * Позиция: desktop (lg+) top-right; ниже lg — bottom-center (вне sticky chrome).
  *
- * Do not: писать unlocks в БД; хардкодить RU/EN.
+ * Canon: DECISIONS → Toast Notifications MVP.
  */
 'use client';
 
-import { useEffect, useState, type CSSProperties } from 'react';
+import {
+    useEffect,
+    useState,
+    type CSSProperties,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { Toaster } from 'sonner';
 
 import {
@@ -27,6 +30,9 @@ import {
 type AppToasterProps = {
     theme: ClientTheme;
 };
+
+/** Выше sticky header / mobile menu (z-50). */
+export const TOASTER_Z_INDEX = 200;
 
 /** Sonner internal tokens → Scoreboard Editorial (живут на data-theme). */
 const sonnerTokenStyle = {
@@ -42,12 +48,20 @@ const sonnerTokenStyle = {
     '--gray5': 'var(--border)',
     '--gray12': 'var(--foreground)',
     '--border-radius': 'var(--radius-md)',
+    zIndex: TOASTER_Z_INDEX,
 } as CSSProperties;
+
+/** Совпадает с Tailwind `lg`: до desktop toast снизу, не под sticky chrome. */
+const COMPACT_VIEWPORT_MQ = '(max-width: 1023px)';
 
 export function AppToaster({ theme: initialTheme }: AppToasterProps) {
     const [theme, setTheme] = useState<ClientTheme>(initialTheme);
+    const [mounted, setMounted] = useState(false);
+    const [isCompactViewport, setIsCompactViewport] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
+
         const syncTheme = () => {
             setTheme(getDocumentTheme());
         };
@@ -60,16 +74,28 @@ export function AppToaster({ theme: initialTheme }: AppToasterProps) {
             attributeFilter: ['data-theme'],
         });
 
+        const media = window.matchMedia(COMPACT_VIEWPORT_MQ);
+        const syncCompact = () => {
+            setIsCompactViewport(media.matches);
+        };
+        syncCompact();
+        media.addEventListener('change', syncCompact);
+
         return () => {
             window.removeEventListener(THEME_CHANGE_EVENT, syncTheme);
             observer.disconnect();
+            media.removeEventListener('change', syncCompact);
         };
     }, []);
 
-    return (
+    if (!mounted) {
+        return null;
+    }
+
+    return createPortal(
         <Toaster
             theme={theme}
-            position="top-right"
+            position={isCompactViewport ? 'bottom-center' : 'top-right'}
             closeButton
             richColors={false}
             expand
@@ -78,11 +104,13 @@ export function AppToaster({ theme: initialTheme }: AppToasterProps) {
             offset={{
                 top: 'var(--site-header-sticky-offset, 4.5rem)',
                 right: 16,
+                bottom: 16,
             }}
             mobileOffset={{
                 top: 'var(--site-header-sticky-offset, 4.5rem)',
                 right: 12,
                 left: 12,
+                bottom: 'max(1rem, env(safe-area-inset-bottom))',
             }}
             style={sonnerTokenStyle}
             className="gm-toaster"
@@ -104,6 +132,7 @@ export function AppToaster({ theme: initialTheme }: AppToasterProps) {
                     icon: 'text-primary',
                 },
             }}
-        />
+        />,
+        document.body,
     );
 }

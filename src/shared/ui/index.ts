@@ -18,4 +18,5 @@ export {
     toastInfo,
     toastSuccess,
 } from './toast';
+export { refreshPreservingScroll } from './refresh-preserving-scroll';
 export { UserAvatar } from './user-avatar';
