@@ -356,9 +356,9 @@ export const ruDictionary: Dictionary = {
         timedTryAgain: 'Реванш',
         timedSavingAnswers: 'Время вышло — сохраняем, что успел…',
         timedClockRoast:
-            'Очки сохранены — но сессию добил таймер, не ты. Реванш на 100%?',
+            'Очки сохранены. Теперь есть результат, который можно перебить.',
         timedClockRoastEyebrow: 'Время вышло',
-        timedClockRoastTitle: 'Горн прозвучал',
+        timedClockRoastTitle: 'Попытка засчитана',
         unansweredLabel: 'Без ответа',
         easy: 'Легко',
         medium: 'Средне',
@@ -403,7 +403,7 @@ export const ruDictionary: Dictionary = {
     leaderboard: {
         title: 'Рейтинг',
         description:
-            'Лучший результат каждого игрока. Сузь по периоду и сложности. Очки: легко 1, средне 2, сложно 3.',
+            'Лучший результат каждого игрока. Выбирай период и сложность, чтобы сравнить результаты честнее. Очки: легко 1, средне 2, сложно 3.',
         rank: 'Место',
         player: 'Игрок',
         score: 'Очки',
@@ -443,32 +443,32 @@ export const ruDictionary: Dictionary = {
         toastMoreSummary: 'Ещё {count} — смотрите в профиле',
         items: {
             FIRST_QUIZ: {
-                title: 'Первый квиз',
+                title: 'Было начало',
                 description: 'Завершите любую викторину.',
             },
             QUIZZES_5: {
-                title: 'Разгон',
+                title: 'Вошёл в ритм',
                 description: 'Завершите 5 викторин.',
             },
             QUIZZES_10: {
-                title: 'В темпе',
+                title: 'Серия из десяти',
                 description: 'Завершите 10 викторин.',
             },
             PERFECT_QUIZ: {
-                title: 'Идеальный зачёт',
+                title: 'Чистый раунд',
                 description: 'Ответьте верно на все вопросы в одном квизе.',
             },
             DAILY_COMPLETE: {
-                title: 'День зачтён',
+                title: 'Челлендж принят',
                 description: 'Пройдите ежедневный челлендж.',
             },
             MEDIUM_QUIZ: {
-                title: 'На среднем',
-                description: 'Завершите квиз на сложности Medium.',
+                title: 'Средняя лига',
+                description: 'Завершите квиз на средней сложности.',
             },
             HARD_QUIZ: {
-                title: 'На сложном',
-                description: 'Завершите квиз на сложности Hard.',
+                title: 'Высшая сложность',
+                description: 'Завершите квиз на высокой сложности.',
             },
         },
     },

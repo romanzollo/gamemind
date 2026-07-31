@@ -344,9 +344,9 @@ export const enDictionary = {
         timedTryAgain: 'Rematch',
         timedSavingAnswers: 'Time’s up — saving what you got…',
         timedClockRoast:
-            'Score saved — but the clock finished the run, not you. Rematch for 100%?',
+            'Score saved. Now there is a result to beat.',
         timedClockRoastEyebrow: 'Time’s up',
-        timedClockRoastTitle: 'The horn blew',
+        timedClockRoastTitle: 'Attempt counted',
         unansweredLabel: 'No answer',
         easy: 'Easy',
         medium: 'Medium',
@@ -390,7 +390,7 @@ export const enDictionary = {
     leaderboard: {
         title: 'Leaderboard',
         description:
-            'Best score per player. Narrow by period and difficulty. Points: easy 1, medium 2, hard 3.',
+            'Best score per player. Choose period and difficulty to compare results more fairly. Points: easy 1, medium 2, hard 3.',
         rank: 'Rank',
         player: 'Player',
         score: 'Points',
@@ -429,31 +429,31 @@ export const enDictionary = {
         toastMoreSummary: '{count} more — see your profile',
         items: {
             FIRST_QUIZ: {
-                title: 'First quiz',
+                title: 'It begins',
                 description: 'Complete any quiz.',
             },
             QUIZZES_5: {
-                title: 'Getting started',
+                title: 'Found the rhythm',
                 description: 'Complete 5 quizzes.',
             },
             QUIZZES_10: {
-                title: 'In the groove',
+                title: 'Ten-run streak',
                 description: 'Complete 10 quizzes.',
             },
             PERFECT_QUIZ: {
-                title: 'Perfect run',
+                title: 'Clean round',
                 description: 'Answer every question correctly in one quiz.',
             },
             DAILY_COMPLETE: {
-                title: 'Daily done',
+                title: 'Challenge accepted',
                 description: 'Finish today’s daily challenge.',
             },
             MEDIUM_QUIZ: {
-                title: 'Medium mode',
+                title: 'Middle league',
                 description: 'Complete a Medium difficulty quiz.',
             },
             HARD_QUIZ: {
-                title: 'Hard mode',
+                title: 'Top difficulty',
                 description: 'Complete a Hard difficulty quiz.',
             },
         },
