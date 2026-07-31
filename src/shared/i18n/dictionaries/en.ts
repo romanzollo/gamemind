@@ -48,7 +48,7 @@ export const enDictionary = {
         title: "Today's challenge",
         description: 'Clear today’s challenge and take the top spot!',
         meta: 'Medium · 10 questions · 1 attempt',
-        startButton: 'Start the daily',
+        startButton: 'Accept the challenge',
         continueButton: 'Continue',
         viewResultButton: 'View result',
         loginPrompt: 'Sign in to play today’s challenge.',
@@ -66,7 +66,7 @@ export const enDictionary = {
         description:
             'Ten questions. One minute. Pick your difficulty. The clock will not wait.',
         meta: '10 questions · 60s · pick difficulty',
-        startButton: 'Start the clock',
+        startButton: 'Start the blitz',
         loginPrompt: 'Sign in to play timed mode.',
         loginLink: 'Sign in',
     },

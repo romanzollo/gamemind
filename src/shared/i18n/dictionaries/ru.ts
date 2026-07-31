@@ -48,7 +48,7 @@ export const ruDictionary: Dictionary = {
         title: 'Челлендж дня',
         description: 'Пройди челлендж дня и стань лучшим!',
         meta: 'Средне · 10 вопросов · 1 попытка',
-        startButton: 'Погнали челлендж',
+        startButton: 'Принять вызов',
         continueButton: 'Продолжить',
         viewResultButton: 'Смотреть результат',
         loginPrompt: 'Войдите, чтобы сыграть сегодняшний челлендж.',
@@ -66,7 +66,7 @@ export const ruDictionary: Dictionary = {
         description:
             'Десять вопросов. Одна минута. Сложность выбираешь сам. Таймер не ждёт.',
         meta: '10 вопросов · 60 сек · выбор сложности',
-        startButton: 'Завести таймер',
+        startButton: 'Начать блиц',
         loginPrompt: 'Войдите, чтобы сыграть режим на время.',
         loginLink: 'Войти',
     },
