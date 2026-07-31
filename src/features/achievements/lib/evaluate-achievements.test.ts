@@ -1,8 +1,8 @@
 /**
- * Unit-тесты чистой оценки Achievements MVP.
+ * Unit-тесты чистой оценки Achievements.
  *
  * Зачем: фиксируем пороги и флаги без Neon — рефактор каталога не должен
- * случайно выдать QUIZZES_5 при 4 квизах или забыть FIRST_QUIZ.
+ * случайно выдать QUIZZES_5 при 4 квизах, QUIZZES_10 при 9, или забыть FIRST_QUIZ.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -22,6 +22,7 @@ function facts(
         quizzesCompleted: 0,
         hasPerfectQuiz: false,
         hasDailyCompleted: false,
+        hasMediumCompleted: false,
         hasHardCompleted: false,
         ...partial,
     };
@@ -52,7 +53,7 @@ describe('isAchievementCriteriaMet', () => {
         ).toBe(true);
     });
 
-    it('maps once-flags directly for perfect / daily / hard', () => {
+    it('maps once-flags directly for perfect / daily / medium / hard', () => {
         expect(
             isAchievementCriteriaMet(
                 {
@@ -74,6 +75,17 @@ describe('isAchievementCriteriaMet', () => {
                 facts({ hasDailyCompleted: false }),
             ),
         ).toBe(false);
+
+        expect(
+            isAchievementCriteriaMet(
+                {
+                    code: 'MEDIUM_QUIZ',
+                    criteria: 'medium_quiz_completed_once',
+                    threshold: null,
+                },
+                facts({ hasMediumCompleted: true }),
+            ),
+        ).toBe(true);
 
         expect(
             isAchievementCriteriaMet(
@@ -109,21 +121,36 @@ describe('evaluateAchievements', () => {
         ]);
     });
 
+    it('unlocks QUIZZES_10 only at ten completed quizzes', () => {
+        expect(evaluateAchievements(facts({ quizzesCompleted: 9 }))).toEqual([
+            'FIRST_QUIZ',
+            'QUIZZES_5',
+        ]);
+        expect(evaluateAchievements(facts({ quizzesCompleted: 10 }))).toEqual([
+            'FIRST_QUIZ',
+            'QUIZZES_5',
+            'QUIZZES_10',
+        ]);
+    });
+
     it('keeps catalog order when several flag criteria are met', () => {
         expect(
             evaluateAchievements(
                 facts({
-                    quizzesCompleted: 5,
+                    quizzesCompleted: 10,
                     hasPerfectQuiz: true,
                     hasDailyCompleted: true,
+                    hasMediumCompleted: true,
                     hasHardCompleted: true,
                 }),
             ),
         ).toEqual([
             'FIRST_QUIZ',
             'QUIZZES_5',
+            'QUIZZES_10',
             'PERFECT_QUIZ',
             'DAILY_COMPLETE',
+            'MEDIUM_QUIZ',
             'HARD_QUIZ',
         ]);
     });
@@ -138,7 +165,10 @@ describe('getNewlyEarnedAchievementCodes', () => {
         ).toEqual(['QUIZZES_5']);
 
         expect(
-            getNewlyEarnedAchievementCodes(earned, new Set(['FIRST_QUIZ', 'QUIZZES_5'])),
+            getNewlyEarnedAchievementCodes(
+                earned,
+                new Set(['FIRST_QUIZ', 'QUIZZES_5']),
+            ),
         ).toEqual([]);
     });
 });

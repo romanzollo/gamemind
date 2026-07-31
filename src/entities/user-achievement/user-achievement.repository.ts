@@ -24,6 +24,7 @@ type EvalFactsRow = {
     quizzes_completed: number;
     has_perfect: boolean | null;
     has_daily: boolean | null;
+    has_medium: boolean | null;
     has_hard: boolean | null;
 };
 
@@ -37,6 +38,7 @@ function mapEvalFactsRow(row: EvalFactsRow | undefined): AchievementEvalFacts {
         quizzesCompleted: Number(row?.quizzes_completed ?? 0),
         hasPerfectQuiz: Boolean(row?.has_perfect),
         hasDailyCompleted: Boolean(row?.has_daily),
+        hasMediumCompleted: Boolean(row?.has_medium),
         hasHardCompleted: Boolean(row?.has_hard),
     };
 }
@@ -55,6 +57,10 @@ const EVAL_FACTS_SQL = `
             BOOL_OR(s."dailyChallengeId" IS NOT NULL),
             false
         ) AS has_daily,
+        COALESCE(
+            BOOL_OR(s.difficulty = 'MEDIUM'),
+            false
+        ) AS has_medium,
         COALESCE(
             BOOL_OR(s.difficulty = 'HARD'),
             false

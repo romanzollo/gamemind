@@ -90,6 +90,21 @@ export function Quizzes5Illustration({ className }: IllustrationProps) {
     );
 }
 
+/** Прогресс ×2: двойная лестница ступеней */
+export function Quizzes10Illustration({ className }: IllustrationProps) {
+    return (
+        <Plaque className={className}>
+            <rect x="8" y="28" width="4" height="10" className="fill-current opacity-30" />
+            <rect x="13" y="24" width="4" height="14" className="fill-current opacity-45" />
+            <rect x="18" y="19" width="4" height="19" className="fill-current opacity-60" />
+            <rect x="23" y="15" width="4" height="23" className="fill-current opacity-75" />
+            <rect x="28" y="11" width="4" height="27" className="fill-current opacity-90" />
+            <rect x="35" y="22" width="4" height="16" className="fill-current opacity-40" />
+            <rect x="40" y="16" width="4" height="22" className="fill-current" />
+        </Plaque>
+    );
+}
+
 /** Идеал: ромб-медаль с галочкой */
 export function PerfectQuizIllustration({ className }: IllustrationProps) {
     return (
@@ -140,6 +155,34 @@ export function DailyCompleteIllustration({ className }: IllustrationProps) {
     );
 }
 
+/** Medium: холм перед пиком */
+export function MediumQuizIllustration({ className }: IllustrationProps) {
+    return (
+        <Plaque className={className}>
+            <path
+                d="M8 36h32"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="square"
+            />
+            <path
+                d="M10 36c4-10 8-16 14-16s10 6 14 16H10Z"
+                className="fill-current opacity-25"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinejoin="miter"
+            />
+            <path
+                d="M18 28h12"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="square"
+                className="opacity-70"
+            />
+        </Plaque>
+    );
+}
+
 /** Hard: горный пик */
 export function HardQuizIllustration({ className }: IllustrationProps) {
     return (
@@ -173,7 +216,9 @@ export const ACHIEVEMENT_ILLUSTRATIONS: Record<
 > = {
     FIRST_QUIZ: FirstQuizIllustration,
     QUIZZES_5: Quizzes5Illustration,
+    QUIZZES_10: Quizzes10Illustration,
     PERFECT_QUIZ: PerfectQuizIllustration,
     DAILY_COMPLETE: DailyCompleteIllustration,
+    MEDIUM_QUIZ: MediumQuizIllustration,
     HARD_QUIZ: HardQuizIllustration,
 };

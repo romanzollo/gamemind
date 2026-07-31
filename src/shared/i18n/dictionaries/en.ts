@@ -411,6 +411,10 @@ export const enDictionary = {
                 title: 'Getting started',
                 description: 'Complete 5 quizzes.',
             },
+            QUIZZES_10: {
+                title: 'In the groove',
+                description: 'Complete 10 quizzes.',
+            },
             PERFECT_QUIZ: {
                 title: 'Perfect run',
                 description: 'Answer every question correctly in one quiz.',
@@ -418,6 +422,10 @@ export const enDictionary = {
             DAILY_COMPLETE: {
                 title: 'Daily done',
                 description: 'Finish today’s daily challenge.',
+            },
+            MEDIUM_QUIZ: {
+                title: 'Medium mode',
+                description: 'Complete a Medium difficulty quiz.',
             },
             HARD_QUIZ: {
                 title: 'Hard mode',

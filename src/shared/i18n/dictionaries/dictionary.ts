@@ -447,8 +447,10 @@ export type Dictionary = {
         items: {
             FIRST_QUIZ: { title: string; description: string };
             QUIZZES_5: { title: string; description: string };
+            QUIZZES_10: { title: string; description: string };
             PERFECT_QUIZ: { title: string; description: string };
             DAILY_COMPLETE: { title: string; description: string };
+            MEDIUM_QUIZ: { title: string; description: string };
             HARD_QUIZ: { title: string; description: string };
         };
     };

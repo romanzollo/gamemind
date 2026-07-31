@@ -425,6 +425,10 @@ export const ruDictionary: Dictionary = {
                 title: 'Разгон',
                 description: 'Завершите 5 викторин.',
             },
+            QUIZZES_10: {
+                title: 'В темпе',
+                description: 'Завершите 10 викторин.',
+            },
             PERFECT_QUIZ: {
                 title: 'Идеальный зачёт',
                 description: 'Ответьте верно на все вопросы в одном квизе.',
@@ -432,6 +436,10 @@ export const ruDictionary: Dictionary = {
             DAILY_COMPLETE: {
                 title: 'День зачтён',
                 description: 'Пройдите ежедневный челлендж.',
+            },
+            MEDIUM_QUIZ: {
+                title: 'На среднем',
+                description: 'Завершите квиз на сложности Medium.',
             },
             HARD_QUIZ: {
                 title: 'На сложном',

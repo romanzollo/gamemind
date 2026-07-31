@@ -1,5 +1,5 @@
 /**
- * Контракт Achievements (MVP) — доменная модель feature-слоя.
+ * Контракт Achievements — доменная модель feature-слоя.
  *
  * Зачем отдельный файл рядом со схемой:
  * - каталог бейджей и правила живут в feature-слое без Prisma в UI;
@@ -7,13 +7,12 @@
  * - scoring / snapshot hot path не меняем — unlock = побочный эффект после результата.
  *
  * Масштаб доменов (video-games → movies / football / music):
- * - MVP-коды намеренно domain-agnostic (`FIRST_QUIZ`, не `FIRST_VIDEO_GAME_QUIZ`);
- * - критерии смотрят на QuizResult/QuizSession, которые переживут новые категории;
- * - узкие бейджи по категории — позже отдельными кодами или optional scope в БД,
- *   когда taxonomy реально появится (не сейчас).
+ * - коды domain-agnostic (`FIRST_QUIZ`, не `FIRST_VIDEO_GAME_QUIZ`);
+ * - критерии смотрят на QuizResult/QuizSession;
+ * - узкие бейджи по категории — позже, когда taxonomy реально появится.
  *
  * Canon: docs/DECISIONS.md → Achievements MVP.
- * Миграция: `20260730120000_user_achievement`.
+ * Миграция: `20260730120000_user_achievement` (новые коды = те же строки, без schema change).
  */
 
 /**
@@ -24,8 +23,10 @@
 export type AchievementCode =
     | 'FIRST_QUIZ'
     | 'QUIZZES_5'
+    | 'QUIZZES_10'
     | 'PERFECT_QUIZ'
     | 'DAILY_COMPLETE'
+    | 'MEDIUM_QUIZ'
     | 'HARD_QUIZ';
 
 /**
@@ -36,6 +37,7 @@ export type AchievementCriteriaKind =
     | 'quizzes_completed_at_least'
     | 'perfect_quiz_once'
     | 'daily_challenge_completed_once'
+    | 'medium_quiz_completed_once'
     | 'hard_quiz_completed_once';
 
 /**
@@ -62,7 +64,7 @@ export type AchievementProgressItem = {
 };
 
 /**
- * Сводка для секции профиля: весь MVP-каталог + факты unlock.
+ * Сводка для секции профиля: весь каталог + факты unlock.
  * Порядок = порядок в ACHIEVEMENT_CATALOG (стабильный для UI).
  */
 export type AchievementProgress = {
@@ -70,17 +72,18 @@ export type AchievementProgress = {
 };
 
 /**
- * Факты о прогрессе игрока, достаточные для оценки MVP-критериев.
- * Собираем одним (или двумя) SQL на сервере; не тащим весь QuizResult в память.
+ * Факты о прогрессе игрока, достаточные для оценки критериев.
+ * Собираем одним SQL на сервере; не тащим весь QuizResult в память.
  */
 export type AchievementEvalFacts = {
     quizzesCompleted: number;
     hasPerfectQuiz: boolean;
     hasDailyCompleted: boolean;
+    hasMediumCompleted: boolean;
     hasHardCompleted: boolean;
 };
 
-/** Правила MVP — одна точка правды для тестов и комментариев. */
+/** Правила — одна точка правды для тестов и комментариев. */
 export const ACHIEVEMENTS_MVP_RULES = {
     /** Каталог только в коде; admin CRUD позже. */
     catalogSource: 'code' as const,
@@ -89,15 +92,17 @@ export const ACHIEVEMENTS_MVP_RULES = {
     /** Первая UI-поверхность: профиль. */
     primarySurface: 'profile' as const,
     /**
-     * MVP: бейджи глобальные по аккаунту (любой контент-домен).
+     * Бейджи глобальные по аккаунту (любой контент-домен).
      * Позже: category-scoped коды или колонка scope — когда появятся movies/football/…
      */
     scope: 'global' as const,
 } as const;
 
 /**
- * Стабильный MVP-каталог. Новый бейдж = новый код + критерий + i18n + (при необходимости) SQL facts.
+ * Стабильный каталог. Новый бейдж = новый код + критерий + i18n + (при необходимости) SQL facts.
  * Порядок массива = порядок отображения.
+ *
+ * v2: QUIZZES_10 (лестница после 5) + MEDIUM_QUIZ (ступень до HARD).
  */
 export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
     {
@@ -111,6 +116,11 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
         threshold: 5,
     },
     {
+        code: 'QUIZZES_10',
+        criteria: 'quizzes_completed_at_least',
+        threshold: 10,
+    },
+    {
         code: 'PERFECT_QUIZ',
         criteria: 'perfect_quiz_once',
         threshold: null,
@@ -118,6 +128,11 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
     {
         code: 'DAILY_COMPLETE',
         criteria: 'daily_challenge_completed_once',
+        threshold: null,
+    },
+    {
+        code: 'MEDIUM_QUIZ',
+        criteria: 'medium_quiz_completed_once',
         threshold: null,
     },
     {

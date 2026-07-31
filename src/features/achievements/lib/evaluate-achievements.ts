@@ -1,10 +1,10 @@
 /**
- * Чистая оценка Achievements MVP по уже собранным фактам.
+ * Чистая оценка Achievements по уже собранным фактам.
  *
  * Зачем отдельный модуль без Prisma/Neon:
  * - критерии можно покрыть Vitest без БД;
  * - SQL только собирает `AchievementEvalFacts`; правила unlock живут здесь;
- * - award-слой позже вставляет коды идемпотентно — эта функция не пишет в БД.
+ * - award-слой вставляет коды идемпотентно — эта функция не пишет в БД.
  *
  * Canon: docs/DECISIONS.md → Achievements MVP.
  */
@@ -33,6 +33,8 @@ export function isAchievementCriteriaMet(
             return facts.hasPerfectQuiz;
         case 'daily_challenge_completed_once':
             return facts.hasDailyCompleted;
+        case 'medium_quiz_completed_once':
+            return facts.hasMediumCompleted;
         case 'hard_quiz_completed_once':
             return facts.hasHardCompleted;
         default: {
