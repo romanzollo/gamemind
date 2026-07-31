@@ -45,9 +45,9 @@ export const enDictionary = {
     },
     dailyChallenge: {
         eyebrow: 'Daily challenge',
-        title: 'One set for everyone',
+        title: "Today's shared quiz",
         description:
-            'The same questions for every player today. One attempt — then review your result.',
+            'Same questions for everyone today. One try — then you can review your answers.',
         meta: 'Medium · 10 questions · 1 attempt',
         startButton: 'Start challenge',
         continueButton: 'Continue',
@@ -63,9 +63,9 @@ export const enDictionary = {
     },
     timedMode: {
         eyebrow: 'Timed',
-        title: 'Beat the clock',
+        title: 'Timed quiz',
         description:
-            'Ten questions and two minutes for the whole session. You pick difficulty — the server owns the clock.',
+            'Ten questions, two minutes. Pick a difficulty and try to finish in time.',
         meta: '10 questions · 120s · pick difficulty',
         startButton: 'Start timed quiz',
         loginPrompt: 'Sign in to play timed mode.',
