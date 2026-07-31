@@ -8,6 +8,7 @@ const ERROR_MAP: Record<QuizErrorCode, keyof Dictionary['quiz']['errors']> = {
     INVALID_ANSWER: 'invalidAnswer',
     SUBMIT_FAILED: 'submitFailed',
     RATE_LIMITED: 'rateLimited',
+    TIMED_OUT: 'timedOut',
 };
 
 export function getQuizErrorMessage(

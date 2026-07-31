@@ -1,5 +1,6 @@
 import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
 import { QuizSetupForm } from '@/features/quiz/components/QuizSetupForm';
+import { TimedModeCta } from '@/features/timed-mode/components/TimedModeCta';
 import { getDictionary, isLocale } from '@/shared/i18n';
 
 type QuizSetupPageProps = {
@@ -27,6 +28,12 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
                 locale={safeLocale}
                 dictionary={dictionary}
                 className="mt-5 sm:mt-6"
+            />
+
+            <TimedModeCta
+                locale={safeLocale}
+                dictionary={dictionary}
+                className="mt-4 sm:mt-5"
             />
 
             <p className="mt-6 font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">

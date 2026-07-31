@@ -47,6 +47,7 @@ type SnapshotPublicRow = {
 type SnapshotScoringRow = {
     session_id: string;
     question_count: number;
+    timed_ends_at: Date | string | null;
     question_id: string | null;
     difficulty: Difficulty | null;
     option_id: string | null;
@@ -155,6 +156,7 @@ async function loadSessionForSubmit(
                       status: 'ready',
                       sessionId: jsonSnapshot.session_id,
                       questions,
+                      timedEndsAt: toTimedEndsAtIso(jsonSnapshot.timed_ends_at),
                   }
                 : { status: 'invalid_snapshot' };
         }
@@ -166,6 +168,7 @@ async function loadSessionForSubmit(
                 SELECT
                     s."id" AS "session_id",
                     s."questionCount" AS "question_count",
+                    s."timedEndsAt" AS "timed_ends_at",
                     q."id" AS "question_id",
                     q."difficulty"::text AS "difficulty",
                     ao."id" AS "option_id",
@@ -230,6 +233,7 @@ async function loadSessionForSubmit(
         status: 'ready',
         sessionId: firstRow.session_id,
         questions: Array.from(questions.values()),
+        timedEndsAt: toTimedEndsAtIso(firstRow.timed_ends_at),
     };
 }
 

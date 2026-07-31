@@ -68,6 +68,20 @@ export type Dictionary = {
         /** Пустой рейтинг (день есть, ещё никто не финишировал) */
         boardEmpty: string;
     };
+    /**
+     * Timed Mode CTA (home + /quiz).
+     * Правила count/duration — TIMED_MODE_MVP_RULES; meta в словаре держим в синхроне.
+     */
+    timedMode: {
+        eyebrow: string;
+        title: string;
+        description: string;
+        /** Мета: 10 Q · 120s · pick difficulty */
+        meta: string;
+        startButton: string;
+        loginPrompt: string;
+        loginLink: string;
+    };
     auth: {
         loginTitle: string;
         registerTitle: string;
@@ -377,6 +391,8 @@ export type Dictionary = {
             invalidAnswer: string;
             submitFailed: string;
             rateLimited: string;
+            /** Timed mode: submit после timedEndsAt + grace. */
+            timedOut: string;
             /** Neon/timeout при загрузке result — не путать с submitFailed. */
             resultLoadFailed: string;
         };

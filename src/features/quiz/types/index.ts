@@ -38,7 +38,9 @@ export type QuizErrorCode =
     | 'INVALID_ANSWER'
     | 'SUBMIT_FAILED'
     /** Слишком много start/submit для этого userId за окно. */
-    | 'RATE_LIMITED';
+    | 'RATE_LIMITED'
+    /** Timed submit после timedEndsAt + grace (server clock). */
+    | 'TIMED_OUT';
 
 // тип для состояния формы викторины
 export type QuizFormState = {

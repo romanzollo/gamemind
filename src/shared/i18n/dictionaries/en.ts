@@ -61,6 +61,16 @@ export const enDictionary = {
         boardTitle: 'Today’s ranking',
         boardEmpty: 'No finishes yet — be the first.',
     },
+    timedMode: {
+        eyebrow: 'Timed',
+        title: 'Beat the clock',
+        description:
+            'Ten questions and two minutes for the whole session. You pick difficulty — the server owns the clock.',
+        meta: '10 questions · 120s · pick difficulty',
+        startButton: 'Start timed quiz',
+        loginPrompt: 'Sign in to play timed mode.',
+        loginLink: 'Sign in',
+    },
     auth: {
         loginTitle: 'Log in',
         registerTitle: 'Register',
@@ -361,6 +371,8 @@ export const enDictionary = {
                 'One or more answers are invalid. Refresh the page and try again.',
             submitFailed: 'Failed to submit the result. Try again.',
             rateLimited: 'Too many attempts. Please wait a bit and try again.',
+            timedOut:
+                'Time is up. This timed session result cannot be saved.',
             resultLoadFailed:
                 'Could not load the result page. Please refresh.',
         },

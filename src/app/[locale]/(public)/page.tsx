@@ -1,4 +1,5 @@
 import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
+import { TimedModeCta } from '@/features/timed-mode/components/TimedModeCta';
 import { getDictionary, isLocale } from '@/shared/i18n';
 import { buttonClassName, PendingLink } from '@/shared/ui';
 
@@ -44,11 +45,17 @@ export default async function HomePage({ params }: HomePageProps) {
                     </PendingLink>
                 </div>
 
-                {/* Вторичный блок: не спорит с brand hero GameMind */}
+                {/* Вторичные режимы: не спорят с brand hero GameMind */}
                 <DailyChallengeCta
                     locale={safeLocale}
                     dictionary={dictionary}
                     className="mt-10 max-w-lg"
+                />
+
+                <TimedModeCta
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    className="mt-4 max-w-lg"
                 />
             </div>
         </main>

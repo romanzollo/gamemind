@@ -9,6 +9,7 @@ import {
 } from '@/entities/quiz-session/quiz-session.repository';
 import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import { buildUnlockedQuerySuffix } from '@/features/achievements/lib/parse-unlocked-query';
+import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -155,6 +156,11 @@ export async function submitQuizAction(
 
     if (sessionForSubmit.status === 'invalid_snapshot') {
         return { errorCode: 'INVALID_ANSWER' };
+    }
+
+    // Timed gate до scoring/write: клиентский countdown не авторитет.
+    if (isTimedSubmitExpired(sessionForSubmit.timedEndsAt)) {
+        return { errorCode: 'TIMED_OUT' };
     }
 
     const { sessionId: quizSessionId, questions } = sessionForSubmit;

@@ -87,6 +87,11 @@ export type SessionForSubmitResult =
           status: 'ready';
           sessionId: string;
           questions: SessionSnapshotScoringQuestion[];
+          /**
+           * ISO UTC или null. null = classic/daily (без Timed gate).
+           * Submit сравнивает с server now + grace — не с клиентским таймером.
+           */
+          timedEndsAt: string | null;
       };
 
 /**
