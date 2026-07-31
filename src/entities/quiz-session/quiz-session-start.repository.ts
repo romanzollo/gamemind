@@ -151,6 +151,12 @@ async function insertQuizSessionWithSnapshotData(
 ) {
     assertSnapshotDisplayTexts(input);
 
+    if (input.dailyChallengeId && input.timedEndsAt) {
+        throw new Error(
+            'QuizSession cannot be both Daily and Timed (dailyChallengeId + timedEndsAt)',
+        );
+    }
+
     await client.query(
         `
             INSERT INTO "QuizSession" (
@@ -162,6 +168,7 @@ async function insertQuizSessionWithSnapshotData(
                 "sessionLocale",
                 "snapshotData",
                 "dailyChallengeId",
+                "timedEndsAt",
                 "startedAt"
             )
             VALUES (
@@ -173,6 +180,7 @@ async function insertQuizSessionWithSnapshotData(
                 $6::"ContentLocale",
                 $7::jsonb,
                 $8,
+                $9,
                 NOW()
             )
         `,
@@ -185,6 +193,7 @@ async function insertQuizSessionWithSnapshotData(
             input.sessionLocale,
             JSON.stringify(snapshotData),
             input.dailyChallengeId ?? null,
+            input.timedEndsAt ?? null,
         ],
     );
 }

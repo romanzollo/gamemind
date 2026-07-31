@@ -39,6 +39,11 @@ export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
     questions: SessionSnapshotQuestionInput[];
     /** NULL/omit = classic; set = Daily Challenge attempt (UNIQUE per user). */
     dailyChallengeId?: string | null;
+    /**
+     * NULL/omit = classic/daily; set = Timed mode deadline (server clock).
+     * Не сочетать с dailyChallengeId. Canon: DECISIONS.md → Timed Mode MVP.
+     */
+    timedEndsAt?: Date | null;
 };
 
 /** Публичный вопрос из snapshot для UI квиза (без isCorrect). */

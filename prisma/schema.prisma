@@ -171,6 +171,9 @@ model QuizSession {
   snapshotData     Json?
   /// NULL = classic quiz; non-null = попытка Daily Challenge.
   dailyChallengeId String?
+  /// NULL = classic/daily; non-null = Timed mode (серверный дедлайн submit).
+  /// Canon: docs/DECISIONS.md → Timed Mode MVP.
+  timedEndsAt      DateTime?
   startedAt        DateTime          @default(now())
   completedAt      DateTime?
 
