@@ -60,6 +60,15 @@ export type SessionSnapshotPublicQuestion = {
     }>;
 };
 
+/**
+ * Данные IN_PROGRESS сессии для quiz page.
+ * `timedEndsAt` — ISO UTC; null = classic/daily (countdown не показываем).
+ */
+export type QuizSessionPublicView = {
+    questions: SessionSnapshotPublicQuestion[];
+    timedEndsAt: string | null;
+};
+
 /** Вопрос из snapshot для server-side scoring (с isCorrect, без текста). */
 export type SessionSnapshotScoringQuestion = {
     id: string;

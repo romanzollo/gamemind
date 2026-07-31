@@ -339,6 +339,8 @@ export const ruDictionary: Dictionary = {
         difficultyLabel: 'Сложность',
         questionCountLabel: 'Количество вопросов',
         progressAnsweredLabel: 'Отвечено',
+        timedRemainingLabel: 'Осталось',
+        timedExpiredLabel: 'Время вышло',
         easy: 'Легко',
         medium: 'Средне',
         hard: 'Сложно',

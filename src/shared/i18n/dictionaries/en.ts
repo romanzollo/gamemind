@@ -327,6 +327,8 @@ export const enDictionary = {
         difficultyLabel: 'Difficulty',
         questionCountLabel: 'Question count',
         progressAnsweredLabel: 'Answered',
+        timedRemainingLabel: 'Time left',
+        timedExpiredLabel: 'Time is up',
         easy: 'Easy',
         medium: 'Medium',
         hard: 'Hard',

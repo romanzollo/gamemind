@@ -16,6 +16,7 @@ import { withDirectPgClient } from '@/lib/db/direct-pg';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type {
+    QuizSessionPublicView,
     SessionForSubmitResult,
     SessionReviewPayload,
     SessionSnapshotPublicQuestion,
@@ -33,6 +34,7 @@ import {
 type SnapshotPublicRow = {
     session_id: string;
     question_count: number;
+    timed_ends_at: Date | string | null;
     question_id: string | null;
     question_text: string | null;
     display_image_url: string | null;
@@ -55,6 +57,7 @@ type SessionSnapshotJsonRow = {
     session_id: string;
     question_count: number;
     snapshot_data: QuizSessionSnapshotData | string | null;
+    timed_ends_at: Date | string | null;
 };
 
 type ReviewAnswerRow = {
@@ -62,6 +65,23 @@ type ReviewAnswerRow = {
     selected_option_id: string;
     is_correct: boolean;
 };
+
+/** Date/string из pg → ISO для Client Component; null остаётся null. */
+function toTimedEndsAtIso(
+    value: Date | string | null | undefined,
+): string | null {
+    if (value == null) {
+        return null;
+    }
+
+    const date = value instanceof Date ? value : new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return null;
+    }
+
+    return date.toISOString();
+}
 
 async function loadQuizSessionSnapshotData(
     sessionId: string,
@@ -73,7 +93,8 @@ async function loadQuizSessionSnapshotData(
                 SELECT
                     "id" AS "session_id",
                     "questionCount" AS "question_count",
-                    "snapshotData" AS "snapshot_data"
+                    "snapshotData" AS "snapshot_data",
+                    "timedEndsAt" AS "timed_ends_at"
                 FROM "QuizSession"
                 WHERE
                     "id" = $1
@@ -332,7 +353,7 @@ async function loadSnapshotPublicQuestions(
     sessionId: string,
     userId: string,
     locale: Locale,
-): Promise<SessionSnapshotPublicQuestion[] | null> {
+): Promise<QuizSessionPublicView | null> {
     const jsonSnapshot = await loadQuizSessionSnapshotData(sessionId, userId);
 
     if (jsonSnapshot) {
@@ -349,11 +370,12 @@ async function loadSnapshotPublicQuestions(
                 return null;
             }
 
-            if (!hasBilingualTexts(snapshotData)) {
-                return overlayPublicQuestionsWithLocale(mapped, locale);
-            }
+            const timedEndsAt = toTimedEndsAtIso(jsonSnapshot.timed_ends_at);
+            const questions = !hasBilingualTexts(snapshotData)
+                ? await overlayPublicQuestionsWithLocale(mapped, locale)
+                : mapped;
 
-            return mapped;
+            return { questions, timedEndsAt };
         }
     }
 
@@ -363,6 +385,7 @@ async function loadSnapshotPublicQuestions(
                 SELECT
                     s."id" AS "session_id",
                     s."questionCount" AS "question_count",
+                    s."timedEndsAt" AS "timed_ends_at",
                     ssq."questionId" AS "question_id",
                     ssq."displayText" AS "question_text",
                     ssq."displayImageUrl" AS "display_image_url",
@@ -435,10 +458,13 @@ async function loadSnapshotPublicQuestions(
         return null;
     }
 
-    return overlayPublicQuestionsWithLocale(
-        Array.from(questions.values()),
-        locale,
-    );
+    return {
+        questions: await overlayPublicQuestionsWithLocale(
+            Array.from(questions.values()),
+            locale,
+        ),
+        timedEndsAt: toTimedEndsAtIso(firstRow.timed_ends_at),
+    };
 }
 
 /** Методы reads для thin facade quizSessionRepository. */

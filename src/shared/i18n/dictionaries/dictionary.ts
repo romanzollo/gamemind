@@ -342,6 +342,10 @@ export type Dictionary = {
         questionCountLabel: string;
         /** Прогресс сессии: отвечено / всего (не число вопросов в setup). */
         progressAnsweredLabel: string;
+        /** Timed mode: подпись countdown, пока время не вышло. */
+        timedRemainingLabel: string;
+        /** Timed mode: подпись, когда countdown дошёл до 00:00 (UX only). */
+        timedExpiredLabel: string;
         easy: string;
         medium: string;
         hard: string;

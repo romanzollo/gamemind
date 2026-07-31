@@ -18,14 +18,14 @@ export default async function QuizSessionPage({
 
     const authSession = await requireUser(safeLocale);
 
-    const questions =
+    const sessionView =
         await quizSessionRepository.findSnapshotPublicQuestionsForUser(
             sessionId,
             authSession.user.id,
             safeLocale,
         );
 
-    if (!questions) {
+    if (!sessionView) {
         notFound();
     }
 
@@ -40,7 +40,8 @@ export default async function QuizSessionPage({
             <QuizSessionForm
                 locale={safeLocale}
                 sessionId={sessionId}
-                questions={questions}
+                questions={sessionView.questions}
+                timedEndsAt={sessionView.timedEndsAt}
                 dictionary={dictionary}
             />
         </main>

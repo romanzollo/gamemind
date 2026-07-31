@@ -6,6 +6,7 @@ import { submitQuizAction } from '@/features/quiz/actions';
 import { QuestionCard } from '@/features/quiz/components/QuestionCard';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { QuizPublicQuestion } from '@/features/quiz/types';
+import { TimedQuizCountdown } from '@/features/timed-mode/components/TimedQuizCountdown';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
 
@@ -13,6 +14,8 @@ type QuizSessionFormProps = {
     locale: Locale;
     sessionId: string;
     questions: QuizPublicQuestion[];
+    /** ISO UTC или null (classic/daily — без countdown). */
+    timedEndsAt?: string | null;
     dictionary: Dictionary;
 };
 
@@ -20,6 +23,7 @@ export function QuizSessionForm({
     locale,
     sessionId,
     questions,
+    timedEndsAt = null,
     dictionary,
 }: QuizSessionFormProps) {
     const [state, formAction] = useActionState(submitQuizAction, {});
@@ -49,6 +53,18 @@ export function QuizSessionForm({
 
             <div className="sticky top-[var(--site-header-sticky-offset)] z-30 -mx-4 mb-4 border-b border-border bg-background px-4 py-2.5 sm:-mx-8 sm:mb-6 sm:px-8 sm:py-3">
                 <div className="rounded-lg border border-border bg-surface px-3 py-2.5 shadow-sm sm:px-4 sm:py-3">
+                    {timedEndsAt ? (
+                        <div className="mb-2 border-b border-border pb-2">
+                            <TimedQuizCountdown
+                                timedEndsAt={timedEndsAt}
+                                remainingLabel={
+                                    dictionary.quiz.timedRemainingLabel
+                                }
+                                expiredLabel={dictionary.quiz.timedExpiredLabel}
+                            />
+                        </div>
+                    ) : null}
+
                     <div className="flex items-center justify-between gap-3 text-sm">
                         <span className="font-medium text-foreground">
                             {dictionary.quiz.progressAnsweredLabel}
