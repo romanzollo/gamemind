@@ -38,9 +38,9 @@ export const enDictionary = {
     },
     home: {
         title: 'GameMind',
-        headline: 'See how well you know video games',
+        headline: 'Remember the games you played',
         description:
-            'A sharp bilingual quiz — from classics to new releases. Answer, score, and review.',
+            'Screenshots, facts, series, and details from video games. Answer fast, score points, and see if your memory holds up.',
         cta: 'Start quiz',
     },
     dailyChallenge: {
