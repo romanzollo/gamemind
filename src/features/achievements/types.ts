@@ -57,14 +57,20 @@ export type AchievementDefinition = {
 /**
  * Состояние бейджа для UI профиля (один пользователь).
  * `unlockedAt` null = ещё не получен; дата = когда сервер зафиксировал unlock.
+ *
+ * `criteriaCurrent` / `criteriaTarget` — прогресс к критерию (сервер из EvalFacts).
+ * Оба null = метрику показать нельзя (битый threshold и т.п.).
+ * Не путать с шапочным `progressCount` (сколько бейджей открыто / всего в каталоге).
  */
 export type AchievementProgressItem = {
     code: AchievementCode;
     unlockedAt: Date | null;
+    criteriaCurrent: number | null;
+    criteriaTarget: number | null;
 };
 
 /**
- * Сводка для секции профиля: весь каталог + факты unlock.
+ * Сводка для секции профиля: весь каталог + unlock + прогресс к критерию.
  * Порядок = порядок в ACHIEVEMENT_CATALOG (стабильный для UI).
  */
 export type AchievementProgress = {

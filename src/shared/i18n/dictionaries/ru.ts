@@ -414,6 +414,7 @@ export const ruDictionary: Dictionary = {
         locked: 'Ещё не открыто',
         unlockedOn: 'Открыто {date}',
         progressCount: '{unlocked} / {total}',
+        criteriaProgress: '{current} / {target}',
         toastUnlocked: 'Достижение открыто',
         toastMoreSummary: 'Ещё {count} — смотрите в профиле',
         items: {

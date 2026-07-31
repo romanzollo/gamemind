@@ -138,6 +138,38 @@ export const userAchievementRepository = {
         }));
     },
 
+    /**
+     * Facts + unlock с датами на одном unpooled client — для профиля (progress UI).
+     * Не параллелить отдельные withDirectPgClient (см. findAwardContextByUserId).
+     */
+    async findProgressContextByUserId(userId: string): Promise<{
+        facts: AchievementEvalFacts;
+        unlockRows: Array<{ code: string; unlockedAt: Date }>;
+    }> {
+        return withDirectPgClient(async (client) => {
+            const factsResult = await client.query<EvalFactsRow>(
+                EVAL_FACTS_SQL,
+                [userId],
+            );
+            const unlockResult = await client.query<UnlockRow>(
+                `
+                    SELECT code, "unlockedAt" AS unlocked_at
+                    FROM "UserAchievement"
+                    WHERE "userId" = $1
+                `,
+                [userId],
+            );
+
+            return {
+                facts: mapEvalFactsRow(factsResult.rows[0]),
+                unlockRows: unlockResult.rows.map((row) => ({
+                    code: row.code,
+                    unlockedAt: row.unlocked_at,
+                })),
+            };
+        });
+    },
+
     /** Уже сохранённые коды unlock (для diff с evaluate). */
     async findUnlockedCodesByUserId(userId: string): Promise<string[]> {
         const rows =

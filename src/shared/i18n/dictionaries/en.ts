@@ -400,6 +400,7 @@ export const enDictionary = {
         locked: 'Locked',
         unlockedOn: 'Unlocked {date}',
         progressCount: '{unlocked} / {total}',
+        criteriaProgress: '{current} / {target}',
         toastUnlocked: 'Achievement unlocked',
         toastMoreSummary: '{count} more — see your profile',
         items: {

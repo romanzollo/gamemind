@@ -7,7 +7,9 @@ import { InlineAlert } from '@/shared/ui';
  * Achievements на профиле: tile-сетка + illustration pack.
  *
  * sm+: 2 колонки — бейджи читаются как коллекция, не как длинный список строк.
- * Description скрыт на очень узких/в tile (остаётся title + status); полный текст в title attr.
+ * Locked: показываем прогресс к критерию («7 / 10»), если сервер отдал метрики.
+ * Unlocked: дата открытия (прогресс к цели уже не нужен как мотивация).
+ * Description — в title attr.
  */
 
 type ProfileAchievementsListProps = {
@@ -43,9 +45,25 @@ export function ProfileAchievementsList({
                           year: 'numeric',
                       })
                     : null;
+
+                const hasCriteria =
+                    item.criteriaCurrent !== null &&
+                    item.criteriaTarget !== null;
+                const criteriaText = hasCriteria
+                    ? labels.criteriaProgress
+                          .replace(
+                              '{current}',
+                              String(item.criteriaCurrent),
+                          )
+                          .replace(
+                              '{target}',
+                              String(item.criteriaTarget),
+                          )
+                    : null;
+
                 const statusText = unlocked
                     ? labels.unlockedOn.replace('{date}', unlockedText ?? '')
-                    : labels.locked;
+                    : (criteriaText ?? labels.locked);
 
                 return (
                     <li

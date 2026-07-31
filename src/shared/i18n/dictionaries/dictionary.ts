@@ -435,8 +435,13 @@ export type Dictionary = {
         locked: string;
         /** Шаблон с `{date}` — дата уже локализована в UI. */
         unlockedOn: string;
-        /** Счётчик в шапке: `{unlocked}` / `{total}`. */
+        /** Счётчик в шапке секции: `{unlocked}` / `{total}` бейджей. */
         progressCount: string;
+        /**
+         * Прогресс к критерию одного бейджа: `{current}` / `{target}`.
+         * Не путать с `progressCount` (сколько бейджей открыто).
+         */
+        criteriaProgress: string;
         /** Подзаголовок unlock-toast (title = имя бейджа). */
         toastUnlocked: string;
         /**
