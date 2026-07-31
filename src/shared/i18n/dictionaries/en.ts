@@ -45,9 +45,8 @@ export const enDictionary = {
     },
     dailyChallenge: {
         eyebrow: 'Daily challenge',
-        title: "Today's shared scoreboard",
-        description:
-            'Same questions for everyone. One shot — then see who cooked.',
+        title: "Today's challenge",
+        description: 'Clear today’s challenge and take the top spot!',
         meta: 'Medium · 10 questions · 1 attempt',
         startButton: 'Start the daily',
         continueButton: 'Continue',
@@ -59,13 +58,13 @@ export const enDictionary = {
         completedScore: 'Points: {score} · {correct}/{total}',
         classicEyebrow: 'Classic, no timer',
         boardTitle: 'Today’s ranking',
-        boardEmpty: 'Empty board. First blood?',
+        boardEmpty: 'The arena is empty. Time to claim first place.',
     },
     timedMode: {
         eyebrow: 'Timed',
-        title: 'Two minutes of glory',
+        title: 'Blitz round',
         description:
-            'Ten questions. Two minutes. Pick your difficulty — excuses not accepted.',
+            'Ten questions. One minute. Pick your difficulty. The clock will not wait.',
         meta: '10 questions · 60s · pick difficulty',
         startButton: 'Start the clock',
         loginPrompt: 'Sign in to play timed mode.',
