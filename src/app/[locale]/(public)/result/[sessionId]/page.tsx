@@ -1,13 +1,14 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
-import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { AchievementUnlockFlash } from '@/features/achievements/components/AchievementUnlockFlash';
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
-import { QuizResultReview } from '@/features/quiz/components/QuizResultReview';
+import { QuizResultReviewSection } from '@/features/quiz/components/QuizResultReviewSection';
+import { QuizResultReviewSkeleton } from '@/features/quiz/components/QuizResultReviewSkeleton';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
-import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review';
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
+import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClockRoastBanner';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
 import { InlineAlert } from '@/shared/ui';
@@ -28,10 +29,17 @@ export default async function QuizResultPage({
     const authSession = await requireUser(safeLocale);
 
     const unlockedCodes = parseUnlockedQuery(rawSearchParams.unlocked);
+    const finishedByClock =
+        (Array.isArray(rawSearchParams.clock)
+            ? rawSearchParams.clock[0]
+            : rawSearchParams.clock) === '1';
     const resultPath = `/${safeLocale}/result/${sessionId}`;
+    // Flash снимает только unlocked; clock оставляем (roast на result).
+    const resultPathAfterFlash = finishedByClock
+        ? `${resultPath}?clock=1`
+        : resultPath;
 
-    // Soft-fail Neon: после submit+award TLS иногда клинит; не роняем весь RSC
-    // красным overlay — flash toasts всё равно показать, refresh обычно чинит.
+    // Soft-fail Neon: после submit+award TLS иногда клинит; не роняем весь RSC.
     let result: Awaited<
         ReturnType<typeof quizResultRepository.findBySessionIdForUser>
     > = null;
@@ -51,37 +59,16 @@ export default async function QuizResultPage({
         notFound();
     }
 
-    let reviewItems: ReturnType<typeof mapQuizResultReview> = [];
-    let maxPossibleScore: number | null = null;
-    let reviewLoadFailed = false;
-
-    if (result) {
-        try {
-            const reviewPayload =
-                await quizSessionRepository.findReviewForUser(
-                    sessionId,
-                    authSession.user.id,
-                    safeLocale,
-                );
-            reviewItems = mapQuizResultReview(reviewPayload);
-            maxPossibleScore = reviewPayload
-                ? getMaxPossibleScore(
-                      reviewPayload.questions.map(
-                          (question) => question.difficulty,
-                      ),
-                  )
-                : null;
-        } catch (error) {
-            console.error('Quiz result review load failed:', error);
-            reviewLoadFailed = true;
-        }
-    }
+    const maxPossibleScore =
+        result && result.difficulties.length > 0
+            ? getMaxPossibleScore(result.difficulties)
+            : null;
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
             <AchievementUnlockFlash
                 codes={unlockedCodes}
-                resultPath={resultPath}
+                resultPath={resultPathAfterFlash}
             />
 
             {resultLoadFailed || !result ? (
@@ -90,6 +77,14 @@ export default async function QuizResultPage({
                 </InlineAlert>
             ) : (
                 <>
+                    {finishedByClock ? (
+                        <TimedClockRoastBanner
+                            eyebrow={dictionary.quiz.timedClockRoastEyebrow}
+                            title={dictionary.quiz.timedClockRoastTitle}
+                            body={dictionary.quiz.timedClockRoast}
+                        />
+                    ) : null}
+
                     <QuizResultSummary
                         locale={safeLocale}
                         score={result.score}
@@ -99,20 +94,18 @@ export default async function QuizResultPage({
                         labels={dictionary.quiz}
                     />
 
-                    {reviewLoadFailed ? (
-                        <InlineAlert
-                            className="mt-4"
-                            tone="warning"
-                            role="status"
-                        >
-                            {dictionary.quiz.errors.resultLoadFailed}
-                        </InlineAlert>
-                    ) : (
-                        <QuizResultReview
-                            items={reviewItems}
-                            labels={dictionary.quiz}
+                    {/*
+                      Review в Suspense: locale switch / Neon timeout не держат
+                      очки на экране. max score — из JOIN snapshot в result read.
+                    */}
+                    <Suspense fallback={<QuizResultReviewSkeleton />}>
+                        <QuizResultReviewSection
+                            sessionId={sessionId}
+                            userId={authSession.user.id}
+                            locale={safeLocale}
+                            dictionary={dictionary}
                         />
-                    )}
+                    </Suspense>
                 </>
             )}
         </main>

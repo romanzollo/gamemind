@@ -13,6 +13,8 @@ type QuestionCardProps = {
     imageUnavailableLabel: string;
     /** Eager-load image for the first card (usually question 1). */
     imagePriority?: boolean;
+    /** Timed expired / submitting — нельзя менять ответы. */
+    disabled?: boolean;
 };
 
 type OptionIndicatorProps = {
@@ -46,12 +48,18 @@ export function QuestionCard({
     imageAlt,
     imageUnavailableLabel,
     imagePriority = false,
+    disabled = false,
 }: QuestionCardProps) {
     const hasImage = Boolean(imageUrl);
 
     return (
         <section
-            className="rounded-lg border border-border bg-surface p-3.5 shadow-sm sm:p-6"
+            className={[
+                'rounded-lg border border-border bg-surface p-3.5 shadow-sm sm:p-6',
+                disabled ? 'opacity-80' : '',
+            ]
+                .filter(Boolean)
+                .join(' ')}
             aria-labelledby={`question-${question.id}-title`}
         >
             <header className="flex items-start gap-3">
@@ -95,8 +103,10 @@ export function QuestionCard({
                         <label
                             key={option.id}
                             className={[
-                                'flex min-h-12 cursor-pointer items-start gap-3 rounded-md border-2 p-3 motion-safe:transition-colors sm:min-h-11',
-                                'hover:bg-surface-hover',
+                                'flex min-h-12 items-start gap-3 rounded-md border-2 p-3 motion-safe:transition-colors sm:min-h-11',
+                                disabled
+                                    ? 'cursor-not-allowed'
+                                    : 'cursor-pointer hover:bg-surface-hover',
                                 'focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-ring',
                                 isSelected
                                     ? 'border-primary bg-primary/10 shadow-sm'
@@ -108,8 +118,12 @@ export function QuestionCard({
                                 name={question.id}
                                 value={option.id}
                                 checked={isSelected}
-                                onChange={() => onSelectOption(option.id)}
-                                required
+                                disabled={disabled}
+                                onChange={() => {
+                                    if (!disabled) {
+                                        onSelectOption(option.id);
+                                    }
+                                }}
                                 className="sr-only"
                             />
                             <OptionIndicator isSelected={isSelected} />

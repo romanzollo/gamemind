@@ -32,7 +32,7 @@ export const TIMED_MODE_MVP_RULES = {
      * Бюджет времени на всю сессию (секунды), одинаковый для всех сложностей в MVP.
      * Позже можно сделать таблицу по difficulty / questionCount.
      */
-    durationSeconds: 120,
+    durationSeconds: 60,
     /**
      * Допуск на сеть/склок после `timedEndsAt` при submit (секунды).
      * Клиентский «0» ≠ мгновенный отказ: иначе честный игрок ловит TIMED_OUT из‑за RTT.

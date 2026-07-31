@@ -45,11 +45,11 @@ export const enDictionary = {
     },
     dailyChallenge: {
         eyebrow: 'Daily challenge',
-        title: "Today's shared quiz",
+        title: "Today's shared scoreboard",
         description:
-            'Same questions for everyone today. One try — then you can review your answers.',
+            'Same questions for everyone. One shot — then see who cooked.',
         meta: 'Medium · 10 questions · 1 attempt',
-        startButton: 'Start challenge',
+        startButton: 'Start the daily',
         continueButton: 'Continue',
         viewResultButton: 'View result',
         loginPrompt: 'Sign in to play today’s challenge.',
@@ -57,17 +57,17 @@ export const enDictionary = {
         unavailablePool:
             'Today’s challenge is unavailable — not enough published questions in the pool.',
         completedScore: 'Points: {score} · {correct}/{total}',
-        classicEyebrow: 'Classic quiz',
+        classicEyebrow: 'Classic, no timer',
         boardTitle: 'Today’s ranking',
-        boardEmpty: 'No finishes yet — be the first.',
+        boardEmpty: 'Empty board. First blood?',
     },
     timedMode: {
         eyebrow: 'Timed',
-        title: 'Timed quiz',
+        title: 'Two minutes of glory',
         description:
-            'Ten questions, two minutes. Pick a difficulty and try to finish in time.',
-        meta: '10 questions · 120s · pick difficulty',
-        startButton: 'Start timed quiz',
+            'Ten questions. Two minutes. Pick your difficulty — excuses not accepted.',
+        meta: '10 questions · 60s · pick difficulty',
+        startButton: 'Start the clock',
         loginPrompt: 'Sign in to play timed mode.',
         loginLink: 'Sign in',
     },
@@ -333,12 +333,22 @@ export const enDictionary = {
     },
     quiz: {
         setupTitle: 'Quiz setup',
-        setupDescription: 'Choose difficulty and question count.',
+        setupDescription:
+            'Pick a mode below: daily challenge, timed race, or classic at your pace.',
         difficultyLabel: 'Difficulty',
         questionCountLabel: 'Question count',
         progressAnsweredLabel: 'Answered',
         timedRemainingLabel: 'Time left',
         timedExpiredLabel: 'Time is up',
+        timedExpiredBody:
+            'Time’s up. The clock won this round. Rematch for that sweet 100%?',
+        timedTryAgain: 'Rematch',
+        timedSavingAnswers: 'Time’s up — saving what you got…',
+        timedClockRoast:
+            'Score saved — but the clock finished the run, not you. Rematch for 100%?',
+        timedClockRoastEyebrow: 'Time’s up',
+        timedClockRoastTitle: 'The horn blew',
+        unansweredLabel: 'No answer',
         easy: 'Easy',
         medium: 'Medium',
         hard: 'Hard',
@@ -371,8 +381,9 @@ export const enDictionary = {
                 'One or more answers are invalid. Refresh the page and try again.',
             submitFailed: 'Failed to submit the result. Try again.',
             rateLimited: 'Too many attempts. Please wait a bit and try again.',
-            timedOut:
-                'Time is up. This timed session result cannot be saved.',
+            timedOut: 'Time is up. This attempt can’t be saved anymore.',
+            dbTimeout:
+                'The database is taking a nap (Neon cold starts happen). Wait a sec and try again.',
             resultLoadFailed:
                 'Could not load the result page. Please refresh.',
         },

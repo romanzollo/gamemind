@@ -45,11 +45,11 @@ export const ruDictionary: Dictionary = {
     },
     dailyChallenge: {
         eyebrow: 'Ежедневный челлендж',
-        title: 'Общий квиз на сегодня',
+        title: 'Общий зачёт дня',
         description:
-            'Одни и те же вопросы у всех. Одна попытка в день — потом можно посмотреть разбор.',
+            'Одинаковые вопросы у всех. Одна попытка — потом можно посмотреть, кто кого сделал.',
         meta: 'Средне · 10 вопросов · 1 попытка',
-        startButton: 'Начать челлендж',
+        startButton: 'Погнали челлендж',
         continueButton: 'Продолжить',
         viewResultButton: 'Смотреть результат',
         loginPrompt: 'Войдите, чтобы сыграть сегодняшний челлендж.',
@@ -57,17 +57,17 @@ export const ruDictionary: Dictionary = {
         unavailablePool:
             'Сегодня челлендж недоступен — в пуле мало опубликованных вопросов.',
         completedScore: 'Очки: {score} · {correct}/{total}',
-        classicEyebrow: 'Обычный квиз',
+        classicEyebrow: 'Классика без таймера',
         boardTitle: 'Рейтинг сегодня',
-        boardEmpty: 'Пока никого нет — стань первым.',
+        boardEmpty: 'Тишина в зале. Кто первый на табло?',
     },
     timedMode: {
         eyebrow: 'На время',
-        title: 'Квиз на время',
+        title: 'Две минуты славы',
         description:
-            'Десять вопросов и две минуты. Выбери сложность и постарайся успеть.',
-        meta: '10 вопросов · 120 сек · выбор сложности',
-        startButton: 'Начать на время',
+            'Десять вопросов. Две минуты. Сложность выбираешь сам — оправдания не принимаются.',
+        meta: '10 вопросов · 60 сек · выбор сложности',
+        startButton: 'Завести таймер',
         loginPrompt: 'Войдите, чтобы сыграть режим на время.',
         loginLink: 'Войти',
     },
@@ -345,12 +345,22 @@ export const ruDictionary: Dictionary = {
     },
     quiz: {
         setupTitle: 'Настройка квиза',
-        setupDescription: 'Выбери сложность и количество вопросов.',
+        setupDescription:
+            'Выбери режим ниже: челлендж дня, гонка с таймером или спокойная классика.',
         difficultyLabel: 'Сложность',
         questionCountLabel: 'Количество вопросов',
         progressAnsweredLabel: 'Отвечено',
         timedRemainingLabel: 'Осталось',
         timedExpiredLabel: 'Время вышло',
+        timedExpiredBody:
+            'Время вышло. Таймер — 1, ты — 0. Реванш и 100% ждут тебя.',
+        timedTryAgain: 'Реванш',
+        timedSavingAnswers: 'Время вышло — сохраняем, что успел…',
+        timedClockRoast:
+            'Очки сохранены — но сессию добил таймер, не ты. Реванш на 100%?',
+        timedClockRoastEyebrow: 'Время вышло',
+        timedClockRoastTitle: 'Горн прозвучал',
+        unansweredLabel: 'Без ответа',
         easy: 'Легко',
         medium: 'Средне',
         hard: 'Сложно',
@@ -384,8 +394,9 @@ export const ruDictionary: Dictionary = {
             submitFailed: 'Не удалось сохранить результат. Попробуй ещё раз.',
             rateLimited:
                 'Слишком много попыток. Подождите немного и попробуйте снова.',
-            timedOut:
-                'Время вышло. Результат этой timed-сессии сохранить нельзя.',
+            timedOut: 'Время вышло. Эту попытку сохранить уже нельзя.',
+            dbTimeout:
+                'База задумалась (бывает на Neon). Подожди пару секунд и жми ещё раз.',
             resultLoadFailed:
                 'Не удалось загрузить страницу результата. Обновите страницу.',
         },

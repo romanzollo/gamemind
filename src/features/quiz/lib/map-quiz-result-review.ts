@@ -1,9 +1,19 @@
 import type { SessionReviewPayload } from '@/entities/quiz-session/quiz-session.repository';
 import type { QuizResultReviewItem } from '@/features/quiz/types';
 
-// функция для преобразования результатов обзора сессии в тип QuizResultReviewItem
+type MapQuizResultReviewOptions = {
+    /** Подпись «Без ответа» для timed partial / пропусков. */
+    unansweredLabel: string;
+};
+
+/**
+ * Snapshot + answers → строки разбора.
+ * Вопросы без ответа тоже показываем как wrong (иначе фильтр «Ошибки»
+ * пустой при timed auto-submit с частичными ответами).
+ */
 export function mapQuizResultReview(
     payload: SessionReviewPayload | null,
+    options: MapQuizResultReviewOptions,
 ): QuizResultReviewItem[] {
     if (!payload) {
         return [];
@@ -17,19 +27,39 @@ export function mapQuizResultReview(
 
     for (const question of payload.questions) {
         const answer = answersByQuestionId.get(question.id);
+        const correctOption = question.options.find(
+            (option) => option.isCorrect,
+        );
+
+        if (!correctOption) {
+            continue;
+        }
 
         if (!answer) {
+            items.push({
+                questionId: question.id,
+                position: question.position,
+                text: question.text,
+                type: question.type,
+                imageUrl: question.imageUrl ?? null,
+                isCorrect: false,
+                selectedOption: {
+                    id: '__unanswered__',
+                    text: options.unansweredLabel,
+                },
+                correctOption: {
+                    id: correctOption.id,
+                    text: correctOption.text,
+                },
+            });
             continue;
         }
 
         const selectedOption = question.options.find(
             (option) => option.id === answer.selectedOptionId,
         );
-        const correctOption = question.options.find(
-            (option) => option.isCorrect,
-        );
 
-        if (!selectedOption || !correctOption) {
+        if (!selectedOption) {
             continue;
         }
 

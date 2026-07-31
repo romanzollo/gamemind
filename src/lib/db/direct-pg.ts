@@ -127,15 +127,23 @@ export function isTransientDirectPgError(error: unknown) {
     );
 }
 
-function wait(milliseconds: number) {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
-
-class DirectPgTimeoutError extends Error {
+export class DirectPgTimeoutError extends Error {
     constructor(timeoutMs: number) {
         super(`Direct pg operation timed out after ${timeoutMs}ms`);
         this.name = 'DirectPgTimeoutError';
     }
+}
+
+/** name-check: instanceof может ломаться при HMR / дублях бандла. */
+export function isDirectPgTimeoutError(error: unknown): boolean {
+    return (
+        error instanceof DirectPgTimeoutError ||
+        (error instanceof Error && error.name === 'DirectPgTimeoutError')
+    );
+}
+
+function wait(milliseconds: number) {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 type TimeoutControl = {

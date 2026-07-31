@@ -76,7 +76,7 @@ export type Dictionary = {
         eyebrow: string;
         title: string;
         description: string;
-        /** Мета: 10 Q · 120s · pick difficulty */
+        /** Мета: 10 Q · 60s · pick difficulty */
         meta: string;
         startButton: string;
         loginPrompt: string;
@@ -356,10 +356,27 @@ export type Dictionary = {
         questionCountLabel: string;
         /** Прогресс сессии: отвечено / всего (не число вопросов в setup). */
         progressAnsweredLabel: string;
-        /** Timed mode: подпись countdown, пока время не вышло. */
+        /** Timed: подпись countdown, пока время не вышло. */
         timedRemainingLabel: string;
-        /** Timed mode: подпись, когда countdown дошёл до 00:00 (UX only). */
+        /** Timed: подпись на 00:00. */
         timedExpiredLabel: string;
+        /** Timed: текст recovery после TIMED_OUT (вместо «Завершить»). */
+        timedExpiredBody: string;
+        /** Timed: CTA «ещё раз» после просрочки grace. */
+        timedTryAgain: string;
+        /** Timed: статус пока идёт auto-submit на 00:00. */
+        timedSavingAnswers: string;
+        /**
+         * Timed: баннер на result после auto-submit по таймеру (`?clock=1`).
+         * Не путать с TIMED_OUT (попытка не сохранена).
+         */
+        timedClockRoast: string;
+        /** Timed roast plaque: короткий eyebrow над title. */
+        timedClockRoastEyebrow: string;
+        /** Timed roast plaque: display title. */
+        timedClockRoastTitle: string;
+        /** В разборе: вопрос без ответа (timed partial). */
+        unansweredLabel: string;
         easy: string;
         medium: string;
         hard: string;
@@ -393,6 +410,11 @@ export type Dictionary = {
             rateLimited: string;
             /** Timed mode: submit после timedEndsAt + grace. */
             timedOut: string;
+            /**
+             * Neon/direct pg timeout на start — не путать с rateLimited.
+             * Обычно помогает повторить через пару секунд / restart dev.
+             */
+            dbTimeout: string;
             /** Neon/timeout при загрузке result — не путать с submitFailed. */
             resultLoadFailed: string;
         };

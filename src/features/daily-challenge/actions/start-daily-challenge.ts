@@ -17,11 +17,9 @@ import { redirect } from 'next/navigation';
 
 import { dailyChallengeRepository } from '@/entities/daily-challenge/daily-challenge.repository';
 import { questionRepository } from '@/entities/question/question.repository';
-import {
-    quizSessionRepository,
-    QuizSessionStartError,
-} from '@/entities/quiz-session/quiz-session.repository';
+import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { ensureDailyChallenge } from '@/features/daily-challenge/lib/ensure-daily-challenge';
+import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
 import type { QuizFormState } from '@/features/quiz/types';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
@@ -97,38 +95,40 @@ export async function startDailyChallengeAction(
         redirectExistingAttempt(locale, existingAttempt);
     }
 
-    const pickedQuestions =
-        await questionRepository.pickSnapshotBundleByQuestionIds(
-            challenge.questionIds,
-            locale,
-        );
-
-    if (pickedQuestions.length !== challenge.questionCount) {
-        return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
-    }
-
-    // Порядок вопросов = freeze; порядок вариантов — per-session shuffle (anti-cheat).
-    const snapshotQuestions = pickedQuestions.map((question, index) => {
-        const shuffledOptions = shuffleArray(question.options);
-
-        return {
-            questionId: question.id,
-            position: index,
-            displayText: question.displayText,
-            displayTexts: question.displayTexts,
-            displayImageUrl: normalizeQuizImageUrl(question.displayImageUrl),
-            options: shuffledOptions.map((option, optionIndex) => ({
-                optionId: option.id,
-                displayOrder: optionIndex,
-                displayText: option.displayText,
-                displayTexts: option.displayTexts,
-            })),
-        };
-    });
-
     let quizSession: { id: string };
 
     try {
+        const pickedQuestions =
+            await questionRepository.pickSnapshotBundleByQuestionIds(
+                challenge.questionIds,
+                locale,
+            );
+
+        if (pickedQuestions.length !== challenge.questionCount) {
+            return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
+        }
+
+        // Порядок вопросов = freeze; порядок вариантов — per-session shuffle (anti-cheat).
+        const snapshotQuestions = pickedQuestions.map((question, index) => {
+            const shuffledOptions = shuffleArray(question.options);
+
+            return {
+                questionId: question.id,
+                position: index,
+                displayText: question.displayText,
+                displayTexts: question.displayTexts,
+                displayImageUrl: normalizeQuizImageUrl(
+                    question.displayImageUrl,
+                ),
+                options: shuffledOptions.map((option, optionIndex) => ({
+                    optionId: option.id,
+                    displayOrder: optionIndex,
+                    displayText: option.displayText,
+                    displayTexts: option.displayTexts,
+                })),
+            };
+        });
+
         quizSession = await quizSessionRepository.createWithJsonSnapshot({
             userId: session.user.id,
             difficulty: challenge.difficulty,
@@ -151,12 +151,13 @@ export async function startDailyChallengeAction(
             }
         }
 
-        if (error instanceof QuizSessionStartError) {
-            return { errorCode: error.code };
+        const errorCode = mapQuizStartError(error);
+        if (errorCode === 'INVALID_SETUP') {
+            console.error('Daily challenge session create failed:', error);
+        } else {
+            console.error('Daily challenge start failed:', errorCode, error);
         }
-
-        console.error('Daily challenge session create failed:', error);
-        return { errorCode: 'INVALID_SETUP' };
+        return { errorCode };
     }
 
     redirect(`/${locale}/quiz/${quizSession.id}`);

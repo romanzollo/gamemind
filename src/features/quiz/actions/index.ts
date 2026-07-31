@@ -3,13 +3,10 @@
 import { redirect } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
-import {
-    quizSessionRepository,
-    QuizSessionStartError,
-} from '@/entities/quiz-session/quiz-session.repository';
+import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
-import { buildUnlockedQuerySuffix } from '@/features/achievements/lib/parse-unlocked-query';
 import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
+import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -62,38 +59,40 @@ export async function startQuizAction(
         return { errorCode: 'INVALID_SETUP' };
     }
 
-    const pickedQuestions =
-        await questionRepository.pickRandomActiveSnapshotBundle(
-            parsed.data.difficulty,
-            parsed.data.questionCount,
-            locale,
-        );
-
-    if (pickedQuestions.length < parsed.data.questionCount) {
-        return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
-    }
-
-    const snapshotQuestions = pickedQuestions.map((question, index) => {
-        const shuffledOptions = shuffleArray(question.options);
-
-        return {
-            questionId: question.id,
-            position: index,
-            displayText: question.displayText,
-            displayTexts: question.displayTexts,
-            displayImageUrl: normalizeQuizImageUrl(question.displayImageUrl),
-            options: shuffledOptions.map((option, optionIndex) => ({
-                optionId: option.id,
-                displayOrder: optionIndex,
-                displayText: option.displayText,
-                displayTexts: option.displayTexts,
-            })),
-        };
-    });
-
     let quizSession: { id: string };
 
     try {
+        const pickedQuestions =
+            await questionRepository.pickRandomActiveSnapshotBundle(
+                parsed.data.difficulty,
+                parsed.data.questionCount,
+                locale,
+            );
+
+        if (pickedQuestions.length < parsed.data.questionCount) {
+            return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
+        }
+
+        const snapshotQuestions = pickedQuestions.map((question, index) => {
+            const shuffledOptions = shuffleArray(question.options);
+
+            return {
+                questionId: question.id,
+                position: index,
+                displayText: question.displayText,
+                displayTexts: question.displayTexts,
+                displayImageUrl: normalizeQuizImageUrl(
+                    question.displayImageUrl,
+                ),
+                options: shuffledOptions.map((option, optionIndex) => ({
+                    optionId: option.id,
+                    displayOrder: optionIndex,
+                    displayText: option.displayText,
+                    displayTexts: option.displayTexts,
+                })),
+            };
+        });
+
         quizSession = await quizSessionRepository.createWithJsonSnapshot({
             userId: session.user.id,
             difficulty: parsed.data.difficulty,
@@ -103,12 +102,13 @@ export async function startQuizAction(
             pickedQuestions,
         });
     } catch (error) {
-        if (error instanceof QuizSessionStartError) {
-            return { errorCode: error.code };
+        const errorCode = mapQuizStartError(error);
+        if (errorCode === 'INVALID_SETUP') {
+            console.error('Quiz session snapshot create failed:', error);
+        } else {
+            console.error('Quiz start failed:', errorCode, error);
         }
-
-        console.error('Quiz session snapshot create failed:', error);
-        return { errorCode: 'INVALID_SETUP' };
+        return { errorCode };
     }
 
     // перенаправляем на страницу викторины
@@ -164,6 +164,7 @@ export async function submitQuizAction(
     }
 
     const { sessionId: quizSessionId, questions } = sessionForSubmit;
+    const isTimedSession = sessionForSubmit.timedEndsAt != null;
 
     // собираем ответы пользователя из формы
     const answers = questions.map((question) => {
@@ -176,17 +177,24 @@ export async function submitQuizAction(
         };
     });
 
-    // проверяем, что на все вопросы даны ответы
-    const allAnswered = answers.every(
+    // Classic/daily: все ответы обязательны.
+    // Timed: partial OK (как Kahoot/LMS) — пустые = неверно в scoring.
+    if (!isTimedSession) {
+        const allAnswered = answers.every(
+            (answer) => answer.selectedOptionId.length > 0,
+        );
+
+        if (!allAnswered) {
+            return { errorCode: 'ANSWER_ALL' };
+        }
+    }
+
+    const answeredRows = answers.filter(
         (answer) => answer.selectedOptionId.length > 0,
     );
 
-    if (!allAnswered) {
-        return { errorCode: 'ANSWER_ALL' };
-    }
-
-    // проверяем, что все выбранные варианты ответов существуют
-    const allValid = answers.every((answer) => {
+    // Пустые у timed пропускаем; непустые должны быть валидными optionId.
+    const allValid = answeredRows.every((answer) => {
         const question = questions.find(
             (item) => item.id === answer.questionId,
         );
@@ -200,11 +208,11 @@ export async function submitQuizAction(
         return { errorCode: 'INVALID_ANSWER' };
     }
 
-    // вычисляем результаты викторины
-    const scoreResult = calculateQuizScore(questions, answers);
+    // вычисляем результаты викторины (missing answers = 0 в calculateQuizScore)
+    const scoreResult = calculateQuizScore(questions, answeredRows);
 
     // подготавливаем данные для сохранения ответов
-    const answerRows = answers.map((answer) => {
+    const answerRows = answeredRows.map((answer) => {
         const question = questions.find(
             (item) => item.id === answer.questionId,
         );
@@ -254,7 +262,18 @@ export async function submitQuizAction(
     await new Promise((resolve) => setTimeout(resolve, 300));
     // `awardedCodes` → flash query на result (display-only; БД = source of truth).
     const award = await awardAchievementsForUser(authSession.user.id);
-    const unlockQuery = buildUnlockedQuerySuffix(award.awardedCodes);
 
-    redirect(`/${locale}/result/${sessionId}${unlockQuery}`);
+    const resultQuery = new URLSearchParams();
+    if (award.awardedCodes.length > 0) {
+        resultQuery.set('unlocked', award.awardedCodes.join(','));
+    }
+    // Auto-submit по таймеру — покажем roast на result (не путать с TIMED_OUT void).
+    if (formData.get('finishedByTimer') === '1') {
+        resultQuery.set('clock', '1');
+    }
+
+    const querySuffix = resultQuery.toString();
+    redirect(
+        `/${locale}/result/${sessionId}${querySuffix ? `?${querySuffix}` : ''}`,
+    );
 }

@@ -1,6 +1,15 @@
 'use client';
 
-import { useActionState, useMemo, useState } from 'react';
+/**
+ * Форма quiz session.
+ *
+ * Timed: при 00:00 — auto-submit текущих ответов (partial OK на сервере),
+ * ответы блокируются; если всё же TIMED_OUT (после grace) — recovery CTA,
+ * без «живой» кнопки Завершить.
+ * Classic/daily: поведение без изменений (все ответы обязательны на сервере).
+ */
+
+import { useActionState, useCallback, useMemo, useRef, useState, startTransition } from 'react';
 
 import { submitQuizAction } from '@/features/quiz/actions';
 import { QuestionCard } from '@/features/quiz/components/QuestionCard';
@@ -8,7 +17,12 @@ import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message'
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import { TimedQuizCountdown } from '@/features/timed-mode/components/TimedQuizCountdown';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton } from '@/shared/ui';
+import {
+    InlineAlert,
+    PendingLink,
+    SubmitButton,
+    buttonClassName,
+} from '@/shared/ui';
 
 type QuizSessionFormProps = {
     locale: Locale;
@@ -26,10 +40,21 @@ export function QuizSessionForm({
     timedEndsAt = null,
     dictionary,
 }: QuizSessionFormProps) {
-    const [state, formAction] = useActionState(submitQuizAction, {});
+    const isTimed = Boolean(timedEndsAt);
+    const formRef = useRef<HTMLFormElement>(null);
+    const autoSubmitStartedRef = useRef(false);
+
+    const [state, formAction, isPending] = useActionState(submitQuizAction, {});
     const [selectedAnswers, setSelectedAnswers] = useState<
         Record<string, string>
     >({});
+    const [timedExpired, setTimedExpired] = useState(() => {
+        if (!timedEndsAt) {
+            return false;
+        }
+
+        return new Date(timedEndsAt).getTime() <= Date.now();
+    });
 
     const answeredCount = useMemo(
         () =>
@@ -46,8 +71,40 @@ export function QuizSessionForm({
     const submitHintId = 'quiz-submit-hint';
     const progressLabel = `${answeredCount} / ${totalQuestions}`;
 
+    const timedOut = state.errorCode === 'TIMED_OUT';
+    const answersLocked = timedExpired || timedOut || (isTimed && isPending);
+    const showTimedRecovery = timedOut;
+
+    const handleTimedExpired = useCallback(() => {
+        setTimedExpired(true);
+
+        if (autoSubmitStartedRef.current || timedOut) {
+            return;
+        }
+
+        autoSubmitStartedRef.current = true;
+
+        const form = formRef.current;
+        if (!form) {
+            return;
+        }
+
+        // FormData + formAction: гарантируем finishedByTimer=1 до POST
+        // (скрытый input через setState мог бы не успеть до requestSubmit).
+        const formData = new FormData(form);
+        formData.set('finishedByTimer', '1');
+        startTransition(() => {
+            formAction(formData);
+        });
+    }, [formAction, timedOut]);
+
     return (
-        <form action={formAction} className="mt-4 sm:mt-6">
+        <form
+            ref={formRef}
+            action={formAction}
+            noValidate={isTimed}
+            className="mt-4 sm:mt-6"
+        >
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="sessionId" value={sessionId} />
 
@@ -61,6 +118,7 @@ export function QuizSessionForm({
                                     dictionary.quiz.timedRemainingLabel
                                 }
                                 expiredLabel={dictionary.quiz.timedExpiredLabel}
+                                onExpired={handleTimedExpired}
                             />
                         </div>
                     ) : null}
@@ -99,8 +157,15 @@ export function QuizSessionForm({
                         selectedOptionId={selectedAnswers[question.id]}
                         imageUrl={question.imageUrl}
                         imageUnavailableLabel={dictionary.quiz.imageUnavailable}
-                        imagePriority={index === 0 && Boolean(question.imageUrl)}
+                        imagePriority={
+                            index === 0 && Boolean(question.imageUrl)
+                        }
+                        disabled={answersLocked}
                         onSelectOption={(optionId) => {
+                            if (answersLocked) {
+                                return;
+                            }
+
                             setSelectedAnswers((current) => ({
                                 ...current,
                                 [question.id]: optionId,
@@ -111,27 +176,75 @@ export function QuizSessionForm({
             </div>
 
             <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pb-[max(1rem,env(safe-area-inset-bottom))]">
-                {errorMessage ? (
-                    <InlineAlert className="mb-3">{errorMessage}</InlineAlert>
-                ) : null}
+                {showTimedRecovery ? (
+                    <div className="space-y-3">
+                        <InlineAlert>
+                            {dictionary.quiz.timedExpiredBody}
+                        </InlineAlert>
+                        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                            <PendingLink
+                                href={`/${locale}/quiz`}
+                                className={buttonClassName({
+                                    className: 'w-full sm:w-auto',
+                                })}
+                            >
+                                {dictionary.quiz.timedTryAgain}
+                            </PendingLink>
+                            <PendingLink
+                                href={`/${locale}`}
+                                className={buttonClassName({
+                                    variant: 'secondary',
+                                    className: 'w-full sm:w-auto',
+                                })}
+                            >
+                                {dictionary.quiz.backHome}
+                            </PendingLink>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {errorMessage ? (
+                            <InlineAlert className="mb-3">
+                                {errorMessage}
+                            </InlineAlert>
+                        ) : null}
 
-                {!allAnswered ? (
-                    <p
-                        id={submitHintId}
-                        className="mb-2 text-sm leading-snug text-muted sm:mb-3"
-                    >
-                        {dictionary.quiz.errors.answerAll}
-                    </p>
-                ) : null}
+                        {isTimed && timedExpired && isPending ? (
+                            <p
+                                className="mb-2 text-sm leading-snug text-muted sm:mb-3"
+                                role="status"
+                            >
+                                {dictionary.quiz.timedSavingAnswers}
+                            </p>
+                        ) : null}
 
-                <SubmitButton
-                    disabled={!allAnswered}
-                    pendingLabel={dictionary.common.submitting}
-                    className="w-full"
-                    aria-describedby={!allAnswered ? submitHintId : undefined}
-                >
-                    {dictionary.quiz.submitButton}
-                </SubmitButton>
+                        {!isTimed && !allAnswered ? (
+                            <p
+                                id={submitHintId}
+                                className="mb-2 text-sm leading-snug text-muted sm:mb-3"
+                            >
+                                {dictionary.quiz.errors.answerAll}
+                            </p>
+                        ) : null}
+
+                        <SubmitButton
+                            disabled={
+                                isTimed
+                                    ? timedExpired || isPending
+                                    : !allAnswered
+                            }
+                            pendingLabel={dictionary.common.submitting}
+                            className="w-full"
+                            aria-describedby={
+                                !isTimed && !allAnswered
+                                    ? submitHintId
+                                    : undefined
+                            }
+                        >
+                            {dictionary.quiz.submitButton}
+                        </SubmitButton>
+                    </>
+                )}
             </div>
         </form>
     );

@@ -40,7 +40,9 @@ export type QuizErrorCode =
     /** Слишком много start/submit для этого userId за окно. */
     | 'RATE_LIMITED'
     /** Timed submit после timedEndsAt + grace (server clock). */
-    | 'TIMED_OUT';
+    | 'TIMED_OUT'
+    /** Neon/direct pg wall-clock timeout на start (холодный старт / wedged socket). */
+    | 'DB_TIMEOUT';
 
 // тип для состояния формы викторины
 export type QuizFormState = {

@@ -1,5 +1,6 @@
 // Работа с результатами викторин
 import { withDirectPgClient } from '@/lib/db/direct-pg';
+import { parseSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
 import type { Difficulty } from '@/types';
 
 type QuizResultRow = {
@@ -10,6 +11,8 @@ type QuizResultRow = {
     total_questions: number;
     correct_count: number;
     completed_at: Date;
+    snapshot_data: string | null;
+    question_count: number;
 };
 
 type LeaderboardScoreRow = {
@@ -60,15 +63,19 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
         return client.query<QuizResultRow>(
             `
                 SELECT
-                    "id",
-                    "sessionId" AS "session_id",
-                    "userId" AS "user_id",
-                    "score",
-                    "totalQuestions" AS "total_questions",
-                    "correctCount" AS "correct_count",
-                    "completedAt" AS "completed_at"
-                FROM "QuizResult"
-                WHERE "sessionId" = $1 AND "userId" = $2
+                    r."id",
+                    r."sessionId" AS "session_id",
+                    r."userId" AS "user_id",
+                    r."score",
+                    r."totalQuestions" AS "total_questions",
+                    r."correctCount" AS "correct_count",
+                    r."completedAt" AS "completed_at",
+                    s."snapshotData" AS "snapshot_data",
+                    s."questionCount" AS "question_count"
+                FROM "QuizResult" r
+                INNER JOIN "QuizSession" s
+                    ON s."id" = r."sessionId"
+                WHERE r."sessionId" = $1 AND r."userId" = $2
                 LIMIT 1
             `,
             [sessionId, userId],
@@ -81,6 +88,12 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
         return null;
     }
 
+    const snapshot = parseSnapshotData(row.snapshot_data);
+    const difficulties: Difficulty[] =
+        snapshot && snapshot.questions.length === row.question_count
+            ? snapshot.questions.map((question) => question.difficulty)
+            : [];
+
     return {
         id: row.id,
         sessionId: row.session_id,
@@ -89,6 +102,8 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
         totalQuestions: row.total_questions,
         correctCount: row.correct_count,
         completedAt: row.completed_at,
+        /** Для summary «score / max» без второго round-trip на review. */
+        difficulties,
     };
 }
 
