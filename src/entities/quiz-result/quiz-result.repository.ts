@@ -13,6 +13,14 @@ type QuizResultRow = {
     completed_at: Date;
     snapshot_data: string | null;
     question_count: number;
+    timed_ends_at: Date | string | null;
+    difficulty: Difficulty;
+};
+
+type ReviewAnswerRow = {
+    question_id: string;
+    selected_option_id: string;
+    is_correct: boolean;
 };
 
 type LeaderboardScoreRow = {
@@ -59,8 +67,11 @@ type ProfileStatsRow = {
 };
 
 async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
-    const result = await withDirectPgClient((client) => {
-        return client.query<QuizResultRow>(
+    // Один Direct-клиент: score + snapshot + answers.
+    // Иначе после submit второй TLS на review часто клинит Windows+Neon
+    // (см. withDirectPgQueue в direct-pg.ts).
+    const loaded = await withDirectPgClient(async (client) => {
+        const result = await client.query<QuizResultRow>(
             `
                 SELECT
                     r."id",
@@ -71,7 +82,9 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
                     r."correctCount" AS "correct_count",
                     r."completedAt" AS "completed_at",
                     s."snapshotData" AS "snapshot_data",
-                    s."questionCount" AS "question_count"
+                    s."questionCount" AS "question_count",
+                    s."timedEndsAt" AS "timed_ends_at",
+                    s."difficulty"::text AS "difficulty"
                 FROM "QuizResult" r
                 INNER JOIN "QuizSession" s
                     ON s."id" = r."sessionId"
@@ -80,14 +93,40 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
             `,
             [sessionId, userId],
         );
+
+        const row = result.rows[0];
+
+        if (!row) {
+            return null;
+        }
+
+        const answersResult = await client.query<ReviewAnswerRow>(
+            `
+                SELECT
+                    "questionId" AS "question_id",
+                    "selectedOptionId" AS "selected_option_id",
+                    "isCorrect" AS "is_correct"
+                FROM "QuizAnswer"
+                WHERE "sessionId" = $1
+            `,
+            [sessionId],
+        );
+
+        return {
+            row,
+            answers: answersResult.rows.map((answer) => ({
+                questionId: answer.question_id,
+                selectedOptionId: answer.selected_option_id,
+                isCorrect: answer.is_correct,
+            })),
+        };
     });
 
-    const row = result.rows[0];
-
-    if (!row) {
+    if (!loaded) {
         return null;
     }
 
+    const { row, answers } = loaded;
     const snapshot = parseSnapshotData(row.snapshot_data);
     const difficulties: Difficulty[] =
         snapshot && snapshot.questions.length === row.question_count
@@ -104,6 +143,23 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
         completedAt: row.completed_at,
         /** Для summary «score / max» без второго round-trip на review. */
         difficulties,
+        /** Timed session → rematch CTA ведёт к Timed, не к classic setup. */
+        isTimed: row.timed_ends_at != null,
+        /** Сложность сессии — для Timed rematch с теми же правилами. */
+        difficulty: row.difficulty,
+        /**
+         * Сырьё для mapQuizResultReview на page (тот же connect, что score).
+         * null если snapshot битый — UI покажет soft-fail только на review.
+         */
+        review:
+            snapshot && snapshot.questions.length === row.question_count
+                ? {
+                      sessionId: row.session_id,
+                      questionCount: row.question_count,
+                      snapshotData: snapshot,
+                      answers,
+                  }
+                : null,
     };
 }
 

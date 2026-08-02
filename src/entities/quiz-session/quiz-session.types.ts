@@ -67,6 +67,8 @@ export type SessionSnapshotPublicQuestion = {
 export type QuizSessionPublicView = {
     questions: SessionSnapshotPublicQuestion[];
     timedEndsAt: string | null;
+    /** Сложность сессии — rematch Timed с теми же правилами. */
+    difficulty: Difficulty;
 };
 
 /** Вопрос из snapshot для server-side scoring (с isCorrect, без текста). */

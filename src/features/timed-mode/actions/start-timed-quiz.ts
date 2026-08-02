@@ -9,9 +9,13 @@
  * 3) pick random PUBLISHED bundle → JSON snapshot;
  * 4) timedEndsAt = now + durationSeconds (серверный авторитет часов).
  *
+ * Stuck timed: abandon orphan IN_PROGRESS делается внутри
+ * `createWithJsonSnapshot` (тот же pooled client, что INSERT) —
+ * не отдельным `withDirectPgWriteClient` (лишний TLS → Windows+Neon hang).
+ * Canon: docs/DECISIONS.md → Timed Mode MVP.
+ *
  * Pick+create в одном try: Neon DirectPgTimeout иначе улетал в 500
  * (знакомый Windows+Neon hang class).
- * Canon: docs/DECISIONS.md → Timed Mode MVP.
  */
 
 import { redirect } from 'next/navigation';

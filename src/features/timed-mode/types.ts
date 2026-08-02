@@ -42,10 +42,22 @@ export const TIMED_MODE_MVP_RULES = {
     difficultySource: 'player_choice' as const,
     /**
      * Попытки не ограничены календарным днём (это не Daily).
-     * Один IN_PROGRESS timed-session на пользователя — продуктово ок отложить
-     * до schema/start (abandon / resume), в контракте фиксируем «не once-per-day».
+     * Новый старт всегда создаёт новую timed-сессию.
      */
     attemptsPolicy: 'unlimited' as const,
+    /**
+     * Застрявшие timed-сессии: при новом старте все IN_PROGRESS с
+     * `timedEndsAt IS NOT NULL` у этого user → `ABANDONED` (без QuizResult).
+     *
+     * Почему abandon, а не resume:
+     * - Timed = давление по часам; «продолжить через час» ломает смысл дедлайна;
+     * - Daily уже делает resume из‑за UNIQUE(user, day) — другой продукт;
+     * - classic не трогаем: у него нет дедлайна и orphan IN_PROGRESS менее вреден.
+     *
+     * Scope: только timed. Classic/daily `IN_PROGRESS` не трогаем.
+     * Resume timed в MVP нет.
+     */
+    stuckSessionPolicy: 'abandon_on_new_start' as const,
 } as const;
 
 /**

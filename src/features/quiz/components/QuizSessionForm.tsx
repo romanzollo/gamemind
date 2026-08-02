@@ -16,6 +16,7 @@ import { QuestionCard } from '@/features/quiz/components/QuestionCard';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import { TimedQuizCountdown } from '@/features/timed-mode/components/TimedQuizCountdown';
+import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import {
     InlineAlert,
@@ -23,6 +24,7 @@ import {
     SubmitButton,
     buttonClassName,
 } from '@/shared/ui';
+import type { Difficulty } from '@/types';
 
 type QuizSessionFormProps = {
     locale: Locale;
@@ -30,6 +32,8 @@ type QuizSessionFormProps = {
     questions: QuizPublicQuestion[];
     /** ISO UTC или null (classic/daily — без countdown). */
     timedEndsAt?: string | null;
+    /** Сложность сессии — для Timed rematch после TIMED_OUT. */
+    difficulty: Difficulty;
     dictionary: Dictionary;
 };
 
@@ -38,6 +42,7 @@ export function QuizSessionForm({
     sessionId,
     questions,
     timedEndsAt = null,
+    difficulty,
     dictionary,
 }: QuizSessionFormProps) {
     const isTimed = Boolean(timedEndsAt);
@@ -181,15 +186,13 @@ export function QuizSessionForm({
                         <InlineAlert>
                             {dictionary.quiz.timedExpiredBody}
                         </InlineAlert>
-                        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                            <PendingLink
-                                href={`/${locale}/quiz`}
-                                className={buttonClassName({
-                                    className: 'w-full sm:w-auto',
-                                })}
-                            >
-                                {dictionary.quiz.timedTryAgain}
-                            </PendingLink>
+                        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-start">
+                            <TimedRematchButton
+                                locale={locale}
+                                difficulty={difficulty}
+                                label={dictionary.quiz.timedTryAgain}
+                                dictionary={dictionary}
+                            />
                             <PendingLink
                                 href={`/${locale}`}
                                 className={buttonClassName({

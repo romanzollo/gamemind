@@ -35,6 +35,7 @@ type SnapshotPublicRow = {
     session_id: string;
     question_count: number;
     timed_ends_at: Date | string | null;
+    session_difficulty: Difficulty;
     question_id: string | null;
     question_text: string | null;
     display_image_url: string | null;
@@ -59,6 +60,7 @@ type SessionSnapshotJsonRow = {
     question_count: number;
     snapshot_data: QuizSessionSnapshotData | string | null;
     timed_ends_at: Date | string | null;
+    difficulty: Difficulty;
 };
 
 type ReviewAnswerRow = {
@@ -95,7 +97,8 @@ async function loadQuizSessionSnapshotData(
                     "id" AS "session_id",
                     "questionCount" AS "question_count",
                     "snapshotData" AS "snapshot_data",
-                    "timedEndsAt" AS "timed_ends_at"
+                    "timedEndsAt" AS "timed_ends_at",
+                    "difficulty"::text AS "difficulty"
                 FROM "QuizSession"
                 WHERE
                     "id" = $1
@@ -379,7 +382,11 @@ async function loadSnapshotPublicQuestions(
                 ? await overlayPublicQuestionsWithLocale(mapped, locale)
                 : mapped;
 
-            return { questions, timedEndsAt };
+            return {
+                questions,
+                timedEndsAt,
+                difficulty: jsonSnapshot.difficulty,
+            };
         }
     }
 
@@ -390,6 +397,7 @@ async function loadSnapshotPublicQuestions(
                     s."id" AS "session_id",
                     s."questionCount" AS "question_count",
                     s."timedEndsAt" AS "timed_ends_at",
+                    s."difficulty"::text AS "session_difficulty",
                     ssq."questionId" AS "question_id",
                     ssq."displayText" AS "question_text",
                     ssq."displayImageUrl" AS "display_image_url",
@@ -468,6 +476,7 @@ async function loadSnapshotPublicQuestions(
             locale,
         ),
         timedEndsAt: toTimedEndsAtIso(firstRow.timed_ends_at),
+        difficulty: firstRow.session_difficulty,
     };
 }
 

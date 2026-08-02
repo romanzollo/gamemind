@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { buttonClassName } from '@/shared/ui';
@@ -10,6 +11,11 @@ type QuizResultSummaryProps = {
     correctCount: number;
     totalQuestions: number;
     labels: Dictionary['quiz'];
+    /**
+     * Primary CTA: Link на classic setup или TimedRematchButton (форма).
+     * Timed rematch = сразу новая партия, не страница выбора режима.
+     */
+    playAgainAction: ReactNode;
 };
 
 /**
@@ -23,6 +29,7 @@ export function QuizResultSummary({
     correctCount,
     totalQuestions,
     labels,
+    playAgainAction,
 }: QuizResultSummaryProps) {
     const scoreText =
         maxPossibleScore != null && maxPossibleScore > 0
@@ -61,15 +68,10 @@ export function QuizResultSummary({
             </p>
 
             <nav
-                className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3"
+                className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3 sm:items-start"
                 aria-label={labels.resultTitle}
             >
-                <Link
-                    href={`/${locale}/quiz`}
-                    className={buttonClassName({ className: 'w-full sm:w-auto' })}
-                >
-                    {labels.playAgain}
-                </Link>
+                {playAgainAction}
                 <Link
                     href={`/${locale}/leaderboard`}
                     className={buttonClassName({

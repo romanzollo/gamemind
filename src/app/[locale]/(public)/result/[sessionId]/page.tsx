@@ -1,17 +1,19 @@
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import { AchievementUnlockFlash } from '@/features/achievements/components/AchievementUnlockFlash';
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
-import { QuizResultReviewSection } from '@/features/quiz/components/QuizResultReviewSection';
-import { QuizResultReviewSkeleton } from '@/features/quiz/components/QuizResultReviewSkeleton';
+import { QuizResultReview } from '@/features/quiz/components/QuizResultReview';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
+import { buildSessionReviewPayloadFromSnapshot } from '@/features/quiz/lib/build-session-review-payload';
+import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review';
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
 import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClockRoastBanner';
+import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
-import { InlineAlert } from '@/shared/ui';
+import { InlineAlert, buttonClassName } from '@/shared/ui';
+import Link from 'next/link';
 
 type QuizResultPageProps = {
     params: Promise<{ locale: string; sessionId: string }>;
@@ -40,6 +42,7 @@ export default async function QuizResultPage({
         : resultPath;
 
     // Soft-fail Neon: после submit+award TLS иногда клинит; не роняем весь RSC.
+    // Score + review answers читаем одним Direct-клиентом (см. repository).
     let result: Awaited<
         ReturnType<typeof quizResultRepository.findBySessionIdForUser>
     > = null;
@@ -63,6 +66,41 @@ export default async function QuizResultPage({
         result && result.difficulties.length > 0
             ? getMaxPossibleScore(result.difficulties)
             : null;
+
+    const reviewItems =
+        result?.review != null
+            ? mapQuizResultReview(
+                  buildSessionReviewPayloadFromSnapshot({
+                      sessionId: result.review.sessionId,
+                      questionCount: result.review.questionCount,
+                      snapshotData: result.review.snapshotData,
+                      answers: result.review.answers,
+                      locale: safeLocale,
+                  }),
+                  {
+                      unansweredLabel: dictionary.quiz.unansweredLabel,
+                  },
+              )
+            : [];
+
+    // Timed: сразу новая партия с той же сложностью (прод-паттерн rematch).
+    // Classic/daily: ссылка на setup /quiz.
+    const playAgainAction =
+        result?.isTimed ? (
+            <TimedRematchButton
+                locale={safeLocale}
+                difficulty={result.difficulty}
+                label={dictionary.quiz.timedTryAgain}
+                dictionary={dictionary}
+            />
+        ) : (
+            <Link
+                href={`/${safeLocale}/quiz`}
+                className={buttonClassName({ className: 'w-full sm:w-auto' })}
+            >
+                {dictionary.quiz.playAgain}
+            </Link>
+        );
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
@@ -92,20 +130,19 @@ export default async function QuizResultPage({
                         correctCount={result.correctCount}
                         totalQuestions={result.totalQuestions}
                         labels={dictionary.quiz}
+                        playAgainAction={playAgainAction}
                     />
 
-                    {/*
-                      Review в Suspense: locale switch / Neon timeout не держат
-                      очки на экране. max score — из JOIN snapshot в result read.
-                    */}
-                    <Suspense fallback={<QuizResultReviewSkeleton />}>
-                        <QuizResultReviewSection
-                            sessionId={sessionId}
-                            userId={authSession.user.id}
-                            locale={safeLocale}
-                            dictionary={dictionary}
+                    {reviewItems.length > 0 ? (
+                        <QuizResultReview
+                            items={reviewItems}
+                            labels={dictionary.quiz}
                         />
-                    </Suspense>
+                    ) : (
+                        <InlineAlert className="mt-4" tone="warning" role="status">
+                            {dictionary.quiz.errors.resultLoadFailed}
+                        </InlineAlert>
+                    )}
                 </>
             )}
         </main>

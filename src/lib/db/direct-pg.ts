@@ -7,8 +7,9 @@
  *   so a late connect cannot start a query on a half-dead client.
  * - Prefer unpooled URL for admin/quiz reads; pooled+tight timeout was a
  *   known false-failure regression.
- * - In development on Windows, soften SSL and serialize reads: parallel
- *   fresh-Client TLS to Neon is a known wedge (admin full list timeouts).
+ * - In development on Windows, soften SSL and serialize Direct (unpooled)
+ *   connect hops: parallel / back-to-back fresh-Client TLS wedges `next dev`
+ *   (submit → result review, cold Timed start). Same pattern as admin-list queue.
  */
 import { Client } from 'pg';
 
@@ -285,14 +286,52 @@ const readClientOptions = {
 } as const;
 
 /**
+ * Очередь unpooled Direct-клиентов в `next dev` (Windows+Neon).
+ * После submit/result/admin нельзя сразу открывать второй TLS — socket.destroy
+ * предыдущего ещё не осел. Prod (Linux/serverless) обычно ок без очереди.
+ */
+const globalForDirectPg = globalThis as typeof globalThis & {
+    __directPgTail?: Promise<unknown>;
+};
+
+const DIRECT_PG_SETTLE_MS = 300;
+
+async function withDirectPgQueue<T>(run: () => Promise<T>): Promise<T> {
+    if (!isDev) {
+        return run();
+    }
+
+    const previous = globalForDirectPg.__directPgTail ?? Promise.resolve();
+    let releaseTail!: () => void;
+    const tail = new Promise<void>((resolve) => {
+        releaseTail = resolve;
+    });
+    globalForDirectPg.__directPgTail = previous.then(
+        () => tail,
+        () => tail,
+    );
+
+    await previous.catch(() => undefined);
+
+    try {
+        return await run();
+    } finally {
+        await wait(DIRECT_PG_SETTLE_MS);
+        releaseTail();
+    }
+}
+
+/**
  * Reads via unpooled Neon host. Prefer for admin list/detail and critical
  * quiz reads.
  */
 export async function withDirectPgClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
-    return withPgReadRetry(() =>
-        withFreshClient(createDirectClient, operation, readClientOptions),
+    return withDirectPgQueue(() =>
+        withPgReadRetry(() =>
+            withFreshClient(createDirectClient, operation, readClientOptions),
+        ),
     );
 }
 
@@ -313,7 +352,9 @@ export async function withPooledPgReadClient<T>(
 export async function withDirectPgWriteClient<T>(
     operation: (client: Client) => Promise<T>,
 ) {
-    return withFreshClient(createDirectClient, operation);
+    return withDirectPgQueue(() =>
+        withFreshClient(createDirectClient, operation),
+    );
 }
 
 /** Writes with one guarded retry for transient Neon connect/socket errors. */
@@ -321,23 +362,37 @@ export async function withDirectPgWriteRetry<T>(
     operation: (client: Client) => Promise<T>,
     attempts = 2,
 ) {
-    let lastError: unknown;
+    return withDirectPgQueue(async () => {
+        let lastError: unknown;
 
-    for (let attempt = 1; attempt <= attempts; attempt += 1) {
-        try {
-            return await withFreshClient(createDirectClient, operation);
-        } catch (error) {
-            lastError = error;
+        for (let attempt = 1; attempt <= attempts; attempt += 1) {
+            try {
+                return await withFreshClient(createDirectClient, operation);
+            } catch (error) {
+                lastError = error;
 
-            if (!isTransientDirectPgError(error) || attempt === attempts) {
-                throw error;
+                if (!isTransientDirectPgError(error) || attempt === attempts) {
+                    throw error;
+                }
+
+                await wait(300 * attempt);
             }
-
-            await wait(300 * attempt);
         }
-    }
 
-    throw lastError;
+        throw lastError;
+    });
+}
+
+/**
+ * Best-effort wake Neon unpooled host (home/quiz CTA).
+ * Не бросает наружу — старт квиза всё равно имеет свой retry/timeout UX.
+ */
+export async function warmDirectPgConnection(): Promise<void> {
+    try {
+        await withDirectPgClient((client) => client.query('SELECT 1'));
+    } catch {
+        // ignore — cold start всё ещё возможен; кнопка покажет DB_TIMEOUT
+    }
 }
 
 /** Quiz start: one connection for question pick + snapshot write. */

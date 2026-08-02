@@ -42,6 +42,7 @@ export default async function QuizSessionPage({
                 sessionId={sessionId}
                 questions={sessionView.questions}
                 timedEndsAt={sessionView.timedEndsAt}
+                difficulty={sessionView.difficulty}
                 dictionary={dictionary}
             />
         </main>

@@ -5,6 +5,7 @@
  * в одном файле с submit/reads. SQL перенесён as-is — без rewrite.
  * Neon: pooled quiz-start client для JSON insert; recovery после transient
  * ошибки; не await client.end() на response path (см. DECISIONS → Neon Write Path).
+ * Timed abandon-on-new-start: `abandonInProgressTimedByUserId` (см. DECISIONS → Timed Mode).
  * Публичный фасад: quiz-session.repository.ts.
  * См. docs/DECISIONS.md → Repository File Split.
  */
@@ -397,6 +398,53 @@ async function startQuizSessionWithPick(
     }, 2);
 }
 
+/**
+ * UPDATE на уже открытом клиенте — без нового TLS к Neon.
+ * Canon: stuckSessionPolicy = abandon_on_new_start (только timed).
+ */
+async function abandonInProgressTimedOnClient(
+    client: Client,
+    userId: string,
+): Promise<number> {
+    const result = await client.query(
+        `
+            UPDATE "QuizSession"
+            SET "status" = 'ABANDONED'::"QuizSessionStatus"
+            WHERE
+                "userId" = $1
+                AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                AND "timedEndsAt" IS NOT NULL
+        `,
+        [userId],
+    );
+
+    return result.rowCount ?? 0;
+}
+
+/**
+ * Помечает застрявшие timed-сессии пользователя как ABANDONED.
+ *
+ * Контракт: TIMED_MODE_MVP_RULES.stuckSessionPolicy = abandon_on_new_start.
+ * Фильтр `timedEndsAt IS NOT NULL` — только Timed; classic/daily не трогаем.
+ * Без QuizResult: это не завершение, а «бросил и начал заново».
+ *
+ * Neon: используем `withPooledPgQuizStartClient` (timeout + retry),
+ * НЕ `withDirectPgWriteClient` — лишний unpooled TLS на Windows клинит сокеты.
+ * Основной путь: abandon внутри createJsonSnapshotSession на том же client,
+ * что и INSERT (один connect на abandon+create).
+ */
+async function abandonInProgressTimedByUserId(
+    userId: string,
+): Promise<{ abandonedCount: number }> {
+    return withPooledPgQuizStartClient(async (client) => {
+        const abandonedCount = await abandonInProgressTimedOnClient(
+            client,
+            userId,
+        );
+        return { abandonedCount };
+    });
+}
+
 async function createJsonSnapshotSession(
     input: CreateQuizSessionWithJsonSnapshotInput,
 ): Promise<SessionSnapshotCreateResult> {
@@ -405,6 +453,12 @@ async function createJsonSnapshotSession(
         const snapshotData = buildSnapshotData(input, input.pickedQuestions);
 
         try {
+            // Timed: закрыть orphan IN_PROGRESS на том же соединении, что INSERT.
+            // Classic/daily (timedEndsAt null) — no-op. См. DECISIONS → Timed Mode.
+            if (input.timedEndsAt != null) {
+                await abandonInProgressTimedOnClient(client, input.userId);
+            }
+
             await insertQuizSessionWithSnapshotData(
                 client,
                 sessionId,
@@ -457,4 +511,6 @@ export const quizSessionStartMethods = {
 
         return createSnapshotWithPgClient(input);
     },
+
+    abandonInProgressTimedByUserId,
 };

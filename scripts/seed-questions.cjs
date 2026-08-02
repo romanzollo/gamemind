@@ -345,7 +345,7 @@ const questions = [
         'What is the name of the city where most of Cyberpunk 2077 takes place?',
         [
             opt(true, 'Найт-Сити', 'Night City'),
-            opt(false, 'Рапчур', 'Rapture'),
+            opt(false, 'Восторг', 'Rapture'),
             opt(false, 'Сити 17', 'City 17'),
             opt(false, 'Дженова', 'Junon'),
         ],
@@ -397,7 +397,7 @@ const questions = [
         'Как называется подводный город-утопия в первой BioShock?',
         'What is the name of the underwater utopian city in the first BioShock?',
         [
-            opt(true, 'Рапчур', 'Rapture'),
+            opt(true, 'Восторг', 'Rapture'),
             opt(false, 'Колумбия', 'Columbia'),
             opt(false, 'Данвич', 'Dunwich'),
             opt(false, 'Аркадия', 'Arcadia'),
@@ -489,7 +489,7 @@ const questions = [
         'Как называют безымянного героя современных игр DOOM (2016 и далее)?',
         'What is the unnamed hero of modern DOOM games (2016 onward) commonly called?',
         [
-            opt(true, 'Doom Slayer', 'Doom Slayer'),
+            opt(true, 'Палач Рока', 'Doom Slayer'),
             opt(false, 'Duke Nukem', 'Duke Nukem'),
             opt(false, 'Doomguy Jr.', 'Doomguy Jr.'),
             opt(false, 'B.J. Blazkowicz', 'B.J. Blazkowicz'),
