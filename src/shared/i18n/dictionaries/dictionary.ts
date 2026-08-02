@@ -40,9 +40,21 @@ export type Dictionary = {
         title: string;
         headline: string;
         description: string;
+        /** Primary: вход в mode lobby `/quiz` (когда нет незавершённого Daily). */
         cta: string;
+        /** Secondary при in_progress Daily: уйти в lobby, не бросая сессию. */
+        ctaAllModes: string;
+        /**
+         * Secondary Daily tease — start (available / guest→login).
+         * Не полный mode CTA; anti-duplication с lobby.
+         */
+        dailyTease: string;
+        /** Primary при in_progress: продолжить сессию Daily. */
+        dailyContinue: string;
+        /** Secondary при completed: результат сегодняшнего Daily. */
+        dailyResult: string;
     };
-    /** Ежедневный челлендж — CTA на home / quiz setup (Scoreboard Editorial). */
+    /** Ежедневный челлендж — CTA только на mode lobby `/quiz` (Scoreboard Editorial). */
     dailyChallenge: {
         /** Caps eyebrow над заголовком */
         eyebrow: string;
@@ -61,15 +73,13 @@ export type Dictionary = {
          * Пример: «Очки: {score} · {correct}/{total}»
          */
         completedScore: string;
-        /** Eyebrow над classic setup на /quiz */
-        classicEyebrow: string;
         /** Заголовок компактного рейтинга дня */
         boardTitle: string;
         /** Пустой рейтинг (день есть, ещё никто не финишировал) */
         boardEmpty: string;
     };
     /**
-     * Timed Mode CTA (home + /quiz).
+     * Timed Mode CTA — только mode lobby `/quiz`.
      * Правила count/duration — TIMED_MODE_MVP_RULES; meta в словаре держим в синхроне.
      */
     timedMode: {
@@ -352,6 +362,11 @@ export type Dictionary = {
     quiz: {
         setupTitle: string;
         setupDescription: string;
+        /** Caps eyebrow Classic на lobby (как timedMode.eyebrow). */
+        classicEyebrow: string;
+        classicTitle: string;
+        classicDescription: string;
+        classicMeta: string;
         difficultyLabel: string;
         questionCountLabel: string;
         /** Прогресс сессии: отвечено / всего (не число вопросов в setup). */

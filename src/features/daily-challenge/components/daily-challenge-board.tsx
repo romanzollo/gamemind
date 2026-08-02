@@ -6,7 +6,6 @@
  */
 
 import type { LeaderboardEntry } from '@/features/leaderboard/types/leaderboard-entry';
-import { EmptyState } from '@/shared/ui';
 
 type DailyChallengeBoardProps = {
     entries: LeaderboardEntry[];
@@ -99,7 +98,9 @@ export function DailyChallengeBoard({
             </h3>
 
             {entries.length === 0 ? (
-                <EmptyState className="mt-3" title={labels.boardEmpty} />
+                <p className="mt-2 text-sm leading-relaxed text-muted" role="status">
+                    {labels.boardEmpty}
+                </p>
             ) : (
                 <ol className="mt-3 divide-y divide-border">
                     {entries.map((entry) => {

@@ -18,12 +18,14 @@ import {
     PendingLink,
     SubmitButton,
     buttonClassName,
+    type ButtonVariant,
 } from '@/shared/ui';
 
 type TimedModeCtaPanelProps = {
     locale: Locale;
     dictionary: Dictionary;
     isAuthenticated: boolean;
+    startVariant?: ButtonVariant;
 };
 
 const fieldClassName =
@@ -35,6 +37,7 @@ export function TimedModeCtaPanel({
     locale,
     dictionary,
     isAuthenticated,
+    startVariant = 'primary',
 }: TimedModeCtaPanelProps) {
     const labels = dictionary.timedMode;
     const [state, formAction] = useActionState(startTimedQuizAction, {});
@@ -107,6 +110,7 @@ export function TimedModeCtaPanel({
                         </label>
 
                         <SubmitButton
+                            variant={startVariant}
                             pendingLabel={dictionary.common.working}
                             className="w-full sm:w-auto"
                         >

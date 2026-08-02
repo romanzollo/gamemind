@@ -1,6 +1,7 @@
 /**
  * Server CTA Daily Challenge: auth (optional) → статус → панель + рейтинг дня.
  *
+ * Живёт на mode lobby `/quiz` (не на Home — anti-duplication IA).
  * Рейтинг: только если строка DailyChallenge на сегодня уже есть
  * (после ensure у залогиненного или если кто-то уже стартовал).
  * Гость без созданного дня — CTA login, без лишнего INSERT.

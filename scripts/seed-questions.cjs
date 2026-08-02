@@ -490,9 +490,9 @@ const questions = [
         'What is the unnamed hero of modern DOOM games (2016 onward) commonly called?',
         [
             opt(true, 'Палач Рока', 'Doom Slayer'),
-            opt(false, 'Duke Nukem', 'Duke Nukem'),
-            opt(false, 'Doomguy Jr.', 'Doomguy Jr.'),
-            opt(false, 'B.J. Blazkowicz', 'B.J. Blazkowicz'),
+            opt(false, 'Дюк Нюкем', 'Duke Nukem'),
+            opt(false, 'Думгай-младший', 'Doomguy Jr.'),
+            opt(false, 'Би.Джей Блазкович', 'B.J. Blazkowicz'),
         ],
     ),
     Q(
@@ -557,7 +557,7 @@ const questions = [
             opt(true, 'Уитли', 'Wheatley'),
             opt(false, 'Кори', 'Corey'),
             opt(false, 'Атлас', 'Atlas'),
-            opt(false, 'P-Body', 'P-Body'),
+            opt(false, 'П-Боди', 'P-Body'),
         ],
     ),
     Q(

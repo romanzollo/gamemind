@@ -1,12 +1,15 @@
-import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
-import { TimedModeCta } from '@/features/timed-mode/components/TimedModeCta';
+import { HomeCtaGroup } from '@/features/daily-challenge/components/home-cta-group';
 import { getDictionary, isLocale } from '@/shared/i18n';
-import { buttonClassName, PendingLink } from '@/shared/ui';
 
 type HomePageProps = {
     params: Promise<{ locale: string }>;
 };
 
+/**
+ * Home = brand invite (Scoreboard Editorial), не mode lobby.
+ * Полные Daily / Timed / Classic живут только на `/quiz`.
+ * CTA-ряд: при незавершённом Daily primary = продолжить челлендж.
+ */
 export default async function HomePage({ params }: HomePageProps) {
     const { locale } = await params;
     const safeLocale = isLocale(locale) ? locale : 'ru';
@@ -36,27 +39,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     {dictionary.home.description}
                 </p>
 
-                <div className="mt-10">
-                    <PendingLink
-                        href={`/${safeLocale}/quiz`}
-                        className={buttonClassName({ className: 'px-5' })}
-                    >
-                        {dictionary.home.cta}
-                    </PendingLink>
-                </div>
-
-                {/* Вторичные режимы: не спорят с brand hero GameMind */}
-                <DailyChallengeCta
-                    locale={safeLocale}
-                    dictionary={dictionary}
-                    className="mt-10 max-w-lg"
-                />
-
-                <TimedModeCta
-                    locale={safeLocale}
-                    dictionary={dictionary}
-                    className="mt-4 max-w-lg"
-                />
+                <HomeCtaGroup locale={safeLocale} dictionary={dictionary} />
             </div>
         </main>
     );

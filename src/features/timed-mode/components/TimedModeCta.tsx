@@ -1,6 +1,7 @@
 /**
  * Server CTA Timed Mode: optional auth → панель старта.
  *
+ * Живёт на mode lobby `/quiz` (не на Home — anti-duplication IA).
  * Presentation only. Дедлайн / snapshot пишет `startTimedQuizAction`.
  * Перед отдачей CTA будим unpooled Neon (best-effort) — иначе первый
  * клик на Windows часто ловит DirectPgTimeout на cold TLS.
@@ -11,17 +12,21 @@ import { TimedModeCtaPanel } from '@/features/timed-mode/components/TimedModeCta
 import { auth } from '@/lib/auth';
 import { warmDirectPgConnection } from '@/lib/db/direct-pg';
 import type { Dictionary, Locale } from '@/shared/i18n';
+import type { ButtonVariant } from '@/shared/ui';
 
 type TimedModeCtaProps = {
     locale: Locale;
     dictionary: Dictionary;
     className?: string;
+    /** Когда Daily in progress — secondary, чтобы не спорить с «продолжить». */
+    startVariant?: ButtonVariant;
 };
 
 export async function TimedModeCta({
     locale,
     dictionary,
     className = '',
+    startVariant = 'primary',
 }: TimedModeCtaProps) {
     const session = await auth();
     // Не await: не держим TTFB на cold Neon; к моменту клика connect часто уже тёплый.
@@ -33,6 +38,7 @@ export async function TimedModeCta({
                 locale={locale}
                 dictionary={dictionary}
                 isAuthenticated={Boolean(session?.user?.id)}
+                startVariant={startVariant}
             />
         </div>
     );

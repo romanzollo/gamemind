@@ -1,16 +1,30 @@
 import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
+import { getDailyChallengePlayerStatus } from '@/features/daily-challenge/lib/get-daily-challenge-player-status';
 import { QuizSetupForm } from '@/features/quiz/components/QuizSetupForm';
 import { TimedModeCta } from '@/features/timed-mode/components/TimedModeCta';
+import { auth } from '@/lib/auth';
 import { getDictionary, isLocale } from '@/shared/i18n';
 
 type QuizSetupPageProps = {
     params: Promise<{ locale: string }>;
 };
 
+/**
+ * Mode lobby: единственное место полных Daily / Timed / Classic.
+ * Home только приглашает сюда — без дубля mode cards (IA Model 1).
+ * Classic chrome живёт внутри QuizSetupForm (не отдельный eyebrow над карточкой).
+ * Если Daily in progress — Blitz CTA secondary, чтобы не спорить с «продолжить».
+ */
 export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
     const { locale } = await params;
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
+
+    const session = await auth();
+    const dailyStatus = await getDailyChallengePlayerStatus(
+        session?.user?.id ?? null,
+    );
+    const deprioritizeTimed = dailyStatus.kind === 'in_progress';
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
@@ -24,21 +38,20 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
                 </p>
             </header>
 
-            <DailyChallengeCta
-                locale={safeLocale}
-                dictionary={dictionary}
-                className="mt-5 sm:mt-6"
-            />
+            <div id="mode-daily" className="scroll-mt-24">
+                <DailyChallengeCta
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    className="mt-5 sm:mt-6"
+                />
+            </div>
 
             <TimedModeCta
                 locale={safeLocale}
                 dictionary={dictionary}
                 className="mt-4 sm:mt-5"
+                startVariant={deprioritizeTimed ? 'secondary' : 'primary'}
             />
-
-            <p className="mt-6 font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
-                {dictionary.dailyChallenge.classicEyebrow}
-            </p>
 
             <QuizSetupForm locale={safeLocale} dictionary={dictionary} />
         </main>

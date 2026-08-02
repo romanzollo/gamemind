@@ -12,8 +12,7 @@ import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClo
 import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
-import { InlineAlert, buttonClassName } from '@/shared/ui';
-import Link from 'next/link';
+import { InlineAlert, PendingLink, buttonClassName } from '@/shared/ui';
 
 type QuizResultPageProps = {
     params: Promise<{ locale: string; sessionId: string }>;
@@ -94,12 +93,12 @@ export default async function QuizResultPage({
                 dictionary={dictionary}
             />
         ) : (
-            <Link
+            <PendingLink
                 href={`/${safeLocale}/quiz`}
                 className={buttonClassName({ className: 'w-full sm:w-auto' })}
             >
                 {dictionary.quiz.playAgain}
-            </Link>
+            </PendingLink>
         );
 
     return (
