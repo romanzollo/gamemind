@@ -1,6 +1,10 @@
 /**
  * Seed question bank: 20 EASY + 20 MEDIUM + 20 HARD.
  * Each question has ru/en text and exactly one correct option.
+ *
+ * Bilingual options: always pass both `ru` and `en` in `opt(...)`.
+ * Do not localize only the correct answer (distractors must match strategy).
+ * Canon: docs/QUESTION_I18N.md.
  */
 
 function opt(isCorrect, ru, en) {

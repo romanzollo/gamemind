@@ -52,7 +52,7 @@ prisma/
   schema.prisma
   migrations/
 scripts/         # seed, image optimize, Windows migration helpers
-docs/            # DEPLOY.md, QUIZ_IMAGES.md (+ local continuity gitignored)
+docs/            # DEPLOY.md, QUIZ_IMAGES.md, QUESTION_I18N.md (+ local continuity gitignored)
 ```
 
 ## Getting started (local)
@@ -138,4 +138,4 @@ On Windows, `prisma migrate dev` may fail with `P1017`. Prefer:
 node scripts/apply-named-migration.cjs <migration_folder_name>
 ```
 
-Or run migrate from WSL / Linux / CI. See also `docs/DEPLOY.md` and `docs/QUIZ_IMAGES.md`.
+Or run migrate from WSL / Linux / CI. See also `docs/DEPLOY.md`, `docs/QUIZ_IMAGES.md`, and `docs/QUESTION_I18N.md` (RU/EN option rules).

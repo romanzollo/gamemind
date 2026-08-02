@@ -7,6 +7,9 @@
  * uncontrolled inputs в форме; иначе при INVALID_INPUT (например IMAGE_GUESS
  * без картинки) админ теряет весь ввод. File input восстановить нельзя
  * (ограничение браузера) — его оставляем uncontrolled.
+ *
+ * Bilingual: для каждого варианта заполнять RU и EN согласованно
+ * (не локализовать только правильный ответ). Canon: docs/QUESTION_I18N.md.
  */
 
 import { useActionState, useState } from 'react';
