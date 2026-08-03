@@ -7,6 +7,7 @@ const ERROR_MAP: Record<QuizErrorCode, keyof Dictionary['quiz']['errors']> = {
     ANSWER_ALL: 'answerAll',
     INVALID_ANSWER: 'invalidAnswer',
     SUBMIT_FAILED: 'submitFailed',
+    DAILY_ATTEMPT_USED: 'dailyAttemptUsed',
     RATE_LIMITED: 'rateLimited',
     TIMED_OUT: 'timedOut',
     DB_TIMEOUT: 'dbTimeout',

@@ -9,13 +9,14 @@
  * 3) pick random PUBLISHED bundle → JSON snapshot;
  * 4) timedEndsAt = now + durationSeconds (серверный авторитет часов).
  *
- * Stuck timed: abandon orphan IN_PROGRESS делается внутри
- * `createWithJsonSnapshot` (тот же pooled client, что INSERT) —
- * не отдельным `withDirectPgWriteClient` (лишний TLS → Windows+Neon hang).
- * Canon: docs/DECISIONS.md → Timed Mode MVP.
+ * Важно (Windows + Neon): pick и create — РАЗНЫЕ Direct-операции.
+ * Объединение в один `startWithRandomQuestions` (abandon + 10Q RANDOM + INSERT)
+ * укладывало всё в один 12s budget → ложный DB_TIMEOUT на Blitz, пока Classic 3Q
+ * успевал. Рабочий канон: commit `940f396` (pick → createWithJsonSnapshot).
  *
- * Pick+create в одном try: Neon DirectPgTimeout иначе улетал в 500
- * (знакомый Windows+Neon hang class).
+ * Stuck timed: abandon orphan IN_PROGRESS внутри `createWithJsonSnapshot`
+ * на том же Direct client, что INSERT (не отдельный write-client).
+ * Canon: docs/DECISIONS.md → Timed Mode MVP / Neon Write Path.
  */
 
 import { redirect } from 'next/navigation';
@@ -79,6 +80,7 @@ export async function startTimedQuizAction(
     let quizSession: { id: string };
 
     try {
+        // Шаг 1: тяжёлый RANDOM pick 10Q — отдельный Direct budget (+ read retry).
         const pickedQuestions =
             await questionRepository.pickRandomActiveSnapshotBundle(
                 parsed.data.difficulty,
@@ -110,6 +112,7 @@ export async function startTimedQuizAction(
             };
         });
 
+        // Шаг 2: abandon orphan timed (если есть) + INSERT snapshot — свой Direct budget.
         quizSession = await quizSessionRepository.createWithJsonSnapshot({
             userId: session.user.id,
             difficulty: parsed.data.difficulty,

@@ -37,6 +37,8 @@ export type QuizErrorCode =
     | 'ANSWER_ALL'
     | 'INVALID_ANSWER'
     | 'SUBMIT_FAILED'
+    /** Daily Challenge: слот одной попытки уже занят и не может быть resumed. */
+    | 'DAILY_ATTEMPT_USED'
     /** Слишком много start/submit для этого userId за окно. */
     | 'RATE_LIMITED'
     /** Timed submit после timedEndsAt + grace (server clock). */

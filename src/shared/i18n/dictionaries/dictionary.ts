@@ -68,6 +68,8 @@ export type Dictionary = {
         loginPrompt: string;
         loginLink: string;
         unavailablePool: string;
+        /** Слот Daily занят ABANDONED-сессией: попытка дня уже потрачена. */
+        attemptAbandoned: string;
         /**
          * Плейсхолдеры: {score}, {correct}, {total}.
          * Пример: «Очки: {score} · {correct}/{total}»
@@ -375,7 +377,7 @@ export type Dictionary = {
         timedRemainingLabel: string;
         /** Timed: подпись на 00:00. */
         timedExpiredLabel: string;
-        /** Timed: текст recovery после TIMED_OUT (вместо «Завершить»). */
+        /** Текст подсказки при auto-save; roast plaque — на result (?clock=1). */
         timedExpiredBody: string;
         /** Timed: CTA «ещё раз» после просрочки grace. */
         timedTryAgain: string;
@@ -383,7 +385,7 @@ export type Dictionary = {
         timedSavingAnswers: string;
         /**
          * Timed: баннер на result после auto-submit по таймеру (`?clock=1`).
-         * Не путать с TIMED_OUT (попытка не сохранена).
+         * Roast на result после finish по таймеру (?clock=1).
          */
         timedClockRoast: string;
         /** Timed roast plaque: короткий eyebrow над title. */
@@ -422,6 +424,8 @@ export type Dictionary = {
             answerAll: string;
             invalidAnswer: string;
             submitFailed: string;
+            /** Daily Challenge: попытка дня уже закрыта/потрачена. */
+            dailyAttemptUsed: string;
             rateLimited: string;
             /** Timed mode: submit после timedEndsAt + grace. */
             timedOut: string;

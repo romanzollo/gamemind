@@ -67,8 +67,14 @@ export type DailyChallengePlayerStatus =
       }
     | {
           kind: 'unavailable';
-          /** Например: пул опубликованных вопросов меньше questionCount. */
-          reason: 'insufficient_pool' | 'not_authenticated';
+          /**
+           * `attempt_abandoned` — слот дня уже занят ABANDONED-сессией.
+           * Не ссылаться на `/quiz/:id`: quiz page принимает только IN_PROGRESS.
+           */
+          reason:
+              | 'insufficient_pool'
+              | 'not_authenticated'
+              | 'attempt_abandoned';
       };
 
 /** Правила MVP — одна точка правды для тестов и комментариев в actions. */

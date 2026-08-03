@@ -35,7 +35,9 @@ export const TIMED_MODE_MVP_RULES = {
     durationSeconds: 60,
     /**
      * Допуск на сеть/склок после `timedEndsAt` при submit (секунды).
-     * Клиентский «0» ≠ мгновенный отказ: иначе честный игрок ловит TIMED_OUT из‑за RTT.
+     * Клиентский «0» ≠ мгновенный отказ: иначе честный игрок ловит late Neon.
+     * Submit после endsAt+grace всё равно сохраняет partial → result?clock=1
+     * (не void TIMED_OUT на странице квиза).
      */
     graceSeconds: 3,
     /** Игрок выбирает сложность при старте (как classic). */
@@ -66,7 +68,7 @@ export const TIMED_MODE_MVP_RULES = {
  */
 export type TimedSessionPublicState = {
     sessionId: string;
-    /** ISO-строка момента, после которого submit без grace должен отклоняться. */
+    /** ISO-строка дедлайна сессии (UI countdown + roast на result). */
     timedEndsAt: string;
     /** Сколько секунд осталось roughly для гидрации таймера (сервер считает). */
     remainingSeconds: number;
@@ -76,10 +78,11 @@ export type TimedSessionPublicState = {
 
 /**
  * Коды ошибок, специфичные для Timed (поверх общих QuizErrorCode).
- * Добавим в quiz types / словарь, когда появится submit-gate.
+ * `TIMED_OUT` больше не возвращается с submit (late → result?clock=1);
+ * тип оставлен для совместимости словаря/тестов.
  */
 export type TimedModeErrorCode =
-    /** Submit пришёл после timedEndsAt + graceSeconds. */
+    /** @deprecated Late timed submit теперь сохраняет result, не void. */
     | 'TIMED_OUT'
     /** Сессия не timed, а action/UI ожидали timed (защитный код). */
     | 'NOT_TIMED_SESSION';

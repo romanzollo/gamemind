@@ -137,26 +137,28 @@ async function completeQuizSessionWithPgClient(
                 return 'not_found';
             }
 
-            await client.query(
-                `
-                INSERT INTO "QuizAnswer" (
-                    "id",
-                    "sessionId",
-                    "questionId",
-                    "selectedOptionId",
-                    "isCorrect"
-                )
-                VALUES ${buildValuesPlaceholder(answerRows.length, 5)}
-                ON CONFLICT ("sessionId", "questionId") DO NOTHING
-            `,
-                answerRows.flatMap((row) => [
-                    row.id,
-                    row.sessionId,
-                    row.questionId,
-                    row.selectedOptionId,
-                    row.isCorrect,
-                ]),
-            );
+            if (answerRows.length > 0) {
+                await client.query(
+                    `
+                    INSERT INTO "QuizAnswer" (
+                        "id",
+                        "sessionId",
+                        "questionId",
+                        "selectedOptionId",
+                        "isCorrect"
+                    )
+                    VALUES ${buildValuesPlaceholder(answerRows.length, 5)}
+                    ON CONFLICT ("sessionId", "questionId") DO NOTHING
+                `,
+                    answerRows.flatMap((row) => [
+                        row.id,
+                        row.sessionId,
+                        row.questionId,
+                        row.selectedOptionId,
+                        row.isCorrect,
+                    ]),
+                );
+            }
 
             await client.query(
                 `

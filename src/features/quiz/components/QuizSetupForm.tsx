@@ -13,9 +13,9 @@ type QuizSetupFormProps = {
 };
 
 const fieldClassName =
-    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:max-w-xs';
 
-const labelClassName = 'text-sm font-medium text-foreground sm:text-base';
+const labelClassName = 'text-sm font-medium text-foreground';
 
 /**
  * Classic на mode lobby — тот же card-паттерн, что TimedModeCtaPanel
@@ -89,7 +89,7 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
 
                 <SubmitButton
                     pendingLabel={dictionary.common.working}
-                    className="w-full"
+                    className="w-full sm:w-auto"
                 >
                     {labels.startButton}
                 </SubmitButton>

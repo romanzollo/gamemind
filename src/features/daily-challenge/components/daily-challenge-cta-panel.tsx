@@ -89,6 +89,13 @@ export function DailyChallengeCtaPanel({
                     </p>
                 ) : null}
 
+                {status.kind === 'unavailable' &&
+                status.reason === 'attempt_abandoned' ? (
+                    <p className="text-sm text-muted" role="status">
+                        {labels.attemptAbandoned}
+                    </p>
+                ) : null}
+
                 {status.kind === 'available' ? (
                     <form action={formAction} className="w-full sm:w-auto">
                         <input type="hidden" name="locale" value={locale} />

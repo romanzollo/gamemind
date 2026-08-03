@@ -3,10 +3,9 @@
 /**
  * Форма quiz session.
  *
- * Timed: при 00:00 — auto-submit текущих ответов (partial OK на сервере),
- * ответы блокируются; если всё же TIMED_OUT (после grace) — recovery CTA,
- * без «живой» кнопки Завершить.
- * Classic/daily: поведение без изменений (все ответы обязательны на сервере).
+ * Timed: «Завершить» только когда отвечены все; при 00:00 — auto-submit
+ * partial → `/result?clock=1` (roast). Late submit после grace тоже на result.
+ * Classic/daily: все ответы обязательны; кнопка disabled пока не все.
  */
 
 import { useActionState, useCallback, useMemo, useRef, useState, startTransition } from 'react';
@@ -16,14 +15,8 @@ import { QuestionCard } from '@/features/quiz/components/QuestionCard';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import { TimedQuizCountdown } from '@/features/timed-mode/components/TimedQuizCountdown';
-import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import {
-    InlineAlert,
-    PendingLink,
-    SubmitButton,
-    buttonClassName,
-} from '@/shared/ui';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
 import type { Difficulty } from '@/types';
 
 type QuizSessionFormProps = {
@@ -32,7 +25,7 @@ type QuizSessionFormProps = {
     questions: QuizPublicQuestion[];
     /** ISO UTC или null (classic/daily — без countdown). */
     timedEndsAt?: string | null;
-    /** Сложность сессии — для Timed rematch после TIMED_OUT. */
+    /** Сложность сессии — для Timed rematch на result (prop сохранён для API page). */
     difficulty: Difficulty;
     dictionary: Dictionary;
 };
@@ -42,7 +35,6 @@ export function QuizSessionForm({
     sessionId,
     questions,
     timedEndsAt = null,
-    difficulty,
     dictionary,
 }: QuizSessionFormProps) {
     const isTimed = Boolean(timedEndsAt);
@@ -76,14 +68,12 @@ export function QuizSessionForm({
     const submitHintId = 'quiz-submit-hint';
     const progressLabel = `${answeredCount} / ${totalQuestions}`;
 
-    const timedOut = state.errorCode === 'TIMED_OUT';
-    const answersLocked = timedExpired || timedOut || (isTimed && isPending);
-    const showTimedRecovery = timedOut;
+    const answersLocked = timedExpired || (isTimed && isPending);
 
     const handleTimedExpired = useCallback(() => {
         setTimedExpired(true);
 
-        if (autoSubmitStartedRef.current || timedOut) {
+        if (autoSubmitStartedRef.current) {
             return;
         }
 
@@ -101,7 +91,7 @@ export function QuizSessionForm({
         startTransition(() => {
             formAction(formData);
         });
-    }, [formAction, timedOut]);
+    }, [formAction]);
 
     return (
         <form
@@ -128,25 +118,24 @@ export function QuizSessionForm({
                         </div>
                     ) : null}
 
-                    <div className="flex items-center justify-between gap-3 text-sm">
-                        <span className="font-medium text-foreground">
+                    <div className="flex items-baseline justify-between gap-3">
+                        <p className="text-sm font-medium text-foreground">
                             {dictionary.quiz.progressAnsweredLabel}
-                        </span>
-                        <span className="tabular-nums font-semibold text-foreground">
+                        </p>
+                        <p className="font-mono text-sm tabular-nums text-muted">
                             {progressLabel}
-                        </span>
+                        </p>
                     </div>
-
                     <div
-                        className="mt-2 h-2 overflow-hidden rounded-full bg-surface-muted"
+                        className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-muted"
                         role="progressbar"
-                        aria-valuenow={answeredCount}
                         aria-valuemin={0}
                         aria-valuemax={totalQuestions}
-                        aria-label={progressLabel}
+                        aria-valuenow={answeredCount}
+                        aria-label={`${dictionary.quiz.progressAnsweredLabel}: ${progressLabel}`}
                     >
                         <div
-                            className="h-full rounded-full bg-primary motion-safe:transition-[width]"
+                            className="h-full rounded-full bg-primary transition-[width] duration-300 ease-out"
                             style={{ width: `${progressPercent}%` }}
                         />
                     </div>
@@ -181,73 +170,44 @@ export function QuizSessionForm({
             </div>
 
             <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pb-[max(1rem,env(safe-area-inset-bottom))]">
-                {showTimedRecovery ? (
-                    <div className="space-y-3">
-                        <InlineAlert>
-                            {dictionary.quiz.timedExpiredBody}
-                        </InlineAlert>
-                        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-start">
-                            <TimedRematchButton
-                                locale={locale}
-                                difficulty={difficulty}
-                                label={dictionary.quiz.timedTryAgain}
-                                dictionary={dictionary}
-                            />
-                            <PendingLink
-                                href={`/${locale}`}
-                                className={buttonClassName({
-                                    variant: 'secondary',
-                                    className: 'w-full sm:w-auto',
-                                })}
-                            >
-                                {dictionary.quiz.backHome}
-                            </PendingLink>
-                        </div>
-                    </div>
-                ) : (
-                    <>
-                        {errorMessage ? (
-                            <InlineAlert className="mb-3">
-                                {errorMessage}
-                            </InlineAlert>
-                        ) : null}
+                {errorMessage ? (
+                    <InlineAlert className="mb-3">{errorMessage}</InlineAlert>
+                ) : null}
 
-                        {isTimed && timedExpired && isPending ? (
-                            <p
-                                className="mb-2 text-sm leading-snug text-muted sm:mb-3"
-                                role="status"
-                            >
-                                {dictionary.quiz.timedSavingAnswers}
-                            </p>
-                        ) : null}
+                {isTimed && timedExpired && isPending ? (
+                    <p
+                        className="mb-2 text-sm leading-snug text-muted sm:mb-3"
+                        role="status"
+                    >
+                        {dictionary.quiz.timedSavingAnswers}
+                    </p>
+                ) : null}
 
-                        {!isTimed && !allAnswered ? (
-                            <p
-                                id={submitHintId}
-                                className="mb-2 text-sm leading-snug text-muted sm:mb-3"
-                            >
-                                {dictionary.quiz.errors.answerAll}
-                            </p>
-                        ) : null}
+                {!allAnswered && !timedExpired ? (
+                    <p
+                        id={submitHintId}
+                        className="mb-2 text-sm leading-snug text-muted sm:mb-3"
+                    >
+                        {dictionary.quiz.errors.answerAll}
+                    </p>
+                ) : null}
 
-                        <SubmitButton
-                            disabled={
-                                isTimed
-                                    ? timedExpired || isPending
-                                    : !allAnswered
-                            }
-                            pendingLabel={dictionary.common.submitting}
-                            className="w-full"
-                            aria-describedby={
-                                !isTimed && !allAnswered
-                                    ? submitHintId
-                                    : undefined
-                            }
-                        >
-                            {dictionary.quiz.submitButton}
-                        </SubmitButton>
-                    </>
-                )}
+                <SubmitButton
+                    disabled={
+                        isTimed
+                            ? !allAnswered || timedExpired || isPending
+                            : !allAnswered
+                    }
+                    pendingLabel={dictionary.common.submitting}
+                    className="w-full"
+                    aria-describedby={
+                        !allAnswered && !timedExpired
+                            ? submitHintId
+                            : undefined
+                    }
+                >
+                    {dictionary.quiz.submitButton}
+                </SubmitButton>
             </div>
         </form>
     );

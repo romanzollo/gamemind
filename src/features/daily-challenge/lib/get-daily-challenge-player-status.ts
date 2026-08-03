@@ -63,10 +63,10 @@ export async function getDailyChallengePlayerStatus(
         };
     }
 
-    // ABANDONED: уникальный слот занят — считаем in_progress для resume на quiz.
+    // ABANDONED: уникальный слот дня занят, но quiz page читает только IN_PROGRESS.
+    // Поэтому не отдаём continue-ссылку на `/quiz/:id`, иначе получим честный 404.
     return {
-        kind: 'in_progress',
-        challengeDate: challenge.challengeDate,
-        sessionId: attempt.sessionId,
+        kind: 'unavailable',
+        reason: 'attempt_abandoned',
     };
 }

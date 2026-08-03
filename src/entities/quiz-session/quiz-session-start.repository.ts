@@ -3,9 +3,11 @@
  *
  * Зачем отдельный модуль (§11.7): hot path создания сессии не должен жить
  * в одном файле с submit/reads. SQL перенесён as-is — без rewrite.
- * Neon: pooled quiz-start client для JSON insert; recovery после transient
- * ошибки; не await client.end() на response path (см. DECISIONS → Neon Write Path).
- * Timed abandon-on-new-start: `abandonInProgressTimedByUserId` (см. DECISIONS → Timed Mode).
+ * Neon: Direct (unpooled) quiz-start client — один TLS на pick+INSERT;
+ * pooler+timeout на Windows давал ложный DB_TIMEOUT. Recovery после
+ * transient — вне queue (nested withDirectPgQueue = deadlock).
+ * Не await client.end() на response path (см. DECISIONS → Neon Write Path).
+ * Timed abandon-on-new-start: на том же client, что INSERT (см. Timed Mode).
  * Публичный фасад: quiz-session.repository.ts.
  * См. docs/DECISIONS.md → Repository File Split.
  */
@@ -19,9 +21,9 @@ import type { Locale } from '@/shared/i18n';
 import {
     isTransientDirectPgError,
     withDirectPgClient,
+    withDirectPgQuizStartClient,
     withDirectPgWriteClient,
     withDirectPgWriteRetry,
-    withPooledPgQuizStartClient,
 } from '@/lib/db/direct-pg';
 import { loadRandomSnapshotBundleWithPgClient } from '@/entities/question/question.repository';
 import type { QuestionSnapshotBundleItem } from '@/entities/question/question.repository';
@@ -47,6 +49,7 @@ type StartQuizSessionWithPickInput = {
     questionCount: number;
     sessionLocale: Locale;
     locale: Locale;
+    timedEndsAt?: Date | null;
     buildSnapshotQuestions: (
         picked: QuestionSnapshotBundleItem[],
     ) => SessionSnapshotQuestionInput[];
@@ -342,35 +345,63 @@ async function createSnapshotWithPgClient(
     }, 2);
 }
 
+async function recoverJsonSnapshotAfterWriteError(
+    sessionId: string,
+    userId: string,
+    expectedQuestionCount: number,
+    error: unknown,
+): Promise<SessionSnapshotCreateResult | null> {
+    if (!isTransientDirectPgError(error)) {
+        return null;
+    }
+
+    const recovered = await isJsonSnapshotComplete(
+        sessionId,
+        userId,
+        expectedQuestionCount,
+    ).catch(() => false);
+
+    return recovered ? { id: sessionId } : null;
+}
+
 async function startQuizSessionWithPick(
     input: StartQuizSessionWithPickInput,
 ): Promise<SessionSnapshotCreateResult> {
-    return withPooledPgQuizStartClient(async (client) => {
-        const picked = await loadRandomSnapshotBundleWithPgClient(
-            client,
-            input.difficulty,
-            input.questionCount,
-            input.locale,
-        );
+    const sessionId = randomUUID();
+    const timedEndsAt = input.timedEndsAt ?? null;
 
-        if (picked.length < input.questionCount) {
-            throw new QuizSessionStartError('NOT_ENOUGH_QUESTIONS');
-        }
+    try {
+        // Без retry внутри write-operation: late commit + повторный INSERT с тем же id
+        // превращается в duplicate key и может снести уже созданную сессию cleanup-ом.
+        return await withDirectPgQuizStartClient(async (client) => {
+            // Timed: orphan IN_PROGRESS → ABANDONED на том же TLS, что pick+INSERT.
+            if (timedEndsAt != null) {
+                await abandonInProgressTimedOnClient(client, input.userId);
+            }
 
-        const questions = input.buildSnapshotQuestions(picked);
-        const snapshotInput: CreateQuizSessionWithSnapshotInput = {
-            userId: input.userId,
-            difficulty: input.difficulty,
-            questionCount: input.questionCount,
-            sessionLocale: input.sessionLocale,
-            questions,
-        };
+            const picked = await loadRandomSnapshotBundleWithPgClient(
+                client,
+                input.difficulty,
+                input.questionCount,
+                input.locale,
+            );
 
-        const snapshotData = buildSnapshotData(snapshotInput, picked);
+            if (picked.length < input.questionCount) {
+                throw new QuizSessionStartError('NOT_ENOUGH_QUESTIONS');
+            }
 
-        const sessionId = randomUUID();
+            const questions = input.buildSnapshotQuestions(picked);
+            const snapshotInput: CreateQuizSessionWithSnapshotInput = {
+                userId: input.userId,
+                difficulty: input.difficulty,
+                questionCount: input.questionCount,
+                sessionLocale: input.sessionLocale,
+                timedEndsAt,
+                questions,
+            };
 
-        try {
+            const snapshotData = buildSnapshotData(snapshotInput, picked);
+
             await insertQuizSessionWithSnapshotData(
                 client,
                 sessionId,
@@ -379,23 +410,27 @@ async function startQuizSessionWithPick(
             );
 
             return { id: sessionId };
-        } catch (error) {
-            const recovered =
-                isTransientDirectPgError(error) &&
-                (await isJsonSnapshotComplete(
-                    sessionId,
-                    input.userId,
-                    input.questionCount,
-                ).catch(() => false));
-
-            if (recovered) {
-                return { id: sessionId };
-            }
-
-            await cleanupQuizSessionById(sessionId);
+        }, 1);
+    } catch (error) {
+        if (error instanceof QuizSessionStartError) {
             throw error;
         }
-    }, 2);
+
+        // Recovery вне queue — иначе nested withDirectPgQueue deadlock.
+        const recovered = await recoverJsonSnapshotAfterWriteError(
+            sessionId,
+            input.userId,
+            input.questionCount,
+            error,
+        );
+
+        if (recovered) {
+            return recovered;
+        }
+
+        await cleanupQuizSessionById(sessionId);
+        throw error;
+    }
 }
 
 /**
@@ -428,15 +463,13 @@ async function abandonInProgressTimedOnClient(
  * Фильтр `timedEndsAt IS NOT NULL` — только Timed; classic/daily не трогаем.
  * Без QuizResult: это не завершение, а «бросил и начал заново».
  *
- * Neon: используем `withPooledPgQuizStartClient` (timeout + retry),
- * НЕ `withDirectPgWriteClient` — лишний unpooled TLS на Windows клинит сокеты.
- * Основной путь: abandon внутри createJsonSnapshotSession на том же client,
- * что и INSERT (один connect на abandon+create).
+ * Neon: `withDirectPgQuizStartClient` (Direct + queue + timeout), не отдельный
+ * write-client. Основной путь: abandon внутри start/create на том же client.
  */
 async function abandonInProgressTimedByUserId(
     userId: string,
 ): Promise<{ abandonedCount: number }> {
-    return withPooledPgQuizStartClient(async (client) => {
+    return withDirectPgQuizStartClient(async (client) => {
         const abandonedCount = await abandonInProgressTimedOnClient(
             client,
             userId,
@@ -448,11 +481,12 @@ async function abandonInProgressTimedByUserId(
 async function createJsonSnapshotSession(
     input: CreateQuizSessionWithJsonSnapshotInput,
 ): Promise<SessionSnapshotCreateResult> {
-    return withPooledPgQuizStartClient(async (client) => {
-        const sessionId = randomUUID();
-        const snapshotData = buildSnapshotData(input, input.pickedQuestions);
+    const sessionId = randomUUID();
+    const snapshotData = buildSnapshotData(input, input.pickedQuestions);
 
-        try {
+    try {
+        // См. startWithRandomQuestions: recovery должен идти после одного attempt.
+        return await withDirectPgQuizStartClient(async (client) => {
             // Timed: закрыть orphan IN_PROGRESS на том же соединении, что INSERT.
             // Classic/daily (timedEndsAt null) — no-op. См. DECISIONS → Timed Mode.
             if (input.timedEndsAt != null) {
@@ -467,23 +501,22 @@ async function createJsonSnapshotSession(
             );
 
             return { id: sessionId };
-        } catch (error) {
-            const recovered =
-                isTransientDirectPgError(error) &&
-                (await isJsonSnapshotComplete(
-                    sessionId,
-                    input.userId,
-                    input.questionCount,
-                ).catch(() => false));
+        }, 1);
+    } catch (error) {
+        const recovered = await recoverJsonSnapshotAfterWriteError(
+            sessionId,
+            input.userId,
+            input.questionCount,
+            error,
+        );
 
-            if (recovered) {
-                return { id: sessionId };
-            }
-
-            await cleanupQuizSessionById(sessionId);
-            throw error;
+        if (recovered) {
+            return recovered;
         }
-    }, 2);
+
+        await cleanupQuizSessionById(sessionId);
+        throw error;
+    }
 }
 
 /** Методы start для thin facade quizSessionRepository. */

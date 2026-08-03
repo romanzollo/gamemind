@@ -1,6 +1,10 @@
 import { HomeCtaGroup } from '@/features/daily-challenge/components/home-cta-group';
 import { getDictionary, isLocale } from '@/shared/i18n';
 
+// Home CTA зависит от auth + Daily Challenge state; stale link может вести на 404.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type HomePageProps = {
     params: Promise<{ locale: string }>;
 };
@@ -16,7 +20,7 @@ export default async function HomePage({ params }: HomePageProps) {
     const dictionary = getDictionary(safeLocale);
 
     return (
-        <main className="relative flex min-h-[100dvh] flex-col overflow-hidden bg-background">
+        <main className="relative flex min-h-dvh flex-col overflow-hidden bg-background">
             <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,var(--surface-muted)_0%,transparent_55%)]"

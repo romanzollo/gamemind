@@ -5,8 +5,8 @@
  * - Never await client.end() on the response path (Neon close can take ~19s).
  * - On wall-clock timeout, mark aborted SYNCHRONOUSLY and destroy the socket
  *   so a late connect cannot start a query on a half-dead client.
- * - Prefer unpooled URL for admin/quiz reads; pooled+tight timeout was a
- *   known false-failure regression.
+ * - Prefer unpooled URL for admin/quiz reads and quiz start; pooled+tight
+ *   timeout was a known false-failure regression on Windows `next dev`.
  * - In development on Windows, soften SSL and serialize Direct (unpooled)
  *   connect hops: parallel / back-to-back fresh-Client TLS wedges `next dev`
  *   (submit → result review, cold Timed start). Same pattern as admin-list queue.
@@ -384,39 +384,57 @@ export async function withDirectPgWriteRetry<T>(
 }
 
 /**
- * Best-effort wake Neon unpooled host (home/quiz CTA).
- * Не бросает наружу — старт квиза всё равно имеет свой retry/timeout UX.
+ * Best-effort wake Neon unpooled host.
+ * Не вызывать fire-and-forget на quiz lobby: занимает Direct-очередь и
+ * может клинить следующий start. Оставлен для явного/редкого ping.
  */
+const WARM_ATTEMPT_TIMEOUT_MS = 5_000;
+
 export async function warmDirectPgConnection(): Promise<void> {
     try {
-        await withDirectPgClient((client) => client.query('SELECT 1'));
+        await withDirectPgQueue(() =>
+            withFreshClient(
+                createDirectClient,
+                (client) => client.query('SELECT 1'),
+                { attemptTimeoutMs: WARM_ATTEMPT_TIMEOUT_MS },
+            ),
+        );
     } catch {
         // ignore — cold start всё ещё возможен; кнопка покажет DB_TIMEOUT
     }
 }
 
-/** Quiz start: one connection for question pick + snapshot write. */
-export async function withPooledPgQuizStartClient<T>(
+/**
+ * Quiz start hot path: один Direct (unpooled) client на pick + snapshot write.
+ *
+ * Почему не pooler (`DATABASE_URL`): на Windows + `next dev` pooled+12s timeout
+ * давал ложный DB_TIMEOUT (~25s), тогда как unpooled admin/list стабильно ~1s.
+ * Очередь обязательна: иначе start гоняется с submit/result Direct TLS.
+ * Recovery после ошибки — снаружи этого helper (не nested queue).
+ */
+export async function withDirectPgQuizStartClient<T>(
     operation: (client: Client) => Promise<T>,
     attempts = 2,
 ) {
-    let lastError: unknown;
+    return withDirectPgQueue(async () => {
+        let lastError: unknown;
 
-    for (let attempt = 1; attempt <= attempts; attempt += 1) {
-        try {
-            return await withFreshClient(createPooledClient, operation, {
-                attemptTimeoutMs: READ_ATTEMPT_TIMEOUT_MS,
-            });
-        } catch (error) {
-            lastError = error;
+        for (let attempt = 1; attempt <= attempts; attempt += 1) {
+            try {
+                return await withFreshClient(createDirectClient, operation, {
+                    attemptTimeoutMs: READ_ATTEMPT_TIMEOUT_MS,
+                });
+            } catch (error) {
+                lastError = error;
 
-            if (!isTransientDirectPgError(error) || attempt === attempts) {
-                throw error;
+                if (!isTransientDirectPgError(error) || attempt === attempts) {
+                    throw error;
+                }
+
+                await wait(300 * attempt);
             }
-
-            await wait(300 * attempt);
         }
-    }
 
-    throw lastError;
+        throw lastError;
+    });
 }

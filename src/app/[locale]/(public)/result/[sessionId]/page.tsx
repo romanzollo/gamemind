@@ -14,6 +14,11 @@ import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
 import { InlineAlert, PendingLink, buttonClassName } from '@/shared/ui';
 
+// Result создаётся сразу после submit и принадлежит конкретному пользователю.
+// Dynamic режим защищает от stale notFound после Server Action redirect.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type QuizResultPageProps = {
     params: Promise<{ locale: string; sessionId: string }>;
     searchParams: Promise<Record<string, string | string[] | undefined>>;

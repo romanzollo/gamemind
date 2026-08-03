@@ -60,6 +60,8 @@ export const enDictionary = {
         loginLink: 'Sign in',
         unavailablePool:
             'Today’s challenge is unavailable — not enough published questions in the pool.',
+        attemptAbandoned:
+            'Today’s attempt is already closed. A new challenge opens tomorrow.',
         completedScore: 'Points: {score} · {correct}/{total}',
         boardTitle: 'Today’s ranking',
         boardEmpty: 'The arena is empty. Time to claim first place.',
@@ -388,6 +390,8 @@ export const enDictionary = {
             invalidAnswer:
                 'One or more answers are invalid. Refresh the page and try again.',
             submitFailed: 'Failed to submit the result. Try again.',
+            dailyAttemptUsed:
+                'Today’s challenge attempt is already closed. A new challenge opens tomorrow.',
             rateLimited: 'Too many attempts. Please wait a bit and try again.',
             timedOut: 'Time is up. This attempt can’t be saved anymore.',
             dbTimeout:

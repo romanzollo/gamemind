@@ -32,7 +32,6 @@ export function HomeCtaGroupPanel({
     dictionary,
 }: HomeCtaGroupPanelProps) {
     const home = dictionary.home;
-    const daily = dictionary.dailyChallenge;
     const [state, formAction] = useActionState(startDailyChallengeAction, {});
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
 

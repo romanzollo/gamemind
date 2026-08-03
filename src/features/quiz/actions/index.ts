@@ -2,7 +2,6 @@
 
 import { redirect } from 'next/navigation';
 
-import { questionRepository } from '@/entities/question/question.repository';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
@@ -62,44 +61,32 @@ export async function startQuizAction(
     let quizSession: { id: string };
 
     try {
-        const pickedQuestions =
-            await questionRepository.pickRandomActiveSnapshotBundle(
-                parsed.data.difficulty,
-                parsed.data.questionCount,
-                locale,
-            );
-
-        if (pickedQuestions.length < parsed.data.questionCount) {
-            return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
-        }
-
-        const snapshotQuestions = pickedQuestions.map((question, index) => {
-            const shuffledOptions = shuffleArray(question.options);
-
-            return {
-                questionId: question.id,
-                position: index,
-                displayText: question.displayText,
-                displayTexts: question.displayTexts,
-                displayImageUrl: normalizeQuizImageUrl(
-                    question.displayImageUrl,
-                ),
-                options: shuffledOptions.map((option, optionIndex) => ({
-                    optionId: option.id,
-                    displayOrder: optionIndex,
-                    displayText: option.displayText,
-                    displayTexts: option.displayTexts,
-                })),
-            };
-        });
-
-        quizSession = await quizSessionRepository.createWithJsonSnapshot({
+        quizSession = await quizSessionRepository.startWithRandomQuestions({
             userId: session.user.id,
             difficulty: parsed.data.difficulty,
             questionCount: parsed.data.questionCount,
             sessionLocale: locale,
-            questions: snapshotQuestions,
-            pickedQuestions,
+            locale,
+            buildSnapshotQuestions: (pickedQuestions) =>
+                pickedQuestions.map((question, index) => {
+                    const shuffledOptions = shuffleArray(question.options);
+
+                    return {
+                        questionId: question.id,
+                        position: index,
+                        displayText: question.displayText,
+                        displayTexts: question.displayTexts,
+                        displayImageUrl: normalizeQuizImageUrl(
+                            question.displayImageUrl,
+                        ),
+                        options: shuffledOptions.map((option, optionIndex) => ({
+                            optionId: option.id,
+                            displayOrder: optionIndex,
+                            displayText: option.displayText,
+                            displayTexts: option.displayTexts,
+                        })),
+                    };
+                }),
         });
     } catch (error) {
         const errorCode = mapQuizStartError(error);
@@ -111,7 +98,6 @@ export async function startQuizAction(
         return { errorCode };
     }
 
-    // перенаправляем на страницу викторины
     redirect(`/${locale}/quiz/${quizSession.id}`);
 }
 
@@ -158,13 +144,13 @@ export async function submitQuizAction(
         return { errorCode: 'INVALID_ANSWER' };
     }
 
-    // Timed gate до scoring/write: клиентский countdown не авторитет.
-    if (isTimedSubmitExpired(sessionForSubmit.timedEndsAt)) {
-        return { errorCode: 'TIMED_OUT' };
-    }
-
     const { sessionId: quizSessionId, questions } = sessionForSubmit;
     const isTimedSession = sessionForSubmit.timedEndsAt != null;
+    // Дедлайн прошёл (с grace) — всё равно сохраняем partial и идём на result
+    // с roast (?clock=1). Раньше здесь был TIMED_OUT void + recovery на квизе;
+    // продукт: всегда страница результата, как Kahoot/LMS.
+    const timedPastGrace = isTimedSubmitExpired(sessionForSubmit.timedEndsAt);
+    const finishedByTimer = formData.get('finishedByTimer') === '1';
 
     // собираем ответы пользователя из формы
     const answers = questions.map((question) => {
@@ -178,8 +164,10 @@ export async function submitQuizAction(
     });
 
     // Classic/daily: все ответы обязательны.
-    // Timed: partial OK (как Kahoot/LMS) — пустые = неверно в scoring.
-    if (!isTimedSession) {
+    // Timed manual finish: тоже все ответы.
+    // Timed auto-submit (finishedByTimer): partial OK — пустые = 0 в scoring.
+    const requireAllAnswers = !isTimedSession || !finishedByTimer;
+    if (requireAllAnswers) {
         const allAnswered = answers.every(
             (answer) => answer.selectedOptionId.length > 0,
         );
@@ -267,8 +255,8 @@ export async function submitQuizAction(
     if (award.awardedCodes.length > 0) {
         resultQuery.set('unlocked', award.awardedCodes.join(','));
     }
-    // Auto-submit по таймеру — покажем roast на result (не путать с TIMED_OUT void).
-    if (formData.get('finishedByTimer') === '1') {
+    // Auto-submit / late timed finish → roast на result.
+    if (finishedByTimer || (isTimedSession && timedPastGrace)) {
         resultQuery.set('clock', '1');
     }
 

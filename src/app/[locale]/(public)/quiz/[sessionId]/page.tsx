@@ -5,6 +5,11 @@ import { QuizSessionForm } from '@/features/quiz/components/QuizSessionForm';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
 
+// Страница сессии пользовательская и создаётся за секунды до redirect.
+// Не даём App Router переиспользовать прежний notFound/RSC payload для нового id.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type QuizSessionPageProps = {
     params: Promise<{ locale: string; sessionId: string }>;
 };

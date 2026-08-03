@@ -59,6 +59,10 @@ function redirectExistingAttempt(
     redirect(`/${locale}/quiz/${attempt.sessionId}`);
 }
 
+function isResumeableDailyAttempt(attempt: { kind: string }) {
+    return attempt.kind === 'in_progress' || attempt.kind === 'completed';
+}
+
 /**
  * Старт daily. FormData: только `locale` (сложность/count — из MVP rules + freeze).
  */
@@ -92,7 +96,11 @@ export async function startDailyChallengeAction(
         );
 
     if (existingAttempt) {
-        redirectExistingAttempt(locale, existingAttempt);
+        if (isResumeableDailyAttempt(existingAttempt)) {
+            redirectExistingAttempt(locale, existingAttempt);
+        }
+
+        return { errorCode: 'DAILY_ATTEMPT_USED' };
     }
 
     let quizSession: { id: string };
@@ -147,7 +155,11 @@ export async function startDailyChallengeAction(
                 );
 
             if (raced) {
-                redirectExistingAttempt(locale, raced);
+                if (isResumeableDailyAttempt(raced)) {
+                    redirectExistingAttempt(locale, raced);
+                }
+
+                return { errorCode: 'DAILY_ATTEMPT_USED' };
             }
         }
 
