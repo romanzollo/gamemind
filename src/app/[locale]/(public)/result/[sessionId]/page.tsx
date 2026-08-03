@@ -5,6 +5,7 @@ import { AchievementUnlockFlash } from '@/features/achievements/components/Achie
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
 import { QuizResultReview } from '@/features/quiz/components/QuizResultReview';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
+import { ClassicRematchButton } from '@/features/quiz/components/ClassicRematchButton';
 import { buildSessionReviewPayloadFromSnapshot } from '@/features/quiz/lib/build-session-review-payload';
 import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review';
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
@@ -12,7 +13,7 @@ import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClo
 import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
-import { InlineAlert, PendingLink, buttonClassName } from '@/shared/ui';
+import { InlineAlert } from '@/shared/ui';
 
 // Result создаётся сразу после submit и принадлежит конкретному пользователю.
 // Dynamic режим защищает от stale notFound после Server Action redirect.
@@ -87,24 +88,24 @@ export default async function QuizResultPage({
               )
             : [];
 
-    // Timed: сразу новая партия с той же сложностью (прод-паттерн rematch).
-    // Classic/daily: ссылка на setup /quiz.
-    const playAgainAction =
-        result?.isTimed ? (
-            <TimedRematchButton
-                locale={safeLocale}
-                difficulty={result.difficulty}
-                label={dictionary.quiz.timedTryAgain}
-                dictionary={dictionary}
-            />
-        ) : (
-            <PendingLink
-                href={`/${safeLocale}/quiz`}
-                className={buttonClassName({ className: 'w-full sm:w-auto' })}
-            >
-                {dictionary.quiz.playAgain}
-            </PendingLink>
-        );
+    // Timed: сразу новая партия с той же сложностью.
+    // Classic: сразу новая партия с теми же difficulty + questionCount.
+    const playAgainAction = result?.isTimed ? (
+        <TimedRematchButton
+            locale={safeLocale}
+            difficulty={result.difficulty}
+            label={dictionary.quiz.timedTryAgain}
+            dictionary={dictionary}
+        />
+    ) : result ? (
+        <ClassicRematchButton
+            locale={safeLocale}
+            difficulty={result.difficulty}
+            questionCount={result.totalQuestions}
+            label={dictionary.quiz.playAgain}
+            dictionary={dictionary}
+        />
+    ) : null;
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">

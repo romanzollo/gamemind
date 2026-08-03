@@ -9,8 +9,14 @@
  * DRAFT / IN_REVIEW и soft-hide (isActive=false) исключены. Snapshot write/read
  * и scoring math не меняются — только WHERE при выборе id.
  *
+ * Hot path Direct pick (Classic/Timed): два коротких read-budget —
+ * 1) только id (`ORDER BY RANDOM() LIMIT n`);
+ * 2) bilingual resolve по id (как Daily).
+ * Один тяжёлый RANDOM+JOINs в 12s на Windows+Neon ломал Classic 10Q,
+ * пока 3/5Q ещё проходили. Legacy one-shot SQL — для in-client merged path.
+ *
  * Публичный фасад: question.repository.ts реэкспортирует функции и методы.
- * См. docs/DECISIONS.md → Repository File Split / Question publication workflow.
+ * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
 
 import type { Client } from 'pg';
@@ -514,6 +520,32 @@ export async function loadSnapshotBundleByQuestionIdsWithPgClient(
     return groupBilingualSnapshotBundleRows(result.rows, locale);
 }
 
+/**
+ * Лёгкий pick: только id (без translation/option JOINs).
+ * Тяжёлый bilingual resolve — отдельным Direct-budget по списку id.
+ */
+async function pickRandomActiveQuestionIdsWithPgClient(
+    client: Client,
+    difficulty: Difficulty,
+    limit: number,
+): Promise<string[]> {
+    const result = await client.query<{ id: string }>(
+        `
+            SELECT q."id"
+            FROM "Question" q
+            WHERE
+                q."difficulty" = $1::"Difficulty"
+                AND q."isActive" = true
+                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
+            ORDER BY RANDOM()
+            LIMIT $2
+        `,
+        [difficulty, limit],
+    );
+
+    return result.rows.map((row) => row.id);
+}
+
 async function loadSnapshotBundleByQuestionIdsWithDirectPg(
     questionIds: string[],
     locale: Locale,
@@ -527,19 +559,25 @@ async function loadSnapshotBundleByQuestionIdsWithDirectPg(
     );
 }
 
+/**
+ * Classic/Timed hot path: id-pick и resolve — разные Direct reads (свой 12s
+ * budget + retry у каждого). Не склеивать RANDOM + bilingual JOINs в один
+ * wall-clock timeout: на 10Q Windows+Neon давал ложный DB_TIMEOUT при живых 3/5Q.
+ */
 async function loadRandomSnapshotBundleWithDirectPg(
     difficulty: Difficulty,
     limit: number,
     locale: Locale,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    return withDirectPgClient((client) =>
-        loadRandomSnapshotBundleWithPgClient(
-            client,
-            difficulty,
-            limit,
-            locale,
-        ),
+    const questionIds = await withDirectPgClient((client) =>
+        pickRandomActiveQuestionIdsWithPgClient(client, difficulty, limit),
     );
+
+    if (questionIds.length === 0) {
+        return [];
+    }
+
+    return loadSnapshotBundleByQuestionIdsWithDirectPg(questionIds, locale);
 }
 
 /** Методы quiz-pick для фасада questionRepository (без смены сигнатур). */

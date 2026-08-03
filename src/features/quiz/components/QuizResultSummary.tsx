@@ -12,8 +12,8 @@ type QuizResultSummaryProps = {
     totalQuestions: number;
     labels: Dictionary['quiz'];
     /**
-     * Primary CTA: Link на classic setup или TimedRematchButton (форма).
-     * Timed rematch = сразу новая партия, не страница выбора режима.
+     * Primary CTA: ClassicRematchButton или TimedRematchButton.
+     * Rematch = сразу новая партия с теми же правилами сессии.
      */
     playAgainAction: ReactNode;
 };

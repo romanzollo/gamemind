@@ -3,13 +3,15 @@
  *
  * Зачем отдельный модуль (§11.7): hot path создания сессии не должен жить
  * в одном файле с submit/reads. SQL перенесён as-is — без rewrite.
- * Neon: Direct (unpooled) quiz-start client — один TLS на pick+INSERT;
- * pooler+timeout на Windows давал ложный DB_TIMEOUT. Recovery после
- * transient — вне queue (nested withDirectPgQueue = deadlock).
+ * Neon: Direct (unpooled). Hot path Classic/Timed/Daily: pick (отдельный
+ * budget) → createWithJsonSnapshot (свой budget). Не склеивать тяжёлый
+ * RANDOM pick + INSERT в один 12s client — ложный DB_TIMEOUT на Windows.
+ * `startWithRandomQuestions` оставлен legacy; actions его не зовут.
+ * Recovery после transient — вне queue (nested withDirectPgQueue = deadlock).
  * Не await client.end() на response path (см. DECISIONS → Neon Write Path).
  * Timed abandon-on-new-start: на том же client, что INSERT (см. Timed Mode).
  * Публичный фасад: quiz-session.repository.ts.
- * См. docs/DECISIONS.md → Repository File Split.
+ * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
 
 import { randomUUID } from 'node:crypto';
@@ -521,6 +523,11 @@ async function createJsonSnapshotSession(
 
 /** Методы start для thin facade quizSessionRepository. */
 export const quizSessionStartMethods = {
+    /**
+     * Legacy: pick+INSERT на одном Direct client (один 12s budget).
+     * Actions (Classic/Timed/Daily) используют split pick → createWithJsonSnapshot.
+     * Не возвращать в hot path без измерения на Windows+Neon.
+     */
     startWithRandomQuestions(input: StartQuizSessionWithPickInput) {
         return startQuizSessionWithPick(input);
     },

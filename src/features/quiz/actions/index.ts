@@ -5,16 +5,14 @@ import { redirect } from 'next/navigation';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
-import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
+import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
 import type { QuizFormState } from '@/features/quiz/types';
-import { shuffleArray } from '@/shared/utils';
-import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
 // получение локали из формы
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -27,8 +25,11 @@ function getLocaleFromFormData(formData: FormData): Locale {
 }
 
 /**
- * Старт квиза. Rate limit по userId — до pick/snapshot на Neon,
- * чтобы спам «Начать» не плодил сессии и не жёг unpooled путь.
+ * Старт Classic. Rate limit по userId — до pick/snapshot на Neon.
+ *
+ * Windows + Neon: pick и create — РАЗНЫЕ Direct-операции (как Timed `940f396`).
+ * Общая логика: `runClassicQuizStart`. Rematch с result — `rematchClassicQuizAction`
+ * (settle перед pick). Canon: docs/DECISIONS.md → Quiz Start Playbook.
  */
 export async function startQuizAction(
     _prevState: QuizFormState,
@@ -58,47 +59,18 @@ export async function startQuizAction(
         return { errorCode: 'INVALID_SETUP' };
     }
 
-    let quizSession: { id: string };
+    const started = await runClassicQuizStart({
+        userId: session.user.id,
+        difficulty: parsed.data.difficulty,
+        questionCount: parsed.data.questionCount,
+        locale,
+    });
 
-    try {
-        quizSession = await quizSessionRepository.startWithRandomQuestions({
-            userId: session.user.id,
-            difficulty: parsed.data.difficulty,
-            questionCount: parsed.data.questionCount,
-            sessionLocale: locale,
-            locale,
-            buildSnapshotQuestions: (pickedQuestions) =>
-                pickedQuestions.map((question, index) => {
-                    const shuffledOptions = shuffleArray(question.options);
-
-                    return {
-                        questionId: question.id,
-                        position: index,
-                        displayText: question.displayText,
-                        displayTexts: question.displayTexts,
-                        displayImageUrl: normalizeQuizImageUrl(
-                            question.displayImageUrl,
-                        ),
-                        options: shuffledOptions.map((option, optionIndex) => ({
-                            optionId: option.id,
-                            displayOrder: optionIndex,
-                            displayText: option.displayText,
-                            displayTexts: option.displayTexts,
-                        })),
-                    };
-                }),
-        });
-    } catch (error) {
-        const errorCode = mapQuizStartError(error);
-        if (errorCode === 'INVALID_SETUP') {
-            console.error('Quiz session snapshot create failed:', error);
-        } else {
-            console.error('Quiz start failed:', errorCode, error);
-        }
-        return { errorCode };
+    if (!started.ok) {
+        return { errorCode: started.errorCode };
     }
 
-    redirect(`/${locale}/quiz/${quizSession.id}`);
+    redirect(`/${locale}/quiz/${started.sessionId}`);
 }
 
 /**
