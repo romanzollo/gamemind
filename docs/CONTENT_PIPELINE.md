@@ -52,7 +52,11 @@ src/features/content/lib/
   validate-draft-questions.ts        # validate without DB write
   validate-draft-questions.test.ts   # Vitest
   index.ts
+
+scripts/validate-draft-questions.ts  # CLI wrapper (no Neon)
 ```
+
+npm script: `content:validate-drafts`
 
 Authoring batches later: e.g. `content/drafts/batches/2026-08-text-easy.json` (not committed until you choose to).
 
@@ -136,8 +140,8 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 | Step | Status |
 |------|--------|
 | 1. Contract docs + JSON Schema + sample TEXT drafts | done |
-| 2. Validate module (Zod / domain) without DB write | **done** |
-| 3. CLI: validate a draft file | pending |
+| 2. Validate module (Zod / domain) without DB write | done |
+| 3. CLI: validate a draft file | **done** |
 | 4. Import script/action → DRAFT only | pending |
 | 5. Smoke: admin review → publish via existing UI | pending |
 | 6. Optional: AI emits same JSON | later |
@@ -160,3 +164,10 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 - [x] Sample file validates `ok: true`
 - [x] Duplicate option text → `ok: true` but `hasPublishBlockers: true` (import later still allowed as DRAFT)
 - [x] `npm run test -- src/features/content/lib/validate-draft-questions.test.ts` green
+
+### Step 3 (CLI)
+
+- [x] `npm run content:validate-drafts` checks sample by default
+- [x] Contract fail → exit code 1
+- [x] Optional `--fail-on-publish-blockers` for stricter CI-style checks
+- [x] Still no DB write
