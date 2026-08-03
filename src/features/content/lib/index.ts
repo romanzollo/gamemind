@@ -1,5 +1,5 @@
 /**
- * Реэкспорт content-pipeline validate (без UI / DB).
+ * Реэкспорт content-pipeline validate/import (без UI).
  */
 
 export {
@@ -14,3 +14,13 @@ export {
     type DraftBatchValidationResult,
     type DraftQuestionQualityReport,
 } from './validate-draft-questions';
+
+export { mapDraftQuestionToCreateInput } from './map-draft-to-create-input';
+
+export {
+    importDraftQuestionsBatch,
+    type ImportDraftCreatedItem,
+    type ImportDraftPlannedItem,
+    type ImportDraftQuestionsOptions,
+    type ImportDraftQuestionsResult,
+} from './import-draft-questions';

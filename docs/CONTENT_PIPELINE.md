@@ -53,10 +53,13 @@ src/features/content/lib/
   validate-draft-questions.test.ts   # Vitest
   index.ts
 
-scripts/validate-draft-questions.ts  # CLI wrapper (no Neon)
+scripts/validate-draft-questions.ts  # CLI validate (no Neon)
+scripts/import-draft-questions.ts    # CLI import → DRAFT (needs .env)
 ```
 
-npm script: `content:validate-drafts`
+npm scripts:
+- `content:validate-drafts`
+- `content:import-drafts` (add `--dry-run` first)
 
 Authoring batches later: e.g. `content/drafts/batches/2026-08-text-easy.json` (not committed until you choose to).
 
@@ -141,8 +144,8 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 |------|--------|
 | 1. Contract docs + JSON Schema + sample TEXT drafts | done |
 | 2. Validate module (Zod / domain) without DB write | done |
-| 3. CLI: validate a draft file | **done** |
-| 4. Import script/action → DRAFT only | pending |
+| 3. CLI: validate a draft file | done |
+| 4. Import script/action → DRAFT only | **done** |
 | 5. Smoke: admin review → publish via existing UI | pending |
 | 6. Optional: AI emits same JSON | later |
 
@@ -165,9 +168,17 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 - [x] Duplicate option text → `ok: true` but `hasPublishBlockers: true` (import later still allowed as DRAFT)
 - [x] `npm run test -- src/features/content/lib/validate-draft-questions.test.ts` green
 
-### Step 3 (CLI)
+### Step 3 (CLI validate)
 
 - [x] `npm run content:validate-drafts` checks sample by default
 - [x] Contract fail → exit code 1
 - [x] Optional `--fail-on-publish-blockers` for stricter CI-style checks
-- [x] Still no DB write
+- [x] Still no DB write on validate CLI
+
+### Step 4 (import DRAFT)
+
+- [x] `mapDraftQuestionToCreateInput` + `importDraftQuestionsBatch`
+- [x] Reuses `questionRepository.createWithOptions` (always DRAFT in SQL)
+- [x] New UUID per row (not idempotent; safe vs overwriting PUBLISHED)
+- [x] `--dry-run` and real import of sample verified locally
+- [x] Never sets `PUBLISHED` in this path

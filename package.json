@@ -18,6 +18,7 @@
         "db:fix-i18n": "node scripts/verify-content-i18n.cjs --fix",
         "db:studio": "prisma studio",
         "content:validate-drafts": "npx tsx scripts/validate-draft-questions.ts",
+        "content:import-drafts": "npx tsx scripts/import-draft-questions.ts",
         "images:optimize": "node scripts/optimize-quiz-images.cjs",
         "images:update-db": "node scripts/update-quiz-image-assets.cjs"
     },
