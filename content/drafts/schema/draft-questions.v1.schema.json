@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://game-mind.ru/schemas/draft-questions.v1.schema.json",
+  "title": "GameMind draft questions batch v1",
+  "description": "Bilingual TEXT question drafts for import as publicationStatus=DRAFT. Canon: docs/CONTENT_PIPELINE.md, docs/QUESTION_I18N.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "questions"],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "source": {
+      "type": "string",
+      "enum": ["manual", "ai", "api", "template"]
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/draftQuestion" }
+    }
+  },
+  "$defs": {
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1
+    },
+    "localeText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "$ref": "#/$defs/nonEmptyText" }
+      }
+    },
+    "bilingualTexts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ru", "en"],
+      "properties": {
+        "ru": { "$ref": "#/$defs/localeText" },
+        "en": { "$ref": "#/$defs/localeText" }
+      }
+    },
+    "draftOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["isCorrect", "translations"],
+      "properties": {
+        "isCorrect": { "type": "boolean" },
+        "translations": { "$ref": "#/$defs/bilingualTexts" }
+      }
+    },
+    "draftQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "difficulty", "translations", "options"],
+      "properties": {
+        "draftKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Human/idempotency key for the batch; not the database id."
+        },
+        "type": {
+          "type": "string",
+          "const": "TEXT"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["EASY", "MEDIUM", "HARD"]
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "default": "video-games"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Optional authoring hints; not required by quiz hot path."
+        },
+        "translations": { "$ref": "#/$defs/bilingualTexts" },
+        "options": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "$ref": "#/$defs/draftOption" }
+        }
+      }
+    }
+  }
+}

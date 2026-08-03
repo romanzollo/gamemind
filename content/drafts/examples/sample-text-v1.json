@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "source": "manual",
+  "questions": [
+    {
+      "draftKey": "sample-text-portal-companion-cube",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Portal",
+        "topic": "item",
+        "game": "Portal"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется культовый куб-спутник из Portal?"
+        },
+        "en": {
+          "text": "What is the name of the iconic companion cube from Portal?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Куб-компаньон" },
+            "en": { "text": "Weighted Companion Cube" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Куб хранения" },
+            "en": { "text": "Storage Cube" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Куб Эдгара" },
+            "en": { "text": "Edgeless Safety Cube" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Куб Гельмана" },
+            "en": { "text": "Aperture Science Cube" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "sample-text-fromsoft-title-set",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "studio": "FromSoftware",
+        "topic": "title-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая из этих игр вышла первой?"
+        },
+        "en": {
+          "text": "Which of these games was released first?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Dark Souls" },
+            "en": { "text": "Dark Souls" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Bloodborne" },
+            "en": { "text": "Bloodborne" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Sekiro: Shadows Die Twice" },
+            "en": { "text": "Sekiro: Shadows Die Twice" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Elden Ring" },
+            "en": { "text": "Elden Ring" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "sample-text-columbia-bioshock",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "BioShock",
+        "topic": "place",
+        "game": "BioShock Infinite"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется парящий город из BioShock Infinite?"
+        },
+        "en": {
+          "text": "What is the name of the floating city in BioShock Infinite?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Колумбия" },
+            "en": { "text": "Columbia" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Восторг" },
+            "en": { "text": "Rapture" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Данвич" },
+            "en": { "text": "Dunwich" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Аркадия" },
+            "en": { "text": "Arcadia" }
+          }
+        }
+      ]
+    }
+  ]
+}
