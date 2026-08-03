@@ -45,7 +45,13 @@ content/drafts/
   schema/
     draft-questions.v1.schema.json   # machine-readable contract (JSON Schema)
   examples/
-    sample-text-v1.json              # 3 TEXT bilingual samples (this track step 1)
+    sample-text-v1.json              # 3 TEXT bilingual samples
+
+src/features/content/lib/
+  draft-questions.schema.ts          # Zod contract v1 (runtime)
+  validate-draft-questions.ts        # validate without DB write
+  validate-draft-questions.test.ts   # Vitest
+  index.ts
 ```
 
 Authoring batches later: e.g. `content/drafts/batches/2026-08-text-easy.json` (not committed until you choose to).
@@ -129,8 +135,8 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 
 | Step | Status |
 |------|--------|
-| 1. Contract docs + JSON Schema + sample TEXT drafts | **in progress** |
-| 2. Validate module (Zod / domain) without DB write | pending |
+| 1. Contract docs + JSON Schema + sample TEXT drafts | done |
+| 2. Validate module (Zod / domain) without DB write | **done** |
 | 3. CLI: validate a draft file | pending |
 | 4. Import script/action → DRAFT only | pending |
 | 5. Smoke: admin review → publish via existing UI | pending |
@@ -138,10 +144,19 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 
 ---
 
-## 8. Verification (step 1)
+## 8. Verification
 
-- [ ] `docs/CONTENT_PIPELINE.md` exists and matches this contract
-- [ ] `content/drafts/schema/draft-questions.v1.schema.json` exists
-- [ ] `content/drafts/examples/sample-text-v1.json` has exactly 3 TEXT questions, each with 4 bilingual options and one correct
-- [ ] Samples follow `QUESTION_I18N.md` (one strategy A character/place, one strategy B titles)
-- [ ] No `publicationStatus` / `isActive` / image fields in the sample file
+### Step 1 (contract)
+
+- [x] `docs/CONTENT_PIPELINE.md` exists and matches this contract
+- [x] `content/drafts/schema/draft-questions.v1.schema.json` exists
+- [x] `content/drafts/examples/sample-text-v1.json` has exactly 3 TEXT questions, each with 4 bilingual options and one correct
+- [x] Samples follow `QUESTION_I18N.md` (one strategy A character/place, one strategy B titles)
+- [x] No `publicationStatus` / `isActive` / image fields in the sample file
+
+### Step 2 (validate)
+
+- [x] `validateDraftQuestionsBatch` rejects bad version / wrong correct count / duplicate `draftKey`
+- [x] Sample file validates `ok: true`
+- [x] Duplicate option text → `ok: true` but `hasPublishBlockers: true` (import later still allowed as DRAFT)
+- [x] `npm run test -- src/features/content/lib/validate-draft-questions.test.ts` green
