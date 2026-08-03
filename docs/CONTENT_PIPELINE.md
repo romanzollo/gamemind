@@ -55,11 +55,13 @@ src/features/content/lib/
 
 scripts/validate-draft-questions.ts  # CLI validate (no Neon)
 scripts/import-draft-questions.ts    # CLI import → DRAFT (needs .env)
+scripts/smoke-content-pipeline-status.ts  # read-only status of sample rows
 ```
 
 npm scripts:
 - `content:validate-drafts`
 - `content:import-drafts` (add `--dry-run` first)
+- `content:smoke-status`
 
 Authoring batches later: e.g. `content/drafts/batches/2026-08-text-easy.json` (not committed until you choose to).
 
@@ -145,8 +147,8 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 | 1. Contract docs + JSON Schema + sample TEXT drafts | done |
 | 2. Validate module (Zod / domain) without DB write | done |
 | 3. CLI: validate a draft file | done |
-| 4. Import script/action → DRAFT only | **done** |
-| 5. Smoke: admin review → publish via existing UI | pending |
+| 4. Import script/action → DRAFT only | done |
+| 5. Smoke: admin review → publish via existing UI | **ready (you run)** — interrupted Aug 3 by Neon/quiz debug; resume next chat |
 | 6. Optional: AI emits same JSON | later |
 
 ---
@@ -182,3 +184,72 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 - [x] New UUID per row (not idempotent; safe vs overwriting PUBLISHED)
 - [x] `--dry-run` and real import of sample verified locally
 - [x] Never sets `PUBLISHED` in this path
+
+### Step 5 (admin smoke — human)
+
+See §9 runbook below. Mark done after you publish at least one imported sample via admin UI.
+
+**Status Aug 3 late:** runbook + `content:smoke-status` ready; Neon/quiz path recovered — **resume smoke in next chat** (do not invent new publish code).
+
+---
+
+## 9. Step 5 smoke runbook (review → publish)
+
+**Goal:** prove the pipeline ends in the **existing** draft/review/publish + quality gate. No new publish code.
+
+### Terms again
+
+| Term | Meaning here |
+|------|----------------|
+| **Review** | Open edit page, read RU+EN, check quality panel |
+| **Submit for review** | Optional: DRAFT → IN_REVIEW (solo admin may skip) |
+| **Publish** | DRAFT or IN_REVIEW → PUBLISHED (runs `getQuestionPublishQualityIssues`) |
+| **Quiz pool** | Only `PUBLISHED` **and** `isActive=true` |
+
+### Before UI
+
+```powershell
+npm run content:smoke-status
+```
+
+Expect at least one `DRAFT` row for each sample RU text (or re-import if empty).
+
+If nothing found:
+
+```powershell
+npm run content:import-drafts -- content/drafts/examples/sample-text-v1.json
+npm run content:smoke-status
+```
+
+### In admin (with `npm run dev`)
+
+1. Open `/ru/admin/questions?publication=DRAFT`
+2. Find Portal / FromSoft / Columbia samples (search box or scroll)
+3. Open **Edit** on Portal (strategy A — clean bilingual)
+4. Check quality panel: ideally no blockers
+5. Either:
+   - **Submit for review** then **Publish**, or
+   - **Publish** directly from DRAFT (allowed for solo admin)
+6. Confirm badge → Published
+7. Optional: publish Columbia the same way
+8. FromSoft titles: may show warning `IDENTICAL_OPTION_LOCALES` (strategy B) — **warning does not block publish**
+9. List filter `?publication=PUBLISHED` — rows visible
+10. Start a short Classic quiz on `/ru/quiz` — if pool pick hits them, texts look coherent (not required to see all three)
+
+### After UI
+
+```powershell
+npm run content:smoke-status
+```
+
+Expect some rows `PUBLISHED` (and still `active=true`).
+
+### Cleanup (optional)
+
+Duplicate DRAFTs from repeated imports: deactivate or delete extras in admin. Do not leave junk PUBLISHED if you were only testing.
+
+### Do not
+
+- Change scoring / snapshot / import to auto-PUBLISH
+- Skip quality panel “because JSON validated”
+- Publish IMAGE_GUESS without assets (not in this sample)
