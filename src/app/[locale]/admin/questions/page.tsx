@@ -1,11 +1,15 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { questionRepository } from '@/entities/question/question.repository';
 import { AdminNoticeFlash } from '@/features/admin/components/AdminNoticeFlash';
 import { AdminQuestionsFilters } from '@/features/admin/components/AdminQuestionsFilters';
+import { AdminQuestionsPagination } from '@/features/admin/components/AdminQuestionsPagination';
 import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
 import {
+    buildAdminQuestionListHref,
+    getAdminQuestionListPageMeta,
     hasActiveAdminQuestionListFilters,
     mapAdminQuestions,
     parseAdminNotice,
@@ -42,18 +46,27 @@ export default async function AdminQuestionsPage({
     const notice = parseAdminNotice(rawSearchParams.notice);
 
     let entries: ReturnType<typeof mapAdminQuestions> = [];
+    let totalCount = 0;
+    let listPage = filters.page;
     let loadErrorMessage: string | undefined;
+    let clampedPage: number | null = null;
 
     try {
-        const rows = await questionRepository.findAllForAdmin(
+        const result = await questionRepository.findAllForAdmin(
             safeLocale,
             filters,
         );
-        entries = mapAdminQuestions(rows);
+        entries = mapAdminQuestions(result.rows);
+        totalCount = result.totalCount;
+        listPage = result.page;
+
+        if (filters.page !== result.page && result.totalCount > 0) {
+            clampedPage = result.page;
+        }
 
         if (process.env.NODE_ENV === 'development') {
             console.info(
-                `[admin/questions] findAllForAdmin ok (rows=${rows.length}, filtersActive=${filtersActive})`,
+                `[admin/questions] findAllForAdmin ok (rows=${result.rows.length}, total=${result.totalCount}, page=${result.page}, filtersActive=${filtersActive})`,
             );
         }
     } catch (loadError) {
@@ -67,6 +80,18 @@ export default async function AdminQuestionsPage({
         }
         loadErrorMessage = dictionary.admin.errors.loadFailed;
     }
+
+    // URL page за пределами totalPages → канонический URL (после успешного read).
+    if (clampedPage !== null) {
+        redirect(
+            buildAdminQuestionListHref(safeLocale, {
+                ...filters,
+                page: clampedPage,
+            }),
+        );
+    }
+
+    const pageMeta = getAdminQuestionListPageMeta(totalCount, listPage);
 
     const actionErrorMessage =
         error === 'DELETE_FAILED'
@@ -166,18 +191,31 @@ export default async function AdminQuestionsPage({
             />
 
             {!loadErrorMessage ? (
-                <AdminQuestionsTable
-                    entries={entries}
-                    labels={dictionary.admin}
-                    dictionary={dictionary}
-                    locale={safeLocale}
-                    workingLabel={dictionary.common.working}
-                    emptyTitle={
-                        filtersActive
-                            ? dictionary.admin.emptyFiltered
-                            : dictionary.admin.empty
-                    }
-                />
+                <>
+                    <AdminQuestionsTable
+                        entries={entries}
+                        labels={dictionary.admin}
+                        dictionary={dictionary}
+                        locale={safeLocale}
+                        workingLabel={dictionary.common.working}
+                        emptyTitle={
+                            filtersActive
+                                ? dictionary.admin.emptyFiltered
+                                : dictionary.admin.empty
+                        }
+                    />
+                    <AdminQuestionsPagination
+                        locale={safeLocale}
+                        filters={{ ...filters, page: pageMeta.page }}
+                        page={pageMeta.page}
+                        totalPages={pageMeta.totalPages}
+                        totalCount={pageMeta.totalCount}
+                        from={pageMeta.from}
+                        to={pageMeta.to}
+                        labels={dictionary.admin}
+                        loadingLabel={dictionary.common.loading}
+                    />
+                </>
             ) : null}
         </main>
     );

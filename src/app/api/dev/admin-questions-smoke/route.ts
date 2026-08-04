@@ -28,20 +28,23 @@ export async function GET(request: Request) {
                   difficulty: difficultyParam as Difficulty,
                   type: 'all',
                   q: '',
+                  page: 1,
               }
             : undefined;
 
     const startedAt = Date.now();
 
     try {
-        const rows = await questionRepository.findAllForAdmin('ru', filters);
+        const result = await questionRepository.findAllForAdmin('ru', filters);
 
         return NextResponse.json({
             ok: true,
             ms: Date.now() - startedAt,
-            rows: rows.length,
+            rows: result.rows.length,
+            totalCount: result.totalCount,
+            page: result.page,
             filtersActive: Boolean(filters),
-            sample: rows.slice(0, 2).map((row) => ({
+            sample: result.rows.slice(0, 2).map((row) => ({
                 type: row.type,
                 text: row.text.slice(0, 40),
                 options: row._count.options,

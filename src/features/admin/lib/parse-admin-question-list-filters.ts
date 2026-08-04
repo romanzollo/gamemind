@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { ADMIN_QUESTION_LIST_PAGE_SIZE } from '@/features/admin/lib/constants';
 import type {
     Difficulty,
     QuestionPublicationStatus,
@@ -12,11 +13,14 @@ import type {
  * Зачем отдельный модуль:
  * - URL — внешний вход (как FormData); валидируем до репозитория;
  * - невалидные значения не роняют страницу — fallback на «без фильтра»;
- * - один контракт для page → SQL WHERE.
+ * - один контракт для page → SQL WHERE + LIMIT.
  *
  * Две оси в URL (не путать):
  * - `status` → isActive (витрина: active / inactive);
  * - `publication` → publicationStatus (редактура: DRAFT / IN_REVIEW / PUBLISHED).
+ *
+ * `page` — 1-based offset-пагинация (pageSize фиксирован в constants).
+ * Смена фильтров/поиска сбрасывает page → 1 (см. AdminQuestionsFilters).
  *
  * См. DECISIONS.md → Question publication workflow.
  */
@@ -41,6 +45,8 @@ export type AdminQuestionListFilters = {
     type: QuestionType | 'all';
     /** Подстрока поиска по тексту; пустая строка = без поиска. */
     q: string;
+    /** 1-based номер страницы; битые значения → 1. */
+    page: number;
 };
 
 const DEFAULT_FILTERS: AdminQuestionListFilters = {
@@ -49,10 +55,14 @@ const DEFAULT_FILTERS: AdminQuestionListFilters = {
     difficulty: 'all',
     type: 'all',
     q: '',
+    page: 1,
 };
 
 /** Верхняя граница длины q: защита от огромных URL, не «умность» поиска. */
 const SEARCH_MAX_LENGTH = 200;
+
+/** Защита от page=999999 в URL (огромный OFFSET / over-fetch). */
+const PAGE_MAX = 10_000;
 
 const adminQuestionListFiltersSchema = z.object({
     status: z.enum(['active', 'inactive', 'all']).default('all'),
@@ -61,11 +71,8 @@ const adminQuestionListFiltersSchema = z.object({
         .default('all'),
     difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'all']).default('all'),
     type: z.enum(['TEXT', 'IMAGE_GUESS', 'all']).default('all'),
-    q: z
-        .string()
-        .trim()
-        .max(SEARCH_MAX_LENGTH)
-        .default(''),
+    q: z.string().trim().max(SEARCH_MAX_LENGTH).default(''),
+    page: z.coerce.number().int().min(1).max(PAGE_MAX).default(1),
 });
 
 function firstParam(
@@ -90,6 +97,9 @@ function emptyToUndefined(value: string | undefined): string | undefined {
 /**
  * Преобразует сырые searchParams страницы в безопасные фильтры.
  * Неизвестные ключи игнорируются; битые значения → defaults.
+ *
+ * Важно: один битый ключ (в т.ч. page) → весь DEFAULT_FILTERS
+ * (safeParse fail), как и раньше для status/difficulty.
  */
 export function parseAdminQuestionListFilters(
     searchParams: Record<string, string | string[] | undefined>,
@@ -100,6 +110,7 @@ export function parseAdminQuestionListFilters(
         difficulty: emptyToUndefined(firstParam(searchParams.difficulty)),
         type: emptyToUndefined(firstParam(searchParams.type)),
         q: emptyToUndefined(firstParam(searchParams.q)),
+        page: emptyToUndefined(firstParam(searchParams.page)),
     };
 
     const parsed = adminQuestionListFiltersSchema.safeParse(raw);
@@ -114,10 +125,14 @@ export function parseAdminQuestionListFilters(
         difficulty: parsed.data.difficulty,
         type: parsed.data.type,
         q: parsed.data.q,
+        page: parsed.data.page,
     };
 }
 
-/** Есть ли хотя бы одно ограничение (для empty-state / «сбросить»). */
+/**
+ * Есть ли хотя бы одно ограничение контента (для empty-state / «сбросить»).
+ * `page` не считается активным фильтром — иначе Reset на page=2 выглядел бы «грязно».
+ */
 export function hasActiveAdminQuestionListFilters(
     filters: AdminQuestionListFilters,
 ): boolean {
@@ -131,8 +146,8 @@ export function hasActiveAdminQuestionListFilters(
 }
 
 /**
- * URL списка без «шумных» all/пустого q.
- * Нужен Client-навигации фильтров и Reset.
+ * URL списка без «шумных» all/пустого q/page=1.
+ * Нужен Client-навигации фильтров, Reset и pagination links.
  */
 export function buildAdminQuestionListHref(
     locale: string,
@@ -160,8 +175,42 @@ export function buildAdminQuestionListHref(
         params.set('q', filters.q);
     }
 
+    if (filters.page > 1) {
+        params.set('page', String(filters.page));
+    }
+
     const query = params.toString();
     const base = `/${locale}/admin/questions`;
 
     return query ? `${base}?${query}` : base;
+}
+
+/** Мета пагинации для UI (from/to/totalPages) из totalCount + page. */
+export function getAdminQuestionListPageMeta(
+    totalCount: number,
+    page: number,
+    pageSize: number = ADMIN_QUESTION_LIST_PAGE_SIZE,
+): {
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+    from: number;
+    to: number;
+} {
+    const totalPages = Math.max(1, Math.ceil(totalCount / pageSize) || 1);
+    const safePage =
+        totalCount === 0 ? 1 : Math.min(Math.max(1, page), totalPages);
+    const from = totalCount === 0 ? 0 : (safePage - 1) * pageSize + 1;
+    const to =
+        totalCount === 0 ? 0 : Math.min(safePage * pageSize, totalCount);
+
+    return {
+        page: safePage,
+        pageSize,
+        totalCount,
+        totalPages,
+        from,
+        to,
+    };
 }

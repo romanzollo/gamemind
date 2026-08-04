@@ -66,6 +66,7 @@ export function AdminQuestionsFilters({
                 difficulty: 'all',
                 type: 'all',
                 q: '',
+                page: 1,
             }),
         );
     }
@@ -81,6 +82,7 @@ export function AdminQuestionsFilters({
                 buildAdminQuestionListHref(locale, {
                     ...filters,
                     q: trimmed.slice(0, 200),
+                    page: 1,
                 }),
             );
         }, SEARCH_DEBOUNCE_MS);
@@ -112,6 +114,7 @@ export function AdminQuestionsFilters({
                                 status: event.target
                                     .value as AdminQuestionListStatusFilter,
                                 q: searchText.trim(),
+                                page: 1,
                             });
                         }}
                     >
@@ -137,6 +140,7 @@ export function AdminQuestionsFilters({
                                 publication: event.target
                                     .value as AdminQuestionListPublicationFilter,
                                 q: searchText.trim(),
+                                page: 1,
                             });
                         }}
                     >
@@ -169,6 +173,7 @@ export function AdminQuestionsFilters({
                                 difficulty: event.target
                                     .value as Difficulty | 'all',
                                 q: searchText.trim(),
+                                page: 1,
                             });
                         }}
                     >
@@ -197,6 +202,7 @@ export function AdminQuestionsFilters({
                                 type: event.target
                                     .value as QuestionType | 'all',
                                 q: searchText.trim(),
+                                page: 1,
                             });
                         }}
                     >

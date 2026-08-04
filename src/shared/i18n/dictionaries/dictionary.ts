@@ -253,6 +253,14 @@ export type Dictionary = {
         filterSearchPlaceholder: string;
         filterApply: string;
         filterReset: string;
+        /** Пагинация списка вопросов (offset, URL ?page=). */
+        paginationNavLabel: string;
+        /** «Показаны {from}–{to} из {total}». */
+        paginationSummary: string;
+        /** Mobile: «{page} из {totalPages}». */
+        paginationPageStatus: string;
+        paginationPrev: string;
+        paginationNext: string;
         formQuestionText: string;
         formQuestionTextRu: string;
         formQuestionTextEn: string;
