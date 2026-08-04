@@ -66,6 +66,7 @@ model User {
   quizSessions      QuizSession[]
   quizResults       QuizResult[]
   userAchievements  UserAchievement[]
+  achievementOutbox AchievementOutbox[]
 }
 
 model Account {
@@ -214,12 +215,33 @@ model QuizResult {
   totalQuestions Int
   correctCount   Int
   completedAt    DateTime @default(now())
+  /// Копия snapshot на момент complete — result page не читает QuizSession.snapshotData
+  /// сразу после UPDATE status (Windows+Neon: connect OK, TOAST/query hang).
+  /// См. DECISIONS → Quiz Start / Session Load Playbook (result incident).
+  reviewSnapshot Json?
 
   session QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([score(sort: Desc), completedAt(sort: Asc)])
+}
+
+/// Намерение award после completed QuizResult (transactional outbox, MVP).
+/// Пишется на том же Direct write-client, что answers/result/COMPLETED.
+/// Processor / profile catch-up / result Suspense — идемпотентно; не блокирует submit UX.
+/// Canon: docs/DECISIONS.md → Achievements MVP + result incident Aug 4.
+model AchievementOutbox {
+  id          String    @id @default(cuid())
+  userId      String
+  sessionId   String    @unique
+  createdAt   DateTime  @default(now())
+  processedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([processedAt, createdAt])
+  @@index([userId])
 }
 
 /// Факт разблокировки бейджа у пользователя (Achievements MVP, вариант A).

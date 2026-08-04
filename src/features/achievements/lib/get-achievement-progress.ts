@@ -1,8 +1,8 @@
 /**
- * Progress ачивок для профиля: catch-up award + каталог + unlock + метрики критерия.
+ * Progress ачивок для профиля: outbox/award catch-up + каталог + unlock + метрики.
  *
- * Зачем: старые QuizResult (до фичи) получат бейджи при открытии профиля;
- * UI всегда видит полный каталог (locked / unlocked) и «текущее / цель», не только строки БД.
+ * Зачем: старые QuizResult (до фичи) и pending AchievementOutbox получат
+ * бейджи при открытии профиля; UI всегда видит полный каталог.
  *
  * Метрики считаются на сервере из EvalFacts — клиент не присылает прогресс.
  */
@@ -22,7 +22,7 @@ import {
 export async function getAchievementProgressForUser(
     userId: string,
 ): Promise<AchievementProgress | null> {
-    // Soft-fail catch-up: ошибка award не должна ломать чтение прогресса.
+    // Soft-fail catch-up: ошибка award/outbox не должна ломать чтение прогресса.
     await awardAchievementsForUser(userId);
 
     try {

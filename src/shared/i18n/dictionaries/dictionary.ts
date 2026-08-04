@@ -436,6 +436,10 @@ export type Dictionary = {
             dbTimeout: string;
             /** Neon/timeout при загрузке result — не путать с submitFailed. */
             resultLoadFailed: string;
+            /** Разбор (JSONB) не загрузился — score уже на экране. */
+            reviewLoadFailed: string;
+            /** Сессия есть в БД, но первый RSC после start отдал miss / stale 404. */
+            sessionLoadFailed: string;
         };
     };
     leaderboard: {

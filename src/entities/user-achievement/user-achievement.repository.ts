@@ -209,4 +209,54 @@ export const userAchievementRepository = {
             return inserted;
         });
     },
+
+    /**
+     * Один Direct write-client (autocommit, без BEGIN):
+     * INSERT unlocks → mark all pending outbox for user processed.
+     *
+     * Идемпотентно при гонке after()/Suspense/profile: ON CONFLICT + UPDATE
+     * WHERE processedAt IS NULL. Без FOR UPDATE — Neon write path на этом
+     * стеке надёжнее без явных транзакций (см. quiz submit).
+     */
+    async processOutboxAwardPass(
+        userId: string,
+        newlyEarnedCodes: readonly AchievementCode[],
+    ): Promise<{ processedOutboxCount: number; insertedUnlocks: number }> {
+        return withDirectPgWriteClient(
+            async (client) => {
+                let insertedUnlocks = 0;
+
+                for (const code of newlyEarnedCodes) {
+                    const result = await client.query(
+                        `
+                            INSERT INTO "UserAchievement" ("id", "userId", "code")
+                            VALUES ($1, $2, $3)
+                            ON CONFLICT ("userId", "code") DO NOTHING
+                        `,
+                        [randomUUID(), userId, code],
+                    );
+                    insertedUnlocks += result.rowCount ?? 0;
+                }
+
+                const marked = await client.query(
+                    `
+                        UPDATE "AchievementOutbox"
+                        SET "processedAt" = NOW()
+                        WHERE
+                            "userId" = $1
+                            AND "processedAt" IS NULL
+                    `,
+                    [userId],
+                );
+
+                return {
+                    processedOutboxCount: marked.rowCount ?? 0,
+                    insertedUnlocks,
+                };
+            },
+            {
+                debugLabel: 'achievement.outbox.process',
+            },
+        );
+    },
 };

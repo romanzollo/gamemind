@@ -9,11 +9,11 @@
  * DRAFT / IN_REVIEW и soft-hide (isActive=false) исключены. Snapshot write/read
  * и scoring math не меняются — только WHERE при выборе id.
  *
- * Hot path Direct pick (Classic/Timed): два коротких read-budget —
- * 1) только id (`ORDER BY RANDOM() LIMIT n`);
- * 2) bilingual resolve по id (как Daily).
- * Один тяжёлый RANDOM+JOINs в 12s на Windows+Neon ломал Classic 10Q,
- * пока 3/5Q ещё проходили. Legacy one-shot SQL — для in-client merged path.
+ * Hot path Direct pick (Classic/Timed/Daily resolve):
+ * - id pool (отдельный TLS) + resolve;
+ * - resolve чанками по `SNAPSHOT_RESOLVE_CHUNK_SIZE` (5): один fat resolve на 10Q
+ *   стабильно ловит DirectPgTimeout ~18s×2 в Windows `next dev`, пока Classic 5 OK.
+ * Create — отдельный budget. Keep-warm interval выключен.
  *
  * Публичный фасад: question.repository.ts реэкспортирует функции и методы.
  * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
@@ -116,6 +116,19 @@ const PROMPT_IMAGE_URL_SQL = `
         ORDER BY qa."order" ASC, qa."id" ASC
         LIMIT 1
     )
+`;
+
+/** Один PROMPT на вопрос до разворота options — дешевле correlated на 40 строк (10Q). */
+const PROMPT_IMAGE_LATERAL_JOIN_SQL = `
+    LEFT JOIN LATERAL (
+        SELECT qa."url"
+        FROM "QuestionAsset" qa
+        WHERE
+            qa."questionId" = q."id"
+            AND qa."role" = 'PROMPT'::"QuestionAssetRole"
+        ORDER BY qa."order" ASC, qa."id" ASC
+        LIMIT 1
+    ) prompt_asset ON TRUE
 `;
 
 const BILINGUAL_QUESTION_TRANSLATION_JOINS_SQL = `
@@ -425,53 +438,32 @@ export async function loadLocalizedTextsByQuestionIds(
     );
 }
 
+/**
+ * Лёгкий random bundle на открытом client (Classic start / in-client path).
+ * Id pool → JS shuffle → resolve. Без ORDER BY RANDOM()+JOINs в одном statement
+ * — иначе 10Q + INSERT в одном 12–18s budget давал ложный DB_TIMEOUT.
+ */
 export async function loadRandomSnapshotBundleWithPgClient(
     client: Client,
     difficulty: Difficulty,
     limit: number,
     locale: Locale,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    const result = await client.query<SnapshotBilingualDisplayTextRow>(
-        `
-                WITH random_ids AS (
-                    SELECT id, ord::int - 1 AS pick_position
-                    FROM unnest((
-                        SELECT ARRAY(
-                            SELECT q."id"
-                            FROM "Question" q
-                            WHERE
-                                q."difficulty" = $1::"Difficulty"
-                                AND q."isActive" = true
-                                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
-                            ORDER BY RANDOM()
-                            LIMIT $2
-                        )
-                    )::text[]) WITH ORDINALITY AS t(id, ord)
-                )
-                SELECT
-                    q."id" AS question_id,
-                    q."difficulty"::text AS difficulty,
-                    q."type"::text AS question_type,
-                    ${RESOLVED_QUESTION_TEXT_RU_SQL} AS question_text_ru,
-                    ${RESOLVED_QUESTION_TEXT_EN_SQL} AS question_text_en,
-                    ${PROMPT_IMAGE_URL_SQL} AS prompt_image_url,
-                    ao."id" AS option_id,
-                    ${RESOLVED_OPTION_TEXT_RU_SQL} AS option_text_ru,
-                    ${RESOLVED_OPTION_TEXT_EN_SQL} AS option_text_en,
-                    ao."isCorrect" AS is_correct
-                FROM random_ids ri
-                INNER JOIN "Question" q
-                    ON q."id" = ri.id
-                INNER JOIN "AnswerOption" ao
-                    ON ao."questionId" = q."id"
-                ${BILINGUAL_QUESTION_TRANSLATION_JOINS_SQL}
-                ${BILINGUAL_OPTION_TRANSLATION_JOINS_SQL}
-                ORDER BY ri.pick_position, ao."order" ASC
-            `,
-        [difficulty, limit],
+    const questionIds = await pickRandomActiveQuestionIdsWithPgClient(
+        client,
+        difficulty,
+        limit,
     );
 
-    return groupBilingualSnapshotBundleRows(result.rows, locale);
+    if (questionIds.length === 0) {
+        return [];
+    }
+
+    return loadSnapshotBundleByQuestionIdsWithPgClient(
+        client,
+        questionIds,
+        locale,
+    );
 }
 
 /**
@@ -500,7 +492,7 @@ export async function loadSnapshotBundleByQuestionIdsWithPgClient(
                     q."type"::text AS question_type,
                     ${RESOLVED_QUESTION_TEXT_RU_SQL} AS question_text_ru,
                     ${RESOLVED_QUESTION_TEXT_EN_SQL} AS question_text_en,
-                    ${PROMPT_IMAGE_URL_SQL} AS prompt_image_url,
+                    prompt_asset."url" AS prompt_image_url,
                     ao."id" AS option_id,
                     ${RESOLVED_OPTION_TEXT_RU_SQL} AS option_text_ru,
                     ${RESOLVED_OPTION_TEXT_EN_SQL} AS option_text_en,
@@ -508,6 +500,7 @@ export async function loadSnapshotBundleByQuestionIdsWithPgClient(
                 FROM ordered_ids oi
                 INNER JOIN "Question" q
                     ON q."id" = oi.id
+                ${PROMPT_IMAGE_LATERAL_JOIN_SQL}
                 INNER JOIN "AnswerOption" ao
                     ON ao."questionId" = q."id"
                 ${BILINGUAL_QUESTION_TRANSLATION_JOINS_SQL}
@@ -521,8 +514,8 @@ export async function loadSnapshotBundleByQuestionIdsWithPgClient(
 }
 
 /**
- * Лёгкий pick: только id (без translation/option JOINs).
- * Тяжёлый bilingual resolve — отдельным Direct-budget по списку id.
+ * Id pool без ORDER BY RANDOM: банк на сложность маленький, shuffle в JS.
+ * Resolve — следующим query на том же client.
  */
 async function pickRandomActiveQuestionIdsWithPgClient(
     client: Client,
@@ -537,32 +530,77 @@ async function pickRandomActiveQuestionIdsWithPgClient(
                 q."difficulty" = $1::"Difficulty"
                 AND q."isActive" = true
                 AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
-            ORDER BY RANDOM()
-            LIMIT $2
         `,
-        [difficulty, limit],
+        [difficulty],
     );
 
-    return result.rows.map((row) => row.id);
+    return shuffleArray(result.rows.map((row) => row.id)).slice(0, limit);
 }
+
+/**
+ * Сколько вопросов в одном Direct resolve.
+ * Измерено Aug 4: 5Q start OK; 10Q / Blitz / Daily (10) → DB_TIMEOUT на resolve.
+ */
+const SNAPSHOT_RESOLVE_CHUNK_SIZE = 5;
 
 async function loadSnapshotBundleByQuestionIdsWithDirectPg(
     questionIds: string[],
     locale: Locale,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    return withDirectPgClient((client) =>
-        loadSnapshotBundleByQuestionIdsWithPgClient(
-            client,
-            questionIds,
-            locale,
-        ),
-    );
+    if (questionIds.length === 0) {
+        return [];
+    }
+
+    // Classic 5 / маленький Daily-фрагмент — один TLS.
+    if (questionIds.length <= SNAPSHOT_RESOLVE_CHUNK_SIZE) {
+        return withDirectPgClient((client) =>
+            loadSnapshotBundleByQuestionIdsWithPgClient(
+                client,
+                questionIds,
+                locale,
+            ),
+        );
+    }
+
+    // 10Q (Classic/Blitz/Daily): чанки по 5 — каждый свой Direct budget.
+    // Один resolve на 10 id стабильно timeout; 5 id — рабочий размер.
+    const byId = new Map<string, QuestionSnapshotBundleItem>();
+
+    for (
+        let offset = 0;
+        offset < questionIds.length;
+        offset += SNAPSHOT_RESOLVE_CHUNK_SIZE
+    ) {
+        const chunk = questionIds.slice(
+            offset,
+            offset + SNAPSHOT_RESOLVE_CHUNK_SIZE,
+        );
+        const part = await withDirectPgClient((client) =>
+            loadSnapshotBundleByQuestionIdsWithPgClient(client, chunk, locale),
+        );
+
+        for (const question of part) {
+            byId.set(question.id, question);
+        }
+    }
+
+    const ordered: QuestionSnapshotBundleItem[] = [];
+
+    for (const id of questionIds) {
+        const question = byId.get(id);
+
+        if (question) {
+            ordered.push(question);
+        }
+    }
+
+    return ordered;
 }
 
 /**
- * Classic/Timed hot path: id-pick и resolve — разные Direct reads (свой 12s
- * budget + retry у каждого). Не склеивать RANDOM + bilingual JOINs в один
- * wall-clock timeout: на 10Q Windows+Neon давал ложный DB_TIMEOUT при живых 3/5Q.
+ * Classic/Timed pick: id-pool TLS, затем resolve (чанки по 5 для 10Q).
+ * Daily использует тот же chunked resolve по frozen ids.
+ * Не возвращать тяжёлый ORDER BY RANDOM()+JOINs.
  */
 async function loadRandomSnapshotBundleWithDirectPg(
     difficulty: Difficulty,

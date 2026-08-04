@@ -1,18 +1,26 @@
 /**
  * Общая логика старта Classic (lobby + rematch).
  *
- * Без redirect / FormData — только pick → snapshot create.
- * Actions решают auth, rate limit, redirect и (для rematch) settle.
+ * Без redirect / FormData — auth/rate limit в actions.
+ *
+ * Контракт Classic (не смешивать с Timed):
+ * - pickClassicSnapshotBundle → createWithJsonSnapshot (без timedEndsAt);
+ * - pick: id-pool TLS + resolve TLS; create — третий budget;
+ * - 500ms settle перед pick (rematch / lobby Daily);
+ * - матрица: Easy 3 / 5 / 10 → 303.
+ *
+ * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
 
-import { questionRepository } from '@/entities/question/question.repository';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
+import { buildQuizSnapshotQuestions } from '@/features/quiz/lib/build-quiz-snapshot-questions';
 import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
+import { pickClassicSnapshotBundle } from '@/features/quiz/lib/pick-quiz-snapshot-bundle';
 import type { QuizErrorCode } from '@/features/quiz/types';
 import type { Locale } from '@/shared/i18n';
-import { shuffleArray } from '@/shared/utils';
-import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type { Difficulty } from '@/types';
+
+const CLASSIC_START_SETTLE_MS = 500;
 
 export type RunClassicQuizStartInput = {
     userId: string;
@@ -29,43 +37,26 @@ export async function runClassicQuizStart(
     input: RunClassicQuizStartInput,
 ): Promise<RunClassicQuizStartResult> {
     try {
-        const pickedQuestions =
-            await questionRepository.pickRandomActiveSnapshotBundle(
-                input.difficulty,
-                input.questionCount,
-                input.locale,
-            );
+        await new Promise((resolve) =>
+            setTimeout(resolve, CLASSIC_START_SETTLE_MS),
+        );
+
+        const pickedQuestions = await pickClassicSnapshotBundle(
+            input.difficulty,
+            input.questionCount,
+            input.locale,
+        );
 
         if (pickedQuestions.length < input.questionCount) {
             return { ok: false, errorCode: 'NOT_ENOUGH_QUESTIONS' };
         }
-
-        const snapshotQuestions = pickedQuestions.map((question, index) => {
-            const shuffledOptions = shuffleArray(question.options);
-
-            return {
-                questionId: question.id,
-                position: index,
-                displayText: question.displayText,
-                displayTexts: question.displayTexts,
-                displayImageUrl: normalizeQuizImageUrl(
-                    question.displayImageUrl,
-                ),
-                options: shuffledOptions.map((option, optionIndex) => ({
-                    optionId: option.id,
-                    displayOrder: optionIndex,
-                    displayText: option.displayText,
-                    displayTexts: option.displayTexts,
-                })),
-            };
-        });
 
         const quizSession = await quizSessionRepository.createWithJsonSnapshot({
             userId: input.userId,
             difficulty: input.difficulty,
             questionCount: input.questionCount,
             sessionLocale: input.locale,
-            questions: snapshotQuestions,
+            questions: buildQuizSnapshotQuestions(pickedQuestions),
             pickedQuestions,
         });
 

@@ -6,13 +6,18 @@
  * - classic quiz pick (`ORDER BY RANDOM`) сюда не тащим — только id pool + upsert дня;
  * - scoring / snapshot write не меняем.
  *
+ * Lobby `/quiz`: `findLobbyPanelState` — challenge + attempt + board на **одном**
+ * Direct TLS (раньше 3–4 подряд клинили Classic/Blitz start).
+ *
  * Гонка двух первых игроков: INSERT … ON CONFLICT DO NOTHING → SELECT.
  * Источник правды после успеха — строка в БД, не повторный pick в памяти.
  *
- * Canon: DECISIONS.md → Daily Challenge MVP.
+ * Canon: DECISIONS.md → Daily Challenge MVP / Quiz Start Playbook.
  */
 
 import { randomUUID } from 'node:crypto';
+
+import type { Client } from 'pg';
 
 import {
     withDirectPgClient,
@@ -84,24 +89,23 @@ function mapRow(row: DailyChallengeRow): DailyChallengeDefinition | null {
     };
 }
 
-async function findByChallengeDate(
+async function queryChallengeByDate(
+    client: Client,
     challengeDate: string,
 ): Promise<DailyChallengeDefinition | null> {
-    const result = await withDirectPgClient((client) =>
-        client.query<DailyChallengeRow>(
-            `
-                SELECT
-                    "id",
-                    "challengeDate" AS challenge_date,
-                    "difficulty",
-                    "questionCount" AS question_count,
-                    "questionIds" AS question_ids
-                FROM "DailyChallenge"
-                WHERE "challengeDate" = $1::date
-                LIMIT 1
-            `,
-            [challengeDate],
-        ),
+    const result = await client.query<DailyChallengeRow>(
+        `
+            SELECT
+                "id",
+                "challengeDate" AS challenge_date,
+                "difficulty",
+                "questionCount" AS question_count,
+                "questionIds" AS question_ids
+            FROM "DailyChallenge"
+            WHERE "challengeDate" = $1::date
+            LIMIT 1
+        `,
+        [challengeDate],
     );
 
     const row = result.rows[0];
@@ -111,6 +115,14 @@ async function findByChallengeDate(
     }
 
     return mapRow(row);
+}
+
+async function findByChallengeDate(
+    challengeDate: string,
+): Promise<DailyChallengeDefinition | null> {
+    return withDirectPgClient((client) =>
+        queryChallengeByDate(client, challengeDate),
+    );
 }
 
 /**
@@ -227,40 +239,7 @@ export type DailyChallengeAttempt =
           status: 'ABANDONED';
       };
 
-/**
- * Одна попытка пользователя на челлендж (UNIQUE userId+dailyChallengeId).
- * Нужна для resume / redirect на result / блокировки второго старта.
- */
-async function findAttemptByUserAndChallenge(
-    userId: string,
-    dailyChallengeId: string,
-): Promise<DailyChallengeAttempt | null> {
-    const result = await withDirectPgClient((client) =>
-        client.query<DailyAttemptRow>(
-            `
-                SELECT
-                    s."id" AS session_id,
-                    s."status"::text AS status,
-                    r."score" AS score,
-                    r."totalQuestions" AS total_questions,
-                    r."correctCount" AS correct_count
-                FROM "QuizSession" s
-                LEFT JOIN "QuizResult" r
-                    ON r."sessionId" = s."id"
-                WHERE s."userId" = $1
-                  AND s."dailyChallengeId" = $2
-                LIMIT 1
-            `,
-            [userId, dailyChallengeId],
-        ),
-    );
-
-    const row = result.rows[0];
-
-    if (!row) {
-        return null;
-    }
-
+function mapAttemptRow(row: DailyAttemptRow): DailyChallengeAttempt {
     if (row.status === 'COMPLETED') {
         return {
             kind: 'completed',
@@ -285,6 +264,51 @@ async function findAttemptByUserAndChallenge(
     };
 }
 
+async function queryAttemptByUserAndChallenge(
+    client: Client,
+    userId: string,
+    dailyChallengeId: string,
+): Promise<DailyChallengeAttempt | null> {
+    const result = await client.query<DailyAttemptRow>(
+        `
+            SELECT
+                s."id" AS session_id,
+                s."status"::text AS status,
+                r."score" AS score,
+                r."totalQuestions" AS total_questions,
+                r."correctCount" AS correct_count
+            FROM "QuizSession" s
+            LEFT JOIN "QuizResult" r
+                ON r."sessionId" = s."id"
+            WHERE s."userId" = $1
+              AND s."dailyChallengeId" = $2
+            LIMIT 1
+        `,
+        [userId, dailyChallengeId],
+    );
+
+    const row = result.rows[0];
+
+    if (!row) {
+        return null;
+    }
+
+    return mapAttemptRow(row);
+}
+
+/**
+ * Одна попытка пользователя на челлендж (UNIQUE userId+dailyChallengeId).
+ * Нужна для resume / redirect на result / блокировки второго старта.
+ */
+async function findAttemptByUserAndChallenge(
+    userId: string,
+    dailyChallengeId: string,
+): Promise<DailyChallengeAttempt | null> {
+    return withDirectPgClient((client) =>
+        queryAttemptByUserAndChallenge(client, userId, dailyChallengeId),
+    );
+}
+
 type DailyScoreRow = {
     user_id: string;
     username: string;
@@ -294,40 +318,20 @@ type DailyScoreRow = {
     completed_at: Date;
 };
 
-/**
- * Рейтинг одного дня: одна попытка на user → без DISTINCT ON.
- * Только завершённые сессии с этим dailyChallengeId.
- */
-async function findScoresByChallengeId(
-    dailyChallengeId: string,
-    limit: number,
-) {
-    const result = await withDirectPgClient((client) =>
-        client.query<DailyScoreRow>(
-            `
-                SELECT
-                    u."id" AS user_id,
-                    u."username" AS username,
-                    r."score" AS score,
-                    r."totalQuestions" AS total_questions,
-                    r."correctCount" AS correct_count,
-                    r."completedAt" AS completed_at
-                FROM "QuizResult" AS r
-                INNER JOIN "QuizSession" AS s
-                    ON s."id" = r."sessionId"
-                INNER JOIN "User" AS u
-                    ON u."id" = r."userId"
-                WHERE s."dailyChallengeId" = $1
-                ORDER BY
-                    r."score" DESC,
-                    r."completedAt" ASC
-                LIMIT $2
-            `,
-            [dailyChallengeId, limit],
-        ),
-    );
+type DailyScoreEntry = {
+    userId: string;
+    score: number;
+    totalQuestions: number;
+    correctCount: number;
+    completedAt: Date;
+    user: {
+        id: string;
+        username: string;
+    };
+};
 
-    return result.rows.map((row) => ({
+function mapScoreRows(rows: DailyScoreRow[]): DailyScoreEntry[] {
+    return rows.map((row) => ({
         userId: row.user_id,
         score: row.score,
         totalQuestions: row.total_questions,
@@ -340,10 +344,103 @@ async function findScoresByChallengeId(
     }));
 }
 
+async function queryScoresByChallengeId(
+    client: Client,
+    dailyChallengeId: string,
+    limit: number,
+): Promise<DailyScoreEntry[]> {
+    const result = await client.query<DailyScoreRow>(
+        `
+            SELECT
+                u."id" AS user_id,
+                u."username" AS username,
+                r."score" AS score,
+                r."totalQuestions" AS total_questions,
+                r."correctCount" AS correct_count,
+                r."completedAt" AS completed_at
+            FROM "QuizResult" AS r
+            INNER JOIN "QuizSession" AS s
+                ON s."id" = r."sessionId"
+            INNER JOIN "User" AS u
+                ON u."id" = r."userId"
+            WHERE s."dailyChallengeId" = $1
+            ORDER BY
+                r."score" DESC,
+                r."completedAt" ASC
+            LIMIT $2
+        `,
+        [dailyChallengeId, limit],
+    );
+
+    return mapScoreRows(result.rows);
+}
+
+/**
+ * Рейтинг одного дня: одна попытка на user → без DISTINCT ON.
+ * Только завершённые сессии с этим dailyChallengeId.
+ */
+async function findScoresByChallengeId(
+    dailyChallengeId: string,
+    limit: number,
+) {
+    return withDirectPgClient((client) =>
+        queryScoresByChallengeId(client, dailyChallengeId, limit),
+    );
+}
+
+export type DailyLobbyPanelState = {
+    challenge: DailyChallengeDefinition | null;
+    attempt: DailyChallengeAttempt | null;
+    boardEntries: DailyScoreEntry[];
+};
+
+/**
+ * Mode lobby `/quiz`: challenge + attempt + board на одном Direct client.
+ * Не вызывает ensure/INSERT — только чтение. Write остаётся в ensureDailyChallenge.
+ */
+async function findLobbyPanelState(input: {
+    challengeDate: string;
+    userId: string | null;
+    boardLimit: number;
+}): Promise<DailyLobbyPanelState> {
+    return withDirectPgClient(async (client) => {
+        const challenge = await queryChallengeByDate(
+            client,
+            input.challengeDate,
+        );
+
+        if (!challenge) {
+            return {
+                challenge: null,
+                attempt: null,
+                boardEntries: [],
+            };
+        }
+
+        const attempt =
+            input.userId != null
+                ? await queryAttemptByUserAndChallenge(
+                      client,
+                      input.userId,
+                      challenge.id,
+                  )
+                : null;
+
+        const boardEntries = await queryScoresByChallengeId(
+            client,
+            challenge.id,
+            input.boardLimit,
+        );
+
+        return { challenge, attempt, boardEntries };
+    });
+}
+
 export const dailyChallengeRepository = {
     findByChallengeDate,
     findPublishedQuestionIdsByDifficulty,
     createOrGetExisting,
     findAttemptByUserAndChallenge,
     findScoresByChallengeId,
+    findLobbyPanelState,
 };

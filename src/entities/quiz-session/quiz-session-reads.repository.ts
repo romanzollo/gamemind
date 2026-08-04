@@ -89,10 +89,12 @@ function toTimedEndsAtIso(
 async function loadQuizSessionSnapshotData(
     sessionId: string,
     userId: string,
+    debugLabel = 'quiz.session.load-snapshot',
 ): Promise<SessionSnapshotJsonRow | null> {
-    const result = await withDirectPgClient((client) =>
-        client.query<SessionSnapshotJsonRow>(
-            `
+    const result = await withDirectPgClient(
+        (client) =>
+            client.query<SessionSnapshotJsonRow>(
+                `
                 SELECT
                     "id" AS "session_id",
                     "questionCount" AS "question_count",
@@ -105,8 +107,11 @@ async function loadQuizSessionSnapshotData(
                     AND "userId" = $2
                     AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
             `,
-            [sessionId, userId],
-        ),
+                [sessionId, userId],
+            ),
+        {
+            debugLabel,
+        },
     );
 
     return result.rows[0] ?? null;
@@ -143,7 +148,11 @@ async function loadSessionForSubmit(
     sessionId: string,
     userId: string,
 ): Promise<SessionForSubmitResult> {
-    const jsonSnapshot = await loadQuizSessionSnapshotData(sessionId, userId);
+    const jsonSnapshot = await loadQuizSessionSnapshotData(
+        sessionId,
+        userId,
+        'quiz.submit.load-snapshot',
+    );
 
     if (jsonSnapshot) {
         const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);

@@ -53,8 +53,7 @@ export async function rematchClassicQuizAction(
         return { errorCode: 'INVALID_SETUP' };
     }
 
-    // Дать Direct-очереди остыть после result/submit (как award pause).
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Rematch: settle уже в runClassicQuizStart (500ms). Здесь без второй паузы.
 
     const started = await runClassicQuizStart({
         userId: session.user.id,
@@ -67,5 +66,5 @@ export async function rematchClassicQuizAction(
         return { errorCode: started.errorCode };
     }
 
-    redirect(`/${locale}/quiz/${started.sessionId}`);
+    redirect(`/${locale}/quiz/${started.sessionId}?f=${Date.now()}`);
 }

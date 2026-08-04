@@ -524,9 +524,9 @@ async function createJsonSnapshotSession(
 /** Методы start для thin facade quizSessionRepository. */
 export const quizSessionStartMethods = {
     /**
-     * Legacy: pick+INSERT на одном Direct client (один 12s budget).
-     * Actions (Classic/Timed/Daily) используют split pick → createWithJsonSnapshot.
-     * Не возвращать в hot path без измерения на Windows+Neon.
+     * Legacy merged pick+INSERT (один Direct budget).
+     * Classic/Timed hot path: split pick → createWithJsonSnapshot (не звать отсюда).
+     * attempts=1: не retry INSERT с тем же sessionId (late-commit risk).
      */
     startWithRandomQuestions(input: StartQuizSessionWithPickInput) {
         return startQuizSessionWithPick(input);

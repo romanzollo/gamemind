@@ -5,5 +5,7 @@
 export { ensureDailyChallenge } from './ensure-daily-challenge';
 export type { EnsureDailyChallengeResult } from './ensure-daily-challenge';
 export { getDailyChallengePlayerStatus } from './get-daily-challenge-player-status';
+export { getDailyLobbyView } from './get-daily-lobby-view';
+export type { DailyLobbyView } from './get-daily-lobby-view';
 export { getMoscowDateKey } from './get-moscow-date-key';
 export { pickDailyQuestionIds } from './pick-daily-question-ids';

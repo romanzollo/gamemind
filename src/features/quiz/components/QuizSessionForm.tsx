@@ -6,9 +6,21 @@
  * Timed: «Завершить» только когда отвечены все; при 00:00 — auto-submit
  * partial → `/result?clock=1` (roast). Late submit после grace тоже на result.
  * Classic/daily: все ответы обязательны; кнопка disabled пока не все.
+ *
+ * Submit всегда собирает FormData из React state `selectedAnswers`, а не только
+ * из native radio FormData: controlled radios после долгого Server Action /
+ * remount могут дать ложный ANSWER_ALL при UI 10/10.
  */
 
-import { useActionState, useCallback, useMemo, useRef, useState, startTransition } from 'react';
+import {
+    useActionState,
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+    startTransition,
+    type FormEvent,
+} from 'react';
 
 import { submitQuizAction } from '@/features/quiz/actions';
 import { QuestionCard } from '@/features/quiz/components/QuestionCard';
@@ -40,6 +52,7 @@ export function QuizSessionForm({
     const isTimed = Boolean(timedEndsAt);
     const formRef = useRef<HTMLFormElement>(null);
     const autoSubmitStartedRef = useRef(false);
+    const selectedAnswersRef = useRef<Record<string, string>>({});
 
     const [state, formAction, isPending] = useActionState(submitQuizAction, {});
     const [selectedAnswers, setSelectedAnswers] = useState<
@@ -52,6 +65,8 @@ export function QuizSessionForm({
 
         return new Date(timedEndsAt).getTime() <= Date.now();
     });
+
+    selectedAnswersRef.current = selectedAnswers;
 
     const answeredCount = useMemo(
         () =>
@@ -70,6 +85,34 @@ export function QuizSessionForm({
 
     const answersLocked = timedExpired || (isTimed && isPending);
 
+    const buildSubmitFormData = useCallback(
+        (finishedByTimer = false) => {
+            const form = formRef.current;
+            const formData = form ? new FormData(form) : new FormData();
+            formData.set('locale', locale);
+            formData.set('sessionId', sessionId);
+
+            for (const question of questions) {
+                const selectedOptionId =
+                    selectedAnswersRef.current[question.id];
+                if (selectedOptionId) {
+                    formData.set(question.id, selectedOptionId);
+                } else {
+                    formData.delete(question.id);
+                }
+            }
+
+            if (finishedByTimer) {
+                formData.set('finishedByTimer', '1');
+            } else {
+                formData.delete('finishedByTimer');
+            }
+
+            return formData;
+        },
+        [locale, questions, sessionId],
+    );
+
     const handleTimedExpired = useCallback(() => {
         setTimedExpired(true);
 
@@ -79,24 +122,25 @@ export function QuizSessionForm({
 
         autoSubmitStartedRef.current = true;
 
-        const form = formRef.current;
-        if (!form) {
-            return;
-        }
-
-        // FormData + formAction: гарантируем finishedByTimer=1 до POST
-        // (скрытый input через setState мог бы не успеть до requestSubmit).
-        const formData = new FormData(form);
-        formData.set('finishedByTimer', '1');
         startTransition(() => {
-            formAction(formData);
+            formAction(buildSubmitFormData(true));
         });
-    }, [formAction]);
+    }, [buildSubmitFormData, formAction]);
+
+    const handleSubmit = useCallback(
+        (event: FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            startTransition(() => {
+                formAction(buildSubmitFormData(false));
+            });
+        },
+        [buildSubmitFormData, formAction],
+    );
 
     return (
         <form
             ref={formRef}
-            action={formAction}
+            onSubmit={handleSubmit}
             noValidate={isTimed}
             className="mt-4 sm:mt-6"
         >

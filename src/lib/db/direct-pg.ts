@@ -3,8 +3,11 @@
  *
  * Critical rules:
  * - Never await client.end() on the response path (Neon close can take ~19s).
- * - On wall-clock timeout, mark aborted SYNCHRONOUSLY and destroy the socket
- *   so a late connect cannot start a query on a half-dead client.
+ * - Success path: fire-and-forget `client.end()` ONLY — do not `stream.destroy()`.
+ *   Abrupt destroy after a healthy write was observed to leave the next hop in
+ *   «connect OK, query hangs until wall timeout» (submit → result soft-fail).
+ * - On wall-clock timeout / hard error: mark aborted SYNCHRONOUSLY and destroy
+ *   the socket so a late connect cannot start a query on a half-dead client.
  * - Prefer unpooled URL for admin/quiz reads and quiz start; pooled+tight
  *   timeout was a known false-failure regression on Windows `next dev`.
  * - In development on Windows, soften SSL and serialize Direct (unpooled)
@@ -32,10 +35,11 @@ const DEPRECATED_SSL_MODES = new Set(['prefer', 'require', 'verify-ca']);
 /**
  * Wall-clock budget per read attempt.
  * Smoke outside Next.js: connect ~0.3–1.1s, admin list query ~50–150ms.
- * 30s×2 (=60s page) was too painful when the first TLS attempt wedged;
- * 12s×2 fails faster and still covers Neon cold wake.
+ * 12s×2 ловил ложный DB_TIMEOUT на Classic 10Q в Windows `next dev` при
+ * живых 3/5 (connect ~8–10s + resolve 10Q). 18s×2 покрывает cold Neon wake
+ * без отката к 30s×2 (=60s боли). Не поднимать дальше без нового измерения.
  */
-const READ_ATTEMPT_TIMEOUT_MS = 12_000;
+const READ_ATTEMPT_TIMEOUT_MS = 18_000;
 const READ_MAX_ATTEMPTS = 2;
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -152,6 +156,21 @@ type TimeoutControl = {
     onTimeout?: () => void;
 };
 
+type DirectPgOperationOptions = {
+    /**
+     * Имя критичного Direct-hop для dev-диагностики очереди и TLS.
+     * Не передавать для обычных экранов: лог нужен только при расследовании.
+     */
+    debugLabel?: string;
+    /**
+     * Переопределение wall-clock на попытку.
+     * Для post-submit review JSONB: короче дефолта — не держать очередь 18s×2.
+     */
+    attemptTimeoutMs?: number;
+    /** По умолчанию READ_MAX_ATTEMPTS (2). Review: 1. */
+    maxAttempts?: number;
+};
+
 async function withTimeout<T>(
     promise: Promise<T>,
     timeoutMs: number,
@@ -176,7 +195,7 @@ async function withTimeout<T>(
     }
 }
 
-/** Fire-and-forget teardown; destroy the socket so late TLS cannot linger. */
+/** Abort path only: kill the socket so a wedged TLS cannot linger ~19s. */
 function destroyClient(client: Client) {
     try {
         const maybeConnection = (
@@ -192,15 +211,32 @@ function destroyClient(client: Client) {
     void client.end().catch(() => undefined);
 }
 
+/**
+ * Success path teardown: graceful end without socket.destroy.
+ * Destroy после здорового hop клинит следующий query на Windows+Neon
+ * (connect проходит, operation висит до READ_ATTEMPT_TIMEOUT).
+ */
+function releaseClient(client: Client) {
+    void client.end().catch(() => undefined);
+}
+
 async function withFreshClient<T>(
     createClientFn: () => Client,
     operation: (client: Client) => Promise<T>,
     options?: {
         attemptTimeoutMs?: number;
+        debugLabel?: string;
+        queueWaitMs?: number;
+        attempt?: number;
     },
 ): Promise<T> {
     const client = createClientFn();
     let aborted = false;
+    const startedAt = performance.now();
+    let connectStartedAt: number | null = null;
+    let connectedAt: number | null = null;
+    let operationStartedAt: number | null = null;
+    let finishedAt: number | null = null;
 
     const abort = () => {
         aborted = true;
@@ -209,7 +245,9 @@ async function withFreshClient<T>(
 
     try {
         const run = async () => {
+            connectStartedAt = performance.now();
             await client.connect();
+            connectedAt = performance.now();
 
             if (aborted) {
                 throw new DirectPgTimeoutError(
@@ -217,7 +255,10 @@ async function withFreshClient<T>(
                 );
             }
 
-            return await operation(client);
+            operationStartedAt = performance.now();
+            const result = await operation(client);
+            finishedAt = performance.now();
+            return result;
         };
 
         if (options?.attemptTimeoutMs !== undefined) {
@@ -243,22 +284,49 @@ async function withFreshClient<T>(
         abort();
         throw error;
     } finally {
-        // Success path: end without awaiting. Abort path: destroy already ran.
+        if (isDev && options?.debugLabel) {
+            const endedAt = finishedAt ?? performance.now();
+            const connectMs =
+                connectStartedAt == null || connectedAt == null
+                    ? null
+                    : Math.round(connectedAt - connectStartedAt);
+            const operationMs =
+                operationStartedAt == null
+                    ? null
+                    : Math.round(endedAt - operationStartedAt);
+            const phase =
+                connectedAt == null
+                    ? 'connect'
+                    : operationStartedAt == null || finishedAt == null
+                      ? 'operation'
+                      : 'ok';
+
+            console.info(
+                `Direct pg hop ${options.debugLabel} attempt ${options.attempt ?? 1}: ` +
+                    `queue=${Math.round(options.queueWaitMs ?? 0)}ms ` +
+                    `waiters=${getDirectPgQueueWaiterCount()} ` +
+                    `connect=${connectMs ?? 'timeout'}ms ` +
+                    `operation=${operationMs ?? 'not-started'}ms ` +
+                    `total=${Math.round(endedAt - startedAt)}ms phase=${phase}`,
+            );
+        }
+
+        // Success: graceful end. Abort/error: destroy already ran in abort().
         if (!aborted) {
-            destroyClient(client);
+            releaseClient(client);
         }
     }
 }
 
 async function withPgReadRetry<T>(
-    operation: () => Promise<T>,
+    operation: (attempt: number) => Promise<T>,
     attempts = READ_MAX_ATTEMPTS,
 ) {
     let lastError: unknown;
 
     for (let attempt = 1; attempt <= attempts; attempt += 1) {
         try {
-            return await operation();
+            return await operation(attempt);
         } catch (error) {
             lastError = error;
 
@@ -292,14 +360,20 @@ const readClientOptions = {
  */
 const globalForDirectPg = globalThis as typeof globalThis & {
     __directPgTail?: Promise<unknown>;
+    __directPgWaiters?: number;
 };
 
 const DIRECT_PG_SETTLE_MS = 300;
 
-async function withDirectPgQueue<T>(run: () => Promise<T>): Promise<T> {
+async function withDirectPgQueue<T>(
+    run: (queueWaitMs: number) => Promise<T>,
+): Promise<T> {
     if (!isDev) {
-        return run();
+        return run(0);
     }
+
+    globalForDirectPg.__directPgWaiters =
+        (globalForDirectPg.__directPgWaiters ?? 0) + 1;
 
     const previous = globalForDirectPg.__directPgTail ?? Promise.resolve();
     let releaseTail!: () => void;
@@ -311,14 +385,25 @@ async function withDirectPgQueue<T>(run: () => Promise<T>): Promise<T> {
         () => tail,
     );
 
+    const queueStartedAt = performance.now();
     await previous.catch(() => undefined);
+    const queueWaitMs = performance.now() - queueStartedAt;
 
     try {
-        return await run();
+        return await run(queueWaitMs);
     } finally {
+        globalForDirectPg.__directPgWaiters = Math.max(
+            0,
+            (globalForDirectPg.__directPgWaiters ?? 1) - 1,
+        );
         await wait(DIRECT_PG_SETTLE_MS);
         releaseTail();
     }
+}
+
+/** Dev-only: сколько Direct-hop сейчас ждут/держат общую очередь. */
+export function getDirectPgQueueWaiterCount() {
+    return globalForDirectPg.__directPgWaiters ?? 0;
 }
 
 /**
@@ -327,10 +412,22 @@ async function withDirectPgQueue<T>(run: () => Promise<T>): Promise<T> {
  */
 export async function withDirectPgClient<T>(
     operation: (client: Client) => Promise<T>,
+    options?: DirectPgOperationOptions,
 ) {
-    return withDirectPgQueue(() =>
-        withPgReadRetry(() =>
-            withFreshClient(createDirectClient, operation, readClientOptions),
+    const attemptTimeoutMs =
+        options?.attemptTimeoutMs ?? readClientOptions.attemptTimeoutMs;
+    const maxAttempts = options?.maxAttempts ?? READ_MAX_ATTEMPTS;
+
+    return withDirectPgQueue((queueWaitMs) =>
+        withPgReadRetry(
+            (attempt) =>
+                withFreshClient(createDirectClient, operation, {
+                    attemptTimeoutMs,
+                    debugLabel: options?.debugLabel,
+                    queueWaitMs,
+                    attempt,
+                }),
+            maxAttempts,
         ),
     );
 }
@@ -351,9 +448,13 @@ export async function withPooledPgReadClient<T>(
 /** Writes: fresh direct client without automatic retry / hard timeout. */
 export async function withDirectPgWriteClient<T>(
     operation: (client: Client) => Promise<T>,
+    options?: DirectPgOperationOptions,
 ) {
-    return withDirectPgQueue(() =>
-        withFreshClient(createDirectClient, operation),
+    return withDirectPgQueue((queueWaitMs) =>
+        withFreshClient(createDirectClient, operation, {
+            debugLabel: options?.debugLabel,
+            queueWaitMs,
+        }),
     );
 }
 

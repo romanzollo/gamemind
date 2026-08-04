@@ -133,6 +133,7 @@ export function DailyChallengeCtaPanel({
                         </p>
                         <PendingLink
                             href={`/${locale}/result/${status.sessionId}`}
+                            prefetch={false}
                             className={buttonClassName({
                                 variant: 'secondary',
                                 className: 'sm:w-auto',

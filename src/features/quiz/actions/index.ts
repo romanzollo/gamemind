@@ -3,7 +3,6 @@
 import { redirect } from 'next/navigation';
 
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
-import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
@@ -27,9 +26,9 @@ function getLocaleFromFormData(formData: FormData): Locale {
 /**
  * Старт Classic. Rate limit по userId — до pick/snapshot на Neon.
  *
- * Windows + Neon: pick и create — РАЗНЫЕ Direct-операции (как Timed `940f396`).
- * Общая логика: `runClassicQuizStart`. Rematch с result — `rematchClassicQuizAction`
- * (settle перед pick). Canon: docs/DECISIONS.md → Quiz Start Playbook.
+ * Оркестрация: `runClassicQuizStart` (изолирована от Timed).
+ * Rematch: `rematchClassicQuizAction` → тот же helper.
+ * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
 export async function startQuizAction(
     _prevState: QuizFormState,
@@ -70,7 +69,7 @@ export async function startQuizAction(
         return { errorCode: started.errorCode };
     }
 
-    redirect(`/${locale}/quiz/${started.sessionId}`);
+    redirect(`/${locale}/quiz/${started.sessionId}?f=${Date.now()}`);
 }
 
 /**
@@ -210,23 +209,20 @@ export async function submitQuizAction(
             return { errorCode: 'SUBMIT_FAILED' };
         }
 
-        // already_completed: QuizResult уже есть — идём на award + result ниже.
+        // already_completed: QuizResult уже есть — идём на result; outbox/award ниже.
     } catch (error) {
         console.error('Quiz submit failed:', error);
         return { errorCode: 'SUBMIT_FAILED' };
     }
 
-    // Soft-fail award после QuizResult (новый или уже существующий).
-    // Не внутри completeWithResult — отдельный путь; scoring не меняем.
-    // Короткая пауза: write-client teardown + следующий TLS (Windows/Neon).
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    // `awardedCodes` → flash query на result (display-only; БД = source of truth).
-    const award = await awardAchievementsForUser(authSession.user.id);
+    /**
+     * Award не на критичном пути до result read и не через after():
+     * after() гоняется с result Direct-hop на общей очереди (Windows wedge).
+     * complete уже записал AchievementOutbox на том же write-client;
+     * result Suspense (после score load) + profile catch-up обрабатывают pending.
+     */
 
     const resultQuery = new URLSearchParams();
-    if (award.awardedCodes.length > 0) {
-        resultQuery.set('unlocked', award.awardedCodes.join(','));
-    }
     // Auto-submit / late timed finish → roast на result.
     if (finishedByTimer || (isTimedSession && timedPastGrace)) {
         resultQuery.set('clock', '1');

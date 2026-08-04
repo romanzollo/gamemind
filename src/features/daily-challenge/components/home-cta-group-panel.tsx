@@ -89,6 +89,7 @@ export function HomeCtaGroupPanel({
             return (
                 <PendingLink
                     href={`/${locale}/result/${status.sessionId}`}
+                    prefetch={false}
                     className={secondaryLinkClassName}
                 >
                     {home.dailyResult}

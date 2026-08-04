@@ -3,36 +3,21 @@
 /**
  * Server Action: старт Timed mode.
  *
- * Поток (как classic, с фиксированными MVP-правилами):
- * 1) auth + rate limit (preset `quiz`);
- * 2) difficulty из формы; questionCount / duration — из TIMED_MODE_MVP_RULES;
- * 3) pick random PUBLISHED bundle → JSON snapshot;
- * 4) timedEndsAt = now + durationSeconds (серверный авторитет часов).
+ * Auth + rate limit здесь; pick/create/timedEndsAt — в `runTimedQuizStart`
+ * (изолирован от Classic, чтобы фикс одного режима не ломал другой).
  *
- * Важно (Windows + Neon): pick и create — РАЗНЫЕ Direct-операции.
- * Объединение в один `startWithRandomQuestions` (abandon + 10Q RANDOM + INSERT)
- * укладывало всё в один 12s budget → ложный DB_TIMEOUT на Blitz, пока Classic 3Q
- * успевал. Рабочий канон: commit `940f396` (pick → createWithJsonSnapshot).
- *
- * Stuck timed: abandon orphan IN_PROGRESS внутри `createWithJsonSnapshot`
- * на том же Direct client, что INSERT (не отдельный write-client).
- * Canon: docs/DECISIONS.md → Timed Mode MVP / Neon Write Path.
+ * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
 
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { questionRepository } from '@/entities/question/question.repository';
-import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
-import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
-import { TIMED_MODE_MVP_RULES } from '@/features/timed-mode/types';
 import type { QuizFormState } from '@/features/quiz/types';
+import { runTimedQuizStart } from '@/features/timed-mode/lib/run-timed-quiz-start';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
-import { shuffleArray } from '@/shared/utils';
-import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
 /** Только сложность: count и duration зафиксированы правилами MVP. */
 const timedQuizSetupSchema = z.object({
@@ -74,63 +59,15 @@ export async function startTimedQuizAction(
         return { errorCode: 'INVALID_SETUP' };
     }
 
-    const { questionCount, durationSeconds } = TIMED_MODE_MVP_RULES;
-    const timedEndsAt = new Date(Date.now() + durationSeconds * 1000);
+    const started = await runTimedQuizStart({
+        userId: session.user.id,
+        difficulty: parsed.data.difficulty,
+        locale,
+    });
 
-    let quizSession: { id: string };
-
-    try {
-        // Шаг 1: тяжёлый RANDOM pick 10Q — отдельный Direct budget (+ read retry).
-        const pickedQuestions =
-            await questionRepository.pickRandomActiveSnapshotBundle(
-                parsed.data.difficulty,
-                questionCount,
-                locale,
-            );
-
-        if (pickedQuestions.length < questionCount) {
-            return { errorCode: 'NOT_ENOUGH_QUESTIONS' };
-        }
-
-        const snapshotQuestions = pickedQuestions.map((question, index) => {
-            const shuffledOptions = shuffleArray(question.options);
-
-            return {
-                questionId: question.id,
-                position: index,
-                displayText: question.displayText,
-                displayTexts: question.displayTexts,
-                displayImageUrl: normalizeQuizImageUrl(
-                    question.displayImageUrl,
-                ),
-                options: shuffledOptions.map((option, optionIndex) => ({
-                    optionId: option.id,
-                    displayOrder: optionIndex,
-                    displayText: option.displayText,
-                    displayTexts: option.displayTexts,
-                })),
-            };
-        });
-
-        // Шаг 2: abandon orphan timed (если есть) + INSERT snapshot — свой Direct budget.
-        quizSession = await quizSessionRepository.createWithJsonSnapshot({
-            userId: session.user.id,
-            difficulty: parsed.data.difficulty,
-            questionCount,
-            sessionLocale: locale,
-            timedEndsAt,
-            questions: snapshotQuestions,
-            pickedQuestions,
-        });
-    } catch (error) {
-        const errorCode = mapQuizStartError(error);
-        if (errorCode === 'INVALID_SETUP') {
-            console.error('Timed quiz session create failed:', error);
-        } else {
-            console.error('Timed quiz start failed:', errorCode, error);
-        }
-        return { errorCode };
+    if (!started.ok) {
+        return { errorCode: started.errorCode };
     }
 
-    redirect(`/${locale}/quiz/${quizSession.id}`);
+    redirect(`/${locale}/quiz/${started.sessionId}?f=${Date.now()}`);
 }

@@ -2,10 +2,16 @@
  * QuizSession submit: answers + result + COMPLETED (Neon direct pg).
  *
  * Зачем отдельный модуль (§11.7): write-path завершения не должен жить
- * в одном файле со start/reads. SQL перенесён as-is — без rewrite.
+ * в одном файле со start/reads.
  * Правила Neon: autocommit, ON CONFLICT idempotent, recovery после transient,
  * cleanup partial answers/result; не BEGIN/COMMIT; не await client.end().
  * Scoring math остаётся в features — сюда уже готовые score/isCorrect.
+ *
+ * Result incident (Aug 4): reviewSnapshot копируется SQL-ом
+ * `INSERT…SELECT s.snapshotData` — НЕ читать TOAST в Node (это давало
+ * connect-OK / operation~19s / Connection terminated на Windows+Neon).
+ * Outbox на том же write-client. Result page читает reviewSnapshot.
+ *
  * Публичный фасад: quiz-session.repository.ts.
  * См. docs/DECISIONS.md → Repository File Split / Neon Write Path.
  */
@@ -97,6 +103,10 @@ async function cleanupQuizSubmitPartial(sessionId: string) {
         await client.query('DELETE FROM "QuizAnswer" WHERE "sessionId" = $1', [
             sessionId,
         ]);
+        await client.query(
+            'DELETE FROM "AchievementOutbox" WHERE "sessionId" = $1',
+            [sessionId],
+        );
     }).catch(() => undefined);
 }
 
@@ -111,35 +121,38 @@ async function completeQuizSessionWithPgClient(
         isCorrect: answer.isCorrect,
     }));
     const resultId = randomUUID();
+    const outboxId = randomUUID();
 
     try {
-        return await withDirectPgWriteClient(async (client) => {
-            const sessionResult = await client.query<{ status: string }>(
-                `
+        return await withDirectPgWriteClient(
+            async (client) => {
+                // Только status — без snapshotData (TOAST в Node клинит write ~19s).
+                const sessionResult = await client.query<{ status: string }>(
+                    `
                 SELECT "status"::text AS "status"
                 FROM "QuizSession"
                 WHERE "id" = $1 AND "userId" = $2
             `,
-                [input.sessionId, input.userId],
-            );
+                    [input.sessionId, input.userId],
+                );
 
-            const session = sessionResult.rows[0];
+                const session = sessionResult.rows[0];
 
-            if (!session) {
-                return 'not_found';
-            }
+                if (!session) {
+                    return 'not_found';
+                }
 
-            if (session.status === 'COMPLETED') {
-                return 'already_completed';
-            }
+                if (session.status === 'COMPLETED') {
+                    return 'already_completed';
+                }
 
-            if (session.status !== 'IN_PROGRESS') {
-                return 'not_found';
-            }
+                if (session.status !== 'IN_PROGRESS') {
+                    return 'not_found';
+                }
 
-            if (answerRows.length > 0) {
-                await client.query(
-                    `
+                if (answerRows.length > 0) {
+                    await client.query(
+                        `
                     INSERT INTO "QuizAnswer" (
                         "id",
                         "sessionId",
@@ -150,41 +163,54 @@ async function completeQuizSessionWithPgClient(
                     VALUES ${buildValuesPlaceholder(answerRows.length, 5)}
                     ON CONFLICT ("sessionId", "questionId") DO NOTHING
                 `,
-                    answerRows.flatMap((row) => [
-                        row.id,
-                        row.sessionId,
-                        row.questionId,
-                        row.selectedOptionId,
-                        row.isCorrect,
-                    ]),
-                );
-            }
+                        answerRows.flatMap((row) => [
+                            row.id,
+                            row.sessionId,
+                            row.questionId,
+                            row.selectedOptionId,
+                            row.isCorrect,
+                        ]),
+                    );
+                }
 
-            await client.query(
-                `
+                // reviewSnapshot: server-side copy TOAST, без передачи JSON в Node.
+                await client.query(
+                    `
                 INSERT INTO "QuizResult" (
                     "id",
                     "sessionId",
                     "userId",
                     "score",
                     "totalQuestions",
-                    "correctCount"
+                    "correctCount",
+                    "reviewSnapshot"
                 )
-                VALUES ($1, $2, $3, $4, $5, $6)
+                SELECT
+                    $1,
+                    s."id",
+                    s."userId",
+                    $2,
+                    $3,
+                    $4,
+                    s."snapshotData"
+                FROM "QuizSession" AS s
+                WHERE
+                    s."id" = $5
+                    AND s."userId" = $6
                 ON CONFLICT ("sessionId") DO NOTHING
             `,
-                [
-                    resultId,
-                    input.sessionId,
-                    input.userId,
-                    input.score,
-                    input.totalQuestions,
-                    input.correctCount,
-                ],
-            );
+                    [
+                        resultId,
+                        input.score,
+                        input.totalQuestions,
+                        input.correctCount,
+                        input.sessionId,
+                        input.userId,
+                    ],
+                );
 
-            const updateResult = await client.query(
-                `
+                const updateResult = await client.query(
+                    `
                 UPDATE "QuizSession"
                 SET "status" = $1::"QuizSessionStatus", "completedAt" = NOW()
                 WHERE
@@ -193,15 +219,32 @@ async function completeQuizSessionWithPgClient(
                     AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
                 RETURNING "id"
             `,
-                ['COMPLETED', input.sessionId, input.userId],
-            );
+                    ['COMPLETED', input.sessionId, input.userId],
+                );
 
-            if (updateResult.rowCount === 0) {
-                return 'already_completed';
-            }
+                if (updateResult.rowCount === 0) {
+                    return 'already_completed';
+                }
 
-            return 'completed';
-        });
+                await client.query(
+                    `
+                INSERT INTO "AchievementOutbox" (
+                    "id",
+                    "userId",
+                    "sessionId"
+                )
+                VALUES ($1, $2, $3)
+                ON CONFLICT ("sessionId") DO NOTHING
+            `,
+                    [outboxId, input.userId, input.sessionId],
+                );
+
+                return 'completed';
+            },
+            {
+                debugLabel: 'quiz.submit.complete',
+            },
+        );
     } catch (error) {
         const recovered = await recoverSubmitStatusAfterWriteError(
             input.sessionId,

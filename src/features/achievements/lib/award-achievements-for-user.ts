@@ -5,10 +5,13 @@
  * 1) факты из БД;
  * 2) чистый evaluate;
  * 3) diff с уже unlock;
- * 4) INSERT ON CONFLICT DO NOTHING.
+ * 4) INSERT ON CONFLICT DO NOTHING + mark AchievementOutbox processed.
  *
  * Soft-fail: любая ошибка логируется и глотается — submit/result UX
  * не должен падать из‑за бейджей. Scoring / snapshot не вызываются отсюда.
+ *
+ * Delivery: submit пишет outbox на write-client; этот processor / profile
+ * catch-up / result Suspense забирают pending. Не fire-and-forget без outbox.
  *
  * Canon: docs/DECISIONS.md → Achievements MVP.
  */
@@ -29,7 +32,7 @@ export type AwardAchievementsResult = {
 
 /**
  * Пересчитывает и дописывает недостающие unlock для пользователя.
- * Идемпотентно; безопасно вызывать после submit и позже на profile catch-up.
+ * Идемпотентно; безопасно после submit (outbox), profile catch-up, result flash.
  */
 export async function awardAchievementsForUser(
     userId: string,
@@ -46,15 +49,25 @@ export async function awardAchievementsForUser(
             unlockedCodes,
         );
 
-        if (newlyEarned.length === 0) {
-            return { awardedCodes: [], ok: true };
-        }
-
-        await userAchievementRepository.insertUnlocks(userId, newlyEarned);
+        // Даже без новых кодов помечаем pending outbox processed (пустой insert).
+        await userAchievementRepository.processOutboxAwardPass(
+            userId,
+            newlyEarned,
+        );
 
         return { awardedCodes: newlyEarned, ok: true };
     } catch (error) {
         console.error('Achievement award failed (non-fatal):', error);
         return { awardedCodes: [], ok: false };
     }
+}
+
+/**
+ * Обрабатывает pending outbox для userId (после submit / на result flash).
+ * Тот же soft-fail контракт, что awardAchievementsForUser.
+ */
+export async function processAchievementOutboxForUser(
+    userId: string,
+): Promise<AwardAchievementsResult> {
+    return awardAchievementsForUser(userId);
 }

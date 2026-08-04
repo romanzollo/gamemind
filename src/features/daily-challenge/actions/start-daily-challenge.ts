@@ -56,7 +56,7 @@ function redirectExistingAttempt(
         redirect(`/${locale}/result/${attempt.sessionId}`);
     }
 
-    redirect(`/${locale}/quiz/${attempt.sessionId}`);
+    redirect(`/${locale}/quiz/${attempt.sessionId}?f=${Date.now()}`);
 }
 
 function isResumeableDailyAttempt(attempt: { kind: string }) {
@@ -106,6 +106,9 @@ export async function startDailyChallengeAction(
     let quizSession: { id: string };
 
     try {
+        // После ensure/attempt Direct — пауза, как Classic/Timed settle.
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         const pickedQuestions =
             await questionRepository.pickSnapshotBundleByQuestionIds(
                 challenge.questionIds,
@@ -172,5 +175,5 @@ export async function startDailyChallengeAction(
         return { errorCode };
     }
 
-    redirect(`/${locale}/quiz/${quizSession.id}`);
+    redirect(`/${locale}/quiz/${quizSession.id}?f=${Date.now()}`);
 }

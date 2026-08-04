@@ -148,7 +148,7 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 | 2. Validate module (Zod / domain) without DB write | done |
 | 3. CLI: validate a draft file | done |
 | 4. Import script/action → DRAFT only | done |
-| 5. Smoke: admin review → publish via existing UI | **ready (you run)** — interrupted Aug 3 by Neon/quiz debug; resume next chat |
+| 5. Smoke: admin review → publish via existing UI | **done** (Aug 3) — ≥1 sample PUBLISHED; user confirmed quiz pool |
 | 6. Optional: AI emits same JSON | later |
 
 ---
@@ -187,9 +187,11 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 
 ### Step 5 (admin smoke — human)
 
-See §9 runbook below. Mark done after you publish at least one imported sample via admin UI.
+- [x] `content:smoke-status` shows imported samples (DRAFT and/or PUBLISHED)
+- [x] ≥1 sample published via existing admin UI + quality gate (Portal EASY)
+- [x] User confirmed published samples appear in quiz pool (Classic)
 
-**Status Aug 3 late:** runbook + `content:smoke-status` ready; Neon/quiz path recovered — **resume smoke in next chat** (do not invent new publish code).
+See §9 runbook for the repeatable checklist. No new publish code was added.
 
 ---
 

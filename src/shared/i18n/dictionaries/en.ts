@@ -398,6 +398,10 @@ export const enDictionary = {
                 'The database is taking a nap (Neon cold starts happen). Wait a sec and try again.',
             resultLoadFailed:
                 'Could not load the result page. Please refresh.',
+            reviewLoadFailed:
+                'Could not load the answer review. Wait a few seconds and try again.',
+            sessionLoadFailed:
+                'Could not open this quiz session. Refresh the page or start a new game.',
         },
     },
     leaderboard: {

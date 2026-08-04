@@ -114,7 +114,11 @@ export function ProfileResultHistory({
 
                     return (
                         <li key={entry.sessionId}>
-                            <Link href={href} className={phoneRowClassName}>
+                            <Link
+                                href={href}
+                                prefetch={false}
+                                className={phoneRowClassName}
+                            >
                                 <div className="flex items-center justify-between gap-3">
                                     <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
                                         <time
@@ -215,6 +219,7 @@ export function ProfileResultHistory({
                                 <td className="whitespace-nowrap py-3">
                                     <Link
                                         href={`/${locale}/result/${entry.sessionId}`}
+                                        prefetch={false}
                                         className={`${reviewLinkClassName} font-medium`}
                                     >
                                         {labels.historyView}

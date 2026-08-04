@@ -3,7 +3,7 @@ import { withDirectPgClient } from '@/lib/db/direct-pg';
 import { parseSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
 import type { Difficulty } from '@/types';
 
-type QuizResultRow = {
+type QuizResultSummaryRow = {
     id: string;
     session_id: string;
     user_id: string;
@@ -11,7 +11,6 @@ type QuizResultRow = {
     total_questions: number;
     correct_count: number;
     completed_at: Date;
-    snapshot_data: string | null;
     question_count: number;
     timed_ends_at: Date | string | null;
     difficulty: Difficulty;
@@ -21,6 +20,31 @@ type ReviewAnswerRow = {
     question_id: string;
     selected_option_id: string;
     is_correct: boolean;
+};
+
+export type QuizResultSummary = {
+    id: string;
+    sessionId: string;
+    userId: string;
+    score: number;
+    totalQuestions: number;
+    correctCount: number;
+    completedAt: Date;
+    /** MVP: одна difficulty на сессию → max score без чтения JSONB. */
+    difficulties: Difficulty[];
+    isTimed: boolean;
+    difficulty: Difficulty;
+};
+
+export type QuizResultReviewBundle = {
+    sessionId: string;
+    questionCount: number;
+    snapshotData: NonNullable<ReturnType<typeof parseSnapshotData>>;
+    answers: Array<{
+        questionId: string;
+        selectedOptionId: string;
+        isCorrect: boolean;
+    }>;
 };
 
 type LeaderboardScoreRow = {
@@ -66,13 +90,18 @@ type ProfileStatsRow = {
     last_played_at: Date | null;
 };
 
-async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
-    // Один Direct-клиент: score + snapshot + answers.
-    // Иначе после submit второй TLS на review часто клинит Windows+Neon
-    // (см. withDirectPgQueue в direct-pg.ts).
-    const loaded = await withDirectPgClient(async (client) => {
-        const result = await client.query<QuizResultRow>(
-            `
+/**
+ * Summary без JSONB: сразу после submit нельзя читать reviewSnapshot/TOAST
+ * (connect OK → operation ~18s). Score/rematch живут на скалярах + Session.
+ */
+async function loadResultSummaryBySessionIdForUser(
+    sessionId: string,
+    userId: string,
+): Promise<QuizResultSummary | null> {
+    const result = await withDirectPgClient(
+        (client) =>
+            client.query<QuizResultSummaryRow>(
+                `
                 SELECT
                     r."id",
                     r."sessionId" AS "session_id",
@@ -81,7 +110,6 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
                     r."totalQuestions" AS "total_questions",
                     r."correctCount" AS "correct_count",
                     r."completedAt" AS "completed_at",
-                    s."snapshotData" AS "snapshot_data",
                     s."questionCount" AS "question_count",
                     s."timedEndsAt" AS "timed_ends_at",
                     s."difficulty"::text AS "difficulty"
@@ -91,47 +119,24 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
                 WHERE r."sessionId" = $1 AND r."userId" = $2
                 LIMIT 1
             `,
-            [sessionId, userId],
-        );
+                [sessionId, userId],
+            ),
+        {
+            debugLabel: 'quiz.result.summary',
+        },
+    );
 
-        const row = result.rows[0];
+    const row = result.rows[0];
 
-        if (!row) {
-            return null;
-        }
-
-        const answersResult = await client.query<ReviewAnswerRow>(
-            `
-                SELECT
-                    "questionId" AS "question_id",
-                    "selectedOptionId" AS "selected_option_id",
-                    "isCorrect" AS "is_correct"
-                FROM "QuizAnswer"
-                WHERE "sessionId" = $1
-            `,
-            [sessionId],
-        );
-
-        return {
-            row,
-            answers: answersResult.rows.map((answer) => ({
-                questionId: answer.question_id,
-                selectedOptionId: answer.selected_option_id,
-                isCorrect: answer.is_correct,
-            })),
-        };
-    });
-
-    if (!loaded) {
+    if (!row) {
         return null;
     }
 
-    const { row, answers } = loaded;
-    const snapshot = parseSnapshotData(row.snapshot_data);
-    const difficulties: Difficulty[] =
-        snapshot && snapshot.questions.length === row.question_count
-            ? snapshot.questions.map((question) => question.difficulty)
-            : [];
+    // Classic/Timed/Daily MVP: одна difficulty на сессию.
+    const difficulties = Array.from(
+        { length: row.total_questions },
+        () => row.difficulty,
+    );
 
     return {
         id: row.id,
@@ -141,26 +146,103 @@ async function loadResultBySessionIdForUser(sessionId: string, userId: string) {
         totalQuestions: row.total_questions,
         correctCount: row.correct_count,
         completedAt: row.completed_at,
-        /** Для summary «score / max» без второго round-trip на review. */
         difficulties,
-        /** Timed session → rematch CTA ведёт к Timed, не к classic setup. */
         isTimed: row.timed_ends_at != null,
-        /** Сложность сессии — для Timed rematch с теми же правилами. */
         difficulty: row.difficulty,
-        /**
-         * Сырьё для mapQuizResultReview на page (тот же connect, что score).
-         * null если snapshot битый — UI покажет soft-fail только на review.
-         */
-        review:
-            snapshot && snapshot.questions.length === row.question_count
-                ? {
-                      sessionId: row.session_id,
-                      questionCount: row.question_count,
-                      snapshotData: snapshot,
-                      answers,
-                  }
-                : null,
     };
+}
+
+/**
+ * Review JSONB + answers — отдельный hop (Suspense). Не блокирует summary.
+ * Сначала reviewSnapshot; legacy → Session.snapshotData только если NULL.
+ */
+async function loadResultReviewBySessionIdForUser(
+    sessionId: string,
+    userId: string,
+): Promise<QuizResultReviewBundle | null> {
+    const loaded = await withDirectPgClient(
+        async (client) => {
+            const result = await client.query<{
+                review_snapshot: unknown;
+                question_count: number;
+            }>(
+                `
+                SELECT
+                    r."reviewSnapshot" AS "review_snapshot",
+                    s."questionCount" AS "question_count"
+                FROM "QuizResult" r
+                INNER JOIN "QuizSession" s
+                    ON s."id" = r."sessionId"
+                WHERE r."sessionId" = $1 AND r."userId" = $2
+                LIMIT 1
+            `,
+                [sessionId, userId],
+            );
+
+            const row = result.rows[0];
+
+            if (!row) {
+                return null;
+            }
+
+            let snapshot = parseSnapshotData(
+                row.review_snapshot as string | null,
+            );
+
+            if (!snapshot) {
+                const legacy = await client.query<{
+                    snapshot_data: unknown;
+                }>(
+                    `
+                    SELECT "snapshotData" AS "snapshot_data"
+                    FROM "QuizSession"
+                    WHERE "id" = $1 AND "userId" = $2
+                    LIMIT 1
+                `,
+                    [sessionId, userId],
+                );
+                snapshot = parseSnapshotData(
+                    legacy.rows[0]?.snapshot_data as string | null,
+                );
+            }
+
+            if (!snapshot || snapshot.questions.length !== row.question_count) {
+                return null;
+            }
+
+            const answersResult = await client.query<ReviewAnswerRow>(
+                `
+                SELECT
+                    "questionId" AS "question_id",
+                    "selectedOptionId" AS "selected_option_id",
+                    "isCorrect" AS "is_correct"
+                FROM "QuizAnswer"
+                WHERE "sessionId" = $1
+            `,
+                [sessionId],
+            );
+
+            return {
+                sessionId,
+                questionCount: row.question_count,
+                snapshotData: snapshot,
+                answers: answersResult.rows.map((answer) => ({
+                    questionId: answer.question_id,
+                    selectedOptionId: answer.selected_option_id,
+                    isCorrect: answer.is_correct,
+                })),
+            };
+        },
+        {
+            debugLabel: 'quiz.result.review',
+            // Post-submit TOAST: 1×8s вместо 18s×2 — иначе клинит Direct queue
+            // (home/Daily CTA ждут за review). Soft-fail review, score уже на экране.
+            maxAttempts: 1,
+            attemptTimeoutMs: 8_000,
+        },
+    );
+
+    return loaded;
 }
 
 // репозиторий для работы с результатами викторины
@@ -254,9 +336,14 @@ export const quizResultRepository = {
         }));
     },
 
-    // поиск результата викторины по ID сессии и ID пользователя
-    findBySessionIdForUser(sessionId: string, userId: string) {
-        return loadResultBySessionIdForUser(sessionId, userId);
+    /** Score/rematch без JSONB — critical path после submit. */
+    findSummaryBySessionIdForUser(sessionId: string, userId: string) {
+        return loadResultSummaryBySessionIdForUser(sessionId, userId);
+    },
+
+    /** Разбор ответов (JSONB) — Suspense; не блокирует summary. */
+    findReviewBySessionIdForUser(sessionId: string, userId: string) {
+        return loadResultReviewBySessionIdForUser(sessionId, userId);
     },
 
     // последние результаты пользователя (профиль) — unpooled pg
