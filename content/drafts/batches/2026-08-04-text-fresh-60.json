@@ -1,0 +1,3906 @@
+{
+  "version": 1,
+  "source": "ai",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-04b-easy-samus",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Metroid",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут охотницу за головами в скафандре из серии Metroid?"
+        },
+        "en": {
+          "text": "What is the name of the armored bounty hunter from the Metroid series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Самус Аран"
+            },
+            "en": {
+              "text": "Samus Aran"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лара Крофт"
+            },
+            "en": {
+              "text": "Lara Croft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джилл Валентайн"
+            },
+            "en": {
+              "text": "Jill Valentine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бейонетта"
+            },
+            "en": {
+              "text": "Bayonetta"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-megaman",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Mega Man",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как в англоязычных регионах зовут синего робота-героя серии Mega Man?"
+        },
+        "en": {
+          "text": "What is the English-region name of the blue robot hero of the Mega Man series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мегамен"
+            },
+            "en": {
+              "text": "Mega Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Протомен"
+            },
+            "en": {
+              "text": "Proto Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Басс"
+            },
+            "en": {
+              "text": "Bass"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ролл"
+            },
+            "en": {
+              "text": "Roll"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-banjo",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Banjo-Kazooie",
+        "topic": "character",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут медведя — героя платформера Banjo-Kazooie от Rare?"
+        },
+        "en": {
+          "text": "What is the name of the bear hero in Rare’s Banjo-Kazooie?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Banjo"
+            },
+            "en": {
+              "text": "Banjo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Conker"
+            },
+            "en": {
+              "text": "Conker"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Yooka"
+            },
+            "en": {
+              "text": "Yooka"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Donkey Kong"
+            },
+            "en": {
+              "text": "Donkey Kong"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-starfox",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Star Fox",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут лиса-пилота — главного героя серии Star Fox?"
+        },
+        "en": {
+          "text": "What is the name of the fox pilot protagonist of the Star Fox series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Фокс МакКлауд"
+            },
+            "en": {
+              "text": "Fox McCloud"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фальк Ломбарди"
+            },
+            "en": {
+              "text": "Falco Lombardi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Слиппи Тоад"
+            },
+            "en": {
+              "text": "Slippy Toad"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пеппи Хэйр"
+            },
+            "en": {
+              "text": "Peppy Hare"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-splatoon",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Splatoon",
+        "topic": "mode",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем в Splatoon команды в основном «захватывают» территорию на карте?"
+        },
+        "en": {
+          "text": "In Splatoon, what do teams mainly use to claim turf on the map?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Чернилами"
+            },
+            "en": {
+              "text": "Ink"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Огнём"
+            },
+            "en": {
+              "text": "Fire"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Льдом"
+            },
+            "en": {
+              "text": "Ice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Электричеством"
+            },
+            "en": {
+              "text": "Electricity"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-celeste",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Celeste",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут героиню платформера Celeste, которая поднимается на гору?"
+        },
+        "en": {
+          "text": "What is the name of the Celeste platformer heroine who climbs the mountain?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мадлен"
+            },
+            "en": {
+              "text": "Madeline"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бэдлайн"
+            },
+            "en": {
+              "text": "Badeline"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тео"
+            },
+            "en": {
+              "text": "Theo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гранма"
+            },
+            "en": {
+              "text": "Granny"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-terraria",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Terraria",
+        "topic": "genre",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая 2D-песочница известна крафтом, боссами и исследованием подземного мира?"
+        },
+        "en": {
+          "text": "Which 2D sandbox is known for crafting, bosses, and exploring the underground?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Terraria"
+            },
+            "en": {
+              "text": "Terraria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Starbound"
+            },
+            "en": {
+              "text": "Starbound"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Core Keeper"
+            },
+            "en": {
+              "text": "Core Keeper"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dig Dug"
+            },
+            "en": {
+              "text": "Dig Dug"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-counter-strike",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Counter-Strike",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "К какому жанру ближе всего классический Counter-Strike?"
+        },
+        "en": {
+          "text": "Which genre best describes classic Counter-Strike?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Тактический шутер"
+            },
+            "en": {
+              "text": "Tactical shooter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "MOBA"
+            },
+            "en": {
+              "text": "MOBA"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Автобатлер"
+            },
+            "en": {
+              "text": "Auto battler"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Rhythm game"
+            },
+            "en": {
+              "text": "Rhythm game"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-dota2",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Dota 2",
+        "topic": "publisher",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая компания издаёт Dota 2?"
+        },
+        "en": {
+          "text": "Which company publishes Dota 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Valve"
+            },
+            "en": {
+              "text": "Valve"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Riot Games"
+            },
+            "en": {
+              "text": "Riot Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Blizzard"
+            },
+            "en": {
+              "text": "Blizzard"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Epic Games"
+            },
+            "en": {
+              "text": "Epic Games"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-nba2k",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "NBA 2K",
+        "topic": "sport",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой вид спорта симулирует серия NBA 2K?"
+        },
+        "en": {
+          "text": "Which sport does the NBA 2K series simulate?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Баскетбол"
+            },
+            "en": {
+              "text": "Basketball"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Американский футбол"
+            },
+            "en": {
+              "text": "American football"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бейсбол"
+            },
+            "en": {
+              "text": "Baseball"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хоккей"
+            },
+            "en": {
+              "text": "Hockey"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-gran-turismo",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gran Turismo",
+        "topic": "genre",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая серия Sony известна реалистичными автосимуляторами на PlayStation?"
+        },
+        "en": {
+          "text": "Which Sony series is known for realistic racing sims on PlayStation?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Gran Turismo"
+            },
+            "en": {
+              "text": "Gran Turismo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Need for Speed"
+            },
+            "en": {
+              "text": "Need for Speed"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Burnout"
+            },
+            "en": {
+              "text": "Burnout"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mario Kart"
+            },
+            "en": {
+              "text": "Mario Kart"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-tony-hawk",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tony Hawk’s Pro Skater",
+        "topic": "sport",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой экстремальный спорт лежит в основе серии Tony Hawk’s Pro Skater?"
+        },
+        "en": {
+          "text": "Which extreme sport is the basis of the Tony Hawk’s Pro Skater series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Скейтбординг"
+            },
+            "en": {
+              "text": "Skateboarding"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сноуборд"
+            },
+            "en": {
+              "text": "Snowboarding"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BMX"
+            },
+            "en": {
+              "text": "BMX"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Серфинг"
+            },
+            "en": {
+              "text": "Surfing"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-spiderman-insomniac",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Marvel’s Spider-Man",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала Marvel’s Spider-Man для PlayStation?"
+        },
+        "en": {
+          "text": "Which studio developed Marvel’s Spider-Man for PlayStation?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Insomniac Games"
+            },
+            "en": {
+              "text": "Insomniac Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Naughty Dog"
+            },
+            "en": {
+              "text": "Naughty Dog"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Santa Monica Studio"
+            },
+            "en": {
+              "text": "Santa Monica Studio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Guerrilla Games"
+            },
+            "en": {
+              "text": "Guerrilla Games"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-arkham",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Batman: Arkham",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия создала серию Batman: Arkham (Asylum / City / Knight)?"
+        },
+        "en": {
+          "text": "Which studio created the Batman: Arkham series (Asylum / City / Knight)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Rocksteady Studios"
+            },
+            "en": {
+              "text": "Rocksteady Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "WB Games Montréal"
+            },
+            "en": {
+              "text": "WB Games Montréal"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NetherRealm Studios"
+            },
+            "en": {
+              "text": "NetherRealm Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Traveller’s Tales"
+            },
+            "en": {
+              "text": "Traveller’s Tales"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-monster-hunter",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Monster Hunter",
+        "topic": "loop",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в серии Monster Hunter игрок в основном делает с огромными существами?"
+        },
+        "en": {
+          "text": "In the Monster Hunter series, what does the player mainly do with giant creatures?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Охотится на них"
+            },
+            "en": {
+              "text": "Hunt them"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Приручает как покемонов"
+            },
+            "en": {
+              "text": "Tames them like Pokémon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гонки на них"
+            },
+            "en": {
+              "text": "Races them"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Строит из них города"
+            },
+            "en": {
+              "text": "Builds cities from them"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-kingdom-hearts",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Kingdom Hearts",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут мальчика с Кеем-Клинком — героя Kingdom Hearts?"
+        },
+        "en": {
+          "text": "What is the name of the Keyblade-wielding boy who stars in Kingdom Hearts?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сора"
+            },
+            "en": {
+              "text": "Sora"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рику"
+            },
+            "en": {
+              "text": "Riku"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Роксас"
+            },
+            "en": {
+              "text": "Roxas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вентус"
+            },
+            "en": {
+              "text": "Ventus"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-okami",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Ōkami",
+        "topic": "protagonist",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком облике богиня Аматэрасу появляется в игре Ōkami?"
+        },
+        "en": {
+          "text": "In what form does the goddess Amaterasu appear in Ōkami?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Белый волк"
+            },
+            "en": {
+              "text": "A white wolf"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Красный дракон"
+            },
+            "en": {
+              "text": "A red dragon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чёрный кот"
+            },
+            "en": {
+              "text": "A black cat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Золотой феникс"
+            },
+            "en": {
+              "text": "A golden phoenix"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-nier-2b",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "NieR:Automata",
+        "topic": "character",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется андроид-боец в юбке — один из главных героев NieR:Automata?"
+        },
+        "en": {
+          "text": "What is the name of the skirted combat android who is a lead protagonist in NieR:Automata?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "2B"
+            },
+            "en": {
+              "text": "2B"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "9S"
+            },
+            "en": {
+              "text": "9S"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "A2"
+            },
+            "en": {
+              "text": "A2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Emil"
+            },
+            "en": {
+              "text": "Emil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-vampire-survivors",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Vampire Survivors",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая инди-игра популяризировала жанр «выживалка с автоатакой» против орд врагов?"
+        },
+        "en": {
+          "text": "Which indie game popularized the auto-attack horde-survival genre?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Vampire Survivors"
+            },
+            "en": {
+              "text": "Vampire Survivors"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dead Cells"
+            },
+            "en": {
+              "text": "Dead Cells"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Slay the Spire"
+            },
+            "en": {
+              "text": "Slay the Spire"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-easy-slay-the-spire",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Slay the Spire",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "К какому жанру ближе всего Slay the Spire?"
+        },
+        "en": {
+          "text": "Which genre best describes Slay the Spire?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Колодостроительный roguelike"
+            },
+            "en": {
+              "text": "Deck-building roguelike"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Футбольный симулятор"
+            },
+            "en": {
+              "text": "Football sim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гоночный аркадный"
+            },
+            "en": {
+              "text": "Arcade racer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Танцевальная ритм-игра"
+            },
+            "en": {
+              "text": "Dance rhythm game"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-aloy",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Horizon Zero Dawn",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут охотницу — главную героиню Horizon Zero Dawn?"
+        },
+        "en": {
+          "text": "What is the name of the hunter protagonist of Horizon Zero Dawn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Элой"
+            },
+            "en": {
+              "text": "Aloy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Элизабет"
+            },
+            "en": {
+              "text": "Elisabet"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Варух"
+            },
+            "en": {
+              "text": "Varl"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эренда"
+            },
+            "en": {
+              "text": "Erend"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-death-stranding-sam",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Death Stranding",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут курьера — главного героя Death Stranding?"
+        },
+        "en": {
+          "text": "What is the name of the porter protagonist in Death Stranding?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сэм Портер Бриджес"
+            },
+            "en": {
+              "text": "Sam Porter Bridges"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хиггс"
+            },
+            "en": {
+              "text": "Higgs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Клифф"
+            },
+            "en": {
+              "text": "Cliff"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дие-Хардман"
+            },
+            "en": {
+              "text": "Die-Hardman"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-arthur-morgan",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Red Dead Redemption 2",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут главного протагониста Red Dead Redemption 2?"
+        },
+        "en": {
+          "text": "What is the name of the main protagonist of Red Dead Redemption 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Артур Морган"
+            },
+            "en": {
+              "text": "Arthur Morgan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джон Марстон"
+            },
+            "en": {
+              "text": "John Marston"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дач ван дер Линде"
+            },
+            "en": {
+              "text": "Dutch van der Linde"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мика Белл"
+            },
+            "en": {
+              "text": "Micah Bell"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-agent-47",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hitman",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким номером известен лысый киллер из серии Hitman?"
+        },
+        "en": {
+          "text": "By what number is the bald assassin from the Hitman series known?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Агент 47"
+            },
+            "en": {
+              "text": "Agent 47"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Агент 13"
+            },
+            "en": {
+              "text": "Agent 13"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Агент 99"
+            },
+            "en": {
+              "text": "Agent 99"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Агент 007"
+            },
+            "en": {
+              "text": "Agent 007"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-corvo",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Dishonored",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут лорда-защитника, ставшего мстителем в первом Dishonored?"
+        },
+        "en": {
+          "text": "What is the name of the Lord Protector turned avenger in the first Dishonored?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Корво Аттано"
+            },
+            "en": {
+              "text": "Corvo Attano"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дауд"
+            },
+            "en": {
+              "text": "Daud"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эмили Колдуин"
+            },
+            "en": {
+              "text": "Emily Kaldwin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Внешний"
+            },
+            "en": {
+              "text": "The Outsider"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-prey-talos",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Prey (2017)",
+        "topic": "setting",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется космическая станция — место действия Prey (2017)?"
+        },
+        "en": {
+          "text": "What is the name of the space station setting of Prey (2017)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Talos I"
+            },
+            "en": {
+              "text": "Talos I"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Citadel Station"
+            },
+            "en": {
+              "text": "Citadel Station"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sevastopol"
+            },
+            "en": {
+              "text": "Sevastopol"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Sprawl"
+            },
+            "en": {
+              "text": "The Sprawl"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-umbrella",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "topic": "corp",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется корпорация — главный антагонист ранних Resident Evil?"
+        },
+        "en": {
+          "text": "What is the name of the corporation that is the main antagonist in early Resident Evil?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Амбрелла"
+            },
+            "en": {
+              "text": "Umbrella"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Трикелл"
+            },
+            "en": {
+              "text": "Tricell"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Уэйланд-Ютани"
+            },
+            "en": {
+              "text": "Weyland-Yutani"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Апертура"
+            },
+            "en": {
+              "text": "Aperture"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-silent-hill-town",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Silent Hill",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется туманный город — центр серии Silent Hill?"
+        },
+        "en": {
+          "text": "What is the name of the foggy town at the center of the Silent Hill series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сайлент Хилл"
+            },
+            "en": {
+              "text": "Silent Hill"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Раккун-Сити"
+            },
+            "en": {
+              "text": "Raccoon City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сполдинг"
+            },
+            "en": {
+              "text": "Spalding"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Брайтуол"
+            },
+            "en": {
+              "text": "Bright Falls"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-journey",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Journey",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия создала атмосферный adventure Journey?"
+        },
+        "en": {
+          "text": "Which studio created the atmospheric adventure Journey?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "thatgamecompany"
+            },
+            "en": {
+              "text": "thatgamecompany"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Playdead"
+            },
+            "en": {
+              "text": "Playdead"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Ico"
+            },
+            "en": {
+              "text": "Team Ico"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Giant Squid"
+            },
+            "en": {
+              "text": "Giant Squid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-it-takes-two",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "It Takes Two",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала кооперативный платформер It Takes Two?"
+        },
+        "en": {
+          "text": "Which studio developed the co-op platformer It Takes Two?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hazelight Studios"
+            },
+            "en": {
+              "text": "Hazelight Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Media Molecule"
+            },
+            "en": {
+              "text": "Media Molecule"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Asobo Studio"
+            },
+            "en": {
+              "text": "Asobo Studio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ghost Town Games"
+            },
+            "en": {
+              "text": "Ghost Town Games"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-subnautica",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Subnautica",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где в основном происходит действие Subnautica?"
+        },
+        "en": {
+          "text": "Where does most of Subnautica take place?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Под водой на чужой планете"
+            },
+            "en": {
+              "text": "Underwater on an alien planet"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В пустыне Марса"
+            },
+            "en": {
+              "text": "In a Martian desert"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На космической станции у Земли"
+            },
+            "en": {
+              "text": "On a space station near Earth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В затопленном Нью-Йорке"
+            },
+            "en": {
+              "text": "In a flooded New York"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-no-mans-sky",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "No Man’s Sky",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала No Man’s Sky?"
+        },
+        "en": {
+          "text": "Which studio developed No Man’s Sky?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hello Games"
+            },
+            "en": {
+              "text": "Hello Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mojang"
+            },
+            "en": {
+              "text": "Mojang"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "ConcernedApe"
+            },
+            "en": {
+              "text": "ConcernedApe"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "System Era Softworks"
+            },
+            "en": {
+              "text": "System Era Softworks"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-helldivers2",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Helldivers 2",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала Helldivers 2?"
+        },
+        "en": {
+          "text": "Which studio developed Helldivers 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Arrowhead Game Studios"
+            },
+            "en": {
+              "text": "Arrowhead Game Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Fatshark"
+            },
+            "en": {
+              "text": "Fatshark"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gearbox Software"
+            },
+            "en": {
+              "text": "Gearbox Software"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Saber Interactive"
+            },
+            "en": {
+              "text": "Saber Interactive"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-kiryu",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Yakuza / Like a Dragon",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут легендарного якудзу по прозвищу «Дракон Доджимы»?"
+        },
+        "en": {
+          "text": "What is the name of the legendary yakuza nicknamed the “Dragon of Dojima”?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кадзума Кирю"
+            },
+            "en": {
+              "text": "Kazuma Kiryu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ичибан Касуга"
+            },
+            "en": {
+              "text": "Ichiban Kasuga"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Горо Маджима"
+            },
+            "en": {
+              "text": "Goro Majima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Акира Нишики"
+            },
+            "en": {
+              "text": "Akira Nishikiyama"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-ori",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Ori and the Blind Forest",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия создала Ori and the Blind Forest?"
+        },
+        "en": {
+          "text": "Which studio created Ori and the Blind Forest?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Moon Studios"
+            },
+            "en": {
+              "text": "Moon Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Cherry"
+            },
+            "en": {
+              "text": "Team Cherry"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Supergiant Games"
+            },
+            "en": {
+              "text": "Supergiant Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Motion Twin"
+            },
+            "en": {
+              "text": "Motion Twin"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-obra-dinn",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Return of the Obra Dinn",
+        "topic": "creator",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто создал Return of the Obra Dinn?"
+        },
+        "en": {
+          "text": "Who created Return of the Obra Dinn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Lucas Pope"
+            },
+            "en": {
+              "text": "Lucas Pope"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Jonathan Blow"
+            },
+            "en": {
+              "text": "Jonathan Blow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Toby Fox"
+            },
+            "en": {
+              "text": "Toby Fox"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Eric Barone"
+            },
+            "en": {
+              "text": "Eric Barone"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-papers-please",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Papers, Please",
+        "topic": "job",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кем вы работаете в Papers, Please?"
+        },
+        "en": {
+          "text": "What job do you perform in Papers, Please?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пограничным инспектором"
+            },
+            "en": {
+              "text": "A border inspector"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пилотом авиалайнера"
+            },
+            "en": {
+              "text": "An airliner pilot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Судьёй в суде"
+            },
+            "en": {
+              "text": "A courtroom judge"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Врачом скорой помощи"
+            },
+            "en": {
+              "text": "An ambulance doctor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-max-payne",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Max Payne",
+        "topic": "mechanic",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой приём стрельбы стал визитной карточкой Max Payne?"
+        },
+        "en": {
+          "text": "Which shooting technique became Max Payne’s signature?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Bullet time"
+            },
+            "en": {
+              "text": "Bullet time"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Quick Time Event"
+            },
+            "en": {
+              "text": "Quick Time Event"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "VATS"
+            },
+            "en": {
+              "text": "VATS"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Focus Mode"
+            },
+            "en": {
+              "text": "Focus Mode"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-sam-fisher",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Splinter Cell",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут агента NSA — главного героя серии Splinter Cell?"
+        },
+        "en": {
+          "text": "What is the name of the NSA agent protagonist of the Splinter Cell series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сэм Фишер"
+            },
+            "en": {
+              "text": "Sam Fisher"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Солид Снейк"
+            },
+            "en": {
+              "text": "Solid Snake"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джейсон Борн"
+            },
+            "en": {
+              "text": "Jason Bourne"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Агент 47"
+            },
+            "en": {
+              "text": "Agent 47"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-med-xenoblade",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Xenoblade Chronicles",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разрабатывает серию Xenoblade Chronicles?"
+        },
+        "en": {
+          "text": "Which studio develops the Xenoblade Chronicles series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Monolith Soft"
+            },
+            "en": {
+              "text": "Monolith Soft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Level-5"
+            },
+            "en": {
+              "text": "Level-5"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Intelligent Systems"
+            },
+            "en": {
+              "text": "Intelligent Systems"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Game Freak"
+            },
+            "en": {
+              "text": "Game Freak"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-shenmue-suzuki",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Shenmue",
+        "topic": "director",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто руководил разработкой Shenmue на Sega Dreamcast?"
+        },
+        "en": {
+          "text": "Who directed Shenmue on the Sega Dreamcast?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ю Судзуки"
+            },
+            "en": {
+              "text": "Yu Suzuki"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сигэру Миямото"
+            },
+            "en": {
+              "text": "Shigeru Miyamoto"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хидэо Кодзима"
+            },
+            "en": {
+              "text": "Hideo Kojima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тэцуя Мизугути"
+            },
+            "en": {
+              "text": "Tetsuya Mizuguchi"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-ikaruga",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Ikaruga",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия создала shoot ’em up Ikaruga?"
+        },
+        "en": {
+          "text": "Which studio created the shoot ’em up Ikaruga?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Treasure"
+            },
+            "en": {
+              "text": "Treasure"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Cave"
+            },
+            "en": {
+              "text": "Cave"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Compile"
+            },
+            "en": {
+              "text": "Compile"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Toaplan"
+            },
+            "en": {
+              "text": "Toaplan"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-deus-ex-ion",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Deus Ex",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия выпустила оригинальный Deus Ex (2000)?"
+        },
+        "en": {
+          "text": "Which studio released the original Deus Ex (2000)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ion Storm"
+            },
+            "en": {
+              "text": "Ion Storm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Looking Glass Studios"
+            },
+            "en": {
+              "text": "Looking Glass Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Irrational Games"
+            },
+            "en": {
+              "text": "Irrational Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Black Isle Studios"
+            },
+            "en": {
+              "text": "Black Isle Studios"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-vtmb-troika",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Vampire: The Masquerade – Bloodlines",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала Vampire: The Masquerade – Bloodlines?"
+        },
+        "en": {
+          "text": "Which studio developed Vampire: The Masquerade – Bloodlines?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Troika Games"
+            },
+            "en": {
+              "text": "Troika Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Obsidian Entertainment"
+            },
+            "en": {
+              "text": "Obsidian Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BioWare"
+            },
+            "en": {
+              "text": "BioWare"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Lionhead Studios"
+            },
+            "en": {
+              "text": "Lionhead Studios"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-fallout1-year",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Fallout",
+        "topic": "year",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком году Interplay выпустила оригинальный Fallout?"
+        },
+        "en": {
+          "text": "In what year did Interplay release the original Fallout?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "1997"
+            },
+            "en": {
+              "text": "1997"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1994"
+            },
+            "en": {
+              "text": "1994"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1999"
+            },
+            "en": {
+              "text": "1999"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "2001"
+            },
+            "en": {
+              "text": "2001"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-xcom-ufo",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "X-COM: UFO Defense",
+        "topic": "year",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком году вышла оригинальная X-COM: UFO Defense (Enemy Unknown)?"
+        },
+        "en": {
+          "text": "In what year did the original X-COM: UFO Defense (Enemy Unknown) release?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "1994"
+            },
+            "en": {
+              "text": "1994"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1991"
+            },
+            "en": {
+              "text": "1991"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1997"
+            },
+            "en": {
+              "text": "1997"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1999"
+            },
+            "en": {
+              "text": "1999"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-dungeon-keeper",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Dungeon Keeper",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия создала Dungeon Keeper?"
+        },
+        "en": {
+          "text": "Which studio created Dungeon Keeper?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Bullfrog Productions"
+            },
+            "en": {
+              "text": "Bullfrog Productions"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Lionhead Studios"
+            },
+            "en": {
+              "text": "Lionhead Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Westwood Studios"
+            },
+            "en": {
+              "text": "Westwood Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ensemble Studios"
+            },
+            "en": {
+              "text": "Ensemble Studios"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-braid-blow",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Braid",
+        "topic": "creator",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто создал инди-платформер Braid?"
+        },
+        "en": {
+          "text": "Who created the indie platformer Braid?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Jonathan Blow"
+            },
+            "en": {
+              "text": "Jonathan Blow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Phil Fish"
+            },
+            "en": {
+              "text": "Phil Fish"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Edmund McMillen"
+            },
+            "en": {
+              "text": "Edmund McMillen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Derek Yu"
+            },
+            "en": {
+              "text": "Derek Yu"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-hotline-miami",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Hotline Miami",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия выпустила Hotline Miami?"
+        },
+        "en": {
+          "text": "Which studio released Hotline Miami?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dennaton Games"
+            },
+            "en": {
+              "text": "Dennaton Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Devolver Digital"
+            },
+            "en": {
+              "text": "Devolver Digital"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Croteam"
+            },
+            "en": {
+              "text": "Croteam"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Galactic Cafe"
+            },
+            "en": {
+              "text": "Galactic Cafe"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-ftl-subset",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "FTL: Faster Than Light",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия создала FTL: Faster Than Light?"
+        },
+        "en": {
+          "text": "Which studio created FTL: Faster Than Light?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Subset Games"
+            },
+            "en": {
+              "text": "Subset Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Red Hook Studios"
+            },
+            "en": {
+              "text": "Red Hook Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dodge Roll"
+            },
+            "en": {
+              "text": "Dodge Roll"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Free Lives"
+            },
+            "en": {
+              "text": "Free Lives"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-spelunky",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Spelunky",
+        "topic": "creator",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто создал оригинальный Spelunky?"
+        },
+        "en": {
+          "text": "Who created the original Spelunky?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Derek Yu"
+            },
+            "en": {
+              "text": "Derek Yu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Edmund McMillen"
+            },
+            "en": {
+              "text": "Edmund McMillen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Jonathan Blow"
+            },
+            "en": {
+              "text": "Jonathan Blow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tommy Refenes"
+            },
+            "en": {
+              "text": "Tommy Refenes"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-rez-mizuguchi",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Rez",
+        "topic": "creator",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто был ключевым креативным лидером синестетического шутера Rez?"
+        },
+        "en": {
+          "text": "Who was the key creative lead behind the synesthetic shooter Rez?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Тэцуя Мизугути"
+            },
+            "en": {
+              "text": "Tetsuya Mizuguchi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фумито Уэда"
+            },
+            "en": {
+              "text": "Fumito Ueda"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гоити Суда"
+            },
+            "en": {
+              "text": "Goichi Suda"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кэйта Такахаси"
+            },
+            "en": {
+              "text": "Keita Takahashi"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-sotn-year",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Castlevania: Symphony of the Night",
+        "topic": "year",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком году в Японии вышла Castlevania: Symphony of the Night?"
+        },
+        "en": {
+          "text": "In what year did Castlevania: Symphony of the Night release in Japan?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "1997"
+            },
+            "en": {
+              "text": "1997"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1994"
+            },
+            "en": {
+              "text": "1994"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1999"
+            },
+            "en": {
+              "text": "1999"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "2001"
+            },
+            "en": {
+              "text": "2001"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-killer7",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "killer7",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия Гоити Суды выпустила killer7?"
+        },
+        "en": {
+          "text": "Which Goichi Suda studio released killer7?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Grasshopper Manufacture"
+            },
+            "en": {
+              "text": "Grasshopper Manufacture"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "PlatinumGames"
+            },
+            "en": {
+              "text": "PlatinumGames"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Clover Studio"
+            },
+            "en": {
+              "text": "Clover Studio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Treasure"
+            },
+            "en": {
+              "text": "Treasure"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-goldeneye",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "GoldenEye 007",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала GoldenEye 007 для Nintendo 64?"
+        },
+        "en": {
+          "text": "Which studio developed GoldenEye 007 for the Nintendo 64?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Rare"
+            },
+            "en": {
+              "text": "Rare"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nintendo EAD"
+            },
+            "en": {
+              "text": "Nintendo EAD"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Factor 5"
+            },
+            "en": {
+              "text": "Factor 5"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Silicon Knights"
+            },
+            "en": {
+              "text": "Silicon Knights"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-elite-1984",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Elite",
+        "topic": "year",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком году вышла оригинальная Elite (Braben & Bell)?"
+        },
+        "en": {
+          "text": "In what year did the original Elite (Braben & Bell) release?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "1984"
+            },
+            "en": {
+              "text": "1984"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1979"
+            },
+            "en": {
+              "text": "1979"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1988"
+            },
+            "en": {
+              "text": "1988"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1993"
+            },
+            "en": {
+              "text": "1993"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-alone-in-the-dark",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Alone in the Dark",
+        "topic": "year",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком году Infogrames выпустила оригинальную Alone in the Dark?"
+        },
+        "en": {
+          "text": "In what year did Infogrames release the original Alone in the Dark?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "1992"
+            },
+            "en": {
+              "text": "1992"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1989"
+            },
+            "en": {
+              "text": "1989"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1995"
+            },
+            "en": {
+              "text": "1995"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1998"
+            },
+            "en": {
+              "text": "1998"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-parasite-eve",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Parasite Eve",
+        "topic": "year",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком году Square выпустила оригинальную Parasite Eve на PlayStation?"
+        },
+        "en": {
+          "text": "In what year did Square release the original Parasite Eve on PlayStation?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "1998"
+            },
+            "en": {
+              "text": "1998"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1995"
+            },
+            "en": {
+              "text": "1995"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1997"
+            },
+            "en": {
+              "text": "1997"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "2000"
+            },
+            "en": {
+              "text": "2000"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-radiant-silvergun",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Radiant Silvergun",
+        "topic": "platform",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "На какую домашнюю консоль Treasure портировала Radiant Silvergun?"
+        },
+        "en": {
+          "text": "To which home console did Treasure port Radiant Silvergun?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sega Saturn"
+            },
+            "en": {
+              "text": "Sega Saturn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "PlayStation"
+            },
+            "en": {
+              "text": "PlayStation"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nintendo 64"
+            },
+            "en": {
+              "text": "Nintendo 64"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sega Dreamcast"
+            },
+            "en": {
+              "text": "Sega Dreamcast"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-04b-hard-day-of-the-tentacle",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Day of the Tentacle",
+        "topic": "studio",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия выпустила adventure Day of the Tentacle?"
+        },
+        "en": {
+          "text": "Which studio released the adventure Day of the Tentacle?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "LucasArts"
+            },
+            "en": {
+              "text": "LucasArts"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sierra On-Line"
+            },
+            "en": {
+              "text": "Sierra On-Line"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Revolution Software"
+            },
+            "en": {
+              "text": "Revolution Software"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Telltale Games"
+            },
+            "en": {
+              "text": "Telltale Games"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

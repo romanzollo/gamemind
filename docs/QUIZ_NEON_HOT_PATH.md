@@ -70,12 +70,14 @@ Safe and expected:
 
 - Draft JSON → validate → import DRAFT → admin publish.
 - Larger pool, more bilingual rows, images via existing media path.
+- Prod import against **prod** Neon only; after any schema-changing quiz deploy, run `prisma migrate deploy` on prod (missing `AchievementOutbox` / review columns → submit/result break). Ops notes: `docs/CONTENT_PIPELINE.md` §10.
 
 **Not required and often harmful:**
 
 - Changing submit/result to “embed more question JSON”.
 - Reading live `Question` rows on submit for scoring (use frozen session snapshot already loaded for scoring).
 - Adding JSONB columns to the complete hop “for convenience”.
+- Assuming content import or Vercel redeploy applied Prisma migrations.
 
 Snapshot at **start** already freezes the set. Submit only needs option ids + `isCorrect` from that in-memory snapshot.
 

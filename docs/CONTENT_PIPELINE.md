@@ -47,6 +47,9 @@ content/drafts/
     draft-questions.v1.schema.json   # machine-readable contract (JSON Schema)
   examples/
     sample-text-v1.json              # 3 TEXT bilingual samples
+  batches/
+    2026-08-04-text-fresh-45.json    # AI batch 15×3 (local+prod)
+    2026-08-04-text-fresh-60.json    # AI batch 20×3 (local+prod)
 
 src/features/content/lib/
   draft-questions.schema.ts          # Zod contract v1 (runtime)
@@ -64,7 +67,7 @@ npm scripts:
 - `content:import-drafts` (add `--dry-run` first)
 - `content:smoke-status`
 
-Authoring batches later: e.g. `content/drafts/batches/2026-08-text-easy.json` (not committed until you choose to).
+Authoring batches: `content/drafts/batches/YYYY-MM-DD-….json` (commit when you choose).
 
 ---
 
@@ -150,7 +153,7 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 | 3. CLI: validate a draft file | done |
 | 4. Import script/action → DRAFT only | done |
 | 5. Smoke: admin review → publish via existing UI | **done** (Aug 3) — ≥1 sample PUBLISHED; user confirmed quiz pool |
-| 6. Optional: AI emits same JSON | later |
+| 6. AI emits same JSON → batches → import → publish | **done** (Aug 4) — local + **prod** bank grown; Classic OK after prod migrate |
 
 ---
 
@@ -193,6 +196,14 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 - [x] User confirmed published samples appear in quiz pool (Classic)
 
 See §9 runbook for the repeatable checklist. No new publish code was added.
+
+### Step 6 (AI emit + real batches)
+
+- [x] AI-authored batches keep `version: 1` + `source: "ai"` (same contract as manual)
+- [x] Local batches: `content/drafts/batches/2026-08-04-text-fresh-45.json` (15×3) + `…-fresh-60.json` (20×3)
+- [x] Validate → import DRAFT (never PUBLISHED) → admin publish
+- [x] Prod import uses **prod** Neon host (not local `.env` / `ep-jolly-river`)
+- [x] User published on prod; Classic quiz works after prod schema catch-up (see §10)
 
 ---
 
@@ -256,3 +267,36 @@ Duplicate DRAFTs from repeated imports: deactivate or delete extras in admin. Do
 - Change scoring / snapshot / import to auto-PUBLISH
 - Skip quality panel “because JSON validated”
 - Publish IMAGE_GUESS without assets (not in this sample)
+
+---
+
+## 10. Prod ops (import + schema) — Aug 4 lesson
+
+**Local and prod Neon are different projects.** Importing with local `DATABASE_URL` never updates `www.game-mind.ru`.
+
+### Import drafts to prod
+
+1. Take **Production** `DATABASE_URL_UNPOOLED` from Neon Console or Vercel (Reveal). Confirm host ≠ local (`ep-jolly-river…`).
+2. Dry-run, then real:
+
+```powershell
+$env:DATABASE_URL_UNPOOLED = "postgresql://…prod-unpooled…"
+npm run content:import-drafts -- content/drafts/batches/<file>.json --dry-run
+npm run content:import-drafts -- content/drafts/batches/<file>.json
+Remove-Item Env:DATABASE_URL_UNPOOLED
+```
+
+3. Admin on prod: `?publication=DRAFT` → review → Publish.
+4. Do **not** paste secrets into git. Rotate Neon password if it was shared in chat.
+
+**Note:** `vercel env pull` may download Encrypted vars as empty `""` — use Console Reveal / Neon instead.
+
+### Schema must match deployed code
+
+Symptom after deploy: result page soft-fail; Vercel log `relation "AchievementOutbox" does not exist` (`42P01`).
+
+Cause: quiz/result code already on Vercel expects Aug 4 migrations (`AchievementOutbox`, `QuizResult.reviewSnapshot` / `reviewPayload`), but prod Neon stopped at an earlier migration. **Publishing questions does not apply schema.**
+
+Fix: `npx prisma migrate deploy` against **prod** `DATABASE_URL` (+ `DATABASE_URL_UNPOOLED`). Prisma may load local `.env` and ignore a shell override — temporarily point `.env` at prod for that command, or apply pending SQL then `migrate resolve --applied`. Then play a **new** quiz (old broken sessions may lack a clean complete).
+
+Canon: `docs/QUIZ_NEON_HOT_PATH.md` — content scale must not change submit JSONB; keep schema deploys in the release habit.
