@@ -169,6 +169,7 @@ async function loadSessionForSubmit(
                       sessionId: jsonSnapshot.session_id,
                       questions,
                       timedEndsAt: toTimedEndsAtIso(jsonSnapshot.timed_ends_at),
+                      snapshotData,
                   }
                 : { status: 'invalid_snapshot' };
         }
@@ -246,6 +247,7 @@ async function loadSessionForSubmit(
         sessionId: firstRow.session_id,
         questions: Array.from(questions.values()),
         timedEndsAt: toTimedEndsAtIso(firstRow.timed_ends_at),
+        snapshotData: null,
     };
 }
 

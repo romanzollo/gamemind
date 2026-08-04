@@ -10,6 +10,7 @@
 import type { Difficulty, QuestionType } from '@/types';
 import type { Locale } from '@/shared/i18n';
 import type { LocalizedSnapshotTexts } from '@/entities/question/question.types';
+import type { QuizSessionSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
 
 /** Базовый вход создания сессии (без snapshot). */
 type CreateQuizSessionInput = {
@@ -94,6 +95,7 @@ export type SessionForSubmitResult =
            * Submit сравнивает с server now + grace — не с клиентским таймером.
            */
           timedEndsAt: string | null;
+          snapshotData: QuizSessionSnapshotData | null;
       };
 
 /**

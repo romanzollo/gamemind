@@ -8,6 +8,7 @@ Related canon:
 - Lifecycle: `publicationStatus` DRAFT → IN_REVIEW → PUBLISHED (orthogonal to `isActive`)
 - Quality gate: `getQuestionPublishQualityIssues` (`src/features/admin/lib/question-publish-quality.ts`)
 - Seed shape reference only: `scripts/seed-questions.cjs` (`Q` / `opt`)
+- **Quiz Neon hot path:** `docs/QUIZ_NEON_HOT_PATH.md` — adding questions must **not** change submit/result to write large JSONB on complete; content scale stays on draft→publish only.
 
 ---
 

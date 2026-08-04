@@ -1,0 +1,46 @@
+---
+description: Neon/Direct quiz hot-path canon — never put JSONB/TOAST on submit critical path; matrix before shared pick/Direct changes
+alwaysApply: true
+---
+
+# Quiz + Neon hot path (non-negotiable)
+
+Full canon: `docs/QUIZ_NEON_HOT_PATH.md` + `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.
+
+## Product priority
+
+1. **Submit must save score** (Classic / Blitz / Daily).
+2. Result **summary** (scalars) must paint fast.
+3. Answer **review** and polish are best-effort — never block (1) or (2).
+
+## Forbidden on `completeWithResult` / submit critical hop
+
+- Writing or reading large **JSONB / TOAST** (`snapshotData`, `reviewSnapshot`, fat `reviewPayload`) in the same hop as answers + COMPLETED.
+- Passing large JSON from Node into pg on that hop (`$n::jsonb` of snapshot-sized payloads).
+- Sync achievement award / extra Direct TLS before redirect to result.
+- Raising global Direct timeouts or re-enabling keep-warm to “fix” hangs.
+- `notFound()` on result for transient miss (sticky Router Cache 404).
+
+## Required shape
+
+- Complete: answers + **scalar** `QuizResult` (`VALUES`) + COMPLETED + outbox only.
+- `reviewPayload`: only **after** successful complete, non-blocking (fire-and-forget / separate hop); failure must not fail submit.
+- Result page: summary first; review via client API; soft-miss, not `notFound()`.
+- One shared Direct queue in `next dev` — a hung hop blocks home/Daily/start.
+
+## Before changing shared pick / Direct / submit / result
+
+Run matrix: Classic 3/5/10 start, Blitz start+submit, Daily start+submit, score &lt; ~2–3s, home navigation not stuck behind review.
+
+Do **not** change `SNAPSHOT_RESOLVE_CHUNK_SIZE`, merge Classic/Timed runners, or expand Daily lobby multi-TLS without matrix + playbook update.
+
+## Content / new questions
+
+Adding questions, drafts, seed, admin publish is **fine** and does not require hot-path changes.  
+Do **not** “optimize” quiz by stuffing more JSON into submit/result complete. Snapshot at **start** already freezes content; submit scores from that snapshot in memory.
+
+## If submit hangs ~15–20s / Connection terminated
+
+1. Restart `npm run dev` (clear Direct waiters).
+2. Check latest hop wrote JSONB on complete — remove it from critical path.
+3. Read `docs/QUIZ_NEON_HOT_PATH.md` recovery — do not whack-a-mole timeouts.

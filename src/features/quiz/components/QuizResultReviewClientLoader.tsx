@@ -1,11 +1,10 @@
 'use client';
 
 /**
- * Клиентская подгрузка разбора: score уже на экране, JSONB не в RSC.
+ * Клиентская подгрузка разбора: score уже на экране.
  *
- * Сразу после Daily/Blitz submit reviewSnapshot часто не готов к чтению
- * (TOAST hang). Ждём settle → fetch API → backoff retry. Abort при unmount
- * (уход на главную не оставляет длинный server Suspense).
+ * Option B: API читает slim reviewPayload (быстро). Legacy TOAST — короткий
+ * backoff. Abort при unmount (уход на главную не клинит очередь).
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -23,8 +22,8 @@ type QuizResultReviewClientLoaderProps = {
     retryLabel: string;
 };
 
-/** Паузы перед 1/2/3 попыткой — дать Neon «усвоить» TOAST после write. */
-const ATTEMPT_DELAYS_MS = [2_000, 3_500, 5_000] as const;
+/** Паузы перед попытками: payload path быстрый; legacy TOAST — короткий backoff. */
+const ATTEMPT_DELAYS_MS = [200, 800, 1_500] as const;
 
 export function QuizResultReviewClientLoader({
     sessionId,

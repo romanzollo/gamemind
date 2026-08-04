@@ -5,15 +5,15 @@
  * в одном файле со start/reads.
  * Правила Neon: autocommit, ON CONFLICT idempotent, recovery после transient,
  * cleanup partial answers/result; не BEGIN/COMMIT; не await client.end().
- * Scoring math остаётся в features — сюда уже готовые score/isCorrect.
  *
- * Result incident (Aug 4): reviewSnapshot копируется SQL-ом
- * `INSERT…SELECT s.snapshotData` — НЕ читать TOAST в Node (это давало
- * connect-OK / operation~19s / Connection terminated на Windows+Neon).
- * Outbox на том же write-client. Result page читает reviewSnapshot.
+ * Critical path (Aug 4 senior fix): ТОЛЬКО скаляры на QuizResult.
+ * Не писать reviewSnapshot/reviewPayload в том же hop — Node→JSONB и/или
+ * SELECT s.snapshotData клинили complete ~19s (Connection terminated) на
+ * Windows+Neon next-dev. Slim reviewPayload — отдельный best-effort hop
+ * после успешного complete (ошибка не валит submit).
  *
  * Публичный фасад: quiz-session.repository.ts.
- * См. docs/DECISIONS.md → Repository File Split / Neon Write Path.
+ * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
 
 import { randomUUID } from 'node:crypto';
@@ -24,6 +24,7 @@ import {
     withDirectPgWriteClient,
 } from '@/lib/db/direct-pg';
 import { prisma } from '@/lib/prisma';
+import type { CompactReviewPayloadV1 } from '@/entities/quiz-result/compact-review-payload';
 
 type CompleteQuizAnswerInput = {
     questionId: string;
@@ -38,6 +39,8 @@ type CompleteQuizSessionWithResultInput = {
     totalQuestions: number;
     correctCount: number;
     answers: CompleteQuizAnswerInput[];
+    /** Slim bilingual review — пишется после complete, не блокирует submit. */
+    reviewPayload?: CompactReviewPayloadV1 | null;
 };
 
 type CompleteQuizSessionWithResultStatus =
@@ -72,11 +75,15 @@ async function recoverSubmitStatusAfterWriteError(
     }
 
     const result = await withDirectPgClient((client) =>
-        client.query<{ status: string }>(
+        client.query<{ status: string; has_result: boolean }>(
             `
-                SELECT "status"::text AS "status"
-                FROM "QuizSession"
-                WHERE "id" = $1 AND "userId" = $2
+                SELECT
+                    s."status"::text AS "status",
+                    EXISTS (
+                        SELECT 1 FROM "QuizResult" r WHERE r."sessionId" = s."id"
+                    ) AS "has_result"
+                FROM "QuizSession" s
+                WHERE s."id" = $1 AND s."userId" = $2
             `,
             [sessionId, userId],
         ),
@@ -90,6 +97,39 @@ async function recoverSubmitStatusAfterWriteError(
 
     if (session.status === 'COMPLETED') {
         return 'already_completed';
+    }
+
+    // Partial: result есть, status ещё IN_PROGRESS — дожимаем COMPLETED.
+    if (session.has_result && session.status === 'IN_PROGRESS') {
+        try {
+            await withDirectPgWriteClient(
+                async (client) => {
+                    await client.query(
+                        `
+                        UPDATE "QuizSession"
+                        SET "status" = 'COMPLETED'::"QuizSessionStatus",
+                            "completedAt" = COALESCE("completedAt", NOW())
+                        WHERE "id" = $1
+                          AND "userId" = $2
+                          AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                    `,
+                        [sessionId, userId],
+                    );
+                    await client.query(
+                        `
+                        INSERT INTO "AchievementOutbox" ("id", "userId", "sessionId")
+                        VALUES ($1, $2, $3)
+                        ON CONFLICT ("sessionId") DO NOTHING
+                    `,
+                        [randomUUID(), userId, sessionId],
+                    );
+                },
+                { debugLabel: 'quiz.submit.recover-complete' },
+            );
+            return 'completed';
+        } catch {
+            return null;
+        }
     }
 
     return null;
@@ -110,6 +150,37 @@ async function cleanupQuizSubmitPartial(sessionId: string) {
     }).catch(() => undefined);
 }
 
+/**
+ * Best-effort: slim review после успешного complete.
+ * Не бросает наружу — разбор может soft-fail, score уже сохранён.
+ */
+async function attachReviewPayloadBestEffort(
+    sessionId: string,
+    userId: string,
+    reviewPayload: CompactReviewPayloadV1,
+) {
+    try {
+        await withDirectPgWriteClient(
+            async (client) => {
+                await client.query(
+                    `
+                    UPDATE "QuizResult"
+                    SET "reviewPayload" = $1::jsonb
+                    WHERE "sessionId" = $2 AND "userId" = $3
+                `,
+                    [JSON.stringify(reviewPayload), sessionId, userId],
+                );
+            },
+            { debugLabel: 'quiz.submit.review-payload' },
+        );
+    } catch (error) {
+        console.error(
+            'Quiz reviewPayload attach failed (non-fatal):',
+            error,
+        );
+    }
+}
+
 async function completeQuizSessionWithPgClient(
     input: CompleteQuizSessionWithResultInput,
 ): Promise<CompleteQuizSessionWithResultStatus> {
@@ -124,9 +195,9 @@ async function completeQuizSessionWithPgClient(
     const outboxId = randomUUID();
 
     try {
-        return await withDirectPgWriteClient(
+        const status = await withDirectPgWriteClient(
             async (client) => {
-                // Только status — без snapshotData (TOAST в Node клинит write ~19s).
+                // Только status — без snapshotData (TOAST в Node клинит).
                 const sessionResult = await client.query<{ status: string }>(
                     `
                 SELECT "status"::text AS "status"
@@ -173,7 +244,7 @@ async function completeQuizSessionWithPgClient(
                     );
                 }
 
-                // reviewSnapshot: server-side copy TOAST, без передачи JSON в Node.
+                // Только скаляры — без JSONB. VALUES, без SELECT snapshotData.
                 await client.query(
                     `
                 INSERT INTO "QuizResult" (
@@ -182,30 +253,18 @@ async function completeQuizSessionWithPgClient(
                     "userId",
                     "score",
                     "totalQuestions",
-                    "correctCount",
-                    "reviewSnapshot"
+                    "correctCount"
                 )
-                SELECT
-                    $1,
-                    s."id",
-                    s."userId",
-                    $2,
-                    $3,
-                    $4,
-                    s."snapshotData"
-                FROM "QuizSession" AS s
-                WHERE
-                    s."id" = $5
-                    AND s."userId" = $6
+                VALUES ($1, $2, $3, $4, $5, $6)
                 ON CONFLICT ("sessionId") DO NOTHING
             `,
                     [
                         resultId,
+                        input.sessionId,
+                        input.userId,
                         input.score,
                         input.totalQuestions,
                         input.correctCount,
-                        input.sessionId,
-                        input.userId,
                     ],
                 );
 
@@ -245,6 +304,20 @@ async function completeQuizSessionWithPgClient(
                 debugLabel: 'quiz.submit.complete',
             },
         );
+
+        if (
+            (status === 'completed' || status === 'already_completed') &&
+            input.reviewPayload
+        ) {
+            // Не await: Node→JSONB может клинить ~19s; submit/redirect не ждут.
+            void attachReviewPayloadBestEffort(
+                input.sessionId,
+                input.userId,
+                input.reviewPayload,
+            );
+        }
+
+        return status;
     } catch (error) {
         const recovered = await recoverSubmitStatusAfterWriteError(
             input.sessionId,
@@ -253,6 +326,13 @@ async function completeQuizSessionWithPgClient(
         );
 
         if (recovered) {
+            if (recovered === 'completed' && input.reviewPayload) {
+                void attachReviewPayloadBestEffort(
+                    input.sessionId,
+                    input.userId,
+                    input.reviewPayload,
+                );
+            }
             return recovered;
         }
 

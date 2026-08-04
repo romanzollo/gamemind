@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "source": "ai",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-03-hyrule-world",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "topic": "setting",
+        "game": "The Legend of Zelda",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется вымышленное королевство, где происходят события большинства игр The Legend of Zelda?"
+        },
+        "en": {
+          "text": "What is the name of the fictional kingdom where most The Legend of Zelda games take place?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Хайрул" },
+            "en": { "text": "Hyrule" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тамириэль" },
+            "en": { "text": "Tamriel" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Азерот" },
+            "en": { "text": "Azeroth" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Скайрим" },
+            "en": { "text": "Skyrim" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-03-nintendo-switch-launch",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "title-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая из этих игр вышла в день запуска Nintendo Switch в 2017 году?"
+        },
+        "en": {
+          "text": "Which of these games released on the Nintendo Switch launch day in 2017?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "The Legend of Zelda: Breath of the Wild" },
+            "en": { "text": "The Legend of Zelda: Breath of the Wild" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Super Mario Odyssey" },
+            "en": { "text": "Super Mario Odyssey" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Animal Crossing: New Horizons" },
+            "en": { "text": "Animal Crossing: New Horizons" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Metroid Dread" },
+            "en": { "text": "Metroid Dread" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-03-rapture-bioshock",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "BioShock",
+        "topic": "setting",
+        "game": "BioShock",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется подводный город из оригинальной BioShock?"
+        },
+        "en": {
+          "text": "What is the name of the underwater city in the original BioShock?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Восторг" },
+            "en": { "text": "Rapture" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Колумбия" },
+            "en": { "text": "Columbia" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Данволл" },
+            "en": { "text": "Dunwall" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Новиград" },
+            "en": { "text": "Novigrad" }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 // Работа с результатами викторин
 import { withDirectPgClient } from '@/lib/db/direct-pg';
 import { parseSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
+import {
+    parseCompactReviewPayload,
+    type CompactReviewPayloadV1,
+} from '@/entities/quiz-result/compact-review-payload';
 import type { Difficulty } from '@/types';
 
 type QuizResultSummaryRow = {
@@ -46,6 +50,18 @@ export type QuizResultReviewBundle = {
         isCorrect: boolean;
     }>;
 };
+
+/** Result review load: slim payload (B) или legacy snapshot+answers. */
+export type QuizResultReviewLoad =
+    | {
+          kind: 'payload';
+          sessionId: string;
+          payload: CompactReviewPayloadV1;
+      }
+    | {
+          kind: 'snapshot';
+          bundle: QuizResultReviewBundle;
+      };
 
 type LeaderboardScoreRow = {
     user_id: string;
@@ -153,21 +169,23 @@ async function loadResultSummaryBySessionIdForUser(
 }
 
 /**
- * Review JSONB + answers — отдельный hop (Suspense). Не блокирует summary.
- * Сначала reviewSnapshot; legacy → Session.snapshotData только если NULL.
+ * Review: сначала slim reviewPayload (option B), иначе legacy reviewSnapshot/TOAST.
+ * Не блокирует summary.
  */
 async function loadResultReviewBySessionIdForUser(
     sessionId: string,
     userId: string,
-): Promise<QuizResultReviewBundle | null> {
+): Promise<QuizResultReviewLoad | null> {
     const loaded = await withDirectPgClient(
         async (client) => {
             const result = await client.query<{
+                review_payload: unknown;
                 review_snapshot: unknown;
                 question_count: number;
             }>(
                 `
                 SELECT
+                    r."reviewPayload" AS "review_payload",
                     r."reviewSnapshot" AS "review_snapshot",
                     s."questionCount" AS "question_count"
                 FROM "QuizResult" r
@@ -183,6 +201,16 @@ async function loadResultReviewBySessionIdForUser(
 
             if (!row) {
                 return null;
+            }
+
+            const compact = parseCompactReviewPayload(row.review_payload);
+
+            if (compact) {
+                return {
+                    kind: 'payload' as const,
+                    sessionId,
+                    payload: compact,
+                };
             }
 
             let snapshot = parseSnapshotData(
@@ -223,20 +251,22 @@ async function loadResultReviewBySessionIdForUser(
             );
 
             return {
-                sessionId,
-                questionCount: row.question_count,
-                snapshotData: snapshot,
-                answers: answersResult.rows.map((answer) => ({
-                    questionId: answer.question_id,
-                    selectedOptionId: answer.selected_option_id,
-                    isCorrect: answer.is_correct,
-                })),
+                kind: 'snapshot' as const,
+                bundle: {
+                    sessionId,
+                    questionCount: row.question_count,
+                    snapshotData: snapshot,
+                    answers: answersResult.rows.map((answer) => ({
+                        questionId: answer.question_id,
+                        selectedOptionId: answer.selected_option_id,
+                        isCorrect: answer.is_correct,
+                    })),
+                },
             };
         },
         {
             debugLabel: 'quiz.result.review',
-            // Post-submit TOAST: 1×8s вместо 18s×2 — иначе клинит Direct queue
-            // (home/Daily CTA ждут за review). Soft-fail review, score уже на экране.
+            // Payload path should be fast; legacy TOAST: 1×8s soft-fail.
             maxAttempts: 1,
             attemptTimeoutMs: 8_000,
         },
@@ -341,7 +371,7 @@ export const quizResultRepository = {
         return loadResultSummaryBySessionIdForUser(sessionId, userId);
     },
 
-    /** Разбор ответов (JSONB) — Suspense; не блокирует summary. */
+    /** Разбор: slim reviewPayload (B) или legacy snapshot. */
     findReviewBySessionIdForUser(sessionId: string, userId: string) {
         return loadResultReviewBySessionIdForUser(sessionId, userId);
     },

@@ -215,10 +215,12 @@ model QuizResult {
   totalQuestions Int
   correctCount   Int
   completedAt    DateTime @default(now())
-  /// Копия snapshot на момент complete — result page не читает QuizSession.snapshotData
-  /// сразу после UPDATE status (Windows+Neon: connect OK, TOAST/query hang).
+  /// Копия snapshot на момент complete — legacy fallback для review, если нет reviewPayload.
   /// См. DECISIONS → Quiz Start / Session Load Playbook (result incident).
   reviewSnapshot Json?
+  /// Slim bilingual review DTO (option B): пишется на submit из уже загруженного
+  /// snapshot; hot-path разбора читает его вместо большого reviewSnapshot/TOAST.
+  reviewPayload Json?
 
   session QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)

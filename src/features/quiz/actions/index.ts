@@ -11,6 +11,7 @@ import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
+import { buildCompactReviewPayload } from '@/features/quiz/lib/build-compact-review-payload';
 import type { QuizFormState } from '@/features/quiz/types';
 
 // получение локали из формы
@@ -188,6 +189,14 @@ export async function submitQuizAction(
         };
     });
 
+    // Slim review из уже загруженного snapshot — без второго TOAST read на result.
+    const reviewPayload = sessionForSubmit.snapshotData
+        ? buildCompactReviewPayload({
+              snapshotData: sessionForSubmit.snapshotData,
+              answers: answeredRows,
+          })
+        : null;
+
     // сохраняем все данные одной короткой SQL-транзакцией
     // redirect() нельзя вызывать внутри этого try — Next бросает NEXT_REDIRECT,
     // и catch принял бы его за SUBMIT_FAILED.
@@ -203,6 +212,7 @@ export async function submitQuizAction(
                 selectedOptionId: answer.selectedOptionId,
                 isCorrect: answer.isCorrect,
             })),
+            reviewPayload,
         });
 
         if (submitResult === 'not_found') {

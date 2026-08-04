@@ -1,9 +1,7 @@
 /**
- * Отложенный review JSONB после submit.
+ * Отложенный review после submit.
  *
- * Почему API, а не RSC Suspense: сразу после write TOAST/reviewSnapshot
- * на Neon+Windows часто клинит Direct hop ~8–18s и держит общую очередь.
- * Клиент стартует позже, с backoff; уход со страницы отменяет fetch.
+ * Prefers QuizResult.reviewPayload (slim, option B). Legacy: reviewSnapshot TOAST.
  * Auth + ownership на сервере. Canon: result incident Aug 4.
  */
 
@@ -11,6 +9,7 @@ import { NextResponse } from 'next/server';
 
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import { buildSessionReviewPayloadFromSnapshot } from '@/features/quiz/lib/build-session-review-payload';
+import { mapCompactReviewPayloadToItems } from '@/features/quiz/lib/map-compact-review-payload';
 import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review';
 import type { QuizResultReviewItem } from '@/features/quiz/types';
 import { DirectPgTimeoutError } from '@/lib/db/direct-pg';
@@ -48,18 +47,27 @@ export async function GET(
             return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
         }
 
-        const items: QuizResultReviewItem[] = mapQuizResultReview(
-            buildSessionReviewPayloadFromSnapshot({
-                sessionId: review.sessionId,
-                questionCount: review.questionCount,
-                snapshotData: review.snapshotData,
-                answers: review.answers,
+        let items: QuizResultReviewItem[] = [];
+
+        if (review.kind === 'payload') {
+            items = mapCompactReviewPayloadToItems(review.payload, {
                 locale,
-            }),
-            {
                 unansweredLabel: dictionary.quiz.unansweredLabel,
-            },
-        );
+            });
+        } else {
+            items = mapQuizResultReview(
+                buildSessionReviewPayloadFromSnapshot({
+                    sessionId: review.bundle.sessionId,
+                    questionCount: review.bundle.questionCount,
+                    snapshotData: review.bundle.snapshotData,
+                    answers: review.bundle.answers,
+                    locale,
+                }),
+                {
+                    unansweredLabel: dictionary.quiz.unansweredLabel,
+                },
+            );
+        }
 
         return NextResponse.json({ items });
     } catch (error) {

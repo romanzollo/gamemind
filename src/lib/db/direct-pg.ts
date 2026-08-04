@@ -13,6 +13,8 @@
  * - In development on Windows, soften SSL and serialize Direct (unpooled)
  *   connect hops: parallel / back-to-back fresh-Client TLS wedges `next dev`
  *   (submit → result review, cold Timed start). Same pattern as admin-list queue.
+ * - Quiz submit/result JSONB rules: docs/QUIZ_NEON_HOT_PATH.md (do not put large
+ *   JSONB/TOAST on complete critical path — shared queue wedges the whole app).
  */
 import { Client } from 'pg';
 
