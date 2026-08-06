@@ -12,9 +12,9 @@ type QuestionImageProps = {
     priority?: boolean;
     /** Подсказка «нажмите, чтобы увеличить» (i18n). */
     expandHint: string;
-    /** aria-label кнопки/диалога просмотра. */
+    /** aria-label кнопки открытия. */
     expandLabel: string;
-    /** Подпись кнопки закрытия лайтбокса. */
+    /** aria-label поверхности закрытия лайтбокса (без видимой кнопки). */
     closeLabel: string;
 };
 
@@ -25,10 +25,20 @@ function isPixelArtPath(src: string) {
     return src.includes('/quiz-images/easy/');
 }
 
+function isDismissKey(key: string) {
+    return (
+        key === 'Escape' ||
+        key === 'Enter' ||
+        key === ' ' ||
+        key === 'Spacebar' ||
+        key === 'Backspace'
+    );
+}
+
 /**
- * Промпт IMAGE_GUESS: полный кадр (object-contain) + лайтбокс по клику.
- * Лайтбокс — Scoreboard Editorial: спокойный scrim, без glow; Esc / клик вне /
- * кнопка закрытия; на мобиле — почти весь viewport с safe-area.
+ * Промпт IMAGE_GUESS: полный кадр (object-contain) + лайтбокс.
+ * Закрытие без кнопки Close: клик / тап / Esc·Enter·Space·Backspace
+ * (паттерн lightbox: повторный жест закрывает; на touch — любой тап).
  */
 export function QuestionImage({
     src,
@@ -44,12 +54,33 @@ export function QuestionImage({
     const [isOpen, setIsOpen] = useState(false);
     const pixelArt = isPixelArtPath(resolvedSrc);
     const titleId = useId();
-    const closeButtonRef = useRef<HTMLButtonElement>(null);
+    const dialogRef = useRef<HTMLDivElement>(null);
     const openButtonRef = useRef<HTMLButtonElement>(null);
+    /** Игнор жеста, который только что открыл лайтбокс (mobile ghost tap). */
+    const openedAtRef = useRef(0);
+    /** Игнор click после touch-close, чтобы не открыть снова. */
+    const closedAtRef = useRef(0);
 
     const close = useCallback(() => {
+        closedAtRef.current = Date.now();
         setIsOpen(false);
     }, []);
+
+    const open = useCallback(() => {
+        // После touch-close синтетический click не должен сразу открыть снова.
+        if (Date.now() - closedAtRef.current < 400) {
+            return;
+        }
+        openedAtRef.current = Date.now();
+        setIsOpen(true);
+    }, []);
+
+    const dismissFromPointer = useCallback(() => {
+        if (Date.now() - openedAtRef.current < 280) {
+            return;
+        }
+        close();
+    }, [close]);
 
     useEffect(() => {
         if (!isOpen) {
@@ -58,13 +89,14 @@ export function QuestionImage({
 
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
-        closeButtonRef.current?.focus();
+        dialogRef.current?.focus();
 
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
-                event.preventDefault();
-                close();
+            if (!isDismissKey(event.key)) {
+                return;
             }
+            event.preventDefault();
+            close();
         };
 
         window.addEventListener('keydown', onKeyDown);
@@ -111,7 +143,7 @@ export function QuestionImage({
                     <button
                         ref={openButtonRef}
                         type="button"
-                        onClick={() => setIsOpen(true)}
+                        onClick={open}
                         disabled={loadState !== 'ready'}
                         aria-label={expandLabel}
                         className={[
@@ -150,63 +182,53 @@ export function QuestionImage({
 
             {isOpen ? (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center"
+                    ref={dialogRef}
+                    className={[
+                        'fixed inset-0 z-50 flex cursor-zoom-out items-center justify-center',
+                        'px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))]',
+                        'pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]',
+                        'sm:px-6 sm:py-6',
+                        // Не foreground: в dark он светлый → «молочная» вуаль.
+                        // Чёрный scrim в обеих темах (как у медиа-лайтбоксов).
+                        'bg-black/55 backdrop-blur-[3px]',
+                        'dark:bg-black/80 dark:backdrop-blur-[5px]',
+                        'focus:outline-none',
+                    ].join(' ')}
                     role="dialog"
                     aria-modal="true"
-                    aria-labelledby={titleId}
+                    aria-label={closeLabel}
+                    aria-describedby={titleId}
+                    tabIndex={-1}
+                    // Desktop: клик. Mobile: pointerdown = любой тап сразу закрывает.
+                    onClick={dismissFromPointer}
+                    onPointerDown={(event) => {
+                        // touch / pen — закрываем на down (интуитивный «тап = закрыть»).
+                        if (event.pointerType === 'mouse') {
+                            return;
+                        }
+                        // Блокируем совместимый click, иначе после unmount откроется снова.
+                        event.preventDefault();
+                        dismissFromPointer();
+                    }}
                 >
-                    <button
-                        type="button"
-                        aria-label={closeLabel}
-                        className="absolute inset-0 bg-foreground/70 backdrop-blur-[2px]"
-                        onClick={close}
-                    />
+                    <p id={titleId} className="sr-only">
+                        {alt}
+                    </p>
 
-                    <div
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={resolvedSrc}
+                        alt={alt}
+                        draggable={false}
                         className={[
-                            'relative z-10 flex max-h-[100dvh] w-full max-w-[100vw] flex-col',
-                            'px-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))]',
-                            'pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]',
-                            'sm:px-6 sm:py-6',
+                            'relative z-10 mx-auto h-auto w-auto max-w-full object-contain',
+                            'max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)]',
+                            'rounded-md bg-black/20 shadow-2xl shadow-black/40',
+                            'ring-1 ring-white/10',
+                            'pointer-events-none select-none',
+                            pixelArt ? '[image-rendering:pixelated]' : '',
                         ].join(' ')}
-                    >
-                        <div className="mb-3 flex shrink-0 items-center justify-between gap-3 sm:mb-4">
-                            <p
-                                id={titleId}
-                                className="min-w-0 truncate font-display text-sm font-semibold tracking-wide text-primary-foreground sm:text-base"
-                            >
-                                {alt}
-                            </p>
-                            <button
-                                ref={closeButtonRef}
-                                type="button"
-                                onClick={close}
-                                className={[
-                                    'inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md',
-                                    'border border-primary-foreground/25 bg-surface/95 px-3 text-sm font-semibold text-foreground',
-                                    'shadow-sm backdrop-blur-sm',
-                                    'hover:bg-surface-hover',
-                                    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                                ].join(' ')}
-                            >
-                                {closeLabel}
-                            </button>
-                        </div>
-
-                        <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src={resolvedSrc}
-                                alt={alt}
-                                className={[
-                                    'mx-auto h-auto w-auto max-w-full object-contain',
-                                    'max-h-[calc(100dvh-5.5rem)] sm:max-h-[calc(100dvh-6.5rem)]',
-                                    'rounded-md bg-surface shadow-lg',
-                                    pixelArt ? '[image-rendering:pixelated]' : '',
-                                ].join(' ')}
-                            />
-                        </div>
-                    </div>
+                    />
                 </div>
             ) : null}
         </>
