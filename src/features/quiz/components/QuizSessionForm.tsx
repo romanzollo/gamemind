@@ -195,6 +195,9 @@ export function QuizSessionForm({
                         selectedOptionId={selectedAnswers[question.id]}
                         imageUrl={question.imageUrl}
                         imageUnavailableLabel={dictionary.quiz.imageUnavailable}
+                        imageExpandHint={dictionary.quiz.imageExpandHint}
+                        imageExpandLabel={dictionary.quiz.imageExpandLabel}
+                        imageCloseLabel={dictionary.quiz.imageCloseLabel}
                         imagePriority={
                             index === 0 && Boolean(question.imageUrl)
                         }

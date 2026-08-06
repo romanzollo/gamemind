@@ -20,6 +20,7 @@
         "content:validate-drafts": "npx tsx scripts/validate-draft-questions.ts",
         "content:import-drafts": "npx tsx scripts/import-draft-questions.ts",
         "content:smoke-status": "npx tsx scripts/smoke-content-pipeline-status.ts",
+        "content:import-image-guess": "node scripts/import-image-guess-batch.cjs",
         "images:optimize": "node scripts/optimize-quiz-images.cjs",
         "images:update-db": "node scripts/update-quiz-image-assets.cjs"
     },

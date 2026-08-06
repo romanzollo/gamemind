@@ -11,6 +11,10 @@ type QuestionCardProps = {
     imageUrl?: string | null;
     imageAlt?: string;
     imageUnavailableLabel: string;
+    /** Подсказка под превью: нажмите, чтобы увеличить. */
+    imageExpandHint: string;
+    imageExpandLabel: string;
+    imageCloseLabel: string;
     /** Eager-load image for the first card (usually question 1). */
     imagePriority?: boolean;
     /** Timed expired / submitting — нельзя менять ответы. */
@@ -47,6 +51,9 @@ export function QuestionCard({
     imageUrl,
     imageAlt,
     imageUnavailableLabel,
+    imageExpandHint,
+    imageExpandLabel,
+    imageCloseLabel,
     imagePriority = false,
     disabled = false,
 }: QuestionCardProps) {
@@ -84,6 +91,9 @@ export function QuestionCard({
                         alt={imageAlt ?? question.text}
                         unavailableLabel={imageUnavailableLabel}
                         priority={imagePriority}
+                        expandHint={imageExpandHint}
+                        expandLabel={imageExpandLabel}
+                        closeLabel={imageCloseLabel}
                     />
                 </div>
             ) : null}

@@ -168,3 +168,146 @@ Quiz session loads URL from snapshot (next/image)
 ```
 
 Later: admin uploads → Vercel Blob / R2 → HTTPS URL in `QuestionAsset` (see ROADMAP §10).
+
+---
+
+## 5. Batch Aug 2026 — 90 new IMAGE_GUESS (30 per difficulty)
+
+**Manifest (answers + distractors + hints):** `content/drafts/batches/2026-08-05-image-guess-90.json`  
+**Does not replace** the original 9 seed IMAGE_GUESS (§1). Avoid those slugs.
+
+### Where to drop files
+
+```txt
+raw-quiz-images/
+  easy/{slug}.png|jpg|webp|…
+  medium/{slug}.png|jpg|webp|…
+  hard/{slug}.png|jpg|webp|…
+```
+
+**Stem must match exactly** (no spaces; lowercase kebab-case). Extension can be png/jpg/jpeg/webp/avif.
+
+### After you finish collecting
+
+1. `npm run images:optimize` → writes `public/quiz-images/{easy|medium|hard}/{slug}.webp`
+2. Import DRAFT rows + `QuestionAsset` (seed-style Neon client; never auto-PUBLISH):
+
+```bash
+npm run content:import-image-guess -- --dry-run
+npm run content:import-image-guess
+# prod (needs PROD_DATABASE_URL_UNPOOLED in .env):
+npm run content:import-image-guess -- --target=prod --dry-run
+npm run content:import-image-guess -- --target=prod
+```
+
+3. Admin: filter **DRAFT** → review → **Publish** (quality gate).
+4. Commit/deploy WebP under `public/quiz-images/` so prod can serve them (`docs/DEPLOY.md`).
+
+### Exact filenames (90)
+
+#### Easy → `raw-quiz-images/easy/`
+
+| File stem | Game |
+|-----------|------|
+| `minecraft` | Minecraft |
+| `fortnite` | Fortnite |
+| `among-us` | Among Us |
+| `gta-v` | Grand Theft Auto V |
+| `animal-crossing-new-horizons` | Animal Crossing: New Horizons |
+| `super-mario-odyssey` | Super Mario Odyssey |
+| `sonic-the-hedgehog` | Sonic the Hedgehog |
+| `pac-man` | Pac-Man |
+| `overwatch-2` | Overwatch 2 |
+| `league-of-legends` | League of Legends |
+| `rocket-league` | Rocket League |
+| `fall-guys` | Fall Guys |
+| `the-sims-4` | The Sims 4 |
+| `cuphead` | Cuphead |
+| `stardew-valley` | Stardew Valley |
+| `kirby-and-the-forgotten-land` | Kirby and the Forgotten Land |
+| `splatoon-3` | Splatoon 3 |
+| `mario-kart-8-deluxe` | Mario Kart 8 Deluxe |
+| `portal` | Portal |
+| `skyrim` | The Elder Scrolls V: Skyrim |
+| `god-of-war-2018` | God of War (2018) |
+| `marvels-spider-man` | Marvel’s Spider-Man |
+| `halo-combat-evolved` | Halo: Combat Evolved |
+| `crash-bandicoot` | Crash Bandicoot |
+| `street-fighter-ii` | Street Fighter II |
+| `undertale` | Undertale |
+| `terraria` | Terraria |
+| `genshin-impact` | Genshin Impact |
+| `ea-sports-fc` | EA Sports FC |
+| `assassins-creed-odyssey` | Assassin’s Creed Odyssey |
+
+#### Medium → `raw-quiz-images/medium/`
+
+| File stem | Game |
+|-----------|------|
+| `the-last-of-us` | The Last of Us |
+| `uncharted-4` | Uncharted 4 |
+| `ghost-of-tsushima` | Ghost of Tsushima |
+| `sekiro` | Sekiro: Shadows Die Twice |
+| `bloodborne` | Bloodborne |
+| `baldurs-gate-3` | Baldur’s Gate 3 |
+| `persona-5` | Persona 5 |
+| `cyberpunk-2077` | Cyberpunk 2077 |
+| `red-dead-redemption-2` | Red Dead Redemption 2 |
+| `horizon-zero-dawn` | Horizon Zero Dawn |
+| `death-stranding` | Death Stranding |
+| `hollow-knight` | Hollow Knight |
+| `hades` | Hades |
+| `celeste` | Celeste |
+| `bioshock` | BioShock |
+| `mass-effect-2` | Mass Effect 2 |
+| `dark-souls` | Dark Souls |
+| `resident-evil-4` | Resident Evil 4 |
+| `silent-hill-2` | Silent Hill 2 |
+| `dishonored` | Dishonored |
+| `control` | Control |
+| `outer-wilds` | Outer Wilds |
+| `disco-elysium` | Disco Elysium |
+| `nier-automata` | NieR:Automata |
+| `helldivers-2` | Helldivers 2 |
+| `subnautica` | Subnautica |
+| `no-mans-sky` | No Man’s Sky |
+| `it-takes-two` | It Takes Two |
+| `yakuza-0` | Yakuza 0 |
+| `monster-hunter-world` | Monster Hunter: World |
+
+#### Hard → `raw-quiz-images/hard/`
+
+| File stem | Game |
+|-----------|------|
+| `ico` | Ico |
+| `shadow-of-the-colossus` | Shadow of the Colossus |
+| `journey` | Journey |
+| `rez` | Rez |
+| `jet-set-radio` | Jet Set Radio |
+| `shenmue` | Shenmue |
+| `grim-fandango` | Grim Fandango |
+| `myst` | Myst |
+| `system-shock-2` | System Shock 2 |
+| `thief-the-dark-project` | Thief: The Dark Project |
+| `deus-ex` | Deus Ex |
+| `planescape-torment` | Planescape: Torment |
+| `earthbound` | Earthbound |
+| `chrono-trigger` | Chrono Trigger |
+| `castlevania-symphony-of-the-night` | Castlevania: Symphony of the Night |
+| `killer7` | killer7 |
+| `psychonauts` | Psychonauts |
+| `okami` | Ōkami |
+| `katamari-damacy` | Katamari Damacy |
+| `eternal-darkness` | Eternal Darkness |
+| `goldeneye-007` | GoldenEye 007 |
+| `perfect-dark` | Perfect Dark |
+| `ikaruga` | Ikaruga |
+| `hotline-miami` | Hotline Miami |
+| `papers-please` | Papers, Please |
+| `return-of-the-obra-dinn` | Return of the Obra Dinn |
+| `braid` | Braid |
+| `spelunky` | Spelunky |
+| `xenogears` | Xenogears |
+| `vagrant-story` | Vagrant Story |
+
+Capture tips per game live in the JSON (`captureHint`). Prefer your own screenshots; see §3 for sources.

@@ -414,6 +414,12 @@ export type Dictionary = {
         scoreLabel: string;
         correctAnswersLabel: string;
         imageUnavailable: string;
+        /** Под превью IMAGE_GUESS: нажмите, чтобы увеличить. */
+        imageExpandHint: string;
+        /** aria-label кнопки открытия лайтбокса. */
+        imageExpandLabel: string;
+        /** Кнопка / backdrop закрытия лайтбокса. */
+        imageCloseLabel: string;
         reviewTitle: string;
         yourAnswer: string;
         correctAnswer: string;

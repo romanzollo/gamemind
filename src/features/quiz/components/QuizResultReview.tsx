@@ -143,6 +143,9 @@ export function QuizResultReview({
                                             unavailableLabel={
                                                 labels.imageUnavailable
                                             }
+                                            expandHint={labels.imageExpandHint}
+                                            expandLabel={labels.imageExpandLabel}
+                                            closeLabel={labels.imageCloseLabel}
                                             priority={index === 0}
                                         />
                                     </div>

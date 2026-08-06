@@ -1,0 +1,6319 @@
+{
+  "version": 1,
+  "source": "manual",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Not draft-questions TEXT v1. After raw screenshots → images:optimize → import IMAGE_GUESS DRAFT (script later). Do not bloat seed-questions.cjs.",
+  "existingSeedImageGuessAvoid": [
+    "super-mario-bros",
+    "legend-of-zelda",
+    "pokemon-red-blue",
+    "the-witcher-3",
+    "elden-ring",
+    "final-fantasy-vii",
+    "tetris",
+    "doom-1993",
+    "metal-gear-solid"
+  ],
+  "questions": [
+    {
+      "draftKey": "img-easy-minecraft",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "minecraft",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/minecraft.webp",
+      "rawDropAs": "raw-quiz-images/easy/minecraft.png",
+      "captureHint": "Кубический мир / крафт / крипер или горизонт с блоками. Без меню паузы.",
+      "metadata": {
+        "game": "Minecraft",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Minecraft"
+            },
+            "en": {
+              "text": "Minecraft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Terraria"
+            },
+            "en": {
+              "text": "Terraria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Roblox"
+            },
+            "en": {
+              "text": "Roblox"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Lego Worlds"
+            },
+            "en": {
+              "text": "Lego Worlds"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-fortnite",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "fortnite",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/fortnite.webp",
+      "rawDropAs": "raw-quiz-images/easy/fortnite.png",
+      "captureHint": "Стройки + шторм / узнаваемый лут-остров. Без чужого UI поверх.",
+      "metadata": {
+        "game": "Fortnite",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Fortnite"
+            },
+            "en": {
+              "text": "Fortnite"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "PUBG"
+            },
+            "en": {
+              "text": "PUBG"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Apex Legends"
+            },
+            "en": {
+              "text": "Apex Legends"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Warzone"
+            },
+            "en": {
+              "text": "Warzone"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-among-us",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "among-us",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/among-us.webp",
+      "rawDropAs": "raw-quiz-images/easy/among-us.png",
+      "captureHint": "Корабль Skeld / задача / предательская сцена. Чёткие космонавты.",
+      "metadata": {
+        "game": "Among Us",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Among Us"
+            },
+            "en": {
+              "text": "Among Us"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Fall Guys"
+            },
+            "en": {
+              "text": "Fall Guys"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gang Beasts"
+            },
+            "en": {
+              "text": "Gang Beasts"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Human: Fall Flat"
+            },
+            "en": {
+              "text": "Human: Fall Flat"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-gta-v",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "gta-v",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/gta-v.webp",
+      "rawDropAs": "raw-quiz-images/easy/gta-v.png",
+      "captureHint": "Лос-Сантос / машина / небоскребы. Узнаваемая GTA-HUD ок.",
+      "metadata": {
+        "game": "Grand Theft Auto V",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Grand Theft Auto V"
+            },
+            "en": {
+              "text": "Grand Theft Auto V"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Watch Dogs 2"
+            },
+            "en": {
+              "text": "Watch Dogs 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Saints Row"
+            },
+            "en": {
+              "text": "Saints Row"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sleeping Dogs"
+            },
+            "en": {
+              "text": "Sleeping Dogs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-acnh",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "animal-crossing-new-horizons",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/animal-crossing-new-horizons.webp",
+      "rawDropAs": "raw-quiz-images/easy/animal-crossing-new-horizons.png",
+      "captureHint": "Остров, жители-животные, инструменты. Switch UI можно обрезать.",
+      "metadata": {
+        "game": "Animal Crossing: New Horizons",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Animal Crossing: New Horizons"
+            },
+            "en": {
+              "text": "Animal Crossing: New Horizons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Stardew Valley"
+            },
+            "en": {
+              "text": "Stardew Valley"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Sims 4"
+            },
+            "en": {
+              "text": "The Sims 4"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Harvest Moon"
+            },
+            "en": {
+              "text": "Harvest Moon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-mario-odyssey",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "super-mario-odyssey",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/super-mario-odyssey.webp",
+      "rawDropAs": "raw-quiz-images/easy/super-mario-odyssey.png",
+      "captureHint": "Марио + Cappy, Нью-Донк или королевство. Яркий 3D-платформер.",
+      "metadata": {
+        "game": "Super Mario Odyssey",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Super Mario Odyssey"
+            },
+            "en": {
+              "text": "Super Mario Odyssey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Mario 64"
+            },
+            "en": {
+              "text": "Super Mario 64"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Mario Galaxy"
+            },
+            "en": {
+              "text": "Super Mario Galaxy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "A Hat in Time"
+            },
+            "en": {
+              "text": "A Hat in Time"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-sonic",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "sonic-the-hedgehog",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/sonic-the-hedgehog.webp",
+      "rawDropAs": "raw-quiz-images/easy/sonic-the-hedgehog.png",
+      "captureHint": "Синий ёж, Green Hill / классический сайдскролл. Избегать современных меню.",
+      "metadata": {
+        "game": "Sonic the Hedgehog",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sonic the Hedgehog"
+            },
+            "en": {
+              "text": "Sonic the Hedgehog"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Crash Bandicoot"
+            },
+            "en": {
+              "text": "Crash Bandicoot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mega Man"
+            },
+            "en": {
+              "text": "Mega Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Rayman"
+            },
+            "en": {
+              "text": "Rayman"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-pacman",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "pac-man",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/pac-man.webp",
+      "rawDropAs": "raw-quiz-images/easy/pac-man.png",
+      "captureHint": "Лабиринт, точки, призраки. Аркадный / эмуляторный кадр ок.",
+      "metadata": {
+        "game": "Pac-Man",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Pac-Man"
+            },
+            "en": {
+              "text": "Pac-Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dig Dug"
+            },
+            "en": {
+              "text": "Dig Dug"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ms. Pac-Man"
+            },
+            "en": {
+              "text": "Ms. Pac-Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Q*bert"
+            },
+            "en": {
+              "text": "Q*bert"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-overwatch",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "overwatch-2",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/overwatch-2.webp",
+      "rawDropAs": "raw-quiz-images/easy/overwatch-2.png",
+      "captureHint": "Герой + узнаваемый ability FX / карта. Логотип в кадре не обязателен.",
+      "metadata": {
+        "game": "Overwatch 2",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Overwatch 2"
+            },
+            "en": {
+              "text": "Overwatch 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Valorant"
+            },
+            "en": {
+              "text": "Valorant"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Fortress 2"
+            },
+            "en": {
+              "text": "Team Fortress 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Paladins"
+            },
+            "en": {
+              "text": "Paladins"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-lol",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "league-of-legends",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/league-of-legends.webp",
+      "rawDropAs": "raw-quiz-images/easy/league-of-legends.png",
+      "captureHint": "Summoner’s Rift, миньоны, башни. Классический top-down MOBA.",
+      "metadata": {
+        "game": "League of Legends",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "League of Legends"
+            },
+            "en": {
+              "text": "League of Legends"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dota 2"
+            },
+            "en": {
+              "text": "Dota 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Smite"
+            },
+            "en": {
+              "text": "Smite"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Heroes of the Storm"
+            },
+            "en": {
+              "text": "Heroes of the Storm"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-rocket-league",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "rocket-league",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/rocket-league.webp",
+      "rawDropAs": "raw-quiz-images/easy/rocket-league.png",
+      "captureHint": "Машины + огромный мяч на арене.",
+      "metadata": {
+        "game": "Rocket League",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Rocket League"
+            },
+            "en": {
+              "text": "Rocket League"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "TrackMania"
+            },
+            "en": {
+              "text": "TrackMania"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Forza Horizon"
+            },
+            "en": {
+              "text": "Forza Horizon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mario Kart 8 Deluxe"
+            },
+            "en": {
+              "text": "Mario Kart 8 Deluxe"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-fall-guys",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "fall-guys",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/fall-guys.webp",
+      "rawDropAs": "raw-quiz-images/easy/fall-guys.png",
+      "captureHint": "Желе-человечки на полосе препятствий / королевская битва.",
+      "metadata": {
+        "game": "Fall Guys",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Fall Guys"
+            },
+            "en": {
+              "text": "Fall Guys"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Among Us"
+            },
+            "en": {
+              "text": "Among Us"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Human: Fall Flat"
+            },
+            "en": {
+              "text": "Human: Fall Flat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gang Beasts"
+            },
+            "en": {
+              "text": "Gang Beasts"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-sims4",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "the-sims-4",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/the-sims-4.webp",
+      "rawDropAs": "raw-quiz-images/easy/the-sims-4.png",
+      "captureHint": "Симы в бытовой сцене / строительство дома. Узнаваемый CAS/UI ок.",
+      "metadata": {
+        "game": "The Sims 4",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Sims 4"
+            },
+            "en": {
+              "text": "The Sims 4"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Animal Crossing: New Horizons"
+            },
+            "en": {
+              "text": "Animal Crossing: New Horizons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Second Life"
+            },
+            "en": {
+              "text": "Second Life"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Stardew Valley"
+            },
+            "en": {
+              "text": "Stardew Valley"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-cuphead",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "cuphead",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/cuphead.webp",
+      "rawDropAs": "raw-quiz-images/easy/cuphead.png",
+      "captureHint": "Босс в стиле мультфильма 1930-х, run’n’gun.",
+      "metadata": {
+        "game": "Cuphead",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Cuphead"
+            },
+            "en": {
+              "text": "Cuphead"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Celeste"
+            },
+            "en": {
+              "text": "Celeste"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight"
+            },
+            "en": {
+              "text": "Hollow Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dead Cells"
+            },
+            "en": {
+              "text": "Dead Cells"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-stardew",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "stardew-valley",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/stardew-valley.webp",
+      "rawDropAs": "raw-quiz-images/easy/stardew-valley.png",
+      "captureHint": "Ферма / пиксельный городок / смена сезона.",
+      "metadata": {
+        "game": "Stardew Valley",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Stardew Valley"
+            },
+            "en": {
+              "text": "Stardew Valley"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Animal Crossing: New Horizons"
+            },
+            "en": {
+              "text": "Animal Crossing: New Horizons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Harvest Moon"
+            },
+            "en": {
+              "text": "Harvest Moon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Terraria"
+            },
+            "en": {
+              "text": "Terraria"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-kirby",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "kirby-and-the-forgotten-land",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/kirby-and-the-forgotten-land.webp",
+      "rawDropAs": "raw-quiz-images/easy/kirby-and-the-forgotten-land.png",
+      "captureHint": "Розовый Кирби в 3D-мире, вдох / копирование.",
+      "metadata": {
+        "game": "Kirby and the Forgotten Land",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Kirby and the Forgotten Land"
+            },
+            "en": {
+              "text": "Kirby and the Forgotten Land"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Mario Odyssey"
+            },
+            "en": {
+              "text": "Super Mario Odyssey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Yoshi’s Crafted World"
+            },
+            "en": {
+              "text": "Yoshi’s Crafted World"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pac-Man World"
+            },
+            "en": {
+              "text": "Pac-Man World"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-splatoon",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "splatoon-3",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/splatoon-3.webp",
+      "rawDropAs": "raw-quiz-images/easy/splatoon-3.png",
+      "captureHint": "Чернильный turf war, инклинги, яркие краски.",
+      "metadata": {
+        "game": "Splatoon 3",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Splatoon 3"
+            },
+            "en": {
+              "text": "Splatoon 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Paintball 2"
+            },
+            "en": {
+              "text": "Paintball 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Fortnite"
+            },
+            "en": {
+              "text": "Fortnite"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Overwatch 2"
+            },
+            "en": {
+              "text": "Overwatch 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-mario-kart",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "mario-kart-8-deluxe",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/mario-kart-8-deluxe.webp",
+      "rawDropAs": "raw-quiz-images/easy/mario-kart-8-deluxe.png",
+      "captureHint": "Гонка с предметами, знакомый трек Mario Kart.",
+      "metadata": {
+        "game": "Mario Kart 8 Deluxe",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Mario Kart 8 Deluxe"
+            },
+            "en": {
+              "text": "Mario Kart 8 Deluxe"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Crash Team Racing"
+            },
+            "en": {
+              "text": "Crash Team Racing"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sonic & All-Stars Racing"
+            },
+            "en": {
+              "text": "Sonic & All-Stars Racing"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "TrackMania"
+            },
+            "en": {
+              "text": "TrackMania"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-portal",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "portal",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/portal.webp",
+      "rawDropAs": "raw-quiz-images/easy/portal.png",
+      "captureHint": "Оранжево-синие порталы, тестовая камера Aperture.",
+      "metadata": {
+        "game": "Portal",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Portal"
+            },
+            "en": {
+              "text": "Portal"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Portal 2"
+            },
+            "en": {
+              "text": "Portal 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Talos Principle"
+            },
+            "en": {
+              "text": "The Talos Principle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Q.U.B.E."
+            },
+            "en": {
+              "text": "Q.U.B.E."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-skyrim",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "skyrim",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/skyrim.webp",
+      "rawDropAs": "raw-quiz-images/easy/skyrim.png",
+      "captureHint": "Горы, дракон или данж со знаменем Империи/Штормплащей.",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Elder Scrolls V: Skyrim"
+            },
+            "en": {
+              "text": "The Elder Scrolls V: Skyrim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Witcher 3"
+            },
+            "en": {
+              "text": "The Witcher 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dragon Age: Inquisition"
+            },
+            "en": {
+              "text": "Dragon Age: Inquisition"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring"
+            },
+            "en": {
+              "text": "Elden Ring"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-gow2018",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "god-of-war-2018",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/god-of-war-2018.webp",
+      "rawDropAs": "raw-quiz-images/easy/god-of-war-2018.png",
+      "captureHint": "Кратос + Левиафан / сын Атрей, скандинавский сеттинг.",
+      "metadata": {
+        "game": "God of War (2018)",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "God of War (2018)"
+            },
+            "en": {
+              "text": "God of War (2018)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "God of War III"
+            },
+            "en": {
+              "text": "God of War III"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Devil May Cry 5"
+            },
+            "en": {
+              "text": "Devil May Cry 5"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Darksiders"
+            },
+            "en": {
+              "text": "Darksiders"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-spiderman",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "marvels-spider-man",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/marvels-spider-man.webp",
+      "rawDropAs": "raw-quiz-images/easy/marvels-spider-man.png",
+      "captureHint": "Нью-Йорк, веб-свинг, костюм Человека-паука (Insomniac).",
+      "metadata": {
+        "game": "Marvel’s Spider-Man",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Marvel’s Spider-Man"
+            },
+            "en": {
+              "text": "Marvel’s Spider-Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Spider-Man 2 (PS2)"
+            },
+            "en": {
+              "text": "Spider-Man 2 (PS2)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Batman: Arkham Knight"
+            },
+            "en": {
+              "text": "Batman: Arkham Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Prototype"
+            },
+            "en": {
+              "text": "Prototype"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-halo",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "halo-combat-evolved",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/halo-combat-evolved.webp",
+      "rawDropAs": "raw-quiz-images/easy/halo-combat-evolved.png",
+      "captureHint": "Master Chief, кольцо Halo / Covenant. Классический Xbox-кадр.",
+      "metadata": {
+        "game": "Halo: Combat Evolved",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Halo: Combat Evolved"
+            },
+            "en": {
+              "text": "Halo: Combat Evolved"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Destiny 2"
+            },
+            "en": {
+              "text": "Destiny 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Doom (2016)"
+            },
+            "en": {
+              "text": "Doom (2016)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gears of War"
+            },
+            "en": {
+              "text": "Gears of War"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-crash",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "crash-bandicoot",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/crash-bandicoot.webp",
+      "rawDropAs": "raw-quiz-images/easy/crash-bandicoot.png",
+      "captureHint": "Оранжевый бандикут, ящики Wumpa, классический платформер.",
+      "metadata": {
+        "game": "Crash Bandicoot",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Crash Bandicoot"
+            },
+            "en": {
+              "text": "Crash Bandicoot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Spyro the Dragon"
+            },
+            "en": {
+              "text": "Spyro the Dragon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Jak and Daxter"
+            },
+            "en": {
+              "text": "Jak and Daxter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ratchet & Clank"
+            },
+            "en": {
+              "text": "Ratchet & Clank"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-sf2",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "street-fighter-ii",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/street-fighter-ii.webp",
+      "rawDropAs": "raw-quiz-images/easy/street-fighter-ii.png",
+      "captureHint": "2D-файтинг: Ryu/Ken, хадокен, аркадный UI.",
+      "metadata": {
+        "game": "Street Fighter II",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Street Fighter II"
+            },
+            "en": {
+              "text": "Street Fighter II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tekken 3"
+            },
+            "en": {
+              "text": "Tekken 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mortal Kombat II"
+            },
+            "en": {
+              "text": "Mortal Kombat II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Killer Instinct"
+            },
+            "en": {
+              "text": "Killer Instinct"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-undertale",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "undertale",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/undertale.webp",
+      "rawDropAs": "raw-quiz-images/easy/undertale.png",
+      "captureHint": "Bullet-hell бой / пиксельный коридор с сердцем-SOUL.",
+      "metadata": {
+        "game": "Undertale",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Undertale"
+            },
+            "en": {
+              "text": "Undertale"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deltarune"
+            },
+            "en": {
+              "text": "Deltarune"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "EarthBound"
+            },
+            "en": {
+              "text": "EarthBound"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Omori"
+            },
+            "en": {
+              "text": "Omori"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-terraria",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "terraria",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/terraria.webp",
+      "rawDropAs": "raw-quiz-images/easy/terraria.png",
+      "captureHint": "2D-песочница: копание, босс или база.",
+      "metadata": {
+        "game": "Terraria",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Terraria"
+            },
+            "en": {
+              "text": "Terraria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Minecraft"
+            },
+            "en": {
+              "text": "Minecraft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Starbound"
+            },
+            "en": {
+              "text": "Starbound"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Core Keeper"
+            },
+            "en": {
+              "text": "Core Keeper"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-genshin",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "genshin-impact",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/genshin-impact.webp",
+      "rawDropAs": "raw-quiz-images/easy/genshin-impact.png",
+      "captureHint": "Аниме-открытый мир, элементальный бой / Тейват.",
+      "metadata": {
+        "game": "Genshin Impact",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Genshin Impact"
+            },
+            "en": {
+              "text": "Genshin Impact"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Honkai: Star Rail"
+            },
+            "en": {
+              "text": "Honkai: Star Rail"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Zelda: Breath of the Wild"
+            },
+            "en": {
+              "text": "Zelda: Breath of the Wild"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tears of the Kingdom"
+            },
+            "en": {
+              "text": "Tears of the Kingdom"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-ea-fc",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ea-sports-fc",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ea-sports-fc.webp",
+      "rawDropAs": "raw-quiz-images/easy/ea-sports-fc.png",
+      "captureHint": "Футбольный матч, узнаваемый стадион/форма EA FC / FIFA-наследник.",
+      "metadata": {
+        "game": "EA Sports FC",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "EA Sports FC"
+            },
+            "en": {
+              "text": "EA Sports FC"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "eFootball"
+            },
+            "en": {
+              "text": "eFootball"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NBA 2K"
+            },
+            "en": {
+              "text": "NBA 2K"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Rocket League"
+            },
+            "en": {
+              "text": "Rocket League"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-easy-ac-odyssey",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "assassins-creed-odyssey",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/assassins-creed-odyssey.webp",
+      "rawDropAs": "raw-quiz-images/easy/assassins-creed-odyssey.png",
+      "captureHint": "Древняя Греция, корабль / спартанский сеттинг Odyssey.",
+      "metadata": {
+        "game": "Assassin’s Creed Odyssey",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Assassin’s Creed Odyssey"
+            },
+            "en": {
+              "text": "Assassin’s Creed Odyssey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin’s Creed Valhalla"
+            },
+            "en": {
+              "text": "Assassin’s Creed Valhalla"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "God of War (2018)"
+            },
+            "en": {
+              "text": "God of War (2018)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Immortals Fenyx Rising"
+            },
+            "en": {
+              "text": "Immortals Fenyx Rising"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-tlou",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "the-last-of-us",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/the-last-of-us.webp",
+      "rawDropAs": "raw-quiz-images/medium/the-last-of-us.png",
+      "captureHint": "Джоэл/Элли, заросший пост-апок, кликеры или патруль.",
+      "metadata": {
+        "game": "The Last of Us",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Last of Us"
+            },
+            "en": {
+              "text": "The Last of Us"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Last of Us Part II"
+            },
+            "en": {
+              "text": "The Last of Us Part II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Days Gone"
+            },
+            "en": {
+              "text": "Days Gone"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Resident Evil 2"
+            },
+            "en": {
+              "text": "Resident Evil 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-uncharted4",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "uncharted-4",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/uncharted-4.webp",
+      "rawDropAs": "raw-quiz-images/medium/uncharted-4.png",
+      "captureHint": "Нейтан Дрейк, скалолазание / джунгли / особняк.",
+      "metadata": {
+        "game": "Uncharted 4",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Uncharted 4"
+            },
+            "en": {
+              "text": "Uncharted 4"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Uncharted 2"
+            },
+            "en": {
+              "text": "Uncharted 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tomb Raider (2013)"
+            },
+            "en": {
+              "text": "Tomb Raider (2013)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Indiana Jones and the Great Circle"
+            },
+            "en": {
+              "text": "Indiana Jones and the Great Circle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-tsushima",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "ghost-of-tsushima",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/ghost-of-tsushima.webp",
+      "rawDropAs": "raw-quiz-images/medium/ghost-of-tsushima.png",
+      "captureHint": "Самурай на Цусиме, красные клёны / монгольский лагерь.",
+      "metadata": {
+        "game": "Ghost of Tsushima",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ghost of Tsushima"
+            },
+            "en": {
+              "text": "Ghost of Tsushima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sekiro: Shadows Die Twice"
+            },
+            "en": {
+              "text": "Sekiro: Shadows Die Twice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nioh 2"
+            },
+            "en": {
+              "text": "Nioh 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "For Honor"
+            },
+            "en": {
+              "text": "For Honor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-sekiro",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sekiro",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sekiro.webp",
+      "rawDropAs": "raw-quiz-images/medium/sekiro.png",
+      "captureHint": "Синоби с протезом, Асина, парирование искр.",
+      "metadata": {
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sekiro: Shadows Die Twice"
+            },
+            "en": {
+              "text": "Sekiro: Shadows Die Twice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dark Souls III"
+            },
+            "en": {
+              "text": "Dark Souls III"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nioh 2"
+            },
+            "en": {
+              "text": "Nioh 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ghost of Tsushima"
+            },
+            "en": {
+              "text": "Ghost of Tsushima"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-bloodborne",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bloodborne",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bloodborne.webp",
+      "rawDropAs": "raw-quiz-images/medium/bloodborne.png",
+      "captureHint": "Ярнам, готика, охотник с пилой/ружьём.",
+      "metadata": {
+        "game": "Bloodborne",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Bloodborne"
+            },
+            "en": {
+              "text": "Bloodborne"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dark Souls"
+            },
+            "en": {
+              "text": "Dark Souls"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring"
+            },
+            "en": {
+              "text": "Elden Ring"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Lies of P"
+            },
+            "en": {
+              "text": "Lies of P"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-bg3",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "baldurs-gate-3",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/baldurs-gate-3.webp",
+      "rawDropAs": "raw-quiz-images/medium/baldurs-gate-3.png",
+      "captureHint": "Изометрия / тактический бой D&D, лагерь компаньонов.",
+      "metadata": {
+        "game": "Baldur’s Gate 3",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Baldur’s Gate 3"
+            },
+            "en": {
+              "text": "Baldur’s Gate 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Divinity: Original Sin 2"
+            },
+            "en": {
+              "text": "Divinity: Original Sin 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pathfinder: Wrath of the Righteous"
+            },
+            "en": {
+              "text": "Pathfinder: Wrath of the Righteous"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dragon Age: Origins"
+            },
+            "en": {
+              "text": "Dragon Age: Origins"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-persona5",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "persona-5",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/persona-5.webp",
+      "rawDropAs": "raw-quiz-images/medium/persona-5.png",
+      "captureHint": "Стиль Phantom Thieves, дворец / UI меню красно-чёрный.",
+      "metadata": {
+        "game": "Persona 5",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Persona 5"
+            },
+            "en": {
+              "text": "Persona 5"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Persona 4 Golden"
+            },
+            "en": {
+              "text": "Persona 4 Golden"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Shin Megami Tensei V"
+            },
+            "en": {
+              "text": "Shin Megami Tensei V"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metaphor: ReFantazio"
+            },
+            "en": {
+              "text": "Metaphor: ReFantazio"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-cyberpunk",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "cyberpunk-2077",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/cyberpunk-2077.webp",
+      "rawDropAs": "raw-quiz-images/medium/cyberpunk-2077.png",
+      "captureHint": "Найт-Сити, неон, Ви от первого/третьего лица.",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Cyberpunk 2077"
+            },
+            "en": {
+              "text": "Cyberpunk 2077"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deus Ex: Mankind Divided"
+            },
+            "en": {
+              "text": "Deus Ex: Mankind Divided"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Watch Dogs: Legion"
+            },
+            "en": {
+              "text": "Watch Dogs: Legion"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "GTA V"
+            },
+            "en": {
+              "text": "GTA V"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-rdr2",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "red-dead-redemption-2",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/red-dead-redemption-2.webp",
+      "rawDropAs": "raw-quiz-images/medium/red-dead-redemption-2.png",
+      "captureHint": "Дикий Запад, лагерь Датча / лошадь / салун.",
+      "metadata": {
+        "game": "Red Dead Redemption 2",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Red Dead Redemption 2"
+            },
+            "en": {
+              "text": "Red Dead Redemption 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Red Dead Redemption"
+            },
+            "en": {
+              "text": "Red Dead Redemption"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gun"
+            },
+            "en": {
+              "text": "Gun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Call of Juarez"
+            },
+            "en": {
+              "text": "Call of Juarez"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-horizon",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "horizon-zero-dawn",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/horizon-zero-dawn.webp",
+      "rawDropAs": "raw-quiz-images/medium/horizon-zero-dawn.png",
+      "captureHint": "Элой и робот-динозавр, постапок-племена.",
+      "metadata": {
+        "game": "Horizon Zero Dawn",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Horizon Zero Dawn"
+            },
+            "en": {
+              "text": "Horizon Zero Dawn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Horizon Forbidden West"
+            },
+            "en": {
+              "text": "Horizon Forbidden West"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Legend of Zelda: Breath of the Wild"
+            },
+            "en": {
+              "text": "The Legend of Zelda: Breath of the Wild"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Immortals Fenyx Rising"
+            },
+            "en": {
+              "text": "Immortals Fenyx Rising"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-death-stranding",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "death-stranding",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/death-stranding.webp",
+      "rawDropAs": "raw-quiz-images/medium/death-stranding.png",
+      "captureHint": "Сэм с грузом, BT / радужные эффекты, пустой пейзаж.",
+      "metadata": {
+        "game": "Death Stranding",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Death Stranding"
+            },
+            "en": {
+              "text": "Death Stranding"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Death Stranding 2"
+            },
+            "en": {
+              "text": "Death Stranding 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metal Gear Solid V"
+            },
+            "en": {
+              "text": "Metal Gear Solid V"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Firewatch"
+            },
+            "en": {
+              "text": "Firewatch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-hollow-knight",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hollow-knight",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hollow-knight.webp",
+      "rawDropAs": "raw-quiz-images/medium/hollow-knight.png",
+      "captureHint": "Халлоунест, рыцарь с гвоздём, мрачная 2D-метроидвания.",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight"
+            },
+            "en": {
+              "text": "Hollow Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Blasphemous"
+            },
+            "en": {
+              "text": "Blasphemous"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ori and the Blind Forest"
+            },
+            "en": {
+              "text": "Ori and the Blind Forest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dead Cells"
+            },
+            "en": {
+              "text": "Dead Cells"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-hades",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hades",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hades.webp",
+      "rawDropAs": "raw-quiz-images/medium/hades.png",
+      "captureHint": "Загреус в Подземном мире, изометрия Supergiant, бог Олимпа.",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hades II"
+            },
+            "en": {
+              "text": "Hades II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Curse of the Dead Gods"
+            },
+            "en": {
+              "text": "Curse of the Dead Gods"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dead Cells"
+            },
+            "en": {
+              "text": "Dead Cells"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-celeste",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "celeste",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/celeste.webp",
+      "rawDropAs": "raw-quiz-images/medium/celeste.png",
+      "captureHint": "Мадлен на горе, пиксельный платформинг, dash.",
+      "metadata": {
+        "game": "Celeste",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Celeste"
+            },
+            "en": {
+              "text": "Celeste"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Meat Boy"
+            },
+            "en": {
+              "text": "Super Meat Boy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight"
+            },
+            "en": {
+              "text": "Hollow Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Cuphead"
+            },
+            "en": {
+              "text": "Cuphead"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-bioshock",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bioshock",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bioshock.webp",
+      "rawDropAs": "raw-quiz-images/medium/bioshock.png",
+      "captureHint": "Восторг, Art Deco под водой, плазмиды / Big Daddy.",
+      "metadata": {
+        "game": "BioShock",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "BioShock"
+            },
+            "en": {
+              "text": "BioShock"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BioShock Infinite"
+            },
+            "en": {
+              "text": "BioShock Infinite"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "System Shock 2"
+            },
+            "en": {
+              "text": "System Shock 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Prey (2017)"
+            },
+            "en": {
+              "text": "Prey (2017)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-me2",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "mass-effect-2",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/mass-effect-2.webp",
+      "rawDropAs": "raw-quiz-images/medium/mass-effect-2.png",
+      "captureHint": "Шепард на Нормандии / лояльностный миссия, sci-fi RPG BioWare.",
+      "metadata": {
+        "game": "Mass Effect 2",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Mass Effect 2"
+            },
+            "en": {
+              "text": "Mass Effect 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mass Effect"
+            },
+            "en": {
+              "text": "Mass Effect"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mass Effect 3"
+            },
+            "en": {
+              "text": "Mass Effect 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dragon Age II"
+            },
+            "en": {
+              "text": "Dragon Age II"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-dark-souls",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dark-souls",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dark-souls.webp",
+      "rawDropAs": "raw-quiz-images/medium/dark-souls.png",
+      "captureHint": "Лордран, костёр, рыцарь в тяжёлой броне — не Elden Ring.",
+      "metadata": {
+        "game": "Dark Souls",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dark Souls"
+            },
+            "en": {
+              "text": "Dark Souls"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dark Souls III"
+            },
+            "en": {
+              "text": "Dark Souls III"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring"
+            },
+            "en": {
+              "text": "Elden Ring"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Demon’s Souls"
+            },
+            "en": {
+              "text": "Demon’s Souls"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-re4",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "resident-evil-4",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/resident-evil-4.webp",
+      "rawDropAs": "raw-quiz-images/medium/resident-evil-4.png",
+      "captureHint": "Леон в деревне / цепная пила / классический или Remake — один стиль.",
+      "metadata": {
+        "game": "Resident Evil 4",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Resident Evil 4"
+            },
+            "en": {
+              "text": "Resident Evil 4"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Resident Evil 2"
+            },
+            "en": {
+              "text": "Resident Evil 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dead Space"
+            },
+            "en": {
+              "text": "Dead Space"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Evil Within"
+            },
+            "en": {
+              "text": "The Evil Within"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-sh2",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "silent-hill-2",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/silent-hill-2.webp",
+      "rawDropAs": "raw-quiz-images/medium/silent-hill-2.png",
+      "captureHint": "Туманный город, Джеймс, Пётр / Абстрактный папочка — атмосфера SH2.",
+      "metadata": {
+        "game": "Silent Hill 2",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Silent Hill 2"
+            },
+            "en": {
+              "text": "Silent Hill 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Silent Hill 3"
+            },
+            "en": {
+              "text": "Silent Hill 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Resident Evil 7"
+            },
+            "en": {
+              "text": "Resident Evil 7"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deadly Premonition"
+            },
+            "en": {
+              "text": "Deadly Premonition"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-dishonored",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dishonored",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dishonored.webp",
+      "rawDropAs": "raw-quiz-images/medium/dishonored.png",
+      "captureHint": "Данволл, Корво, китовой жир / суперспособности Чужого.",
+      "metadata": {
+        "game": "Dishonored",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dishonored"
+            },
+            "en": {
+              "text": "Dishonored"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dishonored 2"
+            },
+            "en": {
+              "text": "Dishonored 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Thief (2014)"
+            },
+            "en": {
+              "text": "Thief (2014)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Prey (2017)"
+            },
+            "en": {
+              "text": "Prey (2017)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-control",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "control",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/control.webp",
+      "rawDropAs": "raw-quiz-images/medium/control.png",
+      "captureHint": "Древнейший дом, Джесси с Service Weapon, бетонный брутализм.",
+      "metadata": {
+        "game": "Control",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Control"
+            },
+            "en": {
+              "text": "Control"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Alan Wake II"
+            },
+            "en": {
+              "text": "Alan Wake II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Quantum Break"
+            },
+            "en": {
+              "text": "Quantum Break"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Evil Within 2"
+            },
+            "en": {
+              "text": "The Evil Within 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-outer-wilds",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "outer-wilds",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/outer-wilds.webp",
+      "rawDropAs": "raw-quiz-images/medium/outer-wilds.png",
+      "captureHint": "Солнечная система в миниатюре, деревянный корабль, петля.",
+      "metadata": {
+        "game": "Outer Wilds",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Outer Wilds"
+            },
+            "en": {
+              "text": "Outer Wilds"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "No Man’s Sky"
+            },
+            "en": {
+              "text": "No Man’s Sky"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Kerbal Space Program"
+            },
+            "en": {
+              "text": "Kerbal Space Program"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Astroneer"
+            },
+            "en": {
+              "text": "Astroneer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-disco",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "disco-elysium",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/disco-elysium.webp",
+      "rawDropAs": "raw-quiz-images/medium/disco-elysium.png",
+      "captureHint": "Изометрия Мартиназа, навыки-диалоги, детектив в пальто.",
+      "metadata": {
+        "game": "Disco Elysium",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Disco Elysium"
+            },
+            "en": {
+              "text": "Disco Elysium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Baldur’s Gate 3"
+            },
+            "en": {
+              "text": "Baldur’s Gate 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Planescape: Torment"
+            },
+            "en": {
+              "text": "Planescape: Torment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pentiment"
+            },
+            "en": {
+              "text": "Pentiment"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-nier",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "nier-automata",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/nier-automata.webp",
+      "rawDropAs": "raw-quiz-images/medium/nier-automata.png",
+      "captureHint": "2B в бою, пустоши / фабрика андроидов.",
+      "metadata": {
+        "game": "NieR:Automata",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "NieR:Automata"
+            },
+            "en": {
+              "text": "NieR:Automata"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NieR Replicant"
+            },
+            "en": {
+              "text": "NieR Replicant"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bayonetta"
+            },
+            "en": {
+              "text": "Bayonetta"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metal Gear Rising"
+            },
+            "en": {
+              "text": "Metal Gear Rising"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-helldivers2",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "helldivers-2",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/helldivers-2.webp",
+      "rawDropAs": "raw-quiz-images/medium/helldivers-2.png",
+      "captureHint": "Кооп-шутер сверху, стратагемы, управляемая демократия.",
+      "metadata": {
+        "game": "Helldivers 2",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Helldivers 2"
+            },
+            "en": {
+              "text": "Helldivers 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deep Rock Galactic"
+            },
+            "en": {
+              "text": "Deep Rock Galactic"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Left 4 Dead 2"
+            },
+            "en": {
+              "text": "Left 4 Dead 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Starship Troopers: Extermination"
+            },
+            "en": {
+              "text": "Starship Troopers: Extermination"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-subnautica",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "subnautica",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/subnautica.webp",
+      "rawDropAs": "raw-quiz-images/medium/subnautica.png",
+      "captureHint": "Подводный чужой мир, база / циклоп / левиафан вдалеке.",
+      "metadata": {
+        "game": "Subnautica",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Subnautica"
+            },
+            "en": {
+              "text": "Subnautica"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Subnautica: Below Zero"
+            },
+            "en": {
+              "text": "Subnautica: Below Zero"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "ABZU"
+            },
+            "en": {
+              "text": "ABZU"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Outer Wilds"
+            },
+            "en": {
+              "text": "Outer Wilds"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-nms",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "no-mans-sky",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/no-mans-sky.webp",
+      "rawDropAs": "raw-quiz-images/medium/no-mans-sky.png",
+      "captureHint": "Процедурная планета, корабль, космос Hello Games.",
+      "metadata": {
+        "game": "No Man’s Sky",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "No Man’s Sky"
+            },
+            "en": {
+              "text": "No Man’s Sky"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Starfield"
+            },
+            "en": {
+              "text": "Starfield"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elite Dangerous"
+            },
+            "en": {
+              "text": "Elite Dangerous"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Astroneer"
+            },
+            "en": {
+              "text": "Astroneer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-itt",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "it-takes-two",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/it-takes-two.webp",
+      "rawDropAs": "raw-quiz-images/medium/it-takes-two.png",
+      "captureHint": "Кооп-платформер: куклы Cody/May, креативные уровни Hazelight.",
+      "metadata": {
+        "game": "It Takes Two",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "It Takes Two"
+            },
+            "en": {
+              "text": "It Takes Two"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "A Way Out"
+            },
+            "en": {
+              "text": "A Way Out"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Brothers: A Tale of Two Sons"
+            },
+            "en": {
+              "text": "Brothers: A Tale of Two Sons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Unravel Two"
+            },
+            "en": {
+              "text": "Unravel Two"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-yakuza0",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "yakuza-0",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/yakuza-0.webp",
+      "rawDropAs": "raw-quiz-images/medium/yakuza-0.png",
+      "captureHint": "Камуротё 80-х, Кирю/Маджима, драка на улице / клуб.",
+      "metadata": {
+        "game": "Yakuza 0",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Yakuza 0"
+            },
+            "en": {
+              "text": "Yakuza 0"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Yakuza Kiwami"
+            },
+            "en": {
+              "text": "Yakuza Kiwami"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sleeping Dogs"
+            },
+            "en": {
+              "text": "Sleeping Dogs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Judgment"
+            },
+            "en": {
+              "text": "Judgment"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-med-mhw",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "monster-hunter-world",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/monster-hunter-world.webp",
+      "rawDropAs": "raw-quiz-images/medium/monster-hunter-world.png",
+      "captureHint": "Охота на крупного монстра, лагерь Астра / оружие Capcom.",
+      "metadata": {
+        "game": "Monster Hunter: World",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Monster Hunter: World"
+            },
+            "en": {
+              "text": "Monster Hunter: World"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Monster Hunter Rise"
+            },
+            "en": {
+              "text": "Monster Hunter Rise"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dauntless"
+            },
+            "en": {
+              "text": "Dauntless"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Witcher 3"
+            },
+            "en": {
+              "text": "The Witcher 3"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-ico",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ico",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ico.webp",
+      "rawDropAs": "raw-quiz-images/hard/ico.png",
+      "captureHint": "Мальчик с рогами + Йорда в замке Team Ico. Минимальный HUD.",
+      "metadata": {
+        "game": "Ico",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ico"
+            },
+            "en": {
+              "text": "Ico"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Shadow of the Colossus"
+            },
+            "en": {
+              "text": "Shadow of the Colossus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Last Guardian"
+            },
+            "en": {
+              "text": "The Last Guardian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Journey"
+            },
+            "en": {
+              "text": "Journey"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-sotc",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "shadow-of-the-colossus",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/shadow-of-the-colossus.webp",
+      "rawDropAs": "raw-quiz-images/hard/shadow-of-the-colossus.png",
+      "captureHint": "Ванд + колосс в пустоши. Не путать с Ico.",
+      "metadata": {
+        "game": "Shadow of the Colossus",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Shadow of the Colossus"
+            },
+            "en": {
+              "text": "Shadow of the Colossus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ico"
+            },
+            "en": {
+              "text": "Ico"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Last Guardian"
+            },
+            "en": {
+              "text": "The Last Guardian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Death’s Door"
+            },
+            "en": {
+              "text": "Death’s Door"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-journey",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "journey",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/journey.webp",
+      "rawDropAs": "raw-quiz-images/hard/journey.png",
+      "captureHint": "Красный плащ в пустыне thatgamecompany, без лиц.",
+      "metadata": {
+        "game": "Journey",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Journey"
+            },
+            "en": {
+              "text": "Journey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "ABZU"
+            },
+            "en": {
+              "text": "ABZU"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sky: Children of the Light"
+            },
+            "en": {
+              "text": "Sky: Children of the Light"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gris"
+            },
+            "en": {
+              "text": "Gris"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-rez",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "rez",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/rez.webp",
+      "rawDropAs": "raw-quiz-images/hard/rez.png",
+      "captureHint": "Синестетический rail-shooter, wireframe/электронный стиль Mizuguchi.",
+      "metadata": {
+        "game": "Rez",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Rez"
+            },
+            "en": {
+              "text": "Rez"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Child of Eden"
+            },
+            "en": {
+              "text": "Child of Eden"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tempest"
+            },
+            "en": {
+              "text": "Tempest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Geometry Wars"
+            },
+            "en": {
+              "text": "Geometry Wars"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-jsr",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "jet-set-radio",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/jet-set-radio.webp",
+      "rawDropAs": "raw-quiz-images/hard/jet-set-radio.png",
+      "captureHint": "Селевая графика Dreamcast, ролики, граффити Токио-то.",
+      "metadata": {
+        "game": "Jet Set Radio",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Jet Set Radio"
+            },
+            "en": {
+              "text": "Jet Set Radio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Jet Set Radio Future"
+            },
+            "en": {
+              "text": "Jet Set Radio Future"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bomb Rush Cyberfunk"
+            },
+            "en": {
+              "text": "Bomb Rush Cyberfunk"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Aggressive Inline"
+            },
+            "en": {
+              "text": "Aggressive Inline"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-shenmue",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "shenmue",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/shenmue.webp",
+      "rawDropAs": "raw-quiz-images/hard/shenmue.png",
+      "captureHint": "Иокойо / Добуита, Рё, капсульные автоматы Dreamcast-эры.",
+      "metadata": {
+        "game": "Shenmue",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Shenmue"
+            },
+            "en": {
+              "text": "Shenmue"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Shenmue II"
+            },
+            "en": {
+              "text": "Shenmue II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Yakuza 0"
+            },
+            "en": {
+              "text": "Yakuza 0"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Street Fighter III"
+            },
+            "en": {
+              "text": "Street Fighter III"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-grim",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "grim-fandango",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/grim-fandango.webp",
+      "rawDropAs": "raw-quiz-images/hard/grim-fandango.png",
+      "captureHint": "Manny Calavera, Day of the Dead noir LucasArts.",
+      "metadata": {
+        "game": "Grim Fandango",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Grim Fandango"
+            },
+            "en": {
+              "text": "Grim Fandango"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Day of the Tentacle"
+            },
+            "en": {
+              "text": "Day of the Tentacle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Broken Sword"
+            },
+            "en": {
+              "text": "Broken Sword"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Discworld"
+            },
+            "en": {
+              "text": "Discworld"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-myst",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "myst",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/myst.webp",
+      "rawDropAs": "raw-quiz-images/hard/myst.png",
+      "captureHint": "Остров Myst, докоперные pre-rendered загадки Cyan.",
+      "metadata": {
+        "game": "Myst",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Myst"
+            },
+            "en": {
+              "text": "Myst"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Riven"
+            },
+            "en": {
+              "text": "Riven"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Witness"
+            },
+            "en": {
+              "text": "The Witness"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Obduction"
+            },
+            "en": {
+              "text": "Obduction"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-ss2",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "system-shock-2",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/system-shock-2.webp",
+      "rawDropAs": "raw-quiz-images/hard/system-shock-2.png",
+      "captureHint": "Von Braun, SHODAN, импланты / хоррор-Immersive sim.",
+      "metadata": {
+        "game": "System Shock 2",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "System Shock 2"
+            },
+            "en": {
+              "text": "System Shock 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "System Shock"
+            },
+            "en": {
+              "text": "System Shock"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BioShock"
+            },
+            "en": {
+              "text": "BioShock"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Prey (2017)"
+            },
+            "en": {
+              "text": "Prey (2017)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-thief",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "thief-the-dark-project",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/thief-the-dark-project.webp",
+      "rawDropAs": "raw-quiz-images/hard/thief-the-dark-project.png",
+      "captureHint": "Гарретт, тени Looking Glass, лук / water arrow.",
+      "metadata": {
+        "game": "Thief: The Dark Project",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Thief: The Dark Project"
+            },
+            "en": {
+              "text": "Thief: The Dark Project"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Thief II"
+            },
+            "en": {
+              "text": "Thief II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Thief (2014)"
+            },
+            "en": {
+              "text": "Thief (2014)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dishonored"
+            },
+            "en": {
+              "text": "Dishonored"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-deus-ex",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "deus-ex",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/deus-ex.webp",
+      "rawDropAs": "raw-quiz-images/hard/deus-ex.png",
+      "captureHint": "JC Denton, очки, 2000 immersive sim (не Human Revolution).",
+      "metadata": {
+        "game": "Deus Ex",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Deus Ex"
+            },
+            "en": {
+              "text": "Deus Ex"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deus Ex: Human Revolution"
+            },
+            "en": {
+              "text": "Deus Ex: Human Revolution"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "System Shock 2"
+            },
+            "en": {
+              "text": "System Shock 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Vampire: The Masquerade – Bloodlines"
+            },
+            "en": {
+              "text": "Vampire: The Masquerade – Bloodlines"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-pst",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "planescape-torment",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/planescape-torment.webp",
+      "rawDropAs": "raw-quiz-images/hard/planescape-torment.png",
+      "captureHint": "Безымянный, Сигил, изометрия Infinity Engine / планы.",
+      "metadata": {
+        "game": "Planescape: Torment",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Planescape: Torment"
+            },
+            "en": {
+              "text": "Planescape: Torment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Baldur’s Gate"
+            },
+            "en": {
+              "text": "Baldur’s Gate"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Icewind Dale"
+            },
+            "en": {
+              "text": "Icewind Dale"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Torment: Tides of Numenera"
+            },
+            "en": {
+              "text": "Torment: Tides of Numenera"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-earthbound",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "earthbound",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/earthbound.webp",
+      "rawDropAs": "raw-quiz-images/hard/earthbound.png",
+      "captureHint": "Mother 2 / EB: современный городок, NPC-абсурд, SMB-стиль боя.",
+      "metadata": {
+        "game": "Earthbound",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Earthbound"
+            },
+            "en": {
+              "text": "Earthbound"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mother 3"
+            },
+            "en": {
+              "text": "Mother 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Undertale"
+            },
+            "en": {
+              "text": "Undertale"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chrono Trigger"
+            },
+            "en": {
+              "text": "Chrono Trigger"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-chrono",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "chrono-trigger",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/chrono-trigger.webp",
+      "rawDropAs": "raw-quiz-images/hard/chrono-trigger.png",
+      "captureHint": "SNES Mode-7 / ATB бой, Кроно, Эпохи.",
+      "metadata": {
+        "game": "Chrono Trigger",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Chrono Trigger"
+            },
+            "en": {
+              "text": "Chrono Trigger"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chrono Cross"
+            },
+            "en": {
+              "text": "Chrono Cross"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Final Fantasy VI"
+            },
+            "en": {
+              "text": "Final Fantasy VI"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Secret of Mana"
+            },
+            "en": {
+              "text": "Secret of Mana"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-sotn",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "castlevania-symphony-of-the-night",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/castlevania-symphony-of-the-night.webp",
+      "rawDropAs": "raw-quiz-images/hard/castlevania-symphony-of-the-night.png",
+      "captureHint": "Алукард, замок Бельмонтов, 2D-метроидвания SotN.",
+      "metadata": {
+        "game": "Castlevania: Symphony of the Night",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Castlevania: Symphony of the Night"
+            },
+            "en": {
+              "text": "Castlevania: Symphony of the Night"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Castlevania: Aria of Sorrow"
+            },
+            "en": {
+              "text": "Castlevania: Aria of Sorrow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bloodstained: Ritual of the Night"
+            },
+            "en": {
+              "text": "Bloodstained: Ritual of the Night"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight"
+            },
+            "en": {
+              "text": "Hollow Knight"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-killer7",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "killer7",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/killer7.webp",
+      "rawDropAs": "raw-quiz-images/hard/killer7.png",
+      "captureHint": "Стилизованный cel-shade Suda51, on-rails шутер/адвенчура.",
+      "metadata": {
+        "game": "killer7",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "killer7"
+            },
+            "en": {
+              "text": "killer7"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "No More Heroes"
+            },
+            "en": {
+              "text": "No More Heroes"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Flower, Sun, and Rain"
+            },
+            "en": {
+              "text": "Flower, Sun, and Rain"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Silver Case"
+            },
+            "en": {
+              "text": "The Silver Case"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-psychonauts",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "psychonauts",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/psychonauts.webp",
+      "rawDropAs": "raw-quiz-images/hard/psychonauts.png",
+      "captureHint": "Разор в чужом мозге, Double Fine, лагерь Whispering Rock.",
+      "metadata": {
+        "game": "Psychonauts",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Psychonauts"
+            },
+            "en": {
+              "text": "Psychonauts"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Psychonauts 2"
+            },
+            "en": {
+              "text": "Psychonauts 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "A Hat in Time"
+            },
+            "en": {
+              "text": "A Hat in Time"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ratchet & Clank"
+            },
+            "en": {
+              "text": "Ratchet & Clank"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-okami",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "okami",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/okami.webp",
+      "rawDropAs": "raw-quiz-images/hard/okami.png",
+      "captureHint": "Белый волк Аматэрасу, кисть небожителей, sumi-e стиль.",
+      "metadata": {
+        "game": "Ōkami",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ōkami"
+            },
+            "en": {
+              "text": "Ōkami"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ōkamiden"
+            },
+            "en": {
+              "text": "Ōkamiden"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Legend of Zelda: Skyward Sword"
+            },
+            "en": {
+              "text": "The Legend of Zelda: Skyward Sword"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Kunai"
+            },
+            "en": {
+              "text": "Kunai"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-katamari",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "katamari-damacy",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/katamari-damacy.webp",
+      "rawDropAs": "raw-quiz-images/hard/katamari-damacy.png",
+      "captureHint": "Принц с катамари, клеит объекты, сюрреализм Takahashi.",
+      "metadata": {
+        "game": "Katamari Damacy",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Katamari Damacy"
+            },
+            "en": {
+              "text": "Katamari Damacy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "We Love Katamari"
+            },
+            "en": {
+              "text": "We Love Katamari"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Touch My Katamari"
+            },
+            "en": {
+              "text": "Touch My Katamari"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Donut County"
+            },
+            "en": {
+              "text": "Donut County"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-eternal-darkness",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "eternal-darkness",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/eternal-darkness.webp",
+      "rawDropAs": "raw-quiz-images/hard/eternal-darkness.png",
+      "captureHint": "Санити-эффекты GameCube, особняк / древние боги Silicon Knights.",
+      "metadata": {
+        "game": "Eternal Darkness",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Eternal Darkness"
+            },
+            "en": {
+              "text": "Eternal Darkness"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Call of Cthulhu: Dark Corners of the Earth"
+            },
+            "en": {
+              "text": "Call of Cthulhu: Dark Corners of the Earth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Alone in the Dark"
+            },
+            "en": {
+              "text": "Alone in the Dark"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Fatal Frame"
+            },
+            "en": {
+              "text": "Fatal Frame"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-goldeneye",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "goldeneye-007",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/goldeneye-007.webp",
+      "rawDropAs": "raw-quiz-images/hard/goldeneye-007.png",
+      "captureHint": "N64 FPS, Facility / Archives, классический сплит-скрин ок.",
+      "metadata": {
+        "game": "GoldenEye 007",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "GoldenEye 007"
+            },
+            "en": {
+              "text": "GoldenEye 007"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Perfect Dark"
+            },
+            "en": {
+              "text": "Perfect Dark"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "TimeSplitters 2"
+            },
+            "en": {
+              "text": "TimeSplitters 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "007: Nightfire"
+            },
+            "en": {
+              "text": "007: Nightfire"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-perfect-dark",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "perfect-dark",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/perfect-dark.webp",
+      "rawDropAs": "raw-quiz-images/hard/perfect-dark.png",
+      "captureHint": "Джоанна Дарк, Rare N64, sci-fi миссии (не GoldenEye).",
+      "metadata": {
+        "game": "Perfect Dark",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Perfect Dark"
+            },
+            "en": {
+              "text": "Perfect Dark"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "GoldenEye 007"
+            },
+            "en": {
+              "text": "GoldenEye 007"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Perfect Dark Zero"
+            },
+            "en": {
+              "text": "Perfect Dark Zero"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "TimeSplitters"
+            },
+            "en": {
+              "text": "TimeSplitters"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-ikaruga",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ikaruga",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ikaruga.webp",
+      "rawDropAs": "raw-quiz-images/hard/ikaruga.png",
+      "captureHint": "Чёрно-белый polarity shmup Treasure.",
+      "metadata": {
+        "game": "Ikaruga",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ikaruga"
+            },
+            "en": {
+              "text": "Ikaruga"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Radiant Silvergun"
+            },
+            "en": {
+              "text": "Radiant Silvergun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "DoDonPachi"
+            },
+            "en": {
+              "text": "DoDonPachi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gradius V"
+            },
+            "en": {
+              "text": "Gradius V"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-hotline",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hotline-miami",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hotline-miami.webp",
+      "rawDropAs": "raw-quiz-images/hard/hotline-miami.png",
+      "captureHint": "Top-down неон, маски, кровавый забег Dennaton.",
+      "metadata": {
+        "game": "Hotline Miami",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hotline Miami"
+            },
+            "en": {
+              "text": "Hotline Miami"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hotline Miami 2"
+            },
+            "en": {
+              "text": "Hotline Miami 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gungrave"
+            },
+            "en": {
+              "text": "Gungrave"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "My Friend Pedro"
+            },
+            "en": {
+              "text": "My Friend Pedro"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-papers-please",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "papers-please",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/papers-please.webp",
+      "rawDropAs": "raw-quiz-images/hard/papers-please.png",
+      "captureHint": "Будка погранца, паспорта Арстоцки, пиксельный UI Pope.",
+      "metadata": {
+        "game": "Papers, Please",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Papers, Please"
+            },
+            "en": {
+              "text": "Papers, Please"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Return of the Obra Dinn"
+            },
+            "en": {
+              "text": "Return of the Obra Dinn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Not Tonight"
+            },
+            "en": {
+              "text": "Not Tonight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Please, Touch The Artwork"
+            },
+            "en": {
+              "text": "Please, Touch The Artwork"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-obra-dinn",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "return-of-the-obra-dinn",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/return-of-the-obra-dinn.webp",
+      "rawDropAs": "raw-quiz-images/hard/return-of-the-obra-dinn.png",
+      "captureHint": "1-bit dithering, корабль, трупы, часы.",
+      "metadata": {
+        "game": "Return of the Obra Dinn",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Return of the Obra Dinn"
+            },
+            "en": {
+              "text": "Return of the Obra Dinn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Papers, Please"
+            },
+            "en": {
+              "text": "Papers, Please"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Witness"
+            },
+            "en": {
+              "text": "The Witness"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Her Story"
+            },
+            "en": {
+              "text": "Her Story"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-braid",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "braid",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/braid.webp",
+      "rawDropAs": "raw-quiz-images/hard/braid.png",
+      "captureHint": "Живописный платформер Blow, перемотка времени.",
+      "metadata": {
+        "game": "Braid",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Braid"
+            },
+            "en": {
+              "text": "Braid"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Witness"
+            },
+            "en": {
+              "text": "The Witness"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Limbo"
+            },
+            "en": {
+              "text": "Limbo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Fez"
+            },
+            "en": {
+              "text": "Fez"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-spelunky",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "spelunky",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/spelunky.webp",
+      "rawDropAs": "raw-quiz-images/hard/spelunky.png",
+      "captureHint": "Пещеры, хлыст, roguelike-платформер Mossmouth (classic или 2 — один стиль).",
+      "metadata": {
+        "game": "Spelunky",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Spelunky"
+            },
+            "en": {
+              "text": "Spelunky"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Spelunky 2"
+            },
+            "en": {
+              "text": "Spelunky 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dead Cells"
+            },
+            "en": {
+              "text": "Dead Cells"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Enter the Gungeon"
+            },
+            "en": {
+              "text": "Enter the Gungeon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-xenogears",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "xenogears",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/xenogears.webp",
+      "rawDropAs": "raw-quiz-images/hard/xenogears.png",
+      "captureHint": "PS1 JRPG, гиры / пустыня Авех, Square 1998.",
+      "metadata": {
+        "game": "Xenogears",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Xenogears"
+            },
+            "en": {
+              "text": "Xenogears"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Xenoblade Chronicles"
+            },
+            "en": {
+              "text": "Xenoblade Chronicles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Final Fantasy VII"
+            },
+            "en": {
+              "text": "Final Fantasy VII"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chrono Cross"
+            },
+            "en": {
+              "text": "Chrono Cross"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img-hard-vagrant",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "vagrant-story",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/vagrant-story.webp",
+      "rawDropAs": "raw-quiz-images/hard/vagrant-story.png",
+      "captureHint": "Эшли Райот, Lea Monde, тактические меню Square PS1.",
+      "metadata": {
+        "game": "Vagrant Story",
+        "topic": "image-guess",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Угадай игру по изображению."
+        },
+        "en": {
+          "text": "Guess the game from the image."
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Vagrant Story"
+            },
+            "en": {
+              "text": "Vagrant Story"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Final Fantasy Tactics"
+            },
+            "en": {
+              "text": "Final Fantasy Tactics"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Parasite Eve"
+            },
+            "en": {
+              "text": "Parasite Eve"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Legend of Mana"
+            },
+            "en": {
+              "text": "Legend of Mana"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
