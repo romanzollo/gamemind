@@ -42,15 +42,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Local working-memory / continuity docs (keep on disk, do not commit)
+# Chat session diary (rolling "Last Session" log) — keep local only
 docs/PROJECT_CONTEXT.md
-docs/ROADMAP.md
-docs/DECISIONS.md
-docs/TASTE_SKILL.md
-docs/TESTING.md
-# Local collaboration notes (keep on disk, do not commit)
-AGENTS.md
-CLAUDE.md
 
 # raw screenshot sources before WebP optimize (keep structure + README)
 /raw-quiz-images/**
