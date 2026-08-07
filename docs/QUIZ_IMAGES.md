@@ -202,6 +202,31 @@ npm run content:import-image-guess -- --target=prod
 
 3. Admin: filter **DRAFT** → review → **Publish** (quality gate).
 4. Commit/deploy WebP under `public/quiz-images/` so prod can serve them (`docs/DEPLOY.md`).
+   - **Aug 6 lesson:** DB rows alone are not enough. Until WebP are on Vercel, admin thumbs and quiz images 404.
+
+### Import status (Aug 6, 2026)
+
+| Target | Host | Rows `img-*` | PROMPT asset | `publicationStatus` |
+|--------|------|--------------|--------------|---------------------|
+| Local Neon | `ep-jolly-river…` | 90 | 90 | DRAFT |
+| Prod Neon | `ep-red-mountain…` | 90 | 90 | DRAFT |
+
+**Next:** Publish via admin on each environment (quality gate requires PROMPT URL). Seed ×9 IMAGE_GUESS remain separate (PUBLISHED from seed).
+
+### Neon / script rules (do not re-break)
+
+Canon script: `scripts/import-image-guess-batch.cjs` (pattern from `seed.cjs` + `update-quiz-image-assets.cjs`).
+
+| Do | Don't |
+|----|--------|
+| Fresh `pg` Client per question body | One connection for all 90 |
+| Separate fresh Client for `QuestionAsset` upsert | Multi-minute open transaction across many statements |
+| `client.on('error', …)` + retry transient | Let unhandled `error` kill the process |
+| `ssl: { rejectUnauthorized: false }` (Windows + Neon) | Assume `verify-full` always works mid-batch |
+| Sleep ~500ms between questions; clear stale idle backends periodically | `query_timeout` that leaves zombie `idle` backends |
+| Idempotent upsert by `draftKey` as Question `id` | Random UUID every run → duplicate DRAFTs |
+| `publicationStatus = DRAFT` on insert | Auto-PUBLISH |
+| `--target=prod` only with `PROD_DATABASE_URL_UNPOOLED` + host ≠ `jolly-river` | Point local `.env` at prod by accident |
 
 ### Exact filenames (90)
 
@@ -311,3 +336,27 @@ npm run content:import-image-guess -- --target=prod
 | `vagrant-story` | Vagrant Story |
 
 Capture tips per game live in the JSON (`captureHint`). Prefer your own screenshots; see §3 for sources.
+
+---
+
+## 6. Lightbox UX (quiz + result review)
+
+**Component:** `src/features/quiz/components/QuestionImage.tsx` (also used from `QuestionCard` / `QuizResultReview`).
+
+**Open:** click / activate preview (`cursor-zoom-in`).
+
+**Close (no visible Close button):**
+- Desktop: click anywhere on the overlay (incl. the image area)
+- Mobile / pen: any pointer-down (touch) on the overlay
+- Keyboard: `Escape`, `Enter`, `Space`, `Backspace`
+- Ghost-tap guards: ignore dismiss for ~280ms after open; ignore re-open for ~400ms after touch-close
+
+**Scrim (Scoreboard Editorial):**
+- Light: `bg-black/55` + light blur
+- Dark: `bg-black/80` + slightly stronger blur
+- **Never** `bg-foreground/*` for the overlay — in dark theme `--foreground` is light text, so the scrim becomes a milky veil
+- Frame: thin `ring-white/10`, soft black shadow; still `object-contain` full frame (no crop)
+
+**a11y:** `role="dialog"` `aria-modal`; focus dialog on open; restore focus to preview button on close; `closeLabel` remains as `aria-label` (not a visible button). i18n: `quiz.imageExpandHint` / `imageExpandLabel` / `imageCloseLabel`.
+
+**Do not:** glow effects; `object-cover` crop; change scoring/snapshot for lightbox.

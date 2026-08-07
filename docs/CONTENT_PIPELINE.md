@@ -22,7 +22,9 @@ Related canon:
 
 **Non-negotiable:** import never writes `PUBLISHED`. Only admin review + existing publish actions (with quality gate) put questions into the quiz pool (`isActive AND PUBLISHED`).
 
-**Not in v1 of this pipeline:** IMAGE_GUESS / assets, auto-publish, taxonomy filters, AI calling prod DB directly.
+**Not in TEXT v1 of this pipeline:** IMAGE_GUESS / assets inside `draft-questions.v1`, auto-publish, taxonomy filters, AI calling prod DB directly.
+
+**IMAGE_GUESS batch (sibling, Aug 2026):** separate manifest + `npm run content:import-image-guess` — still **DRAFT-only** + admin Publish. See `docs/QUIZ_IMAGES.md` §5–§6 and `DECISIONS.md` → IMAGE_GUESS Batch Import + Lightbox.
 
 ---
 
@@ -50,6 +52,7 @@ content/drafts/
   batches/
     2026-08-04-text-fresh-45.json    # AI batch 15×3 (local+prod)
     2026-08-04-text-fresh-60.json    # AI batch 20×3 (local+prod)
+    2026-08-05-image-guess-90.json   # IMAGE_GUESS ×90 (sibling importer; DRAFT)
 
 src/features/content/lib/
   draft-questions.schema.ts          # Zod contract v1 (runtime)
@@ -58,13 +61,15 @@ src/features/content/lib/
   index.ts
 
 scripts/validate-draft-questions.ts  # CLI validate (no Neon)
-scripts/import-draft-questions.ts    # CLI import → DRAFT (needs .env)
+scripts/import-draft-questions.ts    # CLI import TEXT → DRAFT (needs .env)
+scripts/import-image-guess-batch.cjs # CLI import IMAGE_GUESS batch → DRAFT + asset
 scripts/smoke-content-pipeline-status.ts  # read-only status of sample rows
 ```
 
 npm scripts:
 - `content:validate-drafts`
 - `content:import-drafts` (add `--dry-run` first)
+- `content:import-image-guess` / `--target=prod` (IMAGE_GUESS batch; see `QUIZ_IMAGES.md` §5)
 - `content:smoke-status`
 
 Authoring batches: `content/drafts/batches/YYYY-MM-DD-….json` (commit when you choose).
@@ -102,7 +107,7 @@ Each question object:
 - DB `id` — generated on import
 - `publicationStatus` — always `DRAFT` on import
 - `isActive` — follow admin create (active row, still hidden from pool while DRAFT)
-- Prompt image / `IMAGE_GUESS` — later pipeline step
+- Prompt image / `IMAGE_GUESS` — TEXT contract only; IMAGE_GUESS batch = sibling importer (`QUIZ_IMAGES.md` §5)
 
 Mirror of seed helpers (shape only):
 
@@ -300,3 +305,13 @@ Cause: quiz/result code already on Vercel expects Aug 4 migrations (`Achievement
 Fix: `npx prisma migrate deploy` against **prod** `DATABASE_URL` (+ `DATABASE_URL_UNPOOLED`). Prisma may load local `.env` and ignore a shell override — temporarily point `.env` at prod for that command, or apply pending SQL then `migrate resolve --applied`. Then play a **new** quiz (old broken sessions may lack a clean complete).
 
 Canon: `docs/QUIZ_NEON_HOT_PATH.md` — content scale must not change submit JSONB; keep schema deploys in the release habit.
+
+### IMAGE_GUESS prod import (Aug 6)
+
+```powershell
+# Requires PROD_DATABASE_URL_UNPOOLED in .env (host must be prod, not jolly-river)
+npm run content:import-image-guess -- --target=prod --dry-run
+npm run content:import-image-guess -- --target=prod
+```
+
+Then: Admin DRAFT → Publish. **Also** ensure `public/quiz-images/**` WebP are committed and deployed — otherwise thumbs/quiz images 404 while DB URLs look correct.

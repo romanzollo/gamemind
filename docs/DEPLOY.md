@@ -9,7 +9,7 @@
 |------|--------|
 | Приложение | Vercel Hobby |
 | БД | Neon (лучше отдельный production project/branch) |
-| Картинки (seed) | `public/quiz-images/*.webp` в git (тот же origin) |
+| Картинки (seed + batches) | `public/quiz-images/**/*.webp` в git (тот же origin) |
 | Домен | Свой домен → Vercel (DNS у REG.RU; CF proxy не обязателен) |
 | Upload (quiz + avatars) | **Vercel Blob** + same-origin `/media/...` (см. Media Storage ADR). Yandex S3 — fallback. **R2 не default**. |
 
@@ -17,8 +17,8 @@
 
 - [ ] Есть `.env.example`; реальные секреты только в локальном `.env` / env на Vercel
 - [ ] Локально проходит `npm run build`
-- [ ] WebP в `public/quiz-images/` закоммичены (не только оставшиеся SVG)
-- [ ] Production Neon: миграции применены; seed (+ URL картинок) выполнен
+- [ ] WebP в `public/quiz-images/` закоммичены (seed **и** новые batches; не только SVG)
+- [ ] Production Neon: миграции применены; seed (+ URL картинок) выполнен; IMAGE_GUESS batch Publish если импортировали DRAFT
 - [ ] На Vercel заданы env (см. ниже)
 - [ ] Сильный личный ADMIN; пароль админа друзьям не раздавать
 
@@ -122,7 +122,8 @@ npm run build
 | Build падает на Vercel, локально ок | Нет env; Prisma generate; смотри build logs |
 | Сайт есть, login сломан | Нет/неверный `AUTH_SECRET` или `AUTH_URL` |
 | Ошибки БД в quiz/admin | Перепутаны pooled/unpooled; миграции на prod не применены |
-| `IMAGE_GUESS` — битая картинка | WebP не в деплое; на prod DB не обновлены asset URL |
+| `IMAGE_GUESS` — битая картинка | WebP не в деплое (Aug 6: DB URL ок, файлов на Vercel нет → 404); на prod DB не обновлены asset URL; DRAFT не Publish |
+| Admin thumbs broken, quiz seed OK | Новый batch WebP не закоммичен/не задеплоен; seed WebP уже в git |
 | `Body exceeded 1 MB limit` на upload | Нет `experimental.serverActions.bodySizeLimit` / нужен restart после next.config |
 | `/media/...` 404 на prod | Нет `BLOB_PUBLIC_BASE_URL` или Blob store / rewrite |
 | `SharedArrayBuffer is not allowed` на upload | sharp Buffer → Blob put без owned copy; см. ADR ops note |
