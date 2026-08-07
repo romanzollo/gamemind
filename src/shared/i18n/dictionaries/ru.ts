@@ -388,7 +388,8 @@ export const ruDictionary: Dictionary = {
         scoreLabel: 'Очки',
         correctAnswersLabel: 'Правильных ответов',
         imageUnavailable: 'Изображение недоступно',
-        imageExpandHint: 'Нажмите, чтобы увеличить · ещё раз — закрыть',
+        imageExpandHint:
+            'Нажмите, чтобы увеличить · на телефоне щипок — ещё ближе',
         imageExpandLabel: 'Открыть изображение на весь экран',
         imageCloseLabel: 'Закрыть изображение',
         reviewTitle: 'Разбор ответов',

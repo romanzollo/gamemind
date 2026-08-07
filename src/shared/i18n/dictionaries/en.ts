@@ -375,7 +375,7 @@ export const enDictionary = {
         scoreLabel: 'Points',
         correctAnswersLabel: 'Correct answers',
         imageUnavailable: 'Image unavailable',
-        imageExpandHint: 'Tap to enlarge · tap again to close',
+        imageExpandHint: 'Tap to enlarge · pinch on phone to zoom further',
         imageExpandLabel: 'Open image fullscreen',
         imageCloseLabel: 'Close image',
         reviewTitle: 'Answer review',

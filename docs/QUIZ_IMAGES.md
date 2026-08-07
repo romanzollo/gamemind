@@ -346,10 +346,10 @@ Capture tips per game live in the JSON (`captureHint`). Prefer your own screensh
 **Open:** click / activate preview (`cursor-zoom-in`).
 
 **Close (no visible Close button):**
-- Desktop: click anywhere on the overlay (incl. the image area)
-- Mobile / pen: any pointer-down (touch) on the overlay
-- Keyboard: `Escape`, `Enter`, `Space`, `Backspace`
+- Desktop: click anywhere on the overlay; keyboard `Escape` / `Enter` / `Space` / `Backspace`
+- Mobile: **pinch** to zoom further (1×–4×) and pan while zoomed; **single tap** closes when scale≈1, or resets zoom when already pinched
 - Ghost-tap guards: ignore dismiss for ~280ms after open; ignore re-open for ~400ms after touch-close
+- Do **not** dismiss on `pointerdown` for touch (that blocked pinch)
 
 **Scrim (Scoreboard Editorial):**
 - Light: `bg-black/55` + light blur

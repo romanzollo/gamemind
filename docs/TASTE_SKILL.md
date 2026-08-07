@@ -330,6 +330,14 @@ Format:
 - Follow-up: ...
 ```
 
+### 2026-08-07 — IMAGE_GUESS lightbox mobile pinch-zoom
+
+- Scope: Fix:quiz-image-lightbox
+- Files: `QuestionImage`, i18n hint
+- What changed: touch no longer dismisses on pointerdown; pinch-zoom (1×–4×) + pan when zoomed; single tap closes at 1× or resets zoom when pinch-active; desktop click/keys unchanged; black scrim kept
+- Explicitly NOT changed: scoring, snapshot, import
+- Verify: phone IMAGE_GUESS open → pinch → pan → tap reset → tap close; desktop click close
+
 ### 2026-08-06 — IMAGE_GUESS lightbox dismiss without Close button
 
 - Scope: Feature:quiz-image-lightbox
