@@ -1,5 +1,5 @@
 /**
- * Import IMAGE_GUESS batch (90) from content/drafts/batches/2026-08-05-image-guess-90.json.
+ * Import IMAGE_GUESS batch from a JSON manifest (kind IMAGE_GUESS_BATCH).
  *
  * Neon pattern = scripts/seed.cjs + scripts/update-quiz-image-assets.cjs:
  * - fresh Client per question (withRetry)
@@ -15,9 +15,10 @@
  *
  * Usage:
  *   npm run content:import-image-guess -- --dry-run
- *   npm run content:import-image-guess
- *   npm run content:import-image-guess -- --target=prod
+ *   npm run content:import-image-guess -- --file=content/drafts/batches/2026-08-07-image-guess-72.json --dry-run
+ *   npm run content:import-image-guess -- --file=… --target=prod
  *
+ * Default --file: 2026-08-05-image-guess-90.json (legacy).
  * Prod needs PROD_DATABASE_URL_UNPOOLED in .env (never commit secrets).
  */
 
@@ -26,10 +27,8 @@ const path = require('path');
 const { Client } = require('pg');
 
 const ROOT = path.join(__dirname, '..');
-const BATCH_PATH = path.join(
-    ROOT,
-    'content/drafts/batches/2026-08-05-image-guess-90.json',
-);
+const DEFAULT_BATCH_REL =
+    'content/drafts/batches/2026-08-05-image-guess-90.json';
 
 const LOCALES = ['ru', 'en'];
 
@@ -64,9 +63,17 @@ function loadEnvFile(fileName) {
 }
 
 function parseArgs(argv) {
+    const fileArg = argv.find((a) => a.startsWith('--file='));
+    const fileRel = fileArg
+        ? fileArg.slice('--file='.length)
+        : DEFAULT_BATCH_REL;
     return {
         dryRun: argv.includes('--dry-run'),
         target: argv.includes('--target=prod') ? 'prod' : 'local',
+        batchPath: path.isAbsolute(fileRel)
+            ? fileRel
+            : path.join(ROOT, fileRel),
+        fileRel,
     };
 }
 
@@ -214,11 +221,14 @@ async function isCompleteImageGuess(client, questionId) {
 async function upsertImageGuess(client, question) {
     const questionId = question.draftKey;
     const ruText = question.translations.ru.text;
+    // batch из манифеста (metadata.batch), иначе legacy id — не затирать новый Wave D.
     const metadata = {
         ...question.metadata,
         draftKey: question.draftKey,
         imageStem: question.imageStem,
-        batch: '2026-08-05-image-guess-90',
+        batch:
+            (question.metadata && question.metadata.batch) ||
+            '2026-08-05-image-guess-90',
     };
 
     const existing = await client.query(
@@ -364,7 +374,10 @@ async function main() {
     loadEnvFile('.env.local');
 
     const options = parseArgs(process.argv.slice(2));
-    const batch = JSON.parse(fs.readFileSync(BATCH_PATH, 'utf8'));
+    if (!fs.existsSync(options.batchPath)) {
+        throw new Error(`Batch file not found: ${options.fileRel}`);
+    }
+    const batch = JSON.parse(fs.readFileSync(options.batchPath, 'utf8'));
 
     if (batch.kind !== 'IMAGE_GUESS_BATCH') {
         throw new Error('Unexpected batch kind');
@@ -406,6 +419,7 @@ async function main() {
     }
 
     log(`Target: ${options.target} (${host})`);
+    log(`Batch: ${options.fileRel}`);
     log(`Questions: ${batch.questions.length}`);
     log(
         `Mode: ${options.dryRun ? 'dry-run' : 'import DRAFT (seed-style upsert)'}`,

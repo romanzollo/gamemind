@@ -1,0 +1,1663 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "Wave C1 Content Scale — Half-Life, GTA, Gears of War, Fable, Atomic Heart, Duke Nukem 3D. 12 EASY / 12 MEDIUM / 12 HARD. Avoids seed/batch dupes (no Gordon name-only, no Los Santos, no Lara). TEXT only; DRAFT import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-hl-black-mesa",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Half-Life",
+        "game": "Half-Life",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как называется исследовательский комплекс, где начинается первый Half-Life?" },
+        "en": { "text": "What is the name of the research facility where the first Half-Life begins?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Black Mesa" },
+            "en": { "text": "Black Mesa" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Aperture Science" },
+            "en": { "text": "Aperture Science" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Umbrella Corp" },
+            "en": { "text": "Umbrella Corp" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Vault-Tec" },
+            "en": { "text": "Vault-Tec" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-hl-valve",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Half-Life",
+        "game": "Half-Life",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия создала серию Half-Life?" },
+        "en": { "text": "Which studio created the Half-Life series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Valve" },
+            "en": { "text": "Valve" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "id Software" },
+            "en": { "text": "id Software" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Epic Games" },
+            "en": { "text": "Epic Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Blizzard" },
+            "en": { "text": "Blizzard" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-hl-gravity-gun",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Half-Life",
+        "game": "Half-Life 2",
+        "topic": "weapon",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как игроки обычно называют оружие из Half-Life 2, которым можно поднимать и швырять предметы?" },
+        "en": { "text": "What do players usually call the Half-Life 2 weapon that lets you pick up and throw objects with physics?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Гравипушка" },
+            "en": { "text": "Gravity Gun" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Портальная пушка" },
+            "en": { "text": "Portal Gun" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "BFG" },
+            "en": { "text": "BFG" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Цепная пила" },
+            "en": { "text": "Chainsaw" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-hl-city-17",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Half-Life",
+        "game": "Half-Life 2",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "В каком городе разворачивается большая часть сюжета Half-Life 2?" },
+        "en": { "text": "In which city does most of Half-Life 2’s story take place?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "City 17" },
+            "en": { "text": "City 17" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Rapture" },
+            "en": { "text": "Rapture" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Columbia" },
+            "en": { "text": "Columbia" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Night City" },
+            "en": { "text": "Night City" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-hl-combine",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Half-Life",
+        "game": "Half-Life 2",
+        "topic": "faction",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как называется инопланетная империя, оккупировавшая Землю в Half-Life 2?" },
+        "en": { "text": "What is the name of the alien empire occupying Earth in Half-Life 2?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Альянс (Combine)" },
+            "en": { "text": "The Combine" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ковенант" },
+            "en": { "text": "The Covenant" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Жнецы" },
+            "en": { "text": "The Reapers" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Цефы" },
+            "en": { "text": "The Ceph" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-hl-alyx-vr",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Half-Life",
+        "game": "Half-Life: Alyx",
+        "topic": "platform",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая часть Half-Life изначально рассчитана прежде всего на VR?" },
+        "en": { "text": "Which Half-Life entry is designed primarily as a VR game?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Half-Life: Alyx" },
+            "en": { "text": "Half-Life: Alyx" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Half-Life 2: Episode Two" },
+            "en": { "text": "Half-Life 2: Episode Two" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Half-Life: Source" },
+            "en": { "text": "Half-Life: Source" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Half-Life: Blue Shift" },
+            "en": { "text": "Half-Life: Blue Shift" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-gta-rockstar",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая компания известна как основной разработчик современных частей Grand Theft Auto?" },
+        "en": { "text": "Which company is known as the main developer of modern Grand Theft Auto games?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Rockstar Games" },
+            "en": { "text": "Rockstar Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ubisoft" },
+            "en": { "text": "Ubisoft" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "EA" },
+            "en": { "text": "EA" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "CD Projekt RED" },
+            "en": { "text": "CD Projekt RED" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-gta-san-andreas-state",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto: San Andreas",
+        "topic": "setting",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "В каком вымышленном штате происходит действие Grand Theft Auto: San Andreas?" },
+        "en": { "text": "In which fictional state does Grand Theft Auto: San Andreas take place?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "San Andreas" },
+            "en": { "text": "San Andreas" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Leonida" },
+            "en": { "text": "Leonida" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ambrosia" },
+            "en": { "text": "Ambrosia" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Hope County" },
+            "en": { "text": "Hope County" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-gta-tommy",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto: Vice City",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как зовут главного героя Grand Theft Auto: Vice City?" },
+        "en": { "text": "What is the name of the protagonist of Grand Theft Auto: Vice City?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Томми Версетти" },
+            "en": { "text": "Tommy Vercetti" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Карл Джонсон" },
+            "en": { "text": "Carl Johnson" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нико Беллик" },
+            "en": { "text": "Niko Bellic" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Майкл Де Санта" },
+            "en": { "text": "Michael De Santa" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-gta-niko",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto IV",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как зовут восточноевропейского иммигранта — героя Grand Theft Auto IV?" },
+        "en": { "text": "What is the name of the Eastern European immigrant protagonist of Grand Theft Auto IV?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Нико Беллик" },
+            "en": { "text": "Niko Bellic" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тревор Филипс" },
+            "en": { "text": "Trevor Philips" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Луис Лопес" },
+            "en": { "text": "Luis Lopez" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Джонни Клебиц" },
+            "en": { "text": "Johnny Klebitz" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-gta-cj",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto: San Andreas",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как полностью расшифровывается кличка CJ — героя GTA: San Andreas?" },
+        "en": { "text": "What does the nickname CJ stand for — the protagonist of GTA: San Andreas?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Carl Johnson" },
+            "en": { "text": "Carl Johnson" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Chris Jackson" },
+            "en": { "text": "Chris Jackson" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Claude Speed" },
+            "en": { "text": "Claude Speed" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Carlos Jimenez" },
+            "en": { "text": "Carlos Jimenez" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-gta-v-trio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto V",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Кто из перечисленных НЕ является одним из трёх главных героев Grand Theft Auto V?" },
+        "en": { "text": "Which of the following is NOT one of the three main protagonists of Grand Theft Auto V?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Джон Марстон" },
+            "en": { "text": "John Marston" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Франклин Клинтон" },
+            "en": { "text": "Franklin Clinton" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Майкл Де Санта" },
+            "en": { "text": "Michael De Santa" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тревор Филипс" },
+            "en": { "text": "Trevor Philips" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-gta-iii-3d",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto III",
+        "topic": "milestone",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая часть GTA первой перевела серию в полноценный 3D open-world (а не top-down)?" },
+        "en": { "text": "Which GTA entry first moved the series into a full 3D open world (not top-down)?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Grand Theft Auto III" },
+            "en": { "text": "Grand Theft Auto III" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Grand Theft Auto 2" },
+            "en": { "text": "Grand Theft Auto 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Grand Theft Auto: Vice City" },
+            "en": { "text": "Grand Theft Auto: Vice City" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Grand Theft Auto IV" },
+            "en": { "text": "Grand Theft Auto IV" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-gta-liberty-city",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto IV",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "В каком вымышленном городе происходит действие Grand Theft Auto IV?" },
+        "en": { "text": "In which fictional city does Grand Theft Auto IV take place?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Liberty City" },
+            "en": { "text": "Liberty City" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Vice City" },
+            "en": { "text": "Vice City" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Los Santos" },
+            "en": { "text": "Los Santos" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "San Fierro" },
+            "en": { "text": "San Fierro" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-gta-chinatown-wars",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto: Chinatown Wars",
+        "topic": "platform",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Для какой портативной платформы изначально вышла Grand Theft Auto: Chinatown Wars?" },
+        "en": { "text": "On which handheld platform did Grand Theft Auto: Chinatown Wars originally launch?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Nintendo DS" },
+            "en": { "text": "Nintendo DS" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "PlayStation Vita" },
+            "en": { "text": "PlayStation Vita" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Game Boy Advance" },
+            "en": { "text": "Game Boy Advance" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "PSP" },
+            "en": { "text": "PSP" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-gears-marcus",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gears of War",
+        "game": "Gears of War",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как зовут главного героя-сержанта в классических Gears of War?" },
+        "en": { "text": "What is the name of the sergeant protagonist in the classic Gears of War games?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Маркус Феникс" },
+            "en": { "text": "Marcus Fenix" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Мастер Чиф" },
+            "en": { "text": "Master Chief" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Капитан Прайс" },
+            "en": { "text": "Captain Price" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Айзек Кларк" },
+            "en": { "text": "Isaac Clarke" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-gears-epic",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gears of War",
+        "game": "Gears of War",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия создала оригинальную трилогию Gears of War?" },
+        "en": { "text": "Which studio created the original Gears of War trilogy?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Epic Games" },
+            "en": { "text": "Epic Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Bungie" },
+            "en": { "text": "Bungie" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Infinity Ward" },
+            "en": { "text": "Infinity Ward" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Naughty Dog" },
+            "en": { "text": "Naughty Dog" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-gears-lancer",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gears of War",
+        "game": "Gears of War",
+        "topic": "weapon",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как называется культовая штурмовая винтовка Gears of War с бензопилой на стволе?" },
+        "en": { "text": "What is the name of Gears of War’s iconic assault rifle with a chainsaw bayonet?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Lancer" },
+            "en": { "text": "Lancer" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Needler" },
+            "en": { "text": "Needler" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Spooler" },
+            "en": { "text": "Spooler" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Gauss Rifle" },
+            "en": { "text": "Gauss Rifle" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-gears-locust",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gears of War",
+        "game": "Gears of War",
+        "topic": "faction",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как называется подземная раса-антагонист в ранних Gears of War?" },
+        "en": { "text": "What is the name of the subterranean enemy faction in early Gears of War?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Саранча (Locust)" },
+            "en": { "text": "Locust Horde" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Flood" },
+            "en": { "text": "The Flood" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Necromorphs" },
+            "en": { "text": "Necromorphs" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Chimera" },
+            "en": { "text": "Chimera" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-gears-sera",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gears of War",
+        "game": "Gears of War",
+        "topic": "setting",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "На какой планете происходит действие серии Gears of War?" },
+        "en": { "text": "On which planet is the Gears of War series set?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Sera" },
+            "en": { "text": "Sera" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Reach" },
+            "en": { "text": "Reach" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Pandora" },
+            "en": { "text": "Pandora" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "LV-426" },
+            "en": { "text": "LV-426" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-gears-coalition",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gears of War",
+        "game": "Gears 5",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия Microsoft развивает Gears of War после передачи серии от Epic?" },
+        "en": { "text": "Which Microsoft studio has continued Gears of War after Epic handed the series over?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "The Coalition" },
+            "en": { "text": "The Coalition" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "343 Industries" },
+            "en": { "text": "343 Industries" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Playground Games" },
+            "en": { "text": "Playground Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Rare" },
+            "en": { "text": "Rare" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-fable-albion",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fable",
+        "game": "Fable",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "В каком вымышленном мире / королевстве происходит действие классических Fable?" },
+        "en": { "text": "In which fictional world / kingdom are the classic Fable games set?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Альбион" },
+            "en": { "text": "Albion" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тамириэль" },
+            "en": { "text": "Tamriel" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тедас" },
+            "en": { "text": "Thedas" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Азерот" },
+            "en": { "text": "Azeroth" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-fable-lionhead",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fable",
+        "game": "Fable",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая британская студия создала оригинальную серию Fable?" },
+        "en": { "text": "Which British studio created the original Fable series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Lionhead Studios" },
+            "en": { "text": "Lionhead Studios" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "BioWare" },
+            "en": { "text": "BioWare" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Obsidian Entertainment" },
+            "en": { "text": "Obsidian Entertainment" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Bethesda Game Studios" },
+            "en": { "text": "Bethesda Game Studios" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-fable-2-dog",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fable",
+        "game": "Fable II",
+        "topic": "companion",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой постоянный компаньон помогает герою в Fable II (поиск сокровищ, бой, эмоции)?" },
+        "en": { "text": "Which loyal companion helps the hero in Fable II (treasure sense, combat, expressions)?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Собака" },
+            "en": { "text": "A dog" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Дракон" },
+            "en": { "text": "A dragon" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Голем" },
+            "en": { "text": "A golem" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Фея" },
+            "en": { "text": "A fairy" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-fable-morality",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fable",
+        "game": "Fable",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Что в Fable заметно меняет внешность героя по мере игры?" },
+        "en": { "text": "In Fable, what visibly changes the hero’s appearance over the course of the game?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Моральные поступки (добро / зло)" },
+            "en": { "text": "Moral choices (good / evil)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только смена брони в меню" },
+            "en": { "text": "Armor swaps in a menu only" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Случайный генератор лиц каждый день" },
+            "en": { "text": "A random face generator each day" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Погода в Альбионе" },
+            "en": { "text": "The weather in Albion" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-fable-3-king",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fable",
+        "game": "Fable III",
+        "topic": "story",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Кем становится герой во второй половине Fable III (ключевой сюжетный поворот)?" },
+        "en": { "text": "What does the hero become in the second half of Fable III (a key story beat)?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Правителем / монархом Альбиона" },
+            "en": { "text": "The ruler / monarch of Albion" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Главой гильдии воров" },
+            "en": { "text": "Head of a thieves’ guild" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Капитаном космического корабля" },
+            "en": { "text": "Captain of a starship" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Бессмертным вампиром" },
+            "en": { "text": "An immortal vampire" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-atomic-ussr",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Atomic Heart",
+        "game": "Atomic Heart",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "В каком альтернативном сеттинге происходит Atomic Heart?" },
+        "en": { "text": "In what kind of alternate setting does Atomic Heart take place?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Альтернативный СССР / советская утопия с роботами" },
+            "en": { "text": "An alternate USSR / Soviet utopia with robots" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Феодальная Япония" },
+            "en": { "text": "Feudal Japan" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Космическая станция у чёрной дыры" },
+            "en": { "text": "A space station near a black hole" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Средневековая Англия" },
+            "en": { "text": "Medieval England" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-atomic-glove",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Atomic Heart",
+        "game": "Atomic Heart",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой фирменный гаджет в Atomic Heart даёт герою особые «полимерные» способности?" },
+        "en": { "text": "Which signature gadget in Atomic Heart grants the hero special “polymer” abilities?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Перчатка / polymer glove" },
+            "en": { "text": "A polymer glove" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пип-бой" },
+            "en": { "text": "A Pip-Boy" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Омни-инструмент" },
+            "en": { "text": "An omni-tool" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Световой меч" },
+            "en": { "text": "A lightsaber" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-atomic-mundfish",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Atomic Heart",
+        "game": "Atomic Heart",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия разработала Atomic Heart?" },
+        "en": { "text": "Which studio developed Atomic Heart?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Mundfish" },
+            "en": { "text": "Mundfish" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "GSC Game World" },
+            "en": { "text": "GSC Game World" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "4A Games" },
+            "en": { "text": "4A Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Techland" },
+            "en": { "text": "Techland" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-atomic-facility",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Atomic Heart",
+        "game": "Atomic Heart",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как называется ключевой научно-производственный комплекс в Atomic Heart, где разворачивается много событий?" },
+        "en": { "text": "What is the name of Atomic Heart’s key science-production complex where much of the action unfolds?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Предприятие 3826" },
+            "en": { "text": "Facility 3826" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Black Mesa" },
+            "en": { "text": "Black Mesa" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Aperture Science Enrichment Center" },
+            "en": { "text": "Aperture Science Enrichment Center" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Raccoon City Police Department" },
+            "en": { "text": "Raccoon City Police Department" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-duke-catchphrase",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Duke Nukem",
+        "game": "Duke Nukem 3D",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какая фраза стала визитной карточкой Дюка Нюкема?" },
+        "en": { "text": "Which line became Duke Nukem’s signature catchphrase?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "It’s time to kick ass and chew bubblegum…" },
+            "en": { "text": "It’s time to kick ass and chew bubblegum…" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "The cake is a lie" },
+            "en": { "text": "The cake is a lie" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "War. War never changes" },
+            "en": { "text": "War. War never changes" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Nothing is true, everything is permitted" },
+            "en": { "text": "Nothing is true, everything is permitted" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-easy-duke-fps",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Duke Nukem",
+        "game": "Duke Nukem 3D",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "К какому жанру относится культовый Duke Nukem 3D?" },
+        "en": { "text": "Which genre best describes the iconic Duke Nukem 3D?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Шутер от первого лица (FPS)" },
+            "en": { "text": "First-person shooter (FPS)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пошаговая стратегия" },
+            "en": { "text": "Turn-based strategy" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Визуальная новелла" },
+            "en": { "text": "Visual novel" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Симулятор фермы" },
+            "en": { "text": "Farming sim" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-duke-pigcops",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Duke Nukem",
+        "game": "Duke Nukem 3D",
+        "topic": "enemy",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какие враги-полицейские со свиными мордами стали мемным символом Duke Nukem 3D?" },
+        "en": { "text": "Which pig-faced police enemies became a meme-worthy hallmark of Duke Nukem 3D?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Pig Cops" },
+            "en": { "text": "Pig Cops" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Zombies" },
+            "en": { "text": "Zombies" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Flood Infection Forms" },
+            "en": { "text": "Flood Infection Forms" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Headcrabs" },
+            "en": { "text": "Headcrabs" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-med-duke-3d-realms",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Duke Nukem",
+        "game": "Duke Nukem 3D",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия выпустила Duke Nukem 3D в 1990-х?" },
+        "en": { "text": "Which studio released Duke Nukem 3D in the 1990s?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "3D Realms" },
+            "en": { "text": "3D Realms" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Valve" },
+            "en": { "text": "Valve" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Looking Glass" },
+            "en": { "text": "Looking Glass" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Square" },
+            "en": { "text": "Square" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-duke-build",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Duke Nukem",
+        "game": "Duke Nukem 3D",
+        "topic": "engine",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "На каком движке сделан Duke Nukem 3D (тот же «семейство», что у Blood / Shadow Warrior)?" },
+        "en": { "text": "Which engine powers Duke Nukem 3D (same family as Blood / Shadow Warrior)?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Build engine" },
+            "en": { "text": "Build engine" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Unreal Engine 1" },
+            "en": { "text": "Unreal Engine 1" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Source" },
+            "en": { "text": "Source" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Unity" },
+            "en": { "text": "Unity" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c1-hard-duke-atomic-edition",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Duke Nukem",
+        "game": "Duke Nukem 3D: Atomic Edition",
+        "topic": "edition",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как называется расширенное издание Duke Nukem 3D с доп. эпизодом и оружием (не Forever)?" },
+        "en": { "text": "What is the expanded Duke Nukem 3D release with an extra episode and weapons (not Forever)?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Atomic Edition" },
+            "en": { "text": "Atomic Edition" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Game of the Year Edition" },
+            "en": { "text": "Game of the Year Edition" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Definitive Director’s Cut" },
+            "en": { "text": "Definitive Director’s Cut" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Complete Platinum Hits" },
+            "en": { "text": "Complete Platinum Hits" }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1675 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "Wave C3 Content Scale — Zelda, Dragon Age, Civilization, Hogwarts Legacy, Need for Speed + platform classics (gaps only). 12/12/12. Avoids: Hyrule name-only, Triforce Wisdom, Switch BOTW launch, Lara/Gordon-style name traps already covered elsewhere, and games heavily covered in TEXT-45/60 + IMAGE-90.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-zelda-oot-n64",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda: Ocarina of Time",
+        "topic": "platform",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "На какой консоли Nintendo изначально вышла The Legend of Zelda: Ocarina of Time?" },
+        "en": { "text": "On which Nintendo console did The Legend of Zelda: Ocarina of Time originally release?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Nintendo 64" },
+            "en": { "text": "Nintendo 64" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "GameCube" },
+            "en": { "text": "GameCube" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Wii" },
+            "en": { "text": "Wii" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "NES" },
+            "en": { "text": "NES" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-zelda-master-sword",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda",
+        "topic": "item",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как называется легендарный клинок Линка, часто связанный с изгнанием зла в серии Zelda?" },
+        "en": { "text": "What is the name of Link’s legendary blade often tied to banishing evil in the Zelda series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Master Sword" },
+            "en": { "text": "Master Sword" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Buster Sword" },
+            "en": { "text": "Buster Sword" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Keyblade" },
+            "en": { "text": "Keyblade" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Energy Sword" },
+            "en": { "text": "Energy Sword" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-zelda-majora-days",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda: Majora’s Mask",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Сколько внутриигровых дней длится цикл перед катастрофой в Majora’s Mask?" },
+        "en": { "text": "How many in-game days does the doomsday cycle last in Majora’s Mask?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Три дня" },
+            "en": { "text": "Three days" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Семь дней" },
+            "en": { "text": "Seven days" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Один час реального времени без цикла" },
+            "en": { "text": "One real-time hour with no cycle" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тридцать дней" },
+            "en": { "text": "Thirty days" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-zelda-wind-waker",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda: The Wind Waker",
+        "topic": "art",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой визуальный стиль стал визитной карточкой The Wind Waker?" },
+        "en": { "text": "Which visual style became The Wind Waker’s hallmark?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Целл-шейдинг / «мультяшный» toon-стиль" },
+            "en": { "text": "Cel-shading / toon style" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Фотореализм как в современных AAA" },
+            "en": { "text": "Photorealism like modern AAA" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только ASCII-арт" },
+            "en": { "text": "ASCII art only" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чёрно-белый нуар без цвета" },
+            "en": { "text": "Black-and-white noir with no color" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-zelda-totk-fuse",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda: Tears of the Kingdom",
+        "topic": "ability",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая способность Tears of the Kingdom позволяет склеивать предметы и оружие в новые комбинации?" },
+        "en": { "text": "Which Tears of the Kingdom ability lets you glue items and weapons into new combinations?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Fuse" },
+            "en": { "text": "Fuse" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Stasis" },
+            "en": { "text": "Stasis" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Magnesis" },
+            "en": { "text": "Magnesis" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Cryonis" },
+            "en": { "text": "Cryonis" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-zelda-twilight",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda: Twilight Princess",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "В кого периодически превращается Линк в Twilight Princess?" },
+        "en": { "text": "What does Link periodically transform into in Twilight Princess?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "В волка" },
+            "en": { "text": "A wolf" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "В дракона" },
+            "en": { "text": "A dragon" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "В машину" },
+            "en": { "text": "A car" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "В кубик" },
+            "en": { "text": "A cube" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-da-thedas",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Dragon Age",
+        "game": "Dragon Age",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как называется континент / мир, где происходит серия Dragon Age?" },
+        "en": { "text": "What is the name of the continent/world where the Dragon Age series is set?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Тедас" },
+            "en": { "text": "Thedas" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тамириэль" },
+            "en": { "text": "Tamriel" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Азерот" },
+            "en": { "text": "Azeroth" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Санктуарий" },
+            "en": { "text": "Sanctuary" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-da-bioware",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Dragon Age",
+        "game": "Dragon Age: Origins",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия создала серию Dragon Age?" },
+        "en": { "text": "Which studio created the Dragon Age series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "BioWare" },
+            "en": { "text": "BioWare" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Bethesda Game Studios" },
+            "en": { "text": "Bethesda Game Studios" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "CD Projekt RED" },
+            "en": { "text": "CD Projekt RED" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Obsidian Entertainment" },
+            "en": { "text": "Obsidian Entertainment" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-da-grey-wardens",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Dragon Age",
+        "game": "Dragon Age: Origins",
+        "topic": "faction",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как называется орден, с которым связан герой Dragon Age: Origins и борьба с Мором?" },
+        "en": { "text": "What is the name of the order tied to the Dragon Age: Origins hero and the fight against the Blight?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Серые Стражи (Grey Wardens)" },
+            "en": { "text": "Grey Wardens" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ночной дозор" },
+            "en": { "text": "Night’s Watch" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ассасины" },
+            "en": { "text": "Assassins" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "S.T.A.R.S." },
+            "en": { "text": "S.T.A.R.S." }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-da-inquisition",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Dragon Age",
+        "game": "Dragon Age: Inquisition",
+        "topic": "game",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "В какой части Dragon Age игрок возглавляет Инквизицию?" },
+        "en": { "text": "In which Dragon Age game does the player lead the Inquisition?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Dragon Age: Inquisition" },
+            "en": { "text": "Dragon Age: Inquisition" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Dragon Age: Origins" },
+            "en": { "text": "Dragon Age: Origins" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Dragon Age II" },
+            "en": { "text": "Dragon Age II" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Dragon Age: The Veilguard" },
+            "en": { "text": "Dragon Age: The Veilguard" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-da-darkspawn",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Dragon Age",
+        "game": "Dragon Age: Origins",
+        "topic": "enemy",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как называются порождения тьмы — главная угроза Мора в Dragon Age?" },
+        "en": { "text": "What are the darkspawn — the main Blight threat in Dragon Age — called in English lore terms?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Порождения тьмы / darkspawn" },
+            "en": { "text": "Darkspawn" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Reapers" },
+            "en": { "text": "Reapers" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Flood" },
+            "en": { "text": "Flood" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Necromorphs" },
+            "en": { "text": "Necromorphs" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-civ-turnbased",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Civilization",
+        "game": "Civilization",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "К какому жанру относится серия Sid Meier’s Civilization?" },
+        "en": { "text": "Which genre best describes Sid Meier’s Civilization series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Пошаговая 4X-стратегия" },
+            "en": { "text": "Turn-based 4X strategy" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Шутер от первого лица" },
+            "en": { "text": "First-person shooter" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ритм-игра" },
+            "en": { "text": "Rhythm game" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Симулятор фермы" },
+            "en": { "text": "Farming sim" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-civ-one-more-turn",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Civilization",
+        "game": "Civilization",
+        "topic": "culture",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какая фраза стала мемом сообщества Civilization про «ещё чуть-чуть и спать»?" },
+        "en": { "text": "Which phrase became the Civilization community meme about “just a bit more before bed”?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Just one more turn" },
+            "en": { "text": "Just one more turn" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Git gud" },
+            "en": { "text": "Git gud" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "The cake is a lie" },
+            "en": { "text": "The cake is a lie" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Press F to pay respects" },
+            "en": { "text": "Press F to pay respects" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-civ-vi",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Civilization",
+        "game": "Civilization VI",
+        "topic": "game",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая часть Civilization вышла в 2016 году и сделала районы (districts) ключевой системой?" },
+        "en": { "text": "Which Civilization entry launched in 2016 and made districts a core system?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Civilization VI" },
+            "en": { "text": "Civilization VI" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Civilization IV" },
+            "en": { "text": "Civilization IV" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Civilization Revolution" },
+            "en": { "text": "Civilization Revolution" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Civilization Online" },
+            "en": { "text": "Civilization Online" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-civ-firaxis",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Civilization",
+        "game": "Civilization",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия Sid Meier’а долгое время разрабатывает современные Civilization?" },
+        "en": { "text": "Which Sid Meier studio has long developed modern Civilization games?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Firaxis Games" },
+            "en": { "text": "Firaxis Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ensemble Studios" },
+            "en": { "text": "Ensemble Studios" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Relic Entertainment" },
+            "en": { "text": "Relic Entertainment" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Creative Assembly" },
+            "en": { "text": "Creative Assembly" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-civ-culture-victory",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Civilization",
+        "game": "Civilization",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой тип победы в Civilization связан с туризмом, великими людьми и культурным влиянием?" },
+        "en": { "text": "Which Civilization victory type is tied to tourism, great people, and cultural influence?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Культурная победа" },
+            "en": { "text": "Cultural victory" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только победа по очкам в FIFA" },
+            "en": { "text": "Only a points win in FIFA" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Победа за скорость прохождения спидрана" },
+            "en": { "text": "A speedrun time victory" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Победа за количество лайков в соцсетях вне игры" },
+            "en": { "text": "A real-world social-media likes victory" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-hogwarts-setting",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hogwarts Legacy",
+        "game": "Hogwarts Legacy",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "В какой вселенной происходит Hogwarts Legacy?" },
+        "en": { "text": "In which fictional universe is Hogwarts Legacy set?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Вселенная Гарри Поттера (Wizarding World)" },
+            "en": { "text": "The Harry Potter / Wizarding World" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вселенная Властелина колец" },
+            "en": { "text": "The Lord of the Rings universe" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вселенная Star Wars" },
+            "en": { "text": "The Star Wars universe" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вселенная Marvel" },
+            "en": { "text": "The Marvel universe" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-hogwarts-open-world",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hogwarts Legacy",
+        "game": "Hogwarts Legacy",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой тип игры лучше всего описывает Hogwarts Legacy?" },
+        "en": { "text": "Which description best fits Hogwarts Legacy?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Action RPG с открытым миром в школе магии" },
+            "en": { "text": "An action RPG with an open world set around a magic school" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только текстовая новелла без исследования" },
+            "en": { "text": "A text novel with no exploration" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чисто соревновательный киберспортивный шутер" },
+            "en": { "text": "A pure competitive esports shooter" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Симулятор фермы без магии" },
+            "en": { "text": "A farming sim with no magic" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-hogwarts-avalanche",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hogwarts Legacy",
+        "game": "Hogwarts Legacy",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия разработала Hogwarts Legacy?" },
+        "en": { "text": "Which studio developed Hogwarts Legacy?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Avalanche Software" },
+            "en": { "text": "Avalanche Software" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Rocksteady Studios" },
+            "en": { "text": "Rocksteady Studios" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Monolith Productions" },
+            "en": { "text": "Monolith Productions" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "NetherRealm Studios" },
+            "en": { "text": "NetherRealm Studios" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-nfs-racing",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Need for Speed",
+        "game": "Need for Speed",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "К какому жанру относится серия Need for Speed?" },
+        "en": { "text": "Which genre is the Need for Speed series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Гоночные игры / racing" },
+            "en": { "text": "Racing games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пошаговые RPG" },
+            "en": { "text": "Turn-based RPGs" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Хоррор от первого лица без машин" },
+            "en": { "text": "First-person horror with no cars" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Симулятор жизни без транспорта" },
+            "en": { "text": "Life sim with no vehicles" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-nfs-most-wanted",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Need for Speed",
+        "game": "Need for Speed: Most Wanted",
+        "topic": "game",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая часть Need for Speed 2005 года прославилась «чёрным списком» гонщиков и погонями полиции?" },
+        "en": { "text": "Which 2005 Need for Speed entry became famous for its Blacklist racers and police chases?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Need for Speed: Most Wanted" },
+            "en": { "text": "Need for Speed: Most Wanted" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Need for Speed: Porsche Unleashed" },
+            "en": { "text": "Need for Speed: Porsche Unleashed" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Need for Speed: Shift" },
+            "en": { "text": "Need for Speed: Shift" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Need for Speed: The Run" },
+            "en": { "text": "Need for Speed: The Run" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-nfs-underground",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Need for Speed",
+        "game": "Need for Speed: Underground 2",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Чем особенно запомнилась линейка Need for Speed: Underground?" },
+        "en": { "text": "What is the Need for Speed: Underground line especially remembered for?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Уличный тюнинг, винил и ночные гонки" },
+            "en": { "text": "Street tuning, vinyls, and night racing" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только реалистичные шинные симуляции Формулы-1" },
+            "en": { "text": "Only hardcore Formula 1 tire sims" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пошаговые бои на арене" },
+            "en": { "text": "Turn-based arena combat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Строительство фермы" },
+            "en": { "text": "Building a farm" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-nfs-ea",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Need for Speed",
+        "game": "Need for Speed",
+        "topic": "publisher",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какой крупный издатель долгие годы владеет серией Need for Speed?" },
+        "en": { "text": "Which major publisher has long owned the Need for Speed series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Electronic Arts (EA)" },
+            "en": { "text": "Electronic Arts (EA)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Nintendo" },
+            "en": { "text": "Nintendo" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Valve" },
+            "en": { "text": "Valve" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Square Enix" },
+            "en": { "text": "Square Enix" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-nfs-criterion",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Need for Speed",
+        "game": "Need for Speed: Hot Pursuit (2010)",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия сделала перезапуск Need for Speed: Hot Pursuit (2010) и славится Burnout?" },
+        "en": { "text": "Which studio made the 2010 Need for Speed: Hot Pursuit reboot and is famous for Burnout?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Criterion Games" },
+            "en": { "text": "Criterion Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Polyphony Digital" },
+            "en": { "text": "Polyphony Digital" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Turn 10" },
+            "en": { "text": "Turn 10" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Slightly Mad Studios" },
+            "en": { "text": "Slightly Mad Studios" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-plat-mario64",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Super Mario",
+        "game": "Super Mario 64",
+        "topic": "platform-classic",
+        "platform": "N64",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая игра на Nintendo 64 считается одним из первых великих 3D-платформеров с Марио?" },
+        "en": { "text": "Which Nintendo 64 game is widely seen as one of the first great 3D Mario platformers?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Super Mario 64" },
+            "en": { "text": "Super Mario 64" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Super Mario Bros. 2" },
+            "en": { "text": "Super Mario Bros. 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Paper Mario" },
+            "en": { "text": "Paper Mario" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Mario Tennis" },
+            "en": { "text": "Mario Tennis" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-plat-spyro",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Spyro",
+        "game": "Spyro the Dragon",
+        "topic": "platform-classic",
+        "platform": "PS1",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Кто является главным героем классической платформерной серии Spyro на PlayStation?" },
+        "en": { "text": "Who is the protagonist of the classic Spyro platformer series on PlayStation?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Фиолетовый дракон Спайро" },
+            "en": { "text": "Spyro the purple dragon" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Зелёный динозавр Крэш" },
+            "en": { "text": "Crash the green dinosaur" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Синий ёж Соник" },
+            "en": { "text": "Sonic the blue hedgehog" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Рыцарь Артус" },
+            "en": { "text": "Arthas the knight" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-plat-mario-galaxy",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Super Mario",
+        "game": "Super Mario Galaxy",
+        "topic": "platform-classic",
+        "platform": "Wii",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "На какой консоли Nintendo вышел Super Mario Galaxy с планетами и гравитацией?" },
+        "en": { "text": "On which Nintendo console did Super Mario Galaxy launch, with planets and gravity play?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Wii" },
+            "en": { "text": "Wii" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Nintendo 64" },
+            "en": { "text": "Nintendo 64" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Game Boy" },
+            "en": { "text": "Game Boy" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Virtual Boy" },
+            "en": { "text": "Virtual Boy" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-easy-plat-l4d2",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Left 4 Dead",
+        "game": "Left 4 Dead 2",
+        "topic": "platform-classic",
+        "platform": "Xbox 360 / PC",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой кооперативный зомби-шутер Valve известен кампаниями на четверых выживших?" },
+        "en": { "text": "Which Valve co-op zombie shooter is known for four-survivor campaigns?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Left 4 Dead 2" },
+            "en": { "text": "Left 4 Dead 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Portal 2" },
+            "en": { "text": "Portal 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Team Fortress Classic" },
+            "en": { "text": "Team Fortress Classic" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Dota Underlords" },
+            "en": { "text": "Dota Underlords" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-plat-metroid-prime",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Metroid",
+        "game": "Metroid Prime",
+        "topic": "platform-classic",
+        "platform": "GameCube",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая часть Metroid на GameCube перевела серию в 3D от первого лица?" },
+        "en": { "text": "Which Metroid entry on GameCube moved the series into first-person 3D?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Metroid Prime" },
+            "en": { "text": "Metroid Prime" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Metroid II: Return of Samus" },
+            "en": { "text": "Metroid II: Return of Samus" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Super Metroid" },
+            "en": { "text": "Super Metroid" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Metroid: Other M" },
+            "en": { "text": "Metroid: Other M" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-plat-dmc",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Devil May Cry",
+        "game": "Devil May Cry",
+        "topic": "platform-classic",
+        "platform": "PS2",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как зовут стильного охотника на демонов — героя Devil May Cry?" },
+        "en": { "text": "What is the name of the stylish demon hunter protagonist of Devil May Cry?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Данте" },
+            "en": { "text": "Dante" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Кратос" },
+            "en": { "text": "Kratos" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Солид Снейк" },
+            "en": { "text": "Solid Snake" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Джоэл" },
+            "en": { "text": "Joel" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-med-plat-alan-wake",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Alan Wake",
+        "game": "Alan Wake",
+        "topic": "platform-classic",
+        "platform": "Xbox 360",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Кем по профессии является главный герой Alan Wake?" },
+        "en": { "text": "What is Alan Wake’s protagonist by profession?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Писатель" },
+            "en": { "text": "A writer" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Повар" },
+            "en": { "text": "A chef" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Футбольный тренер" },
+            "en": { "text": "A football coach" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Космонавт" },
+            "en": { "text": "An astronaut" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-plat-phantasy-star-iv",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Phantasy Star",
+        "game": "Phantasy Star IV",
+        "topic": "platform-classic",
+        "platform": "Sega Mega Drive",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "На какой платформе Sega вышла культовая JRPG Phantasy Star IV?" },
+        "en": { "text": "On which Sega platform did the cult JRPG Phantasy Star IV release?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Sega Mega Drive / Genesis" },
+            "en": { "text": "Sega Mega Drive / Genesis" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "PlayStation 2" },
+            "en": { "text": "PlayStation 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Xbox One" },
+            "en": { "text": "Xbox One" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Nintendo Switch" },
+            "en": { "text": "Nintendo Switch" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-plat-gravity-rush",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gravity Rush",
+        "game": "Gravity Rush",
+        "topic": "platform-classic",
+        "platform": "PS Vita",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какая механика — визитная карточка Gravity Rush на PS Vita?" },
+        "en": { "text": "Which mechanic is the hallmark of Gravity Rush on PS Vita?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Управление направлением гравитации" },
+            "en": { "text": "Controlling the direction of gravity" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только пошаговые бои в сетке" },
+            "en": { "text": "Turn-based grid combat only" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Строительство фермы" },
+            "en": { "text": "Farm building" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Футбольные пенальти" },
+            "en": { "text": "Football penalty kicks" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-plat-patapon",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Patapon",
+        "game": "Patapon",
+        "topic": "platform-classic",
+        "platform": "PSP",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Чем уникален геймплей Patapon на PSP?" },
+        "en": { "text": "What makes Patapon’s gameplay on PSP unique?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Ритм-команды армии через барабанные удары" },
+            "en": { "text": "Rhythm commands for an army via drum beats" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только открытый мир без боя" },
+            "en": { "text": "Open world with no combat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Симулятор полётов Airbus" },
+            "en": { "text": "An Airbus flight simulator" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чисто текстовый чат без игры" },
+            "en": { "text": "A text chat with no game" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-plat-jade-empire",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Jade Empire",
+        "game": "Jade Empire",
+        "topic": "platform-classic",
+        "platform": "Xbox",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая action-RPG BioWare в духе уся вышла эксклюзивом на оригинальный Xbox?" },
+        "en": { "text": "Which BioWare wuxia-inspired action RPG launched as an original Xbox exclusive?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Jade Empire" },
+            "en": { "text": "Jade Empire" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Mass Effect 3" },
+            "en": { "text": "Mass Effect 3" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Dragon Age II" },
+            "en": { "text": "Dragon Age II" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Anthem" },
+            "en": { "text": "Anthem" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c3-hard-plat-streets-of-rage",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Streets of Rage",
+        "game": "Streets of Rage 2",
+        "topic": "platform-classic",
+        "platform": "Sega Mega Drive",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какой культовый beat ’em up Sega на Mega Drive часто называют вершиной серии Streets of Rage?" },
+        "en": { "text": "Which cult Sega Mega Drive beat ’em up is often called the peak of Streets of Rage?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Streets of Rage 2" },
+            "en": { "text": "Streets of Rage 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Streets of Rage 4 only (и больше ничего)" },
+            "en": { "text": "Only Streets of Rage 4 exists" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Final Fight 3 на PS5" },
+            "en": { "text": "Final Fight 3 on PS5" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Tekken 8" },
+            "en": { "text": "Tekken 8" }
+          }
+        }
+      ]
+    }
+  ]
+}

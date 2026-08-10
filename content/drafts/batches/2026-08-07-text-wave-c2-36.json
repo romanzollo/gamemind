@@ -1,0 +1,1663 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "Wave C2 Content Scale — Resident Evil, S.T.A.L.K.E.R., Counter-Strike, Diablo, Hitman, Tomb Raider. 12/12/12. Avoids: Umbrella name-only, CS genre-only, Agent 47 number, Lara name-only, RE4 image topic as TEXT dupe of existing batch fact if any. TEXT DRAFT only.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-re-raccoon",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil 2",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "В каком вымышленном американском городе разворачиваются классические Resident Evil 2 и 3?" },
+        "en": { "text": "In which fictional American city do classic Resident Evil 2 and 3 take place?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Raccoon City" },
+            "en": { "text": "Raccoon City" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Silent Hill" },
+            "en": { "text": "Silent Hill" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Los Santos" },
+            "en": { "text": "Los Santos" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Night City" },
+            "en": { "text": "Night City" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-re-leon",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil 2",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как зовут агента / полицейского, ставшего одним из главных героев Resident Evil 2 и 4?" },
+        "en": { "text": "What is the name of the agent/officer who became a lead hero in Resident Evil 2 and 4?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Леон С. Кеннеди" },
+            "en": { "text": "Leon S. Kennedy" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Крис Редфилд" },
+            "en": { "text": "Chris Redfield" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Альберт Вескер" },
+            "en": { "text": "Albert Wesker" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Джейк Мюллер" },
+            "en": { "text": "Jake Muller" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-re-zombie",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой тип врагов стал «визитной карточкой» ранних Resident Evil?" },
+        "en": { "text": "Which enemy type became the hallmark of early Resident Evil games?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Зомби" },
+            "en": { "text": "Zombies" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Госты (призраки-невидимки)" },
+            "en": { "text": "Ghosts (invisible specters)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только роботы без биоугрозы" },
+            "en": { "text": "Only robots with no bio-threat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только динозавры" },
+            "en": { "text": "Only dinosaurs" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-re-jill",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil 3",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как зовут героиню S.T.A.R.S., ставшую лицом Resident Evil 3?" },
+        "en": { "text": "What is the name of the S.T.A.R.S. heroine who headlines Resident Evil 3?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Джилл Валентайн" },
+            "en": { "text": "Jill Valentine" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ада Вонг" },
+            "en": { "text": "Ada Wong" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Клэр Редфилд" },
+            "en": { "text": "Claire Redfield" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Шерри Бёркин" },
+            "en": { "text": "Sherry Birkin" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-re-nemesis",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil 3",
+        "topic": "enemy",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как зовут огромного преследователя в плаще из Resident Evil 3, который постоянно охотится на героиню?" },
+        "en": { "text": "What is the name of the huge trench-coated pursuer in Resident Evil 3 who relentlessly hunts the heroine?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Nemesis" },
+            "en": { "text": "Nemesis" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Mr. X" },
+            "en": { "text": "Mr. X" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Pyramid Head" },
+            "en": { "text": "Pyramid Head" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "The Flood" },
+            "en": { "text": "The Flood" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-re-village",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil Village",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Кто главный герой Resident Evil 7 и Resident Evil Village?" },
+        "en": { "text": "Who is the protagonist of Resident Evil 7 and Resident Evil Village?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Итан Уинтерс" },
+            "en": { "text": "Ethan Winters" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Леон С. Кеннеди" },
+            "en": { "text": "Leon S. Kennedy" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Карлос Оливейра" },
+            "en": { "text": "Carlos Oliveira" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Билли Коэн" },
+            "en": { "text": "Billy Coen" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-re-tvirus",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil",
+        "topic": "lore",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как называется вирус Umbrella, запускающий зомби-эпидемию в классических Resident Evil?" },
+        "en": { "text": "What is the name of Umbrella’s virus that triggers the zombie outbreak in classic Resident Evil?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "t-Virus" },
+            "en": { "text": "t-Virus" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Green Flu" },
+            "en": { "text": "Green Flu" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Cordyceps" },
+            "en": { "text": "Cordyceps" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Blacklight" },
+            "en": { "text": "Blacklight" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-re-spencer",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "В каком особняке начинается оригинал Resident Evil (1996)?" },
+        "en": { "text": "In which mansion does the original Resident Evil (1996) begin?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Spencer Mansion" },
+            "en": { "text": "Spencer Mansion" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Baker House" },
+            "en": { "text": "Baker House" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Castle Dimitrescu" },
+            "en": { "text": "Castle Dimitrescu" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Shadow Moses" },
+            "en": { "text": "Shadow Moses" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-stalker-zone",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "S.T.A.L.K.E.R.",
+        "game": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как в серии S.T.A.L.K.E.R. называют аномальную территорию вокруг Чернобыля?" },
+        "en": { "text": "In the S.T.A.L.K.E.R. series, what do people call the anomalous area around Chernobyl?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Зона" },
+            "en": { "text": "The Zone" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пустоши" },
+            "en": { "text": "The Wasteland" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Космос" },
+            "en": { "text": "Outer Space" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Подземелье" },
+            "en": { "text": "The Underdark" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-stalker-gsc",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "S.T.A.L.K.E.R.",
+        "game": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия создала оригинальную трилогию S.T.A.L.K.E.R.?" },
+        "en": { "text": "Which studio created the original S.T.A.L.K.E.R. trilogy?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "GSC Game World" },
+            "en": { "text": "GSC Game World" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "4A Games" },
+            "en": { "text": "4A Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Mundfish" },
+            "en": { "text": "Mundfish" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "CD Projekt RED" },
+            "en": { "text": "CD Projekt RED" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-stalker-artifacts",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "S.T.A.L.K.E.R.",
+        "game": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+        "topic": "item",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как в S.T.A.L.K.E.R. называют странные объекты из аномалий, которые сталкеры продают учёным?" },
+        "en": { "text": "In S.T.A.L.K.E.R., what are the strange anomaly-born objects that stalkers sell to scientists called?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Артефакты" },
+            "en": { "text": "Artifacts" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чипы" },
+            "en": { "text": "Chips" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ключи от сейфов" },
+            "en": { "text": "Safe keys" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Покеболы" },
+            "en": { "text": "Poké Balls" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-stalker-marked-one",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "S.T.A.L.K.E.R.",
+        "game": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Под каким прозвищем известен герой S.T.A.L.K.E.R.: Shadow of Chernobyl с амнезией?" },
+        "en": { "text": "By what nickname is the amnesiac protagonist of S.T.A.L.K.E.R.: Shadow of Chernobyl known?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Меченый" },
+            "en": { "text": "The Marked One" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Шрам" },
+            "en": { "text": "Scar" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Дегтярёв" },
+            "en": { "text": "Degtyarev" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Майор Кузнецов" },
+            "en": { "text": "Major Kuznetsov" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-stalker-clear-sky",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "S.T.A.L.K.E.R.",
+        "game": "S.T.A.L.K.E.R.: Clear Sky",
+        "topic": "game",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая часть оригинальной трилогии S.T.A.L.K.E.R. является приквелом к Shadow of Chernobyl?" },
+        "en": { "text": "Which entry in the original S.T.A.L.K.E.R. trilogy is a prequel to Shadow of Chernobyl?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Clear Sky" },
+            "en": { "text": "Clear Sky" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Call of Pripyat" },
+            "en": { "text": "Call of Pripyat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Heart of Chornobyl" },
+            "en": { "text": "Heart of Chornobyl" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Shadow of Chernobyl: Enhanced" },
+            "en": { "text": "Shadow of Chernobyl: Enhanced" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-stalker-emission",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "S.T.A.L.K.E.R.",
+        "game": "S.T.A.L.K.E.R.",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как в S.T.A.L.K.E.R. называют смертельные энергетические волны, от которых нужно прятаться в укрытии?" },
+        "en": { "text": "In S.T.A.L.K.E.R., what are the deadly energy waves you must hide from in cover called?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Выброс" },
+            "en": { "text": "Emission (Blowout)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Радарный пинг" },
+            "en": { "text": "Radar ping" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Кулдаун ульты" },
+            "en": { "text": "Ultimate cooldown" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Смена дня и ночи" },
+            "en": { "text": "Day/night cycle only" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-cs-bomb",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Counter-Strike",
+        "game": "Counter-Strike",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какая классическая цель раунда есть у террористов в режиме Bomb Defusal в Counter-Strike?" },
+        "en": { "text": "In Counter-Strike’s Bomb Defusal mode, what is the classic Terrorist round objective?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Установить бомбу и дать ей взорваться (или уничтожить CT)" },
+            "en": { "text": "Plant the bomb and let it explode (or eliminate the CTs)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Построить базу из блоков" },
+            "en": { "text": "Build a base out of blocks" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Собрать все артефакты на карте" },
+            "en": { "text": "Collect every artifact on the map" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Выиграть гонку на машинах" },
+            "en": { "text": "Win a car race" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-cs-dust2",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Counter-Strike",
+        "game": "Counter-Strike",
+        "topic": "map",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая карта Counter-Strike стала самой узнаваемой «визиткой» серии (пустынный бомб-дефьюз)?" },
+        "en": { "text": "Which Counter-Strike map became the series’ most iconic desert bomb-defusal hallmark?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Dust II" },
+            "en": { "text": "Dust II" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Nuketown" },
+            "en": { "text": "Nuketown" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Blood Gulch" },
+            "en": { "text": "Blood Gulch" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "de_minecraft" },
+            "en": { "text": "de_minecraft" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-cs-awp",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Counter-Strike",
+        "game": "Counter-Strike",
+        "topic": "weapon",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как в Counter-Strike обычно сокращённо называют мощную снайперскую винтовку Magnum Sniper Rifle?" },
+        "en": { "text": "In Counter-Strike, what short name do players usually use for the Magnum Sniper Rifle?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "AWP" },
+            "en": { "text": "AWP" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "RPG" },
+            "en": { "text": "RPG" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "SMG" },
+            "en": { "text": "SMG" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "NPC" },
+            "en": { "text": "NPC" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-cs-valve",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Counter-Strike",
+        "game": "Counter-Strike: Global Offensive",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая компания долгие годы издаёт и развивает Counter-Strike (включая GO и CS2)?" },
+        "en": { "text": "Which company has long published and developed Counter-Strike (including GO and CS2)?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Valve" },
+            "en": { "text": "Valve" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Riot Games" },
+            "en": { "text": "Riot Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Blizzard" },
+            "en": { "text": "Blizzard" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Epic Games" },
+            "en": { "text": "Epic Games" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-cs2-source2",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Counter-Strike",
+        "game": "Counter-Strike 2",
+        "topic": "engine",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "На каком движке вышел Counter-Strike 2, сменив CS:GO?" },
+        "en": { "text": "Which engine does Counter-Strike 2 run on, replacing CS:GO?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Source 2" },
+            "en": { "text": "Source 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Unreal Engine 5" },
+            "en": { "text": "Unreal Engine 5" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "id Tech 7" },
+            "en": { "text": "id Tech 7" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "CryEngine" },
+            "en": { "text": "CryEngine" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-cs-16-mod",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Counter-Strike",
+        "game": "Counter-Strike 1.6",
+        "topic": "history",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Из какого шутера Valve начинался Counter-Strike как модификация в конце 1990-х?" },
+        "en": { "text": "Which Valve shooter did Counter-Strike start as a mod of in the late 1990s?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Half-Life" },
+            "en": { "text": "Half-Life" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Team Fortress 2" },
+            "en": { "text": "Team Fortress 2" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Left 4 Dead" },
+            "en": { "text": "Left 4 Dead" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Portal" },
+            "en": { "text": "Portal" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-diablo-blizzard",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Diablo",
+        "game": "Diablo",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая компания стоит за серией Diablo?" },
+        "en": { "text": "Which company is behind the Diablo series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Blizzard" },
+            "en": { "text": "Blizzard" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "BioWare" },
+            "en": { "text": "BioWare" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Square Enix" },
+            "en": { "text": "Square Enix" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "FromSoftware" },
+            "en": { "text": "FromSoftware" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-diablo-genre",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Diablo",
+        "game": "Diablo",
+        "topic": "genre",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "К какому жанру ближе всего серия Diablo?" },
+        "en": { "text": "Which genre best describes the Diablo series?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Action RPG / dungeon crawler" },
+            "en": { "text": "Action RPG / dungeon crawler" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Футбольный симулятор" },
+            "en": { "text": "Football simulator" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только текстовый квест без боя" },
+            "en": { "text": "Text adventure with no combat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Гоночный аркадный симулятор" },
+            "en": { "text": "Arcade racing sim" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-diablo-2-classes",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Diablo",
+        "game": "Diablo II",
+        "topic": "class",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой класс есть в классическом Diablo II среди стартовых?" },
+        "en": { "text": "Which of these is a starting class in classic Diablo II?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Некромант" },
+            "en": { "text": "Necromancer" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Инженер" },
+            "en": { "text": "Engineer" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пилот истребителя" },
+            "en": { "text": "Starfighter pilot" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Футболист" },
+            "en": { "text": "Footballer" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-diablo-tristram",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Diablo",
+        "game": "Diablo",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как называется городок у собора, вокруг которого крутится сюжет первого Diablo?" },
+        "en": { "text": "What is the name of the town by the cathedral that anchors the first Diablo’s story?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Tristram" },
+            "en": { "text": "Tristram" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Riften" },
+            "en": { "text": "Riften" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Whiterun" },
+            "en": { "text": "Whiterun" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Novigrad" },
+            "en": { "text": "Novigrad" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-diablo-baal",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Diablo",
+        "game": "Diablo II: Lord of Destruction",
+        "topic": "lore",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Кто из Владык Преисподней — главный антагонист дополнения Diablo II: Lord of Destruction?" },
+        "en": { "text": "Which Lord of Hell is the main antagonist of Diablo II: Lord of Destruction?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Баал" },
+            "en": { "text": "Baal" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Андariel" },
+            "en": { "text": "Andariel" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Дуриэль" },
+            "en": { "text": "Duriel" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Изюаль" },
+            "en": { "text": "Izual" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-diablo-4-sanctuary",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Diablo",
+        "game": "Diablo IV",
+        "topic": "setting",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Как называется мир людей в вселенной Diablo, где происходит Diablo IV?" },
+        "en": { "text": "What is the name of the mortal world in the Diablo universe where Diablo IV is set?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Санктуарий" },
+            "en": { "text": "Sanctuary" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Азерот" },
+            "en": { "text": "Azeroth" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тедас" },
+            "en": { "text": "Thedas" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Феердун" },
+            "en": { "text": "Faerûn" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-hitman-ioi",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hitman",
+        "game": "Hitman",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая студия разработала современные части Hitman (2016+)?" },
+        "en": { "text": "Which studio developed the modern Hitman games (2016+)?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "IO Interactive" },
+            "en": { "text": "IO Interactive" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Rockstar North" },
+            "en": { "text": "Rockstar North" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ubisoft Montreal" },
+            "en": { "text": "Ubisoft Montreal" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Guerrilla Games" },
+            "en": { "text": "Guerrilla Games" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-hitman-suit",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hitman",
+        "game": "Hitman",
+        "topic": "character",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какой элемент внешнего вида Агента 47 стал его визуальной визитной карточкой?" },
+        "en": { "text": "Which visual trademark is Agent 47 most known for?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Лысина и костюм + штрихкод на затылке" },
+            "en": { "text": "Bald head, suit, and a barcode on the back of the head" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Зелёный комбинезон сантехника" },
+            "en": { "text": "A green plumber’s overalls" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Шлем со щитком как у Master Chief" },
+            "en": { "text": "A visored helmet like Master Chief" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Плащ ассасина с капюшоном" },
+            "en": { "text": "A hooded assassin’s cloak" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-hitman-disguise",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hitman",
+        "game": "Hitman",
+        "topic": "gameplay",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какая механика — сердце геймплея Hitman: проникновение без «лобовой» перестрелки?" },
+        "en": { "text": "Which mechanic is at the heart of Hitman gameplay: infiltration without a frontal shootout?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Маскировка / смена одежды NPC" },
+            "en": { "text": "Disguises / wearing NPC outfits" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Строительство укреплений" },
+            "en": { "text": "Building fortifications" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пошаговые бои на сетке" },
+            "en": { "text": "Turn-based grid combat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только гонки на время" },
+            "en": { "text": "Timed races only" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-hitman-blood-money",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hitman",
+        "game": "Hitman: Blood Money",
+        "topic": "game",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какую часть Hitman 2000-х часто называют пиком классической серии до перезапуска WOA?" },
+        "en": { "text": "Which 2000s Hitman entry is often called the peak of the classic series before the WOA reboot?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Hitman: Blood Money" },
+            "en": { "text": "Hitman: Blood Money" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Hitman: Absolution" },
+            "en": { "text": "Hitman: Absolution" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Hitman Go" },
+            "en": { "text": "Hitman Go" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Hitman: Sniper Challenge" },
+            "en": { "text": "Hitman: Sniper Challenge" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-hitman-ica",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hitman",
+        "game": "Hitman",
+        "topic": "faction",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Как расшифровывается ICA — организация, на которую работает Агент 47?" },
+        "en": { "text": "What does ICA stand for — the agency Agent 47 works for?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "International Contract Agency" },
+            "en": { "text": "International Contract Agency" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Internal Control Authority" },
+            "en": { "text": "Internal Control Authority" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Independent Covert Alliance" },
+            "en": { "text": "Independent Covert Alliance" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "International Crime Association" },
+            "en": { "text": "International Crime Association" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-tr-archaeology",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tomb Raider",
+        "game": "Tomb Raider",
+        "topic": "theme",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Чем по сюжету занимается героиня серии Tomb Raider (помимо приключений)?" },
+        "en": { "text": "Besides adventuring, what is the Tomb Raider heroine’s profession/theme?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Археология / поиск древних артефактов" },
+            "en": { "text": "Archaeology / hunting ancient artifacts" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только гонки на выживание" },
+            "en": { "text": "Survival racing only" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Управление футбольным клубом" },
+            "en": { "text": "Managing a football club" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Приготовление еды в ресторане" },
+            "en": { "text": "Cooking in a restaurant" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-easy-tr-dual-pistols",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tomb Raider",
+        "game": "Tomb Raider",
+        "topic": "weapon",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": { "text": "Какое оружие стало классическим «образом» Лары Крофт в ранних Tomb Raider?" },
+        "en": { "text": "Which weapons became Lara Croft’s classic look in early Tomb Raider games?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Два пистолета" },
+            "en": { "text": "Dual pistols" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только арбалет без пистолетов" },
+            "en": { "text": "Only a crossbow, no pistols" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Световой меч" },
+            "en": { "text": "A lightsaber" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Гравипушка" },
+            "en": { "text": "A gravity gun" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-med-tr-2013-reboot",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tomb Raider",
+        "game": "Tomb Raider (2013)",
+        "topic": "game",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "В каком году вышел перезапуск Tomb Raider от Crystal Dynamics, с которого началась «survivor»-трилогия?" },
+        "en": { "text": "In which year did Crystal Dynamics’ Tomb Raider reboot launch, starting the “survivor” trilogy?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "2013" },
+            "en": { "text": "2013" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "2001" },
+            "en": { "text": "2001" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "1996" },
+            "en": { "text": "1996" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "2020" },
+            "en": { "text": "2020" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-tr-core-design",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tomb Raider",
+        "game": "Tomb Raider",
+        "topic": "developer",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "Какая британская студия создала оригинальную Tomb Raider 1996 года?" },
+        "en": { "text": "Which British studio created the original Tomb Raider in 1996?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Core Design" },
+            "en": { "text": "Core Design" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Naughty Dog" },
+            "en": { "text": "Naughty Dog" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Insomniac Games" },
+            "en": { "text": "Insomniac Games" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Santa Monica Studio" },
+            "en": { "text": "Santa Monica Studio" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-07-c2-hard-tr-yamatai",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tomb Raider",
+        "game": "Tomb Raider (2013)",
+        "topic": "location",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": { "text": "На каком легендарном острове / королевстве терпит крушение Лара в перезапуске Tomb Raider (2013)?" },
+        "en": { "text": "On which legendary island/kingdom does Lara crash in the 2013 Tomb Raider reboot?" }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Yamatai" },
+            "en": { "text": "Yamatai" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Koholint" },
+            "en": { "text": "Koholint" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "The Island (Lost)" },
+            "en": { "text": "The Island (Lost)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Spooky Island" },
+            "en": { "text": "Spooky Island" }
+          }
+        }
+      ]
+    }
+  ]
+}
