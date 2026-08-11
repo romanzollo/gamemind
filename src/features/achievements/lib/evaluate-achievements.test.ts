@@ -2,7 +2,7 @@
  * Unit-тесты чистой оценки Achievements.
  *
  * Зачем: фиксируем пороги и флаги без Neon — рефактор каталога не должен
- * случайно выдать QUIZZES_5 при 4 квизах, QUIZZES_10 при 9, или забыть FIRST_QUIZ.
+ * случайно выдать QUIZZES_5 при 4 квизах или POINTS_250 при 249 очках.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -21,9 +21,17 @@ function facts(
     return {
         quizzesCompleted: 0,
         hasPerfectQuiz: false,
+        perfectQuizCount: 0,
         hasDailyCompleted: false,
+        dailyCompletedCount: 0,
         hasMediumCompleted: false,
+        mediumCompletedCount: 0,
         hasHardCompleted: false,
+        hardCompletedCount: 0,
+        hasTimedCompleted: false,
+        hasClassicCompleted: false,
+        hasHighAccuracy90: false,
+        totalScore: 0,
         ...partial,
     };
 }
@@ -53,7 +61,7 @@ describe('isAchievementCriteriaMet', () => {
         ).toBe(true);
     });
 
-    it('maps once-flags directly for perfect / daily / medium / hard', () => {
+    it('maps once-flags for perfect / daily / medium / hard / timed / accuracy', () => {
         expect(
             isAchievementCriteriaMet(
                 {
@@ -79,22 +87,73 @@ describe('isAchievementCriteriaMet', () => {
         expect(
             isAchievementCriteriaMet(
                 {
-                    code: 'MEDIUM_QUIZ',
-                    criteria: 'medium_quiz_completed_once',
+                    code: 'TIMED_COMPLETE',
+                    criteria: 'timed_quiz_completed_once',
                     threshold: null,
                 },
-                facts({ hasMediumCompleted: true }),
+                facts({ hasTimedCompleted: true }),
             ),
         ).toBe(true);
 
         expect(
             isAchievementCriteriaMet(
                 {
-                    code: 'HARD_QUIZ',
-                    criteria: 'hard_quiz_completed_once',
+                    code: 'HIGH_ACCURACY_90',
+                    criteria: 'high_accuracy_quiz_once',
                     threshold: null,
                 },
-                facts({ hasHardCompleted: true }),
+                facts({ hasHighAccuracy90: true }),
+            ),
+        ).toBe(true);
+    });
+
+    it('requires both classic and timed for CLASSIC_AND_TIMED', () => {
+        expect(
+            isAchievementCriteriaMet(
+                {
+                    code: 'CLASSIC_AND_TIMED',
+                    criteria: 'classic_and_timed_completed',
+                    threshold: null,
+                },
+                facts({ hasClassicCompleted: true }),
+            ),
+        ).toBe(false);
+
+        expect(
+            isAchievementCriteriaMet(
+                {
+                    code: 'CLASSIC_AND_TIMED',
+                    criteria: 'classic_and_timed_completed',
+                    threshold: null,
+                },
+                facts({
+                    hasClassicCompleted: true,
+                    hasTimedCompleted: true,
+                }),
+            ),
+        ).toBe(true);
+    });
+
+    it('uses count facts for PERFECT_3 / DAILY_3 / MEDIUM_5 / HARD_3 / POINTS', () => {
+        expect(
+            isAchievementCriteriaMet(
+                {
+                    code: 'PERFECT_3',
+                    criteria: 'perfect_quiz_at_least',
+                    threshold: 3,
+                },
+                facts({ perfectQuizCount: 2 }),
+            ),
+        ).toBe(false);
+
+        expect(
+            isAchievementCriteriaMet(
+                {
+                    code: 'POINTS_250',
+                    criteria: 'total_score_at_least',
+                    threshold: 250,
+                },
+                facts({ totalScore: 250 }),
             ),
         ).toBe(true);
     });
@@ -133,15 +192,39 @@ describe('evaluateAchievements', () => {
         ]);
     });
 
+    it('unlocks QUIZZES_25 and QUIZZES_50 on the volume ladder', () => {
+        expect(evaluateAchievements(facts({ quizzesCompleted: 25 }))).toEqual([
+            'FIRST_QUIZ',
+            'QUIZZES_5',
+            'QUIZZES_10',
+            'QUIZZES_25',
+        ]);
+        expect(evaluateAchievements(facts({ quizzesCompleted: 50 }))).toEqual([
+            'FIRST_QUIZ',
+            'QUIZZES_5',
+            'QUIZZES_10',
+            'QUIZZES_25',
+            'QUIZZES_50',
+        ]);
+    });
+
     it('keeps catalog order when several flag criteria are met', () => {
         expect(
             evaluateAchievements(
                 facts({
                     quizzesCompleted: 10,
                     hasPerfectQuiz: true,
+                    perfectQuizCount: 1,
                     hasDailyCompleted: true,
+                    dailyCompletedCount: 1,
                     hasMediumCompleted: true,
+                    mediumCompletedCount: 1,
                     hasHardCompleted: true,
+                    hardCompletedCount: 1,
+                    hasTimedCompleted: true,
+                    hasClassicCompleted: true,
+                    hasHighAccuracy90: true,
+                    totalScore: 100,
                 }),
             ),
         ).toEqual([
@@ -150,6 +233,9 @@ describe('evaluateAchievements', () => {
             'QUIZZES_10',
             'PERFECT_QUIZ',
             'DAILY_COMPLETE',
+            'TIMED_COMPLETE',
+            'CLASSIC_AND_TIMED',
+            'HIGH_ACCURACY_90',
             'MEDIUM_QUIZ',
             'HARD_QUIZ',
         ]);

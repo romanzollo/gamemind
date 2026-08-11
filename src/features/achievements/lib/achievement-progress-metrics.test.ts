@@ -1,7 +1,7 @@
 /**
  * Unit-тесты метрик прогресса к критерию бейджа.
  *
- * Фиксируем: clamp после порога, once = 0|1, битый threshold → null.
+ * Фиксируем: clamp после порога, once = 0|1, classic+timed = 0..2/2, битый threshold → null.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -16,9 +16,17 @@ function facts(
     return {
         quizzesCompleted: 0,
         hasPerfectQuiz: false,
+        perfectQuizCount: 0,
         hasDailyCompleted: false,
+        dailyCompletedCount: 0,
         hasMediumCompleted: false,
+        mediumCompletedCount: 0,
         hasHardCompleted: false,
+        hardCompletedCount: 0,
+        hasTimedCompleted: false,
+        hasClassicCompleted: false,
+        hasHighAccuracy90: false,
+        totalScore: 0,
         ...partial,
     };
 }
@@ -83,5 +91,56 @@ describe('getAchievementCriteriaProgress', () => {
                 facts({ hasHardCompleted: true }),
             ),
         ).toEqual({ current: 1, target: 1 });
+    });
+
+    it('maps classic+timed as modes completed out of 2', () => {
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'CLASSIC_AND_TIMED',
+                    criteria: 'classic_and_timed_completed',
+                    threshold: null,
+                },
+                facts({ hasClassicCompleted: true }),
+            ),
+        ).toEqual({ current: 1, target: 2 });
+
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'CLASSIC_AND_TIMED',
+                    criteria: 'classic_and_timed_completed',
+                    threshold: null,
+                },
+                facts({
+                    hasClassicCompleted: true,
+                    hasTimedCompleted: true,
+                }),
+            ),
+        ).toEqual({ current: 2, target: 2 });
+    });
+
+    it('maps POINTS_250 from totalScore with clamp', () => {
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'POINTS_250',
+                    criteria: 'total_score_at_least',
+                    threshold: 250,
+                },
+                facts({ totalScore: 180 }),
+            ),
+        ).toEqual({ current: 180, target: 250 });
+
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'POINTS_250',
+                    criteria: 'total_score_at_least',
+                    threshold: 250,
+                },
+                facts({ totalScore: 400 }),
+            ),
+        ).toEqual({ current: 250, target: 250 });
     });
 });

@@ -1,18 +1,25 @@
+/**
+ * История результатов профиля: Scoreboard Editorial.
+ *
+ * Узкий экран (&lt;640px): scoreboard-stack + превью N строк + disclosure
+ * (Показать все / Свернуть секцию — как ачивки).
+ * Шире — таблица целиком.
+ * Presentation only — без изменений scoring / snapshot.
+ */
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 
 import type { Difficulty } from '@/features/quiz/types';
+import { ProfileListDisclosureControl } from '@/features/profile/components/ProfileListDisclosureControl';
 import type { Dictionary } from '@/shared/i18n';
 import { EmptyState } from '@/shared/ui';
 
 import type { ProfileResultHistoryEntry } from '../types/result-history-entry';
 
-/**
- * История результатов профиля: Scoreboard Editorial.
- *
- * Узкий экран (&lt;640px): строка-мета (дата + difficulty chip + «Обзор»)
- * и две подписанные метрики. Шире — таблица с той же плашкой сложности.
- * Presentation only — без изменений scoring / snapshot.
- */
+/** Сколько строк истории видно на mobile до «Показать все». */
+const MOBILE_PREVIEW_COUNT = 5;
 
 type ProfileResultHistoryProps = {
     entries: ProfileResultHistoryEntry[];
@@ -23,6 +30,10 @@ type ProfileResultHistoryProps = {
         'easy' | 'medium' | 'hard'
     >;
 };
+
+function asDate(value: Date | string): Date {
+    return value instanceof Date ? value : new Date(value);
+}
 
 function difficultyLabel(
     difficulty: Difficulty,
@@ -87,20 +98,25 @@ export function ProfileResultHistory({
     labels,
     difficultyLabels,
 }: ProfileResultHistoryProps) {
+    const [showAllMobile, setShowAllMobile] = useState(false);
+
     if (entries.length === 0) {
         return (
             <EmptyState className="mt-4" title={labels.historyEmpty} />
         );
     }
 
+    const needsMobileFold = entries.length > MOBILE_PREVIEW_COUNT;
+
     return (
         <div>
             {/*
-              Phone / узкий tablet (&lt;640px): scoreboard-stack.
-              640px+: таблица (как раньше, но с difficulty chip).
+              Phone / узкий tablet (&lt;640px): scoreboard-stack + disclosure.
+              640px+: таблица целиком.
             */}
             <ul className="divide-y divide-border sm:hidden">
-                {entries.map((entry) => {
+                {entries.map((entry, index) => {
+                    const completedAt = asDate(entry.completedAt);
                     const difficulty = difficultyLabel(
                         entry.difficulty,
                         difficultyLabels,
@@ -111,9 +127,20 @@ export function ProfileResultHistory({
                         entry.totalQuestions,
                         labels.historyOf,
                     );
+                    const hideOnMobilePreview =
+                        needsMobileFold &&
+                        !showAllMobile &&
+                        index >= MOBILE_PREVIEW_COUNT;
 
                     return (
-                        <li key={entry.sessionId}>
+                        <li
+                            key={entry.sessionId}
+                            className={
+                                hideOnMobilePreview
+                                    ? 'max-sm:hidden'
+                                    : undefined
+                            }
+                        >
                             <Link
                                 href={href}
                                 prefetch={false}
@@ -122,10 +149,10 @@ export function ProfileResultHistory({
                                 <div className="flex items-center justify-between gap-3">
                                     <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
                                         <time
-                                            dateTime={entry.completedAt.toISOString()}
+                                            dateTime={completedAt.toISOString()}
                                             className="shrink-0 font-mono text-xs tabular-nums text-muted"
                                         >
-                                            {entry.completedAt.toLocaleDateString(
+                                            {completedAt.toLocaleDateString(
                                                 locale,
                                             )}
                                         </time>
@@ -165,6 +192,27 @@ export function ProfileResultHistory({
                 })}
             </ul>
 
+            {needsMobileFold ? (
+                showAllMobile ? (
+                    <ProfileListDisclosureControl
+                        kind="collapse"
+                        label={labels.collapseSection}
+                        onCollapse={() => setShowAllMobile(false)}
+                        className="sm:hidden"
+                    />
+                ) : (
+                    <ProfileListDisclosureControl
+                        kind="expand"
+                        label={labels.showAll.replace(
+                            '{count}',
+                            String(entries.length),
+                        )}
+                        onExpand={() => setShowAllMobile(true)}
+                        className="sm:hidden"
+                    />
+                )
+            ) : null}
+
             <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full border-collapse text-left text-sm">
                     <thead>
@@ -187,46 +235,50 @@ export function ProfileResultHistory({
                         </tr>
                     </thead>
                     <tbody>
-                        {entries.map((entry) => (
-                            <tr
-                                key={entry.sessionId}
-                                className="border-b border-border motion-safe:transition-colors hover:bg-surface-muted/40"
-                            >
-                                <td className="whitespace-nowrap py-3 pl-3 pr-3 font-mono text-xs tabular-nums text-muted sm:pr-4">
-                                    {entry.completedAt.toLocaleDateString(
-                                        locale,
-                                    )}
-                                </td>
-                                <td className="whitespace-nowrap py-3 pr-3 sm:pr-4">
-                                    <DifficultyChip
-                                        difficulty={entry.difficulty}
-                                        label={difficultyLabel(
-                                            entry.difficulty,
-                                            difficultyLabels,
+                        {entries.map((entry) => {
+                            const completedAt = asDate(entry.completedAt);
+
+                            return (
+                                <tr
+                                    key={entry.sessionId}
+                                    className="border-b border-border motion-safe:transition-colors hover:bg-surface-muted/40"
+                                >
+                                    <td className="whitespace-nowrap py-3 pl-3 pr-3 font-mono text-xs tabular-nums text-muted sm:pr-4">
+                                        {completedAt.toLocaleDateString(
+                                            locale,
                                         )}
-                                    />
-                                </td>
-                                <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-foreground sm:pr-4">
-                                    {entry.score}
-                                </td>
-                                <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-success sm:pr-4">
-                                    {formatCorrect(
-                                        entry.correctCount,
-                                        entry.totalQuestions,
-                                        labels.historyOf,
-                                    )}
-                                </td>
-                                <td className="whitespace-nowrap py-3">
-                                    <Link
-                                        href={`/${locale}/result/${entry.sessionId}`}
-                                        prefetch={false}
-                                        className={`${reviewLinkClassName} font-medium`}
-                                    >
-                                        {labels.historyView}
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td className="whitespace-nowrap py-3 pr-3 sm:pr-4">
+                                        <DifficultyChip
+                                            difficulty={entry.difficulty}
+                                            label={difficultyLabel(
+                                                entry.difficulty,
+                                                difficultyLabels,
+                                            )}
+                                        />
+                                    </td>
+                                    <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-foreground sm:pr-4">
+                                        {entry.score}
+                                    </td>
+                                    <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-success sm:pr-4">
+                                        {formatCorrect(
+                                            entry.correctCount,
+                                            entry.totalQuestions,
+                                            labels.historyOf,
+                                        )}
+                                    </td>
+                                    <td className="whitespace-nowrap py-3">
+                                        <Link
+                                            href={`/${locale}/result/${entry.sessionId}`}
+                                            prefetch={false}
+                                            className={`${reviewLinkClassName} font-medium`}
+                                        >
+                                            {labels.historyView}
+                                        </Link>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>

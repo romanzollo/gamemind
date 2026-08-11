@@ -31,12 +31,38 @@ export function isAchievementCriteriaMet(
         }
         case 'perfect_quiz_once':
             return facts.hasPerfectQuiz;
+        case 'perfect_quiz_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.perfectQuizCount >= threshold;
+        }
         case 'daily_challenge_completed_once':
             return facts.hasDailyCompleted;
+        case 'daily_challenge_completed_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.dailyCompletedCount >= threshold;
+        }
         case 'medium_quiz_completed_once':
             return facts.hasMediumCompleted;
+        case 'medium_quiz_completed_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.mediumCompletedCount >= threshold;
+        }
         case 'hard_quiz_completed_once':
             return facts.hasHardCompleted;
+        case 'hard_quiz_completed_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.hardCompletedCount >= threshold;
+        }
+        case 'timed_quiz_completed_once':
+            return facts.hasTimedCompleted;
+        case 'classic_and_timed_completed':
+            return facts.hasClassicCompleted && facts.hasTimedCompleted;
+        case 'high_accuracy_quiz_once':
+            return facts.hasHighAccuracy90;
+        case 'total_score_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.totalScore >= threshold;
+        }
         default: {
             // Исчерпывающий switch: новый kind в типах без ветки = ошибка компиляции.
             const _exhaustive: never = definition.criteria;

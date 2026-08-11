@@ -5,11 +5,17 @@
  * revalidate пересобирает page.tsx и нативный `<details>` снова закрыт →
  * контент схлопывается и кажется, что страница «прыгнула» вверх.
  *
- * Здесь island сохраняет DOM/React state (в т.ч. open) при soft refresh.
+ * Mobile: тот же ряд меню-ленты, что Достижения / История.
  */
 'use client';
 
 import type { ReactNode } from 'react';
+
+import {
+    profileFoldChevronClassName,
+    profileFoldRowClassName,
+    profileFoldSummaryClassName,
+} from '@/features/profile/components/profile-fold-styles';
 
 type ProfileSettingsSectionProps = {
     title: string;
@@ -21,20 +27,29 @@ export function ProfileSettingsSection({
     children,
 }: ProfileSettingsSectionProps) {
     return (
-        <details className="group mt-8 border-t border-border pt-6 sm:mt-10 sm:pt-8">
-            <summary className="cursor-pointer list-none font-display text-xl font-semibold tracking-tight text-foreground marker:content-none sm:text-2xl [&::-webkit-details-marker]:hidden">
-                <span className="inline-flex items-center gap-2">
-                    {title}
-                    <span
-                        className="font-mono text-sm font-normal text-muted transition-transform group-open:rotate-90"
-                        aria-hidden
-                    >
-                        ›
+        <details
+            className={[
+                'group',
+                profileFoldRowClassName,
+                // Desktop: прежний отступ сверху, без «ленточного» border-b
+                'lg:mt-10 lg:border-b-0 lg:border-t lg:border-border lg:pt-8',
+            ].join(' ')}
+        >
+            <summary className={profileFoldSummaryClassName}>
+                <span className="flex min-h-11 w-full items-center">
+                    <span className="inline-flex items-center gap-2">
+                        {title}
+                        <span
+                            className={profileFoldChevronClassName}
+                            aria-hidden
+                        >
+                            ›
+                        </span>
                     </span>
                 </span>
             </summary>
 
-            <div className="mt-6 space-y-8">{children}</div>
+            <div className="mt-4 space-y-8 lg:mt-6">{children}</div>
         </details>
     );
 }

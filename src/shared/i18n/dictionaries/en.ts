@@ -119,6 +119,8 @@ export const enDictionary = {
         historyOf: 'of',
         historyView: 'Review',
         historyLoadFailed: 'Could not load history. Try refreshing the page.',
+        showAll: 'Show all ({count})',
+        collapseSection: 'Collapse',
         statsTitle: 'Summary',
         statsQuizzesCompleted: 'Played',
         statsBestScore: 'Record',
@@ -450,6 +452,10 @@ export const enDictionary = {
         unlockedOn: 'Unlocked {date}',
         progressCount: '{unlocked} / {total}',
         criteriaProgress: '{current} / {target}',
+        criteriaRemaining: '{remaining} left',
+        tapHint: 'details',
+        showAll: 'Show all ({count})',
+        collapseSection: 'Collapse',
         toastUnlocked: 'Achievement unlocked',
         toastMoreSummary: '{count} more — see your profile',
         items: {
@@ -465,21 +471,61 @@ export const enDictionary = {
                 title: 'Ten-run streak',
                 description: 'Complete 10 quizzes.',
             },
+            QUIZZES_25: {
+                title: 'Quarter century',
+                description: 'Complete 25 quizzes.',
+            },
+            QUIZZES_50: {
+                title: 'Fifty deep',
+                description: 'Complete 50 quizzes.',
+            },
             PERFECT_QUIZ: {
                 title: 'Clean round',
                 description: 'Answer every question correctly in one quiz.',
+            },
+            PERFECT_3: {
+                title: 'Triple clean',
+                description: 'Score a perfect quiz three times.',
             },
             DAILY_COMPLETE: {
                 title: 'Challenge accepted',
                 description: 'Finish today’s daily challenge.',
             },
+            DAILY_3: {
+                title: 'Three dailies',
+                description: 'Complete the daily challenge three times.',
+            },
+            TIMED_COMPLETE: {
+                title: 'Blitz accepted',
+                description: 'Finish a timed-mode quiz.',
+            },
+            CLASSIC_AND_TIMED: {
+                title: 'Two tempos',
+                description: 'Complete both a classic quiz and a blitz.',
+            },
+            HIGH_ACCURACY_90: {
+                title: 'Near perfect',
+                description: 'Reach 90% accuracy or higher in one quiz.',
+            },
+            POINTS_250: {
+                title: 'Scoreboard 250',
+                description: 'Earn 250 total points across all quizzes.',
+            },
             MEDIUM_QUIZ: {
                 title: 'Middle league',
                 description: 'Complete a Medium difficulty quiz.',
             },
+            MEDIUM_5: {
+                title: 'Five mediums',
+                description: 'Complete 5 Medium difficulty quizzes.',
+            },
             HARD_QUIZ: {
                 title: 'Top difficulty',
                 description: 'Complete a Hard difficulty quiz.',
+            },
+            HARD_3: {
+                title: 'Three hards',
+                description: 'Complete 3 Hard difficulty quizzes.',
             },
         },
     },

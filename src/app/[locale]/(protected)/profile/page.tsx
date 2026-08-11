@@ -5,6 +5,7 @@ import type { AchievementProgress } from '@/features/achievements/types';
 import { ChangeAvatarForm } from '@/features/profile/components/ChangeAvatarForm';
 import { ChangePasswordForm } from '@/features/profile/components/ChangePasswordForm';
 import { ChangeUsernameForm } from '@/features/profile/components/ChangeUsernameForm';
+import { ProfileFoldSection } from '@/features/profile/components/ProfileFoldSection';
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
 import { ProfileSettingsSection } from '@/features/profile/components/ProfileSettingsSection';
 import { ProfileStatsSummary } from '@/features/profile/components/ProfileStatsSummary';
@@ -30,6 +31,7 @@ const sectionHeadingClassName =
  * Профиль: identity strip → progress (stats+achievements | history) → settings.
  *
  * IA: игровой прогресс выше форм; на lg mid = 2 колонки (меньше скролла).
+ * Mobile: ачивки и история — складки как настройки (не раздувают экран).
  * Settings в Client `<details>`, чтобы soft refresh не схлопывал блок.
  */
 export default async function ProfilePage({ params }: ProfilePageProps) {
@@ -42,31 +44,41 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     let historyLoadError: string | undefined;
     /** null = Neon/read failed; объект с quizzesCompleted=0 = ещё не играл. */
     let profileStats: ProfileStats | null = null;
-    /** null = Neon/read failed после catch-up; объект = полный каталог. */
+    /** null = Neon/read failed; объект = полный каталог. */
     let achievementProgress: AchievementProgress | null = null;
 
-    const [historySettled, statsSettled, achievementsSettled] =
-        await Promise.allSettled([
-            profileResultRepository.findRecentByUserId(
+    /*
+     * Не Promise.allSettled трёх withDirectPgClient: в next dev общая очередь,
+     * параллельные waiters клинят start (см. QUIZ_NEON_HOT_PATH, waiters≥3).
+     * Последовательные soft-fail чтения — один hop за раз.
+     */
+    try {
+        historyEntries = mapResultHistory(
+            await profileResultRepository.findRecentByUserId(
                 session.user.id,
                 PROFILE_RESULT_HISTORY_LIMIT,
             ),
-            profileResultRepository.findStatsByUserId(session.user.id),
-            getAchievementProgressForUser(session.user.id),
-        ]);
-
-    if (historySettled.status === 'fulfilled') {
-        historyEntries = mapResultHistory(historySettled.value);
-    } else {
+        );
+    } catch {
         historyLoadError = dictionary.profile.historyLoadFailed;
     }
 
-    if (statsSettled.status === 'fulfilled') {
-        profileStats = statsSettled.value;
+    try {
+        profileStats = await profileResultRepository.findStatsByUserId(
+            session.user.id,
+        );
+    } catch (error) {
+        console.error('Profile stats load failed:', error);
+        profileStats = null;
     }
 
-    if (achievementsSettled.status === 'fulfilled') {
-        achievementProgress = achievementsSettled.value;
+    try {
+        achievementProgress = await getAchievementProgressForUser(
+            session.user.id,
+        );
+    } catch (error) {
+        console.error('Profile achievements load failed:', error);
+        achievementProgress = null;
     }
 
     const unlockedCount =
@@ -128,103 +140,89 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             </section>
 
             {/*
-              Progress mid: на мобилке колонка; на lg — stats+ачивки | история
-              рядом, чтобы не скроллить «потоком» одинаковых блоков.
+              Progress mid: stats всегда видны; ниже — меню-лента складок
+              (ачивки | история) → settings. На lg: 2 колонки без «простыни».
             */}
-            <div className="mt-8 grid gap-8 sm:mt-10 lg:grid-cols-2 lg:items-start lg:gap-x-10">
-                {/* Левая колонка sticky: сводка+ачивки не «уплывают» при длинной истории */}
-                <div className="space-y-8 lg:sticky lg:top-24 lg:self-start">
-                    <section aria-labelledby="profile-stats-title">
-                        <h2
-                            id="profile-stats-title"
-                            className={sectionHeadingClassName}
-                        >
-                            {dictionary.profile.statsTitle}
-                        </h2>
-
-                        <ProfileStatsSummary
-                            stats={profileStats}
-                            locale={safeLocale}
-                            labels={dictionary.profile}
-                        />
-                    </section>
-
-                    <section aria-labelledby="profile-achievements-title">
-                        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                            <h2
-                                id="profile-achievements-title"
-                                className={sectionHeadingClassName}
-                            >
-                                {dictionary.achievements.sectionTitle}
-                            </h2>
-                            {achievementsCountLabel ? (
-                                <p className="font-mono text-sm tabular-nums tracking-tight text-muted">
-                                    {achievementsCountLabel}
-                                </p>
-                            ) : null}
-                        </div>
-
-                        <ProfileAchievementsList
-                            progress={achievementProgress}
-                            locale={safeLocale}
-                            labels={dictionary.achievements}
-                        />
-                    </section>
-                </div>
-
-                <section
-                    className="border-t border-border pt-8 lg:border-t-0 lg:pt-0"
-                    aria-labelledby="profile-history-title"
-                >
+            <div className="mt-8 sm:mt-10">
+                <section aria-labelledby="profile-stats-title">
                     <h2
-                        id="profile-history-title"
+                        id="profile-stats-title"
                         className={sectionHeadingClassName}
                     >
-                        {dictionary.profile.historyTitle}
+                        {dictionary.profile.statsTitle}
                     </h2>
 
-                    {historyLoadError ? (
-                        <InlineAlert className="mt-4">
-                            {historyLoadError}
-                        </InlineAlert>
-                    ) : null}
-
-                    {!historyLoadError && (
-                        <div className="mt-3 lg:max-h-[min(70vh,36rem)] lg:overflow-y-auto lg:overscroll-contain">
-                            <ProfileResultHistory
-                                entries={historyEntries}
-                                locale={safeLocale}
-                                labels={dictionary.profile}
-                                difficultyLabels={{
-                                    easy: dictionary.quiz.easy,
-                                    medium: dictionary.quiz.medium,
-                                    hard: dictionary.quiz.hard,
-                                }}
-                            />
-                        </div>
-                    )}
+                    <ProfileStatsSummary
+                        stats={profileStats}
+                        locale={safeLocale}
+                        labels={dictionary.profile}
+                    />
                 </section>
+
+                <div className="mt-6 border-t border-border lg:mt-10 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-10 lg:border-t-0">
+                    <div className="lg:sticky lg:top-24 lg:self-start">
+                        <ProfileFoldSection
+                            title={dictionary.achievements.sectionTitle}
+                            titleId="profile-achievements-title"
+                            trailing={achievementsCountLabel}
+                        >
+                            <ProfileAchievementsList
+                                progress={achievementProgress}
+                                locale={safeLocale}
+                                labels={dictionary.achievements}
+                            />
+                        </ProfileFoldSection>
+                    </div>
+
+                    <ProfileFoldSection
+                        title={dictionary.profile.historyTitle}
+                        titleId="profile-history-title"
+                    >
+                        {historyLoadError ? (
+                            <InlineAlert className="mt-1" tone="warning">
+                                {historyLoadError}
+                            </InlineAlert>
+                        ) : null}
+
+                        {!historyLoadError && (
+                            <div className="lg:mt-3 lg:max-h-[min(70vh,36rem)] lg:overflow-y-auto lg:overscroll-contain">
+                                <ProfileResultHistory
+                                    entries={historyEntries}
+                                    locale={safeLocale}
+                                    labels={dictionary.profile}
+                                    difficultyLabels={{
+                                        easy: dictionary.quiz.easy,
+                                        medium: dictionary.quiz.medium,
+                                        hard: dictionary.quiz.hard,
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </ProfileFoldSection>
+                </div>
+
+                {/* Client details: open state переживает revalidate/refresh */}
+                <ProfileSettingsSection
+                    title={dictionary.profile.sectionSettings}
+                >
+                    <ChangeUsernameForm
+                        locale={safeLocale}
+                        dictionary={dictionary}
+                        currentUsername={session.user.username}
+                    />
+
+                    <ChangeAvatarForm
+                        locale={safeLocale}
+                        dictionary={dictionary}
+                        currentImageUrl={session.user.image ?? null}
+                    />
+
+                    <ChangePasswordForm
+                        locale={safeLocale}
+                        dictionary={dictionary}
+                    />
+                </ProfileSettingsSection>
             </div>
-
-            {/* Client details: open state переживает revalidate/refresh */}
-            <ProfileSettingsSection title={dictionary.profile.sectionSettings}>
-                <ChangeUsernameForm
-                    locale={safeLocale}
-                    dictionary={dictionary}
-                    currentUsername={session.user.username}
-                />
-
-                <ChangeAvatarForm
-                    locale={safeLocale}
-                    dictionary={dictionary}
-                    currentImageUrl={session.user.image ?? null}
-                />
-
-                <ChangePasswordForm
-                    locale={safeLocale}
-                    dictionary={dictionary}
-                />
-            </ProfileSettingsSection>
         </main>
     );
 }

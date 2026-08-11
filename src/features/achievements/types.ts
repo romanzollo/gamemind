@@ -24,10 +24,20 @@ export type AchievementCode =
     | 'FIRST_QUIZ'
     | 'QUIZZES_5'
     | 'QUIZZES_10'
+    | 'QUIZZES_25'
+    | 'QUIZZES_50'
     | 'PERFECT_QUIZ'
+    | 'PERFECT_3'
     | 'DAILY_COMPLETE'
+    | 'DAILY_3'
     | 'MEDIUM_QUIZ'
-    | 'HARD_QUIZ';
+    | 'MEDIUM_5'
+    | 'HARD_QUIZ'
+    | 'HARD_3'
+    | 'TIMED_COMPLETE'
+    | 'CLASSIC_AND_TIMED'
+    | 'HIGH_ACCURACY_90'
+    | 'POINTS_250';
 
 /**
  * Как проверяем критерий по уже сохранённым фактам (QuizResult / QuizSession).
@@ -36,9 +46,17 @@ export type AchievementCode =
 export type AchievementCriteriaKind =
     | 'quizzes_completed_at_least'
     | 'perfect_quiz_once'
+    | 'perfect_quiz_at_least'
     | 'daily_challenge_completed_once'
+    | 'daily_challenge_completed_at_least'
     | 'medium_quiz_completed_once'
-    | 'hard_quiz_completed_once';
+    | 'medium_quiz_completed_at_least'
+    | 'hard_quiz_completed_once'
+    | 'hard_quiz_completed_at_least'
+    | 'timed_quiz_completed_once'
+    | 'classic_and_timed_completed'
+    | 'high_accuracy_quiz_once'
+    | 'total_score_at_least';
 
 /**
  * Описание одного бейджа в каталоге (код + критерий).
@@ -49,7 +67,7 @@ export type AchievementDefinition = {
     criteria: AchievementCriteriaKind;
     /**
      * Порог для count-критериев (например QUIZZES_5 → 5).
-     * null если критерию достаточно «хотя бы один раз».
+     * null если критерию достаточно «хотя бы один раз» (или составной once).
      */
     threshold: number | null;
 };
@@ -80,13 +98,26 @@ export type AchievementProgress = {
 /**
  * Факты о прогрессе игрока, достаточные для оценки критериев.
  * Собираем одним SQL на сервере; не тащим весь QuizResult в память.
+ *
+ * Режимы сессии (нет колонки mode):
+ * - Classic: dailyChallengeId IS NULL AND timedEndsAt IS NULL
+ * - Daily: dailyChallengeId IS NOT NULL
+ * - Timed (Blitz UI): timedEndsAt IS NOT NULL
  */
 export type AchievementEvalFacts = {
     quizzesCompleted: number;
     hasPerfectQuiz: boolean;
+    perfectQuizCount: number;
     hasDailyCompleted: boolean;
+    dailyCompletedCount: number;
     hasMediumCompleted: boolean;
+    mediumCompletedCount: number;
     hasHardCompleted: boolean;
+    hardCompletedCount: number;
+    hasTimedCompleted: boolean;
+    hasClassicCompleted: boolean;
+    hasHighAccuracy90: boolean;
+    totalScore: number;
 };
 
 /** Правила — одна точка правды для тестов и комментариев. */
@@ -108,7 +139,7 @@ export const ACHIEVEMENTS_MVP_RULES = {
  * Стабильный каталог. Новый бейдж = новый код + критерий + i18n + (при необходимости) SQL facts.
  * Порядок массива = порядок отображения.
  *
- * v2: QUIZZES_10 (лестница после 5) + MEDIUM_QUIZ (ступень до HARD).
+ * v3: лестница 25/50, Timed/Classic+Timed, Daily×3, quality, points, глубина сложности.
  */
 export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
     {
@@ -127,9 +158,24 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
         threshold: 10,
     },
     {
+        code: 'QUIZZES_25',
+        criteria: 'quizzes_completed_at_least',
+        threshold: 25,
+    },
+    {
+        code: 'QUIZZES_50',
+        criteria: 'quizzes_completed_at_least',
+        threshold: 50,
+    },
+    {
         code: 'PERFECT_QUIZ',
         criteria: 'perfect_quiz_once',
         threshold: null,
+    },
+    {
+        code: 'PERFECT_3',
+        criteria: 'perfect_quiz_at_least',
+        threshold: 3,
     },
     {
         code: 'DAILY_COMPLETE',
@@ -137,13 +183,48 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
         threshold: null,
     },
     {
+        code: 'DAILY_3',
+        criteria: 'daily_challenge_completed_at_least',
+        threshold: 3,
+    },
+    {
+        code: 'TIMED_COMPLETE',
+        criteria: 'timed_quiz_completed_once',
+        threshold: null,
+    },
+    {
+        code: 'CLASSIC_AND_TIMED',
+        criteria: 'classic_and_timed_completed',
+        threshold: null,
+    },
+    {
+        code: 'HIGH_ACCURACY_90',
+        criteria: 'high_accuracy_quiz_once',
+        threshold: null,
+    },
+    {
+        code: 'POINTS_250',
+        criteria: 'total_score_at_least',
+        threshold: 250,
+    },
+    {
         code: 'MEDIUM_QUIZ',
         criteria: 'medium_quiz_completed_once',
         threshold: null,
     },
     {
+        code: 'MEDIUM_5',
+        criteria: 'medium_quiz_completed_at_least',
+        threshold: 5,
+    },
+    {
         code: 'HARD_QUIZ',
         criteria: 'hard_quiz_completed_once',
         threshold: null,
+    },
+    {
+        code: 'HARD_3',
+        criteria: 'hard_quiz_completed_at_least',
+        threshold: 3,
     },
 ] as const;

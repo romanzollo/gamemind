@@ -137,6 +137,12 @@ export type Dictionary = {
         historyOf: string;
         historyView: string;
         historyLoadFailed: string;
+        /**
+         * Mobile: показать весь список в открытой секции. `{count}` = всего строк.
+         */
+        showAll: string;
+        /** Mobile: закрыть всю секцию `<details>`, не урезать до превью. */
+        collapseSection: string;
         /** Заголовок секции агрегатов (не путать с историей строк). */
         statsTitle: string;
         statsQuizzesCompleted: string;
@@ -521,6 +527,22 @@ export type Dictionary = {
          * Не путать с `progressCount` (сколько бейджей открыто).
          */
         criteriaProgress: string;
+        /**
+         * Сколько осталось до цели count-критерия: `{remaining}`.
+         * Показываем только при target > 1 и remaining > 0 (мотивация на mobile).
+         */
+        criteriaRemaining: string;
+        /**
+         * Affordance тапа: показать условие бейджа (desktop = title hover).
+         */
+        tapHint: string;
+        /** Mobile: раскрыть список после превью. `{count}` = всего. */
+        showAll: string;
+        /**
+         * Mobile: закрыть всю секцию `<details>` (не возвращать к превью).
+         * Как Settings / inventory — «я закончил смотреть».
+         */
+        collapseSection: string;
         /** Подзаголовок unlock-toast (title = имя бейджа). */
         toastUnlocked: string;
         /**
@@ -532,10 +554,20 @@ export type Dictionary = {
             FIRST_QUIZ: { title: string; description: string };
             QUIZZES_5: { title: string; description: string };
             QUIZZES_10: { title: string; description: string };
+            QUIZZES_25: { title: string; description: string };
+            QUIZZES_50: { title: string; description: string };
             PERFECT_QUIZ: { title: string; description: string };
+            PERFECT_3: { title: string; description: string };
             DAILY_COMPLETE: { title: string; description: string };
+            DAILY_3: { title: string; description: string };
+            TIMED_COMPLETE: { title: string; description: string };
+            CLASSIC_AND_TIMED: { title: string; description: string };
+            HIGH_ACCURACY_90: { title: string; description: string };
+            POINTS_250: { title: string; description: string };
             MEDIUM_QUIZ: { title: string; description: string };
+            MEDIUM_5: { title: string; description: string };
             HARD_QUIZ: { title: string; description: string };
+            HARD_3: { title: string; description: string };
         };
     };
 };

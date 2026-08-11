@@ -447,7 +447,11 @@ export async function withPooledPgReadClient<T>(
     );
 }
 
-/** Writes: fresh direct client without automatic retry / hard timeout. */
+/**
+ * Writes: fresh direct client without automatic retry.
+ * Таймаут только если caller передал `attemptTimeoutMs` (например award catch-up) —
+ * quiz submit write path по умолчанию без лимита, как раньше.
+ */
 export async function withDirectPgWriteClient<T>(
     operation: (client: Client) => Promise<T>,
     options?: DirectPgOperationOptions,
@@ -456,6 +460,7 @@ export async function withDirectPgWriteClient<T>(
         withFreshClient(createDirectClient, operation, {
             debugLabel: options?.debugLabel,
             queueWaitMs,
+            attemptTimeoutMs: options?.attemptTimeoutMs,
         }),
     );
 }

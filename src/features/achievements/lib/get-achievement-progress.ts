@@ -1,38 +1,56 @@
 /**
- * Progress ачивок для профиля: outbox/award catch-up + каталог + unlock + метрики.
+ * Progress ачивок для профиля: только Direct READ (без award write).
  *
- * Зачем: старые QuizResult (до фичи) и pending AchievementOutbox получат
- * бейджи при открытии профиля; UI всегда видит полный каталог.
+ * Canon / почему так (QUIZ_NEON_HOT_PATH + Aug 4):
+ * - одна shared Direct-очередь в next dev — write/длинный hop на профиле
+ *   ставит waiters и даёт DB_TIMEOUT на Classic/Blitz start;
+ * - award = outbox process на result Suspense (после score), soft-fail;
+ * - профиль показывает каталог + unlock + criteria; новые коды из evaluate
+ *   рисуем optimistic (пока DB догонит на следующем complete/result).
  *
- * Метрики считаются на сервере из EvalFacts — клиент не присылает прогресс.
+ * Не вызывать processOutboxAwardPass отсюда.
  */
 
 import { userAchievementRepository } from '@/entities/user-achievement/user-achievement.repository';
 import { getAchievementCriteriaProgress } from '@/features/achievements/lib/achievement-progress-metrics';
-import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
+import {
+    evaluateAchievements,
+    getNewlyEarnedAchievementCodes,
+} from '@/features/achievements/lib/evaluate-achievements';
 import {
     ACHIEVEMENT_CATALOG,
     type AchievementProgress,
 } from '@/features/achievements/types';
 
 /**
- * null = не удалось прочитать progress после catch-up (UI покажет loadFailed).
- * Объект всегда содержит все MVP-коды в порядке каталога.
+ * null = не удалось прочитать progress (UI покажет loadFailed).
+ * Объект всегда содержит все коды каталога в порядке ACHIEVEMENT_CATALOG.
  */
 export async function getAchievementProgressForUser(
     userId: string,
 ): Promise<AchievementProgress | null> {
-    // Soft-fail catch-up: ошибка award/outbox не должна ломать чтение прогресса.
-    await awardAchievementsForUser(userId);
-
     try {
         const { facts, unlockRows } =
             await userAchievementRepository.findProgressContextByUserId(
                 userId,
             );
+
         const unlockedAtByCode = new Map(
             unlockRows.map((row) => [row.code, row.unlockedAt] as const),
         );
+
+        // Optimistic: критерий уже выполнен, а строки UserAchievement ещё нет
+        // (новые коды каталога / outbox ещё на result). Не пишем в БД здесь.
+        const newlyEarned = getNewlyEarnedAchievementCodes(
+            evaluateAchievements(facts),
+            Array.from(unlockedAtByCode.keys()),
+        );
+        const now = new Date();
+        for (const code of newlyEarned) {
+            if (!unlockedAtByCode.has(code)) {
+                unlockedAtByCode.set(code, now);
+            }
+        }
 
         return {
             items: ACHIEVEMENT_CATALOG.map((definition) => {
@@ -43,7 +61,8 @@ export async function getAchievementProgressForUser(
 
                 return {
                     code: definition.code,
-                    unlockedAt: unlockedAtByCode.get(definition.code) ?? null,
+                    unlockedAt:
+                        unlockedAtByCode.get(definition.code) ?? null,
                     criteriaCurrent: metrics?.current ?? null,
                     criteriaTarget: metrics?.target ?? null,
                 };

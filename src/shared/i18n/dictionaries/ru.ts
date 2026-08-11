@@ -121,6 +121,8 @@ export const ruDictionary: Dictionary = {
         historyView: 'Обзор',
         historyLoadFailed:
             'Не удалось загрузить историю. Попробуйте обновить страницу.',
+        showAll: 'Показать все ({count})',
+        collapseSection: 'Свернуть',
         statsTitle: 'Сводка',
         statsQuizzesCompleted: 'Сыграно',
         statsBestScore: 'Рекорд',
@@ -466,6 +468,10 @@ export const ruDictionary: Dictionary = {
         unlockedOn: 'Открыто {date}',
         progressCount: '{unlocked} / {total}',
         criteriaProgress: '{current} / {target}',
+        criteriaRemaining: 'осталось {remaining}',
+        tapHint: 'подробнее',
+        showAll: 'Показать все ({count})',
+        collapseSection: 'Свернуть',
         toastUnlocked: 'Достижение открыто',
         toastMoreSummary: 'Ещё {count} — смотрите в профиле',
         items: {
@@ -481,21 +487,61 @@ export const ruDictionary: Dictionary = {
                 title: 'Серия из десяти',
                 description: 'Завершите 10 викторин.',
             },
+            QUIZZES_25: {
+                title: 'Четверть сотни',
+                description: 'Завершите 25 викторин.',
+            },
+            QUIZZES_50: {
+                title: 'Полтинник',
+                description: 'Завершите 50 викторин.',
+            },
             PERFECT_QUIZ: {
                 title: 'Чистый раунд',
                 description: 'Ответьте верно на все вопросы в одном квизе.',
+            },
+            PERFECT_3: {
+                title: 'Три чистых',
+                description: 'Соберите идеальный результат в трёх квизах.',
             },
             DAILY_COMPLETE: {
                 title: 'Челлендж принят',
                 description: 'Пройдите ежедневный челлендж.',
             },
+            DAILY_3: {
+                title: 'Три дня в деле',
+                description: 'Завершите ежедневный челлендж три раза.',
+            },
+            TIMED_COMPLETE: {
+                title: 'Блиц принят',
+                description: 'Завершите квиз в режиме на время.',
+            },
+            CLASSIC_AND_TIMED: {
+                title: 'Два темпа',
+                description: 'Пройдите и классический квиз, и блиц.',
+            },
+            HIGH_ACCURACY_90: {
+                title: 'Почти идеал',
+                description: 'Наберите точность 90% или выше в одном квизе.',
+            },
+            POINTS_250: {
+                title: 'Счётчик на 250',
+                description: 'Наберите суммарно 250 очков за все квизы.',
+            },
             MEDIUM_QUIZ: {
                 title: 'Средняя лига',
                 description: 'Завершите квиз на средней сложности.',
             },
+            MEDIUM_5: {
+                title: 'Пять средних',
+                description: 'Завершите 5 квизов на средней сложности.',
+            },
             HARD_QUIZ: {
                 title: 'Высшая сложность',
                 description: 'Завершите квиз на высокой сложности.',
+            },
+            HARD_3: {
+                title: 'Три тяжёлых',
+                description: 'Завершите 3 квиза на высокой сложности.',
             },
         },
     },

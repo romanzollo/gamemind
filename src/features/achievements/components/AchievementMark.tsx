@@ -16,13 +16,14 @@ type AchievementMarkProps = {
 };
 
 const sizeShellClassName = {
-    sm: 'h-10 w-10',
-    md: 'h-12 w-12 sm:h-14 sm:w-14',
+    sm: 'h-9 w-9',
+    /** Mobile плотнее; sm+ чуть крупнее для tile-сетки. */
+    md: 'h-10 w-10 sm:h-12 sm:w-12',
 } as const;
 
 const sizeSvgClassName = {
-    sm: 'h-10 w-10',
-    md: 'h-12 w-12 sm:h-14 sm:w-14',
+    sm: 'h-9 w-9',
+    md: 'h-10 w-10 sm:h-12 sm:w-12',
 } as const;
 
 export function AchievementMark({

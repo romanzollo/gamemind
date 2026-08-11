@@ -6,7 +6,8 @@
  * - не смешивать с quiz snapshot/submit write path — award вызывается после complete;
  * - каталога в БД нет: `code` = slug из ACHIEVEMENT_CATALOG.
  *
- * Canon: docs/DECISIONS.md → Achievements MVP.
+ * Canon: docs/DECISIONS.md → Achievements MVP + QUIZ_NEON_HOT_PATH
+ * (profile/award hops не должны клинить Direct-очередь quiz start).
  */
 
 import { randomUUID } from 'node:crypto';
@@ -22,10 +23,14 @@ import type {
 
 type EvalFactsRow = {
     quizzes_completed: number;
-    has_perfect: boolean | null;
-    has_daily: boolean | null;
-    has_medium: boolean | null;
-    has_hard: boolean | null;
+    perfect_count: number;
+    daily_count: number;
+    medium_count: number;
+    hard_count: number;
+    timed_count: number;
+    classic_count: number;
+    high_accuracy_90_count: number;
+    total_score: number;
 };
 
 type UnlockRow = {
@@ -33,42 +38,91 @@ type UnlockRow = {
     unlocked_at: Date;
 };
 
+/**
+ * Булевы once-флаги выводим из count — меньше aggregate в SQL,
+ * тот же контракт AchievementEvalFacts для evaluate/progress.
+ */
 function mapEvalFactsRow(row: EvalFactsRow | undefined): AchievementEvalFacts {
+    const perfectQuizCount = Number(row?.perfect_count ?? 0);
+    const dailyCompletedCount = Number(row?.daily_count ?? 0);
+    const mediumCompletedCount = Number(row?.medium_count ?? 0);
+    const hardCompletedCount = Number(row?.hard_count ?? 0);
+    const timedCount = Number(row?.timed_count ?? 0);
+    const classicCount = Number(row?.classic_count ?? 0);
+    const highAccuracy90Count = Number(row?.high_accuracy_90_count ?? 0);
+
     return {
         quizzesCompleted: Number(row?.quizzes_completed ?? 0),
-        hasPerfectQuiz: Boolean(row?.has_perfect),
-        hasDailyCompleted: Boolean(row?.has_daily),
-        hasMediumCompleted: Boolean(row?.has_medium),
-        hasHardCompleted: Boolean(row?.has_hard),
+        hasPerfectQuiz: perfectQuizCount > 0,
+        perfectQuizCount,
+        hasDailyCompleted: dailyCompletedCount > 0,
+        dailyCompletedCount,
+        hasMediumCompleted: mediumCompletedCount > 0,
+        mediumCompletedCount,
+        hasHardCompleted: hardCompletedCount > 0,
+        hardCompletedCount,
+        hasTimedCompleted: timedCount > 0,
+        hasClassicCompleted: classicCount > 0,
+        hasHighAccuracy90: highAccuracy90Count > 0,
+        totalScore: Number(row?.total_score ?? 0),
     };
 }
 
+/**
+ * Один SELECT: count-агрегаты для evaluate + progress UI.
+ * Не на submit/complete hop — только award/profile (см. QUIZ_NEON_HOT_PATH).
+ */
 const EVAL_FACTS_SQL = `
     SELECT
         COUNT(r.id)::int AS quizzes_completed,
         COALESCE(
-            BOOL_OR(
-                r."correctCount" = r."totalQuestions"
-                AND r."totalQuestions" > 0
+            COUNT(*) FILTER (
+                WHERE
+                    r."correctCount" = r."totalQuestions"
+                    AND r."totalQuestions" > 0
             ),
-            false
-        ) AS has_perfect,
+            0
+        )::int AS perfect_count,
         COALESCE(
-            BOOL_OR(s."dailyChallengeId" IS NOT NULL),
-            false
-        ) AS has_daily,
+            COUNT(*) FILTER (WHERE s."dailyChallengeId" IS NOT NULL),
+            0
+        )::int AS daily_count,
         COALESCE(
-            BOOL_OR(s.difficulty = 'MEDIUM'),
-            false
-        ) AS has_medium,
+            COUNT(*) FILTER (WHERE s.difficulty = 'MEDIUM'),
+            0
+        )::int AS medium_count,
         COALESCE(
-            BOOL_OR(s.difficulty = 'HARD'),
-            false
-        ) AS has_hard
+            COUNT(*) FILTER (WHERE s.difficulty = 'HARD'),
+            0
+        )::int AS hard_count,
+        COALESCE(
+            COUNT(*) FILTER (WHERE s."timedEndsAt" IS NOT NULL),
+            0
+        )::int AS timed_count,
+        COALESCE(
+            COUNT(*) FILTER (
+                WHERE
+                    s."dailyChallengeId" IS NULL
+                    AND s."timedEndsAt" IS NULL
+            ),
+            0
+        )::int AS classic_count,
+        COALESCE(
+            COUNT(*) FILTER (
+                WHERE
+                    r."totalQuestions" > 0
+                    AND (100.0 * r."correctCount" / r."totalQuestions") >= 90
+            ),
+            0
+        )::int AS high_accuracy_90_count,
+        COALESCE(SUM(r.score), 0)::int AS total_score
     FROM "QuizResult" AS r
     INNER JOIN "QuizSession" AS s ON s.id = r."sessionId"
     WHERE r."userId" = $1
 `;
+
+/** Profile progress — короткий budget: лучше soft-miss, чем клинить quiz start. */
+const PROGRESS_READ_TIMEOUT_MS = 8_000;
 
 export const userAchievementRepository = {
     /**
@@ -139,35 +193,43 @@ export const userAchievementRepository = {
     },
 
     /**
-     * Facts + unlock с датами на одном unpooled client — для профиля (progress UI).
-     * Не параллелить отдельные withDirectPgClient (см. findAwardContextByUserId).
+     * Facts + unlock на одном unpooled client — только READ для UI профиля.
+     * Без outbox/write: write award только на result Suspense (hot path canon).
+     * Короткий timeout — soft-miss ачивок лучше, чем DB_TIMEOUT на quiz start.
      */
     async findProgressContextByUserId(userId: string): Promise<{
         facts: AchievementEvalFacts;
         unlockRows: Array<{ code: string; unlockedAt: Date }>;
     }> {
-        return withDirectPgClient(async (client) => {
-            const factsResult = await client.query<EvalFactsRow>(
-                EVAL_FACTS_SQL,
-                [userId],
-            );
-            const unlockResult = await client.query<UnlockRow>(
-                `
-                    SELECT code, "unlockedAt" AS unlocked_at
-                    FROM "UserAchievement"
-                    WHERE "userId" = $1
-                `,
-                [userId],
-            );
+        return withDirectPgClient(
+            async (client) => {
+                const factsResult = await client.query<EvalFactsRow>(
+                    EVAL_FACTS_SQL,
+                    [userId],
+                );
+                const unlockResult = await client.query<UnlockRow>(
+                    `
+                        SELECT code, "unlockedAt" AS unlocked_at
+                        FROM "UserAchievement"
+                        WHERE "userId" = $1
+                    `,
+                    [userId],
+                );
 
-            return {
-                facts: mapEvalFactsRow(factsResult.rows[0]),
-                unlockRows: unlockResult.rows.map((row) => ({
-                    code: row.code,
-                    unlockedAt: row.unlocked_at,
-                })),
-            };
-        });
+                return {
+                    facts: mapEvalFactsRow(factsResult.rows[0]),
+                    unlockRows: unlockResult.rows.map((row) => ({
+                        code: row.code,
+                        unlockedAt: row.unlocked_at,
+                    })),
+                };
+            },
+            {
+                debugLabel: 'achievement.progress.context',
+                attemptTimeoutMs: PROGRESS_READ_TIMEOUT_MS,
+                maxAttempts: 1,
+            },
+        );
     },
 
     /** Уже сохранённые коды unlock (для diff с evaluate). */
@@ -214,9 +276,8 @@ export const userAchievementRepository = {
      * Один Direct write-client (autocommit, без BEGIN):
      * INSERT unlocks → mark all pending outbox for user processed.
      *
-     * Идемпотентно при гонке after()/Suspense/profile: ON CONFLICT + UPDATE
-     * WHERE processedAt IS NULL. Без FOR UPDATE — Neon write path на этом
-     * стеке надёжнее без явных транзакций (см. quiz submit).
+     * Только result Suspense / явный award — НЕ профиль (очередь start).
+     * Короткий timeout: soft-fail award важнее, чем клинить Direct queue.
      */
     async processOutboxAwardPass(
         userId: string,
@@ -256,6 +317,7 @@ export const userAchievementRepository = {
             },
             {
                 debugLabel: 'achievement.outbox.process',
+                attemptTimeoutMs: 8_000,
             },
         );
     },
