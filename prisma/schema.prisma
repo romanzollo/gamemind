@@ -67,6 +67,8 @@ model User {
   quizResults       QuizResult[]
   userAchievements  UserAchievement[]
   achievementOutbox AchievementOutbox[]
+  /// Мешок анти-повтора вопросов (Classic/Timed) по сложности. Daily не использует.
+  questionCycles    UserQuestionCycle[]
 }
 
 model Account {
@@ -260,6 +262,27 @@ model UserAchievement {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, code])
+  @@index([userId])
+}
+
+/// Shuffle-bag анти-повтора: один мешок на (user, difficulty) для Classic + Timed.
+/// remainingIds = JSON-массив id, ещё не взятых в текущем цикле.
+/// Пустой/короткий remaining → reshuffle (новый cycleNumber), не NOT IN на каждый start.
+/// Daily Challenge эту таблицу не трогает. Пишем только на quiz start, не на submit.
+/// Canon: User Question Cycle MVP.
+model UserQuestionCycle {
+  id            String     @id @default(cuid())
+  userId        String
+  difficulty    Difficulty
+  /// Оставшиеся question id текущего цикла (JSON string[]). Порядок = порядок раздачи.
+  remainingIds  Json
+  cycleNumber   Int        @default(1)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, difficulty])
   @@index([userId])
 }
 
