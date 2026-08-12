@@ -107,8 +107,7 @@ describe('drawFromSeededCycle', () => {
         expect(state.cursor).toBe(20);
     });
 
-    it('drain-then-top-up keeps leftover tail in the quiz', () => {
-        // Подгоняем состояние: cursor у хвоста длины 3, needed 10.
+    it('reshuffle-first when remaining < needed (no mixed-cycle quiz)', () => {
         const primed = drawFromSeededCycle({
             state: EMPTY_STATE,
             poolIds: POOL_20,
@@ -122,6 +121,19 @@ describe('drawFromSeededCycle', () => {
         }
 
         expect(primed.nextState.cursor).toBe(17);
+
+        const previousTail = (() => {
+            const full = drawFromSeededCycle({
+                state: EMPTY_STATE,
+                poolIds: POOL_20,
+                needed: 20,
+                createSeed: () => 7,
+            });
+            if (!full.ok) {
+                return [];
+            }
+            return full.drawnIds.slice(17);
+        })();
 
         let seedCalls = 0;
         const result = drawFromSeededCycle({
@@ -140,25 +152,86 @@ describe('drawFromSeededCycle', () => {
         }
 
         expect(result.didReshuffle).toBe(true);
+        expect(seedCalls).toBe(1);
         expect(result.drawnIds).toHaveLength(10);
         expect(new Set(result.drawnIds).size).toBe(10);
+        expect(result.nextState.cycleNumber).toBe(
+            primed.nextState.cycleNumber + 1,
+        );
+        expect(result.nextState.cursor).toBe(10);
+        expect(result.nextState.cycleSeed).toBe(1001);
 
-        // Хвост предыдущего цикла — первые 3 drawn.
-        const previousShuffledTail = (() => {
-            // Reconstruct: first cycle seed 7, take last 3 of remaining 3.
-            const full = drawFromSeededCycle({
-                state: EMPTY_STATE,
+        // Хвост старого цикла НЕ обязан идти первым — он вернулся в мешок.
+        expect(result.drawnIds.slice(0, 3)).not.toEqual(previousTail);
+    });
+
+    it('Classic-3 wrap: no reappear of wrap quiz ids until next reshuffle', () => {
+        let state = EMPTY_STATE;
+        let seedSeq = 200;
+        const createSeed = () => {
+            seedSeq += 1;
+            return seedSeq;
+        };
+
+        // 6×3 = 18 → остаток 2; следующий draw должен reshuffle-first.
+        for (let i = 0; i < 6; i += 1) {
+            const step = drawFromSeededCycle({
+                state,
                 poolIds: POOL_20,
-                needed: 20,
-                createSeed: () => 7,
+                needed: 3,
+                createSeed,
             });
-            if (!full.ok) {
-                return [];
+            expect(step.ok).toBe(true);
+            if (!step.ok) {
+                return;
             }
-            return full.drawnIds.slice(17);
-        })();
+            expect(step.didReshuffle).toBe(i === 0);
+            state = step.nextState;
+        }
 
-        expect(result.drawnIds.slice(0, 3)).toEqual(previousShuffledTail);
+        expect(state.cursor).toBe(18);
+
+        const wrap = drawFromSeededCycle({
+            state,
+            poolIds: POOL_20,
+            needed: 3,
+            createSeed,
+        });
+
+        expect(wrap.ok).toBe(true);
+        if (!wrap.ok) {
+            return;
+        }
+
+        expect(wrap.didReshuffle).toBe(true);
+        expect(wrap.nextState.cursor).toBe(3);
+
+        const wrapIds = new Set(wrap.drawnIds);
+        let peekState = wrap.nextState;
+
+        while (peekState.cursor < peekState.poolSize) {
+            const peek = drawFromSeededCycle({
+                state: peekState,
+                poolIds: POOL_20,
+                needed: 3,
+                createSeed,
+            });
+
+            expect(peek.ok).toBe(true);
+            if (!peek.ok) {
+                return;
+            }
+
+            if (peek.didReshuffle) {
+                break;
+            }
+
+            for (const id of peek.drawnIds) {
+                expect(wrapIds.has(id)).toBe(false);
+            }
+
+            peekState = peek.nextState;
+        }
     });
 
     it('same seed + cursor is deterministic', () => {

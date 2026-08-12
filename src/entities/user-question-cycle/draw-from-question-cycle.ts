@@ -8,9 +8,13 @@
  *
  * Инварианты:
  * - один проход pool без повторов до исчерпания cursor;
- * - drain-then-top-up на границе цикла (хвост + новый seed);
+ * - граница цикла: если remaining < needed → сразу новый seed и полный добор
+ *   (reshuffle-first; хвост возвращается в мешок, без drain-then-top-up);
  * - смена poolSize / seed=0 → новый цикл;
  * - pool < needed → NOT_ENOUGH_QUESTIONS.
+ *
+ * Почему не drain-then-top-up: хвост + новый shuffle давал повтор drain-id
+ * позже в том же цикле (Classic 3 при pool % 3 ≠ 0). Scalar state это не лечит.
  */
 
 import {
@@ -104,7 +108,8 @@ function shouldOpenNewCycle(
 }
 
 /**
- * Достаёт `needed` id из seeded-цикла с drain-then-top-up на границе.
+ * Достаёт `needed` id из seeded-цикла.
+ * На границе (хвоста не хватает) — reshuffle-first, без смешения двух циклов в одном квизе.
  */
 export function drawFromSeededCycle(
     input: DrawFromSeededCycleInput,
@@ -132,6 +137,11 @@ export function drawFromSeededCycle(
     if (shouldOpenNewCycle(state, pool.length)) {
         state = openNewCycle(state.cycleNumber, pool.length, createSeed);
         didReshuffle = true;
+    } else if (state.poolSize - state.cursor < needed) {
+        // Хвоста мало на целый квиз: не добираем из двух циклов (анти-повтор).
+        // Неиспользованный хвост вернётся через новый seed.
+        state = openNewCycle(state.cycleNumber, pool.length, createSeed);
+        didReshuffle = true;
     }
 
     const shuffled = buildShuffledPool(pool, state.cycleSeed);
@@ -143,42 +153,8 @@ export function drawFromSeededCycle(
         cursor += 1;
     }
 
-    if (drawnIds.length === needed) {
-        return {
-            ok: true,
-            drawnIds,
-            nextState: {
-                cycleNumber: state.cycleNumber,
-                cycleSeed: state.cycleSeed,
-                cursor,
-                poolSize: state.poolSize,
-            },
-            didReshuffle,
-        };
-    }
-
-    // Хвост текущего цикла уже в drawnIds. Новый цикл + добор без дублей.
-    const next = openNewCycle(state.cycleNumber, pool.length, createSeed);
-    const nextShuffled = buildShuffledPool(pool, next.cycleSeed);
-    const drawnSet = new Set(drawnIds);
-    let nextCursor = 0;
-
-    for (; nextCursor < nextShuffled.length; nextCursor += 1) {
-        if (drawnIds.length >= needed) {
-            break;
-        }
-
-        const id = nextShuffled[nextCursor]!;
-
-        if (drawnSet.has(id)) {
-            continue;
-        }
-
-        drawnIds.push(id);
-        drawnSet.add(id);
-    }
-
     if (drawnIds.length < needed) {
+        // После reshuffle-first при pool >= needed не должно случаться.
         return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
     }
 
@@ -186,11 +162,11 @@ export function drawFromSeededCycle(
         ok: true,
         drawnIds,
         nextState: {
-            cycleNumber: next.cycleNumber,
-            cycleSeed: next.cycleSeed,
-            cursor: nextCursor,
-            poolSize: next.poolSize,
+            cycleNumber: state.cycleNumber,
+            cycleSeed: state.cycleSeed,
+            cursor,
+            poolSize: state.poolSize,
         },
-        didReshuffle: true,
+        didReshuffle,
     };
 }
