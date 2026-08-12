@@ -1359,6 +1359,8 @@ Tracking: `ROADMAP.md` ?11.4 / Immediate Next; `PROJECT_CONTEXT.md` Epic 4 Phase
 
 **Status (Aug 4 late night):** TEXT steps **1–6 done** — AI emits same `version: 1` JSON; batches in `content/drafts/batches/`; import DRAFT-only; publish via admin on local + **prod**. Prod ops lesson: never confuse local/prod Neon hosts; after quiz schema deploys run prod `migrate deploy` (Aug 4: missing `AchievementOutbox` broke result until catch-up). See `CONTENT_PIPELINE.md` §10. Neon/quiz hot-path canon must not be undone for content work.
 
+**Status (Aug 12 night):** local/prod TEXT+IMAGE banks aligned after C1–C3 local catch-up and deleting local-only samples/mixed/early admin rows. Quiz pool TEXT **270** + IMAGE_GUESS **171** on both Neons. TEXT import is **not** idempotent (new UUIDs); do not re-import a published batch. Drift check: `content:smoke-text` / `content:smoke-image-guess` with `--target=prod`. Canon: `CONTENT_PIPELINE.md` §10 “Local vs prod drift”.
+
 **IMAGE_GUESS sibling (Aug 6):** batch ×90 is **not** TEXT `draft-questions.v1` — separate manifest + `scripts/import-image-guess-batch.cjs` (seed-style Neon client). Still **DRAFT-only** on import + admin Publish. Canon: `docs/QUIZ_IMAGES.md` §5–§6; ADR below.
 
 ## IMAGE_GUESS Batch Import + Lightbox (August 6, 2026)

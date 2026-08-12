@@ -185,9 +185,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 12, 2026 (evening) — IMAGE_GUESS ×90 `img-*` **PUBLISHED** on local + prod (smoke `content:smoke-image-guess`). UserQuestionCycle earlier same day.
+**Last updated:** August 12, 2026 (night) — TEXT C1–C3 caught up on local; local junk ×8 deleted. Banks match: TEXT pool **270** + IMAGE_GUESS **171** (admin ~441) local+prod.
 
-**Preferred next:** Quiz + lightbox smoke (light/dark, Classic pick hits IMAGE_GUESS) → optional more TEXT batches. Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
+**Preferred next:** Mechanics TEXT wave, or friends lightbox smoke. Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. Do **not** re-import C/D/fresh/samples (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.

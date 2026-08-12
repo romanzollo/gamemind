@@ -50,12 +50,17 @@ content/drafts/
   schema/
     draft-questions.v1.schema.json   # machine-readable contract (JSON Schema)
   examples/
-    sample-text-v1.json              # 3 TEXT bilingual samples
+    sample-text-v1.json              # 3 TEXT samples for CLI/learn — not in quiz pool
   batches/
-    2026-08-04-text-fresh-45.json    # AI batch 15×3 (local+prod)
-    2026-08-04-text-fresh-60.json    # AI batch 20×3 (local+prod)
-    2026-08-05-image-guess-90.json   # IMAGE_GUESS ×90 (sibling importer; DRAFT)
-    2026-08-12-text-wave-d1-6.json   # TEXT ×6 wave D1 — local PUBLISHED Aug 12 (Celeste/Sekiro)
+    2026-08-03-text-mixed-v1.json    # early 3-Q experiment; not in pool (do not re-import)
+    2026-08-04-text-fresh-45.json    # AI batch 15×3 (local+prod PUBLISHED)
+    2026-08-04-text-fresh-60.json    # AI batch 20×3 (local+prod PUBLISHED)
+    2026-08-05-image-guess-90.json   # IMAGE_GUESS ×90 (sibling; local+prod PUBLISHED)
+    2026-08-07-image-guess-72.json   # IMAGE_GUESS ×72 wave 2 (local+prod PUBLISHED)
+    2026-08-07-text-wave-c1-36.json  # TEXT ×36 C1 (local+prod PUBLISHED)
+    2026-08-07-text-wave-c2-36.json  # TEXT ×36 C2 (local+prod PUBLISHED)
+    2026-08-07-text-wave-c3-36.json  # TEXT ×36 C3 (local+prod PUBLISHED)
+    2026-08-12-text-wave-d1-6.json   # TEXT ×6 D1 (local+prod PUBLISHED)
 
 src/features/content/lib/
   draft-questions.schema.ts          # Zod contract v1 (runtime)
@@ -65,6 +70,7 @@ src/features/content/lib/
 
 scripts/validate-draft-questions.ts  # CLI validate (no Neon)
 scripts/import-draft-questions.ts    # CLI import TEXT → DRAFT (needs .env)
+scripts/import-text-drafts-to-prod.cjs  # wrapper: TEXT files → prod URL (host guard)
 scripts/import-image-guess-batch.cjs # CLI import IMAGE_GUESS batch → DRAFT + asset
 scripts/smoke-content-pipeline-status.ts  # read-only status of sample rows
 scripts/smoke-image-guess-publish-status.cjs  # IMAGE_GUESS img-* + pool
@@ -78,7 +84,8 @@ npm scripts:
 - `content:smoke-status`
 - `content:smoke-image-guess` / `--target=prod`
 - `content:smoke-text` / `--target=prod`
-- `content:publish-text-drafts` / `--dry-run` (local TEXT DRAFT → PUBLISHED via quality gate; not for casual prod)
+- `content:publish-text-drafts` / `--dry-run` / `--target=prod --file=…` (quality gate; prod **requires** `--file` filter)
+
 
 Authoring batches: `content/drafts/batches/YYYY-MM-DD-….json` (commit when you choose).
 
@@ -154,6 +161,8 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 - Trust client-only checks for publish
 - Start IMAGE_GUESS in the same batch as first TEXT import
 - Change scoring / quiz snapshot / Neon Direct start paths for this feature
+- Re-import the same TEXT JSON (new UUIDs → duplicates). IMAGE_GUESS batch upserts by `draftKey`
+- Copy `sample-text-v1` / mixed experiments to prod just to match admin hub counts
 
 ---
 
@@ -323,3 +332,22 @@ npm run content:import-image-guess -- --target=prod
 ```
 
 Then: Admin DRAFT → Publish. **Also** ensure `public/quiz-images/**` WebP are committed and deployed — otherwise thumbs/quiz images 404 while DB URLs look correct.
+
+### Local vs prod drift (Aug 12 lesson)
+
+Admin hub counts **all** `isActive` rows (including DRAFT). A gap there is almost always **missing batches on one Neon**, not a UI bug.
+
+**Aug 12:** prod had TEXT waves C1–C3 (×108) that local lacked → hub 435 vs 341. IMAGE_GUESS was already in sync (`img-*` ×90 + `img2-*` ×72 + seed ×9). After local import+publish of C1–C3, local still had **8 extras** (pipeline samples, mixed Hyrule/Switch, two July admin TEXT, one July test IMAGE_GUESS). Those were **deleted on local only** — not copied to prod.
+
+**Bank after cleanup (both Neons):** TEXT quiz pool **270** (90/90/90) + IMAGE_GUESS **171** → admin ~**441**. Verify:
+
+```powershell
+npm run content:smoke-text
+npm run content:smoke-text -- --target=prod
+npm run content:smoke-image-guess
+npm run content:smoke-image-guess -- --target=prod
+```
+
+Helper for TEXT → prod without swapping `.env`: `node scripts/import-text-drafts-to-prod.cjs <files…>` (refuses `jolly-river`). Then publish with `content:publish-text-drafts -- --target=prod --file=…` (prod **requires** `--file`; bulk cap 100).
+
+**Do not:** dump one Neon onto the other; re-import C/D/fresh/samples; treat hub “active” as quiz pool (`PUBLISHED + isActive`).
