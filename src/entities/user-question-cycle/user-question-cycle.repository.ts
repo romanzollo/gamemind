@@ -1,16 +1,15 @@
 /**
  * Persist / draw UserQuestionCycle (shuffle-bag anti-repeat).
  *
- * Важно (Aug 12): мешок НЕ на Direct quiz queue (QUIZ_NEON_HOT_PATH).
- * Pooled Prisma + короткий budget. Если budget вышел — fallback random,
- * но in-flight НЕ должен успеть записать мешок после cancel (иначе
- * рассинхрон + prisma Connection terminated от брошенного запроса).
+ * Важно (Aug 12, lesson 3):
+ * - НЕ на Direct quiz queue (QUIZ_NEON_HOT_PATH).
+ * - Fast path = только upsert + slice в памяти + лёгкий UPDATE.
+ * - Запрещено: findMany IN(голова) и UPDATE … remainingIds equals весь JSON
+ *   массив (~100 id) — на Windows+Neon pooled это зависает >4s, срабатывает
+ *   fallback random → одни и те же IMAGE_GUESS «преследуют», а мешок не списывается.
+ * - Optimistic lock: userId+difficulty+cycleNumber (без JSON equals).
  *
- * Fast path: remaining хватает → take в памяти + один UPDATE.
- * Не делаем findMany id IN (все remaining) — на ~100 id pooled Neon
- * стабильно не укладывался в 4s → ложный fallback и «повторы».
- *
- * Daily / submit эту таблицу не вызывают.
+ * Daily / submit не вызывают.
  */
 
 import { randomUUID } from 'node:crypto';
@@ -22,7 +21,6 @@ import { drawFromQuestionCycle } from '@/entities/user-question-cycle/draw-from-
 
 const OPTIMISTIC_DRAW_MAX_ATTEMPTS = 3;
 
-/** Жёсткий потолок: лучше fallback random, чем старт десятки секунд. */
 export const USER_QUESTION_CYCLE_DRAW_BUDGET_MS = 4_000;
 
 export type DrawUserQuestionCycleIdsResult =
@@ -86,47 +84,19 @@ async function loadActivePublishedPoolIds(
     return rows.map((row) => row.id);
 }
 
-/**
- * Узкая проверка только для id, которые собираемся отдать в квиз (N ≤ 10).
- * Не сканировать весь remaining через IN (...100+).
- */
-async function filterIdsStillInPool(
-    difficulty: Difficulty,
-    candidateIds: string[],
-): Promise<string[]> {
-    if (candidateIds.length === 0) {
-        return [];
-    }
-
-    const rows = await prisma.question.findMany({
-        where: {
-            id: { in: candidateIds },
-            difficulty,
-            isActive: true,
-            publicationStatus: 'PUBLISHED',
-        },
-        select: { id: true },
-    });
-
-    const alive = new Set(rows.map((row) => row.id));
-
-    return candidateIds.filter((id) => alive.has(id));
-}
-
 async function tryPersistDraw(input: {
     userId: string;
     difficulty: Difficulty;
-    expectedRemainingIds: string[];
     expectedCycleNumber: number;
     nextRemainingIds: string[];
     nextCycleNumber: number;
 }): Promise<boolean> {
+    // Без equals на весь JSON remaining — это и был зависающий UPDATE.
     const result = await prisma.userQuestionCycle.updateMany({
         where: {
             userId: input.userId,
             difficulty: input.difficulty,
             cycleNumber: input.expectedCycleNumber,
-            remainingIds: { equals: input.expectedRemainingIds },
         },
         data: {
             remainingIds: input.nextRemainingIds,
@@ -162,42 +132,36 @@ async function drawQuestionIdsOnce(
         const remainingIds = parseRemainingIds(row.remainingIds);
         const cycleNumber = Number(row.cycleNumber);
 
-        let poolIds: string[];
-        let remainingForDraw = remainingIds;
+        let drawnIds: string[];
+        let nextRemainingIds: string[];
+        let nextCycleNumber: number;
+        let didReshuffle: boolean;
 
         if (remainingIds.length >= input.needed) {
-            // Fast path: не тянем весь банк и не IN(весь remaining).
-            // Проверяем только голову мешка (needed + небольшой запас на soft-hide).
-            const head = remainingIds.slice(0, input.needed + 5);
-            const aliveHead = await filterIdsStillInPool(
-                input.difficulty,
-                head,
-            );
-            assertNotCancelled(cancel);
-
-            if (aliveHead.length >= input.needed) {
-                // pool = alive head + хвост без повторной проверки (хвост проверим в следующих стартах).
-                const tail = remainingIds.slice(head.length);
-                poolIds = [...aliveHead, ...tail];
-                remainingForDraw = poolIds;
-            } else {
-                poolIds = await loadActivePublishedPoolIds(input.difficulty);
-                assertNotCancelled(cancel);
-            }
+            // Fast path: ноль лишних SELECT. Soft-hide почистим на reshuffle.
+            drawnIds = remainingIds.slice(0, input.needed);
+            nextRemainingIds = remainingIds.slice(input.needed);
+            nextCycleNumber = cycleNumber;
+            didReshuffle = false;
         } else {
-            poolIds = await loadActivePublishedPoolIds(input.difficulty);
+            const poolIds = await loadActivePublishedPoolIds(input.difficulty);
             assertNotCancelled(cancel);
-        }
 
-        const drawn = drawFromQuestionCycle({
-            remainingIds: remainingForDraw,
-            cycleNumber,
-            poolIds,
-            needed: input.needed,
-        });
+            const drawn = drawFromQuestionCycle({
+                remainingIds,
+                cycleNumber,
+                poolIds,
+                needed: input.needed,
+            });
 
-        if (!drawn.ok) {
-            return { ok: false, reason: drawn.reason };
+            if (!drawn.ok) {
+                return { ok: false, reason: drawn.reason };
+            }
+
+            drawnIds = drawn.drawnIds;
+            nextRemainingIds = drawn.nextRemainingIds;
+            nextCycleNumber = drawn.nextCycleNumber;
+            didReshuffle = drawn.didReshuffle;
         }
 
         assertNotCancelled(cancel);
@@ -205,21 +169,17 @@ async function drawQuestionIdsOnce(
         const persisted = await tryPersistDraw({
             userId: input.userId,
             difficulty: input.difficulty,
-            // Optimistic lock по факту в БД до наших правок головы.
-            expectedRemainingIds: remainingIds,
             expectedCycleNumber: cycleNumber,
-            nextRemainingIds: drawn.nextRemainingIds,
-            nextCycleNumber: drawn.nextCycleNumber,
+            nextRemainingIds,
+            nextCycleNumber,
         });
 
         if (persisted) {
-            // Если budget уже вышел, но UPDATE прошёл — возвращаем эти id,
-            // иначе fallback random + списанный мешок = дыры и путаница.
             return {
                 ok: true,
-                questionIds: drawn.drawnIds,
-                cycleNumber: drawn.nextCycleNumber,
-                didReshuffle: drawn.didReshuffle,
+                questionIds: drawnIds,
+                cycleNumber: nextCycleNumber,
+                didReshuffle,
             };
         }
     }
@@ -248,7 +208,6 @@ function withBudget<T>(
         run(cancel).then(
             (value) => {
                 clearTimeout(timer);
-                // Успех после cancel всё же принимаем: мешок уже согласован с drawn.
                 resolve(value);
             },
             (error: unknown) => {
@@ -260,10 +219,6 @@ function withBudget<T>(
 }
 
 export const userQuestionCycleRepository = {
-    /**
-     * Забирает N question id из мешка. Pooled Prisma, не Direct queue.
-     * Снаружи — try/fallback на random при budget/ошибке.
-     */
     async drawQuestionIds(input: {
         userId: string;
         difficulty: Difficulty;
