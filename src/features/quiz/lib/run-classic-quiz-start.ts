@@ -4,10 +4,11 @@
  * Без redirect / FormData — auth/rate limit в actions.
  *
  * Контракт Classic (не смешивать с Timed):
- * - pickClassicSnapshotBundle → createWithJsonSnapshot (без timedEndsAt);
- * - pick: id-pool TLS + resolve TLS; create — третий budget;
+ * - pickClassicSnapshotBundle (UserQuestionCycle + resolve by ids) →
+ *   createWithJsonSnapshot (без timedEndsAt);
+ * - pick: cycle write TLS + resolve chunks; create — отдельный budget;
  * - 500ms settle перед pick (rematch / lobby Daily);
- * - матрица: Easy 3 / 5 / 10 → 303.
+ * - матрица: Easy 3 / 5 / 10 → 303; анти-повтор до исчерпания мешка.
  *
  * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
@@ -42,6 +43,7 @@ export async function runClassicQuizStart(
         );
 
         const pickedQuestions = await pickClassicSnapshotBundle(
+            input.userId,
             input.difficulty,
             input.questionCount,
             input.locale,

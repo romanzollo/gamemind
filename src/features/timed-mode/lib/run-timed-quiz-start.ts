@@ -4,12 +4,14 @@
  * Без redirect / FormData — auth/rate limit в actions.
  *
  * Контракт Timed (не смешивать с Classic):
- * - pickTimedSnapshotBundle → createWithJsonSnapshot с timedEndsAt;
+ * - pickTimedSnapshotBundle (тот же UserQuestionCycle по difficulty) →
+ *   createWithJsonSnapshot с timedEndsAt;
  * - timedEndsAt = now + durationSeconds **после pick, перед INSERT** —
  *   иначе медленный Neon съедает минуту до экрана (симптом «осталось ~40с»);
  * - abandon orphan timed внутри create на том же Direct client;
  * - 500ms settle перед pick;
  * - матрица: Blitz 10 → 303, countdown ≈60с, result после submit.
+ * - Daily не ест из этого мешка.
  *
  * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
@@ -46,6 +48,7 @@ export async function runTimedQuizStart(
         );
 
         const pickedQuestions = await pickTimedSnapshotBundle(
+            input.userId,
             input.difficulty,
             questionCount,
             input.locale,
