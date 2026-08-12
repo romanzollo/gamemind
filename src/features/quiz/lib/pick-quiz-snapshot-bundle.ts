@@ -1,30 +1,21 @@
 /**
  * Mode-specific snapshot pick wrappers (Classic / Timed).
  *
- * Classic + Timed: UserQuestionCycle shuffle-bag → resolve by ids (chunks of 5).
- * Daily Challenge сюда не ходит — у него frozen ids дня.
+ * Classic + Timed: UserQuestionCycle (pooled) → resolve by ids (Direct chunks).
+ * Daily Challenge сюда не ходит — frozen ids дня.
  *
- * Если cycle Direct hop падает transient (Windows+Neon Connection terminated),
- * fallback на legacy random pick — квиз не должен быть «полностью сломан»,
- * анти-повтор best-effort. См. QUIZ_NEON_HOT_PATH.
+ * Cycle специально НЕ на Direct queue: иначе 18s timeout + fallback = start ~40s.
+ * Если pooled cycle не уложился в budget — сразу legacy random pick.
  *
- * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
+ * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook + QUIZ_NEON_HOT_PATH.
  */
 
 import { questionRepository } from '@/entities/question/question.repository';
 import type { QuestionSnapshotBundleItem } from '@/entities/question/question.types';
 import { userQuestionCycleRepository } from '@/entities/user-question-cycle/user-question-cycle.repository';
-import {
-    isDirectPgTimeoutError,
-    isTransientDirectPgError,
-} from '@/lib/db/direct-pg';
 import type { Locale } from '@/shared/i18n';
 import type { Difficulty } from '@/types';
 
-/**
- * Cycle draw + chunked resolve. Пустой массив = NOT_ENOUGH_QUESTIONS наверху.
- * Не списывает Daily ids; submit не вызывает.
- */
 async function pickUserCycleSnapshotBundle(
     userId: string,
     difficulty: Difficulty,
@@ -47,30 +38,22 @@ async function pickUserCycleSnapshotBundle(
             locale,
         );
     } catch (error) {
-        // Не клинить старт из-за мешка: очередь Direct важнее анти-повтора.
-        if (
-            isTransientDirectPgError(error) ||
-            isDirectPgTimeoutError(error)
-        ) {
-            console.warn(
-                'UserQuestionCycle draw failed; falling back to random pick',
-                error instanceof Error ? error.message : error,
-            );
+        console.warn(
+            'UserQuestionCycle draw failed; falling back to random pick',
+            error instanceof Error ? error.message : error,
+        );
 
-            return questionRepository.pickRandomActiveSnapshotBundle(
-                difficulty,
-                questionCount,
-                locale,
-            );
-        }
-
-        throw error;
+        return questionRepository.pickRandomActiveSnapshotBundle(
+            difficulty,
+            questionCount,
+            locale,
+        );
     }
 }
 
 /**
  * Classic lobby/rematch pick (анти-повтор по difficulty).
- * Матрица: Easy 3 → 5 → 10 без DB_TIMEOUT.
+ * Матрица: Easy 3 → 5 → 10 без DB_TIMEOUT; start не ~40s.
  */
 export function pickClassicSnapshotBundle(
     userId: string,
@@ -87,9 +70,8 @@ export function pickClassicSnapshotBundle(
 }
 
 /**
- * Blitz/Timed pick (всегда 10Q по MVP rules; тот же мешок difficulty, что Classic).
- * Матрица: старт 303, timedEndsAt ≈ now+60s после create, result после submit.
- * Не «ускорять Classic» правкой этого wrapper без прогона Blitz.
+ * Blitz/Timed pick (тот же мешок difficulty, что Classic).
+ * Матрица: старт 303, timedEndsAt после create, result после submit.
  */
 export function pickTimedSnapshotBundle(
     userId: string,

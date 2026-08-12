@@ -1,38 +1,26 @@
 /**
  * Persist / draw UserQuestionCycle (shuffle-bag anti-repeat).
  *
- * Зачем entity-слой:
- * - SQL отдельно от Classic/Timed runners;
- * - Daily Challenge эту таблицу не вызывает;
- * - submit / scoring / snapshot JSONB не трогаем — только start pick ids.
+ * Важно (Aug 12): этот мешок НЕ на Direct quiz queue.
+ * Unpooled Direct + UserQuestionCycle стабильно ловил 18s timeout в
+ * Windows `next dev`, после чего fallback random делал start ~40s.
+ * Маленький upsert/update идёт через Prisma pooled — Direct остаётся
+ * для snapshot resolve/create/submit (QUIZ_NEON_HOT_PATH).
  *
- * Neon / Windows next dev (QUIZ_NEON_HOT_PATH):
- * - один hop через `withDirectPgQuizStartClient` (queue + 18s budget + retry),
- *   не «голый» write без timeout — иначе Connection terminated ~20s клинит очередь;
- * - upsert RETURNING вместо ensure+read (меньше round-trips на одном TLS);
- * - полный pool SELECT только если remaining < needed (reshuffle / top-up).
- *
- * Гонка двух start: optimistic UPDATE по cycleNumber + remainingIds.
- * Canon: User Question Cycle MVP.
+ * Daily Challenge эту таблицу не вызывает. Submit не вызывает.
  */
 
 import { randomUUID } from 'node:crypto';
 
-import type { Client } from 'pg';
-
-import {
-    withDirectPgQuizStartClient,
-} from '@/lib/db/direct-pg';
+import { prisma } from '@/lib/prisma';
 import type { Difficulty } from '@/types';
 
 import { drawFromQuestionCycle } from '@/entities/user-question-cycle/draw-from-question-cycle';
 
 const OPTIMISTIC_DRAW_MAX_ATTEMPTS = 3;
 
-type CycleRow = {
-    remaining_ids: unknown;
-    cycle_number: number;
-};
+/** Жёсткий потолок: лучше fallback random, чем держать старт десятки секунд. */
+export const USER_QUESTION_CYCLE_DRAW_BUDGET_MS = 4_000;
 
 export type DrawUserQuestionCycleIdsResult =
     | {
@@ -55,75 +43,48 @@ function parseRemainingIds(value: unknown): string[] {
     return value;
 }
 
-/** INSERT или no-op conflict → текущее состояние мешка за один round-trip. */
-async function loadOrCreateCycleRow(
-    client: Client,
-    userId: string,
-    difficulty: Difficulty,
-): Promise<CycleRow> {
-    const result = await client.query<CycleRow>(
-        `
-            INSERT INTO "UserQuestionCycle" (
-                "id",
-                "userId",
-                "difficulty",
-                "remainingIds",
-                "cycleNumber",
-                "createdAt",
-                "updatedAt"
-            )
-            VALUES (
-                $1,
-                $2,
-                $3::"Difficulty",
-                '[]'::jsonb,
-                0,
-                NOW(),
-                NOW()
-            )
-            ON CONFLICT ("userId", "difficulty") DO UPDATE
-            SET "updatedAt" = "UserQuestionCycle"."updatedAt"
-            RETURNING
-                "remainingIds" AS remaining_ids,
-                "cycleNumber" AS cycle_number
-        `,
-        [randomUUID(), userId, difficulty],
-    );
-
-    const row = result.rows[0];
-
-    if (!row) {
-        throw new Error('UserQuestionCycle upsert returned no row');
-    }
-
-    return row;
+async function loadOrCreateCycleRow(userId: string, difficulty: Difficulty) {
+    return prisma.userQuestionCycle.upsert({
+        where: {
+            userId_difficulty: {
+                userId,
+                difficulty,
+            },
+        },
+        create: {
+            id: randomUUID(),
+            userId,
+            difficulty,
+            remainingIds: [],
+            cycleNumber: 0,
+        },
+        // No-op touch: нужен непустой update, чтобы upsert вернул строку.
+        update: {
+            updatedAt: new Date(),
+        },
+        select: {
+            remainingIds: true,
+            cycleNumber: true,
+        },
+    });
 }
 
 async function loadActivePublishedPoolIds(
-    client: Client,
     difficulty: Difficulty,
 ): Promise<string[]> {
-    const result = await client.query<{ id: string }>(
-        `
-            SELECT q."id"
-            FROM "Question" q
-            WHERE
-                q."difficulty" = $1::"Difficulty"
-                AND q."isActive" = true
-                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
-        `,
-        [difficulty],
-    );
+    const rows = await prisma.question.findMany({
+        where: {
+            difficulty,
+            isActive: true,
+            publicationStatus: 'PUBLISHED',
+        },
+        select: { id: true },
+    });
 
-    return result.rows.map((row) => row.id);
+    return rows.map((row) => row.id);
 }
 
-/**
- * Узкая проверка: какие id из remaining ещё active+PUBLISHED.
- * Дешевле полного pool, когда хвоста уже хватает на N.
- */
 async function filterIdsStillInPool(
-    client: Client,
     difficulty: Difficulty,
     candidateIds: string[],
 ): Promise<string[]> {
@@ -131,104 +92,84 @@ async function filterIdsStillInPool(
         return [];
     }
 
-    const result = await client.query<{ id: string }>(
-        `
-            SELECT q."id"
-            FROM "Question" q
-            WHERE
-                q."id" = ANY($1::text[])
-                AND q."difficulty" = $2::"Difficulty"
-                AND q."isActive" = true
-                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
-        `,
-        [candidateIds, difficulty],
-    );
+    const rows = await prisma.question.findMany({
+        where: {
+            id: { in: candidateIds },
+            difficulty,
+            isActive: true,
+            publicationStatus: 'PUBLISHED',
+        },
+        select: { id: true },
+    });
 
-    const alive = new Set(result.rows.map((row) => row.id));
+    const alive = new Set(rows.map((row) => row.id));
 
     return candidateIds.filter((id) => alive.has(id));
 }
 
-async function tryPersistDraw(
-    client: Client,
-    input: {
-        userId: string;
-        difficulty: Difficulty;
-        expectedRemainingIds: string[];
-        expectedCycleNumber: number;
-        nextRemainingIds: string[];
-        nextCycleNumber: number;
-    },
-): Promise<boolean> {
-    const result = await client.query(
-        `
-            UPDATE "UserQuestionCycle"
-            SET
-                "remainingIds" = $4::jsonb,
-                "cycleNumber" = $5,
-                "updatedAt" = NOW()
-            WHERE
-                "userId" = $1
-                AND "difficulty" = $2::"Difficulty"
-                AND "cycleNumber" = $3
-                AND "remainingIds" = $6::jsonb
-        `,
-        [
-            input.userId,
-            input.difficulty,
-            input.expectedCycleNumber,
-            JSON.stringify(input.nextRemainingIds),
-            input.nextCycleNumber,
-            JSON.stringify(input.expectedRemainingIds),
-        ],
-    );
+async function tryPersistDraw(input: {
+    userId: string;
+    difficulty: Difficulty;
+    expectedRemainingIds: string[];
+    expectedCycleNumber: number;
+    nextRemainingIds: string[];
+    nextCycleNumber: number;
+}): Promise<boolean> {
+    const result = await prisma.userQuestionCycle.updateMany({
+        where: {
+            userId: input.userId,
+            difficulty: input.difficulty,
+            cycleNumber: input.expectedCycleNumber,
+            remainingIds: { equals: input.expectedRemainingIds },
+        },
+        data: {
+            remainingIds: input.nextRemainingIds,
+            cycleNumber: input.nextCycleNumber,
+        },
+    });
 
-    return (result.rowCount ?? 0) > 0;
+    return result.count > 0;
 }
 
-async function drawQuestionIdsWithClient(
-    client: Client,
-    userId: string,
-    difficulty: Difficulty,
-    needed: number,
-): Promise<DrawUserQuestionCycleIdsResult> {
+async function drawQuestionIdsOnce(input: {
+    userId: string;
+    difficulty: Difficulty;
+    needed: number;
+}): Promise<DrawUserQuestionCycleIdsResult> {
     for (let attempt = 1; attempt <= OPTIMISTIC_DRAW_MAX_ATTEMPTS; attempt += 1) {
-        const row = await loadOrCreateCycleRow(client, userId, difficulty);
-        const remainingIds = parseRemainingIds(row.remaining_ids);
-        const cycleNumber = Number(row.cycle_number);
+        const row = await loadOrCreateCycleRow(input.userId, input.difficulty);
+        const remainingIds = parseRemainingIds(row.remainingIds);
+        const cycleNumber = Number(row.cycleNumber);
 
         let poolIds: string[];
 
-        if (remainingIds.length >= needed) {
-            // Хвоста хватает: не тянем весь банк — только проверка «ещё в pool».
+        if (remainingIds.length >= input.needed) {
             poolIds = await filterIdsStillInPool(
-                client,
-                difficulty,
+                input.difficulty,
                 remainingIds,
             );
 
-            if (poolIds.length < needed) {
-                // После filter хвост короткий → нужен полный pool для reshuffle.
-                poolIds = await loadActivePublishedPoolIds(client, difficulty);
+            if (poolIds.length < input.needed) {
+                poolIds = await loadActivePublishedPoolIds(input.difficulty);
             }
         } else {
-            poolIds = await loadActivePublishedPoolIds(client, difficulty);
+            poolIds = await loadActivePublishedPoolIds(input.difficulty);
         }
 
         const drawn = drawFromQuestionCycle({
             remainingIds,
             cycleNumber,
             poolIds,
-            needed,
+            needed: input.needed,
         });
 
         if (!drawn.ok) {
             return { ok: false, reason: drawn.reason };
         }
 
-        const persisted = await tryPersistDraw(client, {
-            userId,
-            difficulty,
+        const persisted = await tryPersistDraw({
+            userId: input.userId,
+            difficulty: input.difficulty,
             expectedRemainingIds: remainingIds,
             expectedCycleNumber: cycleNumber,
             nextRemainingIds: drawn.nextRemainingIds,
@@ -250,25 +191,42 @@ async function drawQuestionIdsWithClient(
     );
 }
 
+function withBudget<T>(promise: Promise<T>, budgetMs: number): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+        const timer = setTimeout(() => {
+            reject(
+                new Error(
+                    `UserQuestionCycle draw budget exceeded after ${budgetMs}ms`,
+                ),
+            );
+        }, budgetMs);
+
+        promise.then(
+            (value) => {
+                clearTimeout(timer);
+                resolve(value);
+            },
+            (error: unknown) => {
+                clearTimeout(timer);
+                reject(error);
+            },
+        );
+    });
+}
+
 export const userQuestionCycleRepository = {
     /**
-     * Забирает N question id из мешка пользователя и сохраняет хвост.
-     * Только Classic/Timed start. Не вызывать с submit/result.
+     * Забирает N question id из мешка. Pooled Prisma, не Direct queue.
+     * Снаружи всегда оборачивать в try/fallback — budget 4s.
      */
     async drawQuestionIds(input: {
         userId: string;
         difficulty: Difficulty;
         needed: number;
     }): Promise<DrawUserQuestionCycleIdsResult> {
-        return withDirectPgQuizStartClient(
-            (client) =>
-                drawQuestionIdsWithClient(
-                    client,
-                    input.userId,
-                    input.difficulty,
-                    input.needed,
-                ),
-            2,
+        return withBudget(
+            drawQuestionIdsOnce(input),
+            USER_QUESTION_CYCLE_DRAW_BUDGET_MS,
         );
     },
 };
