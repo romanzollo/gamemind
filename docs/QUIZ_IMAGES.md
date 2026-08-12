@@ -204,14 +204,17 @@ npm run content:import-image-guess -- --target=prod
 4. Commit/deploy WebP under `public/quiz-images/` so prod can serve them (`docs/DEPLOY.md`).
    - **Aug 6 lesson:** DB rows alone are not enough. Until WebP are on Vercel, admin thumbs and quiz images 404.
 
-### Import status (Aug 6, 2026)
+### Import / publish status
 
-| Target | Host | Rows `img-*` | PROMPT asset | `publicationStatus` |
-|--------|------|--------------|--------------|---------------------|
-| Local Neon | `ep-jolly-river…` | 90 | 90 | DRAFT |
-| Prod Neon | `ep-red-mountain…` | 90 | 90 | DRAFT |
+| When | Target | Host | Rows `img-*` | PROMPT asset | `publicationStatus` |
+|------|--------|------|--------------|--------------|---------------------|
+| Aug 6 | Local Neon | `ep-jolly-river…` | 90 | 90 | DRAFT (import) |
+| Aug 6 | Prod Neon | `ep-red-mountain…` | 90 | 90 | DRAFT (import) |
+| Aug 12 | Local + prod | same hosts | 90 | 90 | **PUBLISHED** (verified) |
 
-**Next:** Publish via admin on each environment (quality gate requires PROMPT URL). Seed ×9 IMAGE_GUESS remain separate (PUBLISHED from seed).
+**Verify (read-only):** `npm run content:smoke-image-guess` / `-- --target=prod` — script `scripts/smoke-image-guess-publish-status.cjs`. Expect `PUBLISHED: 90`, no missing PROMPT / WebP on disk.
+
+**Next:** quiz + lightbox smoke (light/dark) — see **§6**. Optional more TEXT batches. Seed ×9 IMAGE_GUESS remain separate. Do **not** auto-PUBLISH from import CLI.
 
 ### Neon / script rules (do not re-break)
 
@@ -360,3 +363,27 @@ Capture tips per game live in the JSON (`captureHint`). Prefer your own screensh
 **a11y:** `role="dialog"` `aria-modal`; focus dialog on open; restore focus to preview button on close; `closeLabel` remains as `aria-label` (not a visible button). i18n: `quiz.imageExpandHint` / `imageExpandLabel` / `imageCloseLabel`.
 
 **Do not:** glow effects; `object-cover` crop; change scoring/snapshot for lightbox.
+
+### Smoke checklist (after Publish)
+
+**DB first (read-only):**
+
+```powershell
+npm run content:smoke-image-guess
+# optional: npm run content:smoke-image-guess -- --target=prod
+```
+
+Expect: `img-*` PUBLISHED 90; quiz pool IMAGE_GUESS = all PUBLISHED+active (batch + seed + any later waves — local may be ≫ 99).
+
+**UI (local `npm run dev`, then optionally www):**
+
+1. Theme **light** → `/ru/quiz` → Classic **Easy** 10Q → start.
+2. When an `IMAGE_GUESS` appears: full screenshot visible (`object-contain`, no crop); click → lightbox.
+3. Lightbox: dark scrim (not milky); Esc / click overlay closes; no visible Close button.
+4. Switch **dark** theme (same session or new): scrim darker (`bg-black/80`), still readable; dismiss still works.
+5. Optional: finish quiz → result review → same lightbox on IMAGE_GUESS row.
+6. Optional prod: one Classic Easy on `www.game-mind.ru` — image URL 200 (not 404).
+
+Pass = images load + lightbox open/close in light and dark. Fail = 404 WebP, milky scrim, or crop/`object-cover`.
+
+**Do not:** change `SNAPSHOT_RESOLVE_CHUNK_SIZE`, submit hot path, or cycle for this smoke.

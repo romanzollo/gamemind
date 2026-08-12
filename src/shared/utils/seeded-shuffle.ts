@@ -49,5 +49,6 @@ export function shuffleWithSeed<T>(
 }
 
 export function randomCycleSeed(): number {
-    return (Math.floor(Math.random() * 0xffffffff) >>> 0) || 1;
+    // Prisma/Postgres Int = signed int32 (max 2^31-1); mulberry32 всё равно берёт seed >>> 0.
+    return (Math.floor(Math.random() * 0x7fffffff) || 1);
 }
