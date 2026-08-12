@@ -12,6 +12,8 @@ Related canon:
 
 **Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish.
 
+**Next authoring target (Aug 12 handoff):** Mechanics TEXT wave — suggested size **12** (4×EASY/MEDIUM/HARD) or **18** (6×3); file `content/drafts/batches/YYYY-MM-DD-text-mechanics-….json`; pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import existing C/D/fresh/sample files.
+
 ---
 
 ## 1. Why this exists (product)
