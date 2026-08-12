@@ -1,7 +1,7 @@
 /**
  * Mode-specific snapshot pick wrappers (Classic / Timed).
  *
- * Classic + Timed: seeded UserQuestionCycle (scalars) → resolve by ids.
+ * Classic + Timed: seeded UserQuestionCycle (raw pg scalars) → resolve by ids.
  * Daily Challenge сюда не ходит — frozen ids дня.
  *
  * Анти-паттерн (снят): Prisma JSONB remaining + Promise.race budget +

@@ -448,6 +448,24 @@ export async function withPooledPgReadClient<T>(
 }
 
 /**
+ * Короткий scalar hop вне shared Direct queue (UserQuestionCycle на quiz start).
+ *
+ * Почему pooled + вне queue: cycle на `withDirectPg*` клинил start/home/submit
+ * (история A); Prisma pooled давал ложный «Connection terminated» после COMMIT.
+ * Fresh `pg` Client на DATABASE_URL + fire-and-forget end — без очереди и без
+ * автоматического write-retry (optimistic lock остаётся у caller).
+ */
+export async function withPooledPgClient<T>(
+    operation: (client: Client) => Promise<T>,
+    options?: Pick<DirectPgOperationOptions, 'debugLabel' | 'attemptTimeoutMs'>,
+) {
+    return withFreshClient(createPooledClient, operation, {
+        debugLabel: options?.debugLabel,
+        attemptTimeoutMs: options?.attemptTimeoutMs,
+    });
+}
+
+/**
  * Writes: fresh direct client without automatic retry.
  * Таймаут только если caller передал `attemptTimeoutMs` (например award catch-up) —
  * quiz submit write path по умолчанию без лимита, как раньше.
