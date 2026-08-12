@@ -1,0 +1,307 @@
+{
+  "version": 1,
+  "source": "manual",
+  "notes": "Wave D1 Content Scale — TEXT ×6 (2 per difficulty). Minecraft Nether + Outer Wilds duration replaced (near-dupe / topic overlap) with mechanics: Celeste dash crystal, Sekiro Posture. Future batches: prefer interesting game-mechanics questions.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-12-d1-easy-smb-starting-lives",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Super Mario",
+        "game": "Super Mario Bros.",
+        "topic": "rules",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Со сколькими жизнями обычно начинается классический Super Mario Bros. (NES)?"
+        },
+        "en": {
+          "text": "How many lives do you typically start with in the classic Super Mario Bros. (NES)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "3" },
+            "en": { "text": "3" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "1" },
+            "en": { "text": "1" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "5" },
+            "en": { "text": "5" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "10" },
+            "en": { "text": "10" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-d1-easy-tetris-pajitnov",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tetris",
+        "game": "Tetris",
+        "topic": "creator",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто создал оригинальную игру Tetris?"
+        },
+        "en": {
+          "text": "Who created the original Tetris game?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Алексей Пажитнов" },
+            "en": { "text": "Alexey Pajitnov" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сигэру Миямото" },
+            "en": { "text": "Shigeru Miyamoto" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Хидэо Кодзима" },
+            "en": { "text": "Hideo Kojima" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Джон Кармак" },
+            "en": { "text": "John Carmack" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-d1-medium-witcher-roach",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Witcher",
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "character",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут лошадь Геральта в The Witcher 3: Wild Hunt?"
+        },
+        "en": {
+          "text": "What is the name of Geralt's horse in The Witcher 3: Wild Hunt?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Плотва" },
+            "en": { "text": "Roach" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тень" },
+            "en": { "text": "Shadowmere" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Эпона" },
+            "en": { "text": "Epona" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Агро" },
+            "en": { "text": "Agro" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-d1-medium-celeste-dash-crystal",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Celeste",
+        "game": "Celeste",
+        "topic": "mechanics",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Celeste что происходит, когда Мэдлин касается кристалла рывка (dash crystal)?"
+        },
+        "en": {
+          "text": "In Celeste, what happens when Madeline touches a dash crystal?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Рывок снова становится доступен" },
+            "en": { "text": "Her dash is refilled" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Она получает дополнительную жизнь" },
+            "en": { "text": "She gains an extra life" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Уровень перезапускается" },
+            "en": { "text": "The level restarts" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Открывается скрытый выход" },
+            "en": { "text": "A secret exit opens" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-d1-hard-baba-is-you-creator",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Baba Is You",
+        "game": "Baba Is You",
+        "topic": "creator",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким творческим псевдонимом известен создатель Baba Is You?"
+        },
+        "en": {
+          "text": "Under which creative handle is the creator of Baba Is You best known?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Hempuli" },
+            "en": { "text": "Hempuli" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Team Cherry" },
+            "en": { "text": "Team Cherry" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Toby Fox" },
+            "en": { "text": "Toby Fox" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "ConcernedApe" },
+            "en": { "text": "ConcernedApe" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-d1-hard-sekiro-posture",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Sekiro",
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "mechanics",
+        "localizationStrategy": "shared-brand"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Sekiro: Shadows Die Twice какая шкала наполняется при удачных отражениях и открывает врага для добивания?"
+        },
+        "en": {
+          "text": "In Sekiro: Shadows Die Twice, which meter fills from successful deflections and opens an enemy for a deathblow?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Стойкость (Posture)" },
+            "en": { "text": "Posture" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Выносливость (Stamina)" },
+            "en": { "text": "Stamina" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ярость (Rage)" },
+            "en": { "text": "Rage" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Концентрация (Focus)" },
+            "en": { "text": "Focus" }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -10,6 +10,8 @@ Related canon:
 - Seed shape reference only: `scripts/seed-questions.cjs` (`Q` / `opt`)
 - **Quiz Neon hot path:** `docs/QUIZ_NEON_HOT_PATH.md` — adding questions must **not** change submit/result to write large JSONB on complete; content scale stays on draft→publish only.
 
+**Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish.
+
 ---
 
 ## 1. Why this exists (product)
@@ -53,6 +55,7 @@ content/drafts/
     2026-08-04-text-fresh-45.json    # AI batch 15×3 (local+prod)
     2026-08-04-text-fresh-60.json    # AI batch 20×3 (local+prod)
     2026-08-05-image-guess-90.json   # IMAGE_GUESS ×90 (sibling importer; DRAFT)
+    2026-08-12-text-wave-d1-6.json   # TEXT ×6 wave D1 — local PUBLISHED Aug 12 (Celeste/Sekiro)
 
 src/features/content/lib/
   draft-questions.schema.ts          # Zod contract v1 (runtime)
@@ -75,6 +78,7 @@ npm scripts:
 - `content:smoke-status`
 - `content:smoke-image-guess` / `--target=prod`
 - `content:smoke-text` / `--target=prod`
+- `content:publish-text-drafts` / `--dry-run` (local TEXT DRAFT → PUBLISHED via quality gate; not for casual prod)
 
 Authoring batches: `content/drafts/batches/YYYY-MM-DD-….json` (commit when you choose).
 

@@ -22,6 +22,7 @@
         "content:smoke-status": "npx tsx scripts/smoke-content-pipeline-status.ts",
         "content:smoke-image-guess": "node scripts/smoke-image-guess-publish-status.cjs",
         "content:smoke-text": "node scripts/smoke-text-bank-status.cjs",
+        "content:publish-text-drafts": "npx tsx scripts/publish-text-drafts.ts",
         "content:import-image-guess": "node scripts/import-image-guess-batch.cjs",
         "images:optimize": "node scripts/optimize-quiz-images.cjs",
         "images:update-db": "node scripts/update-quiz-image-assets.cjs"
