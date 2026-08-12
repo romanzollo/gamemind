@@ -16,4 +16,10 @@ export function shuffleArray<T>(items: readonly T[]): T[] {
 }
 
 export { normalizeQuizImageUrl } from './normalize-quiz-image-url';
+export {
+    createMulberry32,
+    hashStringToSeed,
+    randomCycleSeed,
+    shuffleWithSeed,
+} from './seeded-shuffle';
 

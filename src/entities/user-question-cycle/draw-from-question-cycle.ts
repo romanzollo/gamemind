@@ -1,144 +1,196 @@
 /**
- * Чистая логика shuffle-bag (User Question Cycle) без Neon / Prisma.
+ * Чистая логика User Question Cycle: seeded shuffle + cursor (без JSON-мешка).
  *
- * Зачем отдельный модуль: правила «взять N / drain+top-up / reshuffle»
- * должны быть тестируемы без Direct queue и не смешиваться с snapshot resolve.
- * Entity-слой держит и pure draw, и repository — features/quiz только вызывает.
+ * Зачем не remainingIds[] в БД:
+ * UPDATE JSONB на ~100 id через Prisma/Neon в Windows next dev стабильно
+ * превышал budget → fallback на random → одни и те же IMAGE_GUESS «липли».
+ * Здесь в БД только скаляры; порядок восстанавливается seed'ом в памяти.
  *
- * Инварианты MVP:
- * - порядок раздачи = порядок remainingIds (голова мешка);
- * - деактивированные / не в pool → выкидываем из remaining, цикл не блокируем;
- * - pool.length < needed → NOT_ENOUGH_QUESTIONS (как сейчас у pick);
- * - remaining пуст → новый цикл (shuffle всего pool);
- * - 0 < remaining < needed → сначала добираем хвост, потом top-up из нового цикла
- *   без дублей id внутри одного start (drain-then-top-up);
- * - новые PUBLISHED mid-cycle в текущий remaining не вшиваем (решает вызывающий:
- *   в pool на reshuffle они попадут сами).
- *
- * Пишется в БД только на quiz start (не на submit). Daily эту логику не вызывает.
+ * Инварианты:
+ * - один проход pool без повторов до исчерпания cursor;
+ * - drain-then-top-up на границе цикла (хвост + новый seed);
+ * - смена poolSize / seed=0 → новый цикл;
+ * - pool < needed → NOT_ENOUGH_QUESTIONS.
  */
 
-import { shuffleArray } from '@/shared/utils';
+import {
+    randomCycleSeed,
+    shuffleWithSeed,
+} from '@/shared/utils/seeded-shuffle';
 
-export type DrawFromQuestionCycleInput = {
-    /** Хвост текущего цикла (порядок = очередь). */
-    remainingIds: readonly string[];
+export type QuestionCycleState = {
     cycleNumber: number;
-    /** Актуальный пул: active + PUBLISHED этой difficulty. */
-    poolIds: readonly string[];
-    needed: number;
-    /** Для тестов: детерминированный shuffle. По умолчанию — Fisher–Yates. */
-    shuffle?: <T>(items: readonly T[]) => T[];
+    cycleSeed: number;
+    cursor: number;
+    poolSize: number;
 };
 
-export type DrawFromQuestionCycleSuccess = {
+export type DrawFromSeededCycleSuccess = {
     ok: true;
     drawnIds: string[];
-    nextRemainingIds: string[];
-    nextCycleNumber: number;
-    /** true, если открыли новый цикл (пустой мешок или drain-then-top-up). */
+    nextState: QuestionCycleState;
     didReshuffle: boolean;
 };
 
-export type DrawFromQuestionCycleFailure = {
+export type DrawFromSeededCycleFailure = {
     ok: false;
     reason: 'NOT_ENOUGH_QUESTIONS';
 };
 
-export type DrawFromQuestionCycleResult =
-    | DrawFromQuestionCycleSuccess
-    | DrawFromQuestionCycleFailure;
+export type DrawFromSeededCycleResult =
+    | DrawFromSeededCycleSuccess
+    | DrawFromSeededCycleFailure;
 
-/**
- * Оставляет в remaining только id, которые ещё есть в актуальном pool.
- * Soft-hide / unpublish не должны «заклинить» хвост мешка.
- */
-export function filterRemainingToPool(
-    remainingIds: readonly string[],
-    poolIds: readonly string[],
-): string[] {
-    const poolSet = new Set(poolIds);
+export type DrawFromSeededCycleInput = {
+    state: QuestionCycleState;
+    poolIds: readonly string[];
+    needed: number;
+    /** Для тестов — фиксированный seed нового цикла. */
+    createSeed?: () => number;
+};
 
-    return remainingIds.filter((id) => poolSet.has(id));
+function uniqueSortedIds(poolIds: readonly string[]): string[] {
+    const seen = new Set<string>();
+    const unique: string[] = [];
+
+    for (const id of poolIds) {
+        if (!seen.has(id)) {
+            seen.add(id);
+            unique.push(id);
+        }
+    }
+
+    return unique.sort((left, right) => left.localeCompare(right));
+}
+
+function buildShuffledPool(poolIds: readonly string[], seed: number): string[] {
+    return shuffleWithSeed(poolIds, seed);
+}
+
+function openNewCycle(
+    previousCycleNumber: number,
+    poolSize: number,
+    createSeed: () => number,
+): QuestionCycleState {
+    return {
+        cycleNumber: previousCycleNumber + 1,
+        cycleSeed: createSeed(),
+        cursor: 0,
+        poolSize,
+    };
+}
+
+function shouldOpenNewCycle(
+    state: QuestionCycleState,
+    poolSize: number,
+): boolean {
+    if (poolSize <= 0) {
+        return true;
+    }
+
+    if (state.cycleSeed === 0 || state.poolSize === 0) {
+        return true;
+    }
+
+    if (state.poolSize !== poolSize) {
+        return true;
+    }
+
+    if (state.cursor >= state.poolSize) {
+        return true;
+    }
+
+    return false;
 }
 
 /**
- * Достаёт `needed` id из мешка с drain-then-top-up на границе цикла.
+ * Достаёт `needed` id из seeded-цикла с drain-then-top-up на границе.
  */
-export function drawFromQuestionCycle(
-    input: DrawFromQuestionCycleInput,
-): DrawFromQuestionCycleResult {
-    const {
-        cycleNumber,
-        needed,
-        shuffle = shuffleArray,
-    } = input;
+export function drawFromSeededCycle(
+    input: DrawFromSeededCycleInput,
+): DrawFromSeededCycleResult {
+    const createSeed = input.createSeed ?? randomCycleSeed;
+    const pool = uniqueSortedIds(input.poolIds);
+    const needed = input.needed;
 
     if (needed <= 0) {
         return {
             ok: true,
             drawnIds: [],
-            nextRemainingIds: filterRemainingToPool(
-                input.remainingIds,
-                input.poolIds,
-            ),
-            nextCycleNumber: cycleNumber,
+            nextState: input.state,
             didReshuffle: false,
         };
-    }
-
-    // Уникальный pool: дубликаты id в источнике не должны ломать take.
-    const pool: string[] = [];
-    const poolSet = new Set<string>();
-
-    for (const id of input.poolIds) {
-        if (!poolSet.has(id)) {
-            poolSet.add(id);
-            pool.push(id);
-        }
     }
 
     if (pool.length < needed) {
         return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
     }
 
-    let remaining = filterRemainingToPool(input.remainingIds, pool);
-    const drawnIds: string[] = [];
+    let state = input.state;
+    let didReshuffle = false;
 
-    if (remaining.length > 0) {
-        const takeCount = Math.min(needed, remaining.length);
-        drawnIds.push(...remaining.slice(0, takeCount));
-        remaining = remaining.slice(takeCount);
+    if (shouldOpenNewCycle(state, pool.length)) {
+        state = openNewCycle(state.cycleNumber, pool.length, createSeed);
+        didReshuffle = true;
+    }
+
+    const shuffled = buildShuffledPool(pool, state.cycleSeed);
+    const drawnIds: string[] = [];
+    let cursor = state.cursor;
+
+    while (drawnIds.length < needed && cursor < shuffled.length) {
+        drawnIds.push(shuffled[cursor]!);
+        cursor += 1;
     }
 
     if (drawnIds.length === needed) {
         return {
             ok: true,
             drawnIds,
-            nextRemainingIds: remaining,
-            nextCycleNumber: cycleNumber,
-            didReshuffle: false,
+            nextState: {
+                cycleNumber: state.cycleNumber,
+                cycleSeed: state.cycleSeed,
+                cursor,
+                poolSize: state.poolSize,
+            },
+            didReshuffle,
         };
     }
 
-    // Пустой мешок или хвост короче N → новый цикл + добор без дублей в этом start.
-    const nextCycleNumber = cycleNumber + 1;
+    // Хвост текущего цикла уже в drawnIds. Новый цикл + добор без дублей.
+    const next = openNewCycle(state.cycleNumber, pool.length, createSeed);
+    const nextShuffled = buildShuffledPool(pool, next.cycleSeed);
     const drawnSet = new Set(drawnIds);
-    const bag = shuffle(pool).filter((id) => !drawnSet.has(id));
-    const needMore = needed - drawnIds.length;
+    let nextCursor = 0;
 
-    if (bag.length < needMore) {
-        return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
+    for (; nextCursor < nextShuffled.length; nextCursor += 1) {
+        if (drawnIds.length >= needed) {
+            break;
+        }
+
+        const id = nextShuffled[nextCursor]!;
+
+        if (drawnSet.has(id)) {
+            continue;
+        }
+
+        drawnIds.push(id);
+        drawnSet.add(id);
     }
 
-    drawnIds.push(...bag.slice(0, needMore));
-    const nextRemainingIds = bag.slice(needMore);
+    if (drawnIds.length < needed) {
+        return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
+    }
 
     return {
         ok: true,
         drawnIds,
-        nextRemainingIds,
-        nextCycleNumber,
+        nextState: {
+            cycleNumber: next.cycleNumber,
+            cycleSeed: next.cycleSeed,
+            cursor: nextCursor,
+            poolSize: next.poolSize,
+        },
         didReshuffle: true,
     };
 }

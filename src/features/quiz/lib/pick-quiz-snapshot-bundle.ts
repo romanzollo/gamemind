@@ -1,13 +1,14 @@
 /**
  * Mode-specific snapshot pick wrappers (Classic / Timed).
  *
- * Classic + Timed: UserQuestionCycle (pooled) → resolve by ids (Direct chunks).
+ * Classic + Timed: seeded UserQuestionCycle (scalars) → resolve by ids.
  * Daily Challenge сюда не ходит — frozen ids дня.
  *
- * Cycle специально НЕ на Direct queue: иначе 18s timeout + fallback = start ~40s.
- * Если pooled cycle не уложился в budget — сразу legacy random pick.
+ * Анти-паттерн (снят): Prisma JSONB remaining + Promise.race budget +
+ * fallback random — давал повторы IMAGE_GUESS при «успешном» старте.
+ * Теперь cycle обязан отработать; ошибка → наверх (не тихий random).
  *
- * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook + QUIZ_NEON_HOT_PATH.
+ * Canon: QUIZ_NEON_HOT_PATH + User Question Cycle (seeded cursor).
  */
 
 import { questionRepository } from '@/entities/question/question.repository';
@@ -22,38 +23,25 @@ async function pickUserCycleSnapshotBundle(
     questionCount: number,
     locale: Locale,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    try {
-        const drawn = await userQuestionCycleRepository.drawQuestionIds({
-            userId,
-            difficulty,
-            needed: questionCount,
-        });
+    const drawn = await userQuestionCycleRepository.drawQuestionIds({
+        userId,
+        difficulty,
+        needed: questionCount,
+    });
 
-        if (!drawn.ok || drawn.questionIds.length < questionCount) {
-            return [];
-        }
-
-        return questionRepository.pickSnapshotBundleByQuestionIds(
-            drawn.questionIds,
-            locale,
-        );
-    } catch (error) {
-        console.warn(
-            'UserQuestionCycle draw failed; falling back to random pick',
-            error instanceof Error ? error.message : error,
-        );
-
-        return questionRepository.pickRandomActiveSnapshotBundle(
-            difficulty,
-            questionCount,
-            locale,
-        );
+    if (!drawn.ok || drawn.questionIds.length < questionCount) {
+        return [];
     }
+
+    return questionRepository.pickSnapshotBundleByQuestionIds(
+        drawn.questionIds,
+        locale,
+    );
 }
 
 /**
  * Classic lobby/rematch pick (анти-повтор по difficulty).
- * Матрица: Easy 3 → 5 → 10 без DB_TIMEOUT; start не ~40s.
+ * Матрица: Easy 3 → 5 → 10; rematch без повторов до исчерпания цикла.
  */
 export function pickClassicSnapshotBundle(
     userId: string,
@@ -71,7 +59,6 @@ export function pickClassicSnapshotBundle(
 
 /**
  * Blitz/Timed pick (тот же мешок difficulty, что Classic).
- * Матрица: старт 303, timedEndsAt после create, result после submit.
  */
 export function pickTimedSnapshotBundle(
     userId: string,
