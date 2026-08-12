@@ -1133,7 +1133,7 @@
         {
           "isCorrect": false,
           "translations": {
-            "ru": { "text": "Андariel" },
+            "ru": { "text": "Андариэль" },
             "en": { "text": "Andariel" }
           }
         },
@@ -1147,7 +1147,7 @@
         {
           "isCorrect": false,
           "translations": {
-            "ru": { "text": "Изюаль" },
+            "ru": { "text": "Изуаль" },
             "en": { "text": "Izual" }
           }
         }

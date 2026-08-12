@@ -64,6 +64,8 @@ scripts/validate-draft-questions.ts  # CLI validate (no Neon)
 scripts/import-draft-questions.ts    # CLI import TEXT → DRAFT (needs .env)
 scripts/import-image-guess-batch.cjs # CLI import IMAGE_GUESS batch → DRAFT + asset
 scripts/smoke-content-pipeline-status.ts  # read-only status of sample rows
+scripts/smoke-image-guess-publish-status.cjs  # IMAGE_GUESS img-* + pool
+scripts/smoke-text-bank-status.cjs   # TEXT by status + quiz pool
 ```
 
 npm scripts:
@@ -71,6 +73,8 @@ npm scripts:
 - `content:import-drafts` (add `--dry-run` first)
 - `content:import-image-guess` / `--target=prod` (IMAGE_GUESS batch; see `QUIZ_IMAGES.md` §5)
 - `content:smoke-status`
+- `content:smoke-image-guess` / `--target=prod`
+- `content:smoke-text` / `--target=prod`
 
 Authoring batches: `content/drafts/batches/YYYY-MM-DD-….json` (commit when you choose).
 
