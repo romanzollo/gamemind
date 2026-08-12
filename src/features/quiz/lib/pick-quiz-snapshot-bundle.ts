@@ -4,17 +4,20 @@
  * Classic + Timed: UserQuestionCycle shuffle-bag → resolve by ids (chunks of 5).
  * Daily Challenge сюда не ходит — у него frozen ids дня.
  *
- * Зачем отдельные функции при общем cycle helper:
- * - правка «под Classic 10Q» не выглядит как бесплатный side-effect на Blitz;
- * - в review видно контракт режима + матрицу проверки.
+ * Если cycle Direct hop падает transient (Windows+Neon Connection terminated),
+ * fallback на legacy random pick — квиз не должен быть «полностью сломан»,
+ * анти-повтор best-effort. См. QUIZ_NEON_HOT_PATH.
  *
  * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
- * Менять pick / chunk / Direct — только с матрицей Classic 3/5/10 + Blitz 10 + Daily.
  */
 
 import { questionRepository } from '@/entities/question/question.repository';
 import type { QuestionSnapshotBundleItem } from '@/entities/question/question.types';
 import { userQuestionCycleRepository } from '@/entities/user-question-cycle/user-question-cycle.repository';
+import {
+    isDirectPgTimeoutError,
+    isTransientDirectPgError,
+} from '@/lib/db/direct-pg';
 import type { Locale } from '@/shared/i18n';
 import type { Difficulty } from '@/types';
 
@@ -28,20 +31,41 @@ async function pickUserCycleSnapshotBundle(
     questionCount: number,
     locale: Locale,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    const drawn = await userQuestionCycleRepository.drawQuestionIds({
-        userId,
-        difficulty,
-        needed: questionCount,
-    });
+    try {
+        const drawn = await userQuestionCycleRepository.drawQuestionIds({
+            userId,
+            difficulty,
+            needed: questionCount,
+        });
 
-    if (!drawn.ok || drawn.questionIds.length < questionCount) {
-        return [];
+        if (!drawn.ok || drawn.questionIds.length < questionCount) {
+            return [];
+        }
+
+        return questionRepository.pickSnapshotBundleByQuestionIds(
+            drawn.questionIds,
+            locale,
+        );
+    } catch (error) {
+        // Не клинить старт из-за мешка: очередь Direct важнее анти-повтора.
+        if (
+            isTransientDirectPgError(error) ||
+            isDirectPgTimeoutError(error)
+        ) {
+            console.warn(
+                'UserQuestionCycle draw failed; falling back to random pick',
+                error instanceof Error ? error.message : error,
+            );
+
+            return questionRepository.pickRandomActiveSnapshotBundle(
+                difficulty,
+                questionCount,
+                locale,
+            );
+        }
+
+        throw error;
     }
-
-    return questionRepository.pickSnapshotBundleByQuestionIds(
-        drawn.questionIds,
-        locale,
-    );
 }
 
 /**

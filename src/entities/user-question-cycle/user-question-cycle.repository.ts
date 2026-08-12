@@ -2,30 +2,32 @@
  * Persist / draw UserQuestionCycle (shuffle-bag anti-repeat).
  *
  * Зачем entity-слой:
- * - SQL и optimistic UPDATE отдельно от Classic/Timed runners;
+ * - SQL отдельно от Classic/Timed runners;
  * - Daily Challenge эту таблицу не вызывает;
  * - submit / scoring / snapshot JSONB не трогаем — только start pick ids.
  *
- * Гонка двух параллельных start: UPDATE … WHERE remainingIds + cycleNumber
- * совпадают с прочитанными (optimistic). Конфликт → короткий retry на том же
- * Direct client (без BEGIN/COMMIT на hot path).
+ * Neon / Windows next dev (QUIZ_NEON_HOT_PATH):
+ * - один hop через `withDirectPgQuizStartClient` (queue + 18s budget + retry),
+ *   не «голый» write без timeout — иначе Connection terminated ~20s клинит очередь;
+ * - upsert RETURNING вместо ensure+read (меньше round-trips на одном TLS);
+ * - полный pool SELECT только если remaining < needed (reshuffle / top-up).
  *
- * Один withDirectPgWriteClient на весь draw: ensure row + pool + read + update.
- * Не Promise.all двух Direct TLS.
- *
- * Canon: QUIZ_NEON_HOT_PATH + User Question Cycle MVP.
+ * Гонка двух start: optimistic UPDATE по cycleNumber + remainingIds.
+ * Canon: User Question Cycle MVP.
  */
 
 import { randomUUID } from 'node:crypto';
 
 import type { Client } from 'pg';
 
-import { withDirectPgWriteClient } from '@/lib/db/direct-pg';
+import {
+    withDirectPgQuizStartClient,
+} from '@/lib/db/direct-pg';
 import type { Difficulty } from '@/types';
 
 import { drawFromQuestionCycle } from '@/entities/user-question-cycle/draw-from-question-cycle';
 
-const OPTIMISTIC_DRAW_MAX_ATTEMPTS = 5;
+const OPTIMISTIC_DRAW_MAX_ATTEMPTS = 3;
 
 type CycleRow = {
     remaining_ids: unknown;
@@ -33,7 +35,12 @@ type CycleRow = {
 };
 
 export type DrawUserQuestionCycleIdsResult =
-    | { ok: true; questionIds: string[]; cycleNumber: number; didReshuffle: boolean }
+    | {
+          ok: true;
+          questionIds: string[];
+          cycleNumber: number;
+          didReshuffle: boolean;
+      }
     | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' };
 
 function parseRemainingIds(value: unknown): string[] {
@@ -48,13 +55,13 @@ function parseRemainingIds(value: unknown): string[] {
     return value;
 }
 
-async function ensureCycleRow(
+/** INSERT или no-op conflict → текущее состояние мешка за один round-trip. */
+async function loadOrCreateCycleRow(
     client: Client,
     userId: string,
     difficulty: Difficulty,
-): Promise<void> {
-    // cycleNumber 0 + пустой remaining: первый draw откроет cycle 1 через reshuffle.
-    await client.query(
+): Promise<CycleRow> {
+    const result = await client.query<CycleRow>(
         `
             INSERT INTO "UserQuestionCycle" (
                 "id",
@@ -74,10 +81,22 @@ async function ensureCycleRow(
                 NOW(),
                 NOW()
             )
-            ON CONFLICT ("userId", "difficulty") DO NOTHING
+            ON CONFLICT ("userId", "difficulty") DO UPDATE
+            SET "updatedAt" = "UserQuestionCycle"."updatedAt"
+            RETURNING
+                "remainingIds" AS remaining_ids,
+                "cycleNumber" AS cycle_number
         `,
         [randomUUID(), userId, difficulty],
     );
+
+    const row = result.rows[0];
+
+    if (!row) {
+        throw new Error('UserQuestionCycle upsert returned no row');
+    }
+
+    return row;
 }
 
 async function loadActivePublishedPoolIds(
@@ -99,37 +118,37 @@ async function loadActivePublishedPoolIds(
     return result.rows.map((row) => row.id);
 }
 
-async function readCycleRow(
+/**
+ * Узкая проверка: какие id из remaining ещё active+PUBLISHED.
+ * Дешевле полного pool, когда хвоста уже хватает на N.
+ */
+async function filterIdsStillInPool(
     client: Client,
-    userId: string,
     difficulty: Difficulty,
-): Promise<CycleRow> {
-    const result = await client.query<CycleRow>(
-        `
-            SELECT
-                "remainingIds" AS remaining_ids,
-                "cycleNumber" AS cycle_number
-            FROM "UserQuestionCycle"
-            WHERE
-                "userId" = $1
-                AND "difficulty" = $2::"Difficulty"
-        `,
-        [userId, difficulty],
-    );
-
-    const row = result.rows[0];
-
-    if (!row) {
-        throw new Error('UserQuestionCycle row missing after ensure');
+    candidateIds: string[],
+): Promise<string[]> {
+    if (candidateIds.length === 0) {
+        return [];
     }
 
-    return row;
+    const result = await client.query<{ id: string }>(
+        `
+            SELECT q."id"
+            FROM "Question" q
+            WHERE
+                q."id" = ANY($1::text[])
+                AND q."difficulty" = $2::"Difficulty"
+                AND q."isActive" = true
+                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
+        `,
+        [candidateIds, difficulty],
+    );
+
+    const alive = new Set(result.rows.map((row) => row.id));
+
+    return candidateIds.filter((id) => alive.has(id));
 }
 
-/**
- * Optimistic persist: пишет только если мешок не изменился с момента read.
- * Возвращает true, если строка обновлена.
- */
 async function tryPersistDraw(
     client: Client,
     input: {
@@ -173,14 +192,28 @@ async function drawQuestionIdsWithClient(
     difficulty: Difficulty,
     needed: number,
 ): Promise<DrawUserQuestionCycleIdsResult> {
-    await ensureCycleRow(client, userId, difficulty);
-
-    const poolIds = await loadActivePublishedPoolIds(client, difficulty);
-
     for (let attempt = 1; attempt <= OPTIMISTIC_DRAW_MAX_ATTEMPTS; attempt += 1) {
-        const row = await readCycleRow(client, userId, difficulty);
+        const row = await loadOrCreateCycleRow(client, userId, difficulty);
         const remainingIds = parseRemainingIds(row.remaining_ids);
         const cycleNumber = Number(row.cycle_number);
+
+        let poolIds: string[];
+
+        if (remainingIds.length >= needed) {
+            // Хвоста хватает: не тянем весь банк — только проверка «ещё в pool».
+            poolIds = await filterIdsStillInPool(
+                client,
+                difficulty,
+                remainingIds,
+            );
+
+            if (poolIds.length < needed) {
+                // После filter хвост короткий → нужен полный pool для reshuffle.
+                poolIds = await loadActivePublishedPoolIds(client, difficulty);
+            }
+        } else {
+            poolIds = await loadActivePublishedPoolIds(client, difficulty);
+        }
 
         const drawn = drawFromQuestionCycle({
             remainingIds,
@@ -227,13 +260,15 @@ export const userQuestionCycleRepository = {
         difficulty: Difficulty;
         needed: number;
     }): Promise<DrawUserQuestionCycleIdsResult> {
-        return withDirectPgWriteClient((client) =>
-            drawQuestionIdsWithClient(
-                client,
-                input.userId,
-                input.difficulty,
-                input.needed,
-            ),
+        return withDirectPgQuizStartClient(
+            (client) =>
+                drawQuestionIdsWithClient(
+                    client,
+                    input.userId,
+                    input.difficulty,
+                    input.needed,
+                ),
+            2,
         );
     },
 };

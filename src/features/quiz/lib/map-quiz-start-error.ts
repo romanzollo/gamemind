@@ -5,14 +5,18 @@
 
 import { QuizSessionStartError } from '@/entities/quiz-session/quiz-session.repository';
 import type { QuizErrorCode } from '@/features/quiz/types';
-import { isDirectPgTimeoutError } from '@/lib/db/direct-pg';
+import {
+    isDirectPgTimeoutError,
+    isTransientDirectPgError,
+} from '@/lib/db/direct-pg';
 
 export function mapQuizStartError(error: unknown): QuizErrorCode {
     if (error instanceof QuizSessionStartError) {
         return error.code;
     }
 
-    if (isDirectPgTimeoutError(error)) {
+    // Connection terminated / timeout — не маскировать под «проверь сложность».
+    if (isDirectPgTimeoutError(error) || isTransientDirectPgError(error)) {
         return 'DB_TIMEOUT';
     }
 
