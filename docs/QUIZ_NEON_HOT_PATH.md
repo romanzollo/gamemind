@@ -49,11 +49,15 @@ BAD:  blocking RSC read of large JSONB before score
 BAD:  notFound() on miss/timeout
 ```
 
-### C. Start (unchanged by this incident — still canon)
+### C. Start (unchanged by Aug 4 submit incident — still canon; cycle note Aug 12)
 
 - Classic / Timed **separate runners**; pick resolve **chunk size 5**.
+- Classic / Timed pick ids via **UserQuestionCycle** (seeded cursor scalars), then resolve-by-ids.
+- Cycle hop: raw `pg` **`withPooledPgClient`** — **outside** shared Direct queue (do not put cycle on `withDirectPg*`).
+- Boundary: **reshuffle-first** when remaining &lt; needed (no drain-then-top-up).
+- No silent random fallback if cycle fails.
 - `timedEndsAt` **after** pick.
-- Daily lobby **1** Direct TLS.
+- Daily lobby **1** Direct TLS; Daily start does **not** use UserQuestionCycle.
 - Keep-warm on quiz Direct queue **OFF**.
 
 ### D. Direct queue
@@ -61,6 +65,7 @@ BAD:  notFound() on miss/timeout
 - One `withDirectPgQueue` for the next-dev process.
 - Hung hop ≈ whole app feels dead. Prefer fail soft / short attempt on non-critical reads over infinite wait.
 - After wedge: **restart `npm run dev`**, stop F5 spam.
+- UserQuestionCycle must **not** sit on this queue.
 
 ---
 
@@ -105,6 +110,7 @@ If only content/admin questions changed and **no** quiz-session/submit/result/di
 3. Ask: did the last change put JSONB/TOAST on complete or blocking result read? **Revert that**, do not bump timeouts.
 4. Score broken → fix complete scalars. Review broken → soft-fail OK; fix payload hop separately.
 5. Do not re-enable keep-warm; do not merge Classic/Timed start; do not expand Daily lobby TLS.
+6. Classic/Timed start dies after cycle with Prisma `Connection terminated` → cycle must stay on `withPooledPgClient`, not Prisma and not Direct queue.
 
 ---
 
@@ -112,7 +118,9 @@ If only content/admin questions changed and **no** quiz-session/submit/result/di
 
 | Area | Path |
 |------|------|
-| Direct queue | `src/lib/db/direct-pg.ts` |
+| Direct queue | `src/lib/db/direct-pg.ts` (`withPooledPgClient` for cycle) |
+| UserQuestionCycle pure + repo | `src/entities/user-question-cycle/*` |
+| Classic/Timed pick wrappers | `src/features/quiz/lib/pick-quiz-snapshot-bundle.ts` |
 | Submit complete | `src/entities/quiz-session/quiz-session-submit.repository.ts` |
 | Result summary/review | `src/entities/quiz-result/quiz-result.repository.ts` |
 | Compact payload type | `src/entities/quiz-result/compact-review-payload.ts` |
@@ -124,3 +132,5 @@ If only content/admin questions changed and **no** quiz-session/submit/result/di
 ## History pointer
 
 Aug 4 incident chain: destroy-on-success → session TOAST read after write → outbox → summary/review split → client review → `reviewPayload` on complete (broke submit) → **scalars-only complete + deferred payload** (matrix green).
+
+Aug 12 cycle chain: Direct-queue cycle wedge → Prisma JSONB bag + random fallback (repeats) → seeded cursor + Prisma teardown false `DB_TIMEOUT` → **pooled raw `pg` cycle outside Direct queue** + **reshuffle-first boundary** (`a84ebdb`, `382f795`). Detail: `DECISIONS.md` → User Question Cycle.

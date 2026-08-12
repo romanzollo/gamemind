@@ -185,9 +185,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 6, 2026 (night) — IMAGE_GUESS ×90 DRAFT local+prod + lightbox UX; WebP deploy lesson. Hot-path canon locked.
+**Last updated:** August 12, 2026 — UserQuestionCycle (pooled raw `pg` + reshuffle-first) landed; Classic/Blitz anti-repeat OK. Hot-path canon updated.
 
-**Preferred next:** Admin **Publish** DRAFT IMAGE_GUESS (local + prod) → quiz/lightbox smoke light/dark → optional more TEXT batches. Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. No keep-warm / no timeout bumps / no JSONB on submit complete.
+**Preferred next:** Admin **Publish** DRAFT IMAGE_GUESS (local + prod) → quiz/lightbox smoke light/dark → optional more TEXT batches. Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -229,6 +229,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 38. ~~**Achievements catalog v2**~~ — `QUIZZES_10` + `MEDIUM_QUIZ` (types → evaluate/tests → SQL `has_medium` → i18n → illustrations); committed `06aeae2` July 31; no schema migration.
 39. ~~**Achievements criteria progress (profile)**~~ — locked tiles show server `current/target`; committed `8f600fb` July 31; Vitest 93.
 40. ~~**IMAGE_GUESS batch ×90 + lightbox**~~ — Aug 6: import DRAFT local+prod; WebP in git; lightbox dismiss + dark scrim (Publish still admin).
+41. ~~**UserQuestionCycle (seeded cursor)**~~ — Aug 12: pooled raw `pg` outside Direct queue (`a84ebdb`); reshuffle-first boundary (`382f795`); Classic+Blitz share bag; Daily out. Canon: `DECISIONS.md` → User Question Cycle.
 ### Deploy / hosting checklist (tracking)
 
 - [x] Production Neon project + migrate + seed

@@ -34,6 +34,15 @@ Run matrix: Classic 3/5/10 start, Blitz start+submit, Daily start+submit, score 
 
 Do **not** change `SNAPSHOT_RESOLVE_CHUNK_SIZE`, merge Classic/Timed runners, or expand Daily lobby multi-TLS without matrix + playbook update.
 
+## UserQuestionCycle (Classic / Timed start pick)
+
+Canon: `docs/DECISIONS.md` → User Question Cycle (seeded cursor).
+
+- Cycle hop = `withPooledPgClient` (raw `pg`), **outside** Direct queue — never `withDirectPg*` for cycle.
+- Scalars only (`cycleSeed` / `cursor` / `poolSize`); no JSONB remaining bag; no Prisma on this hop.
+- Boundary = **reshuffle-first** (not drain-then-top-up); no silent random fallback.
+- Daily does **not** use the cycle.
+
 ## Content / new questions
 
 Adding questions, drafts, seed, admin publish is **fine** and does not require hot-path changes.  

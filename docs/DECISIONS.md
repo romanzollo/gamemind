@@ -543,6 +543,8 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 | Classic/Timed `DB_TIMEOUT` on **10Q** while 3/5Q OK; log `Direct pg read retry` | One Direct read did `ORDER BY RANDOM()` + bilingual JOINs for all options under 12s | Split pick: id-only RANDOM, then resolve-by-ids (Daily-style) — two read budgets; do not raise global read timeout first |
 | After several starts / Blitz, **everything** hangs (home maybe OK; `/quiz` and starts 20–40s) | Shared `withDirectPgQueue` wedged (spam starts + retries + optional background warm) | Stop spam F5/Start; wait; restart `npm run dev`; check Neon Active. Do **not** confuse with app `RATE_LIMITED` (30/15min). Keep-warm interval in `instrumentation` must stay **off** |
 | Classic rematch spinner ~25s / `DB_TIMEOUT` while Timed rematch OK | Rematch POST from `/result` right after heavy submit TLS; Classic was lobby-only or no settle | `rematchClassicQuizAction` → `runClassicQuizStart` + **500ms settle**; keep Timed rematch on `startTimedQuizAction` |
+| Classic/Timed start `DB_TIMEOUT` ~20s after UserQuestionCycle; Prisma `COMMIT` then `Connection terminated` | Cycle on Prisma pooled adapter — SQL/scalars OK, teardown false-fail; or cycle on Direct queue wedges start | **Landed (Aug 12):** cycle on `withPooledPgClient` (raw `pg`, outside Direct queue); seeded cursor scalars; no silent random fallback |
+| IMAGE_GUESS «преследуют» after cycle «success» | JSONB `remainingIds` hang → Promise.race budget → fallback random; мешок не списывался | **Landed:** seeded `cycleSeed`/`cursor`/`poolSize`; no JSONB bag; no random fallback |
 | After submit, `/result/:id` soft-fail; GET 38s–2+min; `Quiz result load failed` | Result Direct read of large JSONB right after write + award on shared queue | **Landed:** summary scalars + client review API + outbox; **open:** review TOAST slow → option B `reviewPayload` |
 | Quiz page loads but submit scores wrong set | Scoring still reads live pool, not snapshot | `findSnapshotForScoring` ? validate `optionId` only against snapshot rows |
 | Migration `P1017` on Windows | Prisma migrate vs Neon | `scripts/apply-named-migration.cjs` |
@@ -568,11 +570,11 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 
 | Mode | Action | DB path | Notes |
 |------|--------|---------|-------|
-| Classic | `startQuizAction` → `runClassicQuizStart` | pickClassic* (id + resolve chunks of 5) → createWithJsonSnapshot | No timedEndsAt. |
+| Classic | `startQuizAction` → `runClassicQuizStart` | **UserQuestionCycle** draw → resolve-by-ids (chunks of 5) → createWithJsonSnapshot | No timedEndsAt. Same cycle bag as Blitz per `userId+difficulty`. |
 | Classic rematch | `rematchClassicQuizAction` → same runner | same | Settle before pick from `/result`. |
-| Blitz/Timed | `startTimedQuizAction` → `runTimedQuizStart` | pickTimed*; **timedEndsAt after pick** | Always 10Q. |
+| Blitz/Timed | `startTimedQuizAction` → `runTimedQuizStart` | **same UserQuestionCycle** → resolve → create; **timedEndsAt after pick** | Always 10Q. Shares bag with Classic. |
 | Daily lobby | `getDailyLobbyView` | `findLobbyPanelState` **1 TLS** | |
-| Daily start | frozen ids → chunked resolve → create | | |
+| Daily start | frozen ids → chunked resolve → create | | **No** UserQuestionCycle. |
 | Submit | `submitQuizAction` → `completeWithResult` | answers + **scalar** QuizResult `VALUES` + COMPLETED + outbox | **No JSONB on this hop.** |
 | reviewPayload | fire-and-forget after complete | `UPDATE QuizResult.reviewPayload` | Must not fail submit. |
 | Result score | `findSummaryBySessionIdForUser` | scalars only | Soft-miss (no `notFound`); retry 400ms. |
@@ -580,6 +582,8 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 | Result review | `QuizResultReviewClientLoader` → API | prefers `reviewPayload` | Soft-fail OK. |
 
 **Pick detail:** `SNAPSHOT_RESOLVE_CHUNK_SIZE = 5`. One 10-id resolve → DB_TIMEOUT; 5-id OK. Changing chunk/pick = full matrix.
+
+**UserQuestionCycle (Aug 12):** Classic/Timed anti-repeat — see section **User Question Cycle (seeded cursor)** below. Cycle hop is **not** on `withDirectPgQueue`.
 
 **Anti whack-a-mole rules:**
 1. Never change shared pick/Direct/queue to fix one mode without running the matrix.
@@ -630,6 +634,10 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 - Do **not** nest Direct recovery inside a held queue.
 - Do **not** put large review JSONB back into blocking RSC Suspense before score.
 - Do **not** use `notFound()` on result for transient miss.
+- Do **not** put UserQuestionCycle on `withDirectPg*` / shared Direct queue.
+- Do **not** put cycle writes back on Prisma for quiz start (Windows teardown false-fail).
+- Do **not** restore silent `pickRandomActiveSnapshotBundle` fallback when cycle fails.
+- Do **not** restore drain-then-top-up on cycle boundary (use reshuffle-first).
 
 **Abandoned starts note:** IN_PROGRESS rows are not connection leaks. Spam Start wedges the queue.
 
@@ -706,6 +714,47 @@ Timing:
 
 - Implement this **before** adding timed modes, daily challenges, category filters, achievements, or portfolio-level UI polish.
 - This is a core product correctness feature, not cosmetic polish.
+
+**Landed follow-up (Aug 12):** per-user anti-repeat for Classic/Timed is **User Question Cycle (seeded cursor)** — see next section. Snapshot still freezes the chosen ids for the session; cycle only chooses which ids enter the snapshot.
+
+## User Question Cycle (seeded cursor)
+
+**Status:** landed Aug 12, 2026 (`a84ebdb` transport + `382f795` boundary).  
+**Product:** Classic + Timed share one bag per `userId + difficulty`. Daily Challenge stays on frozen day ids (no cycle).
+
+### Problem history
+
+1. **JSONB `remainingIds` bag (Prisma)** — UPDATE of ~100 ids hung >4s on Windows+Neon → `Promise.race` budget → silent fallback to `ORDER BY RANDOM` pick → IMAGE_GUESS «преследовали», мешок не списывался; zombie UPDATE after abort.
+2. **Cycle on Direct quiz queue** — long hop / timeout wedged `withDirectPgQueue` (home/submit suffered).
+3. **Seeded cursor + Prisma scalars** — SQL/COMMIT often OK, then Prisma pooled adapter `Connection terminated` on teardown → `mapQuizStartError` → false `DB_TIMEOUT`, session not created.
+
+### Decision
+
+| Piece | Choice |
+|-------|--------|
+| State in DB | Scalars only: `cycleNumber`, `cycleSeed`, `cursor`, `poolSize` (migration `20260812160000_user_question_cycle_seed_cursor`) |
+| Pure draw | `drawFromSeededCycle` — deterministic shuffle from seed; Vitest covers wrap |
+| Boundary | **Reshuffle-first** when `remaining < needed` (хвост returns to bag). **Not** drain-then-top-up (that re-drew wrap ids later in the same cycle when `pool % questionCount ≠ 0`) |
+| Persistence | `user-question-cycle.repository.ts` via **`withPooledPgClient`** (fresh raw `pg` on `DATABASE_URL`, **outside** Direct queue); optimistic UPDATE; transient after UPDATE → verify `nextState` |
+| Pick wiring | `pickClassicSnapshotBundle` / `pickTimedSnapshotBundle` → cycle ids → `pickSnapshotBundleByQuestionIds` (chunk 5). **No** silent random fallback |
+| Errors | Transient → `DB_TIMEOUT`; insufficient pool → `NOT_ENOUGH_QUESTIONS` |
+
+### Do not
+
+- Put cycle on `withDirectPgClient` / `withDirectPgWriteClient` / `withDirectPgQuizStartClient`.
+- Put cycle back on Prisma for quiz start.
+- Raise global Direct/Prisma timeouts or re-enable keep-warm to “fix” cycle.
+- Restore JSONB remaining bag or Promise.race budget that abandons in-flight UPDATE.
+- Restore silent random fallback when cycle fails.
+- Restore drain-then-top-up on the cycle boundary.
+- Touch cycle from Daily start or from submit/complete.
+
+### Code
+
+- Pure: `src/entities/user-question-cycle/draw-from-question-cycle.ts` (+ `.test.ts`)
+- Repo: `src/entities/user-question-cycle/user-question-cycle.repository.ts`
+- Helper: `withPooledPgClient` in `src/lib/db/direct-pg.ts`
+- Pick: `src/features/quiz/lib/pick-quiz-snapshot-bundle.ts`
 
 ## UI/UX Timing And Theme Quality
 
