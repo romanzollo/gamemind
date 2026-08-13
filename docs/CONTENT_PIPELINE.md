@@ -12,7 +12,7 @@ Related canon:
 
 **Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish.
 
-**Next authoring target (Aug 12 handoff):** Mechanics TEXT wave — suggested size **12** (4×EASY/MEDIUM/HARD) or **18** (6×3); file `content/drafts/batches/YYYY-MM-DD-text-mechanics-….json`; pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import existing C/D/fresh/sample files.
+**Next authoring target (Aug 13):** Mechanics TEXT ×12 is **PUBLISHED** local+prod (`2026-08-12-text-mechanics-12.json`) — **do not re-import**. Preferred leftover: friends lightbox smoke (`QUIZ_IMAGES.md` §6). Alternate: mechanics wave 2 (12 or 18; new systems; dupe-check vs seed + C/D + this file). Pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12.
 
 ---
 
@@ -63,6 +63,7 @@ content/drafts/
     2026-08-07-text-wave-c2-36.json  # TEXT ×36 C2 (local+prod PUBLISHED)
     2026-08-07-text-wave-c3-36.json  # TEXT ×36 C3 (local+prod PUBLISHED)
     2026-08-12-text-wave-d1-6.json   # TEXT ×6 D1 (local+prod PUBLISHED)
+    2026-08-12-text-mechanics-12.json # TEXT ×12 mechanics (local+prod PUBLISHED)
 
 src/features/content/lib/
   draft-questions.schema.ts          # Zod contract v1 (runtime)
@@ -341,7 +342,9 @@ Admin hub counts **all** `isActive` rows (including DRAFT). A gap there is almos
 
 **Aug 12:** prod had TEXT waves C1–C3 (×108) that local lacked → hub 435 vs 341. IMAGE_GUESS was already in sync (`img-*` ×90 + `img2-*` ×72 + seed ×9). After local import+publish of C1–C3, local still had **8 extras** (pipeline samples, mixed Hyrule/Switch, two July admin TEXT, one July test IMAGE_GUESS). Those were **deleted on local only** — not copied to prod.
 
-**Bank after cleanup (both Neons):** TEXT quiz pool **270** (90/90/90) + IMAGE_GUESS **171** → admin ~**441**. Verify:
+**Bank after cleanup (both Neons, Aug 12):** TEXT quiz pool **270** (90/90/90) + IMAGE_GUESS **171** → admin ~**441**.
+
+**Aug 13:** mechanics TEXT ×12 published both sides → TEXT **282** (94/94/94) + IMAGE **171** → admin ~**453**. Verify:
 
 ```powershell
 npm run content:smoke-text
@@ -352,4 +355,4 @@ npm run content:smoke-image-guess -- --target=prod
 
 Helper for TEXT → prod without swapping `.env`: `node scripts/import-text-drafts-to-prod.cjs <files…>` (refuses `jolly-river`). Then publish with `content:publish-text-drafts -- --target=prod --file=…` (prod **requires** `--file`; bulk cap 100).
 
-**Do not:** dump one Neon onto the other; re-import C/D/fresh/samples; treat hub “active” as quiz pool (`PUBLISHED + isActive`).
+**Do not:** dump one Neon onto the other; re-import C/D/fresh/samples/mechanics-12; treat hub “active” as quiz pool (`PUBLISHED + isActive`).
