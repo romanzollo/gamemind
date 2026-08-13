@@ -382,6 +382,13 @@ export const ruDictionary: Dictionary = {
         easy: 'Легко',
         medium: 'Средне',
         hard: 'Сложно',
+        mixed: 'Смешанная',
+        mixedSplitMeta3:
+            'Смесь: 1 легко + 1 средне + 1 сложно · веса 1 / 2 / 3',
+        mixedSplitMeta5:
+            'Смесь: 2 легко + 2 средне + 1 сложно · веса 1 / 2 / 3',
+        mixedSplitMeta10:
+            'Смесь: 4 легко + 3 средне + 3 сложно · веса 1 / 2 / 3',
         startButton: 'Начать классику',
         sessionTitle: 'Квиз-сессия',
         resultTitle: 'Результат квиза',
@@ -445,6 +452,7 @@ export const ruDictionary: Dictionary = {
             'Не удалось загрузить рейтинг. Проверь подключение к базе данных и попробуй обновить страницу.',
         filterDifficultyLabel: 'Сложность',
         filterAll: 'Все',
+        filterMixed: 'Смесь',
         filterPeriodLabel: 'Период',
         filterPeriodAll: 'Всё время',
         filterPeriodWeek: 'Неделя',

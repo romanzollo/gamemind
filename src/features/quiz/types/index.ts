@@ -1,5 +1,14 @@
-// тип для сложности вопросов
+/** Сложность одного вопроса / мешка цикла / single-сессии. Не MIXED. */
 export type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
+
+/**
+ * Option формы старта Classic/Blitz.
+ * MIXED — сигнал сессии (poolKind), не значение Question.difficulty.
+ */
+export type QuizSetupDifficulty = Difficulty | 'MIXED';
+
+/** Как набран пул сессии. Исторические строки без поля = SINGLE. */
+export type QuizSessionPoolKind = 'SINGLE' | 'MIXED';
 
 // тип вопроса (совпадает с Prisma enum QuestionType)
 export type QuestionType = 'TEXT' | 'IMAGE_GUESS';
@@ -9,7 +18,7 @@ export type QuestionPublicationStatus = 'DRAFT' | 'IN_REVIEW' | 'PUBLISHED';
 
 // тип для входных данных для настройки викторины
 export type QuizSetupInput = {
-    difficulty: Difficulty;
+    difficulty: QuizSetupDifficulty;
     questionCount: number;
 };
 

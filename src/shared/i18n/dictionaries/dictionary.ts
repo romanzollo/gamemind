@@ -411,6 +411,14 @@ export type Dictionary = {
         easy: string;
         medium: string;
         hard: string;
+        /** Option select + чип сессии (не сложность вопроса). */
+        mixed: string;
+        /** Meta под select, когда выбрана Смешанная (Classic 3). */
+        mixedSplitMeta3: string;
+        /** Classic 5. */
+        mixedSplitMeta5: string;
+        /** Classic 10 и Blitz 10. */
+        mixedSplitMeta10: string;
         startButton: string;
         sessionTitle: string;
         resultTitle: string;
@@ -484,6 +492,8 @@ export type Dictionary = {
         filterDifficultyLabel: string;
         /** Чип «все сложности» → URL без ?difficulty= */
         filterAll: string;
+        /** Короткий chip фильтра mix-сессий (`?difficulty=MIXED`). */
+        filterMixed: string;
         /** aria-label группы чипов периода */
         filterPeriodLabel: string;
         /** Чип all-time → URL без ?period= */

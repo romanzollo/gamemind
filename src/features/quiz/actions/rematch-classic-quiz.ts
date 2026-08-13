@@ -14,7 +14,10 @@
 import { redirect } from 'next/navigation';
 
 import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start';
-import { quizSetupSchema } from '@/features/quiz/lib/validation';
+import {
+    isQuestionDifficulty,
+    quizSetupSchema,
+} from '@/features/quiz/lib/validation';
 import type { QuizFormState } from '@/features/quiz/types';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
@@ -50,6 +53,11 @@ export async function rematchClassicQuizAction(
     });
 
     if (!parsed.success) {
+        return { errorCode: 'INVALID_SETUP' };
+    }
+
+    // MIXED rematch — после pick (урок 4). Пока MIXED не сужаем в Difficulty.
+    if (!isQuestionDifficulty(parsed.data.difficulty)) {
         return { errorCode: 'INVALID_SETUP' };
     }
 
