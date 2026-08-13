@@ -1,0 +1,1207 @@
+{
+  "version": 1,
+  "source": "manual",
+  "notes": "Mechanics TEXT wave 3 — 24 questions (8×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Do not re-import seed/C/D/fresh/samples/mechanics-12/w2-24. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, SMB grown-hit, Pac-Man energizer, Tetris line-clear, SUPERHOT time, Subnautica oxygen, Smash %, Stardew energy, GTA wanted, Mario Kart mini-turbo, Rocket League boost, BioShock EVE, Dishonored mana, Dead Space stasis, Cuphead pink parry, Slay the Spire energy, Fallout VATS, Sifu age-on-death, Returnal malfunction, FTL power, Into the Breach telegraph, Darkest Dungeon stress, Shadow of Mordor orc rank, NecroDancer miss-beat, Baba Is You rules, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf / Kirby inhale / HL2 gravity gun / Quen). Authored incrementally.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-katamari-roll-grow",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Katamari",
+        "game": "Katamari Damacy",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Katamari Damacy что обычно происходит, когда катамари накатывается на предмет меньше себя?"
+        },
+        "en": {
+          "text": "In Katamari Damacy, what usually happens when the katamari rolls over an object smaller than itself?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Предмет прилипает, шар растёт и потом берёт вещи покрупнее" },
+            "en": { "text": "The object sticks, the ball grows, and later it can pick up bigger things" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Предмет отскакивает, и шар немного сжимается" },
+            "en": { "text": "The object bounces off and the ball shrinks a little" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно отдельно «съесть» предмет кнопкой, как всасывание" },
+            "en": { "text": "You must separately “eat” the object with a button, like inhaling" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Предмет превращается в монеты, а размер шара не меняется" },
+            "en": { "text": "The object turns into coins and the ball’s size does not change" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-fortnite-storm-damage",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fortnite",
+        "game": "Fortnite",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Fortnite Battle Royale что обычно происходит, если остаться в шторме вне безопасной зоны?"
+        },
+        "en": {
+          "text": "In Fortnite Battle Royale, what usually happens if you stay in the storm outside the safe zone?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Здоровье постепенно тает, пока не вернёшься в круг" },
+            "en": { "text": "Health ticks down until you get back inside the circle" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Кислород падает, как под водой, но HP не трогает" },
+            "en": { "text": "Oxygen drops like underwater, but HP is untouched" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Появляется щит, который сам регенерирует без урона" },
+            "en": { "text": "A shield appears that recharges on its own out of combat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Карта заливается чернилами, и это даёт очки территории" },
+            "en": { "text": "The map fills with ink and that scores territory points" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-sims-needs-mood",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Sims",
+        "game": "The Sims",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В The Sims что обычно происходит, если долго не закрывать нужды сима — голод, гигиену, туалет?"
+        },
+        "en": {
+          "text": "In The Sims, what usually happens if you ignore a Sim’s needs for a long time — hunger, hygiene, bladder?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Настроение падает, сим хуже себя чувствует, пока нужды не закроют" },
+            "en": { "text": "Mood drops and the Sim feels worse until those needs are met" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сим получает запас энергии только от работы в поле, как на ферме" },
+            "en": { "text": "The Sim only gains energy from working the fields, like on a farm" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Все навыки сбрасываются до нуля после одной пропущенной нужды" },
+            "en": { "text": "All skills reset to zero after a single missed need" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Внешность сима навсегда меняется по шкале морали" },
+            "en": { "text": "The Sim’s looks permanently shift along a morality meter" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-gow-axe-recall",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "God of War",
+        "game": "God of War (2018)",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В God of War (2018) что обычно происходит, если бросить топор Левиафан и затем призвать его обратно?"
+        },
+        "en": {
+          "text": "In God of War (2018), what usually happens if you throw the Leviathan Axe and then call it back?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он летит в руку и по пути может задеть врагов и предметы" },
+            "en": { "text": "It flies back to your hand and can hit enemies and objects on the way" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он остаётся лежать, пока не подойдёшь и не поднимешь пешком" },
+            "en": { "text": "It stays on the ground until you walk over and pick it up" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Возврат тратит ману сил и без неё топор не летит" },
+            "en": { "text": "The recall spends ability mana, and without it the axe will not return" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Топор исчезает до следующего костра или места благодати" },
+            "en": { "text": "The axe vanishes until the next bonfire or Site of Grace" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-amongus-body-report",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Among Us",
+        "game": "Among Us",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Among Us что обычно происходит, если сообщить о найденном теле?"
+        },
+        "en": {
+          "text": "In Among Us, what usually happens if you report a body you found?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Начинается обсуждение, после которого можно голосовать, кого выгнать" },
+            "en": { "text": "A discussion starts, then you can vote on whom to eject" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вы сразу побеждаете как предатель" },
+            "en": { "text": "You instantly win as the impostor" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тело превращается в задание на провода и больше ни на что не влияет" },
+            "en": { "text": "The body turns into a wiring task and does nothing else" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Корабль взрывается, как после заложенной бомбы" },
+            "en": { "text": "The ship explodes, as if a bomb had been planted" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-hotline-one-hit",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hotline Miami",
+        "game": "Hotline Miami",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Hotline Miami что обычно происходит, если вас хоть раз ударили во время зачистки?"
+        },
+        "en": {
+          "text": "In Hotline Miami, what usually happens if you get hit even once during a takedown?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Вы сразу погибаете и перезапускаете текущий уровень с начала" },
+            "en": { "text": "You die immediately and restart the current level from the start" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вы уменьшаетесь и можете продолжить, не теряя жизнь сразу" },
+            "en": { "text": "You shrink and can keep going without losing a life right away" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вы становитесь старше, но попытка продолжается" },
+            "en": { "text": "You get older, but the attempt continues" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время вокруг почти останавливается, пока вы стоите" },
+            "en": { "text": "Time around you nearly stops while you stand still" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-metroid-ball-tunnels",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Metroid",
+        "game": "Metroid",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В классическом Metroid зачем Самус обычно сворачивается в маленький шар?"
+        },
+        "en": {
+          "text": "In classic Metroid, why does Samus usually curl into a small ball?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Чтобы прокатиться по узким тоннелям, куда стоя не пройти" },
+            "en": { "text": "To roll through tight tunnels the standing suit cannot fit" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чтобы всосать врага и скопировать его способность" },
+            "en": { "text": "To inhale an enemy and copy its ability" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чтобы щит сам восстановился, если постоять без урона" },
+            "en": { "text": "So the shield recharges if you stand still out of combat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чтобы открыть меню крафта и склеить новое оружие" },
+            "en": { "text": "To open a crafting menu and fuse a new weapon" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-easy-beatsaber-slash-direction",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Beat Saber",
+        "game": "Beat Saber",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Beat Saber что обычно нужно сделать с цветным блоком, чтобы удар засчитали чисто?"
+        },
+        "en": {
+          "text": "In Beat Saber, what do you usually need to do with a colored block for a clean hit?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Разрезать его мечом в направлении стрелки на блоке" },
+            "en": { "text": "Slash it with the saber in the direction of the arrow on the block" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Поймать блок как покеболом и подождать тряски" },
+            "en": { "text": "Catch the block like a Poké Ball and wait for the shake" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Наступить на клетку строго в такт, иначе сразу урон" },
+            "en": { "text": "Step on a tile exactly on the beat, or you take damage right away" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Стоять неподвижно, пока блок сам не разобьётся" },
+            "en": { "text": "Stand still until the block shatters on its own" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-p5-weakness-onemore",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Persona",
+        "game": "Persona 5",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Persona 5 что обычно происходит в бою, если ударить врага по его слабости?"
+        },
+        "en": {
+          "text": "In Persona 5, what usually happens in battle if you hit an enemy’s weakness?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Враг падает, и вы получаете ещё одно действие" },
+            "en": { "text": "The enemy is knocked down and you get another action" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тратится энергия хода, как в картах Slay the Spire" },
+            "en": { "text": "Turn energy is spent, like cards in Slay the Spire" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Срабатывает активная перезарядка магазина" },
+            "en": { "text": "An active-reload minigame on the magazine triggers" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время вокруг замедляется, как Witch Time" },
+            "en": { "text": "Time around you slows down, like Witch Time" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-xcom-high-cover",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "XCOM",
+        "game": "XCOM",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В XCOM что обычно даёт солдату высокое укрытие, пока его не обошли с фланга?"
+        },
+        "en": {
+          "text": "In XCOM, what does high cover usually give a soldier until they are flanked?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "По нему заметно сложнее попасть" },
+            "en": { "text": "They become much harder to hit" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Щит сам регенерирует, если постоять без урона" },
+            "en": { "text": "A shield recharges if you stand still out of combat" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ход врага показывают заранее, как телеграф удара" },
+            "en": { "text": "The enemy’s turn is shown in advance, like an attack telegraph" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Туман войны снимается со всей карты сразу" },
+            "en": { "text": "Fog of war lifts from the entire map at once" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-re-inventory-slots",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Resident Evil",
+        "game": "Resident Evil",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В классическом Resident Evil зачем обычно оставлять лишнее в сундуке, а не нести всё с собой?"
+        },
+        "en": {
+          "text": "In classic Resident Evil, why do you usually leave extras in the item box instead of carrying everything?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Слотов в инвентаре мало, крупные предметы занимают несколько клеток" },
+            "en": { "text": "Inventory slots are scarce, and large items take several squares" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вещи в руках гниют от дождя, как груз под timefall" },
+            "en": { "text": "Carried items rot in the rain, like cargo under timefall" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Полный инвентарь тратит ману сил на каждый шаг" },
+            "en": { "text": "A full inventory spends ability mana on every step" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сундук — единственный чекпоинт, как костёр" },
+            "en": { "text": "The box is the only checkpoint, like a bonfire" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-alanwake-flashlight-burn",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Alan Wake",
+        "game": "Alan Wake",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Alan Wake что обычно нужно сделать с Одержимым, прежде чем пули начинают ему по-настоящему вредить?"
+        },
+        "en": {
+          "text": "In Alan Wake, what do you usually need to do to a Taken before bullets actually start hurting it?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Выжечь тьму сфокусированным светом фонарика" },
+            "en": { "text": "Burn off the darkness with a focused flashlight beam" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Добить glory kill, чтобы вернуть здоровье" },
+            "en": { "text": "Finish with a glory kill to get health back" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Попасть синим лучом, который коротко замедляет" },
+            "en": { "text": "Hit it with a blue beam that briefly slows it" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Постоять без урона, пока щит сам не восстановится" },
+            "en": { "text": "Stand out of combat until a shield recharges on its own" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-gungeon-blank",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Enter the Gungeon",
+        "game": "Enter the Gungeon",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Enter the Gungeon зачем обычно тратят редкий холостой патрон посреди комнаты, полной пуль?"
+        },
+        "en": {
+          "text": "In Enter the Gungeon, why do you usually spend a rare blank in a room full of bullets?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он стирает снаряды на экране и часто отбрасывает врагов" },
+            "en": { "text": "It erases projectiles on screen and often knocks enemies back" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он лечит, если успеть ударить врага сразу после урона" },
+            "en": { "text": "It heals you if you hit the enemy right after taking damage" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он заряжает SOUL для заклинания" },
+            "en": { "text": "It charges SOUL for a spell" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он даёт мини-ускорение, как искры после заноса" },
+            "en": { "text": "It grants a mini-boost, like sparks after a drift" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-witcher-toxicity",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Witcher",
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В The Witcher 3 что обычно ограничивает, сколько зелий можно выпить подряд в бою?"
+        },
+        "en": {
+          "text": "In The Witcher 3, what usually limits how many potions you can drink back-to-back in a fight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Шкала токсичности: слишком высоко — передозировка и урон" },
+            "en": { "text": "A toxicity meter: too high and you overdose and take damage" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Мана знаков, без которой зелье просто не открывается" },
+            "en": { "text": "Sign mana, without which the potion will not even open" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Острота меча: тупое оружие не даёт пить" },
+            "en": { "text": "Sword sharpness: a dull blade blocks drinking" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ева: каждый глоток жрёт запас плазмидов" },
+            "en": { "text": "EVE: each sip spends your plasmid pool" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-valheim-food-caps",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Valheim",
+        "game": "Valheim",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Valheim что обычно даёт еда, кроме того что персонаж «не голоден»?"
+        },
+        "en": {
+          "text": "In Valheim, what does food usually give you besides “not being hungry”?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Поднимает потолок здоровья и выносливости, пока эффект еды держится" },
+            "en": { "text": "It raises your health and stamina caps while the food effect lasts" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сердца сами регенятся, только если шкала голода почти полная" },
+            "en": { "text": "Hearts regen on their own only if the hunger bar is nearly full" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Работа по ферме тратит энергию, и без сна бар не вернётся" },
+            "en": { "text": "Farm work spends energy, and the bar will not return without sleep" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Еда сразу превращает урон в дополнительные жизни" },
+            "en": { "text": "Food instantly converts damage into extra lives" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-med-pikmin-sunset-return",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Pikmin",
+        "game": "Pikmin",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Pikmin что обычно нужно успеть сделать с пикминами к закату?"
+        },
+        "en": {
+          "text": "In Pikmin, what do you usually need to do with your Pikmin before sunset?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Собрать их и вернуть к луковице, иначе ночью их съедят" },
+            "en": { "text": "Gather them and return them to the Onion, or they get eaten at night" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Дождаться 22-минутного сброса всей вселенной" },
+            "en": { "text": "Wait for a 22-minute reset of the whole universe" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пережить три дня, пока не упадёт луна" },
+            "en": { "text": "Survive three days until the moon falls" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Укрыться от Выброса в аномальной зоне" },
+            "en": { "text": "Shelter from an Emission in an anomalous zone" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-bb-insight-perception",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Bloodborne",
+        "game": "Bloodborne",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Bloodborne что обычно меняется в мире, если охотник копит много озарения?"
+        },
+        "en": {
+          "text": "In Bloodborne, what usually changes in the world if a hunter accumulates a lot of Insight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Становятся видны скрытые существа и знаки, а безумие набирается охотнее" },
+            "en": { "text": "Hidden creatures and signs become visible, and frenzy builds more readily" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Здоровье сразу возвращается, если успеть ударить в ответ" },
+            "en": { "text": "Health comes back immediately if you strike back in time" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Костры восстанавливают эстус и сбрасывают врагов" },
+            "en": { "text": "Bonfires refill Estus and reset enemies" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Щит сам регенерирует, если постоять без урона" },
+            "en": { "text": "A shield recharges if you stand still out of combat" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-mgs-alert-phases",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Metal Gear",
+        "game": "Metal Gear Solid",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Metal Gear Solid что обычно происходит, если вас заметили, а затем вы спрятались и ждёте?"
+        },
+        "en": {
+          "text": "In Metal Gear Solid, what usually happens if you are spotted, then hide and wait?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Тревога спадает фазами: сначала ищут, потом осторожность, затем снова тихо" },
+            "en": { "text": "The alert winds down in phases: a search, then caution, then quiet again" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Достаточно надеть любую форму — вас сразу перестают искать" },
+            "en": { "text": "Putting on any uniform instantly makes them stop searching" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Растут звёзды розыска, и приезжает всё более тяжёлая полиция" },
+            "en": { "text": "Wanted stars rise and heavier police units arrive" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вы стареете на год, но побег продолжается" },
+            "en": { "text": "You age a year, but the escape continues" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-papersplease-daily-rules",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Papers, Please",
+        "game": "Papers, Please",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Papers, Please что обычно происходит со сменой дня на пункте пропуска?"
+        },
+        "en": {
+          "text": "In Papers, Please, what usually happens when the day changes at the checkpoint?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Вступают новые правила: вчерашних документов сегодня может не хватить" },
+            "en": { "text": "New rules take effect: yesterday’s papers may not be enough today" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Слова на поле переписывают правило уровня" },
+            "en": { "text": "Words on the field rewrite the level’s rule" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Вселенная сбрасывается через 22 минуты" },
+            "en": { "text": "The universe resets after 22 minutes" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Внешность героя навсегда меняется по шкале морали" },
+            "en": { "text": "The hero’s looks permanently shift along a morality meter" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-ror-time-difficulty",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Risk of Rain",
+        "game": "Risk of Rain",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Risk of Rain что обычно делает сложность с течением времени, даже если вы почти никого не убиваете?"
+        },
+        "en": {
+          "text": "In Risk of Rain, what does difficulty usually do as time passes, even if you barely kill anyone?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Она растёт сама: враги опаснее, появляются элитные" },
+            "en": { "text": "It rises on its own: enemies get nastier and elites start showing up" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пикминов ночью съедят, если не вернуть их к луковице" },
+            "en": { "text": "Pikmin get eaten at night unless you return them to the Onion" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Карта сужается штормом, и вне круга тает HP" },
+            "en": { "text": "The map shrinks in a storm, and HP ticks down outside the circle" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Энергия фермы падает до нуля, и персонаж телепортируется в кровать" },
+            "en": { "text": "Farm energy hits zero and the character teleports to bed" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-ikaruga-polarity",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Ikaruga",
+        "game": "Ikaruga",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Ikaruga зачем обычно переключают цвет корабля посреди потока пуль?"
+        },
+        "en": {
+          "text": "In Ikaruga, why do you usually switch the ship’s color in the middle of a bullet stream?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Пули своего цвета поглощаются; противоположный цвет ранит" },
+            "en": { "text": "Same-color bullets are absorbed; the opposite color hurts you" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Холостой патрон стирает все снаряды на экране" },
+            "en": { "text": "A blank erases every projectile on screen" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время почти останавливается, пока вы стоите" },
+            "en": { "text": "Time nearly stops while you stand still" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно резать блоки строго по стрелке на них" },
+            "en": { "text": "You must slash blocks strictly along the arrow on them" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-dontstarve-darkness",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Don't Starve",
+        "game": "Don't Starve",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Don't Starve что обычно происходит, если ночью остаться совсем без света?"
+        },
+        "en": {
+          "text": "In Don't Starve, what usually happens if you stay in complete darkness at night?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Из темноты бьёт невидимый урон, пока не зажжёте источник света" },
+            "en": { "text": "Unseen damage hits you from the dark until you light a source" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно выжечь тьму с врага фонариком, иначе пули не вредят" },
+            "en": { "text": "You must burn the darkness off an enemy with a flashlight, or bullets do nothing" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Кончается кислород, как под водой" },
+            "en": { "text": "Oxygen runs out, like being underwater" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Отряд ломается от стресса и получает срыв" },
+            "en": { "text": "The party breaks from stress and suffers an affliction" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-dos2-armor-cc",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Divinity",
+        "game": "Divinity: Original Sin 2",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Divinity: Original Sin 2 что обычно нужно сделать, прежде чем стан, заморозка или нокдаун по-настоящему сработают?"
+        },
+        "en": {
+          "text": "In Divinity: Original Sin 2, what do you usually need to do before stun, freeze, or knockdown actually lands?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Снять нужный тип брони — физическую или магическую" },
+            "en": { "text": "Strip the matching armor type — physical or magic" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сбить стойку серией идеальных отражений" },
+            "en": { "text": "Break posture with a string of perfect deflections" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Набрать очки действия и стрелять в замедлении" },
+            "en": { "text": "Spend action points and fire in slow motion" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Дождаться, пока враг сам покажет клетку удара до хода" },
+            "en": { "text": "Wait until the enemy telegraphs its attack tile before your turn" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w3-hard-inscryption-blood-sac",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Inscryption",
+        "game": "Inscryption",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Inscryption чем обычно платят за сильное существо с ценой в кровь?"
+        },
+        "en": {
+          "text": "In Inscryption, how do you usually pay for a strong creature with a blood cost?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Жертвуют своими картами на столе — столько, сколько капель указано" },
+            "en": { "text": "You sacrifice your own cards on the board — as many as the blood drops require" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тратят энергию хода, которая каждое утро снова становится полной" },
+            "en": { "text": "You spend turn energy that refills completely each morning" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пьют зелья, пока шкала токсичности не переполнится" },
+            "en": { "text": "You drink potions until the toxicity meter overflows" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Копят SOUL с ударов и тратят его на заклинание" },
+            "en": { "text": "You build SOUL from hits and spend it on a spell" }
+          }
+        }
+      ]
+    }
+  ]
+}
