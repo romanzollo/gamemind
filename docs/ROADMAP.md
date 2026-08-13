@@ -185,9 +185,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 13, 2026 — mechanics TEXT wave 3 ×24 PUBLISHED local+prod (TEXT 330 / IMAGE 171). Handoff: lightbox smoke preferred leftover; mechanics wave 4 optional (~24–30 per difficulty).
+**Last updated:** August 13, 2026 — friends prod smoke signed off (quiz + IMAGE_GUESS/lightbox + leaderboard records). Mechanics TEXT wave 3 ×24 already PUBLISHED (TEXT 330 / IMAGE 171).
 
-**Preferred next:** friends lightbox smoke (`QUIZ_IMAGES.md` §6). Alternate: **mechanics TEXT wave 4** (new systems; dupe-check; do not re-import `2026-08-12-text-mechanics-12.json`, `2026-08-13-text-mechanics-w2-24.json`, or `2026-08-13-text-mechanics-w3-24.json`). Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24 (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
+**Preferred next:** **mixed-difficulty quiz mode** (`ROADMAP.md` §11.3) — weights already exist; friends compete on one leaderboard, so a mixed set makes points meaningful. Plan before code: cycle bag + pick must stay off Direct JSONB. Alternate: mechanics TEXT wave 4 (~24 if aiming ~24–30 per difficulty; dupe-check; do not re-import mechanics-12 / w2-24 / w3-24). Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24 (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -234,6 +234,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 43. ~~**Mechanics TEXT wave ×12**~~ — Aug 13: `2026-08-12-text-mechanics-12.json` validate → DRAFT → publish gate local+prod; TEXT pool **282** (94/94/94).
 44. ~~**Mechanics TEXT wave 2 ×24**~~ — Aug 13 later: `2026-08-13-text-mechanics-w2-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **306** (102/102/102) local+prod.
 45. ~~**Mechanics TEXT wave 3 ×24**~~ — Aug 13 evening: `2026-08-13-text-mechanics-w3-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **330** (110/110/110) local+prod.
+46. ~~**Friends prod smoke (incl. IMAGE_GUESS)**~~ — Aug 13: user report — friends play TEXT+images, lightbox OK, set records, use leaderboard.
 
 ### Deploy / hosting checklist (tracking)
 
@@ -242,7 +243,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 - [x] First successful production deploy (`*.vercel.app`)
 - [x] Custom domain attached (`game-mind.ru` → www; REG.RU DNS)
 - [x] `AUTH_URL` points at HTTPS domain (keep in sync with primary host)
-- [ ] Friends smoke-test checklist fully signed off (incl. IMAGE_GUESS + register as non-admin)
+- [x] Friends smoke-test checklist fully signed off (incl. IMAGE_GUESS + register as non-admin) — Aug 13 user report: quiz + images/lightbox + leaderboard records
 - [ ] Rotate prod ADMIN password if it was ever shared outside a password manager
 
 ## Post-MVP Professional Roadmap
@@ -328,7 +329,7 @@ See `PROJECT_CONTEXT.md` → **Next Product Slice** and `DECISIONS.md` → **Pos
 - [x] Register: `confirmPassword` field + Zod refine (passwords must match)
 - [x] After successful register: `signIn('credentials')` → redirect to `/${locale}` (home), already authenticated
 - [x] Register success UI: remove dead-end “please log in again” as the only path
-- [ ] Verify on prod: new user sees USER nav without second password entry
+- [x] Verify on prod: new user sees USER nav without second password entry — friends registered and play as non-admin (Aug 13)
 
 #### 11.2 Result answer review
 

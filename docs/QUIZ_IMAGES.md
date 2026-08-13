@@ -214,7 +214,7 @@ npm run content:import-image-guess -- --target=prod
 
 **Verify (read-only):** `npm run content:smoke-image-guess` / `-- --target=prod` — script `scripts/smoke-image-guess-publish-status.cjs`. Expect `PUBLISHED: 90`, no missing PROMPT / WebP on disk.
 
-**Next:** quiz + lightbox smoke (light/dark) — see **§6**. Optional more TEXT batches. Seed ×9 IMAGE_GUESS remain separate. Do **not** auto-PUBLISH from import CLI.
+**Friends prod smoke (Aug 13):** signed off — quiz + images/lightbox + leaderboard records (user report). §6 checklist remains for regressions. Optional more TEXT/IMAGE batches. Seed ×9 IMAGE_GUESS remain separate. Do **not** auto-PUBLISH from import CLI.
 
 ### Neon / script rules (do not re-break)
 
@@ -385,5 +385,7 @@ Expect: `img-*` PUBLISHED 90; quiz pool IMAGE_GUESS = all PUBLISHED+active (batc
 6. Optional prod: one Classic Easy on `www.game-mind.ru` — image URL 200 (not 404).
 
 Pass = images load + lightbox open/close in light and dark. Fail = 404 WebP, milky scrim, or crop/`object-cover`.
+
+**Status (Aug 13):** friends signed off on prod (user report) — IMAGE_GUESS + lightbox in real play, records on leaderboard. Re-run this checklist after lightbox/CSS/asset changes.
 
 **Do not:** change `SNAPSHOT_RESOLVE_CHUNK_SIZE`, submit hot path, or cycle for this smoke.

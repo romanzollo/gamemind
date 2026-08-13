@@ -12,7 +12,7 @@ Related canon:
 
 **Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish.
 
-**Next authoring target (Aug 13, evening):** Mechanics TEXT wave 3 ×24 is **PUBLISHED** local+prod (`2026-08-13-text-mechanics-w3-24.json`) — **do not re-import**. Dedicated mechanics waves are now ~20 per difficulty (×12 + w2 ×24 + w3 ×24). Preferred leftover: friends lightbox smoke (`QUIZ_IMAGES.md` §6). Alternate: mechanics wave 4 (~24) if aiming ~24–30 per difficulty (new systems; dupe-check vs seed + C/D + mechanics-12 + w2 + this file). Pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24.
+**Next authoring target (Aug 13, friends smoke closed):** Mechanics TEXT wave 3 ×24 is **PUBLISHED** local+prod (`2026-08-13-text-mechanics-w3-24.json`) — **do not re-import**. Dedicated mechanics ≈20 per difficulty. Friends prod smoke (quiz + IMAGE_GUESS/lightbox + leaderboard) **signed off** — not a content leftover. Optional later: mechanics wave 4 (~24) if aiming ~24–30 per difficulty (dupe-check vs seed + C/D + mechanics-12 + w2 + w3). Product next is mixed-difficulty quiz (`ROADMAP.md` Immediate Next), not another TEXT dump. Pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24.
 
 ---
 
