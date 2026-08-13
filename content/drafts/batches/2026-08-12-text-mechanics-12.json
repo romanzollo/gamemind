@@ -1,0 +1,607 @@
+{
+  "version": 1,
+  "source": "manual",
+  "notes": "Mechanics TEXT wave — start size 12 (4×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Avoid seed/C/D dupes: no Celeste dash crystal, no Sekiro Posture, no Elden Ring Sites of Grace, no Max Payne bullet time. Authored incrementally; do not re-import C/D/fresh/samples.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-12-mech-easy-halo-shield-recharge",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Halo",
+        "game": "Halo",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Halo что обычно происходит с энергетическим щитом, если на время перестать получать урон?"
+        },
+        "en": {
+          "text": "In Halo, what typically happens to your energy shield if you stop taking damage for a moment?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он постепенно восстанавливается" },
+            "en": { "text": "It gradually recharges" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он остаётся пустым, пока не найдёшь аптечку" },
+            "en": { "text": "It stays empty until you find a health pack" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно дойти до чекпоинта, чтобы щит вернулся" },
+            "en": { "text": "You must reach a checkpoint to restore the shield" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Щит превращается в дополнительные жизни" },
+            "en": { "text": "The shield converts into extra lives" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-easy-minecraft-hunger-regen",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Minecraft",
+        "game": "Minecraft",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Minecraft в режиме Выживание что обычно нужно сделать, чтобы сердца начали восстанавливаться сами?"
+        },
+        "en": {
+          "text": "In Minecraft Survival, what do you usually need to do before hearts start regenerating on their own?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Наесться, чтобы шкала голода была достаточно полной" },
+            "en": { "text": "Eat until the hunger bar is full enough" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Постоять в воде, пока сердца не заполнятся" },
+            "en": { "text": "Stand in water until the hearts refill" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Спать в кровати каждую минуту" },
+            "en": { "text": "Sleep in a bed every minute" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сломать все факела на базе" },
+            "en": { "text": "Break every torch at your base" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-easy-botw-climb-stamina",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda: Breath of the Wild",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Breath of the Wild что происходит со шкалой выносливости, пока Линк карабкается по скале?"
+        },
+        "en": {
+          "text": "In Breath of the Wild, what happens to the stamina wheel while Link is climbing a cliff?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Она тратится; если кончится — он срывается вниз" },
+            "en": { "text": "It drains; if it empties, he falls" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Она заполняется тем быстрее, чем выше ты залез" },
+            "en": { "text": "It fills faster the higher you climb" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Лазание не тратит выносливость" },
+            "en": { "text": "Climbing does not spend stamina" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пустая шкала даёт крылья и полёт" },
+            "en": { "text": "An empty wheel grants wings and flight" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-easy-portal-momentum-fling",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Portal",
+        "game": "Portal",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Portal что происходит со скоростью Челл, когда она вылетает из портала после длинного падения?"
+        },
+        "en": {
+          "text": "In Portal, what happens to Chell’s speed when she exits a portal after a long fall?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Скорость сохраняется — так делают флинги через порталы" },
+            "en": { "text": "Speed is kept — that is how portal flings work" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Скорость всегда сбрасывается до шага" },
+            "en": { "text": "Speed always resets to a walk" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Портал гасит скорость, чтобы не было урона от падения" },
+            "en": { "text": "The portal kills speed to prevent fall damage" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно нажать «ускорение» в момент выхода" },
+            "en": { "text": "You must press sprint at the exact moment you exit" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-medium-bloodborne-rally",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Bloodborne",
+        "game": "Bloodborne",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Bloodborne как охотник может сразу вернуть часть здоровья, которое только что снял удар врага?"
+        },
+        "en": {
+          "text": "In Bloodborne, how can a hunter immediately recover some of the health a hit just took?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Быстро атаковать в ответ, пока здоровье ещё «отыгрывается» (Rally)" },
+            "en": { "text": "Attack back quickly while the health can still be rallied" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Постоять в укрытии, пока щит сам не восстановится" },
+            "en": { "text": "Wait in cover until a shield recharges on its own" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Отдохнуть у фонаря, не продолжая бой" },
+            "en": { "text": "Rest at a lamp without continuing the fight" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Выпить эстус, как в Dark Souls" },
+            "en": { "text": "Drink Estus, like in Dark Souls" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-medium-doom-glory-kill",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Doom",
+        "game": "Doom (2016)",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Doom (2016) что обычно даёт добивание подсвеченного ослабленного демона (glory kill)?"
+        },
+        "en": {
+          "text": "In Doom (2016), what does a glory kill on a highlighted staggered demon usually give you?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Здоровье" },
+            "en": { "text": "Health" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сохранение чекпоинта" },
+            "en": { "text": "A checkpoint save" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Бесконечные патроны до конца уровня" },
+            "en": { "text": "Infinite ammo until the level ends" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Открытие секретного выхода с карты" },
+            "en": { "text": "A secret exit off the map" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-medium-gears-active-reload",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Gears of War",
+        "game": "Gears of War",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Gears of War что даёт успешный активный перезаряд — попадание в узкое окно на шкале?"
+        },
+        "en": {
+          "text": "In Gears of War, what does a successful active reload — hitting the narrow bar window — grant?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Перезарядка быстрее, и патроны наносят больше урона" },
+            "en": { "text": "A faster reload and a damage bonus on those rounds" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Невидимость на несколько секунд" },
+            "en": { "text": "Invisibility for a few seconds" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Оружие больше не требует патронов" },
+            "en": { "text": "The gun no longer needs ammo" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Автоматический уход в укрытие" },
+            "en": { "text": "An automatic dive into cover" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-medium-hk-soul-from-hits",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hollow Knight",
+        "game": "Hollow Knight",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Hollow Knight откуда Рыцарь в основном набирает Душу (SOUL) для лечения Фокусом и заклинаний?"
+        },
+        "en": {
+          "text": "In Hollow Knight, how does the Knight mainly gain SOUL for Focus healing and spells?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "С ударов ногтем по врагам" },
+            "en": { "text": "From nail hits on enemies" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только сидя на скамейке" },
+            "en": { "text": "Only by sitting on a bench" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Автоматически со временем, как щит Halo" },
+            "en": { "text": "Automatically over time, like a Halo shield" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Из шкалы голода после еды" },
+            "en": { "text": "From a hunger bar after eating" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-hard-nioh-ki-pulse",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Nioh",
+        "game": "Nioh",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Nioh зачем после серии ударов вовремя сделать Ki Pulse (импульс ки)?"
+        },
+        "en": {
+          "text": "In Nioh, why do you time a Ki Pulse after a string of attacks?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Вернуть часть Ки (выносливости) и быстрее восстановиться" },
+            "en": { "text": "Recover some Ki (stamina) and get out of recovery faster" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Заполнить стойкость врага для добивания, как Posture в Sekiro" },
+            "en": { "text": "Fill the enemy’s Posture meter for a deathblow, like in Sekiro" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пополнить все фляги эстуса" },
+            "en": { "text": "Refill every Estus flask" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сохранить игру на чекпоинте" },
+            "en": { "text": "Save the game at a checkpoint" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-hard-hades-death-defiance",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Hades",
+        "game": "Hades",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Hades что происходит, когда Загрей должен умереть, но у него ещё есть заряд «Непокорности смерти» (Death Defiance)?"
+        },
+        "en": {
+          "text": "In Hades, what happens when Zagreus would die but still has a Death Defiance charge?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он выживает: заряд тратится, часть здоровья возвращается" },
+            "en": { "text": "He survives: the charge is spent and some health returns" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Забег сразу заканчивается без шанса продолжить" },
+            "en": { "text": "The run ends immediately with no chance to continue" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Игра предлагает сохранить и выйти в меню" },
+            "en": { "text": "The game offers to save and quit to the menu" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он становится неуязвимым до конца всего забега" },
+            "en": { "text": "He becomes invincible for the rest of the entire run" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-hard-mh-weapon-sharpness",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Monster Hunter",
+        "game": "Monster Hunter",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Monster Hunter что обычно происходит с атаками, если острота оружия сильно упала?"
+        },
+        "en": {
+          "text": "In Monster Hunter, what usually happens to attacks if weapon sharpness has dropped too far?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Удары чаще отскакивают и бьют слабее — оружие нужно точить" },
+            "en": { "text": "Hits bounce more and deal less damage — you need to sharpen" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Монстр сам становится питомцем, как в Pokémon" },
+            "en": { "text": "The monster becomes a pet, like in Pokémon" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Оружие навсегда ломается и пропадает из инвентаря" },
+            "en": { "text": "The weapon breaks forever and vanishes from inventory" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Выносливость перестаёт тратиться" },
+            "en": { "text": "Stamina stops draining" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-12-mech-hard-bayonetta-witch-time",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Bayonetta",
+        "game": "Bayonetta",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Bayonetta что обычно происходит, если уклониться от атаки в последний момент?"
+        },
+        "en": {
+          "text": "In Bayonetta, what usually happens if you dodge an attack at the last moment?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Время вокруг замедляется (Witch Time)" },
+            "en": { "text": "Time around you slows down (Witch Time)" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Заполняется стойкость врага для добивания, как в Sekiro" },
+            "en": { "text": "The enemy’s Posture fills for a deathblow, like in Sekiro" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Включается bullet time до конца уровня, как в Max Payne" },
+            "en": { "text": "Bullet time stays on until the level ends, like in Max Payne" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Байонэтта теряет все магические очки" },
+            "en": { "text": "Bayonetta loses all of her magic gauge" }
+          }
+        }
+      ]
+    }
+  ]
+}
