@@ -1,0 +1,1207 @@
+{
+  "version": 1,
+  "source": "manual",
+  "notes": "Mechanics TEXT wave 2 — 24 questions (8×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Do not re-import seed/C/D/fresh/samples/mechanics-12. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf). Authored incrementally.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-smb-grown-hit",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Super Mario",
+        "game": "Super Mario Bros.",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В классическом Super Mario Bros. что обычно происходит, если ударили уже большого Марио?"
+        },
+        "en": {
+          "text": "In classic Super Mario Bros., what usually happens if Super Mario (already grown) takes a hit?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он уменьшается и может продолжить, не теряя жизнь сразу" },
+            "en": { "text": "He shrinks and can keep going without losing a life right away" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он сразу теряет жизнь, как маленький Марио" },
+            "en": { "text": "He loses a life immediately, like small Mario" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он становится неуязвимым до конца уровня" },
+            "en": { "text": "He becomes invincible until the level ends" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Все собранные монеты разлетаются по уровню" },
+            "en": { "text": "All collected coins scatter across the level" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-pacman-energizer",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Pac-Man",
+        "game": "Pac-Man",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Pac-Man что обычно происходит с призраками, после того как съеден большой мигающий шар в углу?"
+        },
+        "en": {
+          "text": "In Pac-Man, what usually happens to the ghosts after you eat one of the large flashing dots?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Они синеют, и их можно коротко съесть" },
+            "en": { "text": "They turn blue and can be eaten for a short time" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Они начинают собирать точки вместо Пакмана" },
+            "en": { "text": "They start collecting dots instead of Pac-Man" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Они становятся быстрее до конца всей партии" },
+            "en": { "text": "They stay faster until the whole game ends" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пакман сразу теряет жизнь" },
+            "en": { "text": "Pac-Man loses a life immediately" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-tetris-line-clear",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Tetris",
+        "game": "Tetris",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Tetris что обычно происходит, когда горизонтальный ряд полностью заполнен фигурками?"
+        },
+        "en": {
+          "text": "In Tetris, what usually happens when a horizontal row is completely filled with blocks?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Ряд исчезает, и блоки сверху падают вниз" },
+            "en": { "text": "The row disappears, and the blocks above fall down" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Игра сразу заканчивается победой" },
+            "en": { "text": "The game instantly ends in a win" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Все фигуры на поле замирают на месте" },
+            "en": { "text": "Every piece on the board freezes in place" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ты получаешь дополнительную жизнь" },
+            "en": { "text": "You gain an extra life" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-superhot-time",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "SUPERHOT",
+        "game": "SUPERHOT",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В SUPERHOT что обычно происходит со временем, пока ты стоишь на месте?"
+        },
+        "en": {
+          "text": "In SUPERHOT, what usually happens to time while you stand still?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Время почти останавливается" },
+            "en": { "text": "Time almost stops" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Враги ускоряются, пока ты не двигаешься" },
+            "en": { "text": "Enemies speed up until you move" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время замедляется только после выстрела, как в Max Payne" },
+            "en": { "text": "Time slows only after a shot, like in Max Payne" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно нажать перезарядку, чтобы время снова пошло" },
+            "en": { "text": "You must press reload for time to start moving again" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-subnautica-oxygen",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Subnautica",
+        "game": "Subnautica",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Subnautica что обычно происходит со шкалой кислорода, пока ты плывёшь под водой без запаса из техники?"
+        },
+        "en": {
+          "text": "In Subnautica, what usually happens to the oxygen bar while you swim underwater without a vehicle air supply?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Она падает; если кончится — начинаешь тонуть" },
+            "en": { "text": "It drops; if it empties, you start drowning" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Кислород бесконечен, пока видно солнце" },
+            "en": { "text": "Oxygen is infinite as long as you can see the sun" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно постоянно есть, как при голоде в Minecraft" },
+            "en": { "text": "You must keep eating, like Minecraft hunger" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пустая шкала телепортирует на поверхность" },
+            "en": { "text": "An empty bar teleports you to the surface" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-smash-percent-knock",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Super Smash Bros.",
+        "game": "Super Smash Bros.",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Super Smash Bros. что обычно означает высокий процент урона у бойца?"
+        },
+        "en": {
+          "text": "In Super Smash Bros., what does a high damage percent on a fighter usually mean?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Его легче выбить за край арены" },
+            "en": { "text": "It is easier to knock them off the stage" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "У него больше очков здоровья, как в Street Fighter" },
+            "en": { "text": "They have more health points, like in Street Fighter" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Автоматически включается финальный смэш" },
+            "en": { "text": "A Final Smash starts automatically" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Процент сбрасывается после каждого удара" },
+            "en": { "text": "The percent resets after every hit" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-stardew-energy",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Stardew Valley",
+        "game": "Stardew Valley",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Stardew Valley что обычно происходит со шкалой энергии, пока ты копаешь, рубишь и поливаешь грядки?"
+        },
+        "en": {
+          "text": "In Stardew Valley, what usually happens to the energy bar while you dig, chop, and water crops?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Она тратится; при нуле работать инструментами почти нельзя — можно упасть без сил" },
+            "en": { "text": "It drains; at zero, using tools is barely possible and you may collapse" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Она растёт от работы, как опыт" },
+            "en": { "text": "It fills from work, like experience" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Энергия нужна только ночью" },
+            "en": { "text": "Energy is only used at night" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пустая шкала даёт суперскорость по ферме" },
+            "en": { "text": "An empty bar grants super-speed around the farm" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-easy-gta-wanted-stars",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Grand Theft Auto",
+        "game": "Grand Theft Auto",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Grand Theft Auto что обычно происходит, когда растёт число звёзд розыска?"
+        },
+        "en": {
+          "text": "In Grand Theft Auto, what usually happens as the wanted-star count rises?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Полиция преследует агрессивнее и появляется больше единиц" },
+            "en": { "text": "Police chase more aggressively and more units show up" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Игра сохраняется, как у костра в Dark Souls" },
+            "en": { "text": "The game saves, like at a Dark Souls bonfire" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Карта сужается штормом, как в королевской битве" },
+            "en": { "text": "The map shrinks in a storm, like in a battle royale" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Звёзды сразу превращаются в наличные" },
+            "en": { "text": "The stars convert straight into cash" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-mk-drift-miniturbo",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Mario Kart",
+        "game": "Mario Kart",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В современных Mario Kart что обычно происходит, если долго держать занос, пока на шинах не появятся искры, и затем отпустить?"
+        },
+        "en": {
+          "text": "In modern Mario Kart, what usually happens if you hold a drift until sparks appear on the tires and then release?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Машина получает короткое ускорение" },
+            "en": { "text": "The kart gets a short speed burst" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Искры значат перегрев, и скорость падает" },
+            "en": { "text": "The sparks mean overheating, and you lose speed" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Соперники замирают до конца круга" },
+            "en": { "text": "Rivals freeze until the lap ends" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Занос тратит выносливость, как лазание в Breath of the Wild" },
+            "en": { "text": "Drifting spends stamina, like climbing in Breath of the Wild" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-rocket-league-boost",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Rocket League",
+        "game": "Rocket League",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Rocket League зачем обычно подбирать светящиеся цилиндры и сферы на арене?"
+        },
+        "en": {
+          "text": "In Rocket League, why do you usually pick up the glowing pads and orbs on the arena?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Чтобы пополнить ускорение и быстрее ехать или взлетать" },
+            "en": { "text": "To refill boost so you can go faster or fly" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чтобы щит сам восстановился, как в Halo" },
+            "en": { "text": "So a shield recharges on its own, like in Halo" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чтобы мяч приклеился к машине до гола" },
+            "en": { "text": "So the ball sticks to the car until you score" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Чтобы получить дополнительную жизнь" },
+            "en": { "text": "To gain an extra life" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-bioshock-eve",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "BioShock",
+        "game": "BioShock",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В BioShock что обычно тратится, когда ты запускаешь плазмид в бою?"
+        },
+        "en": {
+          "text": "In BioShock, what is usually spent when you fire a plasmid in combat?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Запас Евы; его пополняют синими шприцами" },
+            "en": { "text": "Your EVE supply; blue hypos refill it" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "АДАМ, которым покупают новые плазмиды" },
+            "en": { "text": "ADAM, which is used to buy new plasmids" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Кислород, как под водой в Subnautica" },
+            "en": { "text": "Oxygen, like swimming in Subnautica" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только обычные патроны" },
+            "en": { "text": "Only regular ammunition" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-dishonored-mana",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Dishonored",
+        "game": "Dishonored",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Dishonored что обычно ограничивает, как часто можно коротко телепортироваться и использовать сверхъестественные силы?"
+        },
+        "en": {
+          "text": "In Dishonored, what usually limits how often you can short-teleport and use supernatural powers?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Мана: она медленно копится и пополняется эликсирами" },
+            "en": { "text": "Mana: it refills slowly and can be restored with elixirs" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только патроны пистолета" },
+            "en": { "text": "Pistol ammo only" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Щит, который сам регенерирует в укрытии, как в Halo" },
+            "en": { "text": "A shield that regenerates in cover, like in Halo" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Число жизней, как в классическом Mario" },
+            "en": { "text": "A life count, like in classic Mario" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-dead-space-stasis",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Dead Space",
+        "game": "Dead Space",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Dead Space что обычно происходит с некроморфом, если попасть по нему синим замедляющим лучом?"
+        },
+        "en": {
+          "text": "In Dead Space, what usually happens to a necromorph if you hit it with the blue slowing beam?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он на короткое время становится очень медленным" },
+            "en": { "text": "It becomes very slow for a short time" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он сразу расчленяется без выстрелов" },
+            "en": { "text": "It is instantly dismembered without any shots" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он замирает до конца уровня" },
+            "en": { "text": "It stays frozen until the level ends" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время замедляется для всего корабля, как в Max Payne" },
+            "en": { "text": "Time slows for the whole ship, like in Max Payne" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-cuphead-pink-parry",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Cuphead",
+        "game": "Cuphead",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Cuphead что обычно происходит, если вовремя прыжком ударить по розовому снаряду?"
+        },
+        "en": {
+          "text": "In Cuphead, what usually happens if you jump and strike a pink projectile on time?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Супер-шкала растёт, и этот снаряд тебя не ранит" },
+            "en": { "text": "The super meter fills, and that projectile does not hurt you" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время замедляется, как при уклонении в Bayonetta" },
+            "en": { "text": "Time slows, like a last-second dodge in Bayonetta" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Босс сразу проигрывает раунд" },
+            "en": { "text": "The boss instantly loses the round" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ты получаешь дополнительную жизнь" },
+            "en": { "text": "You gain an extra life" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-sts-energy",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Slay the Spire",
+        "game": "Slay the Spire",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Slay the Spire что обычно ограничивает, сколько карт можно разыграть за один ход?"
+        },
+        "en": {
+          "text": "In Slay the Spire, what usually limits how many cards you can play in a single turn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Энергия; в начале следующего хода запас снова наполняется" },
+            "en": { "text": "Energy; the supply refills at the start of the next turn" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только текущее здоровье" },
+            "en": { "text": "Current health only" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Золото в кошельке" },
+            "en": { "text": "Gold in your wallet" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Число реликвий в инвентаре" },
+            "en": { "text": "How many relics you are carrying" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-med-fallout-vats-ap",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fallout",
+        "game": "Fallout",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Fallout 3, New Vegas и Fallout 4 что обычно происходит, когда бой почти замирает и ты строишь очередь выстрелов по частям тела?"
+        },
+        "en": {
+          "text": "In Fallout 3, New Vegas, and Fallout 4, what usually happens when combat nearly pauses and you queue shots on body parts?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Тратятся очки действия, затем выстрелы идут по очереди" },
+            "en": { "text": "Action points are spent, then the shots fire in sequence" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время замедляется только после выстрела, как в Max Payne" },
+            "en": { "text": "Time slows only after you shoot, like in Max Payne" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Патроны становятся бесконечными до конца локации" },
+            "en": { "text": "Ammo becomes infinite until you leave the area" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Враги сами подставляют слабые места" },
+            "en": { "text": "Enemies willingly expose their weak points" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-sifu-age-on-death",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Sifu",
+        "game": "Sifu",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Sifu что обычно происходит с героем, если после смерти принять воскрешение и продолжить бой?"
+        },
+        "en": {
+          "text": "In Sifu, what usually happens to the hero if you accept a resurrection after death and keep fighting?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он становится старше: бьёт сильнее, но выживаемость обычно хуже" },
+            "en": { "text": "He grows older: hits harder, but survivability usually gets worse" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тратится заряд «Непокорности смерти», как в Hades" },
+            "en": { "text": "A Death Defiance charge is spent, like in Hades" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "День отматывается на 22 минуты, как в Outer Wilds" },
+            "en": { "text": "The day rewinds by 22 minutes, like in Outer Wilds" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Игра сохраняется у костра, как в Dark Souls" },
+            "en": { "text": "The game saves at a bonfire, like in Dark Souls" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-returnal-malfunction",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Returnal",
+        "game": "Returnal",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Returnal какой риск обычно несёт подбор расходника или перегрузка станка за лишнюю награду?"
+        },
+        "en": {
+          "text": "In Returnal, what risk do you usually take when grabbing a consumable or overloading a fabricator for an extra reward?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Может появиться сбой с условием, как его снять" },
+            "en": { "text": "You may get a malfunction with a condition you must clear" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сразу теряется весь забег без возврата к циклу" },
+            "en": { "text": "The whole run is lost with no return to the cycle" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Оружие сразу становится максимально острым, как после точки в Monster Hunter" },
+            "en": { "text": "The gun instantly becomes razor-sharp, like after honing in Monster Hunter" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Щит сам регенерирует в укрытии, как в Halo" },
+            "en": { "text": "A shield recharges in cover, like in Halo" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-ftl-power-grid",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "FTL: Faster Than Light",
+        "game": "FTL: Faster Than Light",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В FTL: Faster Than Light зачем в бою обычно перекидывать энергию реактора между системами?"
+        },
+        "en": {
+          "text": "In FTL: Faster Than Light, why do you usually move reactor power between systems during a fight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Энергии не хватает на всё сразу — щиты, оружие и двигатели конкурируют" },
+            "en": { "text": "There is not enough power for everything — shields, weapons, and engines compete" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Щиты сами восстанавливаются, если постоять в укрытии" },
+            "en": { "text": "Shields recharge on their own if you wait in cover" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Так открывается прыжок FTL без перезарядки" },
+            "en": { "text": "That unlocks an FTL jump with no cooldown" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Экипаж перестаёт нуждаться в кислороде" },
+            "en": { "text": "The crew no longer needs oxygen" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-itb-attack-telegraph",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Into the Breach",
+        "game": "Into the Breach",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Into the Breach что обычно видно ещё до хода твоих мехов?"
+        },
+        "en": {
+          "text": "In Into the Breach, what do you usually see before your mechs take their turn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Куда враги ударят — можно закрыть клетку, толкнуть цель или увести союзника" },
+            "en": { "text": "Where enemies will strike — you can block a tile, push the attacker, or move an ally" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Только туман войны, как в классической XCOM" },
+            "en": { "text": "Only fog of war, like in classic XCOM" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Бой идёт в реальном времени, как в StarCraft" },
+            "en": { "text": "Combat runs in real time, like in StarCraft" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Цикл на 22 минуты, как в Outer Wilds" },
+            "en": { "text": "A 22-minute loop, like in Outer Wilds" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-darkest-dungeon-stress",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Darkest Dungeon",
+        "game": "Darkest Dungeon",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Darkest Dungeon что обычно происходит, если шкала стресса героя забивается под завязку?"
+        },
+        "en": {
+          "text": "In Darkest Dungeon, what usually happens if a hero’s stress bar fills to the breaking point?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Срыв: вредный аффект, а при полном зашкале — риск сердечного приступа" },
+            "en": { "text": "A breakdown: a harmful affliction, and at a full spike a heart-attack risk" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тратится «Непокорность смерти», как в Hades" },
+            "en": { "text": "A Death Defiance charge is spent, like in Hades" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Здоровье само растёт от сытости, как в Minecraft" },
+            "en": { "text": "Health regenerates from being well-fed, like in Minecraft" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Герой становится неуязвимым до конца экспедиции" },
+            "en": { "text": "The hero becomes invincible until the expedition ends" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-som-orc-kill-you",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Middle-earth: Shadow of Mordor",
+        "game": "Middle-earth: Shadow of Mordor",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Middle-earth: Shadow of Mordor что обычно происходит с урком, который сумел тебя убить?"
+        },
+        "en": {
+          "text": "In Middle-earth: Shadow of Mordor, what usually happens to an orc who managed to kill you?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он может вырасти в ранге, запомнить победу и позже хвастаться ею" },
+            "en": { "text": "He can rise in rank, remember the kill, and later boast about it" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он становится твоим питомцем, как в Pokémon" },
+            "en": { "text": "He becomes your pet, like in Pokémon" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Его лицо меняется от морали, как в Fable" },
+            "en": { "text": "His face changes with morality, like in Fable" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ты автоматически надеваешь его одежду, как маскировка в Hitman" },
+            "en": { "text": "You automatically put on his clothes, like a Hitman disguise" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-cotnd-miss-beat",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Crypt of the NecroDancer",
+        "game": "Crypt of the NecroDancer",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Crypt of the NecroDancer что обычно происходит, если шагнуть не в такт музыке?"
+        },
+        "en": {
+          "text": "In Crypt of the NecroDancer, what usually happens if you step off the music’s beat?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Ход срывается: действие не проходит, и ты уязвимее" },
+            "en": { "text": "The turn is wasted: the action fails, and you are more exposed" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время замедляется, как уклонение в Bayonetta" },
+            "en": { "text": "Time slows, like a last-second dodge in Bayonetta" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время почти останавливается, как в SUPERHOT" },
+            "en": { "text": "Time almost stops, like in SUPERHOT" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Автоматически включается неуязвимость до конца этажа" },
+            "en": { "text": "Invincibility turns on until the floor ends" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-13-mech-w2-hard-baba-rule-blocks",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Baba Is You",
+        "game": "Baba Is You",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В Baba Is You что обычно происходит, если сдвинуть слова на поле так, что получится новая фраза вроде «флаг есть победа»?"
+        },
+        "en": {
+          "text": "In Baba Is You, what usually happens if you push words on the field into a new sentence such as “flag is win”?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Правило уровня меняется — так открывают победу или ломают старое правило" },
+            "en": { "text": "The level rule changes — that is how you open a win or break an old rule" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сохраняется импульс через портал, как в Portal" },
+            "en": { "text": "Momentum is kept through a portal, like in Portal" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Запускается 22-минутный космический цикл" },
+            "en": { "text": "A 22-minute space cycle starts" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Слова дают только очки, правила поля не меняются" },
+            "en": { "text": "The words only award points; the field rules do not change" }
+          }
+        }
+      ]
+    }
+  ]
+}

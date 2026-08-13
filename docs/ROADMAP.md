@@ -185,9 +185,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 13, 2026 — mechanics TEXT ×12 PUBLISHED local+prod (TEXT 282 / IMAGE 171). Handoff: lightbox smoke preferred leftover; mechanics wave 2 optional.
+**Last updated:** August 13, 2026 — mechanics TEXT wave 2 ×24 PUBLISHED local+prod (TEXT 306 / IMAGE 171). Handoff: lightbox smoke preferred leftover; mechanics wave 3 optional.
 
-**Preferred next:** friends lightbox smoke (`QUIZ_IMAGES.md` §6). Alternate: **mechanics TEXT wave 2** (new systems; dupe-check; do not re-import `2026-08-12-text-mechanics-12.json`). Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. Do **not** re-import C/D/fresh/samples/mechanics-12 (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
+**Preferred next:** friends lightbox smoke (`QUIZ_IMAGES.md` §6). Alternate: **mechanics TEXT wave 3** (new systems; dupe-check; do not re-import `2026-08-12-text-mechanics-12.json` or `2026-08-13-text-mechanics-w2-24.json`). Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24 (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -232,6 +232,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 41. ~~**UserQuestionCycle (seeded cursor)**~~ — Aug 12: pooled raw `pg` outside Direct queue (`a84ebdb`); reshuffle-first (`382f795`); int32 clamp (`359ff61`).
 42. ~~**Content bank sync + ops tooling**~~ — Aug 12: smoke IMAGE/TEXT; publish-text-drafts CLI; TEXT D1 + C1–C3 local catch-up; banks TEXT 270 / IMAGE 171.
 43. ~~**Mechanics TEXT wave ×12**~~ — Aug 13: `2026-08-12-text-mechanics-12.json` validate → DRAFT → publish gate local+prod; TEXT pool **282** (94/94/94).
+44. ~~**Mechanics TEXT wave 2 ×24**~~ — Aug 13 later: `2026-08-13-text-mechanics-w2-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **306** (102/102/102) local+prod.
 ### Deploy / hosting checklist (tracking)
 
 - [x] Production Neon project + migrate + seed
