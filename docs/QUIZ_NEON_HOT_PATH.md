@@ -3,7 +3,7 @@
 **Status:** binding for GameMind quiz start / submit / result on Neon Direct `pg`.  
 **Why this file is tracked:** local continuity docs (`DECISIONS.md`, `AGENTS.md`) are gitignored; this rule must survive clones and new chats.  
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
-**Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook (gitignored locally — keep in sync when you edit).
+**Overview:** `docs/ARCHITECTURE.md`. Playbook detail: `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.
 
 ---
 

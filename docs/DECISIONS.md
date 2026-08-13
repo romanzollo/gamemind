@@ -1,7 +1,8 @@
-# GameMind Local Architecture Decisions
+# GameMind Architecture Decisions
 
-This file records local architecture decisions so future chats can continue without losing context.
-It is gitignored local continuity documentation (no secrets ? keep it that way).
+ADR-style log of **why** choices landed (dated, incremental). Tracked in git — no secrets.
+
+For a stable overview of layers, Neon access, quiz invariants, auth, and media, read **`docs/ARCHITECTURE.md`** first. Binding quiz/Neon rules: **`docs/QUIZ_NEON_HOT_PATH.md`**.
 
 ## Collaboration
 

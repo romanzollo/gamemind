@@ -129,6 +129,7 @@ This "write after me" workflow is preferred for normal feature work because the 
 
 Tracked in the repo (like ADRs / roadmap / agent rules in real projects):
 
+- `docs/ARCHITECTURE.md` — stable architecture overview (layers, Neon, quiz hot path, auth, media)
 - `docs/ROADMAP.md` — product roadmap
 - `docs/DECISIONS.md` — architecture decisions (ADR-style)
 - `docs/TASTE_SKILL.md` — UI/UX identity (Scoreboard Editorial), change log, prompts
@@ -158,7 +159,7 @@ Use when starting a fresh chat and you need the next step plus the first file to
 ```
 Продолжаем GameMind.
 
-Прочитай AGENTS.md, docs/PROJECT_CONTEXT.md, docs/ROADMAP.md, docs/DECISIONS.md.
+Прочитай AGENTS.md, docs/ARCHITECTURE.md, docs/PROJECT_CONTEXT.md, docs/ROADMAP.md, docs/DECISIONS.md.
 (Если задача про UI/дизайн — ещё docs/TASTE_SKILL.md.)
 
 Задача: предложи следующий логичный шаг проекта.
