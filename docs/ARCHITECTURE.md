@@ -69,9 +69,11 @@ flowchart TB
 
 **Default data access:** Prisma on pooled `DATABASE_URL` for ordinary CRUD (auth, simple reads).
 
-**Direct `pg`:** confirmed fragile Neon paths — quiz start pick/snapshot, submit complete, result summary, admin list/writes, leaderboard `DISTINCT ON`. One process-wide Direct queue in `next dev`; a hung hop stalls Home / Daily / start.
+**Direct `pg`:** confirmed fragile Neon paths — quiz start resolve/snapshot INSERT, submit complete, result summary, admin list/writes, leaderboard `DISTINCT ON`. One process-wide Direct queue in **`next dev` only**; a hung hop stalls Home / Daily / start. **Production has no that queue.** Play-load snapshot read is **pooled**, not Direct.
 
-**UserQuestionCycle** (Classic / Blitz pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. Daily does not use the cycle. Boundary is **reshuffle-first** (not drain-then-top-up). No silent `ORDER BY RANDOM` fallback.
+**UserQuestionCycle** (Classic / Blitz pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. After cycle (SINGLE and Mix): 300ms settle, then Direct resolve chunks of 5. Daily does not use the cycle. Boundary is **reshuffle-first**. No silent `ORDER BY RANDOM` fallback.
+
+**Priority:** production (Vercel + prod Neon) is the product. Local Windows `next dev` is a TLS lab — do not ship local fail-fast that false-fails cold Neon (play-load timeout 5s dev / **18s prod**).
 
 ## Quiz integrity
 
@@ -79,19 +81,25 @@ flowchart TB
 sequenceDiagram
   participant U as Player
   participant S as Server Action
-  participant C as Cycle (pooled pg)
+  participant P as Pooled pg
   participant D as Direct pg
   participant R as Result page
 
   U->>S: start (Classic / Blitz / Daily)
   alt Classic or Blitz
-    S->>C: draw ids (seeded cursor)
-    C-->>S: questionIds
+    S->>P: draw ids (seeded cursor)
+    P-->>S: questionIds
   else Daily
     S->>D: freeze or load day's ids
   end
-  S->>D: resolve bundle + INSERT snapshotData
-  D-->>U: session page (no isCorrect)
+  S->>D: resolve bundle (chunk 5) + INSERT snapshotData
+  Note over S: stash play-load DTO in process (handoff)
+  alt same isolate (typical next dev)
+    S-->>U: session page from handoff (no TOAST read)
+  else other isolate (typical Vercel)
+    S->>P: pooled SELECT snapshotData
+    P-->>U: session page
+  end
 
   U->>S: submit optionIds
   S->>D: answers + scalar QuizResult + COMPLETED + outbox
@@ -108,10 +116,11 @@ Invariants:
 3. **Complete hop** writes answers + **scalar** `QuizResult` + `COMPLETED` + achievement outbox. No fat `snapshotData` / `reviewSnapshot` JSON into pg on that hop.
 4. `reviewPayload` is after successful complete, non-blocking. Review failure must not fail submit.
 5. Result: paint score first. Soft-miss on transient read — never `notFound()` (sticky App Router 404).
-6. Client timer / client score / client `userId` are not authority. Blitz deadline is `timedEndsAt` on the row.
+6. Client timer / client score / client `userId` are not authority. Blitz deadline is `timedEndsAt` on the row (`Date.now()+duration` after create connect — not SQL `NOW()` into naive `TIMESTAMP`).
 7. Adding questions is a **content** change (draft → publish). Do not “optimize” by stuffing more JSON into submit/result.
+8. Do not SELECT `snapshotData` TOAST on the hop right after create INSERT. First paint = handoff; fallback = pooled read (prod 18s). Quiz session page: soft-miss, never `notFound()`.
 
-Classic and Blitz keep **separate start runners**. Shared pick resolve chunk size stays 5. Daily lobby uses **one** Direct TLS. After a wedged Direct queue: restart `npm run dev`; do not raise global timeouts or re-enable keep-warm.
+Classic and Blitz keep **separate start runners**. Shared pick resolve chunk size stays 5. After cycle: 300ms settle (SINGLE and Mix). Daily lobby uses **one** Direct TLS. After a wedged Direct queue: restart `npm run dev`; do not raise global timeouts or re-enable keep-warm. **Prod is the release gate.**
 
 ## Auth and security
 

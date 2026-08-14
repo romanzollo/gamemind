@@ -1,5 +1,5 @@
 ---
-description: Neon/Direct quiz hot-path canon — never put JSONB/TOAST on submit critical path; matrix before shared pick/Direct changes
+description: Neon/Direct quiz hot-path canon — prod first; no JSONB/TOAST on complete or play-load-with-UPDATE; matrix before shared pick/Direct changes
 alwaysApply: true
 ---
 
@@ -7,11 +7,11 @@ alwaysApply: true
 
 Full canon: `docs/QUIZ_NEON_HOT_PATH.md` + `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.
 
-## Product priority
+## Priority
 
-1. **Submit must save score** (Classic / Blitz / Daily).
-2. Result **summary** (scalars) must paint fast.
-3. Answer **review** and polish are best-effort — never block (1) or (2).
+1. **Production** (Vercel + prod Neon) — start → questions → **submit saves score** → result summary.
+2. Local Windows `next dev` must not wedge the Direct queue — but do not “fix” local in a way that false-fails cold Neon on www (example: 5s play-load timeout in production).
+3. Answer **review** and polish are best-effort — never block (1).
 
 ## Forbidden on `completeWithResult` / submit critical hop
 
@@ -19,18 +19,29 @@ Full canon: `docs/QUIZ_NEON_HOT_PATH.md` + `docs/DECISIONS.md` → Quiz Start / 
 - Passing large JSON from Node into pg on that hop (`$n::jsonb` of snapshot-sized payloads).
 - Sync achievement award / extra Direct TLS before redirect to result.
 - Raising global Direct timeouts or re-enabling keep-warm to “fix” hangs.
-- `notFound()` on result for transient miss (sticky Router Cache 404).
+- `notFound()` on result **or quiz session page** for transient miss (sticky Router Cache 404).
+
+## Forbidden on start / play-load (Aug 14)
+
+- SELECT `snapshotData` TOAST on Direct **immediately after** create INSERT (18s hang → 37s soft-miss). First paint = in-memory handoff; fallback = **pooled** SELECT (dev 5s / **prod 18s**).
+- UPDATE `timedEndsAt` on the same client as SELECT `snapshotData`.
+- Abandon UPDATE + JSONB INSERT on one Direct client. Abandon = **pooled scalar before pick**.
+- SQL `NOW()+duration` into naive `TIMESTAMP` (UTC+2 → countdown 00:00). Clock = `Date.now()+duration` **after connect** on INSERT. Not JS `now+60` **before** the create hop.
+- Moving create back to `withDirectPgQuizStartClient`.
+- Direct JOIN fallback after play-load TOAST timeout.
+- Treating handoff Map as source of truth (refresh / other isolate / scoring = Postgres).
 
 ## Required shape
 
 - Complete: answers + **scalar** `QuizResult` (`VALUES`) + COMPLETED + outbox only.
-- `reviewPayload`: only **after** successful complete, non-blocking (fire-and-forget / separate hop); failure must not fail submit.
-- Result page: summary first; review via client API; soft-miss, not `notFound()`.
-- One shared Direct queue in `next dev` — a hung hop blocks home/Daily/start.
+- `reviewPayload`: only **after** successful complete, non-blocking; failure must not fail submit.
+- Result: summary first; review via client API; soft-miss, not `notFound()`.
+- Play-load: handoff from create, else pooled snapshot read; quiz page soft-miss, not `notFound()`.
+- One shared Direct queue in `next dev` only — a hung hop blocks home/Daily/start. Production has **no** that queue.
 
-## Before changing shared pick / Direct / submit / result
+## Before changing shared pick / Direct / submit / result / play-load / clock
 
-Run matrix: Classic 3/5/10 start, Blitz start+submit, Daily start+submit, score &lt; ~2–3s, home navigation not stuck behind review.
+Run matrix: Classic EASY 3 start+submit; Classic MIX start (questions on screen); Blitz MIX 10 (countdown ≈60s); Blitz single 10; score &lt; ~2–3s; home not stuck. After www deploy: Classic EASY 3 + Blitz MIX start→score.
 
 Do **not** change `SNAPSHOT_RESOLVE_CHUNK_SIZE`, merge Classic/Timed runners, or expand Daily lobby multi-TLS without matrix + playbook update.
 
@@ -39,8 +50,9 @@ Do **not** change `SNAPSHOT_RESOLVE_CHUNK_SIZE`, merge Classic/Timed runners, or
 Canon: `docs/DECISIONS.md` → User Question Cycle (seeded cursor).
 
 - Cycle hop = `withPooledPgClient` (raw `pg`), **outside** Direct queue — never `withDirectPg*` for cycle.
+- After cycle (SINGLE **and** Mix): 300ms settle before Direct resolve.
 - Scalars only (`cycleSeed` / `cursor` / `poolSize`); no JSONB remaining bag; no Prisma on this hop.
-- Boundary = **reshuffle-first** (not drain-then-top-up); no silent random fallback.
+- Boundary = **reshuffle-first**; no silent random fallback.
 - Daily does **not** use the cycle.
 
 ## Content / new questions
@@ -53,3 +65,9 @@ Do **not** “optimize” quiz by stuffing more JSON into submit/result complete
 1. Restart `npm run dev` (clear Direct waiters).
 2. Check latest hop wrote JSONB on complete — remove it from critical path.
 3. Read `docs/QUIZ_NEON_HOT_PATH.md` recovery — do not whack-a-mole timeouts.
+
+## If quiz page hangs ~18s×2 or yellow soft-miss after a live create
+
+1. Restart `npm run dev` if the queue is wedged.
+2. Confirm play-load is **not** SELECT+UPDATE TOAST on Direct; first paint should be handoff.
+3. Do not bump global timeouts. Do not arm the Blitz clock with SQL `NOW()` into `TIMESTAMP` without TZ.

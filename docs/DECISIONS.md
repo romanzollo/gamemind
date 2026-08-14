@@ -551,30 +551,33 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 | Migration `P1017` on Windows | Prisma migrate vs Neon | `scripts/apply-named-migration.cjs` |
 | Timed auto-submit `syntax error at or near "ON"` | empty `QuizAnswer` INSERT (`VALUES` + `ON CONFLICT` with 0 rows) | Guard: skip answers INSERT when `answerRows.length === 0`; still write QuizResult + COMPLETED |
 
-### Quiz Start / Session Load Playbook (Aug 4, 2026; hot-path canon locked)
+### Quiz Start / Session Load Playbook (Aug 4, 2026; hot-path canon locked; start/play-load Aug 14)
 
 **Tracked binding doc (git):** `docs/QUIZ_NEON_HOT_PATH.md`  
 **Cursor always-on rule:** `.cursor/rules/quiz-neon-hot-path.mdc`
 
-**Goal:** stop whack-a-mole — isolate Classic vs Timed; diagnose start/**submit→result**/queue without random timeout bumps.
+**Priority: production.** Vercel + prod Neon is the product. Windows `next dev` is a harsher TLS lab — catch bugs there, do not ship local-only fail-fast (5s play-load timeout) that false-fails cold Neon on www. Local green ≠ www green; after deploy, smoke Classic EASY 3 + Blitz MIX start→score.
 
-**Release gate (manual matrix — required before changing shared pick/Direct/settle):**
+**Goal:** stop whack-a-mole — isolate Classic vs Timed; diagnose start/**play-load**/submit→result/queue without random timeout bumps.
 
-| Check | Classic 3 | Classic 5 | Classic 10 | Blitz 10 | Daily | Score after submit | Review after submit |
-|-------|-----------|-----------|------------|----------|-------|--------------------|---------------------|
-| Start 303 | yes | yes | yes | yes | yes | — | — |
-| Timer ~60s | — | — | — | yes | — | — | — |
-| Score usable &lt; ~2–3s | yes | yes | yes | yes | yes | **OK (summary scalars)** | — |
-| Review usable without multi-10s hang | — | — | — | — | — | — | best-effort (`reviewPayload` async) |
+**Release gate (manual matrix — required before changing shared pick/Direct/settle/play-load/clock):**
+
+| Check | Classic 3 | Classic MIX | Classic 10 | Blitz MIX 10 | Blitz single 10 | Daily | Score after submit |
+|-------|-----------|-------------|------------|--------------|-----------------|-------|--------------------|
+| Start 303 + questions on screen (not 37s soft-miss) | yes | yes | yes | yes | yes | yes | — |
+| Timer ≈60s when questions paint; refresh does not reset | — | — | — | yes | yes | — | — |
+| Score usable &lt; ~2–3s | yes | yes | yes | yes | yes | yes | **OK (summary scalars)** |
+
+After **www deploy**: Classic EASY 3 + Blitz MIX start→score (cold Neon). Review after submit stays best-effort.
 
 #### Canon paths (do not unify casually)
 
 | Mode | Action | DB path | Notes |
 |------|--------|---------|-------|
-| Classic | `startQuizAction` → `runClassicQuizStart` | **UserQuestionCycle** draw → resolve-by-ids (chunks of 5) → createWithJsonSnapshot | No timedEndsAt. Same cycle bag as Blitz per `userId+difficulty`. |
+| Classic | `startQuizAction` → `runClassicQuizStart` | cycle (pooled) → 300ms settle → resolve chunks of 5 → createWithJsonSnapshot | No timedEndsAt. Mix = 3 bags + shuffle, not `Difficulty=MIXED` in cycle. |
 | Classic rematch | `rematchClassicQuizAction` → same runner | same | Settle before pick from `/result`. |
-| Blitz/Timed | `startTimedQuizAction` → `runTimedQuizStart` | **same UserQuestionCycle** → resolve → create; **timedEndsAt after pick** | Always 10Q. Shares bag with Classic. |
-| Quiz play-load | `findSnapshotPublicQuestionsForUser` | in-memory handoff after create; fallback pooled SELECT | Dev timeout 5s (не ждать TOAST-клин). Prod 18s (холодный Neon). Soft-miss, не `notFound()`. |
+| Blitz/Timed | `startTimedQuizAction` → `runTimedQuizStart` | pooled abandon → same cycle/settle/resolve → create INSERT-only; clock after connect | Always 10Q. Shares bag with Classic per difficulty. |
+| Quiz play-load | `findSnapshotPublicQuestionsForUser` | **handoff** from create; else pooled SELECT `snapshotData` | Dev 5s / **prod 18s**. Soft-miss, не `notFound()`. Handoff miss on serverless is normal. |
 | Daily lobby | `getDailyLobbyView` | `findLobbyPanelState` **1 TLS** | |
 | Daily start | frozen ids → chunked resolve → create | | **No** UserQuestionCycle. |
 | Submit | `submitQuizAction` → `completeWithResult` | answers + **scalar** QuizResult `VALUES` + COMPLETED + outbox | **No JSONB on this hop.** |
@@ -588,12 +591,13 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 **UserQuestionCycle (Aug 12):** Classic/Timed anti-repeat — see section **User Question Cycle (seeded cursor)** below. Cycle hop is **not** on `withDirectPgQueue`.
 
 **Anti whack-a-mole rules:**
-1. Never change shared pick/Direct/queue to fix one mode without running the matrix.
+1. Never change shared pick/Direct/queue/play-load/clock to fix one mode without running the matrix.
 2. Classic and Timed have **separate runners** — keep them; share only pure helpers (`buildQuizSnapshotQuestions`).
-3. Prefer fewer Direct TLS over more settles. Settles are last resort and must be measured.
+3. Prefer fewer Direct TLS over more settles. Settles are last resort and must be measured. The 300ms after cycle is **measured** — keep it for SINGLE and Mix.
 4. Keep-warm on quiz Direct queue stays **OFF**.
-5. Playbook in this file is canon; if code diverges, update playbook in the same change.
-6. Result page must **not** call `notFound()` for miss/timeout (Router Cache sticky 404). Soft-fail + links. Result links: `prefetch={false}`.
+5. Playbook in this file is canon; if code diverges, update playbook **and** `QUIZ_NEON_HOT_PATH.md` in the same change.
+6. Result **and quiz session** pages must **not** call `notFound()` for miss/timeout. Soft-fail + links. Result links: `prefetch={false}`.
+7. **Prod wins ties.** Do not copy Windows fail-fast budgets onto production play-load.
 
 **Result incident — landed (Aug 4 night + afternoon):**
 - Proven: SQL outside Next ~3ms; hang was connect-OK / operation timeout inside next-dev after submit (TOAST / queue).
@@ -611,23 +615,39 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 - Full result read of large JSONB right after write; award racing on same queue; 18s×2 timeouts blocking home.
 - Settles alone insufficient — structural split was required.
 
-**Timed clock:** дедлайн = `Date.now()+duration` **после connect, в INSERT** (колонка `TIMESTAMP` without TZ; SQL `NOW()` node-pg читает как local → UTC+2 сразу «время вышло»). Не считать `now+60` в JS до create hop (TLS съедал минуту). Play-load SELECT-only. Refresh не сбрасывает.
+**Timed clock:** дедлайн = `Date.now()+duration` **после connect, в INSERT** (колонка `TIMESTAMP` without TZ; SQL `NOW()` node-pg читает как local → UTC+2 сразу «время вышло» + auto-submit `?clock=1`). Не считать `now+60` в JS **до** create hop (TLS съедал минуту). Play-load **не** UPDATE часов. Refresh не сбрасывает. Handoff несёт тот же ISO, что INSERT.
 
-**Direct queue:** one shared `withDirectPgQueue` in next-dev.
+**Play-load (Aug 14):** не SELECT `snapshotData` TOAST сразу после create (Direct *или* pooled клинит ~18s → 37s soft-miss при живом INSERT). Первый кадр = in-memory handoff (`play-load-handoff.ts`, TTL 45s, один take, `userId`). Miss (refresh / другой serverless isolate) = pooled SELECT; **dev 5s / prod 18s**. Не Direct JOIN fallback после timeout. Handoff **не** источник истины для scoring.
+
+**Direct queue:** one shared `withDirectPgQueue` in **`next dev` only**. Production skips it.
+
+**Start / play-load incident — landed (Aug 14, `3a2d42b`):**
+- Play-load UPDATE `timedEndsAt` + SELECT TOAST on one Direct client → 18s×2, skeletons, home wedged.
+- Abandon UPDATE + JSONB INSERT on one write client **without timeout** → infinite start after 2× resolve.
+- SQL `NOW()+interval` into naive `TIMESTAMP` → countdown 00:00.
+- SELECT TOAST immediately after INSERT (even pooled) → Classic MIX / Blitz SINGLE / Classic SINGLE intermittent 37s soft-miss; retry start later OK.
+- Landed: pooled abandon before pick; create INSERT-only on `withDirectPgWriteClient` (18s cap); JS clock after connect; handoff first paint; pooled fallback with **prod 18s**; 300ms settle after every cycle; quiz page soft-miss.
 
 #### Triage order
 
 1. Terminal: long `quiz.result.review` / API 503 → review TOAST (or missing B payload).
-2. Soft-fail score / soft-miss → summary hop or auth; not start pick.
-3. Direct pg read retry on start → pick/resolve chunk.
-4. Blitz timer <<60s → `timedEndsAt` too early.
-5. Everything hangs → restart `npm run dev`; stop F5 spam.
-6. Writes: one attempt + recovery outside queue.
+2. Soft-fail score / soft-miss **result** → summary hop or auth; not start pick.
+3. Yellow quiz-session soft-miss after `quiz.start.create phase=ok` → play-load TOAST (handoff miss + hung SELECT), not “row missing”.
+4. Direct pg read retry on start → pick/resolve chunk.
+5. Blitz timer 00:00 immediately → `timedEndsAt` TZ / SQL `NOW()` into naive TIMESTAMP.
+6. Blitz timer <<60s but not zero → `timedEndsAt` computed **before** create hop.
+7. Infinite lobby spinner after `pick.resolve`×2, no `create` log → abandon+INSERT on one Direct client or write hop without timeout.
+8. Everything hangs → restart `npm run dev`; stop F5 spam.
+9. Writes: one attempt + recovery outside queue.
 
 #### Hard rules
 
 - Do **not** call `startWithRandomQuestions` on Classic/Timed hot path.
-- Do **not** set Timed `timedEndsAt` to `now+duration` before create hop returns / before questions paint.
+- Do **not** set Timed `timedEndsAt` to `now+duration` **before** create hop connect (JS before TLS). Arm **after connect** on INSERT. Do **not** use SQL `NOW()` into `TIMESTAMP` without TZ.
+- Do **not** SELECT `snapshotData` TOAST on Direct immediately after create INSERT. Do **not** UPDATE `timedEndsAt` on that TOAST-read client.
+- Do **not** mix timed abandon UPDATE with snapshot JSONB INSERT on one Direct TLS. Abandon = pooled, before pick.
+- Do **not** move `createWithJsonSnapshot` back to `withDirectPgQuizStartClient`.
+- Do **not** treat play-load handoff as source of truth; do not apply the 5s play-load timeout in production.
 - Do **not** expand lobby Daily back to 3–4 serial Direct calls.
 - Do **not** change shared pick / chunk size without matrix (including Result columns).
 - Do **not** raise global read timeout as the first fix.
@@ -635,11 +655,12 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 - Do **not** await `client.end()` on the response path.
 - Do **not** nest Direct recovery inside a held queue.
 - Do **not** put large review JSONB back into blocking RSC Suspense before score.
-- Do **not** use `notFound()` on result for transient miss.
+- Do **not** use `notFound()` on result **or quiz session page** for transient miss.
 - Do **not** put UserQuestionCycle on `withDirectPg*` / shared Direct queue.
 - Do **not** put cycle writes back on Prisma for quiz start (Windows teardown false-fail).
 - Do **not** restore silent `pickRandomActiveSnapshotBundle` fallback when cycle fails.
 - Do **not** restore drain-then-top-up on cycle boundary (use reshuffle-first).
+- Do **not** skip the 300ms settle after cycle before Direct resolve (SINGLE or Mix).
 
 **Abandoned starts note:** IN_PROGRESS rows are not connection leaks. Spam Start wedges the queue.
 
@@ -738,7 +759,7 @@ Timing:
 | Pure draw | `drawFromSeededCycle` — deterministic shuffle from seed; Vitest covers wrap |
 | Boundary | **Reshuffle-first** when `remaining < needed` (хвост returns to bag). **Not** drain-then-top-up (that re-drew wrap ids later in the same cycle when `pool % questionCount ≠ 0`) |
 | Persistence | `user-question-cycle.repository.ts` via **`withPooledPgClient`** (fresh raw `pg` on `DATABASE_URL`, **outside** Direct queue); optimistic UPDATE; transient after UPDATE → verify `nextState` |
-| Pick wiring | `pickClassicSnapshotBundle` / `pickTimedSnapshotBundle` → cycle ids → `pickSnapshotBundleByQuestionIds` (chunk 5). **No** silent random fallback |
+| Pick wiring | `pickClassicSnapshotBundle` / `pickTimedSnapshotBundle` / `pickMixedSnapshotBundle` → cycle ids → 300ms settle → `pickSnapshotBundleByQuestionIds` (chunk 5). **No** silent random fallback |
 | Errors | Transient → `DB_TIMEOUT`; insufficient pool → `NOT_ENOUGH_QUESTIONS` |
 
 ### Do not
@@ -749,6 +770,7 @@ Timing:
 - Restore JSONB remaining bag or Promise.race budget that abandons in-flight UPDATE.
 - Restore silent random fallback when cycle fails.
 - Restore drain-then-top-up on the cycle boundary.
+- Skip the 300ms settle after cycle before Direct resolve.
 - Touch cycle from Daily start or from submit/complete.
 
 ### Code
@@ -756,7 +778,8 @@ Timing:
 - Pure: `src/entities/user-question-cycle/draw-from-question-cycle.ts` (+ `.test.ts`)
 - Repo: `src/entities/user-question-cycle/user-question-cycle.repository.ts`
 - Helper: `withPooledPgClient` in `src/lib/db/direct-pg.ts`
-- Pick: `src/features/quiz/lib/pick-quiz-snapshot-bundle.ts`
+- Pick: `src/features/quiz/lib/pick-quiz-snapshot-bundle.ts` (300ms settle after cycle, SINGLE and Mix)
+- Play-load handoff: `src/entities/quiz-session/play-load-handoff.ts`
 
 ## UI/UX Timing And Theme Quality
 

@@ -300,15 +300,20 @@ If using Supabase, consider the Supavisor/pooler URL for serverless deployment.
 Do not assume local and production database URLs are the same.
 Explain provider-specific trade-offs when relevant.
 
-Quiz + Neon hot path (binding — Aug 4)
+Quiz + Neon hot path (binding — Aug 4 + Aug 14)
 
 Tracked canon: `docs/QUIZ_NEON_HOT_PATH.md`. Cursor always-on rule: `.cursor/rules/quiz-neon-hot-path.mdc`.
 
+**Priority: production.** Local Windows `next dev` is a TLS lab — play-load timeout 5s in development only; **18s in production** (cold Neon).
+
 - Submit critical path = scalar QuizResult only (no large JSONB/TOAST on complete).
+- Play-load: handoff after create; else pooled SELECT snapshotData. Never TOAST SELECT+UPDATE on Direct right after INSERT.
+- Blitz clock: Date.now()+duration after connect on INSERT (not SQL NOW() into naive TIMESTAMP).
+- Timed abandon: pooled before pick. Create stays on withDirectPgWriteClient.
 - Review payload after success, non-blocking; never fail submit for review.
-- Result: score first; soft-miss (no sticky notFound); shared Direct queue — hung hop blocks the app.
+- Result and quiz session: score/questions first; soft-miss (no sticky notFound). Direct queue is next-dev only.
 - Content/new questions: do not stuff more JSON into complete “for convenience”.
-- Matrix before shared pick/Direct/submit/result changes; no timeout bumps / keep-warm as the fix.
+- Matrix before shared pick/Direct/submit/result/play-load/clock changes; after www deploy smoke Classic 3 + Blitz MIX. No timeout bumps / keep-warm as the fix.
 
 Authentication and security
 

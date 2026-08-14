@@ -475,17 +475,22 @@ Assume Next.js App Router unless the project clearly uses Pages Router.
 -   Explain provider-specific caveats when relevant.
 -   Do not assume local and production database URLs are the same.
 
-## Quiz + Neon hot path (binding — Aug 4 incident)
+## Quiz + Neon hot path (binding — Aug 4 + Aug 14)
 
-**Tracked canon (read before any quiz submit/result/Direct change):** `docs/QUIZ_NEON_HOT_PATH.md`  
+**Tracked canon (read before any quiz start/play-load/submit/result/Direct change):** `docs/QUIZ_NEON_HOT_PATH.md`  
 **Cursor rule (always on):** `.cursor/rules/quiz-neon-hot-path.mdc`
+
+**Priority: production** (Vercel + prod Neon). Local Windows `next dev` is a TLS lab — do not ship local fail-fast that false-fails cold Neon (play-load 5s only in development; **18s in production**).
 
 - Submit **critical path** = answers + **scalar** `QuizResult` + COMPLETED + outbox only.
 - Never put large JSONB/TOAST (`snapshotData`, `reviewSnapshot`, fat payloads) on that hop.
+- Play-load: in-memory **handoff** after create; else pooled SELECT `snapshotData`. Never SELECT TOAST on Direct immediately after INSERT; never UPDATE `timedEndsAt` on that client.
+- Blitz clock: `Date.now()+duration` **after connect** on INSERT. Not SQL `NOW()` into naive `TIMESTAMP`. Not JS `now+60` before the create hop.
+- Timed abandon: pooled scalar **before pick**. Create = INSERT-only on `withDirectPgWriteClient`.
 - Review / `reviewPayload` = after success, non-blocking; must not fail submit.
-- Result: score first; soft-miss (no sticky `notFound()`); one Direct queue — hung hop blocks the app.
+- Result **and quiz session** pages: soft-miss (no sticky `notFound()`); Direct queue is **`next dev` only**.
 - Content/new questions: do **not** “optimize” by stuffing more JSON into complete.
-- Before shared pick/Direct/submit/result edits: manual matrix (Classic/Blitz/Daily + score). Do not bump global timeouts / re-enable keep-warm as the fix.
+- Before shared pick/Direct/submit/result/play-load/clock edits: manual matrix (Classic + Mix + Blitz single/MIX + score). After www deploy: Classic 3 + Blitz MIX start→score. Do not bump global timeouts / re-enable keep-warm.
 - After wedge: restart `npm run dev`; diagnose hop logs (`operation` / `waiters`).
 
 ## Authentication and security rules
