@@ -1,11 +1,13 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useId, useState } from 'react';
 
 import { startQuizAction } from '@/features/quiz/actions';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
+import { getMixedSplitMetaKey } from '@/features/quiz/lib/mixed-difficulty-split';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
+import type { QuizSetupDifficulty } from '@/types';
 
 type QuizSetupFormProps = {
     locale: Locale;
@@ -17,14 +19,46 @@ const fieldClassName =
 
 const labelClassName = 'text-sm font-medium text-foreground';
 
+function asSetupDifficulty(value: string): QuizSetupDifficulty {
+    if (
+        value === 'EASY' ||
+        value === 'MEDIUM' ||
+        value === 'HARD' ||
+        value === 'MIXED'
+    ) {
+        return value;
+    }
+
+    return 'EASY';
+}
+
+function asClassicQuestionCount(value: string): 3 | 5 | 10 {
+    if (value === '5') {
+        return 5;
+    }
+
+    if (value === '10') {
+        return 10;
+    }
+
+    return 3;
+}
+
 /**
  * Classic на mode lobby — тот же card-паттерн, что TimedModeCtaPanel
  * (eyebrow / title / description / meta + form). Start CTA = primary (как Blitz).
+ * Mix = 4-й option select, не 4-я карточка. Сплит — meta под полями, не segmented.
  */
 export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
     const [state, formAction] = useActionState(startQuizAction, {});
+    const [difficulty, setDifficulty] = useState<QuizSetupDifficulty>('EASY');
+    const [questionCount, setQuestionCount] = useState<3 | 5 | 10>(3);
+    const mixedMetaId = useId();
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
     const labels = dictionary.quiz;
+    const mixedMetaKey =
+        difficulty === 'MIXED' ? getMixedSplitMetaKey(questionCount) : null;
+    const mixedMetaText = mixedMetaKey ? labels[mixedMetaKey] : null;
 
     return (
         <section
@@ -61,13 +95,22 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
                     </span>
                     <select
                         name="difficulty"
-                        defaultValue="EASY"
+                        value={difficulty}
                         required
+                        aria-describedby={
+                            mixedMetaText ? mixedMetaId : undefined
+                        }
                         className={fieldClassName}
+                        onChange={(event) => {
+                            setDifficulty(
+                                asSetupDifficulty(event.target.value),
+                            );
+                        }}
                     >
                         <option value="EASY">{labels.easy}</option>
                         <option value="MEDIUM">{labels.medium}</option>
                         <option value="HARD">{labels.hard}</option>
+                        <option value="MIXED">{labels.mixed}</option>
                     </select>
                 </label>
 
@@ -77,15 +120,31 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
                     </span>
                     <select
                         name="questionCount"
-                        defaultValue="3"
+                        value={String(questionCount)}
                         required
                         className={fieldClassName}
+                        onChange={(event) => {
+                            setQuestionCount(
+                                asClassicQuestionCount(event.target.value),
+                            );
+                        }}
                     >
                         <option value="3">3</option>
                         <option value="5">5</option>
                         <option value="10">10</option>
                     </select>
                 </label>
+
+                {mixedMetaText ? (
+                    <p
+                        id={mixedMetaId}
+                        className="font-mono text-xs tabular-nums text-muted"
+                    >
+                        <span className="border-l-2 border-primary pl-2">
+                            {mixedMetaText}
+                        </span>
+                    </p>
+                ) : null}
 
                 <SubmitButton
                     pendingLabel={dictionary.common.working}

@@ -10,7 +10,6 @@ import { ResultSecondaryPanel } from '@/features/quiz/components/ResultSecondary
 import { ClassicRematchButton } from '@/features/quiz/components/ClassicRematchButton';
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
 import { getMixedMaxPossibleScore } from '@/features/quiz/lib/mixed-difficulty-split';
-import { isQuestionDifficulty } from '@/features/quiz/lib/validation';
 import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClockRoastBanner';
 import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
@@ -120,14 +119,12 @@ export default async function QuizResultPage({
         : null;
 
     const playAgainAction = summary?.isTimed ? (
-        isQuestionDifficulty(summary.setupDifficulty) ? (
-            <TimedRematchButton
-                locale={safeLocale}
-                difficulty={summary.setupDifficulty}
-                label={dictionary.quiz.timedTryAgain}
-                dictionary={dictionary}
-            />
-        ) : null
+        <TimedRematchButton
+            locale={safeLocale}
+            difficulty={summary.setupDifficulty}
+            label={dictionary.quiz.timedTryAgain}
+            dictionary={dictionary}
+        />
     ) : summary ? (
         <ClassicRematchButton
             locale={safeLocale}

@@ -39,6 +39,16 @@ export const quizSetupSchema = z
 
 export type QuizSetupFormInput = z.infer<typeof quizSetupSchema>;
 
+/**
+ * Timed/Blitz: только option сложности. Count всегда 10 (TIMED_MODE_MVP_RULES),
+ * поэтому MIXED всегда попадает в залок-сплит 4/3/3.
+ */
+export const timedQuizSetupSchema = z.object({
+    difficulty: quizSetupDifficultySchema,
+});
+
+export type TimedQuizSetupFormInput = z.infer<typeof timedQuizSetupSchema>;
+
 /** Узкий guard: start/cycle всё ещё работают с EASY|MEDIUM|HARD. */
 export function isQuestionDifficulty(
     difficulty: QuizSetupDifficulty,

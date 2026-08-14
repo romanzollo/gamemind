@@ -40,7 +40,7 @@ export const TIMED_MODE_MVP_RULES = {
      * (не void TIMED_OUT на странице квиза).
      */
     graceSeconds: 3,
-    /** Игрок выбирает сложность при старте (как classic). */
+    /** Игрок выбирает EASY|MEDIUM|HARD|MIXED при старте (как classic). */
     difficultySource: 'player_choice' as const,
     /**
      * Попытки не ограничены календарным днём (это не Daily).
@@ -72,7 +72,7 @@ export type TimedSessionPublicState = {
     timedEndsAt: string;
     /** Сколько секунд осталось roughly для гидрации таймера (сервер считает). */
     remainingSeconds: number;
-    difficulty: 'EASY' | 'MEDIUM' | 'HARD';
+    difficulty: 'EASY' | 'MEDIUM' | 'HARD' | 'MIXED';
     questionCount: number;
 };
 

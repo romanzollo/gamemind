@@ -10,19 +10,14 @@
  */
 
 import { redirect } from 'next/navigation';
-import { z } from 'zod';
 
 import type { QuizFormState } from '@/features/quiz/types';
+import { timedQuizSetupSchema } from '@/features/quiz/lib/validation';
 import { runTimedQuizStart } from '@/features/timed-mode/lib/run-timed-quiz-start';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
-
-/** Только сложность: count и duration зафиксированы правилами MVP. */
-const timedQuizSetupSchema = z.object({
-    difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
-});
 
 function getLocaleFromFormData(formData: FormData): Locale {
     const locale = formData.get('locale');

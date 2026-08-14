@@ -14,11 +14,11 @@ import { startTimedQuizAction } from '@/features/timed-mode/actions';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
-import type { Difficulty } from '@/types';
+import type { QuizSetupDifficulty } from '@/types';
 
 type TimedRematchButtonProps = {
     locale: Locale;
-    difficulty: Difficulty;
+    difficulty: QuizSetupDifficulty;
     label: string;
     dictionary: Dictionary;
     className?: string;

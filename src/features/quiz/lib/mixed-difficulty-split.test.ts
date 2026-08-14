@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest';
 import {
     getMixedDifficultySplit,
     getMixedMaxPossibleScore,
+    getMixedSplitMetaKey,
     getQuizSessionPoolWrite,
     isMixedQuestionCount,
     listMixedCycleDraws,
@@ -109,5 +110,14 @@ describe('getQuizSessionPoolWrite', () => {
             poolKind: 'MIXED',
             difficulty: null,
         });
+    });
+});
+
+describe('getMixedSplitMetaKey', () => {
+    it('maps locked counts to i18n meta keys', () => {
+        expect(getMixedSplitMetaKey(3)).toBe('mixedSplitMeta3');
+        expect(getMixedSplitMetaKey(5)).toBe('mixedSplitMeta5');
+        expect(getMixedSplitMetaKey(10)).toBe('mixedSplitMeta10');
+        expect(getMixedSplitMetaKey(7)).toBeNull();
     });
 });

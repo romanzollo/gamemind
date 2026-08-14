@@ -57,6 +57,30 @@ export function getMixedDifficultySplit(
     return MIXED_SPLIT_BY_COUNT[questionCount];
 }
 
+/** Ключ i18n meta-строки сплита (UI lobby). */
+export type MixedSplitMetaKey =
+    | 'mixedSplitMeta3'
+    | 'mixedSplitMeta5'
+    | 'mixedSplitMeta10';
+
+export function getMixedSplitMetaKey(
+    questionCount: number,
+): MixedSplitMetaKey | null {
+    if (questionCount === 3) {
+        return 'mixedSplitMeta3';
+    }
+
+    if (questionCount === 5) {
+        return 'mixedSplitMeta5';
+    }
+
+    if (questionCount === 10) {
+        return 'mixedSplitMeta10';
+    }
+
+    return null;
+}
+
 /** Последовательность cycle-draw: EASY → MEDIUM → HARD. */
 export function listMixedCycleDraws(
     split: MixedDifficultySplit,

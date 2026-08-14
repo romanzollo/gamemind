@@ -7,7 +7,11 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { isQuestionDifficulty, quizSetupSchema } from './validation';
+import {
+    isQuestionDifficulty,
+    quizSetupSchema,
+    timedQuizSetupSchema,
+} from './validation';
 
 describe('quizSetupSchema', () => {
     it('accepts a single-difficulty Classic setup', () => {
@@ -59,5 +63,23 @@ describe('isQuestionDifficulty', () => {
     it('narrows MIXED away from question/cycle Difficulty', () => {
         expect(isQuestionDifficulty('EASY')).toBe(true);
         expect(isQuestionDifficulty('MIXED')).toBe(false);
+    });
+});
+
+describe('timedQuizSetupSchema', () => {
+    it('accepts MIXED (Blitz count is always 10)', () => {
+        const parsed = timedQuizSetupSchema.safeParse({
+            difficulty: 'MIXED',
+        });
+
+        expect(parsed.success).toBe(true);
+    });
+
+    it('rejects values that are not a setup option', () => {
+        const parsed = timedQuizSetupSchema.safeParse({
+            difficulty: 'SUPER_HARD',
+        });
+
+        expect(parsed.success).toBe(false);
     });
 });

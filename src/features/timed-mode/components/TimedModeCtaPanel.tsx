@@ -3,15 +3,18 @@
  *
  * Зачем Client: форма start (useActionState) + difficulty select + pending.
  * Auth решает Server parent; гость видит login, не «битую» кнопку.
+ * Mix = 4-й option в том же select, не 4-я карточка lobby.
  * Presentation only — scoring / snapshot / submit gate не трогаем.
  */
 
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useId, useState } from 'react';
 
 import { startTimedQuizAction } from '@/features/timed-mode/actions';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
+import { getMixedSplitMetaKey } from '@/features/quiz/lib/mixed-difficulty-split';
+import { TIMED_MODE_MVP_RULES } from '@/features/timed-mode/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import {
     InlineAlert,
@@ -20,6 +23,7 @@ import {
     buttonClassName,
     type ButtonVariant,
 } from '@/shared/ui';
+import type { QuizSetupDifficulty } from '@/types';
 
 type TimedModeCtaPanelProps = {
     locale: Locale;
@@ -33,6 +37,19 @@ const fieldClassName =
 
 const labelClassName = 'text-sm font-medium text-foreground';
 
+function asSetupDifficulty(value: string): QuizSetupDifficulty {
+    if (
+        value === 'EASY' ||
+        value === 'MEDIUM' ||
+        value === 'HARD' ||
+        value === 'MIXED'
+    ) {
+        return value;
+    }
+
+    return 'MEDIUM';
+}
+
 export function TimedModeCtaPanel({
     locale,
     dictionary,
@@ -40,8 +57,17 @@ export function TimedModeCtaPanel({
     startVariant = 'primary',
 }: TimedModeCtaPanelProps) {
     const labels = dictionary.timedMode;
+    const quizLabels = dictionary.quiz;
     const [state, formAction] = useActionState(startTimedQuizAction, {});
+    const [difficulty, setDifficulty] =
+        useState<QuizSetupDifficulty>('MEDIUM');
+    const mixedMetaId = useId();
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
+    const mixedMetaKey =
+        difficulty === 'MIXED'
+            ? getMixedSplitMetaKey(TIMED_MODE_MVP_RULES.questionCount)
+            : null;
+    const mixedMetaText = mixedMetaKey ? quizLabels[mixedMetaKey] : null;
 
     return (
         <section
@@ -89,25 +115,41 @@ export function TimedModeCtaPanel({
 
                         <label className="flex flex-col gap-2">
                             <span className={labelClassName}>
-                                {dictionary.quiz.difficultyLabel}
+                                {quizLabels.difficultyLabel}
                             </span>
                             <select
                                 name="difficulty"
-                                defaultValue="MEDIUM"
+                                value={difficulty}
                                 required
+                                aria-describedby={
+                                    mixedMetaText ? mixedMetaId : undefined
+                                }
                                 className={fieldClassName}
+                                onChange={(event) => {
+                                    setDifficulty(
+                                        asSetupDifficulty(event.target.value),
+                                    );
+                                }}
                             >
-                                <option value="EASY">
-                                    {dictionary.quiz.easy}
-                                </option>
+                                <option value="EASY">{quizLabels.easy}</option>
                                 <option value="MEDIUM">
-                                    {dictionary.quiz.medium}
+                                    {quizLabels.medium}
                                 </option>
-                                <option value="HARD">
-                                    {dictionary.quiz.hard}
-                                </option>
+                                <option value="HARD">{quizLabels.hard}</option>
+                                <option value="MIXED">{quizLabels.mixed}</option>
                             </select>
                         </label>
+
+                        {mixedMetaText ? (
+                            <p
+                                id={mixedMetaId}
+                                className="font-mono text-xs tabular-nums text-muted"
+                            >
+                                <span className="border-l-2 border-primary pl-2">
+                                    {mixedMetaText}
+                                </span>
+                            </p>
+                        ) : null}
 
                         <SubmitButton
                             variant={startVariant}

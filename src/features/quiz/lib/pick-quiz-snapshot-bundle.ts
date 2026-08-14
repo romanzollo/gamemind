@@ -84,7 +84,7 @@ export function pickTimedSnapshotBundle(
 
 /**
  * Mix Classic/Blitz: три cycle-draw + один shuffle + один resolve.
- * Start ещё не вызывает (урок 4–5). Пустой массив = NOT_ENOUGH, не random.
+ * Пустой массив = NOT_ENOUGH, не random.
  */
 export async function pickMixedSnapshotBundle(
     userId: string,
