@@ -71,6 +71,7 @@ function mapEvalFactsRow(row: EvalFactsRow | undefined): AchievementEvalFacts {
 /**
  * Один SELECT: count-агрегаты для evaluate + progress UI.
  * Не на submit/complete hop — только award/profile (см. QUIZ_NEON_HOT_PATH).
+ * medium/hard: только poolKind SINGLE — mix не копит «прошёл Medium».
  */
 const EVAL_FACTS_SQL = `
     SELECT
@@ -88,11 +89,19 @@ const EVAL_FACTS_SQL = `
             0
         )::int AS daily_count,
         COALESCE(
-            COUNT(*) FILTER (WHERE s.difficulty = 'MEDIUM'),
+            COUNT(*) FILTER (
+                WHERE
+                    s."poolKind" = 'SINGLE'
+                    AND s.difficulty = 'MEDIUM'
+            ),
             0
         )::int AS medium_count,
         COALESCE(
-            COUNT(*) FILTER (WHERE s.difficulty = 'HARD'),
+            COUNT(*) FILTER (
+                WHERE
+                    s."poolKind" = 'SINGLE'
+                    AND s.difficulty = 'HARD'
+            ),
             0
         )::int AS hard_count,
         COALESCE(

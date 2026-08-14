@@ -11,7 +11,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import type { Difficulty } from '@/features/quiz/types';
+import type { QuizSetupDifficulty } from '@/features/quiz/types';
+import {
+    getSessionDifficultyChipToneClass,
+    getSessionDifficultyLabel,
+} from '@/features/quiz/lib/session-difficulty-label';
 import { ProfileListDisclosureControl } from '@/features/profile/components/ProfileListDisclosureControl';
 import type { Dictionary } from '@/shared/i18n';
 import { EmptyState } from '@/shared/ui';
@@ -27,7 +31,7 @@ type ProfileResultHistoryProps = {
     labels: Dictionary['profile'];
     difficultyLabels: Pick<
         Dictionary['quiz'],
-        'easy' | 'medium' | 'hard'
+        'easy' | 'medium' | 'hard' | 'mixed'
     >;
 };
 
@@ -36,41 +40,27 @@ function asDate(value: Date | string): Date {
 }
 
 function difficultyLabel(
-    difficulty: Difficulty,
+    difficulty: QuizSetupDifficulty,
     labels: ProfileResultHistoryProps['difficultyLabels'],
 ): string {
-    switch (difficulty) {
-        case 'EASY':
-            return labels.easy;
-        case 'MEDIUM':
-            return labels.medium;
-        case 'HARD':
-            return labels.hard;
-    }
+    return getSessionDifficultyLabel(difficulty, labels);
 }
 
 /**
  * Плашка сложности: `bg-surface-muted` + тон по уровню.
  * EASY = foreground (не success): зелёный в блоке только у «Верно».
- * MEDIUM/HARD = warning/danger. Текст всегда есть — не status-by-color-only.
+ * MIXED = info — не маскировать смесь под Medium.
  */
 function DifficultyChip({
     difficulty,
     label,
 }: {
-    difficulty: Difficulty;
+    difficulty: QuizSetupDifficulty;
     label: string;
 }) {
-    const toneClassName =
-        difficulty === 'EASY'
-            ? 'text-foreground'
-            : difficulty === 'MEDIUM'
-              ? 'text-warning'
-              : 'text-danger';
-
     return (
         <span
-            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${toneClassName}`}
+            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${getSessionDifficultyChipToneClass(difficulty)}`}
         >
             {label}
         </span>

@@ -81,8 +81,10 @@ type LeaderboardScoreRow = {
 
 /**
  * Опциональный фильтр рейтинга.
- * - difficulty `all` / omit = без JOIN на QuizSession;
- * - конкретная сложность = best среди сессий этой difficulty (JOIN Session);
+ * - difficulty `all` / omit = без JOIN на QuizSession (mix входит);
+ * - EASY|MEDIUM|HARD = JOIN Session + poolKind SINGLE + эта difficulty
+ *   (mix не попадает в Medium из-за NULL difficulty / poolKind MIXED);
+ * - MIXED = JOIN Session + poolKind MIXED;
  * - completedAfter = только результаты с `completedAt >=` этой даты;
  * - omit / null completedAfter = без нижней границы даты.
  *
@@ -91,7 +93,7 @@ type LeaderboardScoreRow = {
  * Difficulty в SQL только из allowlist выше по стеку (Zod на page).
  */
 export type FindBestScoresFilters = {
-    difficulty?: Difficulty | 'all';
+    difficulty?: Difficulty | 'MIXED' | 'all';
     /** Нижняя граница `QuizResult.completedAt` (скользящее окно). */
     completedAfter?: Date | null;
 };
@@ -125,7 +127,8 @@ type RecentResultRow = {
     total_questions: number;
     correct_count: number;
     completed_at: Date;
-    difficulty: 'EASY' | 'MEDIUM' | 'HARD';
+    difficulty: Difficulty | null;
+    pool_kind: string | null;
 };
 
 /** Одна строка агрегата профиля — COUNT всегда есть; MAX/ROUND могут быть null. */
@@ -320,34 +323,48 @@ export const quizResultRepository = {
     /**
      * Лучший результат на пользователя — unpooled pg (Neon-friendly).
      *
-     * Ветки (JOIN Session только если нужен difficulty):
-     * - без фильтров → DISTINCT ON по QuizResult (быстрый путь);
+     * Ветки (JOIN Session только если нужен poolKind / difficulty):
+     * - без фильтров → DISTINCT ON по QuizResult (быстрый путь, mix входит);
      * - только completedAfter → WHERE completedAt >= $cutoff (без JOIN);
-     * - только difficulty → JOIN Session + WHERE difficulty;
-     * - оба → JOIN + оба WHERE.
+     * - SINGLE EASY|MEDIUM|HARD → JOIN + poolKind SINGLE + difficulty;
+     * - MIXED → JOIN + poolKind MIXED;
+     * - фильтр + дата → JOIN + оба WHERE.
      *
      * Параметры: limit + allowlist difficulty + Date cutoff из feature-слоя.
-     * См. DECISIONS.md → Leaderboard.
+     * См. DECISIONS.md → Leaderboard; Mixed-Difficulty Classic/Blitz.
      */
     async findBestScores(limit: number, filters?: FindBestScoresFilters) {
         const difficulty = filters?.difficulty;
-        const filterByDifficulty =
+        const filterBySingle =
             difficulty === 'EASY' ||
             difficulty === 'MEDIUM' ||
             difficulty === 'HARD';
+        const filterByMixed = difficulty === 'MIXED';
         const completedAfter = filters?.completedAfter ?? null;
 
         const params: unknown[] = [limit];
         const whereParts: string[] = [];
 
-        // JOIN нужен только для фильтра по сложности сессии — дата живёт на QuizResult.
-        const sessionJoin = filterByDifficulty
-            ? `INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"`
-            : '';
+        // JOIN нужен только для фильтра по пулу сессии — дата живёт на QuizResult.
+        const sessionJoin =
+            filterBySingle || filterByMixed
+                ? `INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"`
+                : '';
 
-        if (filterByDifficulty) {
+        if (filterByMixed) {
+            params.push('MIXED');
+            whereParts.push(
+                `s."poolKind" = $${params.length}::"QuizSessionPoolKind"`,
+            );
+        } else if (filterBySingle) {
+            params.push('SINGLE');
+            whereParts.push(
+                `s."poolKind" = $${params.length}::"QuizSessionPoolKind"`,
+            );
             params.push(difficulty);
-            whereParts.push(`s."difficulty" = $${params.length}`);
+            whereParts.push(
+                `s."difficulty" = $${params.length}::"Difficulty"`,
+            );
         }
 
         if (completedAfter) {
@@ -427,7 +444,8 @@ export const quizResultRepository = {
                         r."totalQuestions" AS "total_questions",
                         r."correctCount" AS "correct_count",
                         r."completedAt" AS "completed_at",
-                        s."difficulty" AS "difficulty"
+                        s."difficulty" AS "difficulty",
+                        s."poolKind"::text AS "pool_kind"
                     FROM "QuizResult" AS r
                     INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
                     WHERE r."userId" = $1
@@ -445,7 +463,10 @@ export const quizResultRepository = {
             correctCount: row.correct_count,
             completedAt: row.completed_at,
             session: {
-                difficulty: row.difficulty,
+                difficulty: parseSetupDifficulty(
+                    parseSessionPoolKind(row.pool_kind),
+                    row.difficulty,
+                ),
             },
         }));
     },

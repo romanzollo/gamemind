@@ -36,6 +36,14 @@ describe('parseLeaderboardFilters', () => {
         expect(filters).toEqual({ difficulty: 'HARD', period: 'all' });
     });
 
+    it('parses MIXED as a poolKind filter, not a question difficulty', () => {
+        const filters = parseLeaderboardFilters({
+            difficulty: 'MIXED',
+        });
+
+        expect(filters).toEqual({ difficulty: 'MIXED', period: 'all' });
+    });
+
     it('parses a valid period from the URL', () => {
         const filters = parseLeaderboardFilters({
             period: 'week',
@@ -143,6 +151,15 @@ describe('buildLeaderboardHref', () => {
                 period: 'all',
             }),
         ).toBe('/en/leaderboard?difficulty=HARD');
+    });
+
+    it('includes MIXED in the query so the filter is shareable', () => {
+        expect(
+            buildLeaderboardHref('ru', {
+                difficulty: 'MIXED',
+                period: 'all',
+            }),
+        ).toBe('/ru/leaderboard?difficulty=MIXED');
     });
 
     it('includes period when filtered', () => {

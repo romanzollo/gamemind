@@ -3,6 +3,7 @@ import type {
     Difficulty,
     QuestionPublicationStatus,
     QuestionType,
+    QuizSetupDifficulty,
 } from '@/types';
 
 export type LocalizedAdminText = {
@@ -111,7 +112,7 @@ export type AdminUserResultHistoryEntry = {
     score: number;
     totalQuestions: number;
     correctCount: number;
-    difficulty: Difficulty;
+    difficulty: QuizSetupDifficulty;
     /** ISO string — безопасно для Client Components */
     completedAt: string;
 };

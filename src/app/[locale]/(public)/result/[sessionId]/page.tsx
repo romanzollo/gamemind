@@ -157,6 +157,7 @@ export default async function QuizResultPage({
                         maxPossibleScore={maxPossibleScore}
                         correctCount={summary.correctCount}
                         totalQuestions={summary.totalQuestions}
+                        setupDifficulty={summary.setupDifficulty}
                         labels={dictionary.quiz}
                         playAgainAction={playAgainAction}
                     />

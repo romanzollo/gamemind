@@ -6,6 +6,7 @@ export {
     getLeaderboardPeriodCutoff,
     hasActiveLeaderboardFilters,
     parseLeaderboardFilters,
+    type LeaderboardDifficultyFilter,
     type LeaderboardFilters,
     type LeaderboardPeriod,
 } from './parse-leaderboard-filters';

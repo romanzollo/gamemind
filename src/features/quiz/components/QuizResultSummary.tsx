@@ -1,6 +1,11 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import {
+    getSessionDifficultyChipToneClass,
+    getSessionDifficultyLabel,
+} from '@/features/quiz/lib/session-difficulty-label';
+import type { QuizSetupDifficulty } from '@/features/quiz/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { buttonClassName } from '@/shared/ui';
 
@@ -10,6 +15,7 @@ type QuizResultSummaryProps = {
     maxPossibleScore: number | null;
     correctCount: number;
     totalQuestions: number;
+    setupDifficulty: QuizSetupDifficulty;
     labels: Dictionary['quiz'];
     /**
      * Primary CTA: ClassicRematchButton или TimedRematchButton.
@@ -28,6 +34,7 @@ export function QuizResultSummary({
     maxPossibleScore,
     correctCount,
     totalQuestions,
+    setupDifficulty,
     labels,
     playAgainAction,
 }: QuizResultSummaryProps) {
@@ -35,6 +42,12 @@ export function QuizResultSummary({
         maxPossibleScore != null && maxPossibleScore > 0
             ? `${score} / ${maxPossibleScore}`
             : String(score);
+    const difficultyLabel = getSessionDifficultyLabel(setupDifficulty, {
+        easy: labels.easy,
+        medium: labels.medium,
+        hard: labels.hard,
+        mixed: labels.mixed,
+    });
 
     return (
         <section
@@ -47,6 +60,15 @@ export function QuizResultSummary({
             >
                 {labels.resultTitle}
             </h1>
+
+            {/* Чип сессии: MIXED = «Смешанная», не Medium. */}
+            <p className="mt-2">
+                <span
+                    className={`inline-flex items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${getSessionDifficultyChipToneClass(setupDifficulty)}`}
+                >
+                    {difficultyLabel}
+                </span>
+            </p>
 
             <div className="mt-5 sm:mt-8">
                 <p className="text-xs font-medium tracking-wide text-muted uppercase sm:text-sm">

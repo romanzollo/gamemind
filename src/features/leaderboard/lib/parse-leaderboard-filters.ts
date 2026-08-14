@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { Difficulty } from '@/types';
+import type { QuizSetupDifficulty } from '@/types';
 
 /**
  * Парсинг search params страницы `/leaderboard`.
@@ -8,7 +8,7 @@ import type { Difficulty } from '@/types';
  * Зачем отдельный модуль:
  * - URL — внешний вход (как FormData); валидируем до репозитория;
  * - невалидные `?difficulty=` / `?period=` не роняют страницу — fallback на defaults;
- * - один контракт page → SQL WHERE (difficulty / completedAt).
+ * - один контракт page → SQL WHERE (difficulty / poolKind / completedAt).
  *
  * Период = скользящее окно (rolling), не календарная неделя/месяц:
  * week = последние 7×24ч, month = 30×24ч, all = без нижней границы даты.
@@ -20,10 +20,17 @@ import type { Difficulty } from '@/types';
 /** Период рейтинга после parse. */
 export type LeaderboardPeriod = 'week' | 'month' | 'all';
 
+/** Сложность рейтинга после parse. `MIXED` = poolKind, не Question.difficulty. */
+export type LeaderboardDifficultyFilter = QuizSetupDifficulty | 'all';
+
 /** Нормализованный фильтр рейтинга (после parse). */
 export type LeaderboardFilters = {
-    /** Сессия квиза; `all` = без WHERE по difficulty (глобальный best). */
-    difficulty: Difficulty | 'all';
+    /**
+     * `all` = без JOIN (mix входит в глобальный best).
+     * EASY|MEDIUM|HARD = SINGLE + эта difficulty (mix не в Medium).
+     * MIXED = poolKind MIXED.
+     */
+    difficulty: LeaderboardDifficultyFilter;
     /** Окно по `QuizResult.completedAt`; `all` = без нижней границы. */
     period: LeaderboardPeriod;
 };
@@ -35,7 +42,7 @@ const DEFAULT_FILTERS: LeaderboardFilters = {
 
 const leaderboardFiltersSchema = z.object({
     // Независимое catch: битый difficulty не должен сбрасывать валидный period (и наоборот).
-    difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'all']).catch('all'),
+    difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'MIXED', 'all']).catch('all'),
     period: z.enum(['week', 'month', 'all']).catch('all'),
 });
 

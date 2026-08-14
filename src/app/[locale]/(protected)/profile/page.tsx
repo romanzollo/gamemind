@@ -194,6 +194,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                                         easy: dictionary.quiz.easy,
                                         medium: dictionary.quiz.medium,
                                         hard: dictionary.quiz.hard,
+                                        mixed: dictionary.quiz.mixed,
                                     }}
                                 />
                             </div>

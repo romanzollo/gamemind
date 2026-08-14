@@ -1,4 +1,4 @@
-import type { Difficulty } from '@/features/quiz/types';
+import type { QuizSetupDifficulty } from '@/features/quiz/types';
 
 import type { ProfileResultHistoryEntry } from '../types/result-history-entry';
 
@@ -9,7 +9,7 @@ type RawResultHistoryRow = {
     correctCount: number;
     completedAt: Date;
     session: {
-        difficulty: Difficulty;
+        difficulty: QuizSetupDifficulty;
     };
 };
 

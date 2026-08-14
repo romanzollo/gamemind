@@ -1,5 +1,5 @@
 import type { AdminUserRow } from '@/entities/user/user.repository';
-import type { Difficulty } from '@/types';
+import type { QuizSetupDifficulty } from '@/types';
 
 import type {
     AdminUserDetail,
@@ -17,7 +17,7 @@ type RawAdminUserResultHistoryRow = {
     correctCount: number;
     completedAt: Date;
     session: {
-        difficulty: Difficulty;
+        difficulty: QuizSetupDifficulty;
     };
 };
 

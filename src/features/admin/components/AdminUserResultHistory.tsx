@@ -1,4 +1,8 @@
-import type { Difficulty } from '@/features/quiz/types';
+import type { QuizSetupDifficulty } from '@/features/quiz/types';
+import {
+    getSessionDifficultyChipToneClass,
+    getSessionDifficultyLabel,
+} from '@/features/quiz/lib/session-difficulty-label';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState } from '@/shared/ui';
 
@@ -26,42 +30,28 @@ type AdminUserResultHistoryProps = {
     >;
     difficultyLabels: Pick<
         Dictionary['quiz'],
-        'easy' | 'medium' | 'hard'
+        'easy' | 'medium' | 'hard' | 'mixed'
     >;
 };
 
 function difficultyLabel(
-    difficulty: Difficulty,
+    difficulty: QuizSetupDifficulty,
     labels: AdminUserResultHistoryProps['difficultyLabels'],
 ) {
-    switch (difficulty) {
-        case 'EASY':
-            return labels.easy;
-        case 'MEDIUM':
-            return labels.medium;
-        case 'HARD':
-            return labels.hard;
-    }
+    return getSessionDifficultyLabel(difficulty, labels);
 }
 
-/** Как в профиле: EASY = foreground; MEDIUM/HARD = warning/danger. */
+/** Как в профиле: EASY = foreground; MIXED = info, не Medium. */
 function DifficultyChip({
     difficulty,
     label,
 }: {
-    difficulty: Difficulty;
+    difficulty: QuizSetupDifficulty;
     label: string;
 }) {
-    const toneClassName =
-        difficulty === 'EASY'
-            ? 'text-foreground'
-            : difficulty === 'MEDIUM'
-              ? 'text-warning'
-              : 'text-danger';
-
     return (
         <span
-            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${toneClassName}`}
+            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${getSessionDifficultyChipToneClass(difficulty)}`}
         >
             {label}
         </span>

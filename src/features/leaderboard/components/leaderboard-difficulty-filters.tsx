@@ -1,10 +1,10 @@
 import {
     buildLeaderboardHref,
+    type LeaderboardDifficultyFilter,
     type LeaderboardFilters,
 } from '@/features/leaderboard/lib/parse-leaderboard-filters';
 import type { Locale } from '@/shared/i18n';
 import { PendingLink } from '@/shared/ui';
-import type { Difficulty } from '@/types';
 
 /**
  * Чипы фильтра сложности на публичном рейтинге (Scoreboard Editorial).
@@ -14,7 +14,8 @@ import type { Difficulty } from '@/types';
  *
  * Визуал: segmented control (один ряд в рамке), не 2×2 «кнопочная панель» —
  * фильтр = вторичный chrome под заголовком, акцент остаётся у таблицы очков.
- * Подписи easy/medium/hard — из quiz dictionary (один источник правды).
+ * Пятый чип MIXED: короткая подпись (`filterMixed` = Смесь / Mix), иначе
+ * пять flex-1 на 390px разъедут segmented. Mix ≠ Medium в SQL.
  */
 
 type LeaderboardDifficultyFiltersProps = {
@@ -26,11 +27,12 @@ type LeaderboardDifficultyFiltersProps = {
         easy: string;
         medium: string;
         hard: string;
+        filterMixed: string;
     };
 };
 
 type FilterOption = {
-    value: Difficulty | 'all';
+    value: LeaderboardDifficultyFilter;
     label: string;
 };
 
@@ -44,6 +46,7 @@ export function LeaderboardDifficultyFilters({
         { value: 'EASY', label: labels.easy },
         { value: 'MEDIUM', label: labels.medium },
         { value: 'HARD', label: labels.hard },
+        { value: 'MIXED', label: labels.filterMixed },
     ];
 
     return (
@@ -73,7 +76,7 @@ export function LeaderboardDifficultyFilters({
                             href={href}
                             aria-current={isActive ? 'page' : undefined}
                             className={[
-                                'min-h-10 flex-1 justify-center rounded-sm px-2 py-2 text-center text-xs font-semibold tracking-wide motion-safe:transition-colors sm:min-h-11 sm:px-3 sm:text-sm',
+                                'min-h-10 min-w-0 flex-1 justify-center rounded-sm px-1 py-2 text-center text-[11px] font-semibold tracking-wide motion-safe:transition-colors sm:min-h-11 sm:px-3 sm:text-sm',
                                 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                                 isActive
                                     ? 'bg-primary text-primary-foreground'
