@@ -553,12 +553,14 @@ async function loadSnapshotBundleByQuestionIdsWithDirectPg(
 
     // Classic 5 / маленький Daily-фрагмент — один TLS.
     if (questionIds.length <= SNAPSHOT_RESOLVE_CHUNK_SIZE) {
-        return withDirectPgClient((client) =>
-            loadSnapshotBundleByQuestionIdsWithPgClient(
-                client,
-                questionIds,
-                locale,
-            ),
+        return withDirectPgClient(
+            (client) =>
+                loadSnapshotBundleByQuestionIdsWithPgClient(
+                    client,
+                    questionIds,
+                    locale,
+                ),
+            { debugLabel: 'quiz.pick.resolve' },
         );
     }
 
@@ -575,8 +577,14 @@ async function loadSnapshotBundleByQuestionIdsWithDirectPg(
             offset,
             offset + SNAPSHOT_RESOLVE_CHUNK_SIZE,
         );
-        const part = await withDirectPgClient((client) =>
-            loadSnapshotBundleByQuestionIdsWithPgClient(client, chunk, locale),
+        const part = await withDirectPgClient(
+            (client) =>
+                loadSnapshotBundleByQuestionIdsWithPgClient(
+                    client,
+                    chunk,
+                    locale,
+                ),
+            { debugLabel: 'quiz.pick.resolve' },
         );
 
         for (const question of part) {

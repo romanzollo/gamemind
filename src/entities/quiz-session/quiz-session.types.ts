@@ -44,10 +44,17 @@ export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
     /** NULL/omit = classic; set = Daily Challenge attempt (UNIQUE per user). */
     dailyChallengeId?: string | null;
     /**
-     * NULL/omit = classic/daily; set = Timed mode deadline (server clock).
-     * Не сочетать с dailyChallengeId. Canon: DECISIONS.md → Timed Mode MVP.
+     * NULL/omit = classic/daily; non-null = Timed (флаг).
+     * Дедлайн считается в INSERT после connect: Date.now()+timedDurationSeconds.
+     * Не передавать Date.now()+60 до create hop. Не сочетать с dailyChallengeId.
+     * Canon: DECISIONS.md → Timed clock.
      */
     timedEndsAt?: Date | null;
+    /**
+     * Бюджет Timed (секунды) для дедлайна на create hop после connect.
+     * Игнорируется, если timedEndsAt null. Источник: TIMED_MODE_MVP_RULES.
+     */
+    timedDurationSeconds?: number;
 };
 
 /** Публичный вопрос из snapshot для UI квиза (без isCorrect). */

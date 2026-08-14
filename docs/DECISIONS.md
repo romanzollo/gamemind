@@ -574,6 +574,7 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 | Classic | `startQuizAction` → `runClassicQuizStart` | **UserQuestionCycle** draw → resolve-by-ids (chunks of 5) → createWithJsonSnapshot | No timedEndsAt. Same cycle bag as Blitz per `userId+difficulty`. |
 | Classic rematch | `rematchClassicQuizAction` → same runner | same | Settle before pick from `/result`. |
 | Blitz/Timed | `startTimedQuizAction` → `runTimedQuizStart` | **same UserQuestionCycle** → resolve → create; **timedEndsAt after pick** | Always 10Q. Shares bag with Classic. |
+| Quiz play-load | `findSnapshotPublicQuestionsForUser` | in-memory handoff after create; fallback pooled SELECT | Dev timeout 5s (не ждать TOAST-клин). Prod 18s (холодный Neon). Soft-miss, не `notFound()`. |
 | Daily lobby | `getDailyLobbyView` | `findLobbyPanelState` **1 TLS** | |
 | Daily start | frozen ids → chunked resolve → create | | **No** UserQuestionCycle. |
 | Submit | `submitQuizAction` → `completeWithResult` | answers + **scalar** QuizResult `VALUES` + COMPLETED + outbox | **No JSONB on this hop.** |
@@ -610,7 +611,7 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 - Full result read of large JSONB right after write; award racing on same queue; 18s×2 timeouts blocking home.
 - Settles alone insufficient — structural split was required.
 
-**Timed clock:** `timedEndsAt` immediately before INSERT only.
+**Timed clock:** дедлайн = `Date.now()+duration` **после connect, в INSERT** (колонка `TIMESTAMP` without TZ; SQL `NOW()` node-pg читает как local → UTC+2 сразу «время вышло»). Не считать `now+60` в JS до create hop (TLS съедал минуту). Play-load SELECT-only. Refresh не сбрасывает.
 
 **Direct queue:** one shared `withDirectPgQueue` in next-dev.
 
@@ -626,7 +627,7 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 #### Hard rules
 
 - Do **not** call `startWithRandomQuestions` on Classic/Timed hot path.
-- Do **not** set Timed `timedEndsAt` before pick completes.
+- Do **not** set Timed `timedEndsAt` to `now+duration` before create hop returns / before questions paint.
 - Do **not** expand lobby Daily back to 3–4 serial Direct calls.
 - Do **not** change shared pick / chunk size without matrix (including Result columns).
 - Do **not** raise global read timeout as the first fix.
@@ -1750,13 +1751,13 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 
 **Problem:** Timed allows unlimited starts. If the player leaves mid-quiz and starts again, the old row stays `IN_PROGRESS` forever (orphan). Opening the old URL after deadline still hits `TIMED_OUT` / empty UI; profile history ignores incomplete — but the row is noise and blocks a clean "one live timed attempt" mental model.
 
-**Decision:** when creating a Timed session (`timedEndsAt` set), abandon that user's other timed `IN_PROGRESS` rows (`status = ABANDONED` where `timedEndsAt IS NOT NULL`) **on the same pooled quiz-start client** as the snapshot INSERT (`createJsonSnapshotSession`). No `QuizResult`. Do not resume timed. Do not touch classic (`timedEndsAt` NULL) or daily.
+**Decision:** when creating a Timed session (`timedEndsAt` set), abandon that user's other timed `IN_PROGRESS` rows (`status = ABANDONED` where `timedEndsAt IS NOT NULL`) **on pooled `pg` before pick** (`withPooledPgClient`, outside Direct queue). Create hop is INSERT-only JSONB. No `QuizResult`. Do not resume timed. Do not touch classic (`timedEndsAt` NULL) or daily.
 
-**Neon note:** do **not** open a separate `withDirectPgWriteClient` round-trip before start — extra unpooled TLS is a known Windows+Neon hang class. Abandon shares the existing `withPooledPgQuizStartClient` connection (timeout + retry already applied to quiz start).
+**Neon note:** do **not** open a separate unpooled Direct hop solely for abandon, and do **not** UPDATE orphan rows on the same Direct client as snapshot JSONB INSERT (TOAST hang → infinite start). Abandon = pooled scalar до cycle/resolve.
 
 **Why not resume:** deadline is the product; resuming hours later is a different mode. Daily already resumes because of one-attempt-per-day UNIQUE — different rule.
 
-**Do not:** DELETE orphan rows (lose audit trail); abandon classic/daily; write `COMPLETED` without scoring; put abandon only in the client; add a second DirectPg write hop solely for abandon.
+**Do not:** DELETE orphan rows (lose audit trail); abandon classic/daily; write `COMPLETED` without scoring; put abandon only in the client; add a second DirectPg write hop solely for abandon; mix abandon UPDATE with snapshot JSONB on one Direct TLS.
 
 **Explicitly NOT in MVP:**
 

@@ -12,7 +12,12 @@
 import type { Difficulty } from '@/types';
 import type { Locale } from '@/shared/i18n';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
-import { withDirectPgClient } from '@/lib/db/direct-pg';
+import {
+    isDirectPgTimeoutError,
+    withDirectPgClient,
+    withPooledPgClient,
+} from '@/lib/db/direct-pg';
+import { takeQuizPlayLoad } from '@/entities/quiz-session/play-load-handoff';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type {
@@ -30,20 +35,6 @@ import {
     parseSnapshotData,
     pickSnapshotText,
 } from '@/entities/quiz-session/quiz-session-snapshot';
-
-type SnapshotPublicRow = {
-    session_id: string;
-    question_count: number;
-    timed_ends_at: Date | string | null;
-    session_difficulty: Difficulty | null;
-    question_id: string | null;
-    question_text: string | null;
-    display_image_url: string | null;
-    difficulty: Difficulty | null;
-    option_id: string | null;
-    option_text: string | null;
-    display_order: number | null;
-};
 
 type SnapshotScoringRow = {
     session_id: string;
@@ -90,11 +81,17 @@ async function loadQuizSessionSnapshotData(
     sessionId: string,
     userId: string,
     debugLabel = 'quiz.session.load-snapshot',
+    attemptTimeoutMs = 18_000,
 ): Promise<SessionSnapshotJsonRow | null> {
-    const result = await withDirectPgClient(
-        (client) =>
-            client.query<SessionSnapshotJsonRow>(
-                `
+    // SELECT-only JSONB. Не Direct: сразу после create INSERT тот же TOAST
+    // на unpooled клинит Classic MIX / Blitz SINGLE (~18s×2), пока Blitz MIX
+    // и Classic SINGLE иногда проходят. Cycle уже на pooled вне очереди.
+    // Timeout → null (страница retry / soft-miss), не throw на 37s overlay.
+    try {
+        const result = await withPooledPgClient(
+            (client) =>
+                client.query<SessionSnapshotJsonRow>(
+                    `
                 SELECT
                     "id" AS "session_id",
                     "questionCount" AS "question_count",
@@ -107,14 +104,22 @@ async function loadQuizSessionSnapshotData(
                     AND "userId" = $2
                     AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
             `,
-                [sessionId, userId],
-            ),
-        {
-            debugLabel,
-        },
-    );
+                    [sessionId, userId],
+                ),
+            {
+                debugLabel,
+                attemptTimeoutMs,
+            },
+        );
 
-    return result.rows[0] ?? null;
+        return result.rows[0] ?? null;
+    } catch (error) {
+        if (isDirectPgTimeoutError(error)) {
+            return null;
+        }
+
+        throw error;
+    }
 }
 
 async function overlayPublicQuestionsWithLocale(
@@ -367,12 +372,31 @@ async function loadCompletedSessionReview(
     };
 }
 
+/**
+ * Fallback SELECT snapshotData, если handoff промахнулся (другой инстанс / refresh).
+ * Dev 5s — не ждать Windows TOAST-клин 18s×2. Prod 18s — холодный Neon после
+ * redirect не должен давать ложный soft-miss. Не глобальный timeout bump.
+ */
+const PLAY_LOAD_SNAPSHOT_TIMEOUT_MS =
+    process.env.NODE_ENV === 'development' ? 5_000 : 18_000;
+
 async function loadSnapshotPublicQuestions(
     sessionId: string,
     userId: string,
     locale: Locale,
 ): Promise<QuizSessionPublicView | null> {
-    const jsonSnapshot = await loadQuizSessionSnapshotData(sessionId, userId);
+    const handedOff = takeQuizPlayLoad(sessionId, userId);
+
+    if (handedOff) {
+        return handedOff;
+    }
+
+    const jsonSnapshot = await loadQuizSessionSnapshotData(
+        sessionId,
+        userId,
+        'quiz.session.load-snapshot',
+        PLAY_LOAD_SNAPSHOT_TIMEOUT_MS,
+    );
 
     if (jsonSnapshot) {
         const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);
@@ -401,94 +425,9 @@ async function loadSnapshotPublicQuestions(
         }
     }
 
-    const result = await withDirectPgClient((client) => {
-        return client.query<SnapshotPublicRow>(
-            `
-                SELECT
-                    s."id" AS "session_id",
-                    s."questionCount" AS "question_count",
-                    s."timedEndsAt" AS "timed_ends_at",
-                    s."difficulty"::text AS "session_difficulty",
-                    ssq."questionId" AS "question_id",
-                    ssq."displayText" AS "question_text",
-                    ssq."displayImageUrl" AS "display_image_url",
-                    q."difficulty"::text AS "difficulty",
-                    ssqo."optionId" AS "option_id",
-                    ssqo."displayText" AS "option_text",
-                    ssqo."displayOrder" AS "display_order"
-                FROM "QuizSession" s
-                INNER JOIN "QuizSessionQuestion" ssq
-                    ON ssq."sessionId" = s."id"
-                INNER JOIN "Question" q
-                    ON q."id" = ssq."questionId"
-                INNER JOIN "QuizSessionQuestionOption" ssqo
-                    ON ssqo."sessionQuestionId" = ssq."id"
-                WHERE
-                    s."id" = $1
-                    AND s."userId" = $2
-                    AND s."status" = 'IN_PROGRESS'::"QuizSessionStatus"
-                ORDER BY ssq."position" ASC, ssqo."displayOrder" ASC
-            `,
-            [sessionId, userId],
-        );
-    });
-
-    if (result.rows.length === 0) {
-        return null;
-    }
-
-    const firstRow = result.rows[0];
-    const questions = new Map<string, SessionSnapshotPublicQuestion>();
-
-    for (const row of result.rows) {
-        if (
-            !row.question_id ||
-            !row.question_text ||
-            !row.difficulty ||
-            !row.option_id ||
-            !row.option_text ||
-            row.display_order === null
-        ) {
-            return null;
-        }
-
-        const existing = questions.get(row.question_id);
-
-        if (existing) {
-            existing.options.push({
-                id: row.option_id,
-                text: row.option_text,
-                order: row.display_order,
-            });
-        } else {
-            questions.set(row.question_id, {
-                id: row.question_id,
-                text: row.question_text,
-                difficulty: row.difficulty,
-                imageUrl: normalizeQuizImageUrl(row.display_image_url),
-                options: [
-                    {
-                        id: row.option_id,
-                        text: row.option_text,
-                        order: row.display_order,
-                    },
-                ],
-            });
-        }
-    }
-
-    if (questions.size !== firstRow.question_count) {
-        return null;
-    }
-
-    return {
-        questions: await overlayPublicQuestionsWithLocale(
-            Array.from(questions.values()),
-            locale,
-        ),
-        timedEndsAt: toTimedEndsAtIso(firstRow.timed_ends_at),
-        difficulty: firstRow.session_difficulty,
-    };
+    // Legacy Direct JOIN после create TOAST клинит тот же hop (~18s).
+    // Play-load только pooled snapshotData; miss → retry 400ms / soft-miss.
+    return null;
 }
 
 /** Методы reads для thin facade quizSessionRepository. */

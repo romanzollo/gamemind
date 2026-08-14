@@ -9,7 +9,8 @@
  * `startWithRandomQuestions` оставлен legacy; actions его не зовут.
  * Recovery после transient — вне queue (nested withDirectPgQueue = deadlock).
  * Не await client.end() на response path (см. DECISIONS → Neon Write Path).
- * Timed abandon-on-new-start: на том же client, что INSERT (см. Timed Mode).
+ * Timed abandon-on-new-start: pooled scalar до pick, не на Direct create
+ * вместе с JSONB INSERT (см. Timed Mode + Windows+Neon TOAST).
  * Публичный фасад: quiz-session.repository.ts.
  * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
@@ -26,6 +27,7 @@ import {
     withDirectPgQuizStartClient,
     withDirectPgWriteClient,
     withDirectPgWriteRetry,
+    withPooledPgClient,
 } from '@/lib/db/direct-pg';
 import { loadRandomSnapshotBundleWithPgClient } from '@/entities/question/question.repository';
 import type { QuestionSnapshotBundleItem } from '@/entities/question/question.repository';
@@ -34,10 +36,12 @@ import type {
     SessionSnapshotQuestionInput,
 } from '@/entities/quiz-session/quiz-session.types';
 import { QuizSessionStartError } from '@/entities/quiz-session/quiz-session.types';
+import { rememberQuizPlayLoad } from '@/entities/quiz-session/play-load-handoff';
 import type { QuizSessionSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
 import {
     assertSnapshotDisplayTexts,
     buildSnapshotData,
+    mapSnapshotDataToPublicQuestions,
     parseSnapshotData,
 } from '@/entities/quiz-session/quiz-session-snapshot';
 
@@ -61,6 +65,35 @@ type CreateQuizSessionWithJsonSnapshotInput =
     CreateQuizSessionWithSnapshotInput & {
         pickedQuestions: QuestionSnapshotBundleItem[];
     };
+
+/**
+ * Тот же budget, что Direct read — не повышение глобального timeout.
+ * Write create без лимита клинил Blitz: hop не логировался, спиннер вечный.
+ */
+const QUIZ_START_WRITE_ATTEMPT_MS = 18_000;
+
+function stashPlayLoadHandoff(
+    sessionId: string,
+    input: CreateQuizSessionWithSnapshotInput,
+    snapshotData: QuizSessionSnapshotData,
+    timedEndsAt: Date | null,
+) {
+    const mapped = mapSnapshotDataToPublicQuestions(
+        snapshotData,
+        input.questionCount,
+        input.sessionLocale,
+    );
+
+    if (!mapped) {
+        return;
+    }
+
+    rememberQuizPlayLoad(sessionId, input.userId, {
+        questions: mapped,
+        timedEndsAt: timedEndsAt?.toISOString() ?? null,
+        difficulty: resolveSessionPoolInsert(input).difficulty,
+    });
+}
 
 function resolveSessionPoolInsert(input: CreateQuizSessionWithSnapshotInput): {
     difficulty: Difficulty | null;
@@ -166,7 +199,7 @@ async function insertQuizSessionWithSnapshotData(
     sessionId: string,
     input: CreateQuizSessionWithSnapshotInput,
     snapshotData: QuizSessionSnapshotData,
-) {
+): Promise<{ timedEndsAt: Date | null }> {
     assertSnapshotDisplayTexts(input);
 
     if (input.dailyChallengeId && input.timedEndsAt) {
@@ -176,6 +209,16 @@ async function insertQuizSessionWithSnapshotData(
     }
 
     const pool = resolveSessionPoolInsert(input);
+    // TIMESTAMP(3) without TZ: SQL NOW() пишет UTC-стену, node-pg читает как local
+    // (UTC+2 → дедлайн в прошлом → сразу «время вышло»). Date после connect
+    // совпадает с сериализацией node-pg. Не считать now+60 до create hop.
+    const timedEndsAtValue =
+        input.timedEndsAt != null
+            ? new Date(
+                  Date.now() +
+                      (input.timedDurationSeconds ?? 60) * 1000,
+              )
+            : null;
 
     await client.query(
         `
@@ -216,9 +259,11 @@ async function insertQuizSessionWithSnapshotData(
             input.sessionLocale,
             JSON.stringify(snapshotData),
             input.dailyChallengeId ?? null,
-            input.timedEndsAt ?? null,
+            timedEndsAtValue,
         ],
     );
+
+    return { timedEndsAt: timedEndsAtValue };
 }
 
 async function insertSnapshotRows(
@@ -487,19 +532,26 @@ async function abandonInProgressTimedOnClient(
  * Фильтр `timedEndsAt IS NOT NULL` — только Timed; classic/daily не трогаем.
  * Без QuizResult: это не завершение, а «бросил и начал заново».
  *
- * Neon: `withDirectPgQuizStartClient` (Direct + queue + timeout), не отдельный
- * write-client. Основной путь: abandon внутри start/create на том же client.
+ * Neon: `withPooledPgClient` вне Direct-очереди, до pick — не extra unpooled
+ * TLS и не UPDATE на том же клиенте, что JSONB INSERT (TOAST hang class).
+ * Звать из runTimedQuizStart до cycle/resolve.
  */
 async function abandonInProgressTimedByUserId(
     userId: string,
 ): Promise<{ abandonedCount: number }> {
-    return withDirectPgQuizStartClient(async (client) => {
-        const abandonedCount = await abandonInProgressTimedOnClient(
-            client,
-            userId,
-        );
-        return { abandonedCount };
-    });
+    return withPooledPgClient(
+        async (client) => {
+            const abandonedCount = await abandonInProgressTimedOnClient(
+                client,
+                userId,
+            );
+            return { abandonedCount };
+        },
+        {
+            debugLabel: 'quiz.start.abandon',
+            attemptTimeoutMs: QUIZ_START_WRITE_ATTEMPT_MS,
+        },
+    );
 }
 
 async function createJsonSnapshotSession(
@@ -509,23 +561,34 @@ async function createJsonSnapshotSession(
     const snapshotData = buildSnapshotData(input, input.pickedQuestions);
 
     try {
-        // См. startWithRandomQuestions: recovery должен идти после одного attempt.
-        return await withDirectPgQuizStartClient(async (client) => {
-            // Timed: закрыть orphan IN_PROGRESS на том же соединении, что INSERT.
-            // Classic/daily (timedEndsAt null) — no-op. См. DECISIONS → Timed Mode.
-            if (input.timedEndsAt != null) {
-                await abandonInProgressTimedOnClient(client, input.userId);
-            }
+        // Timed: дедлайн Date.now()+duration после connect (TIMESTAMP without TZ).
+        // Abandon — отдельный pooled hop до pick, не UPDATE+JSONB на этом клиенте.
+        const created = await withDirectPgWriteClient(
+            async (client) => {
+                const inserted = await insertQuizSessionWithSnapshotData(
+                    client,
+                    sessionId,
+                    input,
+                    snapshotData,
+                );
 
-            await insertQuizSessionWithSnapshotData(
-                client,
-                sessionId,
-                input,
-                snapshotData,
-            );
+                return { id: sessionId, timedEndsAt: inserted.timedEndsAt };
+            },
+            {
+                debugLabel: 'quiz.start.create',
+                attemptTimeoutMs: QUIZ_START_WRITE_ATTEMPT_MS,
+            },
+        );
 
-            return { id: sessionId };
-        }, 1);
+        // Вопросы уже в памяти — не SELECT TOAST на play-load (Windows hang).
+        stashPlayLoadHandoff(
+            created.id,
+            input,
+            snapshotData,
+            created.timedEndsAt,
+        );
+
+        return { id: created.id };
     } catch (error) {
         const recovered = await recoverJsonSnapshotAfterWriteError(
             sessionId,
@@ -535,6 +598,17 @@ async function createJsonSnapshotSession(
         );
 
         if (recovered) {
+            stashPlayLoadHandoff(
+                sessionId,
+                input,
+                snapshotData,
+                input.timedEndsAt != null
+                    ? new Date(
+                          Date.now() +
+                              (input.timedDurationSeconds ?? 60) * 1000,
+                      )
+                    : null,
+            );
             return recovered;
         }
 

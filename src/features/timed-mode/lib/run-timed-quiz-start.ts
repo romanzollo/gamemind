@@ -6,10 +6,12 @@
  * Контракт Timed (не смешивать с Classic):
  * - SINGLE: pickTimedSnapshotBundle (тот же мешок, что Classic);
  * - MIXED: pickMixedSnapshotBundle (3× cycle + shuffle + 1 resolve);
- * - createWithJsonSnapshot с timedEndsAt;
- * - timedEndsAt = now + durationSeconds **после pick, перед INSERT** —
- *   иначе медленный Neon съедает минуту до экрана (симптом «осталось ~40с»);
- * - abandon orphan timed внутри create на том же Direct client;
+ * - createWithJsonSnapshot с timedEndsAt (флаг Timed);
+ * - timedEndsAt: Date.now()+duration после connect на create hop
+ *   (не SQL NOW() в TIMESTAMP without TZ — node-pg UTC+2 сразу «время вышло»;
+ *    не JS now+60 до hop — create TLS съедал минуту);
+ *   play-load SELECT-only; refresh не сбрасывает.
+ * - abandon orphan timed pooled до pick (не UPDATE+JSONB на Direct create);
  * - 500ms settle перед pick;
  * - матрица: Blitz 10 + Blitz MIXED 10 → 303, countdown ≈60с.
  * - Daily не ест из этого мешка.
@@ -44,12 +46,21 @@ export type RunTimedQuizStartResult =
 export async function runTimedQuizStart(
     input: RunTimedQuizStartInput,
 ): Promise<RunTimedQuizStartResult> {
-    const { questionCount, durationSeconds } = TIMED_MODE_MVP_RULES;
+    const { questionCount } = TIMED_MODE_MVP_RULES;
 
     try {
         await new Promise((resolve) =>
             setTimeout(resolve, TIMED_START_SETTLE_MS),
         );
+
+        // Scalar abandon до Direct resolve/create. Сбой не блокирует новый старт.
+        try {
+            await quizSessionRepository.abandonInProgressTimedByUserId(
+                input.userId,
+            );
+        } catch (error) {
+            console.warn('Timed abandon skipped:', error);
+        }
 
         const pickedQuestions =
             input.difficulty === 'MIXED'
@@ -69,8 +80,8 @@ export async function runTimedQuizStart(
             return { ok: false, errorCode: 'NOT_ENOUGH_QUESTIONS' };
         }
 
-        // Часы игрока стартуют с момента успешной записи сессии, не с начала pick.
-        const timedEndsAt = new Date(Date.now() + durationSeconds * 1000);
+        // timedEndsAt != null = флаг Timed; дедлайн считает INSERT после connect.
+        const timedEndsAt = new Date();
         const pool = getQuizSessionPoolWrite(input.difficulty);
 
         const quizSession = await quizSessionRepository.createWithJsonSnapshot({
@@ -80,6 +91,7 @@ export async function runTimedQuizStart(
             questionCount,
             sessionLocale: input.locale,
             timedEndsAt,
+            timedDurationSeconds: TIMED_MODE_MVP_RULES.durationSeconds,
             questions: buildQuizSnapshotQuestions(pickedQuestions),
             pickedQuestions,
         });

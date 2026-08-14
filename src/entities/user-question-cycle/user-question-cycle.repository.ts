@@ -10,9 +10,9 @@
  * - Один client, 2–3 autocommit query; optimistic UPDATE; без Promise.race budget.
  * - Transient после UPDATE → verify nextState (как quiz write recovery).
  *
- * Mix (Classic/Blitz): три мешка в ОДНОЙ pooled-транзакции (EASY→MEDIUM→HARD).
- * Любой NOT_ENOUGH → ROLLBACK, курсоры не двигаются. Не Promise.all, не Direct.
- *
+ * Mix (Classic/Blitz): compute на pooled, persist на свежем pooled (не тот же
+ * сокет после fat SELECT). Не BEGIN. Не `withDirectPg*`.
+ * После cycle — 300ms settle перед Direct resolve (очередь так же ждёт 300ms).
  * Daily / submit не вызывают.
  */
 
@@ -230,49 +230,33 @@ async function verifyCycleStateApplied(
     }
 }
 
-type BagDrawResult =
-    | {
-          ok: true;
-          questionIds: string[];
-          nextState: QuestionCycleState;
-          didReshuffle: boolean;
-      }
-    | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' | 'CONFLICT' };
-
 type DrawHopResult =
     | DrawUserQuestionCycleIdsResult
     | { ok: false; reason: 'CONFLICT' };
 
-type MixedDrawHopResult =
-    | DrawMixedUserQuestionCycleIdsResult
-    | { ok: false; reason: 'CONFLICT' };
-
-type PendingMixedBag = {
+type PreparedBagDraw = {
     difficulty: Difficulty;
     questionIds: string[];
+    expected: QuestionCycleState;
     nextState: QuestionCycleState;
+    didReshuffle: boolean;
 };
 
-async function rollbackQuietly(client: Client) {
-    try {
-        await client.query('ROLLBACK');
-    } catch {
-        // Сокет уже мёртв — fresh client всё равно закрывается.
-    }
-}
-
 /**
- * Один мешок на уже открытом client (autocommit или внутри BEGIN).
- * Не открывает TLS сам — иначе mix получил бы 3 hop и частичный сдвиг курсоров.
+ * Load + seeded draw, без UPDATE. Mix persist'ит на свежем pooled client:
+ * fat SELECT id и UPDATE на одном сокете (mix 10) висели ~19s.
  */
-async function drawOneBagOnClient(
+async function computeBagDrawOnClient(
     client: Client,
     input: {
         userId: string;
         difficulty: Difficulty;
         needed: number;
     },
-): Promise<BagDrawResult> {
+): Promise<
+    | { ok: true; bag: Omit<PreparedBagDraw, 'difficulty'> }
+    | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' }
+> {
     const state = await loadOrCreateCycleState(
         client,
         input.userId,
@@ -290,23 +274,14 @@ async function drawOneBagOnClient(
         return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
     }
 
-    const persisted = await persistCycleState(
-        client,
-        input.userId,
-        input.difficulty,
-        state,
-        drawn.nextState,
-    );
-
-    if (!persisted) {
-        return { ok: false, reason: 'CONFLICT' };
-    }
-
     return {
         ok: true,
-        questionIds: drawn.drawnIds,
-        nextState: drawn.nextState,
-        didReshuffle: drawn.didReshuffle,
+        bag: {
+            questionIds: drawn.drawnIds,
+            expected: state,
+            nextState: drawn.nextState,
+            didReshuffle: drawn.didReshuffle,
+        },
     };
 }
 
@@ -327,23 +302,35 @@ async function drawQuestionIdsOnce(input: {
         try {
             const result: DrawHopResult = await withPooledPgClient(
                 async (client): Promise<DrawHopResult> => {
-                    const drawn = await drawOneBagOnClient(client, input);
+                    const computed = await computeBagDrawOnClient(client, input);
 
-                    if (!drawn.ok) {
-                        return drawn;
+                    if (!computed.ok) {
+                        return computed;
                     }
 
                     pendingDraw = {
-                        questionIds: drawn.questionIds,
-                        nextState: drawn.nextState,
-                        didReshuffle: drawn.didReshuffle,
+                        questionIds: computed.bag.questionIds,
+                        nextState: computed.bag.nextState,
+                        didReshuffle: computed.bag.didReshuffle,
                     };
+
+                    const persisted = await persistCycleState(
+                        client,
+                        input.userId,
+                        input.difficulty,
+                        computed.bag.expected,
+                        computed.bag.nextState,
+                    );
+
+                    if (!persisted) {
+                        return { ok: false, reason: 'CONFLICT' };
+                    }
 
                     return {
                         ok: true,
-                        questionIds: drawn.questionIds,
-                        cycleNumber: drawn.nextState.cycleNumber,
-                        didReshuffle: drawn.didReshuffle,
+                        questionIds: computed.bag.questionIds,
+                        cycleNumber: computed.bag.nextState.cycleNumber,
+                        didReshuffle: computed.bag.didReshuffle,
                     };
                 },
                 { debugLabel: 'quiz.cycle.draw' },
@@ -380,38 +367,11 @@ async function drawQuestionIdsOnce(input: {
     throw new Error('UserQuestionCycle optimistic draw failed after 3 attempts');
 }
 
-async function verifyMixedCycleStatesApplied(
-    userId: string,
-    pending: readonly PendingMixedBag[],
-): Promise<boolean> {
-    if (pending.length === 0) {
-        return true;
-    }
-
-    try {
-        return await withPooledPgClient(
-            async (client) => {
-                for (const bag of pending) {
-                    const current = await loadCycleState(
-                        client,
-                        userId,
-                        bag.difficulty,
-                    );
-
-                    if (!current || !statesEqual(current, bag.nextState)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            },
-            { debugLabel: 'quiz.cycle.verify-mixed' },
-        );
-    } catch {
-        return false;
-    }
-}
-
+/**
+ * Mix = compute на pooled (как SINGLE load), persist на СВЕЖЕМ pooled client.
+ * Fat SELECT id + UPDATE на одном сокете на mix 10 рвал persist ~19s.
+ * NOT_ENOUGH до любого UPDATE. Не Direct queue.
+ */
 async function drawMixedQuestionIdsOnce(input: {
     userId: string;
     draws: Array<{ difficulty: Difficulty; needed: number }>;
@@ -423,76 +383,79 @@ async function drawMixedQuestionIdsOnce(input: {
     }
 
     for (let attempt = 1; attempt <= 3; attempt += 1) {
-        let pendingBags: PendingMixedBag[] | undefined;
+        const prepared: PreparedBagDraw[] = [];
 
-        try {
-            const result: MixedDrawHopResult = await withPooledPgClient(
-                async (client): Promise<MixedDrawHopResult> => {
-                    await client.query('BEGIN');
-
-                    try {
-                        const questionIds: string[] = [];
-                        const bags: PendingMixedBag[] = [];
-
-                        for (const draw of activeDraws) {
-                            const bag = await drawOneBagOnClient(client, {
-                                userId: input.userId,
-                                difficulty: draw.difficulty,
-                                needed: draw.needed,
-                            });
-
-                            if (!bag.ok) {
-                                await rollbackQuietly(client);
-                                return { ok: false, reason: bag.reason };
-                            }
-
-                            questionIds.push(...bag.questionIds);
-                            bags.push({
-                                difficulty: draw.difficulty,
-                                questionIds: bag.questionIds,
-                                nextState: bag.nextState,
-                            });
-                        }
-
-                        // До COMMIT: если ответ потерялся, verify увидит все три nextState.
-                        pendingBags = bags;
-                        await client.query('COMMIT');
-
-                        return { ok: true, questionIds };
-                    } catch (error) {
-                        await rollbackQuietly(client);
-                        throw error;
-                    }
-                },
-                { debugLabel: 'quiz.cycle.draw-mixed' },
+        for (const draw of activeDraws) {
+            const computed = await withPooledPgClient(
+                (client) =>
+                    computeBagDrawOnClient(client, {
+                        userId: input.userId,
+                        difficulty: draw.difficulty,
+                        needed: draw.needed,
+                    }),
+                { debugLabel: 'quiz.cycle.draw' },
             );
 
-            if (!result.ok && result.reason === 'CONFLICT') {
-                continue;
+            if (!computed.ok) {
+                return { ok: false, reason: computed.reason };
             }
 
-            return result;
-        } catch (error) {
-            if (isTransientDirectPgError(error) && pendingBags) {
-                const applied = await verifyMixedCycleStatesApplied(
-                    input.userId,
-                    pendingBags,
+            prepared.push({
+                difficulty: draw.difficulty,
+                ...computed.bag,
+            });
+        }
+
+        const questionIds: string[] = [];
+        let conflict = false;
+
+        for (const bag of prepared) {
+            try {
+                const persisted = await withPooledPgClient(
+                    (client) =>
+                        persistCycleState(
+                            client,
+                            input.userId,
+                            bag.difficulty,
+                            bag.expected,
+                            bag.nextState,
+                        ),
+                    { debugLabel: 'quiz.cycle.persist' },
                 );
 
-                if (applied) {
-                    return {
-                        ok: true,
-                        questionIds: pendingBags.flatMap((bag) => bag.questionIds),
-                    };
+                if (!persisted) {
+                    conflict = true;
+                    break;
                 }
-            }
 
-            throw error;
+                questionIds.push(...bag.questionIds);
+            } catch (error) {
+                if (isTransientDirectPgError(error)) {
+                    const applied = await verifyCycleStateApplied(
+                        input.userId,
+                        bag.difficulty,
+                        bag.nextState,
+                    );
+
+                    if (applied) {
+                        questionIds.push(...bag.questionIds);
+                        continue;
+                    }
+                }
+
+                throw error;
+            }
         }
+
+        if (conflict) {
+            continue;
+        }
+
+        return { ok: true, questionIds };
     }
 
     throw new Error(
-        'UserQuestionCycle mixed optimistic draw failed after 3 attempts',
+        'UserQuestionCycle mixed optimistic persist failed after 3 attempts',
     );
 }
 
@@ -510,8 +473,7 @@ export const userQuestionCycleRepository = {
     },
 
     /**
-     * Mix: три существующих мешка, одна транзакция, без четвёртого bag.
-     * Порядок ids = порядок draws (shuffle сессии — в pick, не здесь).
+     * Mix: три pooled SINGLE-hop (EASY→MEDIUM→HARD). Shuffle сессии — в pick.
      */
     async drawMixedQuestionIds(
         input: DrawMixedUserQuestionCycleIdsInput,

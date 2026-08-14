@@ -4,8 +4,9 @@
  * Classic + Timed: seeded UserQuestionCycle (raw pg scalars) → resolve by ids.
  * Daily Challenge сюда не ходит — frozen ids дня.
  *
- * Mix: 3× существующие мешки в одной pooled-транзакции → shuffle порядка →
- * один resolve-by-ids (chunk 5). Не MIXED в Difficulty, не silent random.
+ * Mix: 3× существующие мешки (`withPooledPgClient`, вне Direct queue) → shuffle →
+ * settle 300ms → один resolve-by-ids (chunk 5). Не MIXED в Difficulty.
+ * SINGLE Classic/Blitz: тот же settle после cycle перед Direct resolve.
  *
  * Анти-паттерн (снят): Prisma JSONB remaining + Promise.race budget +
  * fallback random — давал повторы IMAGE_GUESS при «успешном» старте.
@@ -25,6 +26,19 @@ import type { Locale } from '@/shared/i18n';
 import { shuffleArray } from '@/shared/utils';
 import type { Difficulty } from '@/types';
 
+/**
+ * Как `DIRECT_PG_SETTLE_MS` в direct-pg: после pooled cycle нельзя сразу
+ * открывать unpooled resolve. Измерено на Mix 10; тот же зазор нужен
+ * Classic/Blitz SINGLE 10 (иначе 4-й Direct hop клинит play-load).
+ */
+const AFTER_CYCLE_RESOLVE_SETTLE_MS = 300;
+
+async function settleAfterCycleBeforeDirectResolve() {
+    await new Promise((resolve) =>
+        setTimeout(resolve, AFTER_CYCLE_RESOLVE_SETTLE_MS),
+    );
+}
+
 async function pickUserCycleSnapshotBundle(
     userId: string,
     difficulty: Difficulty,
@@ -40,6 +54,8 @@ async function pickUserCycleSnapshotBundle(
     if (!drawn.ok || drawn.questionIds.length < questionCount) {
         return [];
     }
+
+    await settleAfterCycleBeforeDirectResolve();
 
     return questionRepository.pickSnapshotBundleByQuestionIds(
         drawn.questionIds,
@@ -107,6 +123,8 @@ export async function pickMixedSnapshotBundle(
     }
 
     const sessionOrderIds = shuffleArray(drawn.questionIds);
+
+    await settleAfterCycleBeforeDirectResolve();
 
     return questionRepository.pickSnapshotBundleByQuestionIds(
         sessionOrderIds,

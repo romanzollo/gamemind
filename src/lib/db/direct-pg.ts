@@ -549,6 +549,7 @@ export async function withDirectPgQuizStartClient<T>(
             try {
                 return await withFreshClient(createDirectClient, operation, {
                     attemptTimeoutMs: READ_ATTEMPT_TIMEOUT_MS,
+                    debugLabel: 'quiz.start.direct',
                 });
             } catch (error) {
                 lastError = error;
