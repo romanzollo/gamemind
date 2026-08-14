@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest';
 import {
     getMixedDifficultySplit,
     getMixedMaxPossibleScore,
+    getQuizSessionPoolWrite,
     isMixedQuestionCount,
     listMixedCycleDraws,
 } from './mixed-difficulty-split';
@@ -92,5 +93,21 @@ describe('getMixedMaxPossibleScore', () => {
 
     it('returns null when there is no split', () => {
         expect(getMixedMaxPossibleScore(7)).toBeNull();
+    });
+});
+
+describe('getQuizSessionPoolWrite', () => {
+    it('keeps SINGLE rows on the question Difficulty enum', () => {
+        expect(getQuizSessionPoolWrite('HARD')).toEqual({
+            poolKind: 'SINGLE',
+            difficulty: 'HARD',
+        });
+    });
+
+    it('writes MIXED with null session difficulty', () => {
+        expect(getQuizSessionPoolWrite('MIXED')).toEqual({
+            poolKind: 'MIXED',
+            difficulty: null,
+        });
     });
 });

@@ -4,11 +4,12 @@
  * Без redirect / FormData — auth/rate limit в actions.
  *
  * Контракт Classic (не смешивать с Timed):
- * - pickClassicSnapshotBundle (UserQuestionCycle + resolve by ids) →
- *   createWithJsonSnapshot (без timedEndsAt);
+ * - SINGLE: pickClassicSnapshotBundle (один мешок) → create;
+ * - MIXED: pickMixedSnapshotBundle (3× cycle + shuffle + 1 resolve) →
+ *   createWithJsonSnapshot (poolKind MIXED, difficulty NULL);
  * - pick: cycle write TLS + resolve chunks; create — отдельный budget;
  * - 500ms settle перед pick (rematch / lobby Daily);
- * - матрица: Easy 3 / 5 / 10 → 303; анти-повтор до исчерпания мешка.
+ * - матрица: Easy 3 / 5 / 10 и MIXED 3 / 5 / 10 → 303.
  *
  * Canon: docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
@@ -16,16 +17,19 @@
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { buildQuizSnapshotQuestions } from '@/features/quiz/lib/build-quiz-snapshot-questions';
 import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
-import { pickClassicSnapshotBundle } from '@/features/quiz/lib/pick-quiz-snapshot-bundle';
-import type { QuizErrorCode } from '@/features/quiz/types';
+import { getQuizSessionPoolWrite } from '@/features/quiz/lib/mixed-difficulty-split';
+import {
+    pickClassicSnapshotBundle,
+    pickMixedSnapshotBundle,
+} from '@/features/quiz/lib/pick-quiz-snapshot-bundle';
+import type { QuizErrorCode, QuizSetupDifficulty } from '@/features/quiz/types';
 import type { Locale } from '@/shared/i18n';
-import type { Difficulty } from '@/types';
 
 const CLASSIC_START_SETTLE_MS = 500;
 
 export type RunClassicQuizStartInput = {
     userId: string;
-    difficulty: Difficulty;
+    difficulty: QuizSetupDifficulty;
     questionCount: number;
     locale: Locale;
 };
@@ -42,20 +46,30 @@ export async function runClassicQuizStart(
             setTimeout(resolve, CLASSIC_START_SETTLE_MS),
         );
 
-        const pickedQuestions = await pickClassicSnapshotBundle(
-            input.userId,
-            input.difficulty,
-            input.questionCount,
-            input.locale,
-        );
+        const pickedQuestions =
+            input.difficulty === 'MIXED'
+                ? await pickMixedSnapshotBundle(
+                      input.userId,
+                      input.questionCount,
+                      input.locale,
+                  )
+                : await pickClassicSnapshotBundle(
+                      input.userId,
+                      input.difficulty,
+                      input.questionCount,
+                      input.locale,
+                  );
 
         if (pickedQuestions.length < input.questionCount) {
             return { ok: false, errorCode: 'NOT_ENOUGH_QUESTIONS' };
         }
 
+        const pool = getQuizSessionPoolWrite(input.difficulty);
+
         const quizSession = await quizSessionRepository.createWithJsonSnapshot({
             userId: input.userId,
-            difficulty: input.difficulty,
+            difficulty: pool.difficulty,
+            poolKind: pool.poolKind,
             questionCount: input.questionCount,
             sessionLocale: input.locale,
             questions: buildQuizSnapshotQuestions(pickedQuestions),

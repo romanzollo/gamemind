@@ -9,7 +9,11 @@
  * Canon: DECISIONS.md → Mixed-difficulty quiz; ROADMAP §11.3.
  */
 
-import type { Difficulty } from '@/features/quiz/types';
+import type {
+    Difficulty,
+    QuizSessionPoolKind,
+    QuizSetupDifficulty,
+} from '@/features/quiz/types';
 
 import { getDifficultyPoints } from '@/features/quiz/lib/scoring';
 
@@ -62,6 +66,21 @@ export function listMixedCycleDraws(
         { difficulty: 'MEDIUM', needed: split.MEDIUM },
         { difficulty: 'HARD', needed: split.HARD },
     ];
+}
+
+/**
+ * Колонки QuizSession при старте.
+ * MIXED → difficulty NULL (не маскировать под MEDIUM). SINGLE → EASY|MEDIUM|HARD.
+ */
+export function getQuizSessionPoolWrite(setup: QuizSetupDifficulty): {
+    poolKind: QuizSessionPoolKind;
+    difficulty: Difficulty | null;
+} {
+    if (setup === 'MIXED') {
+        return { poolKind: 'MIXED', difficulty: null };
+    }
+
+    return { poolKind: 'SINGLE', difficulty: setup };
 }
 
 /** Максимум очков mix-сессии (все верные) — для UI/тестов, не для submit. */

@@ -4,6 +4,9 @@
  * Classic + Timed: seeded UserQuestionCycle (raw pg scalars) → resolve by ids.
  * Daily Challenge сюда не ходит — frozen ids дня.
  *
+ * Mix: 3× существующие мешки в одной pooled-транзакции → shuffle порядка →
+ * один resolve-by-ids (chunk 5). Не MIXED в Difficulty, не silent random.
+ *
  * Анти-паттерн (снят): Prisma JSONB remaining + Promise.race budget +
  * fallback random — давал повторы IMAGE_GUESS при «успешном» старте.
  * Теперь cycle обязан отработать; ошибка → наверх (не тихий random).
@@ -14,7 +17,12 @@
 import { questionRepository } from '@/entities/question/question.repository';
 import type { QuestionSnapshotBundleItem } from '@/entities/question/question.types';
 import { userQuestionCycleRepository } from '@/entities/user-question-cycle/user-question-cycle.repository';
+import {
+    getMixedDifficultySplit,
+    listMixedCycleDraws,
+} from '@/features/quiz/lib/mixed-difficulty-split';
 import type { Locale } from '@/shared/i18n';
+import { shuffleArray } from '@/shared/utils';
 import type { Difficulty } from '@/types';
 
 async function pickUserCycleSnapshotBundle(
@@ -70,6 +78,38 @@ export function pickTimedSnapshotBundle(
         userId,
         difficulty,
         questionCount,
+        locale,
+    );
+}
+
+/**
+ * Mix Classic/Blitz: три cycle-draw + один shuffle + один resolve.
+ * Start ещё не вызывает (урок 4–5). Пустой массив = NOT_ENOUGH, не random.
+ */
+export async function pickMixedSnapshotBundle(
+    userId: string,
+    questionCount: number,
+    locale: Locale,
+): Promise<QuestionSnapshotBundleItem[]> {
+    const split = getMixedDifficultySplit(questionCount);
+
+    if (!split) {
+        return [];
+    }
+
+    const drawn = await userQuestionCycleRepository.drawMixedQuestionIds({
+        userId,
+        draws: listMixedCycleDraws(split),
+    });
+
+    if (!drawn.ok || drawn.questionIds.length < questionCount) {
+        return [];
+    }
+
+    const sessionOrderIds = shuffleArray(drawn.questionIds);
+
+    return questionRepository.pickSnapshotBundleByQuestionIds(
+        sessionOrderIds,
         locale,
     );
 }

@@ -7,7 +7,7 @@
  * См. docs/DECISIONS.md → Repository File Split.
  */
 
-import type { Difficulty, QuestionType } from '@/types';
+import type { Difficulty, QuizSessionPoolKind, QuestionType } from '@/types';
 import type { Locale } from '@/shared/i18n';
 import type { LocalizedSnapshotTexts } from '@/entities/question/question.types';
 import type { QuizSessionSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
@@ -15,7 +15,10 @@ import type { QuizSessionSnapshotData } from '@/entities/quiz-session/quiz-sessi
 /** Базовый вход создания сессии (без snapshot). */
 type CreateQuizSessionInput = {
     userId: string;
-    difficulty: Difficulty;
+    /** SINGLE: EASY|MEDIUM|HARD. MIXED: null. */
+    difficulty: Difficulty | null;
+    /** Omit = SINGLE (Daily / Timed / legacy Classic). */
+    poolKind?: QuizSessionPoolKind;
     questionCount: number;
 };
 
@@ -68,8 +71,8 @@ export type SessionSnapshotPublicQuestion = {
 export type QuizSessionPublicView = {
     questions: SessionSnapshotPublicQuestion[];
     timedEndsAt: string | null;
-    /** Сложность сессии — rematch Timed с теми же правилами. */
-    difficulty: Difficulty;
+    /** Сложность сессии; null = mix (poolKind MIXED). */
+    difficulty: Difficulty | null;
 };
 
 /** Вопрос из snapshot для server-side scoring (с isCorrect, без текста). */

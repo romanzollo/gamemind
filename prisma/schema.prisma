@@ -19,6 +19,14 @@ enum Difficulty {
   HARD
 }
 
+/// Как набран пул сессии. Не путать с Question.difficulty (там MIXED нет).
+/// SINGLE + difficulty EASY|MEDIUM|HARD; MIXED + difficulty NULL.
+/// CHECK в миграции. Исторические строки = SINGLE. Canon: Mixed-difficulty quiz.
+enum QuizSessionPoolKind {
+  SINGLE
+  MIXED
+}
+
 enum QuizSessionStatus {
   IN_PROGRESS
   COMPLETED
@@ -168,7 +176,10 @@ model QuizSession {
   id               String            @id @default(cuid())
   userId           String
   status           QuizSessionStatus @default(IN_PROGRESS)
-  difficulty       Difficulty
+  /// SINGLE: EASY|MEDIUM|HARD. MIXED: NULL (не маскировать mix под MEDIUM).
+  difficulty       Difficulty?
+  /// SINGLE = один мешок; MIXED = сплит трёх мешков. Default покрывает legacy INSERT.
+  poolKind         QuizSessionPoolKind @default(SINGLE)
   questionCount    Int
   sessionLocale    ContentLocale     @default(ru)
   snapshotData     Json?
@@ -188,6 +199,8 @@ model QuizSession {
 
   @@index([userId, status])
   @@index([dailyChallengeId])
+  /// Leaderboard: MIXED vs SINGLE+difficulty, без UNION.
+  @@index([poolKind, difficulty])
   /// Одна сессия на пользователя на день челленджа.
   /// Postgres: несколько строк с dailyChallengeId NULL допустимы (classic).
   @@unique([userId, dailyChallengeId])

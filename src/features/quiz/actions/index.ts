@@ -9,10 +9,7 @@ import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start';
-import {
-    isQuestionDifficulty,
-    quizSetupSchema,
-} from '@/features/quiz/lib/validation';
+import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
 import { buildCompactReviewPayload } from '@/features/quiz/lib/build-compact-review-payload';
 import type { QuizFormState } from '@/features/quiz/types';
@@ -59,11 +56,6 @@ export async function startQuizAction(
 
     // проверяем, являются ли данные валидными
     if (!parsed.success) {
-        return { errorCode: 'INVALID_SETUP' };
-    }
-
-    // MIXED стартует после pick (урок 3–4). Иначе Difficulty сузится неверно.
-    if (!isQuestionDifficulty(parsed.data.difficulty)) {
         return { errorCode: 'INVALID_SETUP' };
     }
 

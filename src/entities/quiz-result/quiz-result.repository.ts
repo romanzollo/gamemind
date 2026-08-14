@@ -5,7 +5,7 @@ import {
     parseCompactReviewPayload,
     type CompactReviewPayloadV1,
 } from '@/entities/quiz-result/compact-review-payload';
-import type { Difficulty } from '@/types';
+import type { Difficulty, QuizSessionPoolKind, QuizSetupDifficulty } from '@/types';
 
 type QuizResultSummaryRow = {
     id: string;
@@ -17,7 +17,8 @@ type QuizResultSummaryRow = {
     completed_at: Date;
     question_count: number;
     timed_ends_at: Date | string | null;
-    difficulty: Difficulty;
+    difficulty: Difficulty | null;
+    pool_kind: string | null;
 };
 
 type ReviewAnswerRow = {
@@ -34,10 +35,16 @@ export type QuizResultSummary = {
     totalQuestions: number;
     correctCount: number;
     completedAt: Date;
-    /** MVP: одна difficulty на сессию → max score без чтения JSONB. */
+    /**
+     * SINGLE: одна difficulty, повторённая totalQuestions раз (max без JSONB).
+     * MIXED: пусто — max считает feature по сплиту, не по session.difficulty.
+     */
     difficulties: Difficulty[];
     isTimed: boolean;
-    difficulty: Difficulty;
+    difficulty: Difficulty | null;
+    poolKind: QuizSessionPoolKind;
+    /** Hidden rematch: MIXED или EASY|MEDIUM|HARD. */
+    setupDifficulty: QuizSetupDifficulty;
 };
 
 export type QuizResultReviewBundle = {
@@ -89,6 +96,29 @@ export type FindBestScoresFilters = {
     completedAfter?: Date | null;
 };
 
+function parseSessionPoolKind(value: string | null): QuizSessionPoolKind {
+    return value === 'MIXED' ? 'MIXED' : 'SINGLE';
+}
+
+function parseSetupDifficulty(
+    poolKind: QuizSessionPoolKind,
+    difficulty: Difficulty | null,
+): QuizSetupDifficulty {
+    if (poolKind === 'MIXED') {
+        return 'MIXED';
+    }
+
+    if (
+        difficulty === 'EASY' ||
+        difficulty === 'MEDIUM' ||
+        difficulty === 'HARD'
+    ) {
+        return difficulty;
+    }
+
+    return 'EASY';
+}
+
 type RecentResultRow = {
     session_id: string;
     score: number;
@@ -128,7 +158,8 @@ async function loadResultSummaryBySessionIdForUser(
                     r."completedAt" AS "completed_at",
                     s."questionCount" AS "question_count",
                     s."timedEndsAt" AS "timed_ends_at",
-                    s."difficulty"::text AS "difficulty"
+                    s."difficulty"::text AS "difficulty",
+                    s."poolKind"::text AS "pool_kind"
                 FROM "QuizResult" r
                 INNER JOIN "QuizSession" s
                     ON s."id" = r."sessionId"
@@ -148,11 +179,18 @@ async function loadResultSummaryBySessionIdForUser(
         return null;
     }
 
-    // Classic/Timed/Daily MVP: одна difficulty на сессию.
-    const difficulties = Array.from(
-        { length: row.total_questions },
-        () => row.difficulty,
-    );
+    const poolKind = parseSessionPoolKind(row.pool_kind);
+    const setupDifficulty = parseSetupDifficulty(poolKind, row.difficulty);
+    const sessionDifficulty = row.difficulty;
+
+    // SINGLE: max без JSONB. MIXED: пусто — UI берёт getMixedMaxPossibleScore.
+    const difficulties: Difficulty[] =
+        poolKind === 'MIXED' || !sessionDifficulty
+            ? []
+            : Array.from(
+                  { length: row.total_questions },
+                  () => sessionDifficulty,
+              );
 
     return {
         id: row.id,
@@ -165,6 +203,8 @@ async function loadResultSummaryBySessionIdForUser(
         difficulties,
         isTimed: row.timed_ends_at != null,
         difficulty: row.difficulty,
+        poolKind,
+        setupDifficulty,
     };
 }
 

@@ -37,8 +37,8 @@ type QuizSessionFormProps = {
     questions: QuizPublicQuestion[];
     /** ISO UTC или null (classic/daily — без countdown). */
     timedEndsAt?: string | null;
-    /** Сложность сессии — для Timed rematch на result (prop сохранён для API page). */
-    difficulty: Difficulty;
+    /** Сложность сессии; null = mix. Prop сохранён для API page (форма его не читает). */
+    difficulty: Difficulty | null;
     dictionary: Dictionary;
 };
 

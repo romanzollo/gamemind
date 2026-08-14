@@ -13,11 +13,11 @@ import { rematchClassicQuizAction } from '@/features/quiz/actions/rematch-classi
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
-import type { Difficulty } from '@/types';
+import type { QuizSetupDifficulty } from '@/types';
 
 type ClassicRematchButtonProps = {
     locale: Locale;
-    difficulty: Difficulty;
+    difficulty: QuizSetupDifficulty;
     questionCount: number;
     label: string;
     dictionary: Dictionary;

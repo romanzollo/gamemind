@@ -18,7 +18,7 @@ import { randomUUID } from 'node:crypto';
 
 import type { Client } from 'pg';
 
-import type { Difficulty } from '@/types';
+import type { Difficulty, QuizSessionPoolKind } from '@/types';
 import type { Locale } from '@/shared/i18n';
 import {
     isTransientDirectPgError,
@@ -61,6 +61,18 @@ type CreateQuizSessionWithJsonSnapshotInput =
     CreateQuizSessionWithSnapshotInput & {
         pickedQuestions: QuestionSnapshotBundleItem[];
     };
+
+function resolveSessionPoolInsert(input: CreateQuizSessionWithSnapshotInput): {
+    difficulty: Difficulty | null;
+    poolKind: QuizSessionPoolKind;
+} {
+    const poolKind = input.poolKind ?? 'SINGLE';
+
+    return {
+        poolKind,
+        difficulty: poolKind === 'MIXED' ? null : input.difficulty,
+    };
+}
 
 function buildValuesPlaceholder(
     rowCount: number,
@@ -163,6 +175,8 @@ async function insertQuizSessionWithSnapshotData(
         );
     }
 
+    const pool = resolveSessionPoolInsert(input);
+
     await client.query(
         `
             INSERT INTO "QuizSession" (
@@ -170,6 +184,7 @@ async function insertQuizSessionWithSnapshotData(
                 "userId",
                 "status",
                 "difficulty",
+                "poolKind",
                 "questionCount",
                 "sessionLocale",
                 "snapshotData",
@@ -182,11 +197,12 @@ async function insertQuizSessionWithSnapshotData(
                 $2,
                 $3::"QuizSessionStatus",
                 $4::"Difficulty",
-                $5,
-                $6::"ContentLocale",
-                $7::jsonb,
-                $8,
+                $5::"QuizSessionPoolKind",
+                $6,
+                $7::"ContentLocale",
+                $8::jsonb,
                 $9,
+                $10,
                 NOW()
             )
         `,
@@ -194,7 +210,8 @@ async function insertQuizSessionWithSnapshotData(
             sessionId,
             input.userId,
             'IN_PROGRESS',
-            input.difficulty,
+            pool.difficulty,
+            pool.poolKind,
             input.questionCount,
             input.sessionLocale,
             JSON.stringify(snapshotData),
@@ -229,6 +246,8 @@ async function insertSnapshotRows(
         })),
     );
 
+    const pool = resolveSessionPoolInsert(input);
+
     await client.query(
         `
             INSERT INTO "QuizSession" (
@@ -236,6 +255,7 @@ async function insertSnapshotRows(
                 "userId",
                 "status",
                 "difficulty",
+                "poolKind",
                 "questionCount",
                 "sessionLocale",
                 "startedAt"
@@ -245,8 +265,9 @@ async function insertSnapshotRows(
                 $2,
                 $3::"QuizSessionStatus",
                 $4::"Difficulty",
-                $5,
-                $6::"ContentLocale",
+                $5::"QuizSessionPoolKind",
+                $6,
+                $7::"ContentLocale",
                 NOW()
             )
         `,
@@ -254,7 +275,8 @@ async function insertSnapshotRows(
             sessionId,
             input.userId,
             'IN_PROGRESS',
-            input.difficulty,
+            pool.difficulty,
+            pool.poolKind,
             input.questionCount,
             input.sessionLocale,
         ],

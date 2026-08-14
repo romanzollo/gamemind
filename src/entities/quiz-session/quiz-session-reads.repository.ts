@@ -35,7 +35,7 @@ type SnapshotPublicRow = {
     session_id: string;
     question_count: number;
     timed_ends_at: Date | string | null;
-    session_difficulty: Difficulty;
+    session_difficulty: Difficulty | null;
     question_id: string | null;
     question_text: string | null;
     display_image_url: string | null;
@@ -60,7 +60,7 @@ type SessionSnapshotJsonRow = {
     question_count: number;
     snapshot_data: QuizSessionSnapshotData | string | null;
     timed_ends_at: Date | string | null;
-    difficulty: Difficulty;
+    difficulty: Difficulty | null;
 };
 
 type ReviewAnswerRow = {
