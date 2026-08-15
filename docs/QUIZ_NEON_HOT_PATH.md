@@ -141,7 +141,7 @@ Safe and expected:
 
 - Draft JSON → validate → import DRAFT → admin publish.
 - Larger pool, more bilingual rows, images via existing media path.
-- Prod import against **prod** Neon only; after any schema-changing quiz deploy, run `prisma migrate deploy` on prod. Ops: `docs/CONTENT_PIPELINE.md` §10.
+- Prod import against **prod** Neon only; after any schema-changing quiz deploy, run `prisma migrate deploy` on prod (Windows may need SQL + `_prisma_migrations` if `P1002`). Ops: `docs/CONTENT_PIPELINE.md` §10. Aug 15: missing `QuizSession.poolKind` (`42703`) broke all Classic/Blitz starts on www until that catch-up — not a handoff/clock bug.
 
 **Not required and often harmful:**
 
@@ -187,6 +187,7 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
 4. Score broken → complete scalars. Review broken → soft-fail OK. Soft-miss on known new session → handoff miss + TOAST read, not “row missing”.
 5. Do not re-enable keep-warm; do not merge Classic/Timed start; do not expand Daily lobby TLS; do not change chunk size without matrix.
 6. Classic/Timed start dies after cycle with Prisma `Connection terminated` → cycle stays on `withPooledPgClient`.
+7. Start UI generic filter error + Vercel `42703` `poolKind` (or any missing Mix/session column) → prod schema lag. Ops: `CONTENT_PIPELINE.md` §10. Do not change handoff/clock/Direct.
 
 ---
 

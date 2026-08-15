@@ -1166,6 +1166,8 @@ Tracking: `PROJECT_CONTEXT.md` ? Deferred Code Refactoring; `ROADMAP.md` ?11.7.
 
 **Next after this:** mixed-difficulty quiz mode (optional); Epic 4 profile (history + password done locally July 16 evening).
 
+**Later (Aug 15):** Mix is on www (`QuizSession.poolKind`); prod schema catch-up in `CONTENT_PIPELINE.md` §10. Do not re-implement Mix.
+
 ### Profile password & avatar
 
 **Decision:**
@@ -1370,7 +1372,7 @@ Tracking: `ROADMAP.md` ?11.4 / Immediate Next; `PROJECT_CONTEXT.md` Epic 4 Phase
 - Prefer redeploying **one epic at a time** to production (Epic 2+3 shipped together July 16 because friends were not active yet).
 - Primary public URL: `https://www.game-mind.ru` (`AUTH_URL` must match).
 - Rate limiting auth endpoints ? next security pass after password change ships.
-- Mixed-difficulty quiz mode ? after weighted scoring (done); when product wants it.
+- Mixed-difficulty quiz mode — **on www** (Aug 15): prod `poolKind` migration catch-up; user-verified Classic/Blitz MIX start→score. Schema ops: `CONTENT_PIPELINE.md` §10.
 
 ## Content Scale Pipeline (August 3, 2026)
 
@@ -1383,6 +1385,8 @@ Tracking: `ROADMAP.md` ?11.4 / Immediate Next; `PROJECT_CONTEXT.md` Epic 4 Phase
 **Do not:** write `PUBLISHED` on import; skip quality gate; bloat seed; change quiz hot path / scoring / snapshot; start taxonomy for content scale.
 
 **Status (Aug 4 late night):** TEXT steps **1–6 done** — AI emits same `version: 1` JSON; batches in `content/drafts/batches/`; import DRAFT-only; publish via admin on local + **prod**. Prod ops lesson: never confuse local/prod Neon hosts; after quiz schema deploys run prod `migrate deploy` (Aug 4: missing `AchievementOutbox` broke result until catch-up). See `CONTENT_PIPELINE.md` §10. Neon/quiz hot-path canon must not be undone for content work.
+
+**Status (Aug 15):** Mix JS was already on Vercel; prod Neon lacked `20260813220000_quiz_session_pool_kind` → start `42703` `poolKind` on www. Catch-up via prod unpooled SQL + `_prisma_migrations` after `migrate deploy` `P1002` on Windows. User-verified Classic EASY 3 / MIX + Blitz EASY / MIX start→score. Do not treat that symptom as a hot-path bug.
 
 **Status (Aug 12 night):** local/prod TEXT+IMAGE banks aligned after C1–C3 local catch-up and deleting local-only samples/mixed/early admin rows. Quiz pool TEXT **270** + IMAGE_GUESS **171** on both Neons. TEXT import is **not** idempotent (new UUIDs); do not re-import a published batch. Drift check: `content:smoke-text` / `content:smoke-image-guess` with `--target=prod`. Canon: `CONTENT_PIPELINE.md` §10 “Local vs prod drift”.
 

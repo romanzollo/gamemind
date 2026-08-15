@@ -50,7 +50,7 @@ npm run build
 ## Production-база
 
 1. Создай Neon project или branch для production (лучше не смешивать навсегда с «сонной» free-tier БД для local).
-2. Примени миграции на prod (с машины/CI, где Prisma migrate стабилен, или через твои Windows helper-скрипты).
+2. Примени миграции на prod (с машины/CI, где Prisma migrate стабилен, или через Windows helper). Хост ≠ local `ep-jolly-river…`; URL — **unpooled** (`PROD_DATABASE_URL_UNPOOLED`). На Windows `prisma migrate deploy` может дать `P1002` (advisory lock 10s) без реального lock — тогда SQL из `prisma/migrations/…/migration.sql` + запись в `_prisma_migrations` (`docs/CONTENT_PIPELINE.md` §10).
 3. Seed:
 
    ```bash
@@ -122,6 +122,7 @@ npm run build
 | Build падает на Vercel, локально ок | Нет env; Prisma generate; смотри build logs |
 | Сайт есть, login сломан | Нет/неверный `AUTH_SECRET` или `AUTH_URL` |
 | Ошибки БД в quiz/admin | Перепутаны pooled/unpooled; миграции на prod не применены |
+| Старт квиза: «Проверь сложность…»; Vercel `42703` `poolKind` | JS на Vercel новее схемы Neon. Не трогать hot-path — `migrate deploy` / SQL fallback на **prod** (`CONTENT_PIPELINE.md` §10). Aug 15: после catch-up Classic/Blitz MIX на www OK |
 | `IMAGE_GUESS` — битая картинка | WebP не в деплое (Aug 6: DB URL ок, файлов на Vercel нет → 404); на prod DB не обновлены asset URL; DRAFT не Publish |
 | Admin thumbs broken, quiz seed OK | Новый batch WebP не закоммичен/не задеплоен; seed WebP уже в git |
 | `Body exceeded 1 MB limit` на upload | Нет `experimental.serverActions.bodySizeLimit` / нужен restart после next.config |

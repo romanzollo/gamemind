@@ -158,7 +158,7 @@ author JSON  →  validate (Zod, no DB)  →  import DRAFT  →  admin quality g
 
 Import never writes `PUBLISHED`. Quality gate is a pure function (`getQuestionPublishQualityIssues`); Server Actions enforce it. TEXT import is **not** idempotent (new UUIDs) — do not re-import a published batch.
 
-After a schema-changing quiz deploy, run `prisma migrate deploy` on **production** Neon. Missing columns (`AchievementOutbox`, review, cycle, …) break submit/result even if Vercel shipped the new JS.
+After a schema-changing quiz deploy, run `prisma migrate deploy` on **production** Neon (or the §10 SQL fallback if Windows hits `P1002`). Missing columns (`AchievementOutbox`, review, cycle, `QuizSession.poolKind`, …) break start/submit/result even if Vercel shipped the new JS. Ops: `docs/CONTENT_PIPELINE.md` §10.
 
 ## What this file is not
 

@@ -185,9 +185,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 13, 2026 — friends prod smoke signed off (quiz + IMAGE_GUESS/lightbox + leaderboard records). Mechanics TEXT wave 3 ×24 already PUBLISHED (TEXT 330 / IMAGE 171).
+**Last updated:** August 15, 2026 — Mix on www: prod `QuizSession.poolKind` catch-up; user-verified Classic EASY 3 / Classic MIX / Blitz EASY / Blitz MIX start→score.
 
-**Preferred next:** **mixed-difficulty quiz mode** (`ROADMAP.md` §11.3) — weights already exist; friends compete on one leaderboard, so a mixed set makes points meaningful. Plan before code: cycle bag + pick must stay off Direct JSONB. Alternate: mechanics TEXT wave 4 (~24 if aiming ~24–30 per difficulty; dupe-check; do not re-import mechanics-12 / w2-24 / w3-24). Always commit WebP with image batches. Always `migrate deploy` on **prod** after schema deploys. Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24 (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
+**Preferred next:** mechanics TEXT wave 4 (~24 if aiming ~24–30 per difficulty; dupe-check; do not re-import mechanics-12 / w2-24 / w3-24). Mix lobby is live — do not re-implement. Always `migrate deploy` on **prod** after schema deploys (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`). Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24 (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -235,6 +235,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 44. ~~**Mechanics TEXT wave 2 ×24**~~ — Aug 13 later: `2026-08-13-text-mechanics-w2-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **306** (102/102/102) local+prod.
 45. ~~**Mechanics TEXT wave 3 ×24**~~ — Aug 13 evening: `2026-08-13-text-mechanics-w3-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **330** (110/110/110) local+prod.
 46. ~~**Friends prod smoke (incl. IMAGE_GUESS)**~~ — Aug 13: user report — friends play TEXT+images, lightbox OK, set records, use leaderboard.
+47. ~~**Mixed-difficulty on prod (`poolKind`)**~~ — Aug 15: migration `20260813220000_quiz_session_pool_kind` on prod Neon; www Classic EASY 3 / MIX + Blitz EASY / MIX start→score (user-verified). Ops: `CONTENT_PIPELINE.md` §10.
 
 ### Deploy / hosting checklist (tracking)
 
@@ -348,7 +349,7 @@ See `PROJECT_CONTEXT.md` → **Next Product Slice** and `DECISIONS.md` → **Pos
 - [x] `score` = sum of weights for correct; keep `correctCount` separate
 - [x] Result + leaderboard UI copy: points vs correct count
 - [x] Do not rewrite historical `QuizResult` rows unless explicitly planned
-- [ ] Later: mixed-difficulty quiz mode (makes weights meaningful beyond single-diff sessions)
+- [x] Mixed-difficulty quiz mode (`poolKind` SINGLE/MIXED; Mix ≠ `Question.difficulty`) — on www Aug 15 after prod schema catch-up; user-verified Classic/Blitz MIX start→score
 
 #### 11.4 Profile & account
 

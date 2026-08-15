@@ -12,7 +12,7 @@ Related canon:
 
 **Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish.
 
-**Next authoring target (Aug 13, friends smoke closed):** Mechanics TEXT wave 3 ×24 is **PUBLISHED** local+prod (`2026-08-13-text-mechanics-w3-24.json`) — **do not re-import**. Dedicated mechanics ≈20 per difficulty. Friends prod smoke (quiz + IMAGE_GUESS/lightbox + leaderboard) **signed off** — not a content leftover. Optional later: mechanics wave 4 (~24) if aiming ~24–30 per difficulty (dupe-check vs seed + C/D + mechanics-12 + w2 + w3). Product next is mixed-difficulty quiz (`ROADMAP.md` Immediate Next), not another TEXT dump. Pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24.
+**Next authoring target (Aug 15):** Mechanics TEXT wave 3 ×24 is **PUBLISHED** local+prod (`2026-08-13-text-mechanics-w3-24.json`) — **do not re-import**. Dedicated mechanics ≈20 per difficulty. Mixed-difficulty lobby is **on www** (prod schema `poolKind` catch-up Aug 15; user-verified Classic/Blitz MIX start→score). Optional later: mechanics wave 4 (~24) if aiming ~24–30 per difficulty (dupe-check vs seed + C/D + mechanics-12 + w2 + w3). Pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24.
 
 ---
 
@@ -320,13 +320,20 @@ Remove-Item Env:DATABASE_URL_UNPOOLED
 
 ### Schema must match deployed code
 
-Symptom after deploy: result page soft-fail; Vercel log `relation "AchievementOutbox" does not exist` (`42P01`).
+Vercel JS does **not** apply Prisma migrations. Publishing questions does **not** apply schema.
 
-Cause: quiz/result code already on Vercel expects Aug 4 migrations (`AchievementOutbox`, `QuizResult.reviewSnapshot` / `reviewPayload`), but prod Neon stopped at an earlier migration. **Publishing questions does not apply schema.**
+**Aug 4:** result soft-fail; Vercel `relation "AchievementOutbox" does not exist` (`42P01`). Prod lagged `AchievementOutbox` / review columns.
 
-Fix: `npx prisma migrate deploy` against **prod** `DATABASE_URL` (+ `DATABASE_URL_UNPOOLED`). Prisma may load local `.env` and ignore a shell override — temporarily point `.env` at prod for that command, or apply pending SQL then `migrate resolve --applied`. Then play a **new** quiz (old broken sessions may lack a clean complete).
+**Aug 15:** Classic/Blitz start UI «Проверь сложность и количество вопросов.»; Vercel `column "poolKind" of relation "QuizSession" does not exist` (`42703`). Mix JS on Vercel already wrote `poolKind`; prod lacked `20260813220000_quiz_session_pool_kind`. **Not** a hot-path / handoff / clock bug — do not change start/submit/Direct. After catch-up, user-verified on www: Classic EASY 3, Classic MIX, Blitz EASY, Blitz MIX → questions on screen → submit → score.
 
-Canon: `docs/QUIZ_NEON_HOT_PATH.md` — content scale must not change submit JSONB; keep schema deploys in the release habit.
+Fix:
+
+1. Confirm host ≠ local `ep-jolly-river…`. Use **`PROD_DATABASE_URL_UNPOOLED`** (direct, not `-pooler`). Do not point local `DATABASE_URL` at prod permanently.
+2. Prefer `npx prisma migrate deploy` with those prod URLs in the **child process env**. Prisma may still print `Environment variables loaded from .env` — trust the printed datasource **host**, not that line.
+3. Windows + Neon: `migrate deploy` can fail `P1002` (advisory lock timeout 10s) even when `pg_locks` has **no** advisory row. Fallback: apply `prisma/migrations/<name>/migration.sql` on prod unpooled, then register `_prisma_migrations` (sha256 of the file) — same idea as `scripts/apply-named-migration.cjs <name> PROD_DATABASE_URL_UNPOOLED` — or `migrate resolve --applied` if the engine can take the lock. Confirm column/enum exist. Checksum must match hashing an already-applied `migration.sql` the same way.
+4. Play a **new** quiz. Redeploy is not required if the JS is already on Vercel. Old failed sessions can stay.
+
+Canon: `docs/QUIZ_NEON_HOT_PATH.md` — content scale must not change submit JSONB; a `42703` on start is ops, not a pick/Direct rewrite.
 
 ### IMAGE_GUESS prod import (Aug 6)
 
