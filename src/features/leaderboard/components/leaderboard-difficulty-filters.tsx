@@ -14,7 +14,7 @@ import { PendingLink } from '@/shared/ui';
  *
  * Визуал: segmented control (один ряд в рамке), не 2×2 «кнопочная панель» —
  * фильтр = вторичный chrome под заголовком, акцент остаётся у таблицы очков.
- * Пятый чип MIXED: короткая подпись (`filterMixed` = Смесь / Mix), иначе
+ * Пятый чип MIXED: короткая подпись (`filterMixed` = Микс / Mix), иначе
  * пять flex-1 на 390px разъедут segmented. Mix ≠ Medium в SQL.
  */
 

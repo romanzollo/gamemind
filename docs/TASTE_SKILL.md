@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-06 (IMAGE_GUESS lightbox dismiss + dark scrim) |
+| **Last updated** | 2026-08-16 (Quiz Arcade achievement marks) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -329,6 +329,18 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-16 — Achievement illustration semantics (Quiz Arcade)
+
+- Scope: Feature:Achievements / Prompt T-Feature (presentation + copy)
+- Skills used: gamemind-taste-ui (Scoreboard Editorial)
+- Files touched: `achievements/illustrations/index.tsx`, i18n `achievements.items` + `leaderboard.filterMixed`, `leaderboard-difficulty-filters` comment
+- What changed visually: Quiz Arcade plaque pack (round card / combo / S-rank / daily stamp / stopwatch+bolt / scoreboard 250 / rank pips); HARD_3 stays inside plaque; HIGH_ACCURACY_90 is a gapped ring (not a clock); medium triangles vs hard diamonds; titles `Начало` / `Оба режима`; filter chip **Микс**
+- Tokens/components added: none (same plaque + `currentColor`)
+- Explicitly NOT changed: types, evaluate, award, Prisma, snapshot, scoring
+- Verify: `/profile` light/dark ru/en; locked vs unlocked; toast sm; HARD_3 clip; blitz = dial+bolt
+- Follow-up: new badges follow DECISIONS → Achievements MVP → Illustration pack (Quiz Arcade)
+- Canon: `docs/DECISIONS.md` Achievements MVP (how to add + pack rules)
 
 ### 2026-08-07 — IMAGE_GUESS lightbox mobile pinch-zoom
 
@@ -1562,6 +1574,7 @@ No app routing, no quiz logic.
 - [x] Daily Challenge CTA on home + quiz setup (2026-07-30) — Scoreboard panel; guest→login; start/continue/result.
 - [x] Daily Challenge today’s board under CTA (2026-07-30) — top-10 compact strip; **on prod** (user smoke OK).
 - [x] Toast Notifications MVP (2026-07-30) — Sonner + unlock flash; Scoreboard cards; live theme/locale.
+- [x] Achievement illustration semantics (Quiz Arcade) — 2026-08-16. Pack rules in DECISIONS Achievements MVP. New badges extend the plaque language (no gamepad / no `?` as quiz / no overflow-hidden).
 
 **Cursor start prompt for Task 1:**
 

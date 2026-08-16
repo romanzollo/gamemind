@@ -452,7 +452,7 @@ export const ruDictionary: Dictionary = {
             'Не удалось загрузить рейтинг. Проверь подключение к базе данных и попробуй обновить страницу.',
         filterDifficultyLabel: 'Сложность',
         filterAll: 'Все',
-        filterMixed: 'Смесь',
+        filterMixed: 'Микс',
         filterPeriodLabel: 'Период',
         filterPeriodAll: 'Всё время',
         filterPeriodWeek: 'Неделя',
@@ -484,7 +484,7 @@ export const ruDictionary: Dictionary = {
         toastMoreSummary: 'Ещё {count} — смотрите в профиле',
         items: {
             FIRST_QUIZ: {
-                title: 'Было начало',
+                title: 'Начало',
                 description: 'Завершите любую викторину.',
             },
             QUIZZES_5: {
@@ -524,7 +524,7 @@ export const ruDictionary: Dictionary = {
                 description: 'Завершите квиз в режиме на время.',
             },
             CLASSIC_AND_TIMED: {
-                title: 'Два темпа',
+                title: 'Оба режима',
                 description: 'Пройдите и классический квиз, и блиц.',
             },
             HIGH_ACCURACY_90: {

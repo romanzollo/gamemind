@@ -466,7 +466,7 @@ export const enDictionary = {
         toastMoreSummary: '{count} more — see your profile',
         items: {
             FIRST_QUIZ: {
-                title: 'It begins',
+                title: 'The start',
                 description: 'Complete any quiz.',
             },
             QUIZZES_5: {
@@ -506,7 +506,7 @@ export const enDictionary = {
                 description: 'Finish a timed-mode quiz.',
             },
             CLASSIC_AND_TIMED: {
-                title: 'Two tempos',
+                title: 'Both modes',
                 description: 'Complete both a classic quiz and a blitz.',
             },
             HIGH_ACCURACY_90: {

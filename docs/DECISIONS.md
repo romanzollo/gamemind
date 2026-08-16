@@ -1617,9 +1617,25 @@ Important decision: generated questions should not go directly into live quizzes
 2. Evaluate switch + unit tests (thresholds / flags).
 3. Extend `EVAL_FACTS_SQL` + mapper if new fact.
 4. Extend `getAchievementCriteriaProgress` if new criteria kind.
-5. `dictionary` + `ru` / `en` `items[CODE]`.
-6. Illustration + `ACHIEVEMENT_ILLUSTRATIONS` map.
+5. `dictionary` + `ru` / `en` `items[CODE]` — short Scoreboard headlines (`Начало`, not calques like «Было начало»). Glyph must match the **title**.
+6. Illustration in `src/features/achievements/illustrations/index.tsx` + `ACHIEVEMENT_ILLUSTRATIONS` map. Follow **Quiz Arcade** pack rules below — do not invent a second visual language.
 7. Do **not** change award hook / scoring / snapshot unless criteria need new data sources.
+
+**Illustration pack (Quiz Arcade, Aug 16 2026):** one plaque language for all codes. Pack file is the source of primitives (`Plaque`, `LightningBolt`, `RankChevron`, `BossDiamond`, `MediumPip`, `ComboRing`).
+
+| Rule | Choice |
+|------|--------|
+| Format | Inline SVG, `viewBox 0 0 48 48`, `Plaque` 42×42 at x/y=3 (frame ends x=45) |
+| Color | `currentColor` + fill opacity only. Light/dark = token, no second asset |
+| Safe box | Content ≈ 10…38. Stroke must not cross the plaque. **Do not** clip with `overflow-hidden` |
+| Map | Every `AchievementCode` has one entry in `ACHIEVEMENT_ILLUSTRATIONS` |
+| Read at | Profile tile ~40px **and** unlock toast `AchievementMark` `sm` (~36px) |
+
+**Semantics:** the glyph is a quiz-match mark, not an office chart and not a Steam sticker. It must answer the title. A criteria **family** shares a technique (combo ticks, 2×2 grid, combo-ring, daily stamp, rank pips + chevron) — not 17 copies of a barchart. Squint test: distinct silhouettes.
+
+Allowed vocabulary: round card / sheet of question lines, combo ticks or tally, S-rank or full combo-ring (gapped ring = 90%, no clock hands), daily calendar stamp + cells, **lightning inside a stopwatch dial** (ticks 12/3/6/9 + top nub), arcade scoreboard digits, rank chevrons. Count badges (`MEDIUM_5` / `HARD_3`): a row of pips + the family chevron; medium pips = triangles, hard pips = diamonds (hard also has the boss diamond on the single HARD mark).
+
+Forbidden: `?` as “quiz” (reads as help at 40px), gamepad, cartridge, pixel-art, other-franchise mushrooms/coins, skulls, XP bars, neon, Lucide, PNG/emoji, hourglass (use the dial), growing barcharts for volume, hills for difficulty, overflow-hidden to hide a path that hits x=48.
 
 **Explicitly NOT (still):** rarity/points economy, public LB showcase, admin CRUD, streak achievements, category unlocks, notification inbox, scoring math changes, unlock SQL inside Neon snapshot write path. Do not rename shipped codes without data migration.
 
@@ -1630,7 +1646,7 @@ Important decision: generated questions should not go directly into live quizzes
 - Award from client-submitted score or unsigned ?claim? action.
 - Put unlock logic inside scoring calculation (post-result side effect only).
 - Block result redirect on fragile Neon unlock paths.
-- Invent a second visual language (extend Scoreboard Editorial + existing plaque SVGs).
+- Invent a second visual language (extend Scoreboard Editorial + Quiz Arcade plaque SVGs — see illustration pack rules above). No raster / second icon set for one badge. If a mark is unreadable at 40px, enlarge the primitive — do not shrink copies into dots.
 - `Promise.all` of two `withDirectPgClient` for award/progress context on Windows/`next dev`.
 - Trust client-sent `criteriaCurrent` / `criteriaTarget`.
 
@@ -1656,7 +1672,7 @@ Important decision: generated questions should not go directly into live quizzes
 - Award: `src/features/achievements/lib/award-achievements-for-user.ts`
 - Repo (facts SQL + `findProgressContextByUserId`): `src/entities/user-achievement/user-achievement.repository.ts`
 - Profile list: `src/features/achievements/components/ProfileAchievementsList.tsx`
-- Illustrations: `src/features/achievements/illustrations/index.tsx`
+- Illustrations: `src/features/achievements/illustrations/index.tsx` (Quiz Arcade pack + `ACHIEVEMENT_ILLUSTRATIONS`)
 - Hook: soft-fail in `submitQuizAction` after `completeWithResult`
 - Unlock flash: `?unlocked=` + `AchievementUnlockFlash` (Toast ADR)
 
