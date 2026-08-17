@@ -370,10 +370,10 @@ export const enDictionary = {
         medium: 'Medium',
         hard: 'Hard',
         mixed: 'Mixed',
-        mixedSplitMeta3: 'Mix: 1 easy + 1 medium + 1 hard · weights 1 / 2 / 3',
-        mixedSplitMeta5: 'Mix: 2 easy + 2 medium + 1 hard · weights 1 / 2 / 3',
+        mixedSplitMeta3: 'Mix: 1 easy + 1 medium + 1 hard · points 1 / 2 / 3',
+        mixedSplitMeta5: 'Mix: 2 easy + 2 medium + 1 hard · points 1 / 2 / 3',
         mixedSplitMeta10:
-            'Mix: 4 easy + 3 medium + 3 hard · weights 1 / 2 / 3',
+            'Mix: 4 easy + 3 medium + 3 hard · points 1 / 2 / 3',
         startButton: 'Start classic',
         sessionTitle: 'Quiz session',
         resultTitle: 'Quiz result',

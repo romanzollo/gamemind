@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-16 (Quiz Arcade achievement marks) |
+| **Last updated** | 2026-08-17 (Quiz Arcade on www; mix lobby «очки») |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -330,6 +330,15 @@ Format:
 - Follow-up: ...
 ```
 
+### 2026-08-17 — Mix lobby meta: очки, not веса
+
+- Scope: Fix:UX copy / Prompt T-Feature light
+- Files: `ru.ts` / `en.ts` `quiz.mixedSplitMeta*`
+- What changed visually: lobby mix line `веса` → `очки` (EN `weights` → `points`); Classic + Blitz, all three sizes
+- Explicitly NOT changed: scoring weights, mix split, Prisma
+- Verify: `/quiz` Classic MIX 3 — «очки 1 / 2 / 3»
+- Related: Quiz Arcade marks **verified on www** (user, Aug 17) — see §7 2026-08-16
+
 ### 2026-08-16 — Achievement illustration semantics (Quiz Arcade)
 
 - Scope: Feature:Achievements / Prompt T-Feature (presentation + copy)
@@ -338,7 +347,7 @@ Format:
 - What changed visually: Quiz Arcade plaque pack (round card / combo / S-rank / daily stamp / stopwatch+bolt / scoreboard 250 / rank pips); HARD_3 stays inside plaque; HIGH_ACCURACY_90 is a gapped ring (not a clock); medium triangles vs hard diamonds; titles `Начало` / `Оба режима`; filter chip **Микс**
 - Tokens/components added: none (same plaque + `currentColor`)
 - Explicitly NOT changed: types, evaluate, award, Prisma, snapshot, scoring
-- Verify: `/profile` light/dark ru/en; locked vs unlocked; toast sm; HARD_3 clip; blitz = dial+bolt
+- Verify: `/profile` light/dark ru/en; locked vs unlocked; toast sm; HARD_3 clip; blitz = dial+bolt; **www smoke OK 2026-08-17** (user)
 - Follow-up: new badges follow DECISIONS → Achievements MVP → Illustration pack (Quiz Arcade)
 - Canon: `docs/DECISIONS.md` Achievements MVP (how to add + pack rules)
 
