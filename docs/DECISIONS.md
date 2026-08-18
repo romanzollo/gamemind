@@ -1382,7 +1382,9 @@ Tracking: `ROADMAP.md` ?11.4 / Immediate Next; `PROJECT_CONTEXT.md` Epic 4 Phase
 
 **Why:** admin form does not scale to hundreds; seed is bootstrap/demo; draft/review/publish + `getQuestionPublishQualityIssues` already exist — reuse them. Same JSON shape later becomes the AI/API emit target (Phase 5 leftover).
 
-**Do not:** write `PUBLISHED` on import; skip quality gate; bloat seed; change quiz hot path / scoring / snapshot; start taxonomy for content scale.
+**Status (Aug 18 evening):** mechanics-12 / w2 / w3 **stems** voice-passed in place (local+prod). TEXT quiz pool still **354** (118/118/118); DRAFT did not grow. Stem wording + similar-question rule: `QUESTION_I18N.md` §10. Script: `scripts/voice-pass-mechanics-stems.cjs`. Do not re-import those batches.
+
+**Do not:** write `PUBLISHED` on import; skip quality gate; bloat seed; change quiz hot path / scoring / snapshot; start taxonomy for content scale; re-import published TEXT to “fix” a stem (that inserts duplicates).
 
 **Status (Aug 4 late night):** TEXT steps **1–6 done** — AI emits same `version: 1` JSON; batches in `content/drafts/batches/`; import DRAFT-only; publish via admin on local + **prod**. Prod ops lesson: never confuse local/prod Neon hosts; after quiz schema deploys run prod `migrate deploy` (Aug 4: missing `AchievementOutbox` broke result until catch-up). See `CONTENT_PIPELINE.md` §10. Neon/quiz hot-path canon must not be undone for content work.
 

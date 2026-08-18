@@ -185,9 +185,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 18, 2026 — Mechanics TEXT wave 4 ×24 PUBLISHED local+prod; TEXT pool **354** (118/118/118).
+**Last updated:** August 18, 2026 — Mechanics TEXT wave 4 ×24 PUBLISHED; voice-pass 12/w2/w3 stems in place; TEXT pool still **354** (118/118/118).
 
-**Preferred next:** voice-pass on already-published mechanics-12 / w2 / w3 (livelier stems, same loops; in-place translation UPDATE — **do not re-import**). Mix lobby is live — do not re-implement. Always `migrate deploy` on **prod** after schema deploys (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`). Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24 (TEXT = new UUIDs). No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
+**Preferred next:** mechanics TEXT **wave 5** ×24 (8×EASY/MEDIUM/HARD) — **new loops only**; stems per `QUESTION_I18N.md` §10 (game in the first clause; no clones of occupied loops or of the same syntactic machine). Dupe-check vs seed + C/D/fresh + mechanics-12/w2/w3/w4. Mix lobby is live — do not re-implement. Always `migrate deploy` on **prod** after schema deploys (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`). Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -237,6 +237,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 46. ~~**Friends prod smoke (incl. IMAGE_GUESS)**~~ — Aug 13: user report — friends play TEXT+images, lightbox OK, set records, use leaderboard.
 47. ~~**Mixed-difficulty on prod (`poolKind`)**~~ — Aug 15: migration `20260813220000_quiz_session_pool_kind` on prod Neon; www Classic EASY 3 / MIX + Blitz EASY / MIX start→score (user-verified). Ops: `CONTENT_PIPELINE.md` §10.
 48. ~~**Mechanics TEXT wave 4 ×24**~~ — Aug 18: `2026-08-17-text-mechanics-w4-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **354** (118/118/118) local+prod.
+49. ~~**Mechanics stem voice-pass (12 / w2 / w3)**~~ — Aug 18 evening: in-place `UPDATE` local+prod (`scripts/voice-pass-mechanics-stems.cjs`); same 60 UUIDs; pool still **354**. Canon: `QUESTION_I18N.md` §10.
 
 ### Deploy / hosting checklist (tracking)
 

@@ -3,7 +3,8 @@
 How to write and store quiz questions so **both locales look consistent**.  
 Canon for storage: `QuestionTranslation` + `AnswerOptionTranslation` (locales `ru` | `en`); quiz UI picks text by route locale from snapshot `texts.ru` / `texts.en`.
 
-Related: `docs/QUIZ_IMAGES.md` (IMAGE_GUESS assets), `scripts/seed-questions.cjs`, admin form `AdminQuestionForm`, helper `scripts/fix-ru-answer-labels.cjs`.
+Related: `docs/QUIZ_IMAGES.md` (IMAGE_GUESS assets), `scripts/seed-questions.cjs`, admin form `AdminQuestionForm`, helper `scripts/fix-ru-answer-labels.cjs`.  
+Stem wording + similar-question rule: **§10**. In-place stem UPDATE: `scripts/voice-pass-mechanics-stems.cjs` (`docs/CONTENT_PIPELINE.md`).
 
 ---
 
@@ -207,6 +208,7 @@ opt(false, 'Аркадия', 'Arcadia'),
 ## 9. Definition of done (new question)
 
 - [ ] Question text RU + EN filled  
+- [ ] Stem follows §10 (game in the first clause; not a clone of another loop/syntax)  
 - [ ] Four options; one correct  
 - [ ] Every option has RU **and** EN  
 - [ ] RU option set is one strategy (A or B), not a mix of “localized correct + English distractors”  
@@ -215,3 +217,55 @@ opt(false, 'Аркадия', 'Arcadia'),
 - [ ] IMAGE_GUESS: asset rules in `QUIZ_IMAGES.md`  
 
 When in doubt: **localize distractors the same way you localized the correct answer.**
+
+---
+
+## 10. Question stems (clarity + similar questions)
+
+Rules for **the question sentence** the player reads. Options stay §1–§3. Product taste (felt systems, not trivia) is `CONTENT_PIPELINE.md` → Authoring tip.
+
+### 10.1 One question, game first
+
+The stem is **one sentence** (two only if it is still one thought). The **game title is in the first clause**, not after a scene the player cannot place.
+
+| Bad (rejected Aug 18) | Good |
+|------------------------|------|
+| Бой почти замер, ты кликаешь очередь по голове и рукам. Что в Fallout 3 / New Vegas / 4 обычно тратится на эти выстрелы? | Что в Fallout 3 / New Vegas / 4 тратится на выстрелы по частям тела в режиме V.A.T.S., где время почти замирает? |
+| Хочется моргнуть через карниз ещё раз — а сила не идёт. Что в Dishonored… | Что в Dishonored ограничивает, как часто можно использовать сверхъестественные силы? |
+
+A collage of situations **then** the title forces the player to hold an unexplained scene. Name the game, then the loop they feel with their hands.
+
+Cinematic openings in `2026-08-17-text-mechanics-w4-24.json` are **optional spice for a single item**, not a conveyor for a whole wave (`сцена — тире — что игра делает?` on every row is the same machine as `В [игра] что обычно происходит, если…`).
+
+### 10.2 Similar questions — rewrite or drop
+
+A new TEXT item is **too similar** if any of these hold:
+
+1. **Same loop** as seed, C/D/fresh, or an earlier mechanics batch (Halo shield regen, BotW climb stamina, Pac-Man energizer, …). Occupied loops live in the latest mechanics JSON `notes`.
+2. **Same syntactic machine** as the previous two questions in the same file (three `Что в [Game] обычно происходит, если…` in a row, or three scene-then-title dashes).
+3. **Same hands-feel** as another item in the same wave even if the franchise differs (two “bar drains while you hold a button”, two “one hit = restart”).
+4. **Trivia clone** (year, studio, character name) dressed as a mechanic.
+
+Vary the **verb** inside the wave: что делает / зачем / откуда / чем платят / как / что будет с. A wave of 24 copies of «что обычно происходит» is a fail even if every game is unique.
+
+### 10.3 Stem must not
+
+- Spoil the correct option (the answer lives in the four choices).
+- Use «не X и не Y» instead of a normal Russian/English question.
+- Use a wrong local name for a power (Dishonored Blink is **Перенос**, not «моргнуть»).
+- Mix **S.P.E.C.I.A.L.** (attributes) with **V.A.T.S.** (targeting mode that freezes time).
+- Stamp канцелярит on every row: «обычно происходит», «как правило», «в данном случае».
+
+RU: as if explaining to a friend on the couch. EN: the same meaning, living English, not a word-for-word calque. Both locales must be real translations (§1), not a pasted copy.
+
+### 10.4 Already published — replace, do not import
+
+TEXT import always **INSERT**s new UUIDs (`draftKey` is not stored in Neon). Re-importing mechanics-12 / w2 / w3 / w4 / C / D / fresh / samples **duplicates the quiz pool**.
+
+To change only the stem of existing PUBLISHED TEXT: `UPDATE Question.text` + `QuestionTranslation`, matched by **four RU option texts + difficulty**. Do not touch options, `isCorrect`, or `publicationStatus`.
+
+Script: `scripts/voice-pass-mechanics-stems.cjs` — `--dry-run` (expect matched = JSON count, missing 0) → local apply → `--target=prod` (host ≠ `jolly-river`). Do **not** pass `--write-json` after hand-editing JSON; that map overwrites stems.
+
+After apply: `npm run content:smoke-text` and `--target=prod`. Quiz pool count **must not grow**; DRAFT must not appear.
+
+Already-started sessions keep the old snapshot (§2); only **new** quizzes see the new stem.
