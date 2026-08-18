@@ -17,7 +17,7 @@ function localizedHref(locale: Locale, href: string) {
 }
 
 const cardClassName =
-    'group flex flex-col rounded-lg border border-border bg-surface p-5 shadow-sm transition hover:border-primary/35 hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:p-6';
+    'group flex h-full min-w-0 flex-col rounded-lg border border-border bg-surface p-5 shadow-sm transition hover:border-primary/35 hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:p-6';
 
 const cardChevronClassName =
     'text-base font-medium text-primary/70 transition group-hover:translate-x-0.5 group-hover:text-primary';
@@ -27,6 +27,31 @@ const statLabelClassName =
 
 const statValueClassName =
     'font-mono text-2xl font-medium tabular-nums tracking-tight text-foreground sm:text-3xl';
+
+const cardDescriptionClassName =
+    'mt-auto pt-4 text-sm leading-relaxed text-muted';
+
+/** Одна клетка scoreboard на хабе: caps-лейбл + mono-число. */
+function HubStat({
+    label,
+    value,
+    muted = false,
+}: {
+    label: string;
+    value: number;
+    muted?: boolean;
+}) {
+    return (
+        <div className="min-w-0">
+            <dt className={statLabelClassName}>{label}</dt>
+            <dd
+                className={`${statValueClassName} mt-1${muted ? ' text-muted' : ''}`}
+            >
+                {value}
+            </dd>
+        </div>
+    );
+}
 
 export default async function AdminHomePage({ params }: AdminHomePageProps) {
     const { locale } = await params;
@@ -108,32 +133,43 @@ export default async function AdminHomePage({ params }: AdminHomePageProps) {
                     </div>
 
                     {counts !== null ? (
-                        <dl className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4">
-                            <div>
-                                <dt className={statLabelClassName}>
-                                    {dictionary.admin.homeStatQuestionsActive}
-                                </dt>
-                                <dd className={`${statValueClassName} mt-1`}>
-                                    {counts.questionsActive}
-                                </dd>
-                            </div>
-                            <div>
-                                <dt className={statLabelClassName}>
-                                    {
+                        <dl className="mt-4 border-t border-border pt-4">
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                                <HubStat
+                                    label={
+                                        dictionary.admin
+                                            .homeStatQuestionsActive
+                                    }
+                                    value={counts.questionsActive}
+                                />
+                                <HubStat
+                                    label={
                                         dictionary.admin
                                             .homeStatQuestionsInactive
                                     }
-                                </dt>
-                                <dd
-                                    className={`${statValueClassName} mt-1 text-muted`}
-                                >
-                                    {counts.questionsInactive}
-                                </dd>
+                                    value={counts.questionsInactive}
+                                    muted
+                                />
+                            </div>
+                            <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4">
+                                <HubStat
+                                    label={
+                                        dictionary.admin
+                                            .homeStatQuestionsImage
+                                    }
+                                    value={counts.questionsImage}
+                                />
+                                <HubStat
+                                    label={
+                                        dictionary.admin.homeStatQuestionsText
+                                    }
+                                    value={counts.questionsText}
+                                />
                             </div>
                         </dl>
                     ) : null}
 
-                    <p className="mt-4 text-sm leading-relaxed text-muted">
+                    <p className={cardDescriptionClassName}>
                         {dictionary.admin.questionsCardDescription}
                     </p>
                 </a>
@@ -152,15 +188,15 @@ export default async function AdminHomePage({ params }: AdminHomePageProps) {
                     </div>
 
                     {counts !== null ? (
-                        <p
-                            className={`${statValueClassName} mt-4 border-t border-border pt-4`}
-                            aria-label={`${dictionary.admin.homeStatUsers}: ${counts.usersTotal}`}
-                        >
-                            {counts.usersTotal}
-                        </p>
+                        <dl className="mt-4 border-t border-border pt-4">
+                            <HubStat
+                                label={dictionary.admin.homeStatUsers}
+                                value={counts.usersTotal}
+                            />
+                        </dl>
                     ) : null}
 
-                    <p className="mt-4 text-sm leading-relaxed text-muted">
+                    <p className={cardDescriptionClassName}>
                         {dictionary.admin.usersCardDescription}
                     </p>
                 </Link>

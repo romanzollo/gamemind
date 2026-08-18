@@ -12,6 +12,16 @@ export type AdminHomeCounts = {
     usersTotal: number;
     questionsActive: number;
     questionsInactive: number;
+    /**
+     * Все строки Question с type = IMAGE_GUESS (не фильтр isActive).
+     * Инвариант: questionsText + questionsImage === questionsActive + questionsInactive.
+     */
+    questionsImage: number;
+    /**
+     * Все строки Question с type = TEXT (не фильтр isActive).
+     * Считать по enum, не по наличию QuestionAsset.
+     */
+    questionsText: number;
     /** Сессии, у которых startedAt ≥ начало текущих суток UTC. */
     sessionsToday: number;
 };
@@ -20,6 +30,8 @@ type AdminHomeCountsRow = {
     users_total: number;
     questions_active: number;
     questions_inactive: number;
+    questions_image: number;
+    questions_text: number;
     sessions_today: number;
 };
 
@@ -52,6 +64,16 @@ export async function findAdminHomeCounts(): Promise<AdminHomeCounts> {
                     AS "questions_inactive",
                 (
                     SELECT COUNT(*)::int
+                    FROM "Question"
+                    WHERE "type" = 'IMAGE_GUESS'::"QuestionType"
+                ) AS "questions_image",
+                (
+                    SELECT COUNT(*)::int
+                    FROM "Question"
+                    WHERE "type" = 'TEXT'::"QuestionType"
+                ) AS "questions_text",
+                (
+                    SELECT COUNT(*)::int
                     FROM "QuizSession"
                     WHERE "startedAt" >= $1
                 ) AS "sessions_today"
@@ -65,6 +87,8 @@ export async function findAdminHomeCounts(): Promise<AdminHomeCounts> {
             usersTotal: Number(row?.users_total ?? 0),
             questionsActive: Number(row?.questions_active ?? 0),
             questionsInactive: Number(row?.questions_inactive ?? 0),
+            questionsImage: Number(row?.questions_image ?? 0),
+            questionsText: Number(row?.questions_text ?? 0),
             sessionsToday: Number(row?.sessions_today ?? 0),
         };
     });

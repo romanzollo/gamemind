@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-17 (Quiz Arcade on www; mix lobby «очки») |
+| **Last updated** | 2026-08-18 (Admin hub TEXT/IMAGE_GUESS glance) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -74,7 +74,7 @@ Phase 5 modes / achievements inherit the system
 | `/result/[sessionId]` | owner | good structure | Summary + review filters; IMAGE_GUESS lightbox same component |
 | `/leaderboard` | public | **scoreboard + difficulty + period filters** | Phone strip + sm+ table; podium 1–3; segmented `?period=` then `?difficulty=` |
 | `/profile` | user | **identity strip + dense stats 2×2/4-col + 2-col mid + compact achievements + settings details** | order: strip → stats/achievements\|history → settings; stats = full-width 2×2 until lg |
-| `/admin` | admin | **home counts + Scoreboard polish** | Entry + glanceable counts; Questions / Users cards |
+| `/admin` | admin | **home counts + Scoreboard polish** | Sessions strip; Questions 2×2 (status × format); Users total caption |
 | `/admin/questions` (+ new/edit) | admin | **paginated list + draft/bulk + contextual toolbar** | `?page=` (25/page); checkboxes; toolbar Visibility/Publication; desktop Edit + more; publication filter; edit quality panel |
 | `/admin/users` | admin | **questions-pattern list** | cards `&lt;lg`; sticky nowrap actions `lg+`; link → detail |
 | `/admin/users/[id]` | admin | **profile-pattern history** | read-only card; history like ProfileResultHistory; no Обзор |
@@ -329,6 +329,22 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-18 — Admin hub: TEXT / IMAGE_GUESS glance + card rhythm
+
+- Scope: Feature:Admin QoL / Prompt T-Feature (Scoreboard Editorial)
+- Skills used: gamemind-taste-ui
+- Files touched: `src/app/[locale]/admin/page.tsx`, `src/app/[locale]/admin/loading.tsx`, `src/entities/admin/admin-home.repository.ts`, i18n `admin.homeStatQuestionsImage` / `homeStatQuestionsText` / `homeStatUsers`
+- What changed visually:
+  - Questions card: 2×2 `<dl>` (Active | Inactive, then Image | Text);
+  - hairline between status and format rows; same mono tabular values as Active; Inactive stays `text-muted`;
+  - equal hairline padding (`pt-4`); descriptions `mt-auto` so both card footers share a baseline on `sm+`;
+  - Users card: same dt/dd chrome; caption **Всего** / **Total** (not a second «Пользователи»);
+  - hub loading: sessions strip pulse + taller cards, padding matches live page.
+- Tokens/components added: local `HubStat` on the hub page (not a shared primitive)
+- Explicitly NOT changed: extra user metrics; questions list/filters/bulk; Prisma/migrations; quiz hot path; Taste tokens/fonts; nested `?type=` links; icons/badges/charts
+- Verify: `/ru/admin` + `/en/admin` light/dark; 320 + desktop; Image + Text === Active + Inactive; both cards one link; focus ring intact
+- Follow-up: none for this slice
 
 ### 2026-08-17 — Mix lobby meta: очки, not веса
 
@@ -1578,6 +1594,7 @@ No app routing, no quiz logic.
 
 **Ongoing admin UI backlog:**
 
+- [x] Admin hub: TEXT / IMAGE_GUESS glance counts on Questions card + Users total caption / card rhythm. (2026-08-18)
 - [x] Admin questions: edit-page publication controls + publicationStatus URL filter. (2026-07-26 late)
 - [x] Admin questions: primary row action + “more” menu (desktop). (2026-07-27) Desktop = Edit + `⋯`; publication/isActive/delete in menu; native `<details>`; linear forward CTAs; list cache row-patch for snappy redirects.
 - [x] Daily Challenge CTA on home + quiz setup (2026-07-30) — Scoreboard panel; guest→login; start/continue/result.

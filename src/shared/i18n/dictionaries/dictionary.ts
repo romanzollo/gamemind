@@ -191,10 +191,17 @@ export type Dictionary = {
         homeDescription: string;
         questionsCardDescription: string;
         usersCardDescription: string;
-        /** Подписи агрегатов на хабе `/admin` (числа подставляются в JSX). */
+        /**
+         * Подписи агрегатов на хабе `/admin` (числа подставляются в JSX).
+         * homeStatUsers — подпись числа на карточке Users, не дублирует usersLink.
+         */
         homeStatUsers: string;
         homeStatQuestionsActive: string;
         homeStatQuestionsInactive: string;
+        /** Формат IMAGE_GUESS на хабе `/admin` (uppercase-лейбл, не formQuestionTypeImageGuess). */
+        homeStatQuestionsImage: string;
+        /** Формат TEXT на хабе `/admin` (uppercase-лейбл, не formQuestionTypeText). */
+        homeStatQuestionsText: string;
         homeStatSessionsToday: string;
         /** Когда COUNT на Neon не удался — хаб всё равно открывается. */
         homeCountsUnavailable: string;

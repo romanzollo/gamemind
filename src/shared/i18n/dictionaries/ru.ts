@@ -177,9 +177,11 @@ export const ruDictionary: Dictionary = {
             'Список, создание, редактирование и активация вопросов.',
         usersCardDescription:
             'Роли, деактивация и удаление аккаунтов.',
-        homeStatUsers: 'Пользователи',
+        homeStatUsers: 'Всего',
         homeStatQuestionsActive: 'Активные',
         homeStatQuestionsInactive: 'Неактивные',
+        homeStatQuestionsImage: 'Картинки',
+        homeStatQuestionsText: 'Текст',
         homeStatSessionsToday: 'Сессий сегодня',
         homeCountsUnavailable: 'Статистика временно недоступна.',
         retryLoad: 'Повторить загрузку',
