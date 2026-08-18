@@ -1,0 +1,1197 @@
+{
+  "version": 1,
+  "source": "manual",
+  "notes": "Mechanics TEXT wave 5 — 24 questions (8×EASY/MEDIUM/HARD). Felt systems, not trivia. Stems: QUESTION_I18N §10 (game in first clause; no scene-dash conveyor; vary verbs). Distractors: §3 D (plausible mix-ups, not cartoon leftovers). Do not re-import seed/C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni/Quen, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally/Insight, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, SMB grown-hit, Pac-Man energizer, Tetris line-clear, SUPERHOT time, Subnautica oxygen, Smash %, Stardew energy, GTA wanted, Mario Kart mini-turbo, Rocket League boost, BioShock EVE, Dishonored mana, Dead Space stasis, Cuphead pink parry, Slay the Spire energy, Fallout VATS, Sifu age-on-death, Returnal malfunction, FTL power, Into the Breach telegraph, Darkest Dungeon stress, Shadow of Mordor orc rank, NecroDancer miss-beat, Baba Is You rules, Katamari grow, Fortnite storm, Sims needs, GoW axe recall, Among Us body report, Hotline one-hit, Metroid morph ball, Beat Saber slash, Persona 5 One More, XCOM high cover, RE inventory, Alan Wake flashlight, Gungeon blank, Witcher toxicity, Valheim food caps, Pikmin sunset, MGS alert phases, Papers Please daily rules, Risk of Rain time-difficulty, Ikaruga polarity, Don't Starve darkness, DOS2 armor/CC, Inscryption blood, Odyssey Cappy, Angry Birds slingshot, Crash Aku Aku, SF super meter, AC real clock, Vampire Survivors level-up, Star Fox barrel roll, Undertale spare, DS roll i-frames, Isaac devil deals, CP2077 RAM, Helldivers stratagem codes, DBD generators, FF7 Limit, Tsushima stances, Spelunky ghost, Invisible Inc alarm, Thief light gem, NieR chip cap, Cult of the Lamb base, Frostpunk Hope/Discontent, Factorio pollution, DMC style rank, Prey Mimic, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf / Kirby inhale / HL2 gravity gun). W5 loops: Mega Man copy weapon, Overcooked tickets, Bomberman blast, Minecraft crafting grid, Fortnite build, Fall Guys qualify, Apex ping, Zelda heart pieces, Siege reinforce, DRG nitra, Horizon tear, MGS cardboard box, StarCraft supply, Braid rewind, Phasmophobia evidence, Ori Bash, Fire Emblem permadeath, Death Stranding timefall, BG3 concentration, Alien Isolation hunter, Disco Thought Cabinet, Balatro jokers, Elden Ring spirit ashes, MH capture.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-megaman-copy-weapon",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Mega Man",
+        "game": "Mega Man",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в классическом Mega Man остаётся у героя, когда очередной Робот-мастер побеждён?"
+        },
+        "en": {
+          "text": "In classic Mega Man, what stays with the hero after another Robot Master goes down?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Оружие этого босса — его можно выбрать и стрелять дальше" },
+            "en": { "text": "That boss’s weapon — you can pick it and keep firing it" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Босс оставляет только танк энергии; набор выстрелов тот же" },
+            "en": { "text": "The boss only drops an energy tank; your shot set stays the same" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Оружие босса работает только на его стадии и пропадает на других уровнях" },
+            "en": { "text": "The boss’s weapon only works on that stage and vanishes on other levels" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Открывается просто телепорт к следующему боссу, без нового слота" },
+            "en": { "text": "You just unlock a teleport to the next boss, with no new weapon slot" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-overcooked-tickets",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Overcooked",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Overcooked нужно успеть, пока на кухне тикает таймер смены?"
+        },
+        "en": {
+          "text": "In Overcooked, what do you need to finish while the kitchen shift timer is ticking?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Собрать заказы с тикетов и отдать готовые тарелки" },
+            "en": { "text": "Complete the ticket orders and serve the finished plates" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Достаточно порезать ингредиенты — относить тарелку не нужно" },
+            "en": { "text": "Chopping the ingredients is enough — you don’t have to deliver the plate" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно самому съесть блюдо, иначе заказ не засчитают" },
+            "en": { "text": "You have to eat the dish yourself or the order won’t count" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тикеты копятся без штрафа; таймер влияет только на звёзды после смены" },
+            "en": { "text": "Tickets pile up with no penalty; the timer only affects stars after the shift" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-bomberman-blast",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Bomberman",
+        "game": "Bomberman",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем в Bomberman обычно разносят мягкие блоки и достают до соперника?"
+        },
+        "en": {
+          "text": "In Bomberman, what do you use to tear through soft blocks and reach a rival?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Взрывом своей бомбы — луч идёт крестом и бьёт и тебя, если не отойти" },
+            "en": { "text": "Your own bomb’s blast — the beam goes in a cross and hits you too if you don’t move" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Взрыв идёт только в ту сторону, куда смотришь" },
+            "en": { "text": "The blast only goes the way you are facing" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Свои бомбы тебя не задевают, только чужие" },
+            "en": { "text": "Your own bombs never hurt you, only other players’ bombs" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Бомба толкает мягкие блоки, но не уничтожает их" },
+            "en": { "text": "The bomb shoves soft blocks but does not destroy them" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-minecraft-crafting-grid",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Minecraft",
+        "game": "Minecraft",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как в Minecraft из дерева, палок и руды собирают сундук, меч или кирку?"
+        },
+        "en": {
+          "text": "In Minecraft, how do wood, sticks, and ore become a chest, a sword, or a pickaxe?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "По рецепту в сетке крафта — на верстаке она больше, чем в инвентаре" },
+            "en": { "text": "By a recipe in the crafting grid — the crafting table’s grid is larger than the inventory one" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Всё собирается в сетке 2×2 в инвентаре; верстак только стоит для декора" },
+            "en": { "text": "Everything is made in the 2×2 inventory grid; the crafting table is only decoration" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ресурсы отдаёшь жителю — готовый предмет приходит в обмен, без сетки" },
+            "en": { "text": "You hand resources to a villager and get the finished item in trade, with no grid" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сложил ресурсы в сундук и подождал — предмет появляется сам" },
+            "en": { "text": "You dump the resources in a chest, wait, and the item appears on its own" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-fortnite-build",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fortnite",
+        "game": "Fortnite",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Зачем в Fortnite Battle Royale в перестрелке жмут строительство на дерево, кирпич или металл?"
+        },
+        "en": {
+          "text": "In Fortnite Battle Royale, why spend wood, brick, or metal on building in a firefight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Чтобы за секунды поставить стену, пол или рампу и закрыться от огня" },
+            "en": { "text": "To slap down a wall, floor, or ramp in a second and cover yourself from fire" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ресурс уходит в аптечки и щиты, не в геометрию" },
+            "en": { "text": "The resource goes into medkits and shields, not into geometry" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Строить можно только до первого круга; в перестрелке режим выключен" },
+            "en": { "text": "Building only works before the first circle; it turns off in a firefight" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Постройки ставятся как декорации и не держат пули" },
+            "en": { "text": "Builds are placed as decoration and do not stop bullets" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-fall-guys-qualify",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Fall Guys",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как в Fall Guys попадают из одного раунда в следующий?"
+        },
+        "en": {
+          "text": "In Fall Guys, how do you get from one round into the next?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Нужно оказаться среди тех, кого пустили дальше — первое место не обязательно" },
+            "en": { "text": "You need to be among those who qualify — first place is not required" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Дальше идёт только тот, кто финишировал первым" },
+            "en": { "text": "Only whoever finished first goes on" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нужно набрать очки нокаутами, как в обычном PvP" },
+            "en": { "text": "You need knockout points, like a regular PvP match" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Проход решает голосование лобби, результат раунда почти не важен" },
+            "en": { "text": "A lobby vote decides who advances; the round result barely matters" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-apex-ping",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Apex Legends",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Откуда в Apex Legends у союзников на экране берётся метка на лут или на врага, если микрофон выключен?"
+        },
+        "en": {
+          "text": "In Apex Legends, where do teammates get an on-screen marker on loot or an enemy when the mic is off?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "С пинга: ты указал точку, и команда её видит" },
+            "en": { "text": "From a ping: you mark the spot and the squad sees it" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Союзники слышат только голосовую реплику, метки в мире нет" },
+            "en": { "text": "Teammates only hear a voice line; there is no marker in the world" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пингом можно пометить только врага, лут и точку — нет" },
+            "en": { "text": "A ping can mark only an enemy, not loot or a location" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Метка видна только тебе, пока союзник не откроет карту" },
+            "en": { "text": "The marker is only visible to you until an ally opens the map" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-easy-zelda-heart-pieces",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "The Legend of Zelda",
+        "game": "The Legend of Zelda",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в The Legend of Zelda происходит со шкалой здоровья, когда собрано достаточно кусков сердца?"
+        },
+        "en": {
+          "text": "In The Legend of Zelda, what happens to the health bar when you have collected enough Pieces of Heart?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Добавляется ещё одно сердце — потолок HP становится выше" },
+            "en": { "text": "Another heart is added — your max HP goes up" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Куски сердца сразу лечат раны, максимум шкалы не меняется" },
+            "en": { "text": "Heart pieces heal current damage right away; the bar’s maximum does not change" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Четыре куска дают рупии или ключ, не контейнер HP" },
+            "en": { "text": "Four pieces give rupees or a key, not an HP container" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Новый контейнер держится только до выхода из текущего данжа" },
+            "en": { "text": "The new container lasts only until you leave the current dungeon" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-siege-reinforce",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Rainbow Six",
+        "game": "Rainbow Six Siege",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Rainbow Six Siege даёт укрепление, которое кладут на стену в начале раунда?"
+        },
+        "en": {
+          "text": "In Rainbow Six Siege, what does reinforcing a wall at the start of the round give you?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Стену становится намного труднее пробить — обычная очередь уже не делает дыру так легко" },
+            "en": { "text": "The wall becomes much harder to breach — a regular spray no longer opens a hole so easily" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Укрепление только меняет вид стены, прочность та же" },
+            "en": { "text": "Reinforce only changes how the wall looks; the strength stays the same" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Укреплённую стену нельзя пробить вообще, даже взрывчаткой" },
+            "en": { "text": "A reinforced wall cannot be breached at all, even with explosives" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Укрепление глушит шаги за стеной, но держит пули как обычный гипсокартон" },
+            "en": { "text": "Reinforce muffles footsteps behind the wall but still stops bullets like ordinary drywall" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-drg-nitra",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Deep Rock Galactic",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Зачем в Deep Rock Galactic на миссии таскают красную нитру, если золото уже можно нести в Молли?"
+        },
+        "en": {
+          "text": "In Deep Rock Galactic, why haul red nitra on a mission if gold can already go in Molly?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "За нитру вызывают ящик с патронами и лечением с орбиты" },
+            "en": { "text": "Nitra is what you spend to call a resupply pod of ammo and healing from orbit" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нитру сдают как золото — за неё капает XP миссии" },
+            "en": { "text": "You cash nitra in like gold — it pays mission XP" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Нитрой лечатся на месте, как красным сахаром" },
+            "en": { "text": "You heal on the spot with nitra, like red sugar" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Без нитры нельзя вызвать дроп-под эвакуации в конце" },
+            "en": { "text": "Without nitra you cannot call the drop pod for extraction at the end" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-horizon-tear",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Horizon",
+        "game": "Horizon Zero Dawn",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Horizon Zero Dawn происходит с машиной, когда попадаешь в светящийся узел на корпусе?"
+        },
+        "en": {
+          "text": "In Horizon Zero Dawn, what happens to a machine when you hit a glowing node on its body?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Узел срывается: у машины часто отваливается это оружие, а с детали падает лут" },
+            "en": { "text": "The node tears off: that weapon often falls off the machine, and the part drops loot" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "По узлу просто больше урон, деталь остаётся на корпусе" },
+            "en": { "text": "The node just takes extra damage; the part stays on the body" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Попадание в узел сразу взрывает машину целиком" },
+            "en": { "text": "Hitting the node instantly blows the whole machine up" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Сорванный узел чинит машину, если его сразу не подобрать" },
+            "en": { "text": "A torn-off node repairs the machine if you do not pick it up right away" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-mgs-box",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Metal Gear",
+        "game": "Metal Gear Solid",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как в Metal Gear Solid картонная коробка помогает на базе, пока охрана не подошла вплотную?"
+        },
+        "en": {
+          "text": "In Metal Gear Solid, how does the cardboard box help on a base until a guard gets up close?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "В ней можно ползти и чаще остаться незамеченным" },
+            "en": { "text": "You can crawl inside it and more often stay unseen" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Охранник никогда не проверяет коробку, даже вплотную" },
+            "en": { "text": "A guard never checks the box, even at point-blank range" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Коробка сама сбрасывает тревогу до спокойствия" },
+            "en": { "text": "The box itself drops the alert all the way back to quiet" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Из коробки можно стрелять, не снимая её" },
+            "en": { "text": "You can shoot from inside the box without taking it off" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-starcraft-supply",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "StarCraft",
+        "game": "StarCraft",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Почему в StarCraft очередь на следующего юнита становится серой, хотя минералы и газ ещё есть?"
+        },
+        "en": {
+          "text": "In StarCraft, why does the next unit in the build queue go grey when you still have minerals and gas?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Упёрлись в лимит снабжения — нужны депо, пилоны или оверлорды" },
+            "en": { "text": "You have hit the supply cap — you need depots, pylons, or overlords" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Закончилась очередь у этого здания — нужен второй завод, кап армии ни при чём" },
+            "en": { "text": "That building’s queue is full — you need a second factory; army cap has nothing to do with it" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Не хватает рабочих на минералах: без них производство блокируется, даже если ресурс уже в банке" },
+            "en": { "text": "You don’t have enough workers on minerals: production locks until they mine, even if the bank already has the resource" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Юнит серый, пока не куплено улучшение оружия в кузнице" },
+            "en": { "text": "The unit stays grey until you buy the weapon upgrade at the forge" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-braid-rewind",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Braid",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Braid происходит с уровнем, если после прыжка мимо платформы зажать кнопку времени?"
+        },
+        "en": {
+          "text": "In Braid, what happens to the level if you hold the time button after missing a platform?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Всё отматывается назад — можно прыгнуть заново, не с чекпоинта" },
+            "en": { "text": "Everything rewinds — you can jump again without a checkpoint restart" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Время только замедляется, пока кнопка зажата; ошибки остаются" },
+            "en": { "text": "Time only slows while the button is held; the mistakes stay" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Отматывается только Тим, шипы и враги стоят как были" },
+            "en": { "text": "Only Tim rewinds; spikes and enemies stay where they were" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Кнопка кидает на ближайший чекпоинт, как обычный рестарт" },
+            "en": { "text": "The button dumps you at the nearest checkpoint, like a normal restart" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-phasmophobia-evidence",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Phasmophobia",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Откуда в Phasmophobia берётся уверенность, какого призрака вписать в журнал?"
+        },
+        "en": {
+          "text": "In Phasmophobia, where does the confidence come from when you write a ghost type into the journal?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "С улик приборов: ЭМП, радио, отпечатки и остальные складываются в тип" },
+            "en": { "text": "From equipment evidence: EMF, spirit box, fingerprints and the rest add up to a type" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "По уровню рассудка: чем он ниже, тем точнее имя в журнале само" },
+            "en": { "text": "From sanity: the lower it is, the more accurately the journal fills the name by itself" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Достаточно фото призрака — журнал заполняет тип сам" },
+            "en": { "text": "A ghost photo is enough — the journal fills in the type on its own" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Тип пишут по поведению (прячется / охотится), улики для галочки" },
+            "en": { "text": "You pick the type from behaviour (hides / hunts); evidence is just for show" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-med-ori-bash",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Ori and the Blind Forest",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Ori and the Blind Forest происходит, если в воздухе зацепить врага или снаряд и отпустить в выбранную сторону?"
+        },
+        "en": {
+          "text": "In Ori and the Blind Forest, what happens if you latch onto an enemy or projectile in the air and release toward a chosen direction?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Ори отталкивается, а цель часто летит туда, куда направил" },
+            "en": { "text": "Ori is launched away, and the target often flies the way you aimed" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Ори телепортируется в точку зацепа, снаряд летит как летел" },
+            "en": { "text": "Ori teleports to the latch point; the projectile keeps its old path" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Враг или снаряд замирает, Ори падает вниз" },
+            "en": { "text": "The enemy or projectile freezes, and Ori falls downward" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Это обычный второй прыжок; направление снаряда не меняется" },
+            "en": { "text": "It is just a double jump; the projectile’s direction does not change" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-fe-permadeath",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Fire Emblem",
+        "game": "Fire Emblem",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Fire Emblem на классической сложности будет с юнитом, если его HP в бою упало в ноль?"
+        },
+        "en": {
+          "text": "In Fire Emblem on Classic difficulty, what happens to a unit if its HP hits zero in battle?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он погибает навсегда — в следующих картах его уже нет" },
+            "en": { "text": "It dies for good — it is gone from later maps" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Он отступает с карты и в следующих главах возвращается с 1 HP" },
+            "en": { "text": "It retreats from the map and comes back in later chapters with 1 HP" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Его сразу можно купить того же в магазине, как наёмника" },
+            "en": { "text": "You can immediately buy that same hero from the shop as a mercenary" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Отряд автоматически тратит эликсир, и бой идёт дальше" },
+            "en": { "text": "The army automatically spends an elixir and the fight continues" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-ds-timefall",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Death Stranding",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Death Stranding делает timefall с грузом на спине?"
+        },
+        "en": {
+          "text": "In Death Stranding, what does timefall do to the cargo on your back?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Дождь портит упаковку — груз изнашивается и может пострадать" },
+            "en": { "text": "The rain wears the packaging down — cargo degrades and can be ruined" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Дождь только замедляет ходьбу, посылки не трогает" },
+            "en": { "text": "The rain only slows your walk; the packages are untouched" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Под дождём груз наоборот восстанавливается" },
+            "en": { "text": "Under the rain, cargo actually repairs itself" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Timefall сам отправляет посылки на склад, лишь бы не уронить" },
+            "en": { "text": "Timefall ships the packages to storage by itself, as long as you do not drop them" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-bg3-concentration",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Baldur's Gate",
+        "game": "Baldur's Gate 3",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Baldur’s Gate 3 будет с некоторыми длящимися заклинаниями, если кастера ударили, пока эффект ещё висит?"
+        },
+        "en": {
+          "text": "In Baldur’s Gate 3, what happens to some lingering spells if the caster is hit while the effect is still up?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Идёт проверка: при провале эффект спадает" },
+            "en": { "text": "A check is rolled: on a failure the effect drops" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Заклинание держится до конца боя, попадания по кастеру не важны" },
+            "en": { "text": "The spell lasts until the fight ends; hits on the caster do not matter" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Эффект сбивается только когда кончаются ячейки заклинаний" },
+            "en": { "text": "The effect only drops when you run out of spell slots" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Удар по кастеру усиливает заклинание до следующего хода" },
+            "en": { "text": "A hit on the caster empowers the spell until the next turn" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-alien-isolation-hunter",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Alien",
+        "game": "Alien: Isolation",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем в Alien: Isolation обычно оборачивается дуэль с ксеноморфом из пистолета в открытую?"
+        },
+        "en": {
+          "text": "In Alien: Isolation, how does a pistol duel with the xenomorph out in the open usually go?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Он почти не снимается твоим оружием — прятаться и отвлекать надёжнее" },
+            "en": { "text": "Your gun barely drops it — hiding and distracting is more reliable" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Очередь в голову убивает его, как обычного врага FPS" },
+            "en": { "text": "A burst to the head kills it, like a regular FPS enemy" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "После нескольких попаданий он навсегда уходит с этажа" },
+            "en": { "text": "After a few hits it leaves that floor for good" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Огнемёт убивает насовсем с одного зажатия, револьвер — нет" },
+            "en": { "text": "The flamethrower kills it for good from one hold; the revolver does not" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-disco-thought-cabinet",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Disco Elysium",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Disco Elysium делает кабинет мыслей с идеей, которую туда положил?"
+        },
+        "en": {
+          "text": "In Disco Elysium, what does the Thought Cabinet do with an idea you put in it?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Она какое-то время настаивается, потом даёт постоянный эффект — не всегда приятный" },
+            "en": { "text": "It incubates for a while, then grants a lasting effect — not always a pleasant one" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Мысль срабатывает сразу одним кликом, без времени на настой" },
+            "en": { "text": "The thought fires instantly on one click, with no incubating time" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Пока мысль «варится», с людьми говорить нельзя" },
+            "en": { "text": "While the thought is brewing, you cannot talk to people" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "В кабинет можно положить только одну мысль за всю игру" },
+            "en": { "text": "You can put only one thought in the cabinet for the whole game" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-balatro-jokers",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Balatro",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Зачем в Balatro держат джокеров на стойке, если комбинацию уже собрали картами руки?"
+        },
+        "en": {
+          "text": "In Balatro, why keep jokers on the stand if you already made the poker hand with cards?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Они меняют подсчёт — фишки, множители, иногда сами правила комбинации" },
+            "en": { "text": "They change the scoring — chips, multipliers, sometimes the hand’s rules themselves" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Джокеры нужны только чтобы открыть следующий анте, на счёт не влияют" },
+            "en": { "text": "Jokers only unlock the next ante; they do not affect the score" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Каждый джокер даёт лишнюю руку в раунде, формула очков та же" },
+            "en": { "text": "Each joker grants an extra hand in the round; the scoring formula stays the same" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Джокеры сгорают как карты руки: сыграл раунд — и они уходят" },
+            "en": { "text": "Jokers burn like hand cards: you play the round and they are gone" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-er-spirit-ashes",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Elden Ring",
+        "game": "Elden Ring",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Зачем в Elden Ring в бою с боссом достают прах духов?"
+        },
+        "en": {
+          "text": "In Elden Ring, why pull out Spirit Ashes in a boss fight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Призываешь союзника, который дерётся рядом, пока его не собьют" },
+            "en": { "text": "You summon an ally that fights beside you until it is downed" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Прах просто восстанавливает HP, как фляга" },
+            "en": { "text": "The ashes simply restore HP, like a flask" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Прах сохраняет прогресс, как место благодати" },
+            "en": { "text": "The ashes save your progress, like a Site of Grace" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Прах усиливает оружие до конца локации, напарника не появляется" },
+            "en": { "text": "The ashes buff your weapon until you leave the area; no partner appears" }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-08-18-mech-w5-hard-mh-capture",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "franchise": "Monster Hunter",
+        "game": "Monster Hunter",
+        "topic": "mechanics",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как в Monster Hunter засчитывают охоту как поимку, а не как убийство?"
+        },
+        "en": {
+          "text": "In Monster Hunter, how does a hunt count as a capture instead of a kill?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": { "text": "Ослабить до предела, поставить ловушку и добить транквилизаторами" },
+            "en": { "text": "Wear it down, set a trap, and finish with tranqs" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Транки с полного HP без ловушки — этого достаточно" },
+            "en": { "text": "Tranqs from full HP with no trap are enough" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Поимка срабатывает сама, если выйти из зоны, пока у монстра мало HP" },
+            "en": { "text": "Capture triggers on its own if you leave the area while the monster is low" }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": { "text": "Достаточно одной сети с первого удара, пока монстр ещё полный" },
+            "en": { "text": "One net on the first hit is enough while the monster is still at full health" }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -4,15 +4,15 @@ How to grow the question bank **without** typing every row in admin and **withou
 
 Related canon:
 
-- Bilingual rules + **stem / similar-question rule:** `docs/QUESTION_I18N.md` (§1–§3 options, **§10 stems**)
+- Bilingual rules + **stem / similar-question rule:** `docs/QUESTION_I18N.md` (§1–§3 options including **§3 D** plausible distractors, **§10 stems**)
 - Lifecycle: `publicationStatus` DRAFT → IN_REVIEW → PUBLISHED (orthogonal to `isActive`)
 - Quality gate: `getQuestionPublishQualityIssues` (`src/features/admin/lib/question-publish-quality.ts`)
 - Seed shape reference only: `scripts/seed-questions.cjs` (`Q` / `opt`)
 - **Quiz Neon hot path:** `docs/QUIZ_NEON_HOT_PATH.md` — adding questions must **not** change submit/result to write large JSONB on complete; content scale stays on draft→publish only.
 
-**Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish. Stem wording and **similar-question** rule: `QUESTION_I18N.md` §10 (game in the first clause; do not clone another item’s loop, hands-feel, or syntactic machine).
+**Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish. Stem wording and **similar-question** rule: `QUESTION_I18N.md` §10 (game in the first clause; do not clone another item’s loop, hands-feel, or syntactic machine). Wrong options: `QUESTION_I18N.md` **§3 D** — plausible mix-ups, not cartoon leftovers a non-player can discard. Do not overdo with three near-twins of the correct answer.
 
-**Next authoring target (Aug 18 evening):** Voice-pass of mechanics-12 / w2 / w3 stems is **done** local+prod (in-place `UPDATE`, same UUIDs). TEXT quiz pool still **354** (118/118/118). Stem canon: `QUESTION_I18N.md` §10 (game in the first clause; no loop/syntax clones; published TEXT = replace, never re-import). Optional next: mechanics TEXT **wave 5** ×24 — **new loops only** (dupe-check vs seed + C/D + mechanics-12/w2/w3/w4). Mix lobby stays **on www** — do not re-implement. New batches: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24/w4-24.
+**Next authoring target (Aug 18 night):** Mechanics TEXT **wave 5** ×24 is **done** local+prod (`2026-08-18-text-mechanics-w5-24.json`). TEXT quiz pool **378** (126/126/126); DRAFT 0. Stem canon: `QUESTION_I18N.md` §10. Distractors: **§3 D** (plausible mix-ups, not cartoon leftovers). Optional next: mechanics TEXT **wave 6** ×24 — **new loops only** (dupe-check vs seed + C/D + mechanics-12/w2/w3/w4/w5). Mix lobby stays **on www** — do not re-implement. New batches: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24/w4-24/w5-24. Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import.
 
 ---
 
@@ -67,6 +67,7 @@ content/drafts/
     2026-08-13-text-mechanics-w2-24.json # TEXT ×24 mechanics wave 2 (local+prod PUBLISHED)
     2026-08-13-text-mechanics-w3-24.json # TEXT ×24 mechanics wave 3 (local+prod PUBLISHED)
     2026-08-17-text-mechanics-w4-24.json # TEXT ×24 mechanics wave 4 (local+prod PUBLISHED)
+    2026-08-18-text-mechanics-w5-24.json # TEXT ×24 mechanics wave 5 (local+prod PUBLISHED)
 
 src/features/content/lib/
   draft-questions.schema.ts          # Zod contract v1 (runtime)
@@ -169,7 +170,7 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 - Start IMAGE_GUESS in the same batch as first TEXT import
 - Change scoring / quiz snapshot / Neon Direct start paths for this feature
 - Re-import the same TEXT JSON (new UUIDs → duplicates). IMAGE_GUESS batch upserts by `draftKey`
-- Re-import mechanics-12 / w2 / w3 / w4 (or any published TEXT) “to fix wording” — that **adds** rows. Stem fix = `voice-pass-mechanics-stems.cjs` / UPDATE (`QUESTION_I18N.md` §10.4)
+- Re-import mechanics-12 / w2 / w3 / w4 / w5 (or any published TEXT) “to fix wording” — that **adds** rows. Stem fix = `voice-pass-mechanics-stems.cjs` / UPDATE (`QUESTION_I18N.md` §10.4)
 - Call `--write-json` on that script after hand-editing JSON (overwrites stems from the in-file map)
 - Copy `sample-text-v1` / mixed experiments to prod just to match admin hub counts
 - Clone another question’s loop, hands-feel, or syntactic machine (`QUESTION_I18N.md` §10.2)
@@ -366,7 +367,9 @@ Admin hub counts **all** `isActive` rows (including DRAFT). A gap there is almos
 
 **Aug 18:** mechanics TEXT wave 4 ×24 (`2026-08-17-text-mechanics-w4-24.json`) published both sides → TEXT **354** (118/118/118) + IMAGE **171** → admin ~**525**.
 
-**Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10. Verify:
+**Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
+
+**Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
 
 ```powershell
 npm run content:smoke-text
@@ -377,4 +380,4 @@ npm run content:smoke-image-guess -- --target=prod
 
 Helper for TEXT → prod without swapping `.env`: `node scripts/import-text-drafts-to-prod.cjs <files…>` (refuses `jolly-river`). Then publish with `content:publish-text-drafts -- --target=prod --file=…` (prod **requires** `--file`; bulk cap 100).
 
-**Do not:** dump one Neon onto the other; re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24; treat hub “active” as quiz pool (`PUBLISHED + isActive`).
+**Do not:** dump one Neon onto the other; re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24; treat hub “active” as quiz pool (`PUBLISHED + isActive`).

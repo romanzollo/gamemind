@@ -84,11 +84,26 @@ opt(true, 'Палач Рока', 'Doom Slayer'),
 opt(false, 'Duke Nukem', 'Duke Nukem'), // RU column is English while correct is Cyrillic
 ```
 
+### D. Plausible distractors (especially mechanics TEXT)
+
+Wrong options must be **believable** to someone who knows the genre — or this game badly. A player who never touched the title should **not** eliminate three jokes and click the leftover.
+
+| Bad (logic-guessable) | Good (need the loop) |
+|------------------------|----------------------|
+| Съел дерево и палки — в желудке вырос меч | Всё крафтится в сетке 2×2 в инвентаре; верстак только для декора |
+| Машина становится питомцем, как в Pokémon | По узлу просто больше урон, деталь остаётся на корпусе |
+| Команда получает невидимость до первой стрельбы | Укрепление глушит шаги за стеной, прочность та же |
+
+Same **answer type** as the correct option (resource, outcome, verb). Prefer a mix of: (1) a common misconception, (2) an adjacent system **from the same game**, (3) a mix-up with a **similar** game.
+
+Do **not** overdo: not three near-twins of the correct answer; not trivia (year, studio, character name) dressed as a fourth choice.
+
 **Checklist before save/publish:**
 
 1. Open the four RU strings together — do they feel like one language “scene”?  
 2. Open the four EN strings — same.  
-3. If any RU option has Cyrillic and another is Latin-only **letters-only English**, justify it (strategy B for *all* options) or fix the Latin ones.
+3. If any RU option has Cyrillic and another is Latin-only **letters-only English**, justify it (strategy B for *all* options) or fix the Latin ones.  
+4. Open the three wrong options — could a non-player discard them as cartoons? If yes, rewrite (§3 D).
 
 ---
 
@@ -213,6 +228,7 @@ opt(false, 'Аркадия', 'Arcadia'),
 - [ ] Every option has RU **and** EN  
 - [ ] RU option set is one strategy (A or B), not a mix of “localized correct + English distractors”  
 - [ ] EN option set consistent  
+- [ ] Distractors follow §3 D (plausible; not logic-guessable jokes; not three near-twins)  
 - [ ] Smoke `/ru` and `/en` (or Prisma Studio translations)  
 - [ ] IMAGE_GUESS: asset rules in `QUIZ_IMAGES.md`  
 
@@ -222,7 +238,7 @@ When in doubt: **localize distractors the same way you localized the correct ans
 
 ## 10. Question stems (clarity + similar questions)
 
-Rules for **the question sentence** the player reads. Options stay §1–§3. Product taste (felt systems, not trivia) is `CONTENT_PIPELINE.md` → Authoring tip.
+Rules for **the question sentence** the player reads. Options stay §1–§3 (**§3 D** = plausible distractors, not cartoon leftovers). Product taste (felt systems, not trivia) is `CONTENT_PIPELINE.md` → Authoring tip.
 
 ### 10.1 One question, game first
 
@@ -260,7 +276,7 @@ RU: as if explaining to a friend on the couch. EN: the same meaning, living Engl
 
 ### 10.4 Already published — replace, do not import
 
-TEXT import always **INSERT**s new UUIDs (`draftKey` is not stored in Neon). Re-importing mechanics-12 / w2 / w3 / w4 / C / D / fresh / samples **duplicates the quiz pool**.
+TEXT import always **INSERT**s new UUIDs (`draftKey` is not stored in Neon). Re-importing mechanics-12 / w2 / w3 / w4 / w5 / C / D / fresh / samples **duplicates the quiz pool**.
 
 To change only the stem of existing PUBLISHED TEXT: `UPDATE Question.text` + `QuestionTranslation`, matched by **four RU option texts + difficulty**. Do not touch options, `isCorrect`, or `publicationStatus`.
 
