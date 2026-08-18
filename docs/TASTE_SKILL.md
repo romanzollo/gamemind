@@ -343,7 +343,7 @@ Format:
   - hub loading: sessions strip pulse + taller cards, padding matches live page.
 - Tokens/components added: local `HubStat` on the hub page (not a shared primitive)
 - Explicitly NOT changed: extra user metrics; questions list/filters/bulk; Prisma/migrations; quiz hot path; Taste tokens/fonts; nested `?type=` links; icons/badges/charts
-- Verify: `/ru/admin` + `/en/admin` light/dark; 320 + desktop; Image + Text === Active + Inactive; both cards one link; focus ring intact
+- Verify: `/ru/admin` + `/en/admin` light/dark; 320 + desktop; Image + Text === Active + Inactive; both cards one link; focus ring intact; **user smoke OK 2026-08-18**
 - Follow-up: none for this slice
 
 ### 2026-08-17 — Mix lobby meta: очки, not веса

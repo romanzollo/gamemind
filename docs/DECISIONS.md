@@ -93,6 +93,15 @@ For a stable overview of layers, Neon access, quiz invariants, auth, and media, 
 
 **Do not:** turn hub into a multi-KPI marketing dashboard; put counts SQL on the admin list connection queue; block hub render on counts failure.
 
+**Update (August 18, 2026):** Questions card also shows content-format mix.
+
+- Same `findAdminHomeCounts()` SELECT: two more scalar `COUNT(*)` on `Question.type` (`IMAGE_GUESS` / `TEXT`). All `Question` rows — not `isActive` filter, not `QuestionAsset` JOIN.
+- Invariant: `questionsText + questionsImage === questionsActive + questionsInactive`.
+- UI: 2×2 `<dl>` (status row, hairline, format row). Users keeps one number with caption **Всего** / **Total** (do not repeat `usersLink`).
+- Still one round-trip; still `withDirectPgClient`; still no schema / migration.
+
+**Do not (still):** JOIN assets to “detect images”; count only active rows for type; nest `?type=` links inside the card `<a>`; add a fifth “total” on Questions; extra user-role KPIs.
+
 ### Admin user support detail (July 25, 2026)
 
 **Problem:** Admin users list showed only a result *count*. Support needed to see *which* quizzes a user finished (score / difficulty / date) without schema or impersonation.

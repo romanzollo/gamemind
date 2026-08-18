@@ -353,7 +353,7 @@ Then: Admin DRAFT → Publish. **Also** ensure `public/quiz-images/**` WebP are 
 
 ### Local vs prod drift (Aug 12 lesson)
 
-Admin hub counts **all** `isActive` rows (including DRAFT). A gap there is almost always **missing batches on one Neon**, not a UI bug.
+Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isActive` (active includes DRAFT); Image/Text = `Question.type` on **all** rows (not assets). Invariant: Image + Text === Active + Inactive. A gap vs the other Neon is almost always **missing batches**, not a UI bug. Quiz pool is still `PUBLISHED + isActive` — do not treat hub “active” as the playable pool.
 
 **Aug 12:** prod had TEXT waves C1–C3 (×108) that local lacked → hub 435 vs 341. IMAGE_GUESS was already in sync (`img-*` ×90 + `img2-*` ×72 + seed ×9). After local import+publish of C1–C3, local still had **8 extras** (pipeline samples, mixed Hyrule/Switch, two July admin TEXT, one July test IMAGE_GUESS). Those were **deleted on local only** — not copied to prod.
 

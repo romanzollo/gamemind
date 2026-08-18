@@ -103,6 +103,7 @@ This file is gitignored local working documentation.
 - [x] July 26: unfiltered list hang after `publicationStatus` — **not** `WHERE true` / **not** `UNION ALL`; use **3 sequential** SELECTs by difficulty + 60s list TTL cache (invalidate on mutations)
 - [x] July 26 night: admin list locale text fixed without second read — main list SELECT uses EN scalar subquery (`QuestionTranslation(en)` → `Question.text`); cache key includes locale. **Do not** restore queued translation overlay / JOIN / second query for list text.
 - [x] Admin home counts on `/:locale/admin` (July 25) — one COUNT SQL; graceful fallback
+- [x] Admin hub Questions 2×2 format glance (Aug 18) — TEXT/IMAGE_GUESS `COUNT(*)` in the same SELECT; Users **Всего** / **Total**; user smoke OK
 - [ ] Follow-up (hang debt): restore `optionsCount` without JOIN/`ANY` hang
 - [ ] Follow-up (hang debt): revisit soft RSC / drop settle delay if Linux+prod stays healthy
 - [ ] Follow-up (hang debt): single-query or denormalized prompt URL for thumbs
@@ -239,6 +240,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 48. ~~**Mechanics TEXT wave 4 ×24**~~ — Aug 18: `2026-08-17-text-mechanics-w4-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **354** (118/118/118) local+prod.
 49. ~~**Mechanics stem voice-pass (12 / w2 / w3)**~~ — Aug 18 evening: in-place `UPDATE` local+prod (`scripts/voice-pass-mechanics-stems.cjs`); same 60 UUIDs; pool still **354**. Canon: `QUESTION_I18N.md` §10.
 50. ~~**Mechanics TEXT wave 5 ×24**~~ — Aug 18 night: `2026-08-18-text-mechanics-w5-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **378** (126/126/126) local+prod. Distractors: `QUESTION_I18N.md` §3 D.
+51. ~~**Admin hub format glance**~~ — Aug 18: Questions 2×2 (`Question.type` TEXT/IMAGE_GUESS) + Users total caption; same COUNT round-trip; user smoke OK.
 
 ### Deploy / hosting checklist (tracking)
 
@@ -377,6 +379,7 @@ See `PROJECT_CONTEXT.md` → **Next Product Slice** and `DECISIONS.md` → **Pos
 - [x] Admin hub `/:locale/admin` + header Admin → hub (July 18)
 - [x] Neon admin-read harden: sync destroy on timeout, IPv4, 12s×2, retry link
 - [x] Admin home counts (users / questions active·inactive / sessions today UTC) + Scoreboard hub polish (July 25)
+- [x] Admin hub TEXT/IMAGE_GUESS glance on Questions card (Aug 18; same COUNT round-trip; Users **Всего**)
 - [x] Admin user detail `/:locale/admin/users/[id]` — read-only profile + recent QuizResult; history UI = ProfileResultHistory pattern (no Обзор); users list = questions cards/`nowrap` sticky actions (July 25)
 - [ ] Later: **admin session answer review** (owner OR admin; snapshot read-only; entry from user detail) — see DECISIONS; trigger = real support disputes; prefer after commit of user detail, ideally after/near §11.7 session split
 - [ ] Later: audit log, impersonation (avoid), bulk ban
