@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "manual",
-  "notes": "Mechanics TEXT wave 3 — 24 questions (8×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Do not re-import seed/C/D/fresh/samples/mechanics-12/w2-24. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, SMB grown-hit, Pac-Man energizer, Tetris line-clear, SUPERHOT time, Subnautica oxygen, Smash %, Stardew energy, GTA wanted, Mario Kart mini-turbo, Rocket League boost, BioShock EVE, Dishonored mana, Dead Space stasis, Cuphead pink parry, Slay the Spire energy, Fallout VATS, Sifu age-on-death, Returnal malfunction, FTL power, Into the Breach telegraph, Darkest Dungeon stress, Shadow of Mordor orc rank, NecroDancer miss-beat, Baba Is You rules, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf / Kirby inhale / HL2 gravity gun / Quen). Authored incrementally.",
+  "notes": "Mechanics TEXT wave 3 — 24 questions (8×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Do not re-import seed/C/D/fresh/samples/mechanics-12/w2-24. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, SMB grown-hit, Pac-Man energizer, Tetris line-clear, SUPERHOT time, Subnautica oxygen, Smash %, Stardew energy, GTA wanted, Mario Kart mini-turbo, Rocket League boost, BioShock EVE, Dishonored mana, Dead Space stasis, Cuphead pink parry, Slay the Spire energy, Fallout VATS, Sifu age-on-death, Returnal malfunction, FTL power, Into the Breach telegraph, Darkest Dungeon stress, Shadow of Mordor orc rank, NecroDancer miss-beat, Baba Is You rules, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf / Kirby inhale / HL2 gravity gun / Quen). Authored incrementally. Voice-pass Aug 18: replace stems in place (UPDATE). Do not re-import.",
   "questions": [
     {
       "draftKey": "batch-2026-08-13-mech-w3-easy-katamari-roll-grow",
@@ -16,10 +16,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Katamari Damacy что обычно происходит, когда катамари накатывается на предмет меньше себя?"
+          "text": "Что в Katamari Damacy происходит с предметом и шаром, когда шар наезжает на вещь меньше себя?"
         },
         "en": {
-          "text": "In Katamari Damacy, what usually happens when the katamari rolls over an object smaller than itself?"
+          "text": "In Katamari Damacy, what happens to the object and the ball when the ball rolls over something smaller than itself?"
         }
       },
       "options": [
@@ -66,10 +66,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Fortnite Battle Royale что обычно происходит, если остаться в шторме вне безопасной зоны?"
+          "text": "Что в Fortnite Battle Royale делает шторм со здоровьем, если остаться вне круга?"
         },
         "en": {
-          "text": "In Fortnite Battle Royale, what usually happens if you stay in the storm outside the safe zone?"
+          "text": "In Fortnite Battle Royale, what does the storm do to your health if you stay outside the circle?"
         }
       },
       "options": [
@@ -116,10 +116,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В The Sims что обычно происходит, если долго не закрывать нужды сима — голод, гигиену, туалет?"
+          "text": "Что в The Sims будет с симом, если долго не закрывать голод, гигиену и туалет?"
         },
         "en": {
-          "text": "In The Sims, what usually happens if you ignore a Sim’s needs for a long time — hunger, hygiene, bladder?"
+          "text": "In The Sims, what happens to a Sim if you ignore hunger, hygiene, and bladder for a long time?"
         }
       },
       "options": [
@@ -166,10 +166,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В God of War (2018) что обычно происходит, если бросить топор Левиафан и затем призвать его обратно?"
+          "text": "Что в God of War (2018) делает топор Левиафан по пути назад, когда призываешь его после броска?"
         },
         "en": {
-          "text": "In God of War (2018), what usually happens if you throw the Leviathan Axe and then call it back?"
+          "text": "In God of War (2018), what does the Leviathan Axe do on the way back when you recall it after a throw?"
         }
       },
       "options": [
@@ -216,10 +216,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Among Us что обычно происходит, если сообщить о найденном теле?"
+          "text": "Что в Among Us начинается сразу после report по найденному телу?"
         },
         "en": {
-          "text": "In Among Us, what usually happens if you report a body you found?"
+          "text": "In Among Us, what starts right after you report a body you found?"
         }
       },
       "options": [
@@ -266,10 +266,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Hotline Miami что обычно происходит, если вас хоть раз ударили во время зачистки?"
+          "text": "Что в Hotline Miami будет с зачисткой, если вас хоть раз ударили?"
         },
         "en": {
-          "text": "In Hotline Miami, what usually happens if you get hit even once during a takedown?"
+          "text": "In Hotline Miami, what happens to the takedown if you get hit even once?"
         }
       },
       "options": [
@@ -316,10 +316,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В классическом Metroid зачем Самус обычно сворачивается в маленький шар?"
+          "text": "Зачем в классическом Metroid Самус сворачивается в маленький шар?"
         },
         "en": {
-          "text": "In classic Metroid, why does Samus usually curl into a small ball?"
+          "text": "In classic Metroid, why does Samus curl into a small ball?"
         }
       },
       "options": [
@@ -366,10 +366,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Beat Saber что обычно нужно сделать с цветным блоком, чтобы удар засчитали чисто?"
+          "text": "Что в Beat Saber нужно сделать с цветным блоком, чтобы удар засчитали чисто?"
         },
         "en": {
-          "text": "In Beat Saber, what do you usually need to do with a colored block for a clean hit?"
+          "text": "In Beat Saber, what do you need to do with a colored block for the slash to count clean?"
         }
       },
       "options": [
@@ -416,10 +416,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Persona 5 что обычно происходит в бою, если ударить врага по его слабости?"
+          "text": "Что в Persona 5 даёт удар по слабости врага — в том же ходе?"
         },
         "en": {
-          "text": "In Persona 5, what usually happens in battle if you hit an enemy’s weakness?"
+          "text": "In Persona 5, what does hitting an enemy’s weakness give you in that same turn?"
         }
       },
       "options": [
@@ -466,10 +466,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В XCOM что обычно даёт солдату высокое укрытие, пока его не обошли с фланга?"
+          "text": "Что в XCOM даёт солдату высокое укрытие, пока его не обошли с фланга?"
         },
         "en": {
-          "text": "In XCOM, what does high cover usually give a soldier until they are flanked?"
+          "text": "In XCOM, what does high cover give a soldier until they are flanked?"
         }
       },
       "options": [
@@ -516,10 +516,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В классическом Resident Evil зачем обычно оставлять лишнее в сундуке, а не нести всё с собой?"
+          "text": "Зачем в классическом Resident Evil лишнее кладут в сундук, а не несут всё с собой?"
         },
         "en": {
-          "text": "In classic Resident Evil, why do you usually leave extras in the item box instead of carrying everything?"
+          "text": "In classic Resident Evil, why stash extras in the item box instead of carrying everything?"
         }
       },
       "options": [
@@ -566,10 +566,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Alan Wake что обычно нужно сделать с Одержимым, прежде чем пули начинают ему по-настоящему вредить?"
+          "text": "Что в Alan Wake нужно сделать с Одержимым, прежде чем пули начинают ему по-настоящему вредить?"
         },
         "en": {
-          "text": "In Alan Wake, what do you usually need to do to a Taken before bullets actually start hurting it?"
+          "text": "In Alan Wake, what do you need to do to a Taken before bullets actually start hurting it?"
         }
       },
       "options": [
@@ -616,10 +616,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Enter the Gungeon зачем обычно тратят редкий холостой патрон посреди комнаты, полной пуль?"
+          "text": "Зачем в Enter the Gungeon тратят редкий холостой патрон в комнате, полной пуль?"
         },
         "en": {
-          "text": "In Enter the Gungeon, why do you usually spend a rare blank in a room full of bullets?"
+          "text": "In Enter the Gungeon, why spend a rare blank in a room full of bullets?"
         }
       },
       "options": [
@@ -666,10 +666,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В The Witcher 3 что обычно ограничивает, сколько зелий можно выпить подряд в бою?"
+          "text": "Что в The Witcher 3 ограничивает, сколько зелий можно выпить подряд?"
         },
         "en": {
-          "text": "In The Witcher 3, what usually limits how many potions you can drink back-to-back in a fight?"
+          "text": "In The Witcher 3, what limits how many potions you can drink back-to-back?"
         }
       },
       "options": [
@@ -716,10 +716,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Valheim что обычно даёт еда, кроме того что персонаж «не голоден»?"
+          "text": "Что в Valheim даёт еда поверх сытости?"
         },
         "en": {
-          "text": "In Valheim, what does food usually give you besides “not being hungry”?"
+          "text": "In Valheim, what does food give you on top of being full?"
         }
       },
       "options": [
@@ -766,10 +766,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Pikmin что обычно нужно успеть сделать с пикминами к закату?"
+          "text": "Что в Pikmin нужно успеть сделать с пикминами к закату?"
         },
         "en": {
-          "text": "In Pikmin, what do you usually need to do with your Pikmin before sunset?"
+          "text": "In Pikmin, what do you need to do with your Pikmin before sunset?"
         }
       },
       "options": [
@@ -816,10 +816,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Bloodborne что обычно меняется в мире, если охотник копит много озарения?"
+          "text": "Что в Bloodborne меняется в мире, когда охотник копит много озарения?"
         },
         "en": {
-          "text": "In Bloodborne, what usually changes in the world if a hunter accumulates a lot of Insight?"
+          "text": "In Bloodborne, what changes in the world when a hunter hoards a lot of Insight?"
         }
       },
       "options": [
@@ -866,10 +866,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Metal Gear Solid что обычно происходит, если вас заметили, а затем вы спрятались и ждёте?"
+          "text": "Что в Metal Gear Solid происходит с тревогой, если после обнаружения спрятаться и подождать?"
         },
         "en": {
-          "text": "In Metal Gear Solid, what usually happens if you are spotted, then hide and wait?"
+          "text": "In Metal Gear Solid, what happens to the alert if you get spotted, then hide and wait?"
         }
       },
       "options": [
@@ -916,10 +916,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Papers, Please что обычно происходит со сменой дня на пункте пропуска?"
+          "text": "Что в Papers, Please меняется в правилах пропуска, когда на календаре новый день смены?"
         },
         "en": {
-          "text": "In Papers, Please, what usually happens when the day changes at the checkpoint?"
+          "text": "In Papers, Please, what changes about the checkpoint rules when the calendar flips to a new shift day?"
         }
       },
       "options": [
@@ -966,10 +966,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Risk of Rain что обычно делает сложность с течением времени, даже если вы почти никого не убиваете?"
+          "text": "Что в Risk of Rain делает сложность со временем, даже если почти никого не убивать?"
         },
         "en": {
-          "text": "In Risk of Rain, what does difficulty usually do as time passes, even if you barely kill anyone?"
+          "text": "In Risk of Rain, what does difficulty do over time, even if you barely kill anyone?"
         }
       },
       "options": [
@@ -1016,10 +1016,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Ikaruga зачем обычно переключают цвет корабля посреди потока пуль?"
+          "text": "Зачем в Ikaruga переключают цвет корабля посреди потока пуль?"
         },
         "en": {
-          "text": "In Ikaruga, why do you usually switch the ship’s color in the middle of a bullet stream?"
+          "text": "In Ikaruga, why switch the ship’s color in the middle of a bullet stream?"
         }
       },
       "options": [
@@ -1066,10 +1066,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Don't Starve что обычно происходит, если ночью остаться совсем без света?"
+          "text": "Что в Don't Starve будет, если ночью остаться совсем без света?"
         },
         "en": {
-          "text": "In Don't Starve, what usually happens if you stay in complete darkness at night?"
+          "text": "In Don't Starve, what happens if you stay in total darkness at night with no light?"
         }
       },
       "options": [
@@ -1116,10 +1116,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Divinity: Original Sin 2 что обычно нужно сделать, прежде чем стан, заморозка или нокдаун по-настоящему сработают?"
+          "text": "Что в Divinity: Original Sin 2 нужно сломать, прежде чем стан или нокдаун по-настоящему сядет?"
         },
         "en": {
-          "text": "In Divinity: Original Sin 2, what do you usually need to do before stun, freeze, or knockdown actually lands?"
+          "text": "In Divinity: Original Sin 2, what do you need to break before a stun or knockdown actually sticks?"
         }
       },
       "options": [
@@ -1166,10 +1166,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Inscryption чем обычно платят за сильное существо с ценой в кровь?"
+          "text": "Чем в Inscryption платят за существо с ценой в кровь?"
         },
         "en": {
-          "text": "In Inscryption, how do you usually pay for a strong creature with a blood cost?"
+          "text": "In Inscryption, how do you pay for a creature with a blood cost?"
         }
       },
       "options": [

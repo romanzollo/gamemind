@@ -1,0 +1,1575 @@
+{
+    "version": 1,
+    "source": "manual",
+    "notes": "Mechanics TEXT wave 4 — 24 questions (8×EASY/MEDIUM/HARD). Felt systems, not trivia. Varied stems (no repeated «В X что обычно происходит»). Do not re-import seed/C/D/fresh/samples/mechanics-12/w2-24/w3-24. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni/Quen, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally/Insight, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, SMB grown-hit, Pac-Man energizer, Tetris line-clear, SUPERHOT time, Subnautica oxygen, Smash %, Stardew energy, GTA wanted, Mario Kart mini-turbo, Rocket League boost, BioShock EVE, Dishonored mana, Dead Space stasis, Cuphead pink parry, Slay the Spire energy, Fallout VATS, Sifu age-on-death, Returnal malfunction, FTL power, Into the Breach telegraph, Darkest Dungeon stress, Shadow of Mordor orc rank, NecroDancer miss-beat, Baba Is You rules, Katamari grow, Fortnite storm, Sims needs, GoW axe recall, Among Us body report, Hotline one-hit, Metroid morph ball, Beat Saber slash, Persona 5 One More, XCOM high cover, RE inventory, Alan Wake flashlight, Gungeon blank, Witcher toxicity, Valheim food caps, Pikmin sunset, MGS alert phases, Papers Please daily rules, Risk of Rain time-difficulty, Ikaruga polarity, Don’t Starve darkness, DOS2 armor/CC, Inscryption blood, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf / Kirby inhale / HL2 gravity gun). W4 loops: Odyssey Cappy, Angry Birds slingshot, Crash Aku Aku, SF super meter, AC real clock, Vampire Survivors level-up, Star Fox barrel roll, Undertale spare, DS roll i-frames, Isaac devil deals, CP2077 RAM, Helldivers stratagem codes, DBD generators, FF7 Limit, Tsushima stances, Spelunky ghost, Invisible Inc alarm, Thief light gem, NieR chip cap, Cult of the Lamb base, Frostpunk Hope/Discontent, Factorio pollution, DMC style rank, Prey Mimic.",
+    "questions": [
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-odyssey-cappy",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Super Mario",
+                "game": "Super Mario Odyssey",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Кинул кепку во врага — и вдруг рулишь уже им, а не Марио. Что Cappy делает в Super Mario Odyssey?"
+                },
+                "en": {
+                    "text": "You toss the cap at an enemy and suddenly you’re steering them, not Mario. What is Cappy actually doing in Super Mario Odyssey?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Захватывает существо или предмет и даёт его способности"
+                        },
+                        "en": {
+                            "text": "Captures a creature or object and lets you use its abilities"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Даёт второй прыжок в воздухе, как запасной дэш"
+                        },
+                        "en": {
+                            "text": "Gives a second air jump, like a spare dash"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Съедает врага насовсем и сыплет монетами"
+                        },
+                        "en": {
+                            "text": "Eats the enemy for good and showers coins"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Только оглушает: бить всё равно приходится самому Марио"
+                        },
+                        "en": {
+                            "text": "Only stuns them; Mario still has to land the hits himself"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-angry-birds-slingshot",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Angry Birds",
+                "game": "Angry Birds",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Резинка натянута, птица летит дугой, свиньи сидят в башне из досок и стекла. Какой это ход в Angry Birds?"
+                },
+                "en": {
+                    "text": "The rubber band is taut, the bird flies in an arc, and the pigs sit in a tower of boards and glass. What’s the actual move in Angry Birds?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Прицел рогаткой и расчёт, как рухнет конструкция"
+                        },
+                        "en": {
+                            "text": "Aiming with the slingshot and reading how the structure will collapse"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Строишь свою башню и ждёшь, пока свиньи сами подойдут"
+                        },
+                        "en": {
+                            "text": "You build your own tower and wait for the pigs to walk over"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Птицы сами выбирают цель, ты только копишь ярость"
+                        },
+                        "en": {
+                            "text": "The birds pick their own target; you only charge a rage meter"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Нужно найти ключ и открыть клетку со свиньями"
+                        },
+                        "en": {
+                            "text": "You have to find a key and unlock the pigs’ cage"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-crash-aku-aku",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Crash Bandicoot",
+                "game": "Crash Bandicoot",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Новичок в Crash Bandicoot ловит маску Aku Aku и думает, что это просто очки. На деле она обычно…"
+                },
+                "en": {
+                    "text": "A Crash Bandicoot newbie grabs an Aku Aku mask and treats it like score. What does that mask usually actually do?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Держит лишний удар: маска ломается, Крэш остаётся жив"
+                        },
+                        "en": {
+                            "text": "Absorbs a hit: the mask breaks and Crash stays alive"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Сразу открывает секретный выход с уровня"
+                        },
+                        "en": {
+                            "text": "Instantly opens a secret exit off the level"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Навсегда делает Крэша неуязвимым до конца игры"
+                        },
+                        "en": {
+                            "text": "Makes Crash invincible for the rest of the game"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Меняет ящики с TNT на обычные фрукты"
+                        },
+                        "en": {
+                            "text": "Turns TNT crates into ordinary fruit boxes"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-sf-super-meter",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Street Fighter",
+                "game": "Street Fighter",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Внизу экрана Street Fighter ползёт шкала — и после неё можно выпустить супер. Как её обычно наполняют?"
+                },
+                "en": {
+                    "text": "That bar at the bottom of Street Fighter fills up, and then a super comes out. How do you usually fill it?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Попаданиями и полученным уроном в этом раунде"
+                        },
+                        "en": {
+                            "text": "Landing hits and taking damage during the round"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Только предметом, который выбивается с арены"
+                        },
+                        "en": {
+                            "text": "Only a pickup that drops onto the stage"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Она сама тикает раз в десять секунд, как ульта в MOBA"
+                        },
+                        "en": {
+                            "text": "It ticks up on its own every ten seconds, like a MOBA ultimate"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Её выдаёт судья между раундами, независимо от боя"
+                        },
+                        "en": {
+                            "text": "The referee grants it between rounds, no matter the fight"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-ac-real-clock",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Animal Crossing",
+                "game": "Animal Crossing",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Полночь, бежишь в магазин на острове — а дверь закрыта до утра. Почему Animal Crossing так делает?"
+                },
+                "en": {
+                    "text": "It’s midnight, you sprint to the island shop — and the door is locked until morning. Why does Animal Crossing do that?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Время острова привязано к часам в реальном мире"
+                        },
+                        "en": {
+                            "text": "Island time is tied to the real-world clock"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Магазин закрыт, пока не накопишь дружбу с жителями"
+                        },
+                        "en": {
+                            "text": "The shop stays closed until you max friendship with villagers"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Это штраф за слишком много покупок за день"
+                        },
+                        "en": {
+                            "text": "It’s a penalty for buying too much in one day"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Ночью карта острова генерируется заново, как данж"
+                        },
+                        "en": {
+                            "text": "At night the island map regenerates like a dungeon"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-vamp-surv-levelup",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "game": "Vampire Survivors",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Самоцветы сами летят к тебе, уровень прыгает, экран замирает с тремя карточками. Что Vampire Survivors просит сделать?"
+                },
+                "en": {
+                    "text": "Gems fly into you, the level pops, and the screen freezes on three cards. What is Vampire Survivors asking you to do?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Выбрать один новый предмет или апгрейд из предложенных"
+                        },
+                        "en": {
+                            "text": "Pick one new item or upgrade from the offered cards"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Потратить самоцветы в магазине между волнами"
+                        },
+                        "en": {
+                            "text": "Spend the gems in a shop between waves"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Разделить опыт между несколькими героями в отряде"
+                        },
+                        "en": {
+                            "text": "Split the XP across several heroes in a party"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Сохранить прогресс и выйти, иначе волна сбросится"
+                        },
+                        "en": {
+                            "text": "Save and quit, or the wave will reset"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-starfox-barrel-roll",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Star Fox",
+                "game": "Star Fox",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "В кабину Star Fox летят лазеры. Пилоты в этот момент крутят корабль вокруг оси. Зачем?"
+                },
+                "en": {
+                    "text": "Lasers are coming straight into the Star Fox cockpit. Pilots spin the ship around its axis. Why?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Barrel roll сбивает большинство выстрелов"
+                        },
+                        "en": {
+                            "text": "A barrel roll knocks away most incoming shots"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Так включается неуязвимый гиперпрыжок к следующей планете"
+                        },
+                        "en": {
+                            "text": "That triggers an invincible hyperspace jump to the next planet"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Кручение чинит щит, как зарядка в ангаре"
+                        },
+                        "en": {
+                            "text": "The spin repairs the shield, like docking in a hangar"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Это единственный способ выпустить умные бомбы"
+                        },
+                        "en": {
+                            "text": "It’s the only way to fire smart bombs"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-easy-undertale-spare",
+            "type": "TEXT",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "metadata": {
+                "game": "Undertale",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "В обычной RPG бьёшь, пока чужая полоска HP не кончится. Undertale часто предлагает другой выход из боя. Какой?"
+                },
+                "en": {
+                    "text": "Most RPGs have you hit until the other HP bar hits zero. Undertale often offers another way out of a fight. What is it?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Через ACT можно понять врага и пощадить его"
+                        },
+                        "en": {
+                            "text": "You can ACT, figure the enemy out, and Spare them"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "HP врага само тает, если стоять и ничего не нажимать"
+                        },
+                        "en": {
+                            "text": "Enemy HP melts on its own if you stand still and press nothing"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Пощада доступна только после полного вайпа своей пати"
+                        },
+                        "en": {
+                            "text": "Sparing is only allowed after your whole party is wiped"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Нужно сбежать на карту мира, иначе бой не кончится мирно"
+                        },
+                        "en": {
+                            "text": "You have to flee to the world map or the fight cannot end peacefully"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-ds-roll-iframes",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Dark Souls",
+                "game": "Dark Souls",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Щит поднят — вроде безопасно. Почему в Dark Souls часто выгоднее перекатиться сквозь удар, а не держать блок?"
+                },
+                "en": {
+                    "text": "Shield up — feels safe. Why is rolling through an attack often better in Dark Souls than holding block?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "В перекате есть кадры неуязвимости: удар проходит «сквозь» тебя"
+                        },
+                        "en": {
+                            "text": "The roll has invincibility frames, so the hit passes “through” you"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Блока в серии просто нет: щиты только для парирования"
+                        },
+                        "en": {
+                            "text": "Blocking doesn’t exist in the series; shields are parry-only"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Перекат восстанавливает выносливость, а блок жрёт её даже без ударов"
+                        },
+                        "en": {
+                            "text": "Rolling refills stamina, while blocking drains it even with no hits"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Любой блок мгновенно раскалывает щит, как стекло"
+                        },
+                        "en": {
+                            "text": "Any blocked hit instantly shatters the shield like glass"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-isaac-devil-deal",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "game": "The Binding of Isaac",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Комната красная, предметов много, ценников в монетах нет. Чем обычно платят за сделку в The Binding of Isaac?"
+                },
+                "en": {
+                    "text": "The room is red, the items look great, and there are no coin prices. What do you usually pay with in a Binding of Isaac deal?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Контейнерами сердец: сила в обмен на запас жизней"
+                        },
+                        "en": {
+                            "text": "Heart containers: power in exchange for your life pool"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Ключами от сокровищниц на этом этаже"
+                        },
+                        "en": {
+                            "text": "Keys meant for treasure rooms on the floor"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Бомбами, которыми открывают секретные комнаты"
+                        },
+                        "en": {
+                            "text": "Bombs you’d otherwise use to open secret rooms"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Временем: сделка держится до босса и потом пропадает"
+                        },
+                        "en": {
+                            "text": "Time: the deal lasts until the boss, then vanishes"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-cp2077-ram",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "game": "Cyberpunk 2077",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Враг подсвечен, в меню взлома куча быстрых хаков, но часть пунктов серая. Чего обычно не хватает в Cyberpunk 2077?"
+                },
+                "en": {
+                    "text": "The enemy is pinged, the quickhack menu is full of options, but some entries are greyed out. What are you usually short on in Cyberpunk 2077?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Оперативной памяти кибердеки: RAM тратится и потом регенерирует"
+                        },
+                        "en": {
+                            "text": "Cyberdeck RAM: it is spent on hacks, then regenerates"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Патронов особого «хакерского» калибра в инвентаре"
+                        },
+                        "en": {
+                            "text": "Special “hacker-caliber” ammo sitting in the inventory"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Отдельной миниигры на взлом замка, как подбор отмычки"
+                        },
+                        "en": {
+                            "text": "A separate lockpicking mini-game, like a tumbler puzzle"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Очков здоровья цели: в живого врага хак кинуть нельзя"
+                        },
+                        "en": {
+                            "text": "The target’s HP: you cannot hack a living enemy"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-helldivers-stratagem",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "game": "Helldivers 2",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Перед орбитальным ударом в Helldivers 2 пальцы сами рисуют стрелки на стике. Что это за петля — не «зажал ульту»?"
+                },
+                "en": {
+                    "text": "Before an orbital strike in Helldivers 2, your fingers sketch arrows on the stick. What’s that loop — if it isn’t just “hold ult”?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Стратагема — код-последовательность: ошибся ввод — зовёшь не то или опаздываешь"
+                        },
+                        "en": {
+                            "text": "A stratagem is an input code: miss it and you call the wrong thing or call it late"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Ульта копится сама и срабатывает, когда шкала дойдёт до края"
+                        },
+                        "en": {
+                            "text": "The ultimate fills on its own and fires when the bar hits full"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Стратагемы покупаются за патроны прямо посреди перестрелки"
+                        },
+                        "en": {
+                            "text": "Stratagems are bought with ammo in the middle of the firefight"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Код вводится голосом, стрелки на экране — только подсказка для новичка"
+                        },
+                        "en": {
+                            "text": "The code is voice-entered; on-screen arrows are only a newbie tooltip"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-dbd-generators",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "game": "Dead by Daylight",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Выживший в Dead by Daylight никого не убивает и босса не валит. Чем тогда обычно «закрывается» его матч?"
+                },
+                "en": {
+                    "text": "A Dead by Daylight survivor doesn’t kill anyone and doesn’t down a boss. So how does that side usually actually finish a match?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Починить достаточно генераторов, открыть ворота и уйти"
+                        },
+                        "en": {
+                            "text": "Repair enough generators, open the exit gates, and leave"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Собрать четыре тотема и изгнать убийцу с арены"
+                        },
+                        "en": {
+                            "text": "Collect four totems and banish the killer from the arena"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Довести шкалу саботажа, пока убийца не сменит сторону"
+                        },
+                        "en": {
+                            "text": "Fill a sabotage meter until the killer is forced to switch sides"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Выиграть дуэль в мини-игре один на один"
+                        },
+                        "en": { "text": "Win a one-on-one mini-game duel" }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-ff7-limit",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Final Fantasy",
+                "game": "Final Fantasy VII",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Клауд вдруг бросает обычные удары и запускает длинную анимацию оглушительной силы. Что должно было накопиться в Final Fantasy VII?"
+                },
+                "en": {
+                    "text": "Cloud suddenly drops the regular attacks and fires a long, crushing animation. What had to fill up first in Final Fantasy VII?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Шкала Limit — она растёт в бою, чаще от полученного урона"
+                        },
+                        "en": {
+                            "text": "The Limit gauge — it builds in battle, most often from taking damage"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Очки призыва, которые тратятся только вне боя у мастера оружия"
+                        },
+                        "en": {
+                            "text": "Summon points that you can only spend out of battle at a weapon master"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Отдельная шкала стиля, как ранг в файтинге"
+                        },
+                        "en": {
+                            "text": "A separate style bar, like a fighting-game rank"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Запас MP должен быть полностью пустым, иначе лимит не откроется"
+                        },
+                        "en": {
+                            "text": "MP has to be completely empty or the Limit will not unlock"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-got-stances",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "game": "Ghost of Tsushima",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Щитоносец в Ghost of Tsushima не пробивается «как есть». Что обычно даёт смена стойки под тип врага?"
+                },
+                "en": {
+                    "text": "A shielded fighter in Ghost of Tsushima will not crack if you swing “as is.” What does switching stance to match the enemy type usually give you?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Проще разбить его защиту: у мечей, щитов, копий и громил разные стойки"
+                        },
+                        "en": {
+                            "text": "You break their guard faster: swords, shields, spears, and brutes each have a stance"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Полную невидимость, пока стойка не сменится снова"
+                        },
+                        "en": {
+                            "text": "Full invisibility until you switch stance again"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Мгновенный добивающий кадр без участия игрока"
+                        },
+                        "en": {
+                            "text": "An instant finisher that plays without player input"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Стойки меняют только скин оружия, урон тот же"
+                        },
+                        "en": {
+                            "text": "Stances only reskin the weapon; the damage is identical"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-medium-spelunky-ghost",
+            "type": "TEXT",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "metadata": {
+                "game": "Spelunky",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Бомб кот наплакал, верёвок тоже, а если зависнуть на уровне слишком долго — из стены вылезает белая смерть. Какая это петля Spelunky?"
+                },
+                "en": {
+                    "text": "You’re rationing bombs and ropes — and if you linger too long, a white death squeezes out of the wall. What’s that Spelunky loop?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Дефицит ресурсов плюс лимит времени: призрак наказывает за медлительность"
+                        },
+                        "en": {
+                            "text": "Scarce tools plus a time limit: the ghost punishes lingering"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Призрак — союзник: он открывает секретный магазин"
+                        },
+                        "en": {
+                            "text": "The ghost is an ally: it opens a secret shop"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Бомбы бесконечны, ограничен только кислород, как под водой"
+                        },
+                        "en": {
+                            "text": "Bombs are infinite; only oxygen is limited, like diving"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Верёвки нужны лишь для сюжета, на сокровища они не влияют"
+                        },
+                        "en": {
+                            "text": "Ropes are story-only and do not affect treasure"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-invinc-alarm",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "game": "Invisible, Inc.",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Ход за ходом в Invisible, Inc. цифра тревоги ползёт вверх, даже если ты «никого не трогал». К чему это обычно ведёт?"
+                },
+                "en": {
+                    "text": "Turn after turn in Invisible, Inc., the alarm number creeps up even if you “didn’t touch anyone.” Where does that usually go?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Растёт alarm: камеры, щиты и подкрепления становятся злее"
+                        },
+                        "en": {
+                            "text": "Alarm rises: cameras, shields, and reinforcements get nastier"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Миссия автоматически выигрывается, когда тревога доходит до максимума"
+                        },
+                        "en": {
+                            "text": "The mission auto-wins once the alarm hits maximum"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Тревога только косметическая: поведение охраны не меняется"
+                        },
+                        "en": {
+                            "text": "The alarm is cosmetic: guard behavior never changes"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Высокая тревога отключает взлом и оставляет только стрельбу в лоб"
+                        },
+                        "en": {
+                            "text": "High alarm disables hacking and leaves only frontal shooting"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-thief-light-gem",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Thief",
+                "game": "Thief",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "В углу экрана Thief камень-индикатор наливается светом, едва выйдешь из тени. Что он тебе говорит?"
+                },
+                "en": {
+                    "text": "In the corner of Thief, a little gem floods with light the moment you step out of shadow. What is it telling you?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Насколько ты заметен: на свету стража видит тебя гораздо легче"
+                        },
+                        "en": {
+                            "text": "How visible you are: in the light, guards spot you much more easily"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Сколько золота ещё можно украсть на этом этаже"
+                        },
+                        "en": {
+                            "text": "How much gold is still left to steal on this floor"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Заряд маны для заклинания невидимости"
+                        },
+                        "en": {
+                            "text": "The mana charge for an invisibility spell"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Прочность отмычки: на свету она ломается быстрее"
+                        },
+                        "en": {
+                            "text": "Lockpick durability: picks break faster in the light"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-nier-chip-cap",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "game": "NieR: Automata",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "В NieR: Automata сильные чипы лежат в инвентаре, но в активные слоты не лезут. Что обычно этому мешает?"
+                },
+                "en": {
+                    "text": "In NieR: Automata the strong chips sit in the inventory and refuse to go into the active slots. What’s usually getting in the way?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Лимит ёмкости: сумма чипов не может превысить хранилище андроида"
+                        },
+                        "en": {
+                            "text": "Capacity: the chips’ total size cannot exceed the android’s storage"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Чипы работают только за 9S и сгорают после одного взлома"
+                        },
+                        "en": {
+                            "text": "Chips only work as 9S and burn out after a single hack"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Сначала оружие нужно прокачать до максимума, иначе слоты закрыты"
+                        },
+                        "en": {
+                            "text": "Weapons must be fully upgraded first or the slots stay locked"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Чипы экипируются только после титров, не во время прохождения"
+                        },
+                        "en": {
+                            "text": "Chips can only be equipped after the credits, not during the playthrough"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-cotl-cult-loop",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "game": "Cult of the Lamb",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Половина игры Cult of the Lamb — вылазка с мечом по данжу. Что за вторая часть игры, без которой культ обычно разваливается?"
+                },
+                "en": {
+                    "text": "Half of Cult of the Lamb is a sword run through a dungeon. What’s the other half of the game — the one the cult usually falls apart without?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Вернуться на базу: проповеди, постройки и уход за последователями"
+                        },
+                        "en": {
+                            "text": "Return to base: sermons, buildings, and looking after followers"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Бесконечно сидеть в данже, пока не упадёт финальный босс мира"
+                        },
+                        "en": {
+                            "text": "Stay in the dungeon forever until the world’s final boss drops"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Продавать последователей торговцу в каждом новом биоме"
+                        },
+                        "en": {
+                            "text": "Sell followers to a merchant in every new biome"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Перезапускать день только через смерть, без своей деревни"
+                        },
+                        "en": {
+                            "text": "Reset the day only by dying, with no village of your own"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-frostpunk-hope",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "game": "Frostpunk",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Город в морозе в Frostpunk ещё стоит, уголь есть, но на панели два счётчика — надежда и недовольство. Что будет, если один рухнет в ноль, а другой зашкалит?"
+                },
+                "en": {
+                    "text": "The frozen city in Frostpunk is still standing, coal is fine, but two meters sit on the panel: Hope and Discontent. What happens if one hits zero and the other maxes out?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Люди теряют веру в лидера: это штатный путь к провалу города"
+                        },
+                        "en": {
+                            "text": "People lose faith in the leader: that’s a standard path to city failure"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Счётчики только для концовки: на зиму и смены они не влияют"
+                        },
+                        "en": {
+                            "text": "The meters are ending-only flavor and do not affect winter or shifts"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Надежда в нуле включает бесконечный рабочий день без штрафов"
+                        },
+                        "en": {
+                            "text": "Hope at zero unlocks an endless workday with no penalties"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Высокое недовольство автоматически строит новые дома"
+                        },
+                        "en": {
+                            "text": "Max discontent automatically constructs new housing"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-factorio-pollution",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "game": "Factorio",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Заводы тикают как часы, а по карте от фабрик расползается облако. Почему кусаки в Factorio вдруг идут именно к тебе?"
+                },
+                "en": {
+                    "text": "The factory is humming, and a cloud spreads across the map from the machines. Why do Factorio biters suddenly path toward you?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Производство даёт загрязнение: гнёзда чуют pollution и атакуют"
+                        },
+                        "en": {
+                            "text": "Production creates pollution: nests sense it and send attacks"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Враги патрулируют по расписанию, облако на ИИ не влияет"
+                        },
+                        "en": {
+                            "text": "Enemies patrol on a timer; the cloud does not affect their AI"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Кусаки появляются только из сундуков с лутом, как мимик"
+                        },
+                        "en": {
+                            "text": "Biters only spawn from loot chests, like mimics"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Облако лечит гнёзда, поэтому они наоборот откочёвывают дальше"
+                        },
+                        "en": {
+                            "text": "The cloud heals nests, so they migrate farther away"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-dmc-style-rank",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "franchise": "Devil May Cry",
+                "game": "Devil May Cry",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "В Devil May Cry на экране вспыхивает Stylish и лезет к SSS. За что игра это ставит — если не за «просто больше цифр урона»?"
+                },
+                "en": {
+                    "text": "Devil May Cry flashes Stylish and climbs toward SSS. What is that grade actually for — if it isn’t just “bigger damage numbers”?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "За разнообразие приёмов и умение не пропускать удары"
+                        },
+                        "en": {
+                            "text": "For mixing up attacks and not getting hit"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Только за суммарный урон за весь уровень, стиль не важен"
+                        },
+                        "en": {
+                            "text": "Only for total damage across the level; style does not matter"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Ранг растёт сам по таймеру, даже если стоять в углу"
+                        },
+                        "en": {
+                            "text": "The rank climbs on a timer even if you stand in a corner"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "SSS выдаётся исключительно за прохождение без единого прыжка"
+                        },
+                        "en": {
+                            "text": "SSS is awarded only for finishing without a single jump"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "batch-2026-08-17-mech-w4-hard-prey-mimic",
+            "type": "TEXT",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "metadata": {
+                "game": "Prey (2017)",
+                "topic": "mechanics",
+                "localizationStrategy": "full"
+            },
+            "translations": {
+                "ru": {
+                    "text": "В Prey (2017) можно стать кружкой на столе — и охранник проходит мимо. Какая способность так работает?"
+                },
+                "en": {
+                    "text": "In Prey (2017) you can become a mug on a table and a guard walks right past. Which ability does that?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Mimic: копируешь предмет и маскируешься под обстановку"
+                        },
+                        "en": {
+                            "text": "Mimic: you copy an object and blend into the scenery"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Гравипушка: предметы сами прячут тебя, как живой щит"
+                        },
+                        "en": {
+                            "text": "A gravity gun: objects hide you on their own, like a living shield"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Взлом камер навсегда стирает тебя из памяти врагов"
+                        },
+                        "en": {
+                            "text": "Hacking cameras permanently wipes you from enemy memory"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Это только сюжетный ролик, а не умение, которое берёшь сам"
+                        },
+                        "en": {
+                            "text": "It’s only a story cutscene, not an ability you unlock yourself"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

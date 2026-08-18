@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "manual",
-  "notes": "Mechanics TEXT wave — start size 12 (4×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Avoid seed/C/D dupes: no Celeste dash crystal, no Sekiro Posture, no Elden Ring Sites of Grace, no Max Payne bullet time. Authored incrementally; do not re-import C/D/fresh/samples.",
+  "notes": "Mechanics TEXT wave — start size 12 (4×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Avoid seed/C/D dupes: no Celeste dash crystal, no Sekiro Posture, no Elden Ring Sites of Grace, no Max Payne bullet time. Authored incrementally; do not re-import C/D/fresh/samples. Voice-pass Aug 18: replace stems in place (UPDATE). Do not re-import.",
   "questions": [
     {
       "draftKey": "batch-2026-08-12-mech-easy-halo-shield-recharge",
@@ -16,10 +16,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Halo что обычно происходит с энергетическим щитом, если на время перестать получать урон?"
+          "text": "Что в Halo делает энергетический щит в те секунды, когда по тебе никто не попадает?"
         },
         "en": {
-          "text": "In Halo, what typically happens to your energy shield if you stop taking damage for a moment?"
+          "text": "In Halo, what does the energy shield do in the seconds when nobody is hitting you?"
         }
       },
       "options": [
@@ -66,10 +66,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Minecraft в режиме Выживание что обычно нужно сделать, чтобы сердца начали восстанавливаться сами?"
+          "text": "Что в Minecraft на Выживании нужно сделать, чтобы сердца начали восстанавливаться сами?"
         },
         "en": {
-          "text": "In Minecraft Survival, what do you usually need to do before hearts start regenerating on their own?"
+          "text": "In Minecraft Survival, what do you need to do so hearts start regenerating on their own?"
         }
       },
       "options": [
@@ -116,10 +116,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Breath of the Wild что происходит со шкалой выносливости, пока Линк карабкается по скале?"
+          "text": "Что в Breath of the Wild происходит с выносливостью, пока Линк карабкается по скале?"
         },
         "en": {
-          "text": "In Breath of the Wild, what happens to the stamina wheel while Link is climbing a cliff?"
+          "text": "In Breath of the Wild, what happens to stamina while Link is climbing a cliff?"
         }
       },
       "options": [
@@ -166,10 +166,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Portal что происходит со скоростью Челл, когда она вылетает из портала после длинного падения?"
+          "text": "Что Portal делает со скоростью Челл, когда она вылетает из портала после длинного падения?"
         },
         "en": {
-          "text": "In Portal, what happens to Chell’s speed when she exits a portal after a long fall?"
+          "text": "What does Portal do with Chell’s speed when she comes out of a portal after a long fall?"
         }
       },
       "options": [
@@ -216,10 +216,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Bloodborne как охотник может сразу вернуть часть здоровья, которое только что снял удар врага?"
+          "text": "Как в Bloodborne сразу после удара вернуть часть только что снятого здоровья?"
         },
         "en": {
-          "text": "In Bloodborne, how can a hunter immediately recover some of the health a hit just took?"
+          "text": "In Bloodborne, how do you recover some of the health a hit just took off?"
         }
       },
       "options": [
@@ -266,10 +266,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Doom (2016) что обычно даёт добивание подсвеченного ослабленного демона (glory kill)?"
+          "text": "Что в Doom (2016) даёт добивание подсвеченного демона — glory kill?"
         },
         "en": {
-          "text": "In Doom (2016), what does a glory kill on a highlighted staggered demon usually give you?"
+          "text": "In Doom (2016), what does a glory kill on a glowing demon give you?"
         }
       },
       "options": [
@@ -316,10 +316,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Gears of War что даёт успешный активный перезаряд — попадание в узкое окно на шкале?"
+          "text": "Что в Gears of War даёт попадание в узкое окно на шкале перезарядки?"
         },
         "en": {
-          "text": "In Gears of War, what does a successful active reload — hitting the narrow bar window — grant?"
+          "text": "In Gears of War, what do you get for hitting the narrow window on the reload bar?"
         }
       },
       "options": [
@@ -366,10 +366,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Hollow Knight откуда Рыцарь в основном набирает Душу (SOUL) для лечения Фокусом и заклинаний?"
+          "text": "Откуда в Hollow Knight берётся Душа на Фокус и заклинания?"
         },
         "en": {
-          "text": "In Hollow Knight, how does the Knight mainly gain SOUL for Focus healing and spells?"
+          "text": "In Hollow Knight, where does SOUL for Focus and spells mainly come from?"
         }
       },
       "options": [
@@ -416,10 +416,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Nioh зачем после серии ударов вовремя сделать Ki Pulse (импульс ки)?"
+          "text": "Зачем в Nioh ловят Ki Pulse, когда после серии ударов Ки почти на нуле?"
         },
         "en": {
-          "text": "In Nioh, why do you time a Ki Pulse after a string of attacks?"
+          "text": "In Nioh, why catch a Ki Pulse when Ki is nearly empty after a string of attacks?"
         }
       },
       "options": [
@@ -466,10 +466,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Hades что происходит, когда Загрей должен умереть, но у него ещё есть заряд «Непокорности смерти» (Death Defiance)?"
+          "text": "Что в Hades будет с Загреем, если HP в нуле, а заряд Непокорности смерти ещё горит?"
         },
         "en": {
-          "text": "In Hades, what happens when Zagreus would die but still has a Death Defiance charge?"
+          "text": "In Hades, what happens to Zagreus if HP is at zero but a Death Defiance charge is still lit?"
         }
       },
       "options": [
@@ -516,10 +516,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Monster Hunter что обычно происходит с атаками, если острота оружия сильно упала?"
+          "text": "Как в Monster Hunter бьют атаки, когда цвет остроты оружия сильно сполз вниз?"
         },
         "en": {
-          "text": "In Monster Hunter, what usually happens to attacks if weapon sharpness has dropped too far?"
+          "text": "In Monster Hunter, how do attacks hit when the weapon’s sharpness color has dropped a lot?"
         }
       },
       "options": [
@@ -566,10 +566,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Bayonetta что обычно происходит, если уклониться от атаки в последний момент?"
+          "text": "Что в Bayonetta включает уклон в самый последний кадр перед ударом?"
         },
         "en": {
-          "text": "In Bayonetta, what usually happens if you dodge an attack at the last moment?"
+          "text": "In Bayonetta, what does a last-frame dodge before a hit switch on?"
         }
       },
       "options": [

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "manual",
-  "notes": "Mechanics TEXT wave 2 — 24 questions (8×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Do not re-import seed/C/D/fresh/samples/mechanics-12. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf). Authored incrementally.",
+  "notes": "Mechanics TEXT wave 2 — 24 questions (8×EASY/MEDIUM/HARD). Systems the player feels, not trivia. Do not re-import seed/C/D/fresh/samples/mechanics-12. Occupied loops stay out (rings-as-shield, catch, bonfires, Igni, Celeste dash crystal, Sekiro Posture, Halo shield regen, Minecraft hunger regen, BotW climb stamina, Portal fling, Bloodborne Rally, Doom glory kill, Gears active reload, Hollow Knight SOUL, Nioh Ki Pulse, Hades Death Defiance, MH sharpness, Bayonetta Witch Time, plus Sites of Grace / bullet time / Splatoon ink / Outer Wilds 22 min / Fable morality / Majora 3 days / TotK Fuse / STALKER Emission / CS plant / Hitman disguise / Atomic Heart polymer / TP wolf). Authored incrementally. Voice-pass Aug 18: replace stems in place (UPDATE). Do not re-import.",
   "questions": [
     {
       "draftKey": "batch-2026-08-13-mech-w2-easy-smb-grown-hit",
@@ -16,10 +16,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В классическом Super Mario Bros. что обычно происходит, если ударили уже большого Марио?"
+          "text": "Что в классическом Super Mario Bros. происходит с уже большим Марио, если его ударили?"
         },
         "en": {
-          "text": "In classic Super Mario Bros., what usually happens if Super Mario (already grown) takes a hit?"
+          "text": "In classic Super Mario Bros., what happens to Mario if he is already big when he gets hit?"
         }
       },
       "options": [
@@ -66,10 +66,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Pac-Man что обычно происходит с призраками, после того как съеден большой мигающий шар в углу?"
+          "text": "Что в Pac-Man происходит с призраками сразу после большого мигающего шара в углу?"
         },
         "en": {
-          "text": "In Pac-Man, what usually happens to the ghosts after you eat one of the large flashing dots?"
+          "text": "In Pac-Man, what happens to the ghosts right after the big flashing pellet in the corner?"
         }
       },
       "options": [
@@ -116,10 +116,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Tetris что обычно происходит, когда горизонтальный ряд полностью заполнен фигурками?"
+          "text": "Что Tetris делает с полностью заполненной горизонтальной линией?"
         },
         "en": {
-          "text": "In Tetris, what usually happens when a horizontal row is completely filled with blocks?"
+          "text": "What does Tetris do with a completely filled horizontal line?"
         }
       },
       "options": [
@@ -166,10 +166,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В SUPERHOT что обычно происходит со временем, пока ты стоишь на месте?"
+          "text": "Что в SUPERHOT происходит со временем, пока ты стоишь на месте?"
         },
         "en": {
-          "text": "In SUPERHOT, what usually happens to time while you stand still?"
+          "text": "In SUPERHOT, what happens to time while you are standing still?"
         }
       },
       "options": [
@@ -216,10 +216,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Subnautica что обычно происходит со шкалой кислорода, пока ты плывёшь под водой без запаса из техники?"
+          "text": "Что в Subnautica делает шкала кислорода, пока плывёшь под водой без техники?"
         },
         "en": {
-          "text": "In Subnautica, what usually happens to the oxygen bar while you swim underwater without a vehicle air supply?"
+          "text": "In Subnautica, what does the oxygen bar do while you swim underwater with no vehicle?"
         }
       },
       "options": [
@@ -266,10 +266,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Super Smash Bros. что обычно означает высокий процент урона у бойца?"
+          "text": "Что в Super Smash Bros. значит высокий процент на портрете для следующего сильного удара?"
         },
         "en": {
-          "text": "In Super Smash Bros., what does a high damage percent on a fighter usually mean?"
+          "text": "In Super Smash Bros., what does a high percent on the portrait mean for the next strong hit?"
         }
       },
       "options": [
@@ -316,10 +316,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Stardew Valley что обычно происходит со шкалой энергии, пока ты копаешь, рубишь и поливаешь грядки?"
+          "text": "Что в Stardew Valley происходит с энергией, пока копаешь, рубишь и поливаешь?"
         },
         "en": {
-          "text": "In Stardew Valley, what usually happens to the energy bar while you dig, chop, and water crops?"
+          "text": "In Stardew Valley, what happens to energy while you dig, chop, and water?"
         }
       },
       "options": [
@@ -366,10 +366,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Grand Theft Auto что обычно происходит, когда растёт число звёзд розыска?"
+          "text": "Как в Grand Theft Auto меняется погоня, когда звёзд розыска становится больше?"
         },
         "en": {
-          "text": "In Grand Theft Auto, what usually happens as the wanted-star count rises?"
+          "text": "In Grand Theft Auto, how does the chase change as the wanted stars pile up?"
         }
       },
       "options": [
@@ -416,10 +416,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В современных Mario Kart что обычно происходит, если долго держать занос, пока на шинах не появятся искры, и затем отпустить?"
+          "text": "Что в современных Mario Kart даёт долгий занос, если отпустить его на искрах?"
         },
         "en": {
-          "text": "In modern Mario Kart, what usually happens if you hold a drift until sparks appear on the tires and then release?"
+          "text": "In modern Mario Kart, what does a long drift give you if you release it on sparks?"
         }
       },
       "options": [
@@ -466,10 +466,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Rocket League зачем обычно подбирать светящиеся цилиндры и сферы на арене?"
+          "text": "Зачем в Rocket League подбирать светящиеся подушки и шары на арене?"
         },
         "en": {
-          "text": "In Rocket League, why do you usually pick up the glowing pads and orbs on the arena?"
+          "text": "In Rocket League, why pick up the glowing pads and orbs on the arena?"
         }
       },
       "options": [
@@ -516,10 +516,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В BioShock что обычно тратится, когда ты запускаешь плазмид в бою?"
+          "text": "Что в BioShock тратится, когда запускаешь плазмид в бою?"
         },
         "en": {
-          "text": "In BioShock, what is usually spent when you fire a plasmid in combat?"
+          "text": "In BioShock, what gets spent when you fire a plasmid in combat?"
         }
       },
       "options": [
@@ -566,10 +566,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Dishonored что обычно ограничивает, как часто можно коротко телепортироваться и использовать сверхъестественные силы?"
+          "text": "Что в Dishonored ограничивает, как часто можно использовать сверхъестественные силы?"
         },
         "en": {
-          "text": "In Dishonored, what usually limits how often you can short-teleport and use supernatural powers?"
+          "text": "In Dishonored, what limits how often you can use supernatural powers?"
         }
       },
       "options": [
@@ -616,10 +616,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Dead Space что обычно происходит с некроморфом, если попасть по нему синим замедляющим лучом?"
+          "text": "Что в Dead Space делает луч stasis с некроморфом?"
         },
         "en": {
-          "text": "In Dead Space, what usually happens to a necromorph if you hit it with the blue slowing beam?"
+          "text": "In Dead Space, what does the stasis beam do to a necromorph?"
         }
       },
       "options": [
@@ -666,10 +666,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Cuphead что обычно происходит, если вовремя прыжком ударить по розовому снаряду?"
+          "text": "Что в Cuphead даёт прыжок в такт по розовому снаряду?"
         },
         "en": {
-          "text": "In Cuphead, what usually happens if you jump and strike a pink projectile on time?"
+          "text": "In Cuphead, what do you get for jumping on a pink projectile on the beat?"
         }
       },
       "options": [
@@ -716,10 +716,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Slay the Spire что обычно ограничивает, сколько карт можно разыграть за один ход?"
+          "text": "Что в Slay the Spire ограничивает, сколько карт можно разыграть за один ход?"
         },
         "en": {
-          "text": "In Slay the Spire, what usually limits how many cards you can play in a single turn?"
+          "text": "In Slay the Spire, what limits how many cards you can play in one turn?"
         }
       },
       "options": [
@@ -766,10 +766,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Fallout 3, New Vegas и Fallout 4 что обычно происходит, когда бой почти замирает и ты строишь очередь выстрелов по частям тела?"
+          "text": "Что в Fallout 3 / New Vegas / 4 тратится на выстрелы по частям тела в режиме V.A.T.S., где время почти замирает?"
         },
         "en": {
-          "text": "In Fallout 3, New Vegas, and Fallout 4, what usually happens when combat nearly pauses and you queue shots on body parts?"
+          "text": "In Fallout 3 / New Vegas / 4, what is spent on shots to body parts in V.A.T.S., where time almost freezes?"
         }
       },
       "options": [
@@ -816,10 +816,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Sifu что обычно происходит с героем, если после смерти принять воскрешение и продолжить бой?"
+          "text": "Что в Sifu происходит с героем, если после смерти принять воскрешение и продолжить бой?"
         },
         "en": {
-          "text": "In Sifu, what usually happens to the hero if you accept a resurrection after death and keep fighting?"
+          "text": "In Sifu, what happens to the hero if you take the resurrection after death and keep fighting?"
         }
       },
       "options": [
@@ -866,10 +866,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Returnal какой риск обычно несёт подбор расходника или перегрузка станка за лишнюю награду?"
+          "text": "Какой риск в Returnal несёт расходник или перегруз станка за лишнюю награду?"
         },
         "en": {
-          "text": "In Returnal, what risk do you usually take when grabbing a consumable or overloading a fabricator for an extra reward?"
+          "text": "In Returnal, what risk comes with a consumable or overloading the fabricator for extra reward?"
         }
       },
       "options": [
@@ -916,10 +916,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В FTL: Faster Than Light зачем в бою обычно перекидывать энергию реактора между системами?"
+          "text": "Зачем в FTL в бою перекидывают энергию реактора между щитами, оружием и двигателями?"
         },
         "en": {
-          "text": "In FTL: Faster Than Light, why do you usually move reactor power between systems during a fight?"
+          "text": "In FTL, why shuffle reactor power between shields, weapons, and engines in a fight?"
         }
       },
       "options": [
@@ -966,10 +966,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Into the Breach что обычно видно ещё до хода твоих мехов?"
+          "text": "Что в Into the Breach заранее видно на клетках — ещё до хода твоих мехов?"
         },
         "en": {
-          "text": "In Into the Breach, what do you usually see before your mechs take their turn?"
+          "text": "In Into the Breach, what is already visible on the tiles — before your mechs’ turn?"
         }
       },
       "options": [
@@ -1016,10 +1016,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Darkest Dungeon что обычно происходит, если шкала стресса героя забивается под завязку?"
+          "text": "Что в Darkest Dungeon случается с героем, когда шкала стресса забита до упора?"
         },
         "en": {
-          "text": "In Darkest Dungeon, what usually happens if a hero’s stress bar fills to the breaking point?"
+          "text": "In Darkest Dungeon, what happens to a hero when the stress bar is maxed out?"
         }
       },
       "options": [
@@ -1066,10 +1066,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Middle-earth: Shadow of Mordor что обычно происходит с урком, который сумел тебя убить?"
+          "text": "Что в Middle-earth: Shadow of Mordor происходит с урком, который сумел тебя убить?"
         },
         "en": {
-          "text": "In Middle-earth: Shadow of Mordor, what usually happens to an orc who managed to kill you?"
+          "text": "In Middle-earth: Shadow of Mordor, what happens to an orc who managed to kill you?"
         }
       },
       "options": [
@@ -1116,10 +1116,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Crypt of the NecroDancer что обычно происходит, если шагнуть не в такт музыке?"
+          "text": "Что в Crypt of the NecroDancer будет за шаг мимо доли музыки?"
         },
         "en": {
-          "text": "In Crypt of the NecroDancer, what usually happens if you step off the music’s beat?"
+          "text": "In Crypt of the NecroDancer, what happens if you step off the beat?"
         }
       },
       "options": [
@@ -1166,10 +1166,10 @@
       },
       "translations": {
         "ru": {
-          "text": "В Baba Is You что обычно происходит, если сдвинуть слова на поле так, что получится новая фраза вроде «флаг есть победа»?"
+          "text": "Что Baba Is You делает с правилами уровня, если сложить на поле новую фразу вроде «флаг есть победа»?"
         },
         "en": {
-          "text": "In Baba Is You, what usually happens if you push words on the field into a new sentence such as “flag is win”?"
+          "text": "What does Baba Is You do with the level’s rules if you arrange the words into a new sentence like “flag is win”?"
         }
       },
       "options": [

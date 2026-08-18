@@ -12,7 +12,7 @@ Related canon:
 
 **Authoring tip (product taste):** prefer **interesting game-mechanics** questions (systems players feel: dash refill, posture, parry, resource loops) over trivia that repeats seed facts. Still run a quick duplicate check vs seed + prior batches before Publish.
 
-**Next authoring target (Aug 15):** Mechanics TEXT wave 3 ×24 is **PUBLISHED** local+prod (`2026-08-13-text-mechanics-w3-24.json`) — **do not re-import**. Dedicated mechanics ≈20 per difficulty. Mixed-difficulty lobby is **on www** (prod schema `poolKind` catch-up Aug 15; user-verified Classic/Blitz MIX start→score). Optional later: mechanics wave 4 (~24) if aiming ~24–30 per difficulty (dupe-check vs seed + C/D + mechanics-12 + w2 + w3). Pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24.
+**Next authoring target (Aug 18):** Mechanics TEXT wave 4 ×24 is **PUBLISHED** local+prod (`2026-08-17-text-mechanics-w4-24.json`) — **do not re-import**. TEXT quiz pool **354** (118/118/118). Dedicated mechanics ≈28 per difficulty. Mix lobby stays **on www** — do not re-implement. Optional later: voice-pass on mechanics-12 / w2 / w3 stems (same loops, livelier question frames; **UPDATE translations in place**, never re-import). Pipeline unchanged: validate → import DRAFT → `content:publish-text-drafts` (prod: `--target=prod --file=…`). Do not re-import C/D/fresh/sample/mechanics-12/w2-24/w3-24/w4-24.
 
 ---
 
@@ -66,6 +66,7 @@ content/drafts/
     2026-08-12-text-mechanics-12.json # TEXT ×12 mechanics (local+prod PUBLISHED)
     2026-08-13-text-mechanics-w2-24.json # TEXT ×24 mechanics wave 2 (local+prod PUBLISHED)
     2026-08-13-text-mechanics-w3-24.json # TEXT ×24 mechanics wave 3 (local+prod PUBLISHED)
+    2026-08-17-text-mechanics-w4-24.json # TEXT ×24 mechanics wave 4 (local+prod PUBLISHED)
 
 src/features/content/lib/
   draft-questions.schema.ts          # Zod contract v1 (runtime)
@@ -357,7 +358,9 @@ Admin hub counts **all** `isActive` rows (including DRAFT). A gap there is almos
 
 **Aug 13 (later):** mechanics TEXT wave 2 ×24 (`2026-08-13-text-mechanics-w2-24.json`) published both sides → TEXT **306** (102/102/102) + IMAGE **171** → admin ~**477**.
 
-**Aug 13 (evening):** mechanics TEXT wave 3 ×24 (`2026-08-13-text-mechanics-w3-24.json`) published both sides → TEXT **330** (110/110/110) + IMAGE **171** → admin ~**501**. Verify:
+**Aug 13 (evening):** mechanics TEXT wave 3 ×24 (`2026-08-13-text-mechanics-w3-24.json`) published both sides → TEXT **330** (110/110/110) + IMAGE **171** → admin ~**501**.
+
+**Aug 18:** mechanics TEXT wave 4 ×24 (`2026-08-17-text-mechanics-w4-24.json`) published both sides → TEXT **354** (118/118/118) + IMAGE **171** → admin ~**525**. Verify:
 
 ```powershell
 npm run content:smoke-text
@@ -368,4 +371,4 @@ npm run content:smoke-image-guess -- --target=prod
 
 Helper for TEXT → prod without swapping `.env`: `node scripts/import-text-drafts-to-prod.cjs <files…>` (refuses `jolly-river`). Then publish with `content:publish-text-drafts -- --target=prod --file=…` (prod **requires** `--file`; bulk cap 100).
 
-**Do not:** dump one Neon onto the other; re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24; treat hub “active” as quiz pool (`PUBLISHED + isActive`).
+**Do not:** dump one Neon onto the other; re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24; treat hub “active” as quiz pool (`PUBLISHED + isActive`).
