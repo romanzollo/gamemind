@@ -4,7 +4,8 @@
 **Priority: production (Vercel + prod Neon).** Local `next dev` on Windows is a harsher TLS lab — use it to *find* bugs, not to invent prod-only timeouts, keep-warm, or extra Direct hops. A fix that only papers over Windows `next dev` and false-fails cold Neon on www is wrong.  
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
-**Overview:** `docs/ARCHITECTURE.md`.
+**Overview:** `docs/ARCHITECTURE.md`.  
+**Survival contract (not shipped):** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Separate runner; `timedEndsAt` NULL; bank reconstructed on submit.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 
@@ -12,7 +13,7 @@
 
 ## Product priority (do not invert)
 
-1. **Production** Classic / Blitz / Daily: start → questions on screen → **submit saves score** → result summary paints. That path is the release gate.
+1. **Production** Classic / Blitz / Daily: start → questions on screen → **submit saves score** → result summary paints. That path is the release gate. Survival is contracted, not in the gate until schema+start+submit ship.
 2. Local Windows `next dev` must not wedge the shared Direct queue (home/Daily/start look dead). Workarounds (queue, 300ms settle, 5s play-load timeout, in-memory handoff) exist **because** of that lab — they must not make prod worse (example: 5s play-load timeout → false soft-miss on cold Neon).
 3. Answer **review** and polish are best-effort — never block (1).
 
@@ -86,7 +87,7 @@ BAD:  notFound() on miss/timeout
 
 ### C. Start (pick + create)
 
-- Classic / Timed **separate runners**; pick resolve **chunk size 5** (do not change without matrix).
+- Classic / Timed **separate runners**; pick resolve **chunk size 5** (do not change without matrix). Survival (when shipped) is a **third** runner — not `runTimedQuizStart`, not `timedEndsAt`.
 - Classic / Timed pick ids via **UserQuestionCycle** (seeded cursor scalars), then resolve-by-ids.
 - Cycle hop: raw `pg` **`withPooledPgClient`** — **outside** shared Direct queue (never `withDirectPg*` for cycle).
 - After **any** cycle (SINGLE and Mix): **300ms settle** before Direct resolve (`pick-quiz-snapshot-bundle.ts`). Mix is not special here.
@@ -94,6 +95,7 @@ BAD:  notFound() on miss/timeout
 - Boundary: **reshuffle-first** when remaining &lt; needed. No silent random fallback if cycle fails.
 - Create: **`withDirectPgWriteClient`**, INSERT `snapshotData` only. Do **not** return create to `withDirectPgQuizStartClient`.
 - Timed abandon: **pooled scalar UPDATE before pick**. Never UPDATE orphans on the same Direct client as JSONB INSERT. Never a second **unpooled** hop solely for abandon.
+- Survival (contract, not shipped): same abandon shape **for Survival rows only**; pooled `SurvivalRun` INSERT before pick; create INSERT-only; **`timedEndsAt` NULL**; `startedAt` = JS Date after connect. Not `runTimedQuizStart`.
 - Keep-warm on quiz Direct queue **OFF**.
 
 ### D. Play-load (quiz session page)
@@ -185,7 +187,7 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
    - SQL `NOW()` into naive `TIMESTAMP` → JS Date after connect.
    - abandon+INSERT on one Direct client → pooled abandon before pick.
 4. Score broken → complete scalars. Review broken → soft-fail OK. Soft-miss on known new session → handoff miss + TOAST read, not “row missing”.
-5. Do not re-enable keep-warm; do not merge Classic/Timed start; do not expand Daily lobby TLS; do not change chunk size without matrix.
+5. Do not re-enable keep-warm; do not merge Classic/Timed start; do not fold Survival into Timed/`timedEndsAt`; do not expand Daily lobby TLS; do not change chunk size without matrix.
 6. Classic/Timed start dies after cycle with Prisma `Connection terminated` → cycle stays on `withPooledPgClient`.
 7. Start UI generic filter error + Vercel `42703` `poolKind` (or any missing Mix/session column) → prod schema lag. Ops: `CONTENT_PIPELINE.md` §10. Do not change handoff/clock/Direct.
 
@@ -202,6 +204,7 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
 | Play-load Map | `src/entities/quiz-session/play-load-handoff.ts` |
 | Play-load read (handoff then pooled) | `src/entities/quiz-session/quiz-session-reads.repository.ts` |
 | Timed start (abandon then pick) | `src/features/timed-mode/lib/run-timed-quiz-start.ts` |
+| Survival contract (no runner yet) | `src/features/survival-mode/types.ts` |
 | Quiz session page (soft-miss) | `src/app/[locale]/(public)/quiz/[sessionId]/page.tsx` |
 | Submit complete | `src/entities/quiz-session/quiz-session-submit.repository.ts` |
 | Result summary/review | `src/entities/quiz-result/quiz-result.repository.ts` |

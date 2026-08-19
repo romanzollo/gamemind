@@ -187,9 +187,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 19, 2026 — Leaderboard retention Layer 1 **local** (user smoke OK). TEXT pool **378** (126/126/126).
+**Last updated:** August 19, 2026 — Survival Mode MVP **contract** locked (ADR + `types.ts`). Leaderboard Layer 1 still **local** (user smoke OK). TEXT pool **378** (126/126/126).
 
-**Preferred next:** commit Layer 1 when asked → redeploy + smoke `/leaderboard` week default on www (Classic HARD 30 must not lock the live board). Then optional mechanics TEXT **wave 6** ×24 — **new loops only**; stems `QUESTION_I18N.md` §10; distractors **§3 D**. Dupe-check vs seed + C/D/fresh + mechanics-12/w2/w3/w4/w5. Mix lobby is live — do not re-implement. Always `migrate deploy` on **prod** after schema deploys (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`). Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Survival is a separate epic — not bundled with Layer 1.
+**Preferred next:** Survival **chat A** = Prisma `SurvivalRun` + session discriminator + Classic/achievements WHERE `survivalRunId IS NULL` (**before** any Survival result). Do **not** start `runSurvivalQuizStart` in that chat. In parallel / separately: commit Layer 1 when asked → redeploy + smoke `/leaderboard` week default on www. Then optional mechanics TEXT **wave 6** ×24 — **new loops only**; stems `QUESTION_I18N.md` §10; distractors **§3 D**. Mix lobby is live — do not re-implement. Always `migrate deploy` on **prod** after schema deploys (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`). Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Do not merge Survival into Timed.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -243,6 +243,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 50. ~~**Mechanics TEXT wave 5 ×24**~~ — Aug 18 night: `2026-08-18-text-mechanics-w5-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **378** (126/126/126) local+prod. Distractors: `QUESTION_I18N.md` §3 D.
 51. ~~**Admin hub format glance**~~ — Aug 18: Questions 2×2 (`Question.type` TEXT/IMAGE_GUESS) + Users total caption; same COUNT round-trip; user smoke OK.
 52. ~~**Leaderboard retention Layer 1**~~ — Aug 19: default rolling week; exclusive Classic/Blitz/Daily; Blitz duration tie-break; 7-day copy on board + Classic/Blitz lobby; **local user smoke OK**; www deploy pending.
+53. ~~**Survival Mode MVP contract**~~ — Aug 19: ADR + `src/features/survival-mode/types.ts` (time-bank waves, not instant-death). Schema / start / submit **not** started.
 
 ### Deploy / hosting checklist (tracking)
 
@@ -324,7 +325,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 - [x] Toast notifications (Sonner + achievement flash) — **shipped** July 30; see DECISIONS “How to add a new toast”
 - [x] Daily challenge — **MVP on prod** July 30 (Moscow day, freeze, one attempt, CTA home+quiz, today’s board; migration `20260729234500_daily_challenge`)
 - [x] Timed mode — **on origin** July 31; **abandon + rematch + review Neon harden + RU labels** Aug 2 (local verified; redeploy pending)
-- [ ] Survival/streak mode
+- [ ] Survival/streak mode — **ADR + `types.ts` locked Aug 19** (time-bank waves, not instant-death). Next chat: schema + Layer 1/achievements `survivalRunId IS NULL`. No start runner yet.
 - [ ] Category/platform/genre-specific quiz — defer until real filter demand + more tagged content
 - [x] Period-based leaderboards (difficulty `14dc97c` + rolling week/month `019c071`; Layer 1 default week + mode + Blitz speed Aug 19)
 - [ ] API-assisted draft question generation with admin review

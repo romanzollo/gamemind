@@ -5,13 +5,14 @@ Dated “why we chose this” lives in [`DECISIONS.md`](./DECISIONS.md). Binding
 
 ## Product shape
 
-Three play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring):
+Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival is **contracted** (Aug 19); schema/start are not shipped.
 
 | Mode | Discriminator | Player contract |
 |------|----------------|-----------------|
-| Classic | `dailyChallengeId` and `timedEndsAt` both NULL | Difficulty + 1–10 questions; rematch; anti-repeat cycle |
+| Classic | `dailyChallengeId`, `timedEndsAt`, and (when the column exists) `survivalRunId` all NULL | Difficulty + 1–10 questions; rematch; anti-repeat cycle |
 | Blitz (Timed) | `timedEndsAt` set | 10 questions, 60s **server** deadline, 3s grace; partial answers OK |
 | Daily | `dailyChallengeId` set | Moscow calendar day; `MEDIUM` × 10; one attempt; no cycle |
+| Survival | `survivalRunId` set; **`timedEndsAt` NULL** | Wave of 12; time-bank T0=20 +4/−6; same weights; exclusive board. Canon: `DECISIONS.md` → Survival Mode MVP |
 
 Quiz pool = `Question.isActive = true` **and** `publicationStatus = PUBLISHED`.  
 `isActive` is archive/soft-hide; `publicationStatus` is draft → review → publish. They are orthogonal.
@@ -71,9 +72,9 @@ flowchart TB
 
 **Direct `pg`:** confirmed fragile Neon paths — quiz start resolve/snapshot INSERT, submit complete, result summary, admin list/writes, leaderboard `DISTINCT ON`. One process-wide Direct queue in **`next dev` only**; a hung hop stalls Home / Daily / start. **Production has no that queue.** Play-load snapshot read is **pooled**, not Direct.
 
-**Public leaderboard (Layer 1, Aug 19):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`) — never `snapshotData`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily keep `completedAt` only. Page `loadFailed` on error, not 500. Detail: `DECISIONS.md` → Leaderboard retention meta.
+**Public leaderboard (Layer 1, Aug 19):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`) — never `snapshotData`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily keep `completedAt` only. Page `loadFailed` on error, not 500. When Survival `survivalRunId` ships: Classic WHERE must add `AND survivalRunId IS NULL`; Survival is a **separate** board. Detail: `DECISIONS.md` → Leaderboard retention meta + Survival Mode MVP.
 
-**UserQuestionCycle** (Classic / Blitz pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. After cycle (SINGLE and Mix): 300ms settle, then Direct resolve chunks of 5. Daily does not use the cycle. Boundary is **reshuffle-first**. No silent `ORDER BY RANDOM` fallback.
+**UserQuestionCycle** (Classic / Blitz / Survival pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. After cycle (SINGLE and Mix): 300ms settle, then Direct resolve chunks of 5. Daily does not use the cycle. Survival MVP shares the Classic/Timed bag (`userId + difficulty`); no Mix. Boundary is **reshuffle-first**. No silent `ORDER BY RANDOM` fallback.
 
 **Priority:** production (Vercel + prod Neon) is the product. Local Windows `next dev` is a TLS lab — do not ship local fail-fast that false-fails cold Neon (play-load timeout 5s dev / **18s prod**).
 
@@ -87,8 +88,8 @@ sequenceDiagram
   participant D as Direct pg
   participant R as Result page
 
-  U->>S: start (Classic / Blitz / Daily)
-  alt Classic or Blitz
+  U->>S: start (Classic / Blitz / Daily / Survival)
+  alt Classic or Blitz or Survival
     S->>P: draw ids (seeded cursor)
     P-->>S: questionIds
   else Daily
@@ -114,15 +115,15 @@ sequenceDiagram
 Invariants:
 
 1. Snapshot at **start** freezes question ids, option order, `isCorrect`, bilingual texts, image URLs. Mid-session bank edits must not change that session.
-2. Public quiz UI never exposes `isCorrect`. Scoring uses snapshot `optionId`s only.
+2. Public quiz UI never exposes `isCorrect` for Classic / Blitz / Daily. Survival play DTO **may** include correctness for client bank UX (no per-question API) — accepted friends-MVP leak; scoring still uses the frozen snapshot on submit. See Survival Mode MVP.
 3. **Complete hop** writes answers + **scalar** `QuizResult` + `COMPLETED` + achievement outbox. No fat `snapshotData` / `reviewSnapshot` JSON into pg on that hop.
 4. `reviewPayload` is after successful complete, non-blocking. Review failure must not fail submit.
 5. Result: paint score first. Soft-miss on transient read — never `notFound()` (sticky App Router 404).
-6. Client timer / client score / client `userId` are not authority. Blitz deadline is `timedEndsAt` on the row (`Date.now()+duration` after create connect — not SQL `NOW()` into naive `TIMESTAMP`).
+6. Client timer / client score / client `userId` are not authority. Blitz deadline is `timedEndsAt` on the row (`Date.now()+duration` after create connect — not SQL `NOW()` into naive `TIMESTAMP`). Survival does **not** use `timedEndsAt`; bank is reconstructed on submit from `startedAt` (JS Date after connect, not SQL `NOW()`) + correct/wrong counts.
 7. Adding questions is a **content** change (draft → publish). Do not “optimize” by stuffing more JSON into submit/result.
 8. Do not SELECT `snapshotData` TOAST on the hop right after create INSERT. First paint = handoff; fallback = pooled read (prod 18s). Quiz session page: soft-miss, never `notFound()`.
 
-Classic and Blitz keep **separate start runners**. Shared pick resolve chunk size stays 5. After cycle: 300ms settle (SINGLE and Mix). Daily lobby uses **one** Direct TLS. After a wedged Direct queue: restart `npm run dev`; do not raise global timeouts or re-enable keep-warm. **Prod is the release gate.**
+Classic, Blitz, and Survival keep **separate start runners**. Shared pick resolve chunk size stays 5. After cycle: 300ms settle (SINGLE and Mix). Daily lobby uses **one** Direct TLS. After a wedged Direct queue: restart `npm run dev`; do not raise global timeouts or re-enable keep-warm. **Prod is the release gate.**
 
 ## Auth and security
 
@@ -166,4 +167,4 @@ After a schema-changing quiz deploy, run `prisma migrate deploy` on **production
 
 - Not a session diary — that is gitignored `docs/PROJECT_CONTEXT.md`.
 - Not a substitute for [`QUIZ_NEON_HOT_PATH.md`](./QUIZ_NEON_HOT_PATH.md) when changing start/submit/result/Direct.
-- Not a license to merge Classic and Blitz runners, put cycle on the Direct queue, or bump timeouts “to fix hangs”.
+- Not a license to merge Classic and Blitz runners, put cycle on the Direct queue, bump timeouts “to fix hangs”, or fold Survival into `runTimedQuizStart` / `timedEndsAt`.
