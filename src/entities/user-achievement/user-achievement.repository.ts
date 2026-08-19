@@ -72,6 +72,8 @@ function mapEvalFactsRow(row: EvalFactsRow | undefined): AchievementEvalFacts {
  * Один SELECT: count-агрегаты для evaluate + progress UI.
  * Не на submit/complete hop — только award/profile (см. QUIZ_NEON_HOT_PATH).
  * medium/hard: только poolKind SINGLE — mix не копит «прошёл Medium».
+ * Survival исключён целиком (`survivalRunId IS NULL`): иначе HARD 36
+ * раздует classic_count / total_score / HARD / perfect (DECISIONS → Survival Mode MVP).
  */
 const EVAL_FACTS_SQL = `
     SELECT
@@ -113,6 +115,7 @@ const EVAL_FACTS_SQL = `
                 WHERE
                     s."dailyChallengeId" IS NULL
                     AND s."timedEndsAt" IS NULL
+                    AND s."survivalRunId" IS NULL
             ),
             0
         )::int AS classic_count,
@@ -128,6 +131,7 @@ const EVAL_FACTS_SQL = `
     FROM "QuizResult" AS r
     INNER JOIN "QuizSession" AS s ON s.id = r."sessionId"
     WHERE r."userId" = $1
+      AND s."survivalRunId" IS NULL
 `;
 
 /** Profile progress — короткий budget: лучше soft-miss, чем клинить quiz start. */

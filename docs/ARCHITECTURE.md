@@ -5,11 +5,11 @@ Dated “why we chose this” lives in [`DECISIONS.md`](./DECISIONS.md). Binding
 
 ## Product shape
 
-Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival is **contracted** (Aug 19); schema/start are not shipped.
+Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **discriminator shipped** (Aug 19 chat A); start/submit are not.
 
 | Mode | Discriminator | Player contract |
 |------|----------------|-----------------|
-| Classic | `dailyChallengeId`, `timedEndsAt`, and (when the column exists) `survivalRunId` all NULL | Difficulty + 1–10 questions; rematch; anti-repeat cycle |
+| Classic | `dailyChallengeId`, `timedEndsAt`, and `survivalRunId` all NULL | Difficulty + 1–10 questions; rematch; anti-repeat cycle |
 | Blitz (Timed) | `timedEndsAt` set | 10 questions, 60s **server** deadline, 3s grace; partial answers OK |
 | Daily | `dailyChallengeId` set | Moscow calendar day; `MEDIUM` × 10; one attempt; no cycle |
 | Survival | `survivalRunId` set; **`timedEndsAt` NULL** | Wave of 12; time-bank T0=20 +4/−6; same weights; exclusive board. Canon: `DECISIONS.md` → Survival Mode MVP |
@@ -72,7 +72,7 @@ flowchart TB
 
 **Direct `pg`:** confirmed fragile Neon paths — quiz start resolve/snapshot INSERT, submit complete, result summary, admin list/writes, leaderboard `DISTINCT ON`. One process-wide Direct queue in **`next dev` only**; a hung hop stalls Home / Daily / start. **Production has no that queue.** Play-load snapshot read is **pooled**, not Direct.
 
-**Public leaderboard (Layer 1, Aug 19):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`) — never `snapshotData`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily keep `completedAt` only. Page `loadFailed` on error, not 500. When Survival `survivalRunId` ships: Classic WHERE must add `AND survivalRunId IS NULL`; Survival is a **separate** board. Detail: `DECISIONS.md` → Leaderboard retention meta + Survival Mode MVP.
+**Public leaderboard (Layer 1, Aug 19):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`, `survivalRunId`) — never `snapshotData`. Classic WHERE includes `survivalRunId IS NULL`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily keep `completedAt` only. Page `loadFailed` on error, not 500. Survival is a **separate** board (no Layer 1 chip yet). Detail: `DECISIONS.md` → Leaderboard retention meta + Survival Mode MVP.
 
 **UserQuestionCycle** (Classic / Blitz / Survival pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. After cycle (SINGLE and Mix): 300ms settle, then Direct resolve chunks of 5. Daily does not use the cycle. Survival MVP shares the Classic/Timed bag (`userId + difficulty`); no Mix. Boundary is **reshuffle-first**. No silent `ORDER BY RANDOM` fallback.
 

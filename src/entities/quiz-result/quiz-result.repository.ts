@@ -82,12 +82,15 @@ type LeaderboardScoreRow = {
 /**
  * Режим публичной доски. Не play-mode Survival.
  * Дискриминация только скалярами QuizSession (DECISIONS → Leaderboard Layer 1).
+ * Classic: dailyChallengeId / timedEndsAt / survivalRunId все NULL.
  */
 export type FindBestScoresMode = 'classic' | 'blitz' | 'daily';
 
 /**
  * Фильтр рейтинга.
  * JOIN Session всегда: mode режет Classic / Blitz / Daily по скалярам.
+ * Classic дополнительно `survivalRunId IS NULL` — иначе HARD-волна 36
+ * попадёт на недельную доску (DECISIONS → Survival Mode MVP + Layer 1).
  * - difficulty omit/`all` = все сложности внутри mode (mix входит в «все»);
  * - EASY|MEDIUM|HARD = poolKind SINGLE + эта difficulty (mix не в Medium);
  * - MIXED = poolKind MIXED;
@@ -129,7 +132,11 @@ function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
         ];
     }
 
-    return ['s."dailyChallengeId" IS NULL', 's."timedEndsAt" IS NULL'];
+    return [
+        's."dailyChallengeId" IS NULL',
+        's."timedEndsAt" IS NULL',
+        's."survivalRunId" IS NULL',
+    ];
 }
 
 /**

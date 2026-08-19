@@ -5,7 +5,7 @@
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
 **Overview:** `docs/ARCHITECTURE.md`.  
-**Survival contract (not shipped):** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Separate runner; `timedEndsAt` NULL; bank reconstructed on submit.
+**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Schema chat A: `SurvivalRun` + `QuizSession.survivalRunId` (Classic/`EVAL_FACTS_SQL` `AND survivalRunId IS NULL`). Runner **not** shipped. Separate runner; `timedEndsAt` NULL; bank reconstructed on submit.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 
@@ -95,7 +95,7 @@ BAD:  notFound() on miss/timeout
 - Boundary: **reshuffle-first** when remaining &lt; needed. No silent random fallback if cycle fails.
 - Create: **`withDirectPgWriteClient`**, INSERT `snapshotData` only. Do **not** return create to `withDirectPgQuizStartClient`.
 - Timed abandon: **pooled scalar UPDATE before pick**. Never UPDATE orphans on the same Direct client as JSONB INSERT. Never a second **unpooled** hop solely for abandon.
-- Survival (contract, not shipped): same abandon shape **for Survival rows only**; pooled `SurvivalRun` INSERT before pick; create INSERT-only; **`timedEndsAt` NULL**; `startedAt` = JS Date after connect. Not `runTimedQuizStart`.
+- Survival (contract, schema discriminator shipped): same abandon shape **for Survival rows only**; pooled `SurvivalRun` INSERT before pick; create INSERT-only; **`timedEndsAt` NULL**; `startedAt` = JS Date after connect. Not `runTimedQuizStart`.
 - Keep-warm on quiz Direct queue **OFF**.
 
 ### D. Play-load (quiz session page)
@@ -204,7 +204,7 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
 | Play-load Map | `src/entities/quiz-session/play-load-handoff.ts` |
 | Play-load read (handoff then pooled) | `src/entities/quiz-session/quiz-session-reads.repository.ts` |
 | Timed start (abandon then pick) | `src/features/timed-mode/lib/run-timed-quiz-start.ts` |
-| Survival contract (no runner yet) | `src/features/survival-mode/types.ts` |
+| Survival contract (schema discriminator; no runner yet) | `src/features/survival-mode/types.ts`; migration `20260819163000_survival_run` |
 | Quiz session page (soft-miss) | `src/app/[locale]/(public)/quiz/[sessionId]/page.tsx` |
 | Submit complete | `src/entities/quiz-session/quiz-session-submit.repository.ts` |
 | Result summary/review | `src/entities/quiz-result/quiz-result.repository.ts` |

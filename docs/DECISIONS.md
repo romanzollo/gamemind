@@ -586,7 +586,7 @@ When Survival start/submit exist: add Survival HARD 12 start→score; bank UX fr
 | Classic | `startQuizAction` → `runClassicQuizStart` | cycle (pooled) → 300ms settle → resolve chunks of 5 → createWithJsonSnapshot | No timedEndsAt. Mix = 3 bags + shuffle, not `Difficulty=MIXED` in cycle. |
 | Classic rematch | `rematchClassicQuizAction` → same runner | same | Settle before pick from `/result`. |
 | Blitz/Timed | `startTimedQuizAction` → `runTimedQuizStart` | pooled abandon → same cycle/settle/resolve → create INSERT-only; clock after connect | Always 10Q. Shares bag with Classic per difficulty. |
-| Survival | **not shipped** — later `startSurvivalQuizAction` → `runSurvivalQuizStart` | pooled Survival abandon + pooled `SurvivalRun` INSERT → cycle 12 → 300ms → chunk 5 → create INSERT-only; `timedEndsAt` NULL; `startedAt` JS Date after connect | Separate runner. No Mix. Same cycle bag as Classic/Timed. Canon: **Survival Mode MVP**. |
+| Survival | **schema shipped** — runner later `startSurvivalQuizAction` → `runSurvivalQuizStart` | pooled Survival abandon + pooled `SurvivalRun` INSERT → cycle 12 → 300ms → chunk 5 → create INSERT-only; `timedEndsAt` NULL; `startedAt` JS Date after connect | Separate runner. No Mix. Same cycle bag as Classic/Timed. Discriminator: `survivalRunId`. Canon: **Survival Mode MVP**. |
 | Quiz play-load | `findSnapshotPublicQuestionsForUser` | **handoff** from create; else pooled SELECT `snapshotData` | Dev 5s / **prod 18s**. Soft-miss, не `notFound()`. Handoff miss on serverless is normal. |
 | Daily lobby | `getDailyLobbyView` | `findLobbyPanelState` **1 TLS** | |
 | Daily start | frozen ids → chunked resolve → create | | **No** UserQuestionCycle. |
@@ -1026,16 +1026,16 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 
 1. **Default period = rolling week.** Empty `/leaderboard` (no `?period=`) means last 7×24h. All-time stays an **explicit** tab: `?period=all`. Month stays `?period=month`. Same rolling math as July 29 (`getLeaderboardPeriodCutoff`); only the Zod/URL default flips from `all` → `week`. `buildLeaderboardHref` omits `period` when it is `week`, and **writes** `period=all`.
 2. **Mode filter is mandatory and exclusive:** `classic` | `blitz` | `daily`. No “all modes” chip — that would mix ceilings. Default `classic`. URL `?mode=blitz|daily`; omit `mode` = classic. Discriminate with **session scalars only** (Prisma comments already define this):
-   - Classic: `dailyChallengeId IS NULL AND timedEndsAt IS NULL` (when Survival ships: also `survivalRunId IS NULL`);
+   - Classic: `dailyChallengeId IS NULL AND timedEndsAt IS NULL AND survivalRunId IS NULL`;
    - Blitz: `dailyChallengeId IS NULL AND timedEndsAt IS NOT NULL`;
    - Daily: `dailyChallengeId IS NOT NULL`.
-   - Survival (not a Layer 1 chip yet): `survivalRunId IS NOT NULL` — exclusive board; `timedEndsAt` stays NULL so it must **not** look like Classic.
+   - Survival (not a Layer 1 chip yet): `survivalRunId IS NOT NULL` — exclusive board; `timedEndsAt` stays NULL so it must **not** look like Classic. Schema chat A patched Classic WHERE **before** any Survival result.
 3. **Blitz tie-break:** after `score DESC`, shorter duration ranks higher: `(QuizResult.completedAt − QuizSession.startedAt)` ASC, then `completedAt` ASC as a last resort. **Classic and Daily must not** use duration in `ORDER BY` — keep `score DESC, completedAt ASC`. Duration is computed in the leaderboard SELECT; do **not** persist it, do **not** write it on complete.
 4. **Copy (ru/en):** say honestly that 30 is the Classic HARD 10Q ceiling; after that the race is the rolling week, and in Blitz equal scores lose to speed. All-time is a hall-of-fame tab, not the live ladder.
 
 **SQL contract:** `findBestScores` always `INNER JOIN "QuizSession"` for mode (+ difficulty when not `all`). Select only scalars (`score`, counts, `completedAt`, `startedAt`, `timedEndsAt`, `dailyChallengeId`, `poolKind`, `difficulty`). **Never** `snapshotData` / `reviewSnapshot` / `reviewPayload`. Still `withDirectPgClient`. Page `try/catch` → `dictionary.leaderboard.loadFailed` (no 500). If `mode` is omitted at the repo, default **classic** — do not silently mix modes.
 
-**Why this and not Survival:** Survival is a new loop (Phase 5 leftover). Layer 1 reuses existing results and restores a reason to play this week. Friends who already have 30 still keep the all-time tab. Survival **contract** locked Aug 19 (`docs/DECISIONS.md` → Survival Mode MVP); schema must patch this Classic WHERE **before** the first Survival `QuizResult`.
+**Why this and not Survival:** Survival is a new loop (Phase 5 leftover). Layer 1 reuses existing results and restores a reason to play this week. Friends who already have 30 still keep the all-time tab. Survival **contract** locked Aug 19; **schema chat A** added `survivalRunId` and patched this Classic WHERE **before** the first Survival `QuizResult`.
 
 **Do not (this slice):** touch start / submit / `completeWithResult` / snapshot / Direct queue / UserQuestionCycle / scoring weights / Timed clock; add JSONB on complete; add a duration column; `notFound()` on leaderboard; Prisma on this read.
 
@@ -1879,7 +1879,7 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 
 ## Survival Mode MVP (August 19, 2026 — contract kickoff)
 
-**Date:** 2026-08-19 (ADR + types contract). **Status:** contract only — no Prisma migration, no `runSurvivalQuizStart` / submit / play-load in the kickoff.
+**Date:** 2026-08-19 (ADR + types). **Status:** schema + Classic/achievement discriminator shipped locally (chat A, migration `20260819163000_survival_run`). No `runSurvivalQuizStart` / submit / play-load.
 
 **Decision:** Phase 5 leftover after Timed is **Survival as a separate play mode**: fixed-size **waves**, a **server-reconstructed time-bank**, existing weighted scoring, same Neon snapshot/complete shape as Classic/Blitz. Not instant-death. Not a longer Classic. Not merged into `runTimedQuizStart`.
 
@@ -1948,13 +1948,13 @@ Create stays on `withDirectPgWriteClient`. Do **not** move it to `withDirectPgQu
 
 Reuse existing `pickClassicSnapshotBundle` / `pickTimedSnapshotBundle` with `questionCount: 12` — they are already the same cycle helper. Do **not** add Mix pick for Survival MVP.
 
-### Schema (planned migration; not in the kickoff)
+### Schema (chat A — migration `20260819163000_survival_run`)
 
 - Table `SurvivalRun`: id, userId, difficulty, status, currentWaveIndex, startedAt, completedAt?, bankRemainingSeconds? — **scalars only**.
 - `QuizSession.survivalRunId String?`, `survivalWaveIndex Int?`, `survivalClockOk Boolean?`.
 - Discriminator: Survival ⇔ `survivalRunId IS NOT NULL`. Timed stays `timedEndsAt IS NOT NULL`. Daily stays `dailyChallengeId IS NOT NULL`. Classic = all three NULL.
-- CHECK: Survival cannot set `timedEndsAt` or `dailyChallengeId`.
-- **Companion (same schema PR, before any Survival result):** Layer 1 Classic WHERE and `EVAL_FACTS_SQL` `classic_count` (and other existing achievement aggregates) add `AND survivalRunId IS NULL`. Otherwise the first HARD wave **36** lands on the Classic week board and inflates `total_score` / HARD / perfect facts.
+- CHECK `QuizSession_survival_mode_chk`: Survival cannot set `timedEndsAt` or `dailyChallengeId`; non-Survival must keep waveIndex/clockOk NULL; Survival is `poolKind SINGLE` and `survivalWaveIndex >= 1`.
+- **Companion (same schema PR, before any Survival result):** Layer 1 Classic WHERE and `EVAL_FACTS_SQL` (outer WHERE + `classic_count`) add `AND survivalRunId IS NULL`. Otherwise the first HARD wave **36** lands on the Classic week board and inflates `total_score` / HARD / perfect facts.
 - Do **not** put bank / clock / run id only in `snapshotData`.
 - Snapshot JSON stays the question freeze. 12 questions OK; 40+ forbidden.
 
@@ -1990,7 +1990,7 @@ Classic / Blitz / Daily public play-load stays without `isCorrect`. Survival seq
 ### Implementation order (separate chats)
 
 0. This contract (`types.ts` + this ADR + architecture/playbook pointers).
-1. Schema + Layer 1 / achievement WHERE (`survivalRunId IS NULL` on Classic facts) — **before** any Survival result.
+1. ~~Schema + Layer 1 / achievement WHERE (`survivalRunId IS NULL` on Classic facts)~~ — chat A, before any Survival result.
 2. Pure `isSurvivalClockOk` + Vitest (no Neon).
 3. Separate start runner (pooled abandon + `SurvivalRun` + cycle 12 + INSERT-only). Not `runTimedQuizStart`.
 4. Play-load Survival DTO + client bank + auto-submit at 0.

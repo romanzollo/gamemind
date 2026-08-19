@@ -28,7 +28,8 @@ export type LeaderboardPeriod = 'week' | 'month' | 'all';
 
 /**
  * Режим доски. Не QuizSession.status и не play-mode Survival.
- * SQL: скаляры `dailyChallengeId` / `timedEndsAt` (не snapshotData).
+ * SQL: скаляры `dailyChallengeId` / `timedEndsAt` / `survivalRunId` (не snapshotData).
+ * Survival — отдельная доска (ещё не chip); Classic WHERE требует `survivalRunId IS NULL`.
  */
 export type LeaderboardMode = 'classic' | 'blitz' | 'daily';
 

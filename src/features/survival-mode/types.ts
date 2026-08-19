@@ -9,7 +9,8 @@
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  * Не мержить с Timed: Blitz = `timedEndsAt` + фиксированные 60с;
  * Survival = `timedEndsAt` NULL + банк, реконструкция на submit.
- * Миграция / `runSurvivalQuizStart` — следующие чаты, не этот файл.
+ * Схема: `SurvivalRun` + `QuizSession.survivalRunId` (миграция
+ * `20260819163000_survival_run`). `runSurvivalQuizStart` — следующий чат.
  */
 
 /**

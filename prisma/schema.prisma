@@ -77,6 +77,8 @@ model User {
   achievementOutbox AchievementOutbox[]
   /// Мешок анти-повтора вопросов (Classic/Timed) по сложности. Daily не использует.
   questionCycles    UserQuestionCycle[]
+  /// Забеги Survival (волны = отдельные QuizSession). Classic/Blitz/Daily сюда не пишут.
+  survivalRuns      SurvivalRun[]
 }
 
 model Account {
@@ -172,6 +174,29 @@ model DailyChallenge {
   sessions QuizSession[]
 }
 
+/// Забег Survival: скаляры банка/волны, без JSONB.
+/// Одна волна = один QuizSession (snapshot 12 вопросов). Волна 2+ — новая сессия, не рост TOAST.
+/// Дискриминатор сессии: `survivalRunId IS NOT NULL`. `timedEndsAt` и `dailyChallengeId` запрещены CHECK.
+/// Canon: docs/DECISIONS.md → Survival Mode MVP. Не мержить с Timed (`timedEndsAt`).
+model SurvivalRun {
+  id       String @id @default(cuid())
+  userId   String
+  /// Только EASY|MEDIUM|HARD. Mix в MVP нет.
+  difficulty Difficulty
+  /// Тот же enum, что у сессии (IN_PROGRESS / COMPLETED / ABANDONED) — без второго типа.
+  status   QuizSessionStatus @default(IN_PROGRESS)
+  currentWaveIndex Int @default(1)
+  startedAt        DateTime @default(now())
+  completedAt      DateTime?
+  /// Остаток банка после успешного complete волны. Скаляр на run, не JSONB и не per-answer UPDATE.
+  bankRemainingSeconds Int?
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions QuizSession[]
+
+  @@index([userId, status])
+}
+
 model QuizSession {
   id               String            @id @default(cuid())
   userId           String
@@ -188,17 +213,28 @@ model QuizSession {
   /// NULL = classic/daily; non-null = Timed mode (серверный дедлайн submit).
   /// Canon: docs/DECISIONS.md → Timed Mode MVP.
   timedEndsAt      DateTime?
+  /// NULL = не Survival; non-null = волна SurvivalRun.
+  /// Classic = dailyChallengeId, timedEndsAt и survivalRunId все NULL.
+  /// CHECK в миграции: Survival ⇏ timedEndsAt / dailyChallengeId (не Blitz, не Daily).
+  /// Canon: docs/DECISIONS.md → Survival Mode MVP.
+  survivalRunId     String?
+  /// Номер волны внутри run. NULL если не Survival. Волна 1 MVP = 1.
+  survivalWaveIndex Int?
+  /// Реконструкция банка на submit. NULL до complete / если не Survival.
+  survivalClockOk   Boolean?
   startedAt        DateTime          @default(now())
   completedAt      DateTime?
 
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   dailyChallenge DailyChallenge? @relation(fields: [dailyChallengeId], references: [id], onDelete: Restrict)
+  survivalRun    SurvivalRun?    @relation(fields: [survivalRunId], references: [id], onDelete: Restrict)
   answers        QuizAnswer[]
   result         QuizResult?
   sessionQuestions QuizSessionQuestion[]
 
   @@index([userId, status])
   @@index([dailyChallengeId])
+  @@index([survivalRunId])
   /// Leaderboard: MIXED vs SINGLE+difficulty, без UNION.
   @@index([poolKind, difficulty])
   /// Одна сессия на пользователя на день челленджа.

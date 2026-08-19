@@ -220,6 +220,8 @@ async function insertQuizSessionWithSnapshotData(
               )
             : null;
 
+    // Survival-колонки в INSERT не перечисляем: NULL = не Survival
+    // (CHECK: waveIndex/clockOk тоже NULL). runSurvivalQuizStart — отдельный чат.
     await client.query(
         `
             INSERT INTO "QuizSession" (

@@ -101,11 +101,12 @@ export type AchievementProgress = {
  *
  * Режимы сессии (нет колонки mode):
  * - Classic: dailyChallengeId IS NULL AND timedEndsAt IS NULL
- *   (когда появится Survival: ещё AND survivalRunId IS NULL — иначе HARD 36
- *   попадёт в Classic facts. Canon: DECISIONS → Survival Mode MVP.)
+ *   AND survivalRunId IS NULL — иначе HARD 36 попадёт в Classic facts.
+ *   Canon: DECISIONS → Survival Mode MVP.
  * - Daily: dailyChallengeId IS NOT NULL
  * - Timed (Blitz UI): timedEndsAt IS NOT NULL
- * - Survival (не shipped): survivalRunId IS NOT NULL; timedEndsAt остаётся NULL
+ * - Survival: survivalRunId IS NOT NULL; timedEndsAt остаётся NULL
+ *   (исключён из существующих facts целиком, не отдельным кодом MVP).
  */
 export type AchievementEvalFacts = {
     quizzesCompleted: number;
