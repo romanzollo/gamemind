@@ -55,6 +55,17 @@ export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
      * Игнорируется, если timedEndsAt null. Источник: TIMED_MODE_MVP_RULES.
      */
     timedDurationSeconds?: number;
+    /**
+     * NULL/omit = не Survival. Non-null = волна SurvivalRun.
+     * Не сочетать с timedEndsAt или dailyChallengeId (CHECK).
+     * Canon: DECISIONS.md → Survival Mode MVP.
+     */
+    survivalRunId?: string | null;
+    /**
+     * Номер волны. Обязателен вместе с survivalRunId (>= 1). Волна 1 MVP = 1.
+     * Omit/NULL если не Survival — иначе CHECK на non-Survival.
+     */
+    survivalWaveIndex?: number | null;
 };
 
 /** Публичный вопрос из snapshot для UI квиза (без isCorrect). */

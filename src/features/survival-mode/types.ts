@@ -1,16 +1,17 @@
 /**
  * Контракт Survival mode (MVP) — доменная модель feature-слоя.
  *
- * Зачем отдельный файл до схемы и hot path:
- * - фиксируем правила продукта до миграции и правок start/submit;
- * - UI и actions позже импортируют константы отсюда, а не «магические числа»;
- * - scoring / snapshot write path пока не трогаем — только контракт.
+ * Зачем отдельный файл:
+ * - одна точка правды для T0 / +4 / −6 / grace / волны 12;
+ * - UI и actions импортируют константы отсюда, а не «магические числа»;
+ * - start уже зовёт `runSurvivalQuizStart`; submit clock — следующий чат.
  *
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  * Не мержить с Timed: Blitz = `timedEndsAt` + фиксированные 60с;
  * Survival = `timedEndsAt` NULL + банк, реконструкция на submit.
  * Схема: `SurvivalRun` + `QuizSession.survivalRunId` (миграция
- * `20260819163000_survival_run`). `runSurvivalQuizStart` — следующий чат.
+ * `20260819163000_survival_run`). Старт волны 1: `runSurvivalQuizStart`.
+ * Play-load DTO / submit clock / Taste CTA — следующие чаты.
  */
 
 /**

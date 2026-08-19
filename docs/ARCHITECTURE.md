@@ -5,7 +5,7 @@ Dated “why we chose this” lives in [`DECISIONS.md`](./DECISIONS.md). Binding
 
 ## Product shape
 
-Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **discriminator shipped** (Aug 19 chat A); start/submit are not.
+Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **discriminator + start runner shipped** (Aug 19 chats A–C); play DTO / submit / lobby CTA are not.
 
 | Mode | Discriminator | Player contract |
 |------|----------------|-----------------|

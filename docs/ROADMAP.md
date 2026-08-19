@@ -187,9 +187,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 19, 2026 — Survival **chat A** schema + Classic/achievements `survivalRunId IS NULL` (migration `20260819163000_survival_run`). No start runner. Leaderboard Layer 1 still **local** (user smoke OK). TEXT pool **378** (126/126/126).
+**Last updated:** August 19, 2026 — Survival **chat C** `runSurvivalQuizStart` (pooled abandon + `SurvivalRun` + cycle 12 + INSERT-only). No play DTO / submit / Taste CTA. Leaderboard Layer 1 still **local** (user smoke OK). TEXT pool **378** (126/126/126).
 
-**Preferred next:** Survival **chat B** = pure `isSurvivalClockOk` + Vitest (no Neon, no start). Then **chat C** `runSurvivalQuizStart` (not `runTimedQuizStart`). In parallel / separately: commit Layer 1 + this schema when asked → `migrate deploy` on **prod** (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`) → www smoke `/leaderboard` week + Classic EASY 3. Then optional mechanics TEXT **wave 6** ×24 — **new loops only**; stems `QUESTION_I18N.md` §10; distractors **§3 D**. Mix lobby is live — do not re-implement. Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Do not merge Survival into Timed.
+**Preferred next:** Survival **chat D** = play-load Survival DTO + client bank + auto-submit at 0 (presentation+play contract; no submit hop change). Then **chat E** separate submit + `survivalClockOk`. In parallel / separately: commit Layer 1 + schema + Survival start when asked → `migrate deploy` on **prod** (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`) → www smoke `/leaderboard` week + Classic EASY 3. Then optional mechanics TEXT **wave 6** ×24 — **new loops only**; stems `QUESTION_I18N.md` §10; distractors **§3 D**. Mix lobby is live — do not re-implement. Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Do not merge Survival into Timed.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -244,7 +244,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 51. ~~**Admin hub format glance**~~ — Aug 18: Questions 2×2 (`Question.type` TEXT/IMAGE_GUESS) + Users total caption; same COUNT round-trip; user smoke OK.
 52. ~~**Leaderboard retention Layer 1**~~ — Aug 19: default rolling week; exclusive Classic/Blitz/Daily; Blitz duration tie-break; 7-day copy on board + Classic/Blitz lobby; **local user smoke OK**; www deploy pending.
 53. ~~**Survival Mode MVP contract**~~ — Aug 19: ADR + `src/features/survival-mode/types.ts` (time-bank waves, not instant-death). Schema / start / submit **not** started.
-54. ~~**Survival schema + discriminator (chat A)**~~ — Aug 19: `SurvivalRun` + `QuizSession.survivalRunId` / `survivalWaveIndex` / `survivalClockOk`; CHECK not Blitz/Daily; Classic `findBestScores` + `EVAL_FACTS_SQL` `AND survivalRunId IS NULL`. No start runner.
+54. ~~**Survival schema + discriminator (chat A)**~~ — Aug 19: `SurvivalRun` + `QuizSession.survivalRunId` / `survivalWaveIndex` / `survivalClockOk`; CHECK not Blitz/Daily; Classic `findBestScores` + `EVAL_FACTS_SQL` `AND survivalRunId IS NULL`.
+55. ~~**Survival clock gate (chat B)**~~ — Aug 19: `isSurvivalClockOk` + Vitest (elapsed vs budget+grace; floor 0; unanswered not −6).
+56. ~~**Survival start runner (chat C)**~~ — Aug 19: `beginSurvivalRunForUser` + `runSurvivalQuizStart` + `startSurvivalQuizAction`. No Mix, no `timedEndsAt`. Play DTO / submit / lobby CTA **not** started.
 
 ### Deploy / hosting checklist (tracking)
 

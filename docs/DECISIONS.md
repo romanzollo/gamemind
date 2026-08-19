@@ -586,7 +586,7 @@ When Survival start/submit exist: add Survival HARD 12 start→score; bank UX fr
 | Classic | `startQuizAction` → `runClassicQuizStart` | cycle (pooled) → 300ms settle → resolve chunks of 5 → createWithJsonSnapshot | No timedEndsAt. Mix = 3 bags + shuffle, not `Difficulty=MIXED` in cycle. |
 | Classic rematch | `rematchClassicQuizAction` → same runner | same | Settle before pick from `/result`. |
 | Blitz/Timed | `startTimedQuizAction` → `runTimedQuizStart` | pooled abandon → same cycle/settle/resolve → create INSERT-only; clock after connect | Always 10Q. Shares bag with Classic per difficulty. |
-| Survival | **schema shipped** — runner later `startSurvivalQuizAction` → `runSurvivalQuizStart` | pooled Survival abandon + pooled `SurvivalRun` INSERT → cycle 12 → 300ms → chunk 5 → create INSERT-only; `timedEndsAt` NULL; `startedAt` JS Date after connect | Separate runner. No Mix. Same cycle bag as Classic/Timed. Discriminator: `survivalRunId`. Canon: **Survival Mode MVP**. |
+| Survival | `startSurvivalQuizAction` → `runSurvivalQuizStart` | pooled Survival abandon + pooled `SurvivalRun` INSERT → cycle 12 → 300ms → chunk 5 → create INSERT-only; `timedEndsAt` NULL; `startedAt` JS Date after connect | Separate runner. No Mix. Same cycle bag as Classic/Timed. Discriminator: `survivalRunId`. Canon: **Survival Mode MVP**. Lobby CTA / play DTO / submit — later. |
 | Quiz play-load | `findSnapshotPublicQuestionsForUser` | **handoff** from create; else pooled SELECT `snapshotData` | Dev 5s / **prod 18s**. Soft-miss, не `notFound()`. Handoff miss on serverless is normal. |
 | Daily lobby | `getDailyLobbyView` | `findLobbyPanelState` **1 TLS** | |
 | Daily start | frozen ids → chunked resolve → create | | **No** UserQuestionCycle. |
@@ -1879,7 +1879,7 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 
 ## Survival Mode MVP (August 19, 2026 — contract kickoff)
 
-**Date:** 2026-08-19 (ADR + types). **Status:** schema + Classic/achievement discriminator shipped locally (chat A, migration `20260819163000_survival_run`). No `runSurvivalQuizStart` / submit / play-load.
+**Date:** 2026-08-19 (ADR + types). **Status:** schema (chat A) + `isSurvivalClockOk` (chat B) + `runSurvivalQuizStart` (chat C, local). No play-load Survival DTO / submit clock / lobby CTA.
 
 **Decision:** Phase 5 leftover after Timed is **Survival as a separate play mode**: fixed-size **waves**, a **server-reconstructed time-bank**, existing weighted scoring, same Neon snapshot/complete shape as Classic/Blitz. Not instant-death. Not a longer Classic. Not merged into `runTimedQuizStart`.
 
@@ -1991,8 +1991,8 @@ Classic / Blitz / Daily public play-load stays without `isCorrect`. Survival seq
 
 0. This contract (`types.ts` + this ADR + architecture/playbook pointers).
 1. ~~Schema + Layer 1 / achievement WHERE (`survivalRunId IS NULL` on Classic facts)~~ — chat A, before any Survival result.
-2. Pure `isSurvivalClockOk` + Vitest (no Neon).
-3. Separate start runner (pooled abandon + `SurvivalRun` + cycle 12 + INSERT-only). Not `runTimedQuizStart`.
+2. ~~Pure `isSurvivalClockOk` + Vitest (no Neon).~~
+3. ~~Separate start runner (pooled abandon + `SurvivalRun` + cycle 12 + INSERT-only). Not `runTimedQuizStart`.~~
 4. Play-load Survival DTO + client bank + auto-submit at 0.
 5. Separate submit action; scalar complete + `survivalClockOk`.
 6. Exclusive Survival board + honest “wave record” copy.

@@ -11,6 +11,8 @@
  * Не await client.end() на response path (см. DECISIONS → Neon Write Path).
  * Timed abandon-on-new-start: pooled scalar до pick, не на Direct create
  * вместе с JSONB INSERT (см. Timed Mode + Windows+Neon TOAST).
+ * Survival: abandon + INSERT SurvivalRun — `survival-run.repository` (pooled)
+ * до pick; create INSERT-only с `survivalRunId`, без `timedEndsAt`.
  * Публичный фасад: quiz-session.repository.ts.
  * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
@@ -220,50 +222,119 @@ async function insertQuizSessionWithSnapshotData(
               )
             : null;
 
-    // Survival-колонки в INSERT не перечисляем: NULL = не Survival
-    // (CHECK: waveIndex/clockOk тоже NULL). runSurvivalQuizStart — отдельный чат.
-    await client.query(
-        `
-            INSERT INTO "QuizSession" (
-                "id",
-                "userId",
-                "status",
-                "difficulty",
-                "poolKind",
-                "questionCount",
-                "sessionLocale",
-                "snapshotData",
-                "dailyChallengeId",
-                "timedEndsAt",
-                "startedAt"
-            )
-            VALUES (
-                $1,
-                $2,
-                $3::"QuizSessionStatus",
-                $4::"Difficulty",
-                $5::"QuizSessionPoolKind",
-                $6,
-                $7::"ContentLocale",
-                $8::jsonb,
-                $9,
-                $10,
-                NOW()
-            )
-        `,
-        [
-            sessionId,
-            input.userId,
-            'IN_PROGRESS',
-            pool.difficulty,
-            pool.poolKind,
-            input.questionCount,
-            input.sessionLocale,
-            JSON.stringify(snapshotData),
-            input.dailyChallengeId ?? null,
-            timedEndsAtValue,
-        ],
-    );
+    const survivalRunId = input.survivalRunId ?? null;
+    const survivalWaveIndex = input.survivalWaveIndex ?? null;
+    const isSurvival = survivalRunId != null;
+
+    if (isSurvival) {
+        if (input.timedEndsAt != null || input.dailyChallengeId) {
+            throw new Error(
+                'QuizSession Survival cannot set timedEndsAt or dailyChallengeId',
+            );
+        }
+
+        if (pool.poolKind !== 'SINGLE' || pool.difficulty == null) {
+            throw new Error('Survival session must be poolKind SINGLE');
+        }
+
+        if (survivalWaveIndex == null || survivalWaveIndex < 1) {
+            throw new Error('Survival session requires survivalWaveIndex >= 1');
+        }
+    } else if (survivalWaveIndex != null) {
+        throw new Error('survivalWaveIndex requires survivalRunId');
+    }
+
+    const snapshotJson = JSON.stringify(snapshotData);
+    const baseValues = [
+        sessionId,
+        input.userId,
+        'IN_PROGRESS',
+        pool.difficulty,
+        pool.poolKind,
+        input.questionCount,
+        input.sessionLocale,
+        snapshotJson,
+        input.dailyChallengeId ?? null,
+        timedEndsAtValue,
+    ] as const;
+
+    if (isSurvival) {
+        // startedAt = JS Date после connect (мы уже на client). Не SQL NOW()
+        // в naive TIMESTAMP (урок Timed timedEndsAt). Submit Survival должен
+        // писать completedAt так же — иначе elapsed съедет на TZ.
+        // timedEndsAt / dailyChallengeId в VALUES остаются NULL (CHECK).
+        const startedAt = new Date();
+
+        await client.query(
+            `
+                INSERT INTO "QuizSession" (
+                    "id",
+                    "userId",
+                    "status",
+                    "difficulty",
+                    "poolKind",
+                    "questionCount",
+                    "sessionLocale",
+                    "snapshotData",
+                    "dailyChallengeId",
+                    "timedEndsAt",
+                    "startedAt",
+                    "survivalRunId",
+                    "survivalWaveIndex"
+                )
+                VALUES (
+                    $1,
+                    $2,
+                    $3::"QuizSessionStatus",
+                    $4::"Difficulty",
+                    $5::"QuizSessionPoolKind",
+                    $6,
+                    $7::"ContentLocale",
+                    $8::jsonb,
+                    $9,
+                    $10,
+                    $11,
+                    $12,
+                    $13
+                )
+            `,
+            [...baseValues, startedAt, survivalRunId, survivalWaveIndex],
+        );
+    } else {
+        // Classic / Timed / Daily: survival-колонки не перечисляем → NULL
+        // (CHECK: waveIndex/clockOk тоже NULL). startedAt = SQL NOW() as-is.
+        await client.query(
+            `
+                INSERT INTO "QuizSession" (
+                    "id",
+                    "userId",
+                    "status",
+                    "difficulty",
+                    "poolKind",
+                    "questionCount",
+                    "sessionLocale",
+                    "snapshotData",
+                    "dailyChallengeId",
+                    "timedEndsAt",
+                    "startedAt"
+                )
+                VALUES (
+                    $1,
+                    $2,
+                    $3::"QuizSessionStatus",
+                    $4::"Difficulty",
+                    $5::"QuizSessionPoolKind",
+                    $6,
+                    $7::"ContentLocale",
+                    $8::jsonb,
+                    $9,
+                    $10,
+                    NOW()
+                )
+            `,
+            [...baseValues],
+        );
+    }
 
     return { timedEndsAt: timedEndsAtValue };
 }

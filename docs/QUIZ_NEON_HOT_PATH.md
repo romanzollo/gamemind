@@ -5,7 +5,7 @@
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
 **Overview:** `docs/ARCHITECTURE.md`.  
-**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Schema chat A: `SurvivalRun` + `QuizSession.survivalRunId` (Classic/`EVAL_FACTS_SQL` `AND survivalRunId IS NULL`). Runner **not** shipped. Separate runner; `timedEndsAt` NULL; bank reconstructed on submit.
+**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Schema chat A: `SurvivalRun` + `QuizSession.survivalRunId` (Classic/`EVAL_FACTS_SQL` `AND survivalRunId IS NULL`). Runner chat C: `runSurvivalQuizStart` (pooled abandon+run → cycle 12 → INSERT-only). `timedEndsAt` NULL; bank reconstructed on submit. Play DTO / Survival submit / Taste CTA not shipped.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 
@@ -204,7 +204,7 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
 | Play-load Map | `src/entities/quiz-session/play-load-handoff.ts` |
 | Play-load read (handoff then pooled) | `src/entities/quiz-session/quiz-session-reads.repository.ts` |
 | Timed start (abandon then pick) | `src/features/timed-mode/lib/run-timed-quiz-start.ts` |
-| Survival contract (schema discriminator; no runner yet) | `src/features/survival-mode/types.ts`; migration `20260819163000_survival_run` |
+| Survival start (abandon + run + cycle 12) | `src/entities/survival-run/survival-run.repository.ts`; `src/features/survival-mode/lib/run-survival-quiz-start.ts` |
 | Quiz session page (soft-miss) | `src/app/[locale]/(public)/quiz/[sessionId]/page.tsx` |
 | Submit complete | `src/entities/quiz-session/quiz-session-submit.repository.ts` |
 | Result summary/review | `src/entities/quiz-result/quiz-result.repository.ts` |
