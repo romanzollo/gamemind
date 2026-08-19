@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-18 (Admin hub TEXT/IMAGE_GUESS glance) |
+| **Last updated** | 2026-08-19 (Leaderboard retention Layer 1 — local user smoke OK) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -48,7 +48,7 @@ Phase 5 modes / achievements inherit the system
 | **Ongoing mode** | **Active** — every new feature UI extends the lock (Prompt T-Feature + §7) |
 | **Related: §11.9 Perceived performance** | Light July 18 + **pending spinner pass** July 28 (`PendingSpinner` / `SubmitButton`) |
 
-**Next:** Admin Publish DRAFT IMAGE_GUESS ×90 → quiz/lightbox smoke light/dark on www. Optional more TEXT batches.
+**Next:** commit Leaderboard Layer 1 when asked → www smoke `/leaderboard` (week default). Optional mechanics TEXT wave 6. Survival is a separate epic.
 
 ---
 
@@ -342,8 +342,8 @@ Format:
   - Classic + Blitz lobby: one `text-xs` line under meta (not a modal).
 - Tokens/components added: `LeaderboardModeFilters` (same chrome as period)
 - Explicitly NOT changed: scoring, snapshot, submit/complete, Timed clock, Survival, calendar Monday reset
-- Verify: `/ru/leaderboard` week selected; `?period=all`; `?mode=blitz`; lobby Classic/Blitz captions; light/dark; ru/en; 390px three mode chips
-- Follow-up: commit + friends smoke (HARD 30 no longer locks all-time #1 on the default board)
+- Verify: `/ru/leaderboard` week selected; `?period=all`; `?mode=blitz`; lobby Classic/Blitz captions; light/dark; ru/en; 390px three mode chips; **user smoke OK 2026-08-19** (local)
+- Follow-up: commit + www smoke so HARD 30 no longer locks the live board for friends
 
 ### 2026-08-18 — Admin hub: TEXT / IMAGE_GUESS glance + card rhythm
 

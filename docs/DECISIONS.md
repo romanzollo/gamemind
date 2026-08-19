@@ -1033,7 +1033,9 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 
 **Do not (this slice):** touch start / submit / `completeWithResult` / snapshot / Direct queue / UserQuestionCycle / scoring weights / Timed clock; add JSONB on complete; add a duration column; `notFound()` on leaderboard; Prisma on this read.
 
-**UI:** third Scoreboard segmented control (mode), same chrome as period/difficulty; preserve all three query params when switching any chip. Order on the page: mode → period → difficulty.
+**UI:** third Scoreboard segmented control (mode), same chrome as period/difficulty; preserve all three query params when switching any chip. Order on the page: mode → period → difficulty. Period chips: **Week → Month → All time** (live race first). Captions: rolling 7 days (not “falls off the board” / not calendar Monday); Classic/Blitz lobby gets one `text-xs` line under meta, not a modal.
+
+**Status (August 19, 2026):** shipped locally; user smoke OK (`/ru/leaderboard` week+modes, lobby captions). Blitz MIX start `DB_TIMEOUT` on `quiz.start.create` ~18s is the existing Neon/`next dev` INSERT class — **not** this slice. Commit + www smoke still pending.
 
 ## Admin Panel
 

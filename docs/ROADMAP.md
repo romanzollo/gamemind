@@ -187,9 +187,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 18, 2026 — Mechanics TEXT wave 5 ×24 PUBLISHED local+prod; TEXT pool **378** (126/126/126).
+**Last updated:** August 19, 2026 — Leaderboard retention Layer 1 **local** (user smoke OK). TEXT pool **378** (126/126/126).
 
-**Preferred next:** optional mechanics TEXT **wave 6** ×24 — **new loops only**; stems `QUESTION_I18N.md` §10; distractors **§3 D**. Dupe-check vs seed + C/D/fresh + mechanics-12/w2/w3/w4/w5. Mix lobby is live — do not re-implement. Always `migrate deploy` on **prod** after schema deploys (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`). Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue.
+**Preferred next:** commit Layer 1 when asked → redeploy + smoke `/leaderboard` week default on www (Classic HARD 30 must not lock the live board). Then optional mechanics TEXT **wave 6** ×24 — **new loops only**; stems `QUESTION_I18N.md` §10; distractors **§3 D**. Dupe-check vs seed + C/D/fresh + mechanics-12/w2/w3/w4/w5. Mix lobby is live — do not re-implement. Always `migrate deploy` on **prod** after schema deploys (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`). Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Survival is a separate epic — not bundled with Layer 1.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -242,6 +242,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 49. ~~**Mechanics stem voice-pass (12 / w2 / w3)**~~ — Aug 18 evening: in-place `UPDATE` local+prod (`scripts/voice-pass-mechanics-stems.cjs`); same 60 UUIDs; pool still **354**. Canon: `QUESTION_I18N.md` §10.
 50. ~~**Mechanics TEXT wave 5 ×24**~~ — Aug 18 night: `2026-08-18-text-mechanics-w5-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **378** (126/126/126) local+prod. Distractors: `QUESTION_I18N.md` §3 D.
 51. ~~**Admin hub format glance**~~ — Aug 18: Questions 2×2 (`Question.type` TEXT/IMAGE_GUESS) + Users total caption; same COUNT round-trip; user smoke OK.
+52. ~~**Leaderboard retention Layer 1**~~ — Aug 19: default rolling week; exclusive Classic/Blitz/Daily; Blitz duration tie-break; 7-day copy on board + Classic/Blitz lobby; **local user smoke OK**; www deploy pending.
 
 ### Deploy / hosting checklist (tracking)
 

@@ -71,6 +71,8 @@ flowchart TB
 
 **Direct `pg`:** confirmed fragile Neon paths — quiz start resolve/snapshot INSERT, submit complete, result summary, admin list/writes, leaderboard `DISTINCT ON`. One process-wide Direct queue in **`next dev` only**; a hung hop stalls Home / Daily / start. **Production has no that queue.** Play-load snapshot read is **pooled**, not Direct.
 
+**Public leaderboard (Layer 1, Aug 19):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`) — never `snapshotData`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily keep `completedAt` only. Page `loadFailed` on error, not 500. Detail: `DECISIONS.md` → Leaderboard retention meta.
+
 **UserQuestionCycle** (Classic / Blitz pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. After cycle (SINGLE and Mix): 300ms settle, then Direct resolve chunks of 5. Daily does not use the cycle. Boundary is **reshuffle-first**. No silent `ORDER BY RANDOM` fallback.
 
 **Priority:** production (Vercel + prod Neon) is the product. Local Windows `next dev` is a TLS lab — do not ship local fail-fast that false-fails cold Neon (play-load timeout 5s dev / **18s prod**).
