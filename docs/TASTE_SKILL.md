@@ -72,7 +72,7 @@ Phase 5 modes / achievements inherit the system
 | `/quiz` setup | **mode lobby** | functional | Sole Daily + Timed + Classic; Classic start = primary |
 | `/quiz/[sessionId]` | user | strongest so far | QuestionCard, progress, IMAGE_GUESS full-frame + **lightbox** (click/tap/keys dismiss; black scrim) |
 | `/result/[sessionId]` | owner | good structure | Summary + review filters; IMAGE_GUESS lightbox same component |
-| `/leaderboard` | public | **scoreboard + difficulty + period filters** | Phone strip + sm+ table; podium 1–3; segmented `?period=` then `?difficulty=` |
+| `/leaderboard` | public | **scoreboard + mode + period + difficulty** | Phone strip + sm+ table; podium 1–3; segmented `?mode=` → `?period=` (week default) → `?difficulty=` |
 | `/profile` | user | **identity strip + dense stats 2×2/4-col + 2-col mid + compact achievements + settings details** | order: strip → stats/achievements\|history → settings; stats = full-width 2×2 until lg |
 | `/admin` | admin | **home counts + Scoreboard polish** | Sessions strip; Questions 2×2 (status × format); Users total caption |
 | `/admin/questions` (+ new/edit) | admin | **paginated list + draft/bulk + contextual toolbar** | `?page=` (25/page); checkboxes; toolbar Visibility/Publication; desktop Edit + more; publication filter; edit quality panel |
@@ -329,6 +329,21 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-19 — Leaderboard retention Layer 1 (week default + mode boards)
+
+- Scope: Feature:Leaderboard meta / Prompt T-Feature (Scoreboard Editorial)
+- Skills used: gamemind-taste-ui
+- Files touched: `leaderboard-mode-filters.tsx`, period/difficulty filters, `leaderboard/page.tsx`, parse + `findBestScores`, i18n, Classic/Blitz lobby captions
+- What changed visually:
+  - third segmented control **Режим** (Классика / Блиц / Челлендж) above period;
+  - period chips reordered **Неделя → Месяц → Всё время**; week is the live default;
+  - muted captions under title: 7-day window / all-time records / Blitz speed;
+  - Classic + Blitz lobby: one `text-xs` line under meta (not a modal).
+- Tokens/components added: `LeaderboardModeFilters` (same chrome as period)
+- Explicitly NOT changed: scoring, snapshot, submit/complete, Timed clock, Survival, calendar Monday reset
+- Verify: `/ru/leaderboard` week selected; `?period=all`; `?mode=blitz`; lobby Classic/Blitz captions; light/dark; ru/en; 390px three mode chips
+- Follow-up: commit + friends smoke (HARD 30 no longer locks all-time #1 on the default board)
 
 ### 2026-08-18 — Admin hub: TEXT / IMAGE_GUESS glance + card rhythm
 

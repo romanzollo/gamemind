@@ -72,6 +72,8 @@ export const enDictionary = {
         description:
             'Ten questions. One minute. Pick your difficulty. The clock will not wait.',
         meta: '10 questions · 60s · pick difficulty',
+        leaderboardHint:
+            'The weekly board counts games from the last 7 days. Tied scores go to the faster finish.',
         startButton: 'Start the blitz',
         loginPrompt: 'Sign in to play timed mode.',
         loginLink: 'Sign in',
@@ -354,6 +356,8 @@ export const enDictionary = {
         classicDescription:
             'Your pace: pick difficulty and question count. No clock in the way.',
         classicMeta: 'No time limit · your set',
+        classicLeaderboardHint:
+            'The weekly board counts games from the last 7 days.',
         difficultyLabel: 'Difficulty',
         questionCountLabel: 'Question count',
         progressAnsweredLabel: 'Answered',
@@ -424,17 +428,26 @@ export const enDictionary = {
     leaderboard: {
         title: 'Leaderboard',
         description:
-            'Best score per player. Choose period and difficulty to compare results more fairly. Points: easy 1, medium 2, hard 3.',
+            'Classic, Blitz, and Daily are separate boards. Classic HARD 10Q tops out at 30 points. The live board counts games from the last 7 days; all-time records live on the All time tab. Points: easy 1, medium 2, hard 3.',
+        weekWindowHint:
+            'The weekly board counts only games from the last 7 days. Play again to keep your place. All-time records live on the All time tab.',
+        allTimeHint:
+            'These are records with no date window. The live race is on the Week tab.',
+        blitzSpeedHint: 'Tied scores go to whoever finished faster.',
         rank: 'Rank',
         player: 'Player',
         score: 'Points',
         accuracy: 'Accuracy',
         date: 'Date',
-        empty: 'No results yet. Be the first to complete a quiz!',
+        empty: 'No results in the last 7 days yet. Be the first to play.',
         emptyFiltered:
-            'No results for these filters yet. Change period or difficulty — or play a quiz.',
+            'No results for these filters yet. Change mode, period, or difficulty — or play a quiz.',
         loadFailed:
             'Failed to load leaderboard. Check the database connection and refresh the page.',
+        filterModeLabel: 'Mode',
+        filterModeClassic: 'Classic',
+        filterModeBlitz: 'Blitz',
+        filterModeDaily: 'Daily',
         filterDifficultyLabel: 'Difficulty',
         filterAll: 'All',
         filterMixed: 'Mix',

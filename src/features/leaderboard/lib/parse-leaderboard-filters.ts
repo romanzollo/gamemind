@@ -7,18 +7,30 @@ import type { QuizSetupDifficulty } from '@/types';
  *
  * Зачем отдельный модуль:
  * - URL — внешний вход (как FormData); валидируем до репозитория;
- * - невалидные `?difficulty=` / `?period=` не роняют страницу — fallback на defaults;
- * - один контракт page → SQL WHERE (difficulty / poolKind / completedAt).
+ * - невалидные `?difficulty=` / `?period=` / `?mode=` не роняют страницу;
+ * - один контракт page → SQL WHERE (mode / difficulty / poolKind / completedAt).
  *
- * Период = скользящее окно (rolling), не календарная неделя/месяц:
- * week = последние 7×24ч, month = 30×24ч, all = без нижней границы даты.
- * Так проще объяснить игроку и нет споров про таймзону «чей понедельник».
+ * Живая доска (Layer 1, DECISIONS.md → Leaderboard retention meta):
+ * пустой URL = Classic + скользящая неделя. All-time — явная вкладка `?period=all`.
  *
- * См. DECISIONS.md → Leaderboard; ROADMAP §6 later period.
+ * Период = скользящее окно, не календарный понедельник:
+ * week = последние 7×24ч, month = 30×24ч, all = без нижней границы.
+ * В UI: «недельный рейтинг — игры за последние 7 дней»; не обещать
+ * сброс в понедельник. All-time (`period=all`) без нижней границы.
+ *
+ * Режим обязателен и взаимоисключающ (не смешивать потолки Classic/Blitz/Daily).
+ *
+ * См. DECISIONS.md → Leaderboard retention meta — Layer 1.
  */
 
 /** Период рейтинга после parse. */
 export type LeaderboardPeriod = 'week' | 'month' | 'all';
+
+/**
+ * Режим доски. Не QuizSession.status и не play-mode Survival.
+ * SQL: скаляры `dailyChallengeId` / `timedEndsAt` (не snapshotData).
+ */
+export type LeaderboardMode = 'classic' | 'blitz' | 'daily';
 
 /** Сложность рейтинга после parse. `MIXED` = poolKind, не Question.difficulty. */
 export type LeaderboardDifficultyFilter = QuizSetupDifficulty | 'all';
@@ -26,24 +38,31 @@ export type LeaderboardDifficultyFilter = QuizSetupDifficulty | 'all';
 /** Нормализованный фильтр рейтинга (после parse). */
 export type LeaderboardFilters = {
     /**
-     * `all` = без JOIN (mix входит в глобальный best).
+     * `all` = все сложности **внутри выбранного mode** (JOIN Session всё равно нужен).
      * EASY|MEDIUM|HARD = SINGLE + эта difficulty (mix не в Medium).
      * MIXED = poolKind MIXED.
      */
     difficulty: LeaderboardDifficultyFilter;
-    /** Окно по `QuizResult.completedAt`; `all` = без нижней границы. */
+    /**
+     * Окно по `QuizResult.completedAt`.
+     * Default живой доски — `week`; `all` = зал славы без нижней границы.
+     */
     period: LeaderboardPeriod;
+    /** Default — classic. Нет значения «все режимы»: потолки разные. */
+    mode: LeaderboardMode;
 };
 
 const DEFAULT_FILTERS: LeaderboardFilters = {
     difficulty: 'all',
-    period: 'all',
+    period: 'week',
+    mode: 'classic',
 };
 
 const leaderboardFiltersSchema = z.object({
-    // Независимое catch: битый difficulty не должен сбрасывать валидный period (и наоборот).
+    // Независимое catch: битый ключ не должен сбрасывать остальные.
     difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'MIXED', 'all']).catch('all'),
-    period: z.enum(['week', 'month', 'all']).catch('all'),
+    period: z.enum(['week', 'month', 'all']).catch('week'),
+    mode: z.enum(['classic', 'blitz', 'daily']).catch('classic'),
 });
 
 function firstParam(
@@ -75,6 +94,7 @@ export function parseLeaderboardFilters(
     const parsed = leaderboardFiltersSchema.safeParse({
         difficulty: emptyToUndefined(firstParam(searchParams.difficulty)),
         period: emptyToUndefined(firstParam(searchParams.period)),
+        mode: emptyToUndefined(firstParam(searchParams.mode)),
     });
 
     if (!parsed.success) {
@@ -85,17 +105,23 @@ export function parseLeaderboardFilters(
 }
 
 /**
- * Есть ли активный фильтр (для UI «сбросить» / пустого empty copy).
+ * Есть ли отклонение от живой доски (Classic + неделя + все сложности).
+ * Нужно для emptyFiltered: «нет игр на неделе» ≠ «нет HARD за всё время».
  */
 export function hasActiveLeaderboardFilters(
     filters: LeaderboardFilters,
 ): boolean {
-    return filters.difficulty !== 'all' || filters.period !== 'all';
+    return (
+        filters.difficulty !== 'all' ||
+        filters.period !== 'week' ||
+        filters.mode !== 'classic'
+    );
 }
 
 /**
  * Собирает href рейтинга с учётом locale и фильтров.
- * `all` / пустое — не пишем в URL (чистая ссылка = глобальный all-time рейтинг).
+ * Живая доска (classic + week + all difficulties) = чистый `/leaderboard`.
+ * All-time пишем явно (`period=all`), иначе снова станет «невидимым» default.
  */
 export function buildLeaderboardHref(
     locale: string,
@@ -103,12 +129,16 @@ export function buildLeaderboardHref(
 ): string {
     const params = new URLSearchParams();
 
-    if (filters.difficulty !== 'all') {
-        params.set('difficulty', filters.difficulty);
+    if (filters.mode !== 'classic') {
+        params.set('mode', filters.mode);
     }
 
-    if (filters.period !== 'all') {
+    if (filters.period !== 'week') {
         params.set('period', filters.period);
+    }
+
+    if (filters.difficulty !== 'all') {
+        params.set('difficulty', filters.difficulty);
     }
 
     const query = params.toString();

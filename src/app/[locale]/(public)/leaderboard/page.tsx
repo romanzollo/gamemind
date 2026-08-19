@@ -1,4 +1,5 @@
 import { LeaderboardDifficultyFilters } from '@/features/leaderboard/components/leaderboard-difficulty-filters';
+import { LeaderboardModeFilters } from '@/features/leaderboard/components/leaderboard-mode-filters';
 import { LeaderboardPeriodFilters } from '@/features/leaderboard/components/leaderboard-period-filters';
 import { LeaderboardTable } from '@/features/leaderboard/components/leaderboard-table';
 import {
@@ -14,7 +15,7 @@ import { InlineAlert } from '@/shared/ui';
 
 type LeaderboardPageProps = {
     params: Promise<{ locale: string }>;
-    /** URL-фильтры (`?difficulty=` / `?period=`); Next.js 15+ — Promise. */
+    /** URL-фильтры (`?mode=` / `?period=` / `?difficulty=`); Next.js 15+ — Promise. */
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
@@ -34,10 +35,11 @@ export default async function LeaderboardPage({
     let loadErrorMessage: string | undefined;
 
     try {
-        // Feature знает week/month; entity получает только Date (или null = all-time).
+        // Feature знает week/month/mode; entity — Date + allowlist mode.
         const rows = await leaderboardRepository.findBestScores(
             LEADERBOARD_LIMIT,
             {
+                mode: filters.mode,
                 difficulty: filters.difficulty,
                 completedAfter: getLeaderboardPeriodCutoff(filters.period),
             },
@@ -54,6 +56,14 @@ export default async function LeaderboardPage({
             : dictionary.leaderboard.empty,
     };
 
+    const periodHint =
+        filters.period === 'week'
+            ? dictionary.leaderboard.weekWindowHint
+            : filters.period === 'all'
+              ? dictionary.leaderboard.allTimeHint
+              : null;
+    const showBlitzHint = filters.mode === 'blitz';
+
     return (
         <main className="mx-auto max-w-3xl px-4 py-8 sm:px-8 sm:py-12">
             <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
@@ -62,6 +72,27 @@ export default async function LeaderboardPage({
             <p className="mt-3 text-base leading-relaxed text-muted">
                 {dictionary.leaderboard.description}
             </p>
+
+            {periodHint || showBlitzHint ? (
+                <div className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
+                    {periodHint ? <p>{periodHint}</p> : null}
+                    {showBlitzHint ? (
+                        <p>{dictionary.leaderboard.blitzSpeedHint}</p>
+                    ) : null}
+                </div>
+            ) : null}
+
+            <LeaderboardModeFilters
+                locale={safeLocale}
+                filters={filters}
+                labels={{
+                    filterModeLabel: dictionary.leaderboard.filterModeLabel,
+                    filterModeClassic:
+                        dictionary.leaderboard.filterModeClassic,
+                    filterModeBlitz: dictionary.leaderboard.filterModeBlitz,
+                    filterModeDaily: dictionary.leaderboard.filterModeDaily,
+                }}
+            />
 
             <LeaderboardPeriodFilters
                 locale={safeLocale}

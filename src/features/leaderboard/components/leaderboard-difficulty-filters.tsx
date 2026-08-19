@@ -10,6 +10,7 @@ import { PendingLink } from '@/shared/ui';
  * Чипы фильтра сложности на публичном рейтинге (Scoreboard Editorial).
  *
  * Навигация через URL (`?difficulty=`), не client state — можно шарить ссылку.
+ * Смена сложности сохраняет mode и period (неделя/блиц не сбрасываются).
  * PendingLink: лёгкий opacity при soft navigation (§11.9).
  *
  * Визуал: segmented control (один ряд в рамке), не 2×2 «кнопочная панель» —
@@ -64,8 +65,9 @@ export function LeaderboardDifficultyFilters({
             >
                 {options.map((option) => {
                     const isActive = filters.difficulty === option.value;
-                    // Сохраняем period: смена сложности не должна сбрасывать окно дат.
+                    // Смена сложности не сбрасывает режим и окно дат.
                     const href = buildLeaderboardHref(locale, {
+                        mode: filters.mode,
                         difficulty: option.value,
                         period: filters.period,
                     });

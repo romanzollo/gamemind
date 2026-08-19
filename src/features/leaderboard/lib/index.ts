@@ -8,5 +8,6 @@ export {
     parseLeaderboardFilters,
     type LeaderboardDifficultyFilter,
     type LeaderboardFilters,
+    type LeaderboardMode,
     type LeaderboardPeriod,
 } from './parse-leaderboard-filters';

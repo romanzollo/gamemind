@@ -80,23 +80,84 @@ type LeaderboardScoreRow = {
 };
 
 /**
- * Опциональный фильтр рейтинга.
- * - difficulty `all` / omit = без JOIN на QuizSession (mix входит);
- * - EASY|MEDIUM|HARD = JOIN Session + poolKind SINGLE + эта difficulty
- *   (mix не попадает в Medium из-за NULL difficulty / poolKind MIXED);
- * - MIXED = JOIN Session + poolKind MIXED;
- * - completedAfter = только результаты с `completedAt >=` этой даты;
- * - omit / null completedAfter = без нижней границы даты.
+ * Режим публичной доски. Не play-mode Survival.
+ * Дискриминация только скалярами QuizSession (DECISIONS → Leaderboard Layer 1).
+ */
+export type FindBestScoresMode = 'classic' | 'blitz' | 'daily';
+
+/**
+ * Фильтр рейтинга.
+ * JOIN Session всегда: mode режет Classic / Blitz / Daily по скалярам.
+ * - difficulty omit/`all` = все сложности внутри mode (mix входит в «все»);
+ * - EASY|MEDIUM|HARD = poolKind SINGLE + эта difficulty (mix не в Medium);
+ * - MIXED = poolKind MIXED;
+ * - completedAfter = `QuizResult.completedAt >=` даты; null/omit = без окна.
  *
- * Семантику week/month считает feature-слой (`getLeaderboardPeriodCutoff`);
- * entity знает только Date — без зависимости features → entities наоборот.
- * Difficulty в SQL только из allowlist выше по стеку (Zod на page).
+ * Семантику week/month считает feature (`getLeaderboardPeriodCutoff`);
+ * entity знает Date и mode — без features → entities.
+ * mode / difficulty в SQL только из allowlist (Zod на page). Omit mode = classic:
+ * не смешивать потолки, даже если page забыл передать поле.
  */
 export type FindBestScoresFilters = {
     difficulty?: Difficulty | 'MIXED' | 'all';
     /** Нижняя граница `QuizResult.completedAt` (скользящее окно). */
     completedAfter?: Date | null;
+    /** Omit = classic. Нет значения «все режимы». */
+    mode?: FindBestScoresMode;
 };
+
+function resolveLeaderboardMode(
+    mode: FindBestScoresMode | undefined,
+): FindBestScoresMode {
+    if (mode === 'blitz' || mode === 'daily') {
+        return mode;
+    }
+
+    return 'classic';
+}
+
+/** WHERE по скалярам сессии — без snapshotData. */
+function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
+    if (mode === 'daily') {
+        return ['s."dailyChallengeId" IS NOT NULL'];
+    }
+
+    if (mode === 'blitz') {
+        return [
+            's."dailyChallengeId" IS NULL',
+            's."timedEndsAt" IS NOT NULL',
+        ];
+    }
+
+    return ['s."dailyChallengeId" IS NULL', 's."timedEndsAt" IS NULL'];
+}
+
+/**
+ * DISTINCT ON требует, чтобы ORDER BY начинался с userId.
+ * Blitz: равный score → меньшая длительность выше. Classic/Daily этим ключом
+ * не сортируем — только completedAt (иначе классика стала бы гонкой на скорость).
+ */
+function leaderboardBestOrderSql(mode: FindBestScoresMode): {
+    durationSelect: string;
+    innerOrderBy: string;
+    outerOrderBy: string;
+} {
+    if (mode === 'blitz') {
+        return {
+            durationSelect: `, (r."completedAt" - s."startedAt") AS "duration"`,
+            innerOrderBy:
+                'r."userId" ASC, r."score" DESC, (r."completedAt" - s."startedAt") ASC, r."completedAt" ASC',
+            outerOrderBy:
+                'best."score" DESC, best."duration" ASC, best."completedAt" ASC',
+        };
+    }
+
+    return {
+        durationSelect: '',
+        innerOrderBy: 'r."userId" ASC, r."score" DESC, r."completedAt" ASC',
+        outerOrderBy: 'best."score" DESC, best."completedAt" ASC',
+    };
+}
 
 function parseSessionPoolKind(value: string | null): QuizSessionPoolKind {
     return value === 'MIXED' ? 'MIXED' : 'SINGLE';
@@ -321,19 +382,16 @@ async function loadResultReviewBySessionIdForUser(
 // репозиторий для работы с результатами викторины
 export const quizResultRepository = {
     /**
-     * Лучший результат на пользователя — unpooled pg (Neon-friendly).
+     * Лучший результат на пользователя внутри доски — unpooled pg.
      *
-     * Ветки (JOIN Session только если нужен poolKind / difficulty):
-     * - без фильтров → DISTINCT ON по QuizResult (быстрый путь, mix входит);
-     * - только completedAfter → WHERE completedAt >= $cutoff (без JOIN);
-     * - SINGLE EASY|MEDIUM|HARD → JOIN + poolKind SINGLE + difficulty;
-     * - MIXED → JOIN + poolKind MIXED;
-     * - фильтр + дата → JOIN + оба WHERE.
+     * Всегда JOIN QuizSession: mode режет потолки (скаляры, не JSONB).
+     * Difficulty / completedAfter — дополнительные WHERE.
+     * Blitz ORDER BY длительности только в этой ветке.
      *
-     * Параметры: limit + allowlist difficulty + Date cutoff из feature-слоя.
-     * См. DECISIONS.md → Leaderboard; Mixed-Difficulty Classic/Blitz.
+     * См. DECISIONS.md → Leaderboard retention meta — Layer 1.
      */
     async findBestScores(limit: number, filters?: FindBestScoresFilters) {
+        const mode = resolveLeaderboardMode(filters?.mode);
         const difficulty = filters?.difficulty;
         const filterBySingle =
             difficulty === 'EASY' ||
@@ -341,15 +399,10 @@ export const quizResultRepository = {
             difficulty === 'HARD';
         const filterByMixed = difficulty === 'MIXED';
         const completedAfter = filters?.completedAfter ?? null;
+        const orderSql = leaderboardBestOrderSql(mode);
 
         const params: unknown[] = [limit];
-        const whereParts: string[] = [];
-
-        // JOIN нужен только для фильтра по пулу сессии — дата живёт на QuizResult.
-        const sessionJoin =
-            filterBySingle || filterByMixed
-                ? `INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"`
-                : '';
+        const whereParts: string[] = [...leaderboardModeWhereSql(mode)];
 
         if (filterByMixed) {
             params.push('MIXED');
@@ -372,12 +425,12 @@ export const quizResultRepository = {
             whereParts.push(`r."completedAt" >= $${params.length}`);
         }
 
-        const whereSql =
-            whereParts.length > 0 ? `WHERE ${whereParts.join(' AND ')}` : '';
+        const whereSql = `WHERE ${whereParts.join(' AND ')}`;
 
-        const result = await withDirectPgClient((client) =>
-            client.query<LeaderboardScoreRow>(
-                `
+        const result = await withDirectPgClient(
+            (client) =>
+                client.query<LeaderboardScoreRow>(
+                    `
                     SELECT
                         best."userId" AS "user_id",
                         u."username" AS "username",
@@ -392,22 +445,23 @@ export const quizResultRepository = {
                             r."totalQuestions",
                             r."correctCount",
                             r."completedAt"
+                            ${orderSql.durationSelect}
                         FROM "QuizResult" AS r
-                        ${sessionJoin}
+                        INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
                         ${whereSql}
                         ORDER BY
-                            r."userId" ASC,
-                            r."score" DESC,
-                            r."completedAt" ASC
+                            ${orderSql.innerOrderBy}
                     ) AS best
                     INNER JOIN "User" AS u ON u."id" = best."userId"
                     ORDER BY
-                        best."score" DESC,
-                        best."completedAt" ASC
+                        ${orderSql.outerOrderBy}
                     LIMIT $1
                 `,
-                params,
-            ),
+                    params,
+                ),
+            {
+                debugLabel: 'leaderboard.best-scores',
+            },
         );
 
         return result.rows.map((row) => ({

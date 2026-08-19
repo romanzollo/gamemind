@@ -1,55 +1,56 @@
 import {
     buildLeaderboardHref,
     type LeaderboardFilters,
-    type LeaderboardPeriod,
+    type LeaderboardMode,
 } from '@/features/leaderboard/lib/parse-leaderboard-filters';
 import type { Locale } from '@/shared/i18n';
 import { PendingLink } from '@/shared/ui';
 
 /**
- * Чипы периода на публичном рейтинге (Scoreboard Editorial).
+ * Чипы режима на публичном рейтинге (Scoreboard Editorial).
  *
- * Живая доска = week (omit в URL). All-time — явная вкладка `?period=all`.
- * Скользящее окно (7/30 суток), не календарный понедельник.
- * Визуал = тот же segmented control, что у режима и сложности.
- * См. parse-leaderboard-filters; DECISIONS.md → Leaderboard Layer 1.
+ * Classic / Blitz / Daily — взаимоисключающие доски: разные потолки,
+ * нельзя смешивать в одном DISTINCT ON. Нет чипа «все режимы».
+ * URL `?mode=blitz|daily` (omit = classic) — шарибельная ссылка, не client state.
+ *
+ * Тот же segmented control, что у периода: вторичный chrome, акцент у таблицы.
+ * См. DECISIONS.md → Leaderboard retention meta — Layer 1.
  */
 
-type LeaderboardPeriodFiltersProps = {
+type LeaderboardModeFiltersProps = {
     locale: Locale;
     filters: LeaderboardFilters;
     labels: {
-        filterPeriodLabel: string;
-        filterPeriodAll: string;
-        filterPeriodWeek: string;
-        filterPeriodMonth: string;
+        filterModeLabel: string;
+        filterModeClassic: string;
+        filterModeBlitz: string;
+        filterModeDaily: string;
     };
 };
 
-type PeriodOption = {
-    value: LeaderboardPeriod;
+type ModeOption = {
+    value: LeaderboardMode;
     label: string;
 };
 
-export function LeaderboardPeriodFilters({
+export function LeaderboardModeFilters({
     locale,
     filters,
     labels,
-}: LeaderboardPeriodFiltersProps) {
-    // Неделя первой: это живая гонка, не зал славы.
-    const options: PeriodOption[] = [
-        { value: 'week', label: labels.filterPeriodWeek },
-        { value: 'month', label: labels.filterPeriodMonth },
-        { value: 'all', label: labels.filterPeriodAll },
+}: LeaderboardModeFiltersProps) {
+    const options: ModeOption[] = [
+        { value: 'classic', label: labels.filterModeClassic },
+        { value: 'blitz', label: labels.filterModeBlitz },
+        { value: 'daily', label: labels.filterModeDaily },
     ];
 
     return (
         <nav
-            className="mt-4"
-            aria-label={labels.filterPeriodLabel}
+            className="mt-5"
+            aria-label={labels.filterModeLabel}
         >
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
-                {labels.filterPeriodLabel}
+                {labels.filterModeLabel}
             </p>
 
             <div
@@ -57,12 +58,12 @@ export function LeaderboardPeriodFilters({
                 role="group"
             >
                 {options.map((option) => {
-                    const isActive = filters.period === option.value;
-                    // Смена периода не сбрасывает режим и сложность.
+                    const isActive = filters.mode === option.value;
+                    // Смена режима не должна сбрасывать неделю и сложность.
                     const href = buildLeaderboardHref(locale, {
-                        mode: filters.mode,
+                        mode: option.value,
+                        period: filters.period,
                         difficulty: filters.difficulty,
-                        period: option.value,
                     });
 
                     return (

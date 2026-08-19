@@ -80,6 +80,7 @@ This file is gitignored local working documentation.
 - [x] Column cleanup + Scoreboard UI (July 26): Место | Игрок | Очки | Точность | Дата; phone strip + sm+ table; podium medals 1–3
 - [x] Difficulty filter on `/leaderboard` (`?difficulty=`; JOIN `QuizSession`; July 29; committed `14dc97c`)
 - [x] Period filter on `/leaderboard` (`?period=week|month`; rolling 7/30d on `QuizResult.completedAt`; July 29; committed `019c071`; on prod)
+- [x] Retention Layer 1 (Aug 19): default rolling week; exclusive Classic/Blitz/Daily boards; Blitz tie-break by duration; 7-day copy on board + Classic/Blitz lobby
 - [ ] Later: category leaderboards (product, not presentation; needs taxonomy)
 
 ### 7. Admin Panel
@@ -324,7 +325,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 - [x] Timed mode — **on origin** July 31; **abandon + rematch + review Neon harden + RU labels** Aug 2 (local verified; redeploy pending)
 - [ ] Survival/streak mode
 - [ ] Category/platform/genre-specific quiz — defer until real filter demand + more tagged content
-- [x] Period-based leaderboards (difficulty `14dc97c` + rolling week/month `019c071`; on prod)
+- [x] Period-based leaderboards (difficulty `14dc97c` + rolling week/month `019c071`; Layer 1 default week + mode + Blitz speed Aug 19)
 - [ ] API-assisted draft question generation with admin review
 ### Phase 11 — Post-Launch UX Slice (active)
 

@@ -95,6 +95,10 @@ export function TimedModeCtaPanel({
                 </span>
             </p>
 
+            <p className="mt-2 max-w-prose text-xs leading-relaxed text-muted">
+                {labels.leaderboardHint}
+            </p>
+
             <div className="mt-4">
                 {!isAuthenticated ? (
                     <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">

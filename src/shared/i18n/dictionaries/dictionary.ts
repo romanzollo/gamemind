@@ -90,6 +90,11 @@ export type Dictionary = {
         description: string;
         /** Мета: 10 Q · 60s · pick difficulty */
         meta: string;
+        /**
+         * Одна строка у Blitz CTA.
+         * Смысл: недельный рейтинг за 7 дней; при равных очках выше скорость.
+         */
+        leaderboardHint: string;
         startButton: string;
         loginPrompt: string;
         loginLink: string;
@@ -390,6 +395,12 @@ export type Dictionary = {
         classicTitle: string;
         classicDescription: string;
         classicMeta: string;
+        /**
+         * Одна строка у Classic CTA (не модалка).
+         * Смысл: в недельном рейтинге — игры за последние 7 дней.
+         * Не писать «сойдёт с доски».
+         */
+        classicLeaderboardHint: string;
         difficultyLabel: string;
         questionCountLabel: string;
         /** Прогресс сессии: отвечено / всего (не число вопросов в setup). */
@@ -479,7 +490,28 @@ export type Dictionary = {
     };
     leaderboard: {
         title: string;
+        /**
+         * Лид под h1: режимы не смешиваются; Classic HARD 10Q — потолок 30;
+         * живая таблица — неделя; «Всё время» — рекорды.
+         */
         description: string;
+        /**
+         * Когда открыта неделя (default).
+         * Смысл: учитываются только игры за последние 7 дней;
+         * чтобы сохранить место — сыграть снова;
+         * рекорд за всё время — вкладка «Всё время».
+         * Не писать «сойдёт с доски». Не обещать сброс в понедельник.
+         */
+        weekWindowHint: string;
+        /**
+         * Когда открыто «Всё время».
+         * Смысл: это рекорды без окна в 7 дней; живая гонка — вкладка «Неделя».
+         */
+        allTimeHint: string;
+        /**
+         * На доске Blitz: при равных очках выше более быстрый забег.
+         */
+        blitzSpeedHint: string;
         rank: string;
         player: string;
         /** Взвешенные очки (EASY=1, MEDIUM=2, HARD=3) — не путать с correctCount */
@@ -492,9 +524,14 @@ export type Dictionary = {
         /** Дата лучшего результата (QuizResult.completedAt); уже в DTO, раньше не показывали */
         date: string;
         empty: string;
-        /** Пусто при активном ?difficulty= / ?period= (не путать с глобальным empty) */
+        /** Пусто при не-default ?difficulty= / ?period= / ?mode= */
         emptyFiltered: string;
         loadFailed: string;
+        /** aria-label группы чипов режима */
+        filterModeLabel: string;
+        filterModeClassic: string;
+        filterModeBlitz: string;
+        filterModeDaily: string;
         /** aria-label группы чипов сложности */
         filterDifficultyLabel: string;
         /** Чип «все сложности» → URL без ?difficulty= */
@@ -503,9 +540,9 @@ export type Dictionary = {
         filterMixed: string;
         /** aria-label группы чипов периода */
         filterPeriodLabel: string;
-        /** Чип all-time → URL без ?period= */
+        /** Чип all-time → явный `?period=all` (больше не default) */
         filterPeriodAll: string;
-        /** Скользящие 7×24ч */
+        /** Скользящие 7×24ч — default живой доски, в URL не пишем */
         filterPeriodWeek: string;
         /** Скользящие 30×24ч */
         filterPeriodMonth: string;

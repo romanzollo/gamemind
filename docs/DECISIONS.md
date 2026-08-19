@@ -1004,14 +1004,36 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 ## Leaderboard
 
 - Public page; no `requireUser()`.
-- MVP rule: one row per user = their best `QuizResult.score`; tie-break by earlier `completedAt`.
-- **`findBestScores(limit)` (July 16, 2026 evening):** unpooled `withDirectPgClient` + SQL `DISTINCT ON ("userId")` ordered by score DESC / completedAt ASC, then JOIN `User`, global `ORDER BY` + `LIMIT`. Replaced Prisma `distinct` + in-memory sort after the same Neon hang class as admin/quiz.
+- One row per user = their best `QuizResult.score` **inside the active board** (mode + period + difficulty). Global mixed-mode all-time is not the default (August 19 Layer 1).
+- **`findBestScores(limit)` (July 16, 2026 evening):** unpooled `withDirectPgClient` + SQL `DISTINCT ON ("userId")`, then JOIN `User`, global `ORDER BY` + `LIMIT`. Replaced Prisma `distinct` + in-memory sort after the same Neon hang class as admin/quiz.
 - Do not regress to Prisma on this path without re-measuring Windows + Neon.
 - `LeaderboardEntry` DTO is mapped in the feature layer; UI does not depend on DB row shape.
 - Current UI shows points + `correctCount / totalQuestions` + completion date.
 - Keep `LeaderboardEntry.completedAt` even if presentation changes; it supports tie-break explanation.
-- **Difficulty filter (July 29, 2026):** optional URL `?difficulty=EASY|MEDIUM|HARD` (omit/`all` = global). Zod `parseLeaderboardFilters` (safe defaults; unit-tested). `findBestScores(limit, filters?)`: unfiltered path unchanged (no `QuizSession` JOIN); filtered path JOIN `QuizSession` + `WHERE s.difficulty = $2` then same DISTINCT ON ? best **within** session difficulty. Filter by **`QuizSession.difficulty`**, never live `Question.difficulty`. UI: Scoreboard **segmented control** + eyebrow (not 2?2 CTA grid); `PendingLink`; `emptyFiltered` copy.
-- **Period filter (July 29, 2026 late):** optional URL `?period=week|month` (omit/`all` = all-time). **Rolling** windows (7?24h / 30?24h), not calendar week/month ? simpler UX and no timezone ?whose Monday?. Feature `getLeaderboardPeriodCutoff` ? repo `completedAfter: Date | null` (entity does not know week/month words). JOIN Session **only** when difficulty is set; period-only filters `QuizResult.completedAt` without Session JOIN. Zod per-field `.catch` so a bad `difficulty` does not wipe a valid `period` (and vice versa). UI: second segmented control above difficulty; both query params preserved when switching either filter. Later: category boards without rewriting this contract.
+- **Difficulty filter (July 29, 2026):** optional URL `?difficulty=EASY|MEDIUM|HARD|MIXED` (omit/`all` = all difficulties **within the selected mode**). Zod `parseLeaderboardFilters` (safe defaults; unit-tested). Filter by **`QuizSession.difficulty` / `poolKind`**, never live `Question.difficulty`. UI: Scoreboard **segmented control** + eyebrow (not 2×2 CTA grid); `PendingLink`; `emptyFiltered` copy.
+- **Period filter (July 29, 2026 late):** URL `?period=week|month|all`. **Rolling** windows (7×24h / 30×24h), not calendar week/month — simpler UX and no timezone “whose Monday”. Feature `getLeaderboardPeriodCutoff` → repo `completedAfter: Date | null` (entity does not know week/month words). Zod per-field `.catch` so a bad `difficulty` / `mode` / `period` does not wipe the other fields. **Update (August 19):** omit/`default` is **week**, not all-time — see Layer 1.
+
+### Leaderboard retention meta — Layer 1 (August 19, 2026)
+
+**Problem:** Classic HARD 10Q has a hard ceiling of **30** points (`10 × HARD=3`). The public board was all-time best per user (`DISTINCT ON userId ORDER BY score DESC, completedAt ASC`). Once a friend hits 30 they stay #1 forever; weekly competition dies. Mixing Classic / Blitz / Daily on one table also mixes different ceilings and clocks.
+
+**Decision (competition layer only — no new play mode):** keep the same `QuizResult` rows and the same scoring. Change **which board is the default** and **how ties break**.
+
+1. **Default period = rolling week.** Empty `/leaderboard` (no `?period=`) means last 7×24h. All-time stays an **explicit** tab: `?period=all`. Month stays `?period=month`. Same rolling math as July 29 (`getLeaderboardPeriodCutoff`); only the Zod/URL default flips from `all` → `week`. `buildLeaderboardHref` omits `period` when it is `week`, and **writes** `period=all`.
+2. **Mode filter is mandatory and exclusive:** `classic` | `blitz` | `daily`. No “all modes” chip — that would mix ceilings. Default `classic`. URL `?mode=blitz|daily`; omit `mode` = classic. Discriminate with **session scalars only** (Prisma comments already define this):
+   - Classic: `dailyChallengeId IS NULL AND timedEndsAt IS NULL`;
+   - Blitz: `dailyChallengeId IS NULL AND timedEndsAt IS NOT NULL`;
+   - Daily: `dailyChallengeId IS NOT NULL`.
+3. **Blitz tie-break:** after `score DESC`, shorter duration ranks higher: `(QuizResult.completedAt − QuizSession.startedAt)` ASC, then `completedAt` ASC as a last resort. **Classic and Daily must not** use duration in `ORDER BY` — keep `score DESC, completedAt ASC`. Duration is computed in the leaderboard SELECT; do **not** persist it, do **not** write it on complete.
+4. **Copy (ru/en):** say honestly that 30 is the Classic HARD 10Q ceiling; after that the race is the rolling week, and in Blitz equal scores lose to speed. All-time is a hall-of-fame tab, not the live ladder.
+
+**SQL contract:** `findBestScores` always `INNER JOIN "QuizSession"` for mode (+ difficulty when not `all`). Select only scalars (`score`, counts, `completedAt`, `startedAt`, `timedEndsAt`, `dailyChallengeId`, `poolKind`, `difficulty`). **Never** `snapshotData` / `reviewSnapshot` / `reviewPayload`. Still `withDirectPgClient`. Page `try/catch` → `dictionary.leaderboard.loadFailed` (no 500). If `mode` is omitted at the repo, default **classic** — do not silently mix modes.
+
+**Why this and not Survival:** Survival is a new loop (Phase 5 leftover). Layer 1 reuses existing results and restores a reason to play this week. Friends who already have 30 still keep the all-time tab.
+
+**Do not (this slice):** touch start / submit / `completeWithResult` / snapshot / Direct queue / UserQuestionCycle / scoring weights / Timed clock; add JSONB on complete; add a duration column; `notFound()` on leaderboard; Prisma on this read.
+
+**UI:** third Scoreboard segmented control (mode), same chrome as period/difficulty; preserve all three query params when switching any chip. Order on the page: mode → period → difficulty.
 
 ## Admin Panel
 

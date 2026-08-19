@@ -86,6 +86,10 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
                 </span>
             </p>
 
+            <p className="mt-2 max-w-prose text-xs leading-relaxed text-muted">
+                {labels.classicLeaderboardHint}
+            </p>
+
             <form action={formAction} className="mt-4 space-y-4">
                 <input type="hidden" name="locale" value={locale} />
 
