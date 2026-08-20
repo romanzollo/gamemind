@@ -92,7 +92,8 @@ export const ruDictionary: Dictionary = {
         chooseAnswerHint: 'Выбери ответ, чтобы продолжить волну.',
         finishWaveButton: 'Завершить волну',
         restartButton: 'Начать заново',
-        tryAgainWave: 'Ещё волна',
+        tryAgainWave: 'Ещё забег',
+        nextWaveButton: 'Следующая волна',
         waveEndBankEyebrow: 'Банк кончился',
         waveEndBankTitle: 'Волна завершена',
         waveEndBankBody:
@@ -101,6 +102,10 @@ export const ruDictionary: Dictionary = {
         waveEndCutTitle: 'Волна оборвалась',
         waveEndCutBody:
             'Очки за то, что успел ответить, сохранены. Неотвеченные не дают баллов.',
+        waveEndPoolEyebrow: 'Пул пройден',
+        waveEndPoolTitle: 'Вопросы закончились',
+        waveEndPoolBody:
+            'Все вопросы этой сложности в забеге уже сыграны. Новый забег начнёт с чистого пула.',
     },
     auth: {
         loginTitle: 'Вход',
@@ -468,7 +473,7 @@ export const ruDictionary: Dictionary = {
         description: 'Лучший результат выбранного режима.',
         scoringDetailsLabel: 'Как считаются очки',
         scoringDetails:
-            'Легко 1 · средне 2 · сложно 3. Классика на 10 сложных — потолок 30. Каждая арена — своя таблица.',
+            'Легко 1 · средне 2 · сложно 3. Классика на 10 сложных — потолок 30. Survival — сумма очков забега (волны с ok-часами). Каждая арена — своя таблица.',
         weekWindowHint: 'Считаются игры за последние 7 дней.',
         allTimeHint: 'Рекорды без окна по дате.',
         blitzSpeedHint: 'Ничья — кто быстрее.',

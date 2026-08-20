@@ -102,7 +102,7 @@ export type Dictionary = {
     /**
      * Survival Mode CTA — только mode lobby `/quiz`.
      * Правила count/bank — SURVIVAL_MODE_MVP_RULES; meta в словаре держим в синхроне.
-     * Result end-of-wave: rematch + honest plaque (`?wave=cut|bank`).
+     * Result end-of-wave: rematch + honest plaque (`?wave=cut|bank` / pool).
      */
     survivalMode: {
         eyebrow: string;
@@ -121,16 +121,22 @@ export type Dictionary = {
         chooseAnswerHint: string;
         finishWaveButton: string;
         restartButton: string;
-        /** Result primary CTA: новая волна с той же difficulty. */
+        /** Result primary CTA: новая волна с той же difficulty (новый run). */
         tryAgainWave: string;
-        /** Result plaque `?wave=bank`: все 12 lock-in, банк = 0. */
+        /** Result CTA: continue того же SurvivalRun. */
+        nextWaveButton: string;
+        /** Result plaque `?wave=bank`: все lock-in, банк = 0. */
         waveEndBankEyebrow: string;
         waveEndBankTitle: string;
         waveEndBankBody: string;
-        /** Result plaque `?wave=cut`: банк = 0 до 12 ответов. */
+        /** Result plaque `?wave=cut`: банк = 0 до всех ответов. */
         waveEndCutEyebrow: string;
         waveEndCutTitle: string;
         waveEndCutBody: string;
+        /** Result plaque: published pool difficulty исчерпан. */
+        waveEndPoolEyebrow: string;
+        waveEndPoolTitle: string;
+        waveEndPoolBody: string;
     };
     auth: {
         loginTitle: string;

@@ -188,9 +188,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 20, 2026 — Survival **wave 1** locally complete (schema→start→play→submit clock→auto-submit last lock-in / bank=0→result; exclusive board; compact lobby/leaderboard copy). Review 503 after complete: `reviewPayload` attach+API **pooled**, payload-first. Wave 2+ is **not** started.
+**Last updated:** August 20, 2026 — Survival **wave 2+** shipped locally (exclusion seen + run `totalScore` + continue CTA + board = best run total). Wave 1 path unchanged. Review attach stays pooled.
 
-**Preferred next:** new chat — **Survival wave 2+ carry**. Use the prompt in `PROJECT_CONTEXT.md` → Next Recommended Step. Do not grow `snapshotData`. Do not pick during play. Do not fake Continue→Classic. Separately: www smoke `/leaderboard?mode=survival` + Survival HARD 12 start→last-Q auto-redirect→score+review. Optional mechanics TEXT **wave 6** ×24 — **new loops only**. Mix lobby is live — do not re-implement. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Do not merge Survival into Timed.
+**Preferred next:** www smoke Survival HARD wave1→continue wave2 (bank ≠ 20) → board total grows; Classic EASY 3 + Blitz MIX. Optional: content TEXT wave 6. No keep-warm / no timeout bumps / no JSONB on submit complete. Do not merge Survival into Timed.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -252,7 +252,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 58. ~~**Survival submit clock (chat E)**~~ — Aug 19–20: `survivalClockOk` on scalar complete; handoff snapshot scoring (no TOAST); exclusive board SQL.
 59. ~~**Survival end-of-wave UX (chat F)**~~ — Aug 20: bank=0 always submit; last lock-in auto-submit (no finish CTA); `?wave=cut|bank`; rematch; `?mode=survival` chip.
 60. ~~**Result review after Survival complete**~~ — Aug 20: `reviewPayload` attach on pooled + `already_completed`; review API pooled payload-first; pending 503 in attach race.
-61. **Survival wave 2+ carry** — next chat. `bankRemainingSeconds` once after complete; new `QuizSession` per wave; stop when bank=0 or pool policy decided. Prompt: `PROJECT_CONTEXT.md`.
+61. ~~**Survival wave 2+ carry**~~ — Aug 20: `SurvivalRunSeenQuestion` + `totalScore`; pooled after-complete; continue CTA; board = best run total; short last wave 1..11.
 
 ### Deploy / hosting checklist (tracking)
 
@@ -334,7 +334,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 - [x] Toast notifications (Sonner + achievement flash) — **shipped** July 30; see DECISIONS “How to add a new toast”
 - [x] Daily challenge — **MVP on prod** July 30 (Moscow day, freeze, one attempt, CTA home+quiz, today’s board; migration `20260729234500_daily_challenge`)
 - [x] Timed mode — **on origin** July 31; **abandon + rematch + review Neon harden + RU labels** Aug 2 (local verified; redeploy pending)
-- [x] Survival mode wave 1 — **shipped locally Aug 20** (time-bank 12Q, exclusive board, auto-submit). Wave 2+ carry = next epic. Not merged into Timed.
+- [x] Survival mode wave 1 + wave 2+ carry — **shipped locally Aug 20** (time-bank waves, exclusion pool, run total board). Not merged into Timed.
 - [ ] Category/platform/genre-specific quiz — defer until real filter demand + more tagged content
 - [x] Period-based leaderboards (difficulty `14dc97c` + rolling week/month `019c071`; Layer 1 default week + mode + Blitz speed Aug 19)
 - [ ] API-assisted draft question generation with admin review

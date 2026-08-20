@@ -1,10 +1,9 @@
 /**
- * Клиентская кнопка «Ещё волна» для Survival.
+ * Клиентская CTA Survival на result: следующая волна (continue) или rematch.
  *
- * Зачем не Link на /quiz: rematch режима = сразу новая волна
- * с той же difficulty, без повторного выбора режима.
- * Action тот же `startSurvivalQuizAction` (abandon orphan + snapshot).
- * Mix в MVP нет — difficulty только EASY|MEDIUM|HARD.
+ * continueRunId → тот же SurvivalRun, T0' с bank, exclude=seen.
+ * Без continueRunId → новый SurvivalRun (T0=20, abandon).
+ * Action тот же `startSurvivalQuizAction`. Mix нет.
  *
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  */
@@ -25,6 +24,8 @@ type SurvivalRematchButtonProps = {
     label: string;
     dictionary: Dictionary;
     className?: string;
+    /** Если задан — continue того же run, не новый забег. */
+    continueRunId?: string;
 };
 
 export function SurvivalRematchButton({
@@ -33,6 +34,7 @@ export function SurvivalRematchButton({
     label,
     dictionary,
     className,
+    continueRunId,
 }: SurvivalRematchButtonProps) {
     const [state, formAction] = useActionState(startSurvivalQuizAction, {});
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
@@ -42,6 +44,13 @@ export function SurvivalRematchButton({
             <form action={formAction}>
                 <input type="hidden" name="locale" value={locale} />
                 <input type="hidden" name="difficulty" value={difficulty} />
+                {continueRunId ? (
+                    <input
+                        type="hidden"
+                        name="continueRunId"
+                        value={continueRunId}
+                    />
+                ) : null}
                 <SubmitButton
                     pendingLabel={dictionary.common.working}
                     className="w-full sm:w-auto"

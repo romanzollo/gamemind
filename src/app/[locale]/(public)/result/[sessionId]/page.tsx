@@ -4,6 +4,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 import Link from 'next/link';
 
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
+import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
 import { ResultSecondaryPanel } from '@/features/quiz/components/ResultSecondaryPanel';
@@ -146,14 +147,35 @@ export default async function QuizResultPage({
             ? summary.difficulty
             : null;
 
+    const survivalEligibility =
+        summary?.isSurvival &&
+        summary.survivalRunId &&
+        survivalDifficulty
+            ? await survivalRunRepository.findSurvivalNextWaveEligibilityForUser(
+                  summary.survivalRunId,
+                  authSession.user.id,
+                  summary.survivalClockOk === true,
+              )
+            : null;
+
     const playAgainAction = summary?.isSurvival ? (
         survivalDifficulty ? (
-            <SurvivalRematchButton
-                locale={safeLocale}
-                difficulty={survivalDifficulty}
-                label={dictionary.survivalMode.tryAgainWave}
-                dictionary={dictionary}
-            />
+            survivalEligibility?.canContinue ? (
+                <SurvivalRematchButton
+                    locale={safeLocale}
+                    difficulty={survivalDifficulty}
+                    label={dictionary.survivalMode.nextWaveButton}
+                    dictionary={dictionary}
+                    continueRunId={survivalEligibility.runId}
+                />
+            ) : (
+                <SurvivalRematchButton
+                    locale={safeLocale}
+                    difficulty={survivalDifficulty}
+                    label={dictionary.survivalMode.tryAgainWave}
+                    dictionary={dictionary}
+                />
+            )
         ) : null
     ) : summary?.isTimed ? (
         <TimedRematchButton
@@ -177,6 +199,10 @@ export default async function QuizResultPage({
         : `/${safeLocale}/leaderboard`;
 
     const survivalLabels = dictionary.survivalMode;
+    const survivalBlockReason =
+        survivalEligibility && !survivalEligibility.canContinue
+            ? survivalEligibility.blockReason
+            : null;
     const survivalWavePlaque =
         summary?.isSurvival && survivalWaveBanner === 'cut'
             ? {
@@ -190,7 +216,31 @@ export default async function QuizResultPage({
                     title: survivalLabels.waveEndBankTitle,
                     body: survivalLabels.waveEndBankBody,
                 }
-              : null;
+              : summary?.isSurvival &&
+                  !survivalWaveBanner &&
+                  survivalBlockReason === 'pool_exhausted'
+                ? {
+                      eyebrow: survivalLabels.waveEndPoolEyebrow,
+                      title: survivalLabels.waveEndPoolTitle,
+                      body: survivalLabels.waveEndPoolBody,
+                  }
+                : summary?.isSurvival &&
+                    !survivalWaveBanner &&
+                    survivalBlockReason === 'bank_empty'
+                  ? {
+                        eyebrow: survivalLabels.waveEndBankEyebrow,
+                        title: survivalLabels.waveEndBankTitle,
+                        body: survivalLabels.waveEndBankBody,
+                    }
+                  : summary?.isSurvival &&
+                      !survivalWaveBanner &&
+                      survivalBlockReason === 'clock_cut'
+                    ? {
+                          eyebrow: survivalLabels.waveEndCutEyebrow,
+                          title: survivalLabels.waveEndCutTitle,
+                          body: survivalLabels.waveEndCutBody,
+                      }
+                    : null;
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">

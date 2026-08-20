@@ -92,15 +92,20 @@ export const enDictionary = {
         chooseAnswerHint: 'Choose an answer to continue the wave.',
         finishWaveButton: 'Finish wave',
         restartButton: 'Start over',
-        tryAgainWave: 'Another wave',
+        tryAgainWave: 'New run',
+        nextWaveButton: 'Next wave',
         waveEndBankEyebrow: 'Bank empty',
         waveEndBankTitle: 'Wave complete',
         waveEndBankBody:
-            'Score saved. The bank hit zero on your last lock-in — beat it next wave.',
+            'Score saved. The bank hit zero on your last lock-in — beat it next run.',
         waveEndCutEyebrow: 'Bank empty',
         waveEndCutTitle: 'Wave cut short',
         waveEndCutBody:
             'Points for what you answered are saved. Unanswered questions score zero.',
+        waveEndPoolEyebrow: 'Pool cleared',
+        waveEndPoolTitle: 'No questions left',
+        waveEndPoolBody:
+            'Every question at this difficulty was played in this run. A new run starts fresh.',
     },
     auth: {
         loginTitle: 'Log in',
@@ -451,7 +456,7 @@ export const enDictionary = {
         description: 'Best score on the selected board.',
         scoringDetailsLabel: 'How scoring works',
         scoringDetails:
-            'Easy 1 · medium 2 · hard 3. Classic HARD 10 tops out at 30. Each arena is its own board.',
+            'Easy 1 · medium 2 · hard 3. Classic HARD 10 tops out at 30. Survival board = best run total (sum of clock-ok waves). Each arena is its own board.',
         weekWindowHint: 'Counts games from the last 7 days.',
         allTimeHint: 'Records with no date window.',
         blitzSpeedHint: 'Ties go to the faster finish.',

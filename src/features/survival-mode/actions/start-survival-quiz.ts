@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * Server Action: старт Survival волны 1.
+ * Server Action: старт Survival (новый run или continue runId).
  *
  * Auth + rate limit здесь; abandon/run/pick/create — в `runSurvivalQuizStart`.
  * Не звать `runTimedQuizStart`. Mix в FormData отвергает Zod.
@@ -29,8 +29,8 @@ function getLocaleFromFormData(formData: FormData): Locale {
 }
 
 /**
- * Старт Survival. FormData: `locale` + `difficulty`.
- * questionCount клиент не задаёт — иначе обойдёт контракт волны 12.
+ * Старт Survival. FormData: `locale` + `difficulty` (+ optional `continueRunId`).
+ * questionCount клиент не задаёт — иначе обойдёт контракт волны.
  */
 export async function startSurvivalQuizAction(
     _prevState: QuizFormState,
@@ -47,8 +47,13 @@ export async function startSurvivalQuizAction(
         return { errorCode: 'RATE_LIMITED' };
     }
 
+    const continueRaw = formData.get('continueRunId');
     const parsed = survivalQuizSetupSchema.safeParse({
         difficulty: formData.get('difficulty'),
+        continueRunId:
+            typeof continueRaw === 'string' && continueRaw.length > 0
+                ? continueRaw
+                : undefined,
     });
 
     if (!parsed.success) {
@@ -59,6 +64,7 @@ export async function startSurvivalQuizAction(
         userId: session.user.id,
         difficulty: parsed.data.difficulty,
         locale,
+        continueRunId: parsed.data.continueRunId ?? null,
     });
 
     if (!started.ok) {

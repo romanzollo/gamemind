@@ -136,8 +136,17 @@ function buildSurvivalPlayView(
     const runId = input.survivalRunId ?? null;
     const waveIndex = input.survivalWaveIndex ?? null;
     const startedAtIso = toIsoTimestamp(startedAt);
+    const initialBankSeconds = input.survivalInitialBankSeconds ?? null;
 
-    if (runId == null || waveIndex == null || waveIndex < 1 || !startedAtIso) {
+    if (
+        runId == null ||
+        waveIndex == null ||
+        waveIndex < 1 ||
+        !startedAtIso ||
+        initialBankSeconds == null ||
+        !Number.isFinite(initialBankSeconds) ||
+        initialBankSeconds <= 0
+    ) {
         return null;
     }
 
@@ -145,6 +154,7 @@ function buildSurvivalPlayView(
         runId,
         waveIndex,
         startedAt: startedAtIso,
+        initialBankSeconds: Math.floor(initialBankSeconds),
     };
 }
 

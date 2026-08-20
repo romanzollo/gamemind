@@ -116,10 +116,14 @@ export function SurvivalQuizSessionForm({
         (waveSubmitting || bankExpired || isPending) && !state.errorCode;
 
     const {
-        initialBankSeconds,
+        initialBankSeconds = SURVIVAL_MODE_MVP_RULES.initialBankSeconds,
         correctDeltaSeconds,
         wrongDeltaSeconds,
-    } = SURVIVAL_MODE_MVP_RULES;
+    } = {
+        initialBankSeconds: survival.initialBankSeconds,
+        correctDeltaSeconds: SURVIVAL_MODE_MVP_RULES.correctDeltaSeconds,
+        wrongDeltaSeconds: SURVIVAL_MODE_MVP_RULES.wrongDeltaSeconds,
+    };
 
     const buildSubmitFormData = useCallback(
         (waveEnd: SurvivalWaveEnd | null) => {

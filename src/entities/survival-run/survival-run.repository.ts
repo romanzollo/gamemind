@@ -1,12 +1,13 @@
 /**
- * SurvivalRun: scalar start-prep (abandon + INSERT), без JSONB и без Direct.
+ * SurvivalRun: scalar start-prep + wave 2+ after-complete (pooled, без JSONB).
  *
- * Зачем отдельный entity: QuizSession Survival JSONB — отдельный pooled
- * hop после pick (не этот клиент, не Direct). Run = scalars до pick.
- * Orphan run без сессии допустим — следующий старт ставит ABANDONED.
+ * - begin: abandon чужие Survival → INSERT run (волна 1, totalScore=0)
+ * - continue: abandon чужие runs/sessions, НЕ этот runId
+ * - recordWaveAfterComplete: bank T0' + seen ids + waveIndex + totalScore
+ *   → COMPLETED если bank=0 или unseen=0
  *
  * Не звать с того же клиента, что snapshot INSERT.
- * Не трогать Classic (`survivalRunId IS NULL`), Blitz (`timedEndsAt`), Daily.
+ * Не трогать Classic / Blitz / Daily.
  * Canon: docs/DECISIONS.md → Survival Mode MVP; QUIZ_NEON_HOT_PATH.md.
  */
 
@@ -15,9 +16,17 @@ import { randomUUID } from 'node:crypto';
 import type { Client } from 'pg';
 
 import { withPooledPgClient } from '@/lib/db/direct-pg';
+import {
+    resolveSurvivalWaveQuestionCount,
+    SURVIVAL_MODE_MVP_RULES,
+    type SurvivalContinueBlockReason,
+    type SurvivalDifficulty,
+    type SurvivalNextWaveEligibility,
+} from '@/features/survival-mode/types';
 import type { Difficulty } from '@/types';
 
 const SURVIVAL_START_POOLED_ATTEMPT_MS = 18_000;
+const SURVIVAL_AFTER_COMPLETE_POOLED_MS = 12_000;
 
 export type BeginSurvivalRunInput = {
     userId: string;
@@ -28,11 +37,58 @@ export type BeginSurvivalRunResult = {
     runId: string;
     waveIndex: 1;
     startedAt: Date;
+    initialBankSeconds: number;
+    seenQuestionIds: string[];
+};
+
+export type ContinueSurvivalRunInput = {
+    userId: string;
+    runId: string;
+};
+
+export type ContinueSurvivalRunResult =
+    | {
+          ok: true;
+          runId: string;
+          waveIndex: number;
+          difficulty: SurvivalDifficulty;
+          initialBankSeconds: number;
+          seenQuestionIds: string[];
+          remainingUnseen: number;
+          questionCount: number;
+      }
+    | { ok: false; reason: 'SURVIVAL_CANNOT_CONTINUE' };
+
+export type RecordSurvivalWaveAfterCompleteInput = {
+    runId: string;
+    userId: string;
+    questionIds: string[];
+    bankRemainingSeconds: number;
+    waveScore: number;
+    clockOk: boolean;
+};
+
+export type RecordSurvivalWaveAfterCompleteResult = {
+    remainingUnseen: number;
+    runCompleted: boolean;
+    totalScore: number;
+    bankRemainingSeconds: number;
+};
+
+type SurvivalRunRow = {
+    id: string;
+    user_id: string;
+    difficulty: string;
+    status: string;
+    current_wave_index: number;
+    bank_remaining_seconds: number | null;
+    total_score: number;
 };
 
 /**
- * Только Survival-сессии этого user. Blitz/Classic/Daily не входят:
- * `survivalRunId IS NOT NULL` + оба чужих дискриминатора NULL.
+ * Только Survival-сессии этого user. Blitz/Classic/Daily не входят.
+ * `exceptRunId`: при continue не трогаем чужие дискриминаторы, но
+ * orphan IN_PROGRESS-сессии **этого** run тоже ABANDONED (перед новой волной).
  */
 async function abandonInProgressSurvivalSessionsOnClient(
     client: Client,
@@ -55,11 +111,28 @@ async function abandonInProgressSurvivalSessionsOnClient(
     return result.rowCount ?? 0;
 }
 
-/** IN_PROGRESS runs, включая orphan без сессии. */
+/** IN_PROGRESS runs; `exceptRunId` сохраняет текущий забег при continue. */
 async function abandonInProgressSurvivalRunsOnClient(
     client: Client,
     userId: string,
+    exceptRunId?: string,
 ): Promise<number> {
+    if (exceptRunId) {
+        const result = await client.query(
+            `
+                UPDATE "SurvivalRun"
+                SET "status" = 'ABANDONED'::"QuizSessionStatus"
+                WHERE
+                    "userId" = $1
+                    AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                    AND "id" <> $2
+            `,
+            [userId, exceptRunId],
+        );
+
+        return result.rowCount ?? 0;
+    }
+
     const result = await client.query(
         `
             UPDATE "SurvivalRun"
@@ -72,6 +145,104 @@ async function abandonInProgressSurvivalRunsOnClient(
     );
 
     return result.rowCount ?? 0;
+}
+
+async function loadSurvivalRunRow(
+    client: Client,
+    runId: string,
+    userId: string,
+): Promise<SurvivalRunRow | null> {
+    const result = await client.query<SurvivalRunRow>(
+        `
+            SELECT
+                "id",
+                "userId" AS user_id,
+                "difficulty"::text AS difficulty,
+                "status"::text AS status,
+                "currentWaveIndex" AS current_wave_index,
+                "bankRemainingSeconds" AS bank_remaining_seconds,
+                "totalScore" AS total_score
+            FROM "SurvivalRun"
+            WHERE "id" = $1 AND "userId" = $2
+            LIMIT 1
+        `,
+        [runId, userId],
+    );
+
+    return result.rows[0] ?? null;
+}
+
+async function listSeenQuestionIdsOnClient(
+    client: Client,
+    runId: string,
+): Promise<string[]> {
+    const result = await client.query<{ question_id: string }>(
+        `
+            SELECT "questionId" AS question_id
+            FROM "SurvivalRunSeenQuestion"
+            WHERE "runId" = $1
+        `,
+        [runId],
+    );
+
+    return result.rows.map((row) => row.question_id);
+}
+
+async function countUnseenPublishedOnClient(
+    client: Client,
+    runId: string,
+    difficulty: Difficulty,
+): Promise<number> {
+    const result = await client.query<{ remaining: number }>(
+        `
+            SELECT COUNT(*)::int AS remaining
+            FROM "Question" q
+            WHERE
+                q."difficulty" = $1::"Difficulty"
+                AND q."isActive" = true
+                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM "SurvivalRunSeenQuestion" seen
+                    WHERE
+                        seen."runId" = $2
+                        AND seen."questionId" = q."id"
+                )
+        `,
+        [difficulty, runId],
+    );
+
+    return result.rows[0]?.remaining ?? 0;
+}
+
+function parseSurvivalDifficulty(
+    value: string,
+): SurvivalDifficulty | null {
+    if (value === 'EASY' || value === 'MEDIUM' || value === 'HARD') {
+        return value;
+    }
+
+    return null;
+}
+
+function resolveContinueBlockReason(args: {
+    clockOk: boolean;
+    bankRemainingSeconds: number;
+    remainingUnseen: number;
+}): SurvivalContinueBlockReason | null {
+    if (!args.clockOk) {
+        return 'clock_cut';
+    }
+
+    if (args.bankRemainingSeconds <= 0) {
+        return 'bank_empty';
+    }
+
+    if (args.remainingUnseen <= 0) {
+        return 'pool_exhausted';
+    }
+
+    return null;
 }
 
 /**
@@ -99,6 +270,8 @@ export async function beginSurvivalRunForUser(
             const runId = randomUUID();
             const waveIndex = 1 as const;
             const startedAt = new Date();
+            const initialBankSeconds =
+                SURVIVAL_MODE_MVP_RULES.initialBankSeconds;
 
             await client.query(
                 `
@@ -110,7 +283,8 @@ export async function beginSurvivalRunForUser(
                         "currentWaveIndex",
                         "startedAt",
                         "completedAt",
-                        "bankRemainingSeconds"
+                        "bankRemainingSeconds",
+                        "totalScore"
                     )
                     VALUES (
                         $1,
@@ -120,7 +294,8 @@ export async function beginSurvivalRunForUser(
                         $5,
                         $6,
                         NULL,
-                        NULL
+                        NULL,
+                        0
                     )
                 `,
                 [
@@ -133,7 +308,13 @@ export async function beginSurvivalRunForUser(
                 ],
             );
 
-            return { runId, waveIndex, startedAt };
+            return {
+                runId,
+                waveIndex,
+                startedAt,
+                initialBankSeconds,
+                seenQuestionIds: [],
+            };
         },
         {
             debugLabel: 'survival.start.begin',
@@ -142,6 +323,330 @@ export async function beginSurvivalRunForUser(
     );
 }
 
+/**
+ * Continue того же run: не kill runId; orphan Survival sessions abandon;
+ * чужие IN_PROGRESS runs abandon.
+ */
+export async function continueSurvivalRunForUser(
+    input: ContinueSurvivalRunInput,
+): Promise<ContinueSurvivalRunResult> {
+    return withPooledPgClient(
+        async (client) => {
+            try {
+                await abandonInProgressSurvivalSessionsOnClient(
+                    client,
+                    input.userId,
+                );
+                await abandonInProgressSurvivalRunsOnClient(
+                    client,
+                    input.userId,
+                    input.runId,
+                );
+            } catch (error) {
+                console.warn('Survival continue abandon skipped:', error);
+            }
+
+            const run = await loadSurvivalRunRow(
+                client,
+                input.runId,
+                input.userId,
+            );
+            const difficulty = run
+                ? parseSurvivalDifficulty(run.difficulty)
+                : null;
+
+            if (
+                !run ||
+                !difficulty ||
+                run.status !== 'IN_PROGRESS' ||
+                run.bank_remaining_seconds == null ||
+                run.bank_remaining_seconds <= 0
+            ) {
+                return { ok: false, reason: 'SURVIVAL_CANNOT_CONTINUE' };
+            }
+
+            const seenQuestionIds = await listSeenQuestionIdsOnClient(
+                client,
+                run.id,
+            );
+            const remainingUnseen = await countUnseenPublishedOnClient(
+                client,
+                run.id,
+                difficulty,
+            );
+            const questionCount =
+                resolveSurvivalWaveQuestionCount(remainingUnseen);
+
+            if (questionCount <= 0) {
+                return { ok: false, reason: 'SURVIVAL_CANNOT_CONTINUE' };
+            }
+
+            return {
+                ok: true,
+                runId: run.id,
+                waveIndex: run.current_wave_index,
+                difficulty,
+                initialBankSeconds: run.bank_remaining_seconds,
+                seenQuestionIds,
+                remainingUnseen,
+                questionCount,
+            };
+        },
+        {
+            debugLabel: 'survival.start.continue',
+            attemptTimeoutMs: SURVIVAL_START_POOLED_ATTEMPT_MS,
+        },
+    );
+}
+
+/**
+ * Pooled after successful complete: seen + bank + waveIndex + totalScore.
+ * Не вызывать из completeWithResult / Direct queue.
+ */
+export async function recordSurvivalWaveAfterComplete(
+    input: RecordSurvivalWaveAfterCompleteInput,
+): Promise<RecordSurvivalWaveAfterCompleteResult> {
+    return withPooledPgClient(
+        async (client) => {
+            const run = await loadSurvivalRunRow(
+                client,
+                input.runId,
+                input.userId,
+            );
+            const difficulty = run
+                ? parseSurvivalDifficulty(run.difficulty)
+                : null;
+
+            if (!run || !difficulty || run.status !== 'IN_PROGRESS') {
+                return {
+                    remainingUnseen: 0,
+                    runCompleted: true,
+                    totalScore: run?.total_score ?? 0,
+                    bankRemainingSeconds: 0,
+                };
+            }
+
+            const uniqueQuestionIds = Array.from(
+                new Set(input.questionIds.filter((id) => id.length > 0)),
+            );
+
+            if (uniqueQuestionIds.length > 0) {
+                const existingSeen = await client.query<{ n: number }>(
+                    `
+                        SELECT COUNT(*)::int AS n
+                        FROM "SurvivalRunSeenQuestion"
+                        WHERE
+                            "runId" = $1
+                            AND "questionId" = ANY ($2::text[])
+                    `,
+                    [input.runId, uniqueQuestionIds],
+                );
+
+                // Idempotent retry после already_completed: не двойной totalScore.
+                if (
+                    (existingSeen.rows[0]?.n ?? 0) >= uniqueQuestionIds.length
+                ) {
+                    const remainingUnseen = await countUnseenPublishedOnClient(
+                        client,
+                        input.runId,
+                        difficulty,
+                    );
+                    return {
+                        remainingUnseen,
+                        runCompleted: run.status !== 'IN_PROGRESS',
+                        totalScore: run.total_score,
+                        bankRemainingSeconds:
+                            run.bank_remaining_seconds ?? 0,
+                    };
+                }
+
+                const values: unknown[] = [];
+                const placeholders: string[] = [];
+
+                for (const questionId of uniqueQuestionIds) {
+                    const base = values.length;
+                    placeholders.push(
+                        `($${base + 1}, $${base + 2})`,
+                    );
+                    values.push(input.runId, questionId);
+                }
+
+                await client.query(
+                    `
+                        INSERT INTO "SurvivalRunSeenQuestion" ("runId", "questionId")
+                        VALUES ${placeholders.join(', ')}
+                        ON CONFLICT ("runId", "questionId") DO NOTHING
+                    `,
+                    values,
+                );
+            }
+
+            const scoreDelta =
+                input.clockOk && input.waveScore > 0 ? input.waveScore : 0;
+            const bankRemainingSeconds = Math.max(
+                0,
+                Math.floor(input.bankRemainingSeconds),
+            );
+            const nextWaveIndex = run.current_wave_index + 1;
+
+            await client.query(
+                `
+                    UPDATE "SurvivalRun"
+                    SET
+                        "bankRemainingSeconds" = $2,
+                        "currentWaveIndex" = $3,
+                        "totalScore" = "totalScore" + $4
+                    WHERE
+                        "id" = $1
+                        AND "userId" = $5
+                        AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                `,
+                [
+                    input.runId,
+                    bankRemainingSeconds,
+                    nextWaveIndex,
+                    scoreDelta,
+                    input.userId,
+                ],
+            );
+
+            const remainingUnseen = await countUnseenPublishedOnClient(
+                client,
+                input.runId,
+                difficulty,
+            );
+            const runCompleted =
+                bankRemainingSeconds <= 0 || remainingUnseen <= 0;
+            const totalScore = run.total_score + scoreDelta;
+
+            if (runCompleted) {
+                const completedAt = new Date();
+                await client.query(
+                    `
+                        UPDATE "SurvivalRun"
+                        SET
+                            "status" = 'COMPLETED'::"QuizSessionStatus",
+                            "completedAt" = $2
+                        WHERE
+                            "id" = $1
+                            AND "userId" = $3
+                            AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                    `,
+                    [input.runId, completedAt, input.userId],
+                );
+            }
+
+            return {
+                remainingUnseen,
+                runCompleted,
+                totalScore,
+                bankRemainingSeconds,
+            };
+        },
+        {
+            debugLabel: 'survival.after-complete.record-wave',
+            attemptTimeoutMs: SURVIVAL_AFTER_COMPLETE_POOLED_MS,
+        },
+    );
+}
+
+/**
+ * Gate CTA «Следующая волна» на result (серверные скаляры).
+ */
+export async function findSurvivalNextWaveEligibilityForUser(
+    runId: string,
+    userId: string,
+    clockOk: boolean,
+): Promise<SurvivalNextWaveEligibility | null> {
+    return withPooledPgClient(
+        async (client) => {
+            const run = await loadSurvivalRunRow(client, runId, userId);
+            const difficulty = run
+                ? parseSurvivalDifficulty(run.difficulty)
+                : null;
+
+            if (!run || !difficulty) {
+                return null;
+            }
+
+            const bankRemainingSeconds = run.bank_remaining_seconds ?? 0;
+            const remainingUnseen =
+                run.status === 'IN_PROGRESS'
+                    ? await countUnseenPublishedOnClient(
+                          client,
+                          run.id,
+                          difficulty,
+                      )
+                    : 0;
+            const blockReason = resolveContinueBlockReason({
+                clockOk,
+                bankRemainingSeconds,
+                remainingUnseen,
+            });
+            const canContinue =
+                run.status === 'IN_PROGRESS' && blockReason == null;
+            const nextWaveQuestionCount = canContinue
+                ? resolveSurvivalWaveQuestionCount(remainingUnseen)
+                : 0;
+
+            return {
+                canContinue,
+                runId: run.id,
+                nextWaveIndex: run.current_wave_index,
+                bankRemainingSeconds: canContinue
+                    ? bankRemainingSeconds
+                    : null,
+                clockOk,
+                remainingUnseen,
+                nextWaveQuestionCount,
+                blockReason: canContinue ? null : blockReason ?? 'bank_empty',
+            };
+        },
+        {
+            debugLabel: 'survival.result.next-wave-eligibility',
+            attemptTimeoutMs: 8_000,
+        },
+    );
+}
+
+/** Скаляры run для play-load / submit (initialBankSeconds). */
+export async function findSurvivalRunBankSecondsForUser(
+    runId: string,
+    userId: string,
+): Promise<number | null> {
+    return withPooledPgClient(
+        async (client) => {
+            const run = await loadSurvivalRunRow(client, runId, userId);
+
+            if (!run) {
+                return null;
+            }
+
+            if (
+                run.bank_remaining_seconds != null &&
+                run.bank_remaining_seconds > 0
+            ) {
+                return run.bank_remaining_seconds;
+            }
+
+            // Волна 1 до after-complete: bank NULL → T0.
+            if (run.current_wave_index <= 1) {
+                return SURVIVAL_MODE_MVP_RULES.initialBankSeconds;
+            }
+
+            return run.bank_remaining_seconds ?? 0;
+        },
+        {
+            debugLabel: 'survival.run.bank-seconds',
+            attemptTimeoutMs: 5_000,
+        },
+    );
+}
+
 export const survivalRunRepository = {
     beginSurvivalRunForUser,
+    continueSurvivalRunForUser,
+    recordSurvivalWaveAfterComplete,
+    findSurvivalNextWaveEligibilityForUser,
+    findSurvivalRunBankSecondsForUser,
 };

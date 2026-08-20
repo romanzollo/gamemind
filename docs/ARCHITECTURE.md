@@ -5,14 +5,14 @@ Dated “why we chose this” lives in [`DECISIONS.md`](./DECISIONS.md). Binding
 
 ## Product shape
 
-Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **wave 1 shipped** (Aug 19–20: schema → start → play-load → submit clock → end-of-wave UX → exclusive board). Wave 2+ (carry `bankRemainingSeconds`, new session per wave) is the next Survival epic — not in this file’s invariants yet.
+Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **wave 1 + wave 2+ shipped** (Aug 20: exclusion seen, run `totalScore`, continue CTA, board = best run total).
 
 | Mode | Discriminator | Player contract |
 |------|----------------|-----------------|
 | Classic | `dailyChallengeId`, `timedEndsAt`, and `survivalRunId` all NULL | Difficulty + 1–10 questions; rematch; anti-repeat cycle |
 | Blitz (Timed) | `timedEndsAt` set | 10 questions, 60s **server** deadline, 3s grace; partial answers OK |
 | Daily | `dailyChallengeId` set | Moscow calendar day; `MEDIUM` × 10; one attempt; no cycle |
-| Survival | `survivalRunId` set; **`timedEndsAt` NULL** | Wave 1 = 12Q; time-bank T0=20 +4/−6; same weights; exclusive `?mode=survival` board. Last lock-in auto-submits (no «finish quiz» CTA). Canon: `DECISIONS.md` → Survival Mode MVP |
+| Survival | `survivalRunId` set; **`timedEndsAt` NULL** | Waves = N×session; time-bank T0=20 +4/−6; exclusion seen; board = best run `totalScore`. Canon: Survival Mode MVP |
 
 Quiz pool = `Question.isActive = true` **and** `publicationStatus = PUBLISHED`.  
 `isActive` is archive/soft-hide; `publicationStatus` is draft → review → publish. They are orthogonal.
@@ -72,9 +72,9 @@ flowchart TB
 
 **Direct `pg`:** confirmed fragile Neon paths — quiz start resolve/snapshot INSERT, submit complete, result summary, admin list/writes, leaderboard `DISTINCT ON`. One process-wide Direct queue in **`next dev` only**; a hung hop stalls Home / Daily / start. **Production has no that queue.** Play-load snapshot read is **pooled**, not Direct.
 
-**Public leaderboard (Layer 1, Aug 19 + Survival chip Aug 20):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily|survival` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`, `survivalRunId`) — never `snapshotData`. Classic WHERE includes `survivalRunId IS NULL`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily/Survival keep `completedAt` only unless a later Survival-run SUM is decided. Page `loadFailed` on error, not 500. Mode chips wrap 2×2 on narrow screens. Scoring rules sit in `<details>` under the table, not a hero FAQ. Detail: `DECISIONS.md` → Leaderboard retention meta + Survival Mode MVP.
+**Public leaderboard (Layer 1, Aug 19 + Survival run-total Aug 20):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily|survival` (omit = classic). All-time is `?period=all`. SQL: Classic/Blitz/Daily via `findBestScores` JOIN `QuizSession` **scalars only**. Survival mode reads `SurvivalRun.totalScore` (best run per user). Classic WHERE includes `survivalRunId IS NULL`.
 
-**UserQuestionCycle** (Classic / Blitz / Survival pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. After cycle (SINGLE and Mix): 300ms settle, then Direct resolve chunks of 5. Daily does not use the cycle. Survival MVP shares the Classic/Timed bag (`userId + difficulty`); no Mix. Boundary is **reshuffle-first**. No silent `ORDER BY RANDOM` fallback.
+**UserQuestionCycle** (Classic / Blitz): scalars only via `withPooledPgClient` **outside** the Direct queue. Survival **continue** uses run-scoped exclusion (`SurvivalRunSeenQuestion`), not the cycle bag. Daily does not use the cycle.
 
 **Priority:** production (Vercel + prod Neon) is the product. Local Windows `next dev` is a TLS lab — do not ship local fail-fast that false-fails cold Neon (play-load timeout 5s dev / **18s prod**).
 

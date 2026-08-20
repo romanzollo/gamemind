@@ -18,6 +18,7 @@ type QuizResultSummaryRow = {
     question_count: number;
     timed_ends_at: Date | string | null;
     survival_run_id: string | null;
+    survival_clock_ok: boolean | null;
     difficulty: Difficulty | null;
     pool_kind: string | null;
 };
@@ -44,6 +45,10 @@ export type QuizResultSummary = {
     isTimed: boolean;
     /** Survival ⇔ survivalRunId IS NOT NULL (не timedEndsAt). */
     isSurvival: boolean;
+    /** Null если не Survival. Нужен для continue CTA / eligibility. */
+    survivalRunId: string | null;
+    /** Null до complete / если не Survival. */
+    survivalClockOk: boolean | null;
     difficulty: Difficulty | null;
     poolKind: QuizSessionPoolKind;
     /** Hidden rematch: MIXED или EASY|MEDIUM|HARD. */
@@ -202,6 +207,103 @@ function parseSetupDifficulty(
     return 'EASY';
 }
 
+/**
+ * Survival board: best run totalScore per user (не best одна волна).
+ * Period = startedAt run в окне; difficulty = SurvivalRun.difficulty.
+ * totalQuestions / correctCount — SUM clockOk-волн того же run.
+ */
+async function findBestSurvivalRunScores(
+    limit: number,
+    filters?: FindBestScoresFilters,
+) {
+    const difficulty = filters?.difficulty;
+    const filterBySingle =
+        difficulty === 'EASY' ||
+        difficulty === 'MEDIUM' ||
+        difficulty === 'HARD';
+    const completedAfter = filters?.completedAfter ?? null;
+
+    const params: unknown[] = [limit];
+    const whereParts: string[] = ['sr."totalScore" > 0'];
+
+    if (filterBySingle) {
+        params.push(difficulty);
+        whereParts.push(
+            `sr."difficulty" = $${params.length}::"Difficulty"`,
+        );
+    }
+
+    if (completedAfter) {
+        params.push(completedAfter);
+        whereParts.push(`sr."startedAt" >= $${params.length}`);
+    }
+
+    const whereSql = `WHERE ${whereParts.join(' AND ')}`;
+
+    const result = await withDirectPgClient(
+        (client) =>
+            client.query<LeaderboardScoreRow>(
+                `
+                SELECT
+                    best."userId" AS "user_id",
+                    u."username" AS "username",
+                    best."score" AS "score",
+                    best."totalQuestions" AS "total_questions",
+                    best."correctCount" AS "correct_count",
+                    best."completedAt" AS "completed_at"
+                FROM (
+                    SELECT DISTINCT ON (sr."userId")
+                        sr."userId",
+                        sr."totalScore" AS "score",
+                        COALESCE(agg."total_questions", 0) AS "totalQuestions",
+                        COALESCE(agg."correct_count", 0) AS "correctCount",
+                        COALESCE(sr."completedAt", agg."last_completed", sr."startedAt")
+                            AS "completedAt"
+                    FROM "SurvivalRun" AS sr
+                    LEFT JOIN LATERAL (
+                        SELECT
+                            SUM(r."totalQuestions")::int AS "total_questions",
+                            SUM(r."correctCount")::int AS "correct_count",
+                            MAX(r."completedAt") AS "last_completed"
+                        FROM "QuizResult" AS r
+                        INNER JOIN "QuizSession" AS s
+                            ON s."id" = r."sessionId"
+                        WHERE
+                            s."survivalRunId" = sr."id"
+                            AND s."survivalClockOk" IS TRUE
+                    ) AS agg ON TRUE
+                    ${whereSql}
+                    ORDER BY
+                        sr."userId" ASC,
+                        sr."totalScore" DESC,
+                        COALESCE(sr."completedAt", agg."last_completed", sr."startedAt") ASC
+                ) AS best
+                INNER JOIN "User" AS u ON u."id" = best."userId"
+                ORDER BY
+                    best."score" DESC,
+                    best."completedAt" ASC
+                LIMIT $1
+            `,
+                params,
+            ),
+        {
+            debugLabel: 'leaderboard.best-survival-runs',
+        },
+    );
+
+    return result.rows.map((row) => ({
+        userId: row.user_id,
+        score: row.score,
+        totalQuestions: row.total_questions,
+        correctCount: row.correct_count,
+        completedAt: row.completed_at,
+        user: {
+            id: row.user_id,
+            username: row.username,
+        },
+    }));
+}
+
 type RecentResultRow = {
     session_id: string;
     score: number;
@@ -243,6 +345,7 @@ async function loadResultSummaryBySessionIdForUser(
                     s."questionCount" AS "question_count",
                     s."timedEndsAt" AS "timed_ends_at",
                     s."survivalRunId" AS "survival_run_id",
+                    s."survivalClockOk" AS "survival_clock_ok",
                     s."difficulty"::text AS "difficulty",
                     s."poolKind"::text AS "pool_kind"
                 FROM "QuizResult" r
@@ -288,6 +391,8 @@ async function loadResultSummaryBySessionIdForUser(
         difficulties,
         isTimed: row.timed_ends_at != null,
         isSurvival: row.survival_run_id != null,
+        survivalRunId: row.survival_run_id,
+        survivalClockOk: row.survival_clock_ok,
         difficulty: row.difficulty,
         poolKind,
         setupDifficulty,
@@ -437,14 +542,20 @@ export const quizResultRepository = {
     /**
      * Лучший результат на пользователя внутри доски — unpooled pg.
      *
-     * Всегда JOIN QuizSession: mode режет потолки (скаляры, не JSONB).
+     * Classic/Blitz/Daily: JOIN QuizSession + QuizResult (скаляры, не JSONB).
+     * Survival: best `SurvivalRun.totalScore` per user (сумма clockOk-волн).
      * Difficulty / completedAfter — дополнительные WHERE.
-     * Blitz ORDER BY длительности только в этой ветке.
+     * Blitz ORDER BY длительности только в blitz-ветке.
      *
-     * См. DECISIONS.md → Leaderboard retention meta — Layer 1.
+     * См. DECISIONS.md → Leaderboard retention meta — Layer 1 + Survival wave 2+.
      */
     async findBestScores(limit: number, filters?: FindBestScoresFilters) {
         const mode = resolveLeaderboardMode(filters?.mode);
+
+        if (mode === 'survival') {
+            return findBestSurvivalRunScores(limit, filters);
+        }
+
         const difficulty = filters?.difficulty;
         const filterBySingle =
             difficulty === 'EASY' ||

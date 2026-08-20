@@ -19,6 +19,7 @@ import {
 } from '@/lib/db/direct-pg';
 import { peekSurvivalSubmitSnapshot, resolveQuizPlayLoadHandoff } from '@/entities/quiz-session/play-load-handoff';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
+import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type {
     QuizSessionPublicView,
@@ -65,6 +66,33 @@ type ReviewAnswerRow = {
     selected_option_id: string;
     is_correct: boolean;
 };
+
+async function resolveSurvivalInitialBankSeconds(
+    runId: string,
+    userId: string,
+    handoffSeconds?: number | null,
+): Promise<number> {
+    if (
+        handoffSeconds != null &&
+        Number.isFinite(handoffSeconds) &&
+        handoffSeconds > 0
+    ) {
+        return Math.floor(handoffSeconds);
+    }
+
+    const fromRun =
+        await survivalRunRepository.findSurvivalRunBankSecondsForUser(
+            runId,
+            userId,
+        );
+
+    if (fromRun != null && fromRun > 0) {
+        return fromRun;
+    }
+
+    // Совпадает с SURVIVAL_MODE_MVP_RULES.initialBankSeconds (волна 1).
+    return 20;
+}
 
 /** Date/string из pg → ISO для Client Component; null остаётся null. */
 function toIsoTimestamp(
@@ -208,6 +236,8 @@ async function loadSessionForSubmit(
                 return {
                     runId: jsonSnapshot.survival_run_id,
                     startedAt,
+                    // Placeholder; ниже обогащается resolveSurvivalInitialBankSeconds.
+                    initialBankSeconds: 20,
                 };
             })(),
         };
@@ -225,6 +255,12 @@ async function loadSessionForSubmit(
         const survival = survivalHandoff.view.survival;
 
         if (questions && survival) {
+            const initialBankSeconds = await resolveSurvivalInitialBankSeconds(
+                survival.runId,
+                userId,
+                survival.initialBankSeconds,
+            );
+
             return {
                 status: 'ready',
                 sessionId,
@@ -234,6 +270,7 @@ async function loadSessionForSubmit(
                 survival: {
                     runId: survival.runId,
                     startedAt: survival.startedAt,
+                    initialBankSeconds,
                 },
             };
         }
@@ -257,6 +294,20 @@ async function loadSessionForSubmit(
     if (jsonSnapshot) {
         const mapped = mapJsonSnapshotToReady(jsonSnapshot);
         if (mapped) {
+            if (mapped.status === 'ready' && mapped.survival) {
+                const initialBankSeconds =
+                    await resolveSurvivalInitialBankSeconds(
+                        mapped.survival.runId,
+                        userId,
+                    );
+                return {
+                    ...mapped,
+                    survival: {
+                        ...mapped.survival,
+                        initialBankSeconds,
+                    },
+                };
+            }
             return mapped;
         }
         return { status: 'invalid_snapshot' };
@@ -339,25 +390,34 @@ async function loadSessionForSubmit(
         return { status: 'invalid_snapshot' };
     }
 
+    let survivalSubmit: {
+        runId: string;
+        startedAt: string;
+        initialBankSeconds: number;
+    } | null = null;
+
+    if (firstRow.survival_run_id && firstRow.started_at) {
+        const startedAt = toIsoTimestamp(firstRow.started_at);
+        if (startedAt) {
+            const initialBankSeconds = await resolveSurvivalInitialBankSeconds(
+                firstRow.survival_run_id,
+                userId,
+            );
+            survivalSubmit = {
+                runId: firstRow.survival_run_id,
+                startedAt,
+                initialBankSeconds,
+            };
+        }
+    }
+
     return {
         status: 'ready',
         sessionId: firstRow.session_id,
         questions: Array.from(questions.values()),
         timedEndsAt: toTimedEndsAtIso(firstRow.timed_ends_at),
         snapshotData: null,
-        survival: (() => {
-            if (!firstRow.survival_run_id || !firstRow.started_at) {
-                return null;
-            }
-            const startedAt = toIsoTimestamp(firstRow.started_at);
-            if (!startedAt) {
-                return null;
-            }
-            return {
-                runId: firstRow.survival_run_id,
-                startedAt,
-            };
-        })(),
+        survival: survivalSubmit,
     };
 }
 
@@ -601,10 +661,17 @@ async function loadSnapshotPublicQuestions(
                     return null;
                 }
 
+                const initialBankSeconds =
+                    await resolveSurvivalInitialBankSeconds(
+                        survivalRunId,
+                        userId,
+                    );
+
                 survival = {
                     runId: survivalRunId,
                     waveIndex: survivalWaveIndex,
                     startedAt,
+                    initialBankSeconds,
                 };
             }
 

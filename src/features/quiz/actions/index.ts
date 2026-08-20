@@ -13,6 +13,8 @@ import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
 import { buildCompactReviewPayload } from '@/features/quiz/lib/build-compact-review-payload';
 import { isSurvivalClockOk } from '@/features/survival-mode/lib/is-survival-clock-ok';
+import { reconstructSurvivalBankRemainingSeconds } from '@/features/survival-mode/lib/reconstruct-survival-bank-remaining-seconds';
+import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import type { QuizFormState } from '@/features/quiz/types';
 
 // получение локали из формы
@@ -207,6 +209,19 @@ export async function submitQuizAction(
                   .length,
               wrongCount: answerRows.filter((answer) => !answer.isCorrect)
                   .length,
+              initialBankSeconds: survivalSubmitMeta.initialBankSeconds,
+          })
+        : null;
+
+    const survivalBankRemainingSeconds = survivalSubmitMeta
+        ? reconstructSurvivalBankRemainingSeconds({
+              startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
+              completedAtMs: completedAt.getTime(),
+              correctCount: answerRows.filter((answer) => answer.isCorrect)
+                  .length,
+              wrongCount: answerRows.filter((answer) => !answer.isCorrect)
+                  .length,
+              initialBankSeconds: survivalSubmitMeta.initialBankSeconds,
           })
         : null;
 
@@ -240,6 +255,31 @@ export async function submitQuizAction(
 
         if (submitResult === 'not_found') {
             return { errorCode: 'SUBMIT_FAILED' };
+        }
+
+        // Survival wave 2+: pooled after-hop (bank + seen + total). Не JSONB,
+        // не Direct, не валит submit/redirect при ошибке.
+        // already_completed тоже зовём — record идемпотентен по seen ids.
+        if (
+            isSurvivalSession &&
+            survivalSubmitMeta &&
+            survivalBankRemainingSeconds != null &&
+            survivalClockOk != null &&
+            (submitResult === 'completed' ||
+                submitResult === 'already_completed')
+        ) {
+            try {
+                await survivalRunRepository.recordSurvivalWaveAfterComplete({
+                    runId: survivalSubmitMeta.runId,
+                    userId: authSession.user.id,
+                    questionIds: questions.map((question) => question.id),
+                    bankRemainingSeconds: survivalBankRemainingSeconds,
+                    waveScore: scoreResult.score,
+                    clockOk: survivalClockOk,
+                });
+            } catch (error) {
+                console.warn('Survival after-complete record skipped:', error);
+            }
         }
 
         // already_completed: QuizResult уже есть — идём на result; outbox/award ниже.

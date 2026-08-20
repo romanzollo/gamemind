@@ -5,7 +5,7 @@
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
 **Overview:** `docs/ARCHITECTURE.md`.  
-**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. **Wave 1 shipped (Aug 19–20):** schema A + clock B + start C (pooled JSONB create) + play D + submit E (`survivalClockOk`) + end-of-wave F (bank=0 / last lock-in auto-submit → result; rematch; `?mode=survival`). `timedEndsAt` NULL. Survival play DTO may include `isCorrect`. Wave 2+ (carry bank, new session) is **not** shipped.
+**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. **Wave 1 + wave 2+ shipped (Aug 20):** schema A + clock B + start C (pooled JSONB) + play D + submit E + end-of-wave F + carry (seen table, `totalScore`, continue CTA, board = best run total). `timedEndsAt` NULL. Survival play DTO may include `isCorrect` + `initialBankSeconds`. After successful complete: **pooled** `recordSurvivalWaveAfterComplete` (bank/seen/total) — not in `completeWithResult`.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 

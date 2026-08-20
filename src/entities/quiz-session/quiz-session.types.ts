@@ -66,6 +66,11 @@ export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
      * Omit/NULL если не Survival — иначе CHECK на non-Survival.
      */
     survivalWaveIndex?: number | null;
+    /**
+     * T0 волны для play DTO / submit clock. Волна 1 = 20; continue = bank на run.
+     * Не колонка QuizSession — только handoff + join SurvivalRun на miss.
+     */
+    survivalInitialBankSeconds?: number | null;
 };
 
 /** Публичный вопрос из snapshot для UI квиза. */
@@ -97,6 +102,11 @@ export type QuizSessionSurvivalPlayView = {
     waveIndex: number;
     /** ISO `startedAt` с INSERT (JS Date после connect). */
     startedAt: string;
+    /**
+     * Стартовый банк этой волны (сек). Волна 1 = 20; 2+ = T0' с run.
+     * Клиентский remaining — UX; submit реконструирует с этим T0.
+     */
+    initialBankSeconds: number;
 };
 
 /**
@@ -148,6 +158,7 @@ export type SessionForSubmitResult =
           survival: {
               runId: string;
               startedAt: string;
+              initialBankSeconds: number;
           } | null;
       };
 
