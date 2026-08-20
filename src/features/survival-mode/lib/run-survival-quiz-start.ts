@@ -8,7 +8,8 @@
  * - SINGLE only: pickClassicSnapshotBundle, count = 12 (тот же cycle bag);
  * - Mix нет;
  * - createWithJsonSnapshot: survivalRunId + waveIndex, timedEndsAt omit;
- * - 300ms settle уже внутри pick после cycle; extra 500ms не добавляем;
+ *   split create: scalar INSERT → JSONB UPDATE → startedAt UPDATE (pooled).
+ *   Classic/Blitz create остаются Direct. SurvivalRun — другой pooled hop до pick.
  * - Daily не ест из этого мешка.
  *
  * Canon: docs/DECISIONS.md → Survival Mode MVP;

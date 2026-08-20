@@ -5,7 +5,7 @@
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
 **Overview:** `docs/ARCHITECTURE.md`.  
-**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Schema chat A: `SurvivalRun` + `QuizSession.survivalRunId` (Classic/`EVAL_FACTS_SQL` `AND survivalRunId IS NULL`). Runner chat C: `runSurvivalQuizStart` (pooled abandon+run → cycle 12 → INSERT-only). `timedEndsAt` NULL; bank reconstructed on submit. Play DTO / Survival submit / Taste CTA not shipped.
+**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Schema chat A: `SurvivalRun` + `QuizSession.survivalRunId` (Classic/`EVAL_FACTS_SQL` `AND survivalRunId IS NULL`). Runner chat C: `runSurvivalQuizStart` (pooled abandon+run → cycle 12 → INSERT-only). Play DTO chat D: handoff + pooled `snapshotData`; Survival view may include `isCorrect` (Classic/Blitz/Daily do not). `timedEndsAt` NULL; bank UX from `startedAt` + lock-ins. Submit clock (`survivalClockOk`) not shipped.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 
@@ -51,14 +51,26 @@ Create can be healthy (`quiz.start.create phase=ok`) while the **next** hop dies
 **Working shape (canon):**
 
 ```txt
-Blitz:  pooled abandon (scalar, before pick)
-All:    cycle pooled (outside Direct queue) → 300ms settle
-        → resolve chunk 5 Direct → create Direct INSERT-only JSONB
-        → remember play-load DTO in process memory (no isCorrect)
-Page:   take handoff (same Node isolate) OR pooled SELECT snapshotData
-        dev timeout 5s / prod 18s; miss → retry 400ms → soft-miss (not notFound)
-Clock:  Date.now()+duration AFTER connect, on INSERT (JS Date, not SQL NOW())
-Create: withDirectPgWriteClient — do NOT move back to withDirectPgQuizStartClient
+Blitz:     pooled abandon (scalar, before pick)
+Survival:  pooled abandon + SurvivalRun (before pick, scalars);
+           cycle 12 → 300ms → chunk 5 Direct ×3 → split pooled create:
+             hop1 scalar INSERT (10s) → hop2 JSONB UPDATE (45s, survival-only)
+             → hop3 startedAt UPDATE (5s)
+           (not Direct; Classic/Timed/Daily create stay Direct)
+All:       cycle pooled (outside Direct queue) → 300ms settle
+           → resolve chunk 5 Direct → create INSERT-only JSONB
+           → remember play-load DTO in process memory
+           → Survival DTO may include isCorrect (accepted leak); Classic/Blitz/Daily do not
+Page:      resolve handoff (Survival peek 120s / Classic take 45s) OR pooled SELECT snapshotData
+           Classic/Blitz/Daily: dev 5s / prod 18s
+           Survival dev miss: scalar meta only → fast soft-miss (no 5s TOAST loop)
+           Survival prod miss: pooled SELECT 18s
+           miss → retry 400ms → soft-miss (not notFound)
+Clock:     Date.now()+duration AFTER connect, on INSERT (JS Date, not SQL NOW())
+           Survival startedAt = JS Date after connect on the pooled write client
+Create:    Classic/Timed/Daily = withDirectPgWriteClient
+           Survival (survivalRunId) = withPooledPgClient
+           do NOT move any create back to withDirectPgQuizStartClient
 ```
 
 Do **not** “fix” this by raising global Direct timeouts or re-enabling keep-warm.
@@ -93,23 +105,26 @@ BAD:  notFound() on miss/timeout
 - After **any** cycle (SINGLE and Mix): **300ms settle** before Direct resolve (`pick-quiz-snapshot-bundle.ts`). Mix is not special here.
 - Mix: 3× existing difficulty bags + shuffle + one chunked resolve. Not `Difficulty = MIXED` in the cycle table. Daily does **not** use the cycle.
 - Boundary: **reshuffle-first** when remaining &lt; needed. No silent random fallback if cycle fails.
-- Create: **`withDirectPgWriteClient`**, INSERT `snapshotData` only. Do **not** return create to `withDirectPgQuizStartClient`.
+- Create: Classic / Timed / Daily = **`withDirectPgWriteClient`**, INSERT `snapshotData` only. Survival (`survivalRunId`) = **`withPooledPgClient`** — 12Q after 3 Direct resolve is the 4th unpooled hop and abort@18s (payload ~13KB; not size). Do **not** return any create to `withDirectPgQuizStartClient`. Do **not** put `SurvivalRun` and JSONB on one client.
 - Timed abandon: **pooled scalar UPDATE before pick**. Never UPDATE orphans on the same Direct client as JSONB INSERT. Never a second **unpooled** hop solely for abandon.
-- Survival (contract, schema discriminator shipped): same abandon shape **for Survival rows only**; pooled `SurvivalRun` INSERT before pick; create INSERT-only; **`timedEndsAt` NULL**; `startedAt` = JS Date after connect. Not `runTimedQuizStart`.
+- Survival (chat C+D): same abandon shape **for Survival rows only**; pooled `SurvivalRun` INSERT before pick; **split pooled create** (scalar → JSONB 45s → startedAt); **`timedEndsAt` NULL**; `startedAt` = JS Date **after** JSONB hop3. Play-load: Survival handoff **peek** 120s + optional `isCorrect`; dev miss без TOAST SELECT. Not `runTimedQuizStart`. Submit clock still Chat E.
 - Keep-warm on quiz Direct queue **OFF**.
 
 ### D. Play-load (quiz session page)
 
 ```txt
-OK:   take in-memory handoff from create (same process) → paint questions
-OK:   handoff miss → pooled SELECT snapshotData (prod 18s; next-dev 5s)
+OK:   resolve in-memory handoff from create (Survival peek 120s; Classic take 45s) → paint questions
+OK:   Survival handoff/view: startedAt + runId + waveIndex scalars; isCorrect leak OK
+OK:   Classic/Blitz/Daily handoff miss → pooled SELECT snapshotData (prod 18s; next-dev 5s)
+OK:   Survival prod handoff miss → pooled SELECT snapshotData (18s)
+OK:   Survival dev handoff miss → scalar meta check → fast soft-miss (no 5s TOAST loop)
 OK:   still miss → retry 400ms → soft-miss UI (not notFound())
 BAD:  SELECT snapshotData TOAST on Direct immediately after create INSERT
-BAD:  UPDATE timedEndsAt on the same client as SELECT snapshotData
+BAD:  UPDATE timedEndsAt / bank on the same client as SELECT snapshotData
 BAD:  Direct relational JOIN fallback after TOAST timeout (second 18s hang)
 ```
 
-Handoff (`play-load-handoff.ts`): TTL ~45s, one `take`, `userId` check. **Not** the source of truth — refresh / other serverless isolate / scoring always use Postgres.
+Handoff (`play-load-handoff.ts`): Classic TTL ~45s, one `take`, `userId` check. Survival TTL ~120s, **peek** (refresh в том же dev). **Not** the source of truth — other serverless isolate / scoring always use Postgres.
 
 On **production**, Server Action and RSC GET often hit **different isolates** → handoff miss is **normal**. The pooled SELECT **is** the prod path. Do not shrink its timeout to the Windows fail-fast 5s.
 
@@ -190,6 +205,7 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
 5. Do not re-enable keep-warm; do not merge Classic/Timed start; do not fold Survival into Timed/`timedEndsAt`; do not expand Daily lobby TLS; do not change chunk size without matrix.
 6. Classic/Timed start dies after cycle with Prisma `Connection terminated` → cycle stays on `withPooledPgClient`.
 7. Start UI generic filter error + Vercel `42703` `poolKind` (or any missing Mix/session column) → prod schema lag. Ops: `CONTENT_PIPELINE.md` §10. Do not change handoff/clock/Direct.
+8. Survival HARD 12: `quiz.start.create` ~18s `phase=operation` then page paints **00:00** / bank frozen → Direct JSONB INSERT after 3 resolve (payload ~13KB). Late-commit recover finds the row; `startedAt` was stamped before the 18s hang so T0=20s is already gone. Not play-load TOAST, not SQL `NOW()`. Fix: pooled create for `survivalRunId` only. Do not bump global timeout. Do not add more settles.
 
 ---
 
@@ -205,6 +221,7 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
 | Play-load read (handoff then pooled) | `src/entities/quiz-session/quiz-session-reads.repository.ts` |
 | Timed start (abandon then pick) | `src/features/timed-mode/lib/run-timed-quiz-start.ts` |
 | Survival start (abandon + run + cycle 12) | `src/entities/survival-run/survival-run.repository.ts`; `src/features/survival-mode/lib/run-survival-quiz-start.ts` |
+| Survival play DTO / client bank | `src/features/survival-mode/lib/get-survival-bank-remaining-ms.ts`; `src/features/survival-mode/components/SurvivalQuizSessionForm.tsx` |
 | Quiz session page (soft-miss) | `src/app/[locale]/(public)/quiz/[sessionId]/page.tsx` |
 | Submit complete | `src/entities/quiz-session/quiz-session-submit.repository.ts` |
 | Result summary/review | `src/entities/quiz-result/quiz-result.repository.ts` |

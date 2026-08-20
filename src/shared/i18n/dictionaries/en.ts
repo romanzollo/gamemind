@@ -78,6 +78,20 @@ export const enDictionary = {
         loginPrompt: 'Sign in to play timed mode.',
         loginLink: 'Sign in',
     },
+    survivalMode: {
+        eyebrow: 'Survival',
+        title: 'One wave',
+        description:
+            'Twelve questions. You start with twenty seconds — a right answer buys a little more time, a miss takes some away.',
+        meta: '12 questions · 20s to start · pick difficulty',
+        startButton: 'Start the wave',
+        loginPrompt: 'Sign in to play survival.',
+        loginLink: 'Sign in',
+        remainingLabel: 'Time left',
+        expiredLabel: 'Time is up',
+        timeUpHint: 'Time is up. Answers are frozen.',
+        savingAnswers: 'Time’s up — saving what you got…',
+    },
     auth: {
         loginTitle: 'Log in',
         registerTitle: 'Register',
@@ -350,7 +364,7 @@ export const enDictionary = {
     quiz: {
         setupTitle: 'Modes',
         setupDescription:
-            'Daily challenge, timed blitz, or classic without a clock — pick one arena.',
+            'Daily challenge, blitz, survival, or classic without a clock — pick one arena.',
         classicEyebrow: 'No timer',
         classicTitle: 'Classic',
         classicDescription:

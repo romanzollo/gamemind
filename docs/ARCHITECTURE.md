@@ -5,7 +5,7 @@ Dated “why we chose this” lives in [`DECISIONS.md`](./DECISIONS.md). Binding
 
 ## Product shape
 
-Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **discriminator + start runner shipped** (Aug 19 chats A–C); play DTO / submit / lobby CTA are not.
+Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **start + play DTO + lobby CTA shipped** (Aug 19 chats A–D); submit clock (`survivalClockOk`) is chat E.
 
 | Mode | Discriminator | Player contract |
 |------|----------------|-----------------|
@@ -95,7 +95,12 @@ sequenceDiagram
   else Daily
     S->>D: freeze or load day's ids
   end
-  S->>D: resolve bundle (chunk 5) + INSERT snapshotData
+  S->>D: resolve bundle (chunk 5)
+  alt Survival wave 1
+    S->>P: INSERT snapshotData (pooled; not 4th Direct hop)
+  else Classic or Blitz or Daily
+    S->>D: INSERT snapshotData
+  end
   Note over S: stash play-load DTO in process (handoff)
   alt same isolate (typical next dev)
     S-->>U: session page from handoff (no TOAST read)
@@ -123,7 +128,7 @@ Invariants:
 7. Adding questions is a **content** change (draft → publish). Do not “optimize” by stuffing more JSON into submit/result.
 8. Do not SELECT `snapshotData` TOAST on the hop right after create INSERT. First paint = handoff; fallback = pooled read (prod 18s). Quiz session page: soft-miss, never `notFound()`.
 
-Classic, Blitz, and Survival keep **separate start runners**. Shared pick resolve chunk size stays 5. After cycle: 300ms settle (SINGLE and Mix). Daily lobby uses **one** Direct TLS. After a wedged Direct queue: restart `npm run dev`; do not raise global timeouts or re-enable keep-warm. **Prod is the release gate.**
+Classic, Blitz, and Survival keep **separate start runners**. Shared pick resolve chunk size stays 5. After cycle: 300ms settle (SINGLE and Mix). Survival wave 1 JSONB INSERT is **pooled** (`survivalRunId`); Classic/Blitz/Daily create stay Direct. Daily lobby uses **one** Direct TLS. After a wedged Direct queue: restart `npm run dev`; do not raise global timeouts or re-enable keep-warm. **Prod is the release gate.**
 
 ## Auth and security
 

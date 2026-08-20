@@ -1,5 +1,6 @@
 import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
 import { QuizSetupForm } from '@/features/quiz/components/QuizSetupForm';
+import { SurvivalModeCta } from '@/features/survival-mode/components/SurvivalModeCta';
 import { TimedModeCta } from '@/features/timed-mode/components/TimedModeCta';
 import { getDictionary, isLocale } from '@/shared/i18n';
 
@@ -13,7 +14,7 @@ type QuizSetupPageProps = {
 };
 
 /**
- * Mode lobby: единственное место полных Daily / Timed / Classic.
+ * Mode lobby: единственное место полных Daily / Timed / Survival / Classic.
  * Home только приглашает сюда — без дубля mode cards (IA Model 1).
  * Classic chrome живёт внутри QuizSetupForm (не отдельный eyebrow над карточкой).
  * Blitz start всегда primary (зелёный) — паритет с Classic; Daily имеет свой CTA.
@@ -49,6 +50,15 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
                 className="mt-4 sm:mt-5"
                 startVariant="primary"
             />
+
+            <div id="mode-survival" className="scroll-mt-24">
+                <SurvivalModeCta
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    className="mt-4 sm:mt-5"
+                    startVariant="secondary"
+                />
+            </div>
 
             <QuizSetupForm locale={safeLocale} dictionary={dictionary} />
         </main>

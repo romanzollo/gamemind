@@ -68,7 +68,7 @@ export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
     survivalWaveIndex?: number | null;
 };
 
-/** Публичный вопрос из snapshot для UI квиза (без isCorrect). */
+/** Публичный вопрос из snapshot для UI квиза. */
 export type SessionSnapshotPublicQuestion = {
     id: string;
     text: string;
@@ -79,18 +79,37 @@ export type SessionSnapshotPublicQuestion = {
         id: string;
         text: string;
         order: number;
+        /**
+         * Только Survival play DTO (принятый leak для lock-in без per-question API).
+         * Classic / Blitz / Daily — поле отсутствует.
+         * Canon: docs/DECISIONS.md → Survival Mode MVP (Play DTO leak).
+         */
+        isCorrect?: boolean;
     }>;
 };
 
 /**
+ * Скаляры Survival на play-load. Банк / runId не живут только в snapshotData JSONB.
+ * T0 / +4 / −6 клиент берёт из `SURVIVAL_MODE_MVP_RULES`, не из этой view.
+ */
+export type QuizSessionSurvivalPlayView = {
+    runId: string;
+    waveIndex: number;
+    /** ISO `startedAt` с INSERT (JS Date после connect). */
+    startedAt: string;
+};
+
+/**
  * Данные IN_PROGRESS сессии для quiz page.
- * `timedEndsAt` — ISO UTC; null = classic/daily (countdown не показываем).
+ * `timedEndsAt` — ISO UTC; null = classic/daily/survival (Blitz countdown не показываем).
+ * `survival` — null, если это не волна Survival.
  */
 export type QuizSessionPublicView = {
     questions: SessionSnapshotPublicQuestion[];
     timedEndsAt: string | null;
     /** Сложность сессии; null = mix (poolKind MIXED). */
     difficulty: Difficulty | null;
+    survival: QuizSessionSurvivalPlayView | null;
 };
 
 /** Вопрос из snapshot для server-side scoring (с isCorrect, без текста). */

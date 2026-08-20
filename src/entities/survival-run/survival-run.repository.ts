@@ -1,9 +1,9 @@
 /**
  * SurvivalRun: scalar start-prep (abandon + INSERT), без JSONB и без Direct.
  *
- * Зачем отдельный entity: QuizSession create остаётся INSERT-only на Direct.
- * Run живёт на pooled hop до pick. Orphan run без сессии допустим —
- * следующий старт ставит его ABANDONED (Restrict FK не мешает UPDATE status).
+ * Зачем отдельный entity: QuizSession Survival JSONB — отдельный pooled
+ * hop после pick (не этот клиент, не Direct). Run = scalars до pick.
+ * Orphan run без сессии допустим — следующий старт ставит ABANDONED.
  *
  * Не звать с того же клиента, что snapshot INSERT.
  * Не трогать Classic (`survivalRunId IS NULL`), Blitz (`timedEndsAt`), Daily.

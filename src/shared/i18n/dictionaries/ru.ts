@@ -78,6 +78,20 @@ export const ruDictionary: Dictionary = {
         loginPrompt: 'Войдите, чтобы сыграть режим на время.',
         loginLink: 'Войти',
     },
+    survivalMode: {
+        eyebrow: 'На выживание',
+        title: 'Одна волна',
+        description:
+            'Двенадцать вопросов. Сначала двадцать секунд — верный ответ чуть добавляет время, ошибка отбирает.',
+        meta: '12 вопросов · старт 20 сек · выбор сложности',
+        startButton: 'Начать волну',
+        loginPrompt: 'Войдите, чтобы сыграть на выживание.',
+        loginLink: 'Войти',
+        remainingLabel: 'Осталось',
+        expiredLabel: 'Время вышло',
+        timeUpHint: 'Время вышло. Ответы заморожены.',
+        savingAnswers: 'Время вышло — сохраняем, что успел…',
+    },
     auth: {
         loginTitle: 'Вход',
         registerTitle: 'Регистрация',
@@ -363,7 +377,7 @@ export const ruDictionary: Dictionary = {
     quiz: {
         setupTitle: 'Режимы',
         setupDescription:
-            'Челлендж дня, блиц на время или классика без таймера — выбери одну арену.',
+            'Челлендж дня, блиц, выживание или классика — выбери одну арену.',
         classicEyebrow: 'Без таймера',
         classicTitle: 'Классика',
         classicDescription:

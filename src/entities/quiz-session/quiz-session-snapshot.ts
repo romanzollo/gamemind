@@ -204,15 +204,24 @@ export function parseSnapshotData(
     return data as QuizSessionSnapshotData;
 }
 
-/** Snapshot → UI DTO без isCorrect; порядок = position / displayOrder. */
+/** Snapshot → UI DTO; порядок = position / displayOrder. */
 export function mapSnapshotDataToPublicQuestions(
     snapshotData: QuizSessionSnapshotData,
     expectedQuestionCount: number,
     locale: Locale,
+    options?: {
+        /**
+         * Survival play DTO: leak isCorrect для lock-in без per-question hop.
+         * Classic / Blitz / Daily оставляют false — поле не попадает в JSON.
+         */
+        includeCorrectness?: boolean;
+    },
 ): SessionSnapshotPublicQuestion[] | null {
     if (snapshotData.questions.length !== expectedQuestionCount) {
         return null;
     }
+
+    const includeCorrectness = options?.includeCorrectness === true;
 
     return [...snapshotData.questions]
         .sort((left, right) => left.position - right.position)
@@ -228,6 +237,9 @@ export function mapSnapshotDataToPublicQuestions(
                     id: option.id,
                     text: pickSnapshotText(option.texts, option.text, locale),
                     order: option.order,
+                    ...(includeCorrectness
+                        ? { isCorrect: option.isCorrect }
+                        : {}),
                 })),
         }));
 }

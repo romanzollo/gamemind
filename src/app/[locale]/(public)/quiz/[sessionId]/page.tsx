@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { QuizSessionForm } from '@/features/quiz/components/QuizSessionForm';
+import { SurvivalQuizSessionForm } from '@/features/survival-mode/components/SurvivalQuizSessionForm';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
 import { InlineAlert } from '@/shared/ui';
@@ -89,14 +90,24 @@ export default async function QuizSessionPage({
                 </h1>
             </header>
 
-            <QuizSessionForm
-                locale={safeLocale}
-                sessionId={sessionId}
-                questions={sessionView.questions}
-                timedEndsAt={sessionView.timedEndsAt}
-                difficulty={sessionView.difficulty}
-                dictionary={dictionary}
-            />
+            {sessionView.survival ? (
+                <SurvivalQuizSessionForm
+                    locale={safeLocale}
+                    sessionId={sessionId}
+                    questions={sessionView.questions}
+                    survival={sessionView.survival}
+                    dictionary={dictionary}
+                />
+            ) : (
+                <QuizSessionForm
+                    locale={safeLocale}
+                    sessionId={sessionId}
+                    questions={sessionView.questions}
+                    timedEndsAt={sessionView.timedEndsAt}
+                    difficulty={sessionView.difficulty}
+                    dictionary={dictionary}
+                />
+            )}
         </main>
     );
 }

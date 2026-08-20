@@ -22,7 +22,8 @@ export type QuizSetupInput = {
     questionCount: number;
 };
 
-// тип публичного вопроса для отображения в UI без правильного ответа
+// тип публичного вопроса для отображения в UI.
+// `isCorrect` только Survival play DTO (принятый leak). Classic/Blitz/Daily — omit.
 export type QuizPublicQuestion = {
     id: string;
     text: string;
@@ -33,6 +34,7 @@ export type QuizPublicQuestion = {
         id: string;
         text: string;
         order: number;
+        isCorrect?: boolean;
     }[];
 };
 

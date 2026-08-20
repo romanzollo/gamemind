@@ -11,8 +11,9 @@
  * Не await client.end() на response path (см. DECISIONS → Neon Write Path).
  * Timed abandon-on-new-start: pooled scalar до pick, не на Direct create
  * вместе с JSONB INSERT (см. Timed Mode + Windows+Neon TOAST).
- * Survival: abandon + INSERT SurvivalRun — `survival-run.repository` (pooled)
- * до pick; create INSERT-only с `survivalRunId`, без `timedEndsAt`.
+ * Survival: abandon + INSERT SurvivalRun (pooled) до pick;
+ * create волны 1 = split pooled: scalar INSERT → JSONB UPDATE → startedAt.
+ * Classic/Timed/Daily create — Direct. Dev-лог snapshotBytes/writePath.
  * Публичный фасад: quiz-session.repository.ts.
  * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
  */
@@ -35,6 +36,7 @@ import { loadRandomSnapshotBundleWithPgClient } from '@/entities/question/questi
 import type { QuestionSnapshotBundleItem } from '@/entities/question/question.repository';
 import type {
     CreateQuizSessionWithSnapshotInput,
+    QuizSessionSurvivalPlayView,
     SessionSnapshotQuestionInput,
 } from '@/entities/quiz-session/quiz-session.types';
 import { QuizSessionStartError } from '@/entities/quiz-session/quiz-session.types';
@@ -74,16 +76,97 @@ type CreateQuizSessionWithJsonSnapshotInput =
  */
 const QUIZ_START_WRITE_ATTEMPT_MS = 18_000;
 
+/**
+ * Survival hop2 (JSONB UPDATE) — только pooled, только survivalRunId != null.
+ * Короче 18s abort → late-commit + startedAt до hang; без лимита → вечный POST
+ * на Windows next dev. 45s даёт TOAST-классу завершиться; hop3 startedAt после ok.
+ */
+const SURVIVAL_JSONB_UPDATE_TIMEOUT_MS = 45_000;
+
+type QuizStartJsonWritePath = 'direct' | 'pooled' | 'split';
+
+/**
+ * Dev-only: размер JSONB и write-path. Survival 12Q vs Blitz 10 —
+ * не путать create timeout с play-load TOAST SELECT.
+ */
+function logJsonSnapshotCreateDiagnostics(
+    input: CreateQuizSessionWithSnapshotInput,
+    snapshotData: QuizSessionSnapshotData,
+    writePath: QuizStartJsonWritePath,
+) {
+    if (process.env.NODE_ENV !== 'development') {
+        return;
+    }
+
+    const isSurvival = input.survivalRunId != null;
+    const isTimed = input.timedEndsAt != null;
+
+    if (!isSurvival && !isTimed) {
+        return;
+    }
+
+    console.info(
+        `quiz.start.create snapshotBytes=${Buffer.byteLength(
+            JSON.stringify(snapshotData),
+            'utf8',
+        )} writePath=${writePath} questionCount=${input.questionCount} mode=${isSurvival ? 'survival' : 'timed'}`,
+    );
+}
+
+function toIsoTimestamp(value: Date | null | undefined): string | null {
+    if (value == null) {
+        return null;
+    }
+
+    if (Number.isNaN(value.getTime())) {
+        return null;
+    }
+
+    return value.toISOString();
+}
+
+function buildSurvivalPlayView(
+    input: CreateQuizSessionWithSnapshotInput,
+    startedAt: Date | null,
+): QuizSessionSurvivalPlayView | null {
+    const runId = input.survivalRunId ?? null;
+    const waveIndex = input.survivalWaveIndex ?? null;
+    const startedAtIso = toIsoTimestamp(startedAt);
+
+    if (runId == null || waveIndex == null || waveIndex < 1 || !startedAtIso) {
+        return null;
+    }
+
+    return {
+        runId,
+        waveIndex,
+        startedAt: startedAtIso,
+    };
+}
+
 function stashPlayLoadHandoff(
     sessionId: string,
     input: CreateQuizSessionWithSnapshotInput,
     snapshotData: QuizSessionSnapshotData,
     timedEndsAt: Date | null,
+    startedAt: Date | null,
 ) {
+    const isSurvival = input.survivalRunId != null;
+    const survival = isSurvival
+        ? buildSurvivalPlayView(input, startedAt)
+        : null;
+
+    // Survival без startedAt не stash'им: клиентский банк тогда врёт.
+    // Page возьмёт pooled SELECT скаляров (не TOAST на Direct).
+    if (isSurvival && !survival) {
+        return;
+    }
+
     const mapped = mapSnapshotDataToPublicQuestions(
         snapshotData,
         input.questionCount,
         input.sessionLocale,
+        { includeCorrectness: isSurvival },
     );
 
     if (!mapped) {
@@ -94,6 +177,7 @@ function stashPlayLoadHandoff(
         questions: mapped,
         timedEndsAt: timedEndsAt?.toISOString() ?? null,
         difficulty: resolveSessionPoolInsert(input).difficulty,
+        survival,
     });
 }
 
@@ -160,40 +244,335 @@ async function isSnapshotComplete(
 }
 
 async function cleanupQuizSessionById(sessionId: string) {
-    await withDirectPgWriteClient((client) =>
-        client.query('DELETE FROM "QuizSession" WHERE "id" = $1', [sessionId]),
+    // Pooled scalar DELETE: после timeout create Direct-очередь уже горячая;
+    // ещё один unpooled hop клинит home (~70s). Late-commit orphan снимет
+    // Survival abandon на следующем старте.
+    await withPooledPgClient(
+        (client) =>
+            client.query('DELETE FROM "QuizSession" WHERE "id" = $1', [
+                sessionId,
+            ]),
+        {
+            debugLabel: 'quiz.start.cleanup',
+            attemptTimeoutMs: 5_000,
+        },
     ).catch(() => undefined);
 }
 
-/** Recovery-check после transient write: JSON snapshot уже на месте? */
-async function isJsonSnapshotComplete(
+/**
+ * Recovery после timeout create: только скаляры на pooled.
+ * SELECT snapshotData на Direct сразу после INSERT — Aug 14 hang
+ * (18s create + 18s TOAST read → POST ~46s, home клинит).
+ * Snapshot уже в памяти caller — для handoff JSONB из БД не нужен.
+ */
+const CREATE_RECOVERY_SETTLE_MS = 400;
+
+function waitMs(milliseconds: number) {
+    return new Promise<void>((resolve) => {
+        setTimeout(resolve, milliseconds);
+    });
+}
+
+function toStartedAtDate(
+    value: Date | string | null | undefined,
+): Date | null {
+    if (value == null) {
+        return null;
+    }
+
+    const date = value instanceof Date ? value : new Date(value);
+
+    return Number.isNaN(date.getTime()) ? null : date;
+}
+
+async function findCommittedJsonSnapshotScalars(
     sessionId: string,
     userId: string,
     expectedQuestionCount: number,
+): Promise<{ complete: boolean; startedAt: Date | null }> {
+    try {
+        const result = await withPooledPgClient(
+            (client) =>
+                client.query<{
+                    question_count: number;
+                    started_at: Date | string | null;
+                }>(
+                    `
+                        SELECT
+                            "questionCount" AS "question_count",
+                            "startedAt" AS "started_at"
+                        FROM "QuizSession"
+                        WHERE
+                            "id" = $1
+                            AND "userId" = $2
+                            AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                            AND "snapshotData" IS NOT NULL
+                    `,
+                    [sessionId, userId],
+                ),
+            {
+                debugLabel: 'quiz.start.create-recover',
+                attemptTimeoutMs: 5_000,
+            },
+        );
+
+        const session = result.rows[0];
+
+        return {
+            complete: session?.question_count === expectedQuestionCount,
+            startedAt: toStartedAtDate(session?.started_at),
+        };
+    } catch {
+        return { complete: false, startedAt: null };
+    }
+}
+
+function assertSurvivalSessionCreateInput(
+    input: CreateQuizSessionWithSnapshotInput,
+    pool: { difficulty: Difficulty | null; poolKind: QuizSessionPoolKind },
 ) {
-    const result = await withDirectPgClient((client) =>
-        client.query<{
-            question_count: number;
-            snapshot_data: QuizSessionSnapshotData | string | null;
-        }>(
-            `
-                SELECT
-                    "questionCount" AS "question_count",
-                    "snapshotData" AS "snapshot_data"
-                FROM "QuizSession"
-                WHERE
-                    "id" = $1
-                    AND "userId" = $2
-                    AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
-            `,
-            [sessionId, userId],
-        ),
+    if (input.timedEndsAt != null || input.dailyChallengeId) {
+        throw new Error(
+            'QuizSession Survival cannot set timedEndsAt or dailyChallengeId',
+        );
+    }
+
+    if (pool.poolKind !== 'SINGLE' || pool.difficulty == null) {
+        throw new Error('Survival session must be poolKind SINGLE');
+    }
+
+    const survivalWaveIndex = input.survivalWaveIndex ?? null;
+    const survivalRunId = input.survivalRunId ?? null;
+
+    if (
+        survivalRunId == null ||
+        survivalWaveIndex == null ||
+        survivalWaveIndex < 1
+    ) {
+        throw new Error('Survival session requires survivalRunId and waveIndex >= 1');
+    }
+}
+
+/** Hop 1: скаляры без JSONB — быстрый pooled INSERT. startedAt пока DEFAULT. */
+async function insertSurvivalSessionScalarOnClient(
+    client: Client,
+    sessionId: string,
+    input: CreateQuizSessionWithSnapshotInput,
+) {
+    const pool = resolveSessionPoolInsert(input);
+    assertSurvivalSessionCreateInput(input, pool);
+
+    await client.query(
+        `
+            INSERT INTO "QuizSession" (
+                "id",
+                "userId",
+                "status",
+                "difficulty",
+                "poolKind",
+                "questionCount",
+                "sessionLocale",
+                "survivalRunId",
+                "survivalWaveIndex"
+            )
+            VALUES (
+                $1,
+                $2,
+                $3::"QuizSessionStatus",
+                $4::"Difficulty",
+                $5::"QuizSessionPoolKind",
+                $6,
+                $7::"ContentLocale",
+                $8,
+                $9
+            )
+        `,
+        [
+            sessionId,
+            input.userId,
+            'IN_PROGRESS',
+            pool.difficulty,
+            pool.poolKind,
+            input.questionCount,
+            input.sessionLocale,
+            input.survivalRunId,
+            input.survivalWaveIndex,
+        ],
+    );
+}
+
+/** Hop 2: JSONB отдельно от scalar INSERT (урок Blitz: тяжёлый write не на одном budget с clock). */
+async function updateSurvivalSessionSnapshotOnClient(
+    client: Client,
+    sessionId: string,
+    userId: string,
+    snapshotData: QuizSessionSnapshotData,
+) {
+    const snapshotJson = JSON.stringify(snapshotData);
+    const result = await client.query(
+        `
+            UPDATE "QuizSession"
+            SET "snapshotData" = $1::jsonb
+            WHERE
+                "id" = $2
+                AND "userId" = $3
+                AND "survivalRunId" IS NOT NULL
+        `,
+        [snapshotJson, sessionId, userId],
     );
 
-    const session = result.rows[0];
-    const snapshotData = parseSnapshotData(session?.snapshot_data ?? null);
+    if ((result.rowCount ?? 0) !== 1) {
+        throw new Error('Survival snapshot UPDATE missed row');
+    }
+}
 
-    return snapshotData?.questions.length === expectedQuestionCount;
+/**
+ * Hop 3: startedAt ПОСЛЕ JSONB — банк T0=20 не съедается пока UPDATE висит.
+ * JS Date, не SQL NOW() в naive TIMESTAMP (урок Timed timedEndsAt).
+ */
+async function armSurvivalSessionStartedAtOnClient(
+    client: Client,
+    sessionId: string,
+    userId: string,
+): Promise<Date> {
+    const startedAt = new Date();
+    const result = await client.query(
+        `
+            UPDATE "QuizSession"
+            SET "startedAt" = $1
+            WHERE
+                "id" = $2
+                AND "userId" = $3
+                AND "survivalRunId" IS NOT NULL
+        `,
+        [startedAt, sessionId, userId],
+    );
+
+    if ((result.rowCount ?? 0) !== 1) {
+        throw new Error('Survival startedAt UPDATE missed row');
+    }
+
+    return startedAt;
+}
+
+async function recoverSurvivalJsonSnapshotAfterWriteError(
+    sessionId: string,
+    userId: string,
+    expectedQuestionCount: number,
+    error: unknown,
+): Promise<(SessionSnapshotCreateResult & { startedAt: Date }) | null> {
+    if (!isTransientDirectPgError(error)) {
+        return null;
+    }
+
+    await waitMs(CREATE_RECOVERY_SETTLE_MS);
+
+    const check = await findCommittedJsonSnapshotScalars(
+        sessionId,
+        userId,
+        expectedQuestionCount,
+    );
+
+    if (!check.complete) {
+        return null;
+    }
+
+    // Late-commit hop2: JSONB есть, startedAt мог быть до hang — перезаписать.
+    try {
+        const startedAt = await withPooledPgClient(
+            (client) =>
+                armSurvivalSessionStartedAtOnClient(
+                    client,
+                    sessionId,
+                    userId,
+                ),
+            {
+                debugLabel: 'quiz.start.survival-started-at-recover',
+                attemptTimeoutMs: 5_000,
+            },
+        );
+
+        return { id: sessionId, startedAt };
+    } catch {
+        return check.startedAt
+            ? { id: sessionId, startedAt: check.startedAt }
+            : null;
+    }
+}
+
+/**
+ * Survival wave 1: scalar INSERT → JSONB UPDATE (survival-only 45s) → startedAt UPDATE.
+ * Тот же класс разделения, что Timed abandon до pick и Blitz clock после connect.
+ */
+async function createSurvivalJsonSnapshotSession(
+    sessionId: string,
+    input: CreateQuizSessionWithJsonSnapshotInput,
+    snapshotData: QuizSessionSnapshotData,
+): Promise<{ id: string; timedEndsAt: null; startedAt: Date }> {
+    assertSnapshotDisplayTexts(input);
+
+    logJsonSnapshotCreateDiagnostics(input, snapshotData, 'split');
+
+    try {
+        await withPooledPgClient(
+            (client) =>
+                insertSurvivalSessionScalarOnClient(client, sessionId, input),
+            {
+                debugLabel: 'quiz.start.create-scalar',
+                attemptTimeoutMs: 10_000,
+            },
+        );
+
+        await withPooledPgClient(
+            (client) =>
+                updateSurvivalSessionSnapshotOnClient(
+                    client,
+                    sessionId,
+                    input.userId,
+                    snapshotData,
+                ),
+            {
+                debugLabel: 'quiz.start.create-snapshot',
+                attemptTimeoutMs: SURVIVAL_JSONB_UPDATE_TIMEOUT_MS,
+            },
+        );
+
+        const startedAt = await withPooledPgClient(
+            (client) =>
+                armSurvivalSessionStartedAtOnClient(
+                    client,
+                    sessionId,
+                    input.userId,
+                ),
+            {
+                debugLabel: 'quiz.start.survival-started-at',
+                attemptTimeoutMs: 5_000,
+            },
+        );
+
+        return { id: sessionId, timedEndsAt: null, startedAt };
+    } catch (error) {
+        const recovered = await recoverSurvivalJsonSnapshotAfterWriteError(
+            sessionId,
+            input.userId,
+            input.questionCount,
+            error,
+        );
+
+        if (recovered) {
+            return {
+                id: recovered.id,
+                timedEndsAt: null,
+                startedAt: recovered.startedAt,
+            };
+        }
+
+        if (!isTransientDirectPgError(error)) {
+            await cleanupQuizSessionById(sessionId);
+        }
+
+        throw error;
+    }
 }
 
 async function insertQuizSessionWithSnapshotData(
@@ -201,7 +580,7 @@ async function insertQuizSessionWithSnapshotData(
     sessionId: string,
     input: CreateQuizSessionWithSnapshotInput,
     snapshotData: QuizSessionSnapshotData,
-): Promise<{ timedEndsAt: Date | null }> {
+): Promise<{ timedEndsAt: Date | null; startedAt: Date | null }> {
     assertSnapshotDisplayTexts(input);
 
     if (input.dailyChallengeId && input.timedEndsAt) {
@@ -227,20 +606,12 @@ async function insertQuizSessionWithSnapshotData(
     const isSurvival = survivalRunId != null;
 
     if (isSurvival) {
-        if (input.timedEndsAt != null || input.dailyChallengeId) {
-            throw new Error(
-                'QuizSession Survival cannot set timedEndsAt or dailyChallengeId',
-            );
-        }
+        throw new Error(
+            'Survival JSONB create must use createSurvivalJsonSnapshotSession split path',
+        );
+    }
 
-        if (pool.poolKind !== 'SINGLE' || pool.difficulty == null) {
-            throw new Error('Survival session must be poolKind SINGLE');
-        }
-
-        if (survivalWaveIndex == null || survivalWaveIndex < 1) {
-            throw new Error('Survival session requires survivalWaveIndex >= 1');
-        }
-    } else if (survivalWaveIndex != null) {
+    if (survivalWaveIndex != null) {
         throw new Error('survivalWaveIndex requires survivalRunId');
     }
 
@@ -258,85 +629,41 @@ async function insertQuizSessionWithSnapshotData(
         timedEndsAtValue,
     ] as const;
 
-    if (isSurvival) {
-        // startedAt = JS Date после connect (мы уже на client). Не SQL NOW()
-        // в naive TIMESTAMP (урок Timed timedEndsAt). Submit Survival должен
-        // писать completedAt так же — иначе elapsed съедет на TZ.
-        // timedEndsAt / dailyChallengeId в VALUES остаются NULL (CHECK).
-        const startedAt = new Date();
+    // Classic / Timed / Daily: survival-колонки не перечисляем → NULL
+    // (CHECK: waveIndex/clockOk тоже NULL). startedAt = SQL NOW() as-is.
+    await client.query(
+        `
+            INSERT INTO "QuizSession" (
+                "id",
+                "userId",
+                "status",
+                "difficulty",
+                "poolKind",
+                "questionCount",
+                "sessionLocale",
+                "snapshotData",
+                "dailyChallengeId",
+                "timedEndsAt",
+                "startedAt"
+            )
+            VALUES (
+                $1,
+                $2,
+                $3::"QuizSessionStatus",
+                $4::"Difficulty",
+                $5::"QuizSessionPoolKind",
+                $6,
+                $7::"ContentLocale",
+                $8::jsonb,
+                $9,
+                $10,
+                NOW()
+            )
+        `,
+        [...baseValues],
+    );
 
-        await client.query(
-            `
-                INSERT INTO "QuizSession" (
-                    "id",
-                    "userId",
-                    "status",
-                    "difficulty",
-                    "poolKind",
-                    "questionCount",
-                    "sessionLocale",
-                    "snapshotData",
-                    "dailyChallengeId",
-                    "timedEndsAt",
-                    "startedAt",
-                    "survivalRunId",
-                    "survivalWaveIndex"
-                )
-                VALUES (
-                    $1,
-                    $2,
-                    $3::"QuizSessionStatus",
-                    $4::"Difficulty",
-                    $5::"QuizSessionPoolKind",
-                    $6,
-                    $7::"ContentLocale",
-                    $8::jsonb,
-                    $9,
-                    $10,
-                    $11,
-                    $12,
-                    $13
-                )
-            `,
-            [...baseValues, startedAt, survivalRunId, survivalWaveIndex],
-        );
-    } else {
-        // Classic / Timed / Daily: survival-колонки не перечисляем → NULL
-        // (CHECK: waveIndex/clockOk тоже NULL). startedAt = SQL NOW() as-is.
-        await client.query(
-            `
-                INSERT INTO "QuizSession" (
-                    "id",
-                    "userId",
-                    "status",
-                    "difficulty",
-                    "poolKind",
-                    "questionCount",
-                    "sessionLocale",
-                    "snapshotData",
-                    "dailyChallengeId",
-                    "timedEndsAt",
-                    "startedAt"
-                )
-                VALUES (
-                    $1,
-                    $2,
-                    $3::"QuizSessionStatus",
-                    $4::"Difficulty",
-                    $5::"QuizSessionPoolKind",
-                    $6,
-                    $7::"ContentLocale",
-                    $8::jsonb,
-                    $9,
-                    $10,
-                    NOW()
-                )
-            `,
-            [...baseValues],
-        );
-    }
-
-    return { timedEndsAt: timedEndsAtValue };
+    return { timedEndsAt: timedEndsAtValue, startedAt: null };
 }
 
 async function insertSnapshotRows(
@@ -492,18 +819,24 @@ async function recoverJsonSnapshotAfterWriteError(
     userId: string,
     expectedQuestionCount: number,
     error: unknown,
-): Promise<SessionSnapshotCreateResult | null> {
+): Promise<(SessionSnapshotCreateResult & { startedAt: Date | null }) | null> {
     if (!isTransientDirectPgError(error)) {
         return null;
     }
 
-    const recovered = await isJsonSnapshotComplete(
+    await waitMs(CREATE_RECOVERY_SETTLE_MS);
+
+    const check = await findCommittedJsonSnapshotScalars(
         sessionId,
         userId,
         expectedQuestionCount,
-    ).catch(() => false);
+    );
 
-    return recovered ? { id: sessionId } : null;
+    if (!check.complete) {
+        return null;
+    }
+
+    return { id: sessionId, startedAt: check.startedAt };
 }
 
 async function startQuizSessionWithPick(
@@ -634,31 +967,52 @@ async function createJsonSnapshotSession(
     const snapshotData = buildSnapshotData(input, input.pickedQuestions);
 
     try {
-        // Timed: дедлайн Date.now()+duration после connect (TIMESTAMP without TZ).
-        // Abandon — отдельный pooled hop до pick, не UPDATE+JSONB на этом клиенте.
-        const created = await withDirectPgWriteClient(
-            async (client) => {
-                const inserted = await insertQuizSessionWithSnapshotData(
-                    client,
-                    sessionId,
-                    input,
-                    snapshotData,
-                );
+        if (input.survivalRunId != null) {
+            const created = await createSurvivalJsonSnapshotSession(
+                sessionId,
+                input,
+                snapshotData,
+            );
 
-                return { id: sessionId, timedEndsAt: inserted.timedEndsAt };
-            },
-            {
-                debugLabel: 'quiz.start.create',
-                attemptTimeoutMs: QUIZ_START_WRITE_ATTEMPT_MS,
-            },
-        );
+            stashPlayLoadHandoff(
+                created.id,
+                input,
+                snapshotData,
+                created.timedEndsAt,
+                created.startedAt,
+            );
 
-        // Вопросы уже в памяти — не SELECT TOAST на play-load (Windows hang).
+            return { id: created.id };
+        }
+
+        logJsonSnapshotCreateDiagnostics(input, snapshotData, 'direct');
+
+        const writeSnapshot = async (client: Client) => {
+            const inserted = await insertQuizSessionWithSnapshotData(
+                client,
+                sessionId,
+                input,
+                snapshotData,
+            );
+
+            return {
+                id: sessionId,
+                timedEndsAt: inserted.timedEndsAt,
+                startedAt: inserted.startedAt,
+            };
+        };
+
+        const created = await withDirectPgWriteClient(writeSnapshot, {
+            debugLabel: 'quiz.start.create',
+            attemptTimeoutMs: QUIZ_START_WRITE_ATTEMPT_MS,
+        });
+
         stashPlayLoadHandoff(
             created.id,
             input,
             snapshotData,
             created.timedEndsAt,
+            created.startedAt,
         );
 
         return { id: created.id };
@@ -681,11 +1035,15 @@ async function createJsonSnapshotSession(
                               (input.timedDurationSeconds ?? 60) * 1000,
                       )
                     : null,
+                recovered.startedAt,
             );
-            return recovered;
+            return { id: recovered.id };
         }
 
-        await cleanupQuizSessionById(sessionId);
+        if (!isTransientDirectPgError(error)) {
+            await cleanupQuizSessionById(sessionId);
+        }
+
         throw error;
     }
 }

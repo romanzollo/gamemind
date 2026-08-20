@@ -17,11 +17,12 @@ import {
     withDirectPgClient,
     withPooledPgClient,
 } from '@/lib/db/direct-pg';
-import { takeQuizPlayLoad } from '@/entities/quiz-session/play-load-handoff';
+import { resolveQuizPlayLoadHandoff } from '@/entities/quiz-session/play-load-handoff';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type {
     QuizSessionPublicView,
+    QuizSessionSurvivalPlayView,
     SessionForSubmitResult,
     SessionReviewPayload,
     SessionSnapshotPublicQuestion,
@@ -51,6 +52,9 @@ type SessionSnapshotJsonRow = {
     question_count: number;
     snapshot_data: QuizSessionSnapshotData | string | null;
     timed_ends_at: Date | string | null;
+    started_at?: Date | string | null;
+    survival_run_id?: string | null;
+    survival_wave_index?: number | null;
     difficulty: Difficulty | null;
 };
 
@@ -61,7 +65,7 @@ type ReviewAnswerRow = {
 };
 
 /** Date/string из pg → ISO для Client Component; null остаётся null. */
-function toTimedEndsAtIso(
+function toIsoTimestamp(
     value: Date | string | null | undefined,
 ): string | null {
     if (value == null) {
@@ -77,15 +81,23 @@ function toTimedEndsAtIso(
     return date.toISOString();
 }
 
+function toTimedEndsAtIso(
+    value: Date | string | null | undefined,
+): string | null {
+    return toIsoTimestamp(value);
+}
+
 async function loadQuizSessionSnapshotData(
     sessionId: string,
     userId: string,
     debugLabel = 'quiz.session.load-snapshot',
     attemptTimeoutMs = 18_000,
 ): Promise<SessionSnapshotJsonRow | null> {
-    // SELECT-only JSONB. Не Direct: сразу после create INSERT тот же TOAST
+    // SELECT-only JSONB + скаляры (startedAt / survivalRunId / waveIndex).
+    // Не Direct: сразу после create INSERT тот же TOAST
     // на unpooled клинит Classic MIX / Blitz SINGLE (~18s×2), пока Blitz MIX
     // и Classic SINGLE иногда проходят. Cycle уже на pooled вне очереди.
+    // Не UPDATE timedEndsAt / банка на этом клиенте.
     // Timeout → null (страница retry / soft-miss), не throw на 37s overlay.
     try {
         const result = await withPooledPgClient(
@@ -97,6 +109,9 @@ async function loadQuizSessionSnapshotData(
                     "questionCount" AS "question_count",
                     "snapshotData" AS "snapshot_data",
                     "timedEndsAt" AS "timed_ends_at",
+                    "startedAt" AS "started_at",
+                    "survivalRunId" AS "survival_run_id",
+                    "survivalWaveIndex" AS "survival_wave_index",
                     "difficulty"::text AS "difficulty"
                 FROM "QuizSession"
                 WHERE
@@ -376,19 +391,98 @@ async function loadCompletedSessionReview(
  * Fallback SELECT snapshotData, если handoff промахнулся (другой инстанс / refresh).
  * Dev 5s — не ждать Windows TOAST-клин 18s×2. Prod 18s — холодный Neon после
  * redirect не должен давать ложный soft-miss. Не глобальный timeout bump.
+ * Survival dev miss: без TOAST SELECT (handoff-only) — быстрый soft-miss, не 11s loop.
  */
 const PLAY_LOAD_SNAPSHOT_TIMEOUT_MS =
     process.env.NODE_ENV === 'development' ? 5_000 : 18_000;
+
+type SurvivalPlayLoadMeta = {
+    survivalRunId: string;
+    survivalWaveIndex: number;
+    startedAt: string | null;
+};
+
+/**
+ * Скаляры без snapshotData — определить Survival до TOAST SELECT.
+ * Быстрый hop (3s): не клинить play-load на Windows JSONB class.
+ */
+async function loadSurvivalPlayLoadMeta(
+    sessionId: string,
+    userId: string,
+): Promise<SurvivalPlayLoadMeta | null> {
+    try {
+        const result = await withPooledPgClient(
+            (client) =>
+                client.query<{
+                    survival_run_id: string | null;
+                    survival_wave_index: number | null;
+                    started_at: Date | string | null;
+                }>(
+                    `
+                        SELECT
+                            "survivalRunId" AS "survival_run_id",
+                            "survivalWaveIndex" AS "survival_wave_index",
+                            "startedAt" AS "started_at"
+                        FROM "QuizSession"
+                        WHERE
+                            "id" = $1
+                            AND "userId" = $2
+                            AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                            AND "survivalRunId" IS NOT NULL
+                    `,
+                    [sessionId, userId],
+                ),
+            {
+                debugLabel: 'quiz.session.load-survival-meta',
+                attemptTimeoutMs: 3_000,
+            },
+        );
+
+        const row = result.rows[0];
+        const survivalRunId = row?.survival_run_id ?? null;
+        const survivalWaveIndex = row?.survival_wave_index ?? null;
+
+        if (
+            survivalRunId == null ||
+            survivalWaveIndex == null ||
+            survivalWaveIndex < 1
+        ) {
+            return null;
+        }
+
+        return {
+            survivalRunId,
+            survivalWaveIndex,
+            startedAt: toIsoTimestamp(row.started_at),
+        };
+    } catch (error) {
+        if (isDirectPgTimeoutError(error)) {
+            return null;
+        }
+
+        throw error;
+    }
+}
 
 async function loadSnapshotPublicQuestions(
     sessionId: string,
     userId: string,
     locale: Locale,
 ): Promise<QuizSessionPublicView | null> {
-    const handedOff = takeQuizPlayLoad(sessionId, userId);
+    const handedOff = resolveQuizPlayLoadHandoff(sessionId, userId);
 
     if (handedOff) {
         return handedOff;
+    }
+
+    // Dev-only: Survival handoff miss → scalar check → fast soft-miss без 5s TOAST loop.
+    // Prod: handoff miss нормален на serverless — сразу pooled TOAST 18s, без лишнего hop.
+    if (process.env.NODE_ENV === 'development') {
+        const survivalMeta = await loadSurvivalPlayLoadMeta(sessionId, userId);
+
+        if (survivalMeta) {
+            return null;
+        }
     }
 
     const jsonSnapshot = await loadQuizSessionSnapshotData(
@@ -402,10 +496,33 @@ async function loadSnapshotPublicQuestions(
         const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);
 
         if (snapshotData) {
+            const survivalRunId = jsonSnapshot.survival_run_id ?? null;
+            const survivalWaveIndex = jsonSnapshot.survival_wave_index ?? null;
+            const startedAt = toIsoTimestamp(jsonSnapshot.started_at);
+            let survival: QuizSessionSurvivalPlayView | null = null;
+
+            if (survivalRunId != null) {
+                // Survival без startedAt / waveIndex — soft-miss, не «пустой» банк.
+                if (
+                    !startedAt ||
+                    survivalWaveIndex == null ||
+                    survivalWaveIndex < 1
+                ) {
+                    return null;
+                }
+
+                survival = {
+                    runId: survivalRunId,
+                    waveIndex: survivalWaveIndex,
+                    startedAt,
+                };
+            }
+
             const mapped = mapSnapshotDataToPublicQuestions(
                 snapshotData,
                 jsonSnapshot.question_count,
                 locale,
+                { includeCorrectness: survival != null },
             );
 
             if (!mapped) {
@@ -419,8 +536,9 @@ async function loadSnapshotPublicQuestions(
 
             return {
                 questions,
-                timedEndsAt,
+                timedEndsAt: survival ? null : timedEndsAt,
                 difficulty: jsonSnapshot.difficulty,
+                survival,
             };
         }
     }

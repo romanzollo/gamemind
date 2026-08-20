@@ -330,6 +330,30 @@ Format:
 - Follow-up: ...
 ```
 
+### 2026-08-19 — Survival lobby copy (not a second visual world)
+
+- Scope: Feature:Survival / Prompt T-Feature lite
+- Skills used: gamemind-taste-ui
+- Files touched: `ru.ts` / `en.ts` `survivalMode` + `quiz.setupDescription`
+- What changed visually: same Timed CTA chrome; title **Одна волна** (was «Волна на банке»); dropped «Mix нет» / EASY|MEDIUM|HARD shout in meta
+- Tokens/components added: none
+- Explicitly NOT changed: scoring, snapshot, Timed clock, layout
+- Verify: `/ru/quiz` Survival card; light/dark; ru/en
+- Follow-up: Chat E submit; ADR 6–7 board polish later
+
+### 2026-08-19 — Survival lobby CTA (thin, Scoreboard Editorial)
+
+- Scope: Feature:Survival / Prompt T-Feature lite (not ADR §7 polish)
+- Skills used: gamemind-taste-ui
+- Files touched: `SurvivalModeCta.tsx`, `SurvivalModeCtaPanel.tsx`, `quiz/page.tsx`, i18n `survivalMode`
+- What changed visually:
+  - thin lobby card under Blitz: eyebrow / title / meta / EASY|MEDIUM|HARD select (no Mix);
+  - secondary start button so it does not compete with Blitz/Classic primary.
+- Tokens/components added: reuse Timed CTA chrome (`border-border`, `font-display`, hairline meta)
+- Explicitly NOT changed: scoring, snapshot JSONB, Timed clock, Survival board chip, «wave record» copy, home
+- Verify: `/ru/quiz` Survival card; guest login; light/dark; ru/en; 390px
+- Follow-up: Chat E submit + clockOk; ADR 6–7 Taste polish later
+
 ### 2026-08-19 — Leaderboard retention Layer 1 (week default + mode boards)
 
 - Scope: Feature:Leaderboard meta / Prompt T-Feature (Scoreboard Editorial)

@@ -15,6 +15,7 @@ import { QuizSessionStartError } from '@/entities/quiz-session/quiz-session.type
 export type {
     CreateQuizSessionWithSnapshotInput,
     QuizSessionPublicView,
+    QuizSessionSurvivalPlayView,
     SessionForSubmitResult,
     SessionReviewPayload,
     SessionSnapshotPublicQuestion,

@@ -11,7 +11,7 @@
  * Survival = `timedEndsAt` NULL + банк, реконструкция на submit.
  * Схема: `SurvivalRun` + `QuizSession.survivalRunId` (миграция
  * `20260819163000_survival_run`). Старт волны 1: `runSurvivalQuizStart`.
- * Play-load DTO / submit clock / Taste CTA — следующие чаты.
+ * Play-load DTO / клиентский банк — chat D; submit clock — следующий чат.
  */
 
 /**

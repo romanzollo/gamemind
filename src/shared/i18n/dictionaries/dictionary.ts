@@ -99,6 +99,26 @@ export type Dictionary = {
         loginPrompt: string;
         loginLink: string;
     };
+    /**
+     * Survival Mode CTA — только mode lobby `/quiz`.
+     * Правила count/bank — SURVIVAL_MODE_MVP_RULES; meta в словаре держим в синхроне.
+     * Полный Taste polish / «рекорд волны» — не этот срез.
+     */
+    survivalMode: {
+        eyebrow: string;
+        title: string;
+        description: string;
+        /** Мета: 12 Q · банк 20с · без Mix */
+        meta: string;
+        startButton: string;
+        loginPrompt: string;
+        loginLink: string;
+        remainingLabel: string;
+        expiredLabel: string;
+        /** Банк = 0, не все ответы: freeze, без фейкового complete. */
+        timeUpHint: string;
+        savingAnswers: string;
+    };
     auth: {
         loginTitle: string;
         registerTitle: string;
