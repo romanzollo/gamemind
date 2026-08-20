@@ -1,4 +1,9 @@
 import {
+    leaderboardFilterChipClassName,
+    leaderboardFilterChipStateClassName,
+    leaderboardFilterLabelClassName,
+} from '@/features/leaderboard/components/leaderboard-filter-chrome';
+import {
     buildLeaderboardHref,
     type LeaderboardFilters,
     type LeaderboardMode,
@@ -13,8 +18,8 @@ import { PendingLink } from '@/shared/ui';
  * нельзя смешивать в одном DISTINCT ON. Нет чипа «все режимы».
  * URL `?mode=blitz|daily` (omit = classic) — шарибельная ссылка, не client state.
  *
- * Тот же segmented control, что у периода: вторичный chrome, акцент у таблицы.
- * См. DECISIONS.md → Leaderboard retention meta — Layer 1.
+ * 4 чипа: на узком экране 2×2, иначе четвёртый («Выживание») обрезается.
+ * На sm+ — один ряд, как у периода. См. DECISIONS.md → Leaderboard Layer 1.
  */
 
 type LeaderboardModeFiltersProps = {
@@ -47,16 +52,13 @@ export function LeaderboardModeFilters({
     ];
 
     return (
-        <nav
-            className="mt-5"
-            aria-label={labels.filterModeLabel}
-        >
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
+        <nav className="mt-4" aria-label={labels.filterModeLabel}>
+            <p className={leaderboardFilterLabelClassName}>
                 {labels.filterModeLabel}
             </p>
 
             <div
-                className="flex gap-1 rounded-md border border-border bg-surface p-1"
+                className="grid grid-cols-2 gap-1 rounded-md border border-border bg-surface p-1 sm:flex"
                 role="group"
             >
                 {options.map((option) => {
@@ -74,11 +76,9 @@ export function LeaderboardModeFilters({
                             href={href}
                             aria-current={isActive ? 'page' : undefined}
                             className={[
-                                'min-h-10 flex-1 justify-center rounded-sm px-2 py-2 text-center text-xs font-semibold tracking-wide motion-safe:transition-colors sm:min-h-11 sm:px-3 sm:text-sm',
-                                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                                isActive
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'text-muted hover:bg-surface-hover hover:text-foreground',
+                                leaderboardFilterChipClassName,
+                                'sm:flex-1',
+                                leaderboardFilterChipStateClassName(isActive),
                             ].join(' ')}
                         >
                             {option.label}

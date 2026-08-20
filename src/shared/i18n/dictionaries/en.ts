@@ -48,11 +48,10 @@ export const enDictionary = {
         dailyResult: "Today's result",
     },
     dailyChallenge: {
-        eyebrow: 'Daily challenge',
+        eyebrow: 'Today',
         title: "Today's challenge",
-        description:
-            'One shared set for today. One attempt. Today’s board ranks memory — not rematches.',
-        meta: 'Medium · 10 questions · 1 attempt',
+        description: 'One shared set. One shot. Rematch tomorrow.',
+        meta: 'Medium · 10 · 1 attempt',
         startButton: 'Accept the challenge',
         continueButton: 'Continue challenge',
         viewResultButton: 'View result',
@@ -68,22 +67,21 @@ export const enDictionary = {
     },
     timedMode: {
         eyebrow: 'Timed',
-        title: 'Blitz round',
-        description:
-            'Ten questions. One minute. Pick your difficulty. The clock will not wait.',
-        meta: '10 questions · 60s · pick difficulty',
+        title: 'Blitz',
+        description: 'Ten questions. One minute. No pauses.',
+        meta: '10 · 60s · difficulty',
         leaderboardHint:
-            'The weekly board counts games from the last 7 days. Tied scores go to the faster finish.',
+            'The week counts the last 7 days. Ties go to the faster finish.',
         startButton: 'Start the blitz',
         loginPrompt: 'Sign in to play timed mode.',
         loginLink: 'Sign in',
     },
     survivalMode: {
-        eyebrow: 'Survival',
-        title: 'One wave',
+        eyebrow: 'Time bank',
+        title: 'Survival',
         description:
-            'Twelve questions. You start with twenty seconds — a right answer buys a little more time, a miss takes some away.',
-        meta: '12 questions · 20s to start · pick difficulty',
+            'A hit feeds the clock. A miss eats it. Zero ends the wave.',
+        meta: '12 · 20s to start · difficulty',
         startButton: 'Start the wave',
         loginPrompt: 'Sign in to play survival.',
         loginLink: 'Sign in',
@@ -375,15 +373,12 @@ export const enDictionary = {
     },
     quiz: {
         setupTitle: 'Modes',
-        setupDescription:
-            'Daily challenge, blitz, survival, or classic without a clock — pick one arena.',
+        setupDescription: 'Four arenas. Memory on the line.',
         classicEyebrow: 'No timer',
         classicTitle: 'Classic',
-        classicDescription:
-            'Your pace: pick difficulty and question count. No clock in the way.',
+        classicDescription: 'No clock. Your pace, your set.',
         classicMeta: 'No time limit · your set',
-        classicLeaderboardHint:
-            'The weekly board counts games from the last 7 days.',
+        classicLeaderboardHint: 'The week counts games from the last 7 days.',
         difficultyLabel: 'Difficulty',
         questionCountLabel: 'Question count',
         progressAnsweredLabel: 'Answered',
@@ -453,13 +448,13 @@ export const enDictionary = {
     },
     leaderboard: {
         title: 'Leaderboard',
-        description:
-            'Classic, Blitz, and Daily are separate boards. Classic HARD 10Q tops out at 30 points. The live board counts games from the last 7 days; all-time records live on the All time tab. Points: easy 1, medium 2, hard 3.',
-        weekWindowHint:
-            'The weekly board counts only games from the last 7 days. Play again to keep your place. All-time records live on the All time tab.',
-        allTimeHint:
-            'These are records with no date window. The live race is on the Week tab.',
-        blitzSpeedHint: 'Tied scores go to whoever finished faster.',
+        description: 'Best score on the selected board.',
+        scoringDetailsLabel: 'How scoring works',
+        scoringDetails:
+            'Easy 1 · medium 2 · hard 3. Classic HARD 10 tops out at 30. Each arena is its own board.',
+        weekWindowHint: 'Counts games from the last 7 days.',
+        allTimeHint: 'Records with no date window.',
+        blitzSpeedHint: 'Ties go to the faster finish.',
         rank: 'Rank',
         player: 'Player',
         score: 'Points',

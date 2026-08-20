@@ -85,17 +85,17 @@ export function TimedModeCtaPanel({
                 {labels.title}
             </h2>
 
-            <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+            <p className="mt-2 max-w-prose text-sm leading-snug text-muted">
                 {labels.description}
             </p>
 
             <p className="mt-3 font-mono text-xs tabular-nums text-muted">
-                <span className="border-l-2 border-primary pl-2">
+                <span className="inline border-l-2 border-primary pl-2">
                     {labels.meta}
                 </span>
             </p>
 
-            <p className="mt-2 max-w-prose text-xs leading-relaxed text-muted">
+            <p className="mt-2 hidden max-w-prose text-xs leading-snug text-muted sm:block">
                 {labels.leaderboardHint}
             </p>
 

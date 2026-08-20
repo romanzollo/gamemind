@@ -3,6 +3,7 @@
  *
  * Живёт на mode lobby `/quiz` (не на Home — anti-duplication IA).
  * Presentation only. Snapshot / SurvivalRun пишет `startSurvivalQuizAction`.
+ * Start CTA = primary (равная арена с Blitz/Classic).
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  */
 
@@ -22,7 +23,7 @@ export async function SurvivalModeCta({
     locale,
     dictionary,
     className = '',
-    startVariant = 'secondary',
+    startVariant = 'primary',
 }: SurvivalModeCtaProps) {
     const session = await auth();
 

@@ -6,6 +6,7 @@
  * Зачем Client: форма start (useActionState) + difficulty select + pending.
  * Auth решает Server parent; гость видит login, не «битую» кнопку.
  * Mix в MVP нет — Zod режет MIXED, select его не предлагает.
+ * Start CTA = primary, как Blitz/Classic: равная арена, не secondary-ghost.
  * Presentation only. Полный Taste polish / «рекорд волны» — не этот срез.
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  */
@@ -48,7 +49,7 @@ export function SurvivalModeCtaPanel({
     locale,
     dictionary,
     isAuthenticated,
-    startVariant = 'secondary',
+    startVariant = 'primary',
 }: SurvivalModeCtaPanelProps) {
     const labels = dictionary.survivalMode;
     const quizLabels = dictionary.quiz;
@@ -73,12 +74,12 @@ export function SurvivalModeCtaPanel({
                 {labels.title}
             </h2>
 
-            <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+            <p className="mt-2 max-w-prose text-sm leading-snug text-muted">
                 {labels.description}
             </p>
 
             <p className="mt-3 font-mono text-xs tabular-nums text-muted">
-                <span className="border-l-2 border-primary pl-2">
+                <span className="inline border-l-2 border-primary pl-2">
                     {labels.meta}
                 </span>
             </p>

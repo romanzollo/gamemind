@@ -17,7 +17,7 @@ type QuizSetupPageProps = {
  * Mode lobby: единственное место полных Daily / Timed / Survival / Classic.
  * Home только приглашает сюда — без дубля mode cards (IA Model 1).
  * Classic chrome живёт внутри QuizSetupForm (не отдельный eyebrow над карточкой).
- * Blitz start всегда primary (зелёный) — паритет с Classic; Daily имеет свой CTA.
+ * Start CTA у Blitz / Survival / Classic — primary: равные арены, не «серый гость».
  */
 export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
     const { locale } = await params;
@@ -31,7 +31,7 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
                     {dictionary.quiz.setupTitle}
                 </h1>
 
-                <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted sm:text-base">
+                <p className="mt-2 max-w-prose text-sm leading-snug text-muted sm:text-base sm:leading-relaxed">
                     {dictionary.quiz.setupDescription}
                 </p>
             </header>
@@ -56,7 +56,7 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
                     locale={safeLocale}
                     dictionary={dictionary}
                     className="mt-4 sm:mt-5"
-                    startVariant="secondary"
+                    startVariant="primary"
                 />
             </div>
 

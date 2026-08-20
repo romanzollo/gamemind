@@ -1,4 +1,9 @@
 import {
+    leaderboardFilterChipClassName,
+    leaderboardFilterChipStateClassName,
+    leaderboardFilterLabelClassName,
+} from '@/features/leaderboard/components/leaderboard-filter-chrome';
+import {
     buildLeaderboardHref,
     type LeaderboardDifficultyFilter,
     type LeaderboardFilters,
@@ -13,10 +18,8 @@ import { PendingLink } from '@/shared/ui';
  * Смена сложности сохраняет mode и period (неделя/блиц не сбрасываются).
  * PendingLink: лёгкий opacity при soft navigation (§11.9).
  *
- * Визуал: segmented control (один ряд в рамке), не 2×2 «кнопочная панель» —
- * фильтр = вторичный chrome под заголовком, акцент остаётся у таблицы очков.
- * Пятый чип MIXED: короткая подпись (`filterMixed` = Микс / Mix), иначе
- * пять flex-1 на 390px разъедут segmented. Mix ≠ Medium в SQL.
+ * Пять чипов: на узком экране 3+2 (basis ~30%), на sm+ один ряд.
+ * Mix ≠ Medium в SQL. Короткая подпись — `filterMixed`.
  */
 
 type LeaderboardDifficultyFiltersProps = {
@@ -52,15 +55,15 @@ export function LeaderboardDifficultyFilters({
 
     return (
         <nav
-            className="mt-4 border-b border-border pb-5"
+            className="mt-3 border-b border-border pb-4"
             aria-label={labels.filterDifficultyLabel}
         >
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
+            <p className={leaderboardFilterLabelClassName}>
                 {labels.filterDifficultyLabel}
             </p>
 
             <div
-                className="flex gap-1 rounded-md border border-border bg-surface p-1"
+                className="flex flex-wrap gap-1 rounded-md border border-border bg-surface p-1 sm:flex-nowrap"
                 role="group"
             >
                 {options.map((option) => {
@@ -78,11 +81,9 @@ export function LeaderboardDifficultyFilters({
                             href={href}
                             aria-current={isActive ? 'page' : undefined}
                             className={[
-                                'min-h-10 min-w-0 flex-1 justify-center rounded-sm px-1 py-2 text-center text-[11px] font-semibold tracking-wide motion-safe:transition-colors sm:min-h-11 sm:px-3 sm:text-sm',
-                                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                                isActive
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'text-muted hover:bg-surface-hover hover:text-foreground',
+                                leaderboardFilterChipClassName,
+                                'flex-[1_1_30%] sm:flex-1',
+                                leaderboardFilterChipStateClassName(isActive),
                             ].join(' ')}
                         >
                             {option.label}

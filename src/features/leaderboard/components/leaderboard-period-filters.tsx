@@ -1,4 +1,9 @@
 import {
+    leaderboardFilterChipClassName,
+    leaderboardFilterChipStateClassName,
+    leaderboardFilterLabelClassName,
+} from '@/features/leaderboard/components/leaderboard-filter-chrome';
+import {
     buildLeaderboardHref,
     type LeaderboardFilters,
     type LeaderboardPeriod,
@@ -11,8 +16,8 @@ import { PendingLink } from '@/shared/ui';
  *
  * Живая доска = week (omit в URL). All-time — явная вкладка `?period=all`.
  * Скользящее окно (7/30 суток), не календарный понедельник.
- * Визуал = тот же segmented control, что у режима и сложности.
- * См. parse-leaderboard-filters; DECISIONS.md → Leaderboard Layer 1.
+ * Три чипа влезают в один ряд даже на 320px; nowrap, чтобы «Всё время»
+ * не ломалось по буквам. См. parse-leaderboard-filters; DECISIONS Layer 1.
  */
 
 type LeaderboardPeriodFiltersProps = {
@@ -44,11 +49,8 @@ export function LeaderboardPeriodFilters({
     ];
 
     return (
-        <nav
-            className="mt-4"
-            aria-label={labels.filterPeriodLabel}
-        >
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
+        <nav className="mt-3" aria-label={labels.filterPeriodLabel}>
+            <p className={leaderboardFilterLabelClassName}>
                 {labels.filterPeriodLabel}
             </p>
 
@@ -71,11 +73,9 @@ export function LeaderboardPeriodFilters({
                             href={href}
                             aria-current={isActive ? 'page' : undefined}
                             className={[
-                                'min-h-10 flex-1 justify-center rounded-sm px-2 py-2 text-center text-xs font-semibold tracking-wide motion-safe:transition-colors sm:min-h-11 sm:px-3 sm:text-sm',
-                                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                                isActive
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'text-muted hover:bg-surface-hover hover:text-foreground',
+                                leaderboardFilterChipClassName,
+                                'flex-1',
+                                leaderboardFilterChipStateClassName(isActive),
                             ].join(' ')}
                         >
                             {option.label}

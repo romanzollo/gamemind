@@ -69,18 +69,9 @@ export default async function LeaderboardPage({
             <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
                 {dictionary.leaderboard.title}
             </h1>
-            <p className="mt-3 text-base leading-relaxed text-muted">
+            <p className="mt-2 text-sm text-muted sm:text-base">
                 {dictionary.leaderboard.description}
             </p>
-
-            {periodHint || showBlitzHint ? (
-                <div className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted">
-                    {periodHint ? <p>{periodHint}</p> : null}
-                    {showBlitzHint ? (
-                        <p>{dictionary.leaderboard.blitzSpeedHint}</p>
-                    ) : null}
-                </div>
-            ) : null}
 
             <LeaderboardModeFilters
                 locale={safeLocale}
@@ -123,6 +114,16 @@ export default async function LeaderboardPage({
                 }}
             />
 
+            {periodHint || showBlitzHint ? (
+                <p className="mt-3 text-xs leading-snug text-muted">
+                    {periodHint}
+                    {periodHint && showBlitzHint ? ' · ' : null}
+                    {showBlitzHint
+                        ? dictionary.leaderboard.blitzSpeedHint
+                        : null}
+                </p>
+            ) : null}
+
             {loadErrorMessage ? (
                 <InlineAlert className="mt-6">{loadErrorMessage}</InlineAlert>
             ) : null}
@@ -134,6 +135,15 @@ export default async function LeaderboardPage({
                     labels={tableLabels}
                 />
             ) : null}
+
+            <details className="mt-6 rounded-md border border-border bg-surface px-3 py-2">
+                <summary className="cursor-pointer select-none font-mono text-xs font-medium uppercase tracking-wider text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+                    {dictionary.leaderboard.scoringDetailsLabel}
+                </summary>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                    {dictionary.leaderboard.scoringDetails}
+                </p>
+            </details>
         </main>
     );
 }

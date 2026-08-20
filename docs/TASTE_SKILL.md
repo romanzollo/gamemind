@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-20 (Result review: hide unanswered from wrong/correct reveal) |
+| **Last updated** | 2026-08-20 (Lobby + leaderboard copy density; Survival CTA primary) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -48,7 +48,7 @@ Phase 5 modes / achievements inherit the system
 | **Ongoing mode** | **Active** — every new feature UI extends the lock (Prompt T-Feature + §7) |
 | **Related: §11.9 Perceived performance** | Light July 18 + **pending spinner pass** July 28 (`PendingSpinner` / `SubmitButton`) |
 
-**Next:** commit Leaderboard Layer 1 when asked → www smoke `/leaderboard` (week default). Optional mechanics TEXT wave 6. Survival is a separate epic.
+**Next:** commit lobby/leaderboard presentation pass when asked → smoke `/quiz` + `/leaderboard` at 320. Optional mechanics TEXT wave 6.
 
 ---
 
@@ -329,6 +329,21 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-20 — Lobby + leaderboard: equal arenas, compact board, living copy
+
+- Scope: Feature:lobby/leaderboard copy + filter chrome / Prompt T-Feature
+- Skills used: gamemind-taste-ui, design-taste-frontend (Scoreboard Editorial)
+- Files touched: i18n ru/en + dictionary types; Survival CTA variant; lobby cards; leaderboard page + filter chrome; `leaderboard-filter-chrome.ts`
+- What changed visually:
+  - Survival start CTA = **primary** (same green as Blitz/Classic — equal arena, not a ghost guest);
+  - mode chips **2×2 on narrow**, difficulty **3+2 wrap**; chip text nowrap;
+  - leaderboard hero = title + one line + filters + table; scoring rules in `<details>` under the board;
+  - lobby copy: short hooks, mechanics in meta; Survival title **Выживание**, eyebrow **Банк времени** (was «Одна волна»).
+- Tokens/components added: shared filter chrome helper (no new palette)
+- Explicitly NOT changed: scoring, snapshot, Direct/hot path, Prisma, Auth
+- Verify: `/ru/quiz` Survival green CTA; `/ru/leaderboard` 320 no clipped «Выживание»; light/dark; ru/en
+- Follow-up: commit when user smoke OK
 
 ### 2026-08-20 — Result review: hide unanswered (no correct-option spoiler)
 
