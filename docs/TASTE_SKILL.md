@@ -226,7 +226,7 @@ Not a locked identity. Replace when a more intentional logo exists.
 | Surface | Mark | File |
 |---------|------|------|
 | Favicon / Apple | B — rank chevrons (16px-safe) | `src/app/icon.svg`, `src/app/apple-icon.png` |
-| Header lockup | A — plaque + GM + Oswald wordmark | `src/shared/ui/game-mind-mark.tsx` |
+| Header lockup | A — GM + primary bar, no charcoal tile | `src/shared/ui/game-mind-mark.tsx` |
 | Drafts / preview | A, B, C | `docs/brand/` |
 
 Anti: gamepad, `?`, neon, second palette. Wordmark stays text (`dictionary.metadata.title`), not a PNG.
@@ -348,10 +348,10 @@ Format:
 - Scope: Feature:brand / Prompt T-Feature (presentation only)
 - Skills used: gamemind-taste-ui
 - Files touched: `src/app/icon.svg`, `src/app/apple-icon.png`, `game-mind-mark.tsx`, `site-header.tsx`, `docs/brand/*`, TASTE §4.7
-- What changed visually: tab/Apple = rank chevrons; header = plaque GM + Oswald wordmark; charcoal plaque + teal rule
+- What changed visually: tab/Apple = rank chevrons; header lockup = GM + primary bar on transparent (no charcoal tile — AA fringe on light surface)
 - Tokens/components added: `GameMindMark` (interim, not locked)
 - Explicitly NOT changed: scoring, snapshot, Prisma, Auth, quiz hot path
-- Verify: `/ru` header light/dark at 320; browser tab icon; iOS “Add to Home Screen” if convenient
+- Verify: `/ru` header light/dark at 320; logo + «Главная» after `npm run dev` restart if Direct queue wedged; browser tab icon
 - Follow-up: brand mark v2 when a more intentional logo exists (§14)
 
 ### 2026-08-20 — Survival last lock-in auto-submit (no finish CTA)

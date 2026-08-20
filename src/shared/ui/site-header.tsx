@@ -91,10 +91,12 @@ export function SiteHeader({
             <div className="relative mx-auto flex max-w-5xl items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
                 <PendingLink
                     href={localizedHref(locale, '/')}
-                    className="flex shrink-0 items-center gap-2 rounded-md font-display text-base font-semibold tracking-tight text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className="shrink-0 rounded-md font-display text-base font-semibold tracking-tight text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
-                    <GameMindMark className="size-6 shrink-0 ring-1 ring-border sm:size-7" />
-                    {dictionary.metadata.title}
+                    <span className="inline-flex items-center gap-2">
+                        <GameMindMark className="size-6 sm:size-7" />
+                        {dictionary.metadata.title}
+                    </span>
                 </PendingLink>
 
                 <nav
