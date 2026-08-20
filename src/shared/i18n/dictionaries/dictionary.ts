@@ -102,7 +102,7 @@ export type Dictionary = {
     /**
      * Survival Mode CTA — только mode lobby `/quiz`.
      * Правила count/bank — SURVIVAL_MODE_MVP_RULES; meta в словаре держим в синхроне.
-     * Полный Taste polish / «рекорд волны» — не этот срез.
+     * Result end-of-wave: rematch + honest plaque (`?wave=cut|bank`).
      */
     survivalMode: {
         eyebrow: string;
@@ -115,12 +115,22 @@ export type Dictionary = {
         loginLink: string;
         remainingLabel: string;
         expiredLabel: string;
-        /** Банк = 0, не все ответы: freeze, без фейкового complete. */
+        /** Legacy hint; mid-wave теперь auto-submit, не freeze. */
         timeUpHint: string;
         savingAnswers: string;
         chooseAnswerHint: string;
         finishWaveButton: string;
         restartButton: string;
+        /** Result primary CTA: новая волна с той же difficulty. */
+        tryAgainWave: string;
+        /** Result plaque `?wave=bank`: все 12 lock-in, банк = 0. */
+        waveEndBankEyebrow: string;
+        waveEndBankTitle: string;
+        waveEndBankBody: string;
+        /** Result plaque `?wave=cut`: банк = 0 до 12 ответов. */
+        waveEndCutEyebrow: string;
+        waveEndCutTitle: string;
+        waveEndCutBody: string;
     };
     auth: {
         loginTitle: string;

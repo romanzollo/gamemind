@@ -18,10 +18,15 @@ type QuizResultSummaryProps = {
     setupDifficulty: QuizSetupDifficulty;
     labels: Dictionary['quiz'];
     /**
-     * Primary CTA: ClassicRematchButton или TimedRematchButton.
+     * Primary CTA: ClassicRematchButton | TimedRematchButton | SurvivalRematchButton.
      * Rematch = сразу новая партия с теми же правилами сессии.
      */
     playAgainAction: ReactNode;
+    /**
+     * Secondary leaderboard href. Survival → `?mode=survival`.
+     * Default: classic board.
+     */
+    leaderboardHref?: string;
 };
 
 /**
@@ -37,6 +42,7 @@ export function QuizResultSummary({
     setupDifficulty,
     labels,
     playAgainAction,
+    leaderboardHref,
 }: QuizResultSummaryProps) {
     const scoreText =
         maxPossibleScore != null && maxPossibleScore > 0
@@ -48,6 +54,8 @@ export function QuizResultSummary({
         hard: labels.hard,
         mixed: labels.mixed,
     });
+    const resolvedLeaderboardHref =
+        leaderboardHref ?? `/${locale}/leaderboard`;
 
     return (
         <section
@@ -95,7 +103,7 @@ export function QuizResultSummary({
             >
                 {playAgainAction}
                 <Link
-                    href={`/${locale}/leaderboard`}
+                    href={resolvedLeaderboardHref}
                     className={buttonClassName({
                         variant: 'secondary',
                         className: 'w-full sm:w-auto',

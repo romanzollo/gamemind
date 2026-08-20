@@ -17,6 +17,7 @@ type QuizResultSummaryRow = {
     completed_at: Date;
     question_count: number;
     timed_ends_at: Date | string | null;
+    survival_run_id: string | null;
     difficulty: Difficulty | null;
     pool_kind: string | null;
 };
@@ -41,6 +42,8 @@ export type QuizResultSummary = {
      */
     difficulties: Difficulty[];
     isTimed: boolean;
+    /** Survival ⇔ survivalRunId IS NOT NULL (не timedEndsAt). */
+    isSurvival: boolean;
     difficulty: Difficulty | null;
     poolKind: QuizSessionPoolKind;
     /** Hidden rematch: MIXED или EASY|MEDIUM|HARD. */
@@ -235,6 +238,7 @@ async function loadResultSummaryBySessionIdForUser(
                     r."completedAt" AS "completed_at",
                     s."questionCount" AS "question_count",
                     s."timedEndsAt" AS "timed_ends_at",
+                    s."survivalRunId" AS "survival_run_id",
                     s."difficulty"::text AS "difficulty",
                     s."poolKind"::text AS "pool_kind"
                 FROM "QuizResult" r
@@ -279,6 +283,7 @@ async function loadResultSummaryBySessionIdForUser(
         completedAt: row.completed_at,
         difficulties,
         isTimed: row.timed_ends_at != null,
+        isSurvival: row.survival_run_id != null,
         difficulty: row.difficulty,
         poolKind,
         setupDifficulty,

@@ -10,6 +10,7 @@ import { ResultSecondaryPanel } from '@/features/quiz/components/ResultSecondary
 import { ClassicRematchButton } from '@/features/quiz/components/ClassicRematchButton';
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
 import { getMixedMaxPossibleScore } from '@/features/quiz/lib/mixed-difficulty-split';
+import { SurvivalRematchButton } from '@/features/survival-mode/components/SurvivalRematchButton';
 import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClockRoastBanner';
 import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
@@ -29,6 +30,16 @@ type QuizResultPageProps = {
 /** Post-submit / prefetch race: краткий retry перед soft-fail. */
 const SUMMARY_LOAD_RETRY_MS = 400;
 
+function readSingleSearchParam(
+    raw: string | string[] | undefined,
+): string | undefined {
+    if (Array.isArray(raw)) {
+        return raw[0];
+    }
+
+    return raw;
+}
+
 export default async function QuizResultPage({
     params,
     searchParams,
@@ -43,13 +54,23 @@ export default async function QuizResultPage({
     const authSession = await requireUser(safeLocale);
 
     const unlockedCodes = parseUnlockedQuery(rawSearchParams.unlocked);
-    const finishedByClock =
-        (Array.isArray(rawSearchParams.clock)
-            ? rawSearchParams.clock[0]
-            : rawSearchParams.clock) === '1';
+    const finishedByClock = readSingleSearchParam(rawSearchParams.clock) === '1';
+    const survivalWaveEnd = readSingleSearchParam(rawSearchParams.wave);
+    const survivalWaveBanner =
+        survivalWaveEnd === 'cut' || survivalWaveEnd === 'bank'
+            ? survivalWaveEnd
+            : null;
     const resultPath = `/${safeLocale}/result/${sessionId}`;
-    const resultPathAfterFlash = finishedByClock
-        ? `${resultPath}?clock=1`
+    const resultFlashParams = new URLSearchParams();
+    if (finishedByClock) {
+        resultFlashParams.set('clock', '1');
+    }
+    if (survivalWaveBanner) {
+        resultFlashParams.set('wave', survivalWaveBanner);
+    }
+    const flashSuffix = resultFlashParams.toString();
+    const resultPathAfterFlash = flashSuffix
+        ? `${resultPath}?${flashSuffix}`
         : resultPath;
 
     // Critical path: скаляры. Suspense: award + клиентский review (не JSONB в RSC).
@@ -118,7 +139,23 @@ export default async function QuizResultPage({
               : null
         : null;
 
-    const playAgainAction = summary?.isTimed ? (
+    const survivalDifficulty =
+        summary?.isSurvival &&
+        summary.setupDifficulty !== 'MIXED' &&
+        summary.difficulty
+            ? summary.difficulty
+            : null;
+
+    const playAgainAction = summary?.isSurvival ? (
+        survivalDifficulty ? (
+            <SurvivalRematchButton
+                locale={safeLocale}
+                difficulty={survivalDifficulty}
+                label={dictionary.survivalMode.tryAgainWave}
+                dictionary={dictionary}
+            />
+        ) : null
+    ) : summary?.isTimed ? (
         <TimedRematchButton
             locale={safeLocale}
             difficulty={summary.setupDifficulty}
@@ -135,6 +172,26 @@ export default async function QuizResultPage({
         />
     ) : null;
 
+    const leaderboardHref = summary?.isSurvival
+        ? `/${safeLocale}/leaderboard?mode=survival`
+        : `/${safeLocale}/leaderboard`;
+
+    const survivalLabels = dictionary.survivalMode;
+    const survivalWavePlaque =
+        summary?.isSurvival && survivalWaveBanner === 'cut'
+            ? {
+                  eyebrow: survivalLabels.waveEndCutEyebrow,
+                  title: survivalLabels.waveEndCutTitle,
+                  body: survivalLabels.waveEndCutBody,
+              }
+            : summary?.isSurvival && survivalWaveBanner === 'bank'
+              ? {
+                    eyebrow: survivalLabels.waveEndBankEyebrow,
+                    title: survivalLabels.waveEndBankTitle,
+                    body: survivalLabels.waveEndBankBody,
+                }
+              : null;
+
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
             {summaryLoadFailed || !summary ? (
@@ -143,11 +200,19 @@ export default async function QuizResultPage({
                 </InlineAlert>
             ) : (
                 <>
-                    {finishedByClock ? (
+                    {finishedByClock && summary.isTimed ? (
                         <TimedClockRoastBanner
                             eyebrow={dictionary.quiz.timedClockRoastEyebrow}
                             title={dictionary.quiz.timedClockRoastTitle}
                             body={dictionary.quiz.timedClockRoast}
+                        />
+                    ) : null}
+
+                    {survivalWavePlaque ? (
+                        <TimedClockRoastBanner
+                            eyebrow={survivalWavePlaque.eyebrow}
+                            title={survivalWavePlaque.title}
+                            body={survivalWavePlaque.body}
                         />
                     ) : null}
 
@@ -160,6 +225,7 @@ export default async function QuizResultPage({
                         setupDifficulty={summary.setupDifficulty}
                         labels={dictionary.quiz}
                         playAgainAction={playAgainAction}
+                        leaderboardHref={leaderboardHref}
                     />
 
                     <Suspense

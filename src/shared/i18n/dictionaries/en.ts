@@ -94,6 +94,15 @@ export const enDictionary = {
         chooseAnswerHint: 'Choose an answer to continue the wave.',
         finishWaveButton: 'Finish wave',
         restartButton: 'Start over',
+        tryAgainWave: 'Another wave',
+        waveEndBankEyebrow: 'Bank empty',
+        waveEndBankTitle: 'Wave complete',
+        waveEndBankBody:
+            'Score saved. The bank hit zero on your last lock-in — beat it next wave.',
+        waveEndCutEyebrow: 'Bank empty',
+        waveEndCutTitle: 'Wave cut short',
+        waveEndCutBody:
+            'Points for what you answered are saved. Unanswered questions score zero.',
     },
     auth: {
         loginTitle: 'Log in',

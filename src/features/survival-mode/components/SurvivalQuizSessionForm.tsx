@@ -6,9 +6,9 @@
  * Последовательный lock-in: один вопрос, ответ сразу фиксируется,
  * верный → +4с к remaining, неверный → −6с, unanswered не штрафуем.
  * Банк = UX от startedAt; сервер remaining не читает.
- * На 0: auto-submit только если все 12 уже lock-in (существующий
- * submitQuizAction требует ANSWER_ALL и не пишет JSONB на complete).
- * Иначе freeze + «время вышло» — partial complete = Chat E.
+ * На 0: всегда Survival submit (partial OK) → /result — без мёртвого freeze.
+ * `survivalWaveEnd=cut|bank` → honest plaque на result. Не фейковый score.
+ * Во время save: spinner + savingAnswers, не disabled «Завершить волну».
  * Не звать isSurvivalClockOk на клиенте. Не TimedQuizCountdown.
  *
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
@@ -34,7 +34,9 @@ import { SurvivalQuizBankCountdown } from '@/features/survival-mode/components/S
 import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-survival-bank-remaining-ms';
 import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { InlineAlert, PendingLink, SubmitButton } from '@/shared/ui';
+import { InlineAlert, PendingSpinner, SubmitButton } from '@/shared/ui';
+
+type SurvivalWaveEnd = 'cut' | 'bank';
 
 type SurvivalQuizSessionFormProps = {
     locale: Locale;
@@ -79,6 +81,13 @@ export function SurvivalQuizSessionForm({
         selectedAnswersRef.current = selectedAnswers;
     }, [selectedAnswers]);
 
+    // После failed auto-submit можно повторить; банк остаётся expired.
+    useEffect(() => {
+        if (state.errorCode) {
+            autoSubmitStartedRef.current = false;
+        }
+    }, [state.errorCode]);
+
     const totalQuestions = questions.length;
     const answeredCount = useMemo(
         () =>
@@ -98,7 +107,10 @@ export function SurvivalQuizSessionForm({
     const submitHintId = 'survival-submit-hint';
     const progressLabel = `${answeredCount} / ${totalQuestions}`;
     const showSubmitCta = allAnswered && !bankExpired;
-    const showTimeUpState = bankExpired && !allAnswered;
+    const showBankRetry =
+        bankExpired && Boolean(state.errorCode) && !isPending;
+    // Пока идёт auto-submit / redirect — только статус+spinner, без мёртвой CTA.
+    const showSavingState = bankExpired && !state.errorCode;
 
     const {
         initialBankSeconds,
@@ -106,48 +118,54 @@ export function SurvivalQuizSessionForm({
         wrongDeltaSeconds,
     } = SURVIVAL_MODE_MVP_RULES;
 
-    const buildSubmitFormData = useCallback(() => {
-        const form = formRef.current;
-        const formData = form ? new FormData(form) : new FormData();
-        formData.set('locale', locale);
-        formData.set('sessionId', sessionId);
-        formData.delete('finishedByTimer');
+    const buildSubmitFormData = useCallback(
+        (waveEnd: SurvivalWaveEnd | null) => {
+            // Чистый FormData из React state — не native radios
+            // (только текущий вопрос в DOM; disabled radios после expire).
+            const formData = new FormData();
+            formData.set('locale', locale);
+            formData.set('sessionId', sessionId);
 
-        for (const question of questions) {
-            const selectedOptionId = selectedAnswersRef.current[question.id];
-            if (selectedOptionId) {
-                formData.set(question.id, selectedOptionId);
-            } else {
-                formData.delete(question.id);
+            for (const question of questions) {
+                const selectedOptionId =
+                    selectedAnswersRef.current[question.id];
+                if (selectedOptionId) {
+                    formData.set(question.id, selectedOptionId);
+                }
             }
-        }
 
-        return formData;
-    }, [locale, questions, sessionId]);
+            if (waveEnd) {
+                formData.set('survivalWaveEnd', waveEnd);
+            }
 
-    const submitIfAllAnswered = useCallback(() => {
-        if (autoSubmitStartedRef.current) {
-            return;
-        }
+            return formData;
+        },
+        [locale, questions, sessionId],
+    );
+
+    const submitWave = useCallback(
+        (waveEnd: SurvivalWaveEnd | null) => {
+            if (autoSubmitStartedRef.current) {
+                return;
+            }
+
+            autoSubmitStartedRef.current = true;
+            startTransition(() => {
+                formAction(buildSubmitFormData(waveEnd));
+            });
+        },
+        [buildSubmitFormData, formAction],
+    );
+
+    const handleBankExpired = useCallback(() => {
+        setBankExpired(true);
 
         const lockedAll = questions.every(
             (question) => selectedAnswersRef.current[question.id],
         );
 
-        if (!lockedAll) {
-            return;
-        }
-
-        autoSubmitStartedRef.current = true;
-        startTransition(() => {
-            formAction(buildSubmitFormData());
-        });
-    }, [buildSubmitFormData, formAction, questions]);
-
-    const handleBankExpired = useCallback(() => {
-        setBankExpired(true);
-        submitIfAllAnswered();
-    }, [submitIfAllAnswered]);
+        submitWave(lockedAll ? 'bank' : 'cut');
+    }, [questions, submitWave]);
 
     const handleSelectOption = useCallback(
         (optionId: string) => {
@@ -182,7 +200,10 @@ export function SurvivalQuizSessionForm({
 
             if (remainingAfterLock <= 0) {
                 setBankExpired(true);
-                submitIfAllAnswered();
+                const lockedAll = questions.every(
+                    (question) => nextAnswers[question.id],
+                );
+                submitWave(lockedAll ? 'bank' : 'cut');
                 return;
             }
 
@@ -198,7 +219,8 @@ export function SurvivalQuizSessionForm({
             currentLocked,
             currentQuestion,
             initialBankSeconds,
-            submitIfAllAnswered,
+            questions,
+            submitWave,
             survival.startedAt,
             totalQuestions,
             wrongCount,
@@ -210,20 +232,32 @@ export function SurvivalQuizSessionForm({
         (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
-            if (!allAnswered || bankExpired || isPending) {
+            if (isPending) {
                 return;
             }
 
-            startTransition(() => {
-                formAction(buildSubmitFormData());
-            });
+            // Retry after failed bank auto-submit.
+            if (bankExpired && state.errorCode) {
+                const lockedAll = questions.every(
+                    (question) => selectedAnswersRef.current[question.id],
+                );
+                submitWave(lockedAll ? 'bank' : 'cut');
+                return;
+            }
+
+            if (!allAnswered || bankExpired) {
+                return;
+            }
+
+            submitWave(null);
         },
         [
             allAnswered,
             bankExpired,
-            buildSubmitFormData,
-            formAction,
             isPending,
+            questions,
+            state.errorCode,
+            submitWave,
         ],
     );
 
@@ -302,32 +336,14 @@ export function SurvivalQuizSessionForm({
                     <InlineAlert className="mb-3">{errorMessage}</InlineAlert>
                 ) : null}
 
-                {showTimeUpState ? (
-                    <div
-                        className="mb-3 rounded-md border border-border bg-surface px-3 py-2.5"
-                        role="status"
-                    >
-                        <p className="text-sm font-semibold text-foreground">
-                            {labels.expiredLabel}
-                        </p>
-                        <p className="mt-1 text-sm leading-snug text-muted">
-                            {labels.timeUpHint}
-                        </p>
-                        <PendingLink
-                            href={`/${locale}/quiz`}
-                            className="mt-3 inline-flex min-h-10 items-center justify-center rounded-sm border border-border px-3 py-2 text-sm font-semibold text-foreground hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                        >
-                            {labels.restartButton}
-                        </PendingLink>
-                    </div>
-                ) : null}
-
-                {bankExpired && allAnswered && isPending ? (
+                {showSavingState ? (
                     <p
-                        className="mb-2 text-sm leading-snug text-muted sm:mb-3"
+                        className="mb-3 flex min-h-10 items-center justify-center gap-2 text-sm leading-snug text-muted"
                         role="status"
+                        aria-live="polite"
                     >
-                        {labels.savingAnswers}
+                        <PendingSpinner className="text-primary" />
+                        <span>{labels.savingAnswers}</span>
                     </p>
                 ) : null}
 
@@ -340,9 +356,9 @@ export function SurvivalQuizSessionForm({
                     </p>
                 ) : null}
 
-                {showSubmitCta || (bankExpired && allAnswered && isPending) ? (
+                {showSubmitCta || showBankRetry ? (
                     <SubmitButton
-                        disabled={!showSubmitCta || isPending}
+                        disabled={isPending}
                         pendingLabel={dictionary.common.submitting}
                         className="w-full"
                     >

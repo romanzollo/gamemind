@@ -94,6 +94,15 @@ export const ruDictionary: Dictionary = {
         chooseAnswerHint: 'Выбери ответ, чтобы продолжить волну.',
         finishWaveButton: 'Завершить волну',
         restartButton: 'Начать заново',
+        tryAgainWave: 'Ещё волна',
+        waveEndBankEyebrow: 'Банк кончился',
+        waveEndBankTitle: 'Волна завершена',
+        waveEndBankBody:
+            'Очки сохранены. Банк обнулился на последнем ответе — можно перебить результат.',
+        waveEndCutEyebrow: 'Банк кончился',
+        waveEndCutTitle: 'Волна оборвалась',
+        waveEndCutBody:
+            'Очки за то, что успел ответить, сохранены. Неотвеченные не дают баллов.',
     },
     auth: {
         loginTitle: 'Вход',
