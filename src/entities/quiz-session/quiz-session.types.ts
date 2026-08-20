@@ -136,6 +136,14 @@ export type SessionForSubmitResult =
            */
           timedEndsAt: string | null;
           snapshotData: QuizSessionSnapshotData | null;
+          /**
+           * Survival-мета submit: нужна только для серверной сверки банка.
+           * Для Classic/Blitz/Daily = null.
+           */
+          survival: {
+              runId: string;
+              startedAt: string;
+          } | null;
       };
 
 /**

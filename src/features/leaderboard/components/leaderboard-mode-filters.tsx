@@ -9,7 +9,7 @@ import { PendingLink } from '@/shared/ui';
 /**
  * Чипы режима на публичном рейтинге (Scoreboard Editorial).
  *
- * Classic / Blitz / Daily — взаимоисключающие доски: разные потолки,
+ * Classic / Blitz / Daily / Survival — взаимоисключающие доски: разные потолки,
  * нельзя смешивать в одном DISTINCT ON. Нет чипа «все режимы».
  * URL `?mode=blitz|daily` (omit = classic) — шарибельная ссылка, не client state.
  *
@@ -25,6 +25,7 @@ type LeaderboardModeFiltersProps = {
         filterModeClassic: string;
         filterModeBlitz: string;
         filterModeDaily: string;
+        filterModeSurvival: string;
     };
 };
 
@@ -42,6 +43,7 @@ export function LeaderboardModeFilters({
         { value: 'classic', label: labels.filterModeClassic },
         { value: 'blitz', label: labels.filterModeBlitz },
         { value: 'daily', label: labels.filterModeDaily },
+        { value: 'survival', label: labels.filterModeSurvival },
     ];
 
     return (

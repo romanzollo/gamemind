@@ -20,6 +20,7 @@ import {
     useMemo,
     useRef,
     useState,
+    useEffect,
     startTransition,
     type FormEvent,
 } from 'react';
@@ -33,7 +34,7 @@ import { SurvivalQuizBankCountdown } from '@/features/survival-mode/components/S
 import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-survival-bank-remaining-ms';
 import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton } from '@/shared/ui';
+import { InlineAlert, PendingLink, SubmitButton } from '@/shared/ui';
 
 type SurvivalQuizSessionFormProps = {
     locale: Locale;
@@ -74,7 +75,9 @@ export function SurvivalQuizSessionForm({
     const [wrongCount, setWrongCount] = useState(0);
     const [bankExpired, setBankExpired] = useState(false);
 
-    selectedAnswersRef.current = selectedAnswers;
+    useEffect(() => {
+        selectedAnswersRef.current = selectedAnswers;
+    }, [selectedAnswers]);
 
     const totalQuestions = questions.length;
     const answeredCount = useMemo(
@@ -94,6 +97,8 @@ export function SurvivalQuizSessionForm({
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
     const submitHintId = 'survival-submit-hint';
     const progressLabel = `${answeredCount} / ${totalQuestions}`;
+    const showSubmitCta = allAnswered && !bankExpired;
+    const showTimeUpState = bankExpired && !allAnswered;
 
     const {
         initialBankSeconds,
@@ -297,13 +302,24 @@ export function SurvivalQuizSessionForm({
                     <InlineAlert className="mb-3">{errorMessage}</InlineAlert>
                 ) : null}
 
-                {bankExpired && !allAnswered ? (
-                    <p
-                        className="mb-2 text-sm leading-snug text-muted sm:mb-3"
+                {showTimeUpState ? (
+                    <div
+                        className="mb-3 rounded-md border border-border bg-surface px-3 py-2.5"
                         role="status"
                     >
-                        {labels.timeUpHint}
-                    </p>
+                        <p className="text-sm font-semibold text-foreground">
+                            {labels.expiredLabel}
+                        </p>
+                        <p className="mt-1 text-sm leading-snug text-muted">
+                            {labels.timeUpHint}
+                        </p>
+                        <PendingLink
+                            href={`/${locale}/quiz`}
+                            className="mt-3 inline-flex min-h-10 items-center justify-center rounded-sm border border-border px-3 py-2 text-sm font-semibold text-foreground hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                        >
+                            {labels.restartButton}
+                        </PendingLink>
+                    </div>
                 ) : null}
 
                 {bankExpired && allAnswered && isPending ? (
@@ -320,22 +336,19 @@ export function SurvivalQuizSessionForm({
                         id={submitHintId}
                         className="mb-2 text-sm leading-snug text-muted sm:mb-3"
                     >
-                        {dictionary.quiz.errors.answerAll}
+                        {labels.chooseAnswerHint}
                     </p>
                 ) : null}
 
-                <SubmitButton
-                    disabled={!allAnswered || bankExpired || isPending}
-                    pendingLabel={dictionary.common.submitting}
-                    className="w-full"
-                    aria-describedby={
-                        !allAnswered && !bankExpired
-                            ? submitHintId
-                            : undefined
-                    }
-                >
-                    {dictionary.quiz.submitButton}
-                </SubmitButton>
+                {showSubmitCta || (bankExpired && allAnswered && isPending) ? (
+                    <SubmitButton
+                        disabled={!showSubmitCta || isPending}
+                        pendingLabel={dictionary.common.submitting}
+                        className="w-full"
+                    >
+                        {labels.finishWaveButton}
+                    </SubmitButton>
+                ) : null}
             </div>
         </form>
     );

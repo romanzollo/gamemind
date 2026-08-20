@@ -91,6 +91,8 @@ export default async function LeaderboardPage({
                         dictionary.leaderboard.filterModeClassic,
                     filterModeBlitz: dictionary.leaderboard.filterModeBlitz,
                     filterModeDaily: dictionary.leaderboard.filterModeDaily,
+                    filterModeSurvival:
+                        dictionary.leaderboard.filterModeSurvival,
                 }}
             />
 

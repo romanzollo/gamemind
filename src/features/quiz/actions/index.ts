@@ -12,6 +12,7 @@ import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start'
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
 import { buildCompactReviewPayload } from '@/features/quiz/lib/build-compact-review-payload';
+import { isSurvivalClockOk } from '@/features/survival-mode/lib/is-survival-clock-ok';
 import type { QuizFormState } from '@/features/quiz/types';
 
 // получение локали из формы
@@ -118,6 +119,8 @@ export async function submitQuizAction(
 
     const { sessionId: quizSessionId, questions } = sessionForSubmit;
     const isTimedSession = sessionForSubmit.timedEndsAt != null;
+    const survivalSubmitMeta = sessionForSubmit.survival;
+    const isSurvivalSession = survivalSubmitMeta != null;
     // Дедлайн прошёл (с grace) — всё равно сохраняем partial и идём на result
     // с roast (?clock=1). Раньше здесь был TIMED_OUT void + recovery на квизе;
     // продукт: всегда страница результата, как Kahoot/LMS.
@@ -138,7 +141,9 @@ export async function submitQuizAction(
     // Classic/daily: все ответы обязательны.
     // Timed manual finish: тоже все ответы.
     // Timed auto-submit (finishedByTimer): partial OK — пустые = 0 в scoring.
-    const requireAllAnswers = !isTimedSession || !finishedByTimer;
+    // Survival: partial OK (bank=0 до 12 ответов).
+    const requireAllAnswers =
+        (!isTimedSession && !isSurvivalSession) || (isTimedSession && !finishedByTimer);
     if (requireAllAnswers) {
         const allAnswered = answers.every(
             (answer) => answer.selectedOptionId.length > 0,
@@ -188,6 +193,17 @@ export async function submitQuizAction(
             isCorrect: selectedOption?.isCorrect ?? false,
         };
     });
+    const completedAt = new Date();
+    const survivalClockOk = survivalSubmitMeta
+        ? isSurvivalClockOk({
+              startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
+              completedAtMs: completedAt.getTime(),
+              correctCount: answerRows.filter((answer) => answer.isCorrect)
+                  .length,
+              wrongCount: answerRows.filter((answer) => !answer.isCorrect)
+                  .length,
+          })
+        : null;
 
     // Slim review из уже загруженного snapshot — без второго TOAST read на result.
     const reviewPayload = sessionForSubmit.snapshotData
@@ -207,6 +223,8 @@ export async function submitQuizAction(
             score: scoreResult.score,
             totalQuestions: scoreResult.totalQuestions,
             correctCount: scoreResult.correctCount,
+            completedAt,
+            survivalClockOk,
             answers: answerRows.map((answer) => ({
                 questionId: answer.questionId,
                 selectedOptionId: answer.selectedOptionId,

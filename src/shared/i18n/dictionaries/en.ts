@@ -91,6 +91,9 @@ export const enDictionary = {
         expiredLabel: 'Time is up',
         timeUpHint: 'Time is up. Answers are frozen.',
         savingAnswers: 'Time’s up — saving what you got…',
+        chooseAnswerHint: 'Choose an answer to continue the wave.',
+        finishWaveButton: 'Finish wave',
+        restartButton: 'Start over',
     },
     auth: {
         loginTitle: 'Log in',
@@ -462,6 +465,7 @@ export const enDictionary = {
         filterModeClassic: 'Classic',
         filterModeBlitz: 'Blitz',
         filterModeDaily: 'Daily',
+        filterModeSurvival: 'Survival',
         filterDifficultyLabel: 'Difficulty',
         filterAll: 'All',
         filterMixed: 'Mix',

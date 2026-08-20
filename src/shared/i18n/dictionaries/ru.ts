@@ -91,6 +91,9 @@ export const ruDictionary: Dictionary = {
         expiredLabel: 'Время вышло',
         timeUpHint: 'Время вышло. Ответы заморожены.',
         savingAnswers: 'Время вышло — сохраняем, что успел…',
+        chooseAnswerHint: 'Выбери ответ, чтобы продолжить волну.',
+        finishWaveButton: 'Завершить волну',
+        restartButton: 'Начать заново',
     },
     auth: {
         loginTitle: 'Вход',
@@ -479,6 +482,7 @@ export const ruDictionary: Dictionary = {
         filterModeClassic: 'Классика',
         filterModeBlitz: 'Блиц',
         filterModeDaily: 'Челлендж',
+        filterModeSurvival: 'Выживание',
         filterDifficultyLabel: 'Сложность',
         filterAll: 'Все',
         filterMixed: 'Микс',

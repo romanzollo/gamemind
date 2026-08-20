@@ -29,9 +29,9 @@ export type LeaderboardPeriod = 'week' | 'month' | 'all';
 /**
  * Режим доски. Не QuizSession.status и не play-mode Survival.
  * SQL: скаляры `dailyChallengeId` / `timedEndsAt` / `survivalRunId` (не snapshotData).
- * Survival — отдельная доска (ещё не chip); Classic WHERE требует `survivalRunId IS NULL`.
+ * Survival — отдельная доска; Classic WHERE требует `survivalRunId IS NULL`.
  */
-export type LeaderboardMode = 'classic' | 'blitz' | 'daily';
+export type LeaderboardMode = 'classic' | 'blitz' | 'daily' | 'survival';
 
 /** Сложность рейтинга после parse. `MIXED` = poolKind, не Question.difficulty. */
 export type LeaderboardDifficultyFilter = QuizSetupDifficulty | 'all';
@@ -63,7 +63,7 @@ const leaderboardFiltersSchema = z.object({
     // Независимое catch: битый ключ не должен сбрасывать остальные.
     difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'MIXED', 'all']).catch('all'),
     period: z.enum(['week', 'month', 'all']).catch('week'),
-    mode: z.enum(['classic', 'blitz', 'daily']).catch('classic'),
+    mode: z.enum(['classic', 'blitz', 'daily', 'survival']).catch('classic'),
 });
 
 function firstParam(

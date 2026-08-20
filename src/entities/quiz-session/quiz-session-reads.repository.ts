@@ -41,6 +41,8 @@ type SnapshotScoringRow = {
     session_id: string;
     question_count: number;
     timed_ends_at: Date | string | null;
+    started_at: Date | string | null;
+    survival_run_id: string | null;
     question_id: string | null;
     difficulty: Difficulty | null;
     option_id: string | null;
@@ -190,6 +192,24 @@ async function loadSessionForSubmit(
                       questions,
                       timedEndsAt: toTimedEndsAtIso(jsonSnapshot.timed_ends_at),
                       snapshotData,
+                      survival: (() => {
+                          if (
+                              !jsonSnapshot.survival_run_id ||
+                              !jsonSnapshot.started_at
+                          ) {
+                              return null;
+                          }
+                          const startedAt = toIsoTimestamp(
+                              jsonSnapshot.started_at,
+                          );
+                          if (!startedAt) {
+                              return null;
+                          }
+                          return {
+                              runId: jsonSnapshot.survival_run_id,
+                              startedAt,
+                          };
+                      })(),
                   }
                 : { status: 'invalid_snapshot' };
         }
@@ -202,6 +222,8 @@ async function loadSessionForSubmit(
                     s."id" AS "session_id",
                     s."questionCount" AS "question_count",
                     s."timedEndsAt" AS "timed_ends_at",
+                    s."startedAt" AS "started_at",
+                    s."survivalRunId" AS "survival_run_id",
                     q."id" AS "question_id",
                     q."difficulty"::text AS "difficulty",
                     ao."id" AS "option_id",
@@ -268,6 +290,19 @@ async function loadSessionForSubmit(
         questions: Array.from(questions.values()),
         timedEndsAt: toTimedEndsAtIso(firstRow.timed_ends_at),
         snapshotData: null,
+        survival: (() => {
+            if (!firstRow.survival_run_id || !firstRow.started_at) {
+                return null;
+            }
+            const startedAt = toIsoTimestamp(firstRow.started_at);
+            if (!startedAt) {
+                return null;
+            }
+            return {
+                runId: firstRow.survival_run_id,
+                startedAt,
+            };
+        })(),
     };
 }
 

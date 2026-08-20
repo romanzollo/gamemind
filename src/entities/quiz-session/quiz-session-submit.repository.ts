@@ -38,6 +38,8 @@ type CompleteQuizSessionWithResultInput = {
     score: number;
     totalQuestions: number;
     correctCount: number;
+    completedAt?: Date;
+    survivalClockOk?: boolean | null;
     answers: CompleteQuizAnswerInput[];
     /** Slim bilingual review — пишется после complete, не блокирует submit. */
     reviewPayload?: CompactReviewPayloadV1 | null;
@@ -271,14 +273,26 @@ async function completeQuizSessionWithPgClient(
                 const updateResult = await client.query(
                     `
                 UPDATE "QuizSession"
-                SET "status" = $1::"QuizSessionStatus", "completedAt" = NOW()
+                SET
+                    "status" = $1::"QuizSessionStatus",
+                    "completedAt" = $4::timestamp,
+                    "survivalClockOk" = CASE
+                        WHEN "survivalRunId" IS NOT NULL THEN $5::boolean
+                        ELSE NULL
+                    END
                 WHERE
                     "id" = $2
                     AND "userId" = $3
                     AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
                 RETURNING "id"
             `,
-                    ['COMPLETED', input.sessionId, input.userId],
+                    [
+                        'COMPLETED',
+                        input.sessionId,
+                        input.userId,
+                        input.completedAt ?? new Date(),
+                        input.survivalClockOk ?? null,
+                    ],
                 );
 
                 if (updateResult.rowCount === 0) {

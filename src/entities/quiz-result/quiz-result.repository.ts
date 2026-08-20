@@ -84,7 +84,7 @@ type LeaderboardScoreRow = {
  * Дискриминация только скалярами QuizSession (DECISIONS → Leaderboard Layer 1).
  * Classic: dailyChallengeId / timedEndsAt / survivalRunId все NULL.
  */
-export type FindBestScoresMode = 'classic' | 'blitz' | 'daily';
+export type FindBestScoresMode = 'classic' | 'blitz' | 'daily' | 'survival';
 
 /**
  * Фильтр рейтинга.
@@ -112,7 +112,7 @@ export type FindBestScoresFilters = {
 function resolveLeaderboardMode(
     mode: FindBestScoresMode | undefined,
 ): FindBestScoresMode {
-    if (mode === 'blitz' || mode === 'daily') {
+    if (mode === 'blitz' || mode === 'daily' || mode === 'survival') {
         return mode;
     }
 
@@ -129,6 +129,12 @@ function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
         return [
             's."dailyChallengeId" IS NULL',
             's."timedEndsAt" IS NOT NULL',
+        ];
+    }
+    if (mode === 'survival') {
+        return [
+            's."survivalRunId" IS NOT NULL',
+            's."survivalClockOk" IS TRUE',
         ];
     }
 

@@ -118,6 +118,9 @@ export type Dictionary = {
         /** Банк = 0, не все ответы: freeze, без фейкового complete. */
         timeUpHint: string;
         savingAnswers: string;
+        chooseAnswerHint: string;
+        finishWaveButton: string;
+        restartButton: string;
     };
     auth: {
         loginTitle: string;
@@ -552,6 +555,7 @@ export type Dictionary = {
         filterModeClassic: string;
         filterModeBlitz: string;
         filterModeDaily: string;
+        filterModeSurvival: string;
         /** aria-label группы чипов сложности */
         filterDifficultyLabel: string;
         /** Чип «все сложности» → URL без ?difficulty= */

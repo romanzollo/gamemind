@@ -156,9 +156,21 @@ describe('parseLeaderboardFilters', () => {
         expect(filters).toEqual(DEFAULTS);
     });
 
-    it('falls back to classic when mode is invalid', () => {
+    it('parses Survival board from ?mode=', () => {
         const filters = parseLeaderboardFilters({
             mode: 'survival',
+        });
+
+        expect(filters).toEqual({
+            difficulty: 'all',
+            period: 'week',
+            mode: 'survival',
+        });
+    });
+
+    it('falls back to classic when mode is invalid', () => {
+        const filters = parseLeaderboardFilters({
+            mode: 'arena',
         });
 
         expect(filters).toEqual(DEFAULTS);
@@ -166,7 +178,7 @@ describe('parseLeaderboardFilters', () => {
 
     it('keeps a valid period when mode is invalid', () => {
         const filters = parseLeaderboardFilters({
-            mode: 'survival',
+            mode: 'arena',
             period: 'all',
         });
 
