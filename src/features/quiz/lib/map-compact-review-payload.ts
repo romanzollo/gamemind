@@ -1,5 +1,9 @@
 /**
- * CompactReviewPayload → строки UI разбора (locale + unanswered label).
+ * CompactReviewPayload → строки UI разбора.
+ *
+ * Неотвеченные (Blitz timer / Survival mid-wave / пропуск) не входят в список:
+ * иначе фильтр «Ошибки» раскрывает correctOption — спойлер банка, а не разбор хода.
+ * Счёт summary сюда не ходит. Canon: review best-effort, не complete hop.
  */
 
 import {
@@ -14,15 +18,20 @@ export function mapCompactReviewPayloadToItems(
     payload: CompactReviewPayloadV1,
     options: {
         locale: Locale;
-        unansweredLabel: string;
     },
 ): QuizResultReviewItem[] {
-    return payload.items.map((item) => {
+    const items: QuizResultReviewItem[] = [];
+
+    for (const item of payload.items) {
         const selectedIsUnanswered =
             item.selectedOptionId === REVIEW_UNANSWERED_OPTION_ID ||
             item.selectedTexts == null;
 
-        return {
+        if (selectedIsUnanswered) {
+            continue;
+        }
+
+        items.push({
             questionId: item.questionId,
             position: item.position,
             text: pickSnapshotText(item.texts, undefined, options.locale),
@@ -31,13 +40,11 @@ export function mapCompactReviewPayloadToItems(
             isCorrect: item.isCorrect,
             selectedOption: {
                 id: item.selectedOptionId,
-                text: selectedIsUnanswered
-                    ? options.unansweredLabel
-                    : pickSnapshotText(
-                          item.selectedTexts ?? undefined,
-                          undefined,
-                          options.locale,
-                      ),
+                text: pickSnapshotText(
+                    item.selectedTexts ?? undefined,
+                    undefined,
+                    options.locale,
+                ),
             },
             correctOption: {
                 id: item.correctOptionId,
@@ -47,6 +54,8 @@ export function mapCompactReviewPayloadToItems(
                     options.locale,
                 ),
             },
-        };
-    });
+        });
+    }
+
+    return items;
 }

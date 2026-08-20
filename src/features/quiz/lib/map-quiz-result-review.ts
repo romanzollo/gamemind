@@ -1,19 +1,16 @@
+import { REVIEW_UNANSWERED_OPTION_ID } from '@/entities/quiz-result/compact-review-payload';
 import type { SessionReviewPayload } from '@/entities/quiz-session/quiz-session.repository';
 import type { QuizResultReviewItem } from '@/features/quiz/types';
 
-type MapQuizResultReviewOptions = {
-    /** Подпись «Без ответа» для timed partial / пропусков. */
-    unansweredLabel: string;
-};
-
 /**
  * Snapshot + answers → строки разбора.
- * Вопросы без ответа тоже показываем как wrong (иначе фильтр «Ошибки»
- * пустой при timed auto-submit с частичными ответами).
+ *
+ * Только вопросы с реальным выбором. Неотвеченные не показываем и не
+ * раскрываем correctOption (Blitz / Survival partial ≠ «ошибка в банке»).
+ * Счёт summary не строится отсюда.
  */
 export function mapQuizResultReview(
     payload: SessionReviewPayload | null,
-    options: MapQuizResultReviewOptions,
 ): QuizResultReviewItem[] {
     if (!payload) {
         return [];
@@ -35,23 +32,10 @@ export function mapQuizResultReview(
             continue;
         }
 
-        if (!answer) {
-            items.push({
-                questionId: question.id,
-                position: question.position,
-                text: question.text,
-                type: question.type,
-                imageUrl: question.imageUrl ?? null,
-                isCorrect: false,
-                selectedOption: {
-                    id: '__unanswered__',
-                    text: options.unansweredLabel,
-                },
-                correctOption: {
-                    id: correctOption.id,
-                    text: correctOption.text,
-                },
-            });
+        if (
+            !answer ||
+            answer.selectedOptionId === REVIEW_UNANSWERED_OPTION_ID
+        ) {
             continue;
         }
 

@@ -11,7 +11,7 @@ import type { QuestionType } from '@/types';
 
 export const COMPACT_REVIEW_PAYLOAD_VERSION = 1 as const;
 
-/** Маркер «без ответа» (timed partial) — UI подставляет unansweredLabel. */
+/** Маркер «без ответа» (timed partial). Mapper разбора такие items пропускает. */
 export const REVIEW_UNANSWERED_OPTION_ID = '__unanswered__';
 
 export type CompactReviewPayloadItem = {

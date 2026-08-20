@@ -54,7 +54,6 @@ export async function QuizResultReviewSection({
         review.kind === 'payload'
             ? mapCompactReviewPayloadToItems(review.payload, {
                   locale,
-                  unansweredLabel: dictionary.quiz.unansweredLabel,
               })
             : mapQuizResultReview(
                   buildSessionReviewPayloadFromSnapshot({
@@ -64,18 +63,8 @@ export async function QuizResultReviewSection({
                       answers: review.bundle.answers,
                       locale,
                   }),
-                  {
-                      unansweredLabel: dictionary.quiz.unansweredLabel,
-                  },
               );
 
-    if (reviewItems.length === 0) {
-        return (
-            <InlineAlert className="mt-4" tone="warning" role="status">
-                {dictionary.quiz.errors.reviewLoadFailed}
-            </InlineAlert>
-        );
-    }
-
+    // Пустой список валиден (все вопросы без ответа) — не путать с ошибкой загрузки.
     return <QuizResultReview items={reviewItems} labels={dictionary.quiz} />;
 }

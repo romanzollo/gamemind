@@ -14,7 +14,7 @@ import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review'
 import type { QuizResultReviewItem } from '@/features/quiz/types';
 import { DirectPgTimeoutError } from '@/lib/db/direct-pg';
 import { auth } from '@/lib/auth';
-import { getDictionary, isLocale } from '@/shared/i18n';
+import { isLocale } from '@/shared/i18n';
 
 type ReviewRouteContext = {
     params: Promise<{ sessionId: string }>;
@@ -35,7 +35,6 @@ export async function GET(
     const localeParam = new URL(request.url).searchParams.get('locale');
     const locale =
         localeParam && isLocale(localeParam) ? localeParam : 'ru';
-    const dictionary = getDictionary(locale);
 
     try {
         const review = await quizResultRepository.findReviewBySessionIdForUser(
@@ -52,7 +51,6 @@ export async function GET(
         if (review.kind === 'payload') {
             items = mapCompactReviewPayloadToItems(review.payload, {
                 locale,
-                unansweredLabel: dictionary.quiz.unansweredLabel,
             });
         } else {
             items = mapQuizResultReview(
@@ -63,9 +61,6 @@ export async function GET(
                     answers: review.bundle.answers,
                     locale,
                 }),
-                {
-                    unansweredLabel: dictionary.quiz.unansweredLabel,
-                },
             );
         }
 

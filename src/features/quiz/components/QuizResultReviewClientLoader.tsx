@@ -119,7 +119,7 @@ export function QuizResultReviewClientLoader({
         };
     }, [sessionId, locale, retryToken]);
 
-    if (items && items.length > 0) {
+    if (items !== null) {
         return <QuizResultReview items={items} labels={labels} />;
     }
 

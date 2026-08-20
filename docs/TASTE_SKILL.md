@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-19 (Leaderboard retention Layer 1 — local user smoke OK) |
+| **Last updated** | 2026-08-20 (Result review: hide unanswered from wrong/correct reveal) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -329,6 +329,17 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-20 — Result review: hide unanswered (no correct-option spoiler)
+
+- Scope: Feature:Result review
+- Skills used: gamemind-taste-ui
+- Files touched: `map-compact-review-payload.ts`, `map-quiz-result-review.ts`, review API + section + client loader
+- What changed visually: Ошибки / Верные / Все — только вопросы с выбранным ответом; неотвеченные не в списке и без `correctOption`
+- Tokens/components added: none
+- Explicitly NOT changed: scoring, complete hop, Direct, snapshot, `buildCompactReviewPayload`, `survivalClockOk`
+- Verify: Survival mid-wave; Blitz timer partial; Classic all-answered; summary `n из total` unchanged
+- Follow-up: none
 
 ### 2026-08-19 — Survival lobby copy (not a second visual world)
 
