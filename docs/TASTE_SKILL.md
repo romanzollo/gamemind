@@ -48,7 +48,7 @@ Phase 5 modes / achievements inherit the system
 | **Ongoing mode** | **Active** — every new feature UI extends the lock (Prompt T-Feature + §7) |
 | **Related: §11.9 Perceived performance** | Light July 18 + **pending spinner pass** July 28 (`PendingSpinner` / `SubmitButton`) |
 
-**Next:** commit lobby/leaderboard presentation + Survival last-Q auto-submit + review pooled when asked → smoke `/quiz` + Survival last lock-in → result review + `/leaderboard` at 320. Wave 2 = new chat.
+**Next:** interim brand mark **smoke OK** (user 2026-08-20). Commit brand + pending lobby/Survival/review when asked. Brand mark v2 = separate Taste chat (§14). Survival wave 2 = new chat.
 
 ---
 
@@ -351,8 +351,8 @@ Format:
 - What changed visually: tab/Apple = rank chevrons; header lockup = GM + primary bar on transparent (no charcoal tile — AA fringe on light surface)
 - Tokens/components added: `GameMindMark` (interim, not locked)
 - Explicitly NOT changed: scoring, snapshot, Prisma, Auth, quiz hot path
-- Verify: `/ru` header light/dark at 320; logo + «Главная» after `npm run dev` restart if Direct queue wedged; browser tab icon
-- Follow-up: brand mark v2 when a more intentional logo exists (§14)
+- Verify: **OK** (user 2026-08-20) — header light/dark; logo / «Главная» after Direct queue restart; tab icon
+- Follow-up: brand mark v2 when a more intentional logo exists (§14); no charcoal tile in header (AA fringe on light surface)
 
 ### 2026-08-20 — Survival last lock-in auto-submit (no finish CTA)
 

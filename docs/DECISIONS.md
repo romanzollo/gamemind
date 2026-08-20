@@ -1504,7 +1504,9 @@ Important decision: generated questions should not go directly into live quizzes
 
 **Decision:** Product UI follows **Scoreboard Editorial** ? sharp, competitive-but-clean, editorial scoreboard / game-press feel. Foundation work is ROADMAP ?11.8. Canon lives in `docs/TASTE_SKILL.md` (?4 lock, ?6 audit, ?13 strategy, ?14 backlog). Project skill: `.cursor/skills/gamemind-taste-ui`.
 
-**Status (2026-07-22):** Design lock **in code**. **Wave A + Wave B closed on prod** (smoke OK). Status = **`ongoing`**. New UI = Prompt T-Feature + ?7.
+**Status (2026-07-22):** Design lock **in code**. **Wave A + Wave B closed on prod** (smoke OK). Status = **`ongoing`**. New UI = Prompt T-Feature + §7.
+
+**Interim brand mark (2026-08-20):** Not a locked logo. Favicon/Apple = rank chevrons (`src/app/icon.svg`, `apple-icon.png`). Header = transparent GM + primary bar (`GameMindMark`) — no charcoal rounded tile (AA fringe on light surface). Drafts in `docs/brand/` (see README). Replace via Taste §14 «Brand mark v2»; do not invent a second palette or gamepad/`?` marks.
 
 **Tooling:** Taste Skill (always for UI discipline); Google Stitch and Pencil.dev optional for comps/specs only. Cursor + this repo are the only production-code source. Never paste generated app code from external tools.
 
