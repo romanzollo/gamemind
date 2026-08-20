@@ -12,6 +12,7 @@ import { ClassicRematchButton } from '@/features/quiz/components/ClassicRematchB
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
 import { getMixedMaxPossibleScore } from '@/features/quiz/lib/mixed-difficulty-split';
 import { SurvivalRematchButton } from '@/features/survival-mode/components/SurvivalRematchButton';
+import { SurvivalRunResultBoardView } from '@/features/survival-mode/components/SurvivalRunResultBoard';
 import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClockRoastBanner';
 import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
@@ -158,6 +159,14 @@ export default async function QuizResultPage({
               )
             : null;
 
+    const survivalRunBoard =
+        summary?.isSurvival && summary.survivalRunId
+            ? await survivalRunRepository.findSurvivalRunResultBoardForUser(
+                  summary.survivalRunId,
+                  authSession.user.id,
+              )
+            : null;
+
     const playAgainAction = summary?.isSurvival ? (
         survivalDifficulty ? (
             survivalEligibility?.canContinue ? (
@@ -266,17 +275,33 @@ export default async function QuizResultPage({
                         />
                     ) : null}
 
-                    <QuizResultSummary
-                        locale={safeLocale}
-                        score={summary.score}
-                        maxPossibleScore={maxPossibleScore}
-                        correctCount={summary.correctCount}
-                        totalQuestions={summary.totalQuestions}
-                        setupDifficulty={summary.setupDifficulty}
-                        labels={dictionary.quiz}
-                        playAgainAction={playAgainAction}
-                        leaderboardHref={leaderboardHref}
-                    />
+                    {survivalRunBoard && summary.isSurvival ? (
+                        <SurvivalRunResultBoardView
+                            locale={safeLocale}
+                            board={survivalRunBoard}
+                            currentSessionId={sessionId}
+                            waveScore={summary.score}
+                            waveMaxPossibleScore={maxPossibleScore}
+                            waveCorrectCount={summary.correctCount}
+                            waveTotalQuestions={summary.totalQuestions}
+                            labels={survivalLabels}
+                            quizLabels={dictionary.quiz}
+                            playAgainAction={playAgainAction}
+                            leaderboardHref={leaderboardHref}
+                        />
+                    ) : (
+                        <QuizResultSummary
+                            locale={safeLocale}
+                            score={summary.score}
+                            maxPossibleScore={maxPossibleScore}
+                            correctCount={summary.correctCount}
+                            totalQuestions={summary.totalQuestions}
+                            setupDifficulty={summary.setupDifficulty}
+                            labels={dictionary.quiz}
+                            playAgainAction={playAgainAction}
+                            leaderboardHref={leaderboardHref}
+                        />
+                    )}
 
                     <Suspense
                         fallback={

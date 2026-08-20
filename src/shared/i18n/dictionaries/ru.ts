@@ -106,6 +106,12 @@ export const ruDictionary: Dictionary = {
         waveEndPoolTitle: 'Вопросы закончились',
         waveEndPoolBody:
             'Все вопросы этой сложности в забеге уже сыграны. Новый забег начнёт с чистого пула.',
+        runScoreEyebrow: 'Выживание',
+        runScoreTitle: 'Результат забега',
+        runTotalLabel: 'Очки забега',
+        waveLineLabel: 'Волна {n}',
+        waveNotCounted: 'не в зачёт',
+        thisWaveLabel: 'Эта волна',
     },
     auth: {
         loginTitle: 'Вход',

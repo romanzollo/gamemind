@@ -137,6 +137,14 @@ export type Dictionary = {
         waveEndPoolEyebrow: string;
         waveEndPoolTitle: string;
         waveEndPoolBody: string;
+        /** Result: hero run total (доска). */
+        runScoreEyebrow: string;
+        runScoreTitle: string;
+        runTotalLabel: string;
+        /** `{n}` = номер волны. */
+        waveLineLabel: string;
+        waveNotCounted: string;
+        thisWaveLabel: string;
     };
     auth: {
         loginTitle: string;

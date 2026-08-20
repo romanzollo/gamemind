@@ -23,6 +23,11 @@ type SurvivalQuizBankCountdownProps = {
     wrongDeltaSeconds: number;
     remainingLabel: string;
     expiredLabel: string;
+    /**
+     * Все вопросы lock-in / идёт submit — заморозить цифры.
+     * Иначе банк продолжает тикать после конца волны и путает.
+     */
+    frozen?: boolean;
     /** Один вызов при первом remaining = 0. */
     onExpired?: () => void;
 };
@@ -70,6 +75,7 @@ export function SurvivalQuizBankCountdown({
     wrongDeltaSeconds,
     remainingLabel,
     expiredLabel,
+    frozen = false,
     onExpired,
 }: SurvivalQuizBankCountdownProps) {
     const [mounted, setMounted] = useState(false);
@@ -82,8 +88,8 @@ export function SurvivalQuizBankCountdown({
         setMounted(true);
         expiredNotifiedRef.current = false;
 
-        const tick = () => {
-            const next = getRemainingMs({
+        const readRemaining = () =>
+            getRemainingMs({
                 startedAt,
                 nowMs: Date.now(),
                 correctCount,
@@ -92,6 +98,15 @@ export function SurvivalQuizBankCountdown({
                 correctDeltaSeconds,
                 wrongDeltaSeconds,
             });
+
+        // Конец волны / submit: один снимок remaining, без interval.
+        if (frozen) {
+            setRemainingMs(readRemaining());
+            return;
+        }
+
+        const tick = () => {
+            const next = readRemaining();
             setRemainingMs(next);
 
             if (next <= 0 && !expiredNotifiedRef.current) {
@@ -113,9 +128,10 @@ export function SurvivalQuizBankCountdown({
         initialBankSeconds,
         correctDeltaSeconds,
         wrongDeltaSeconds,
+        frozen,
     ]);
 
-    const expired = mounted && remainingMs <= 0;
+    const expired = mounted && remainingMs <= 0 && !frozen;
     const display = mounted ? formatRemaining(remainingMs) : '--:--';
 
     return (
@@ -136,7 +152,9 @@ export function SurvivalQuizBankCountdown({
                 className={
                     expired
                         ? 'font-mono text-base font-semibold tabular-nums text-danger'
-                        : 'font-mono text-base font-semibold tabular-nums text-foreground'
+                        : frozen
+                          ? 'font-mono text-base font-semibold tabular-nums text-muted'
+                          : 'font-mono text-base font-semibold tabular-nums text-foreground'
                 }
                 suppressHydrationWarning
             >

@@ -106,6 +106,12 @@ export const enDictionary = {
         waveEndPoolTitle: 'No questions left',
         waveEndPoolBody:
             'Every question at this difficulty was played in this run. A new run starts fresh.',
+        runScoreEyebrow: 'Survival',
+        runScoreTitle: 'Run result',
+        runTotalLabel: 'Run score',
+        waveLineLabel: 'Wave {n}',
+        waveNotCounted: 'not counted',
+        thisWaveLabel: 'This wave',
     },
     auth: {
         loginTitle: 'Log in',

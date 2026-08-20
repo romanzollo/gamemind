@@ -690,10 +690,91 @@ export async function findSurvivalRunBankSecondsForUser(
     );
 }
 
+export type SurvivalRunResultWaveRow = {
+    sessionId: string;
+    waveIndex: number;
+    score: number;
+    correctCount: number;
+    totalQuestions: number;
+    clockOk: boolean;
+};
+
+export type SurvivalRunResultBoard = {
+    runId: string;
+    /** Авторитет доски: сумма clockOk-волн. */
+    totalScore: number;
+    waves: SurvivalRunResultWaveRow[];
+};
+
+/**
+ * Result page: run total + breakdown по волнам (скаляры, не JSONB).
+ * Pattern: hero = run total (как leaderboard), secondary = эта волна.
+ */
+export async function findSurvivalRunResultBoardForUser(
+    runId: string,
+    userId: string,
+): Promise<SurvivalRunResultBoard | null> {
+    return withPooledPgClient(
+        async (client) => {
+            const run = await loadSurvivalRunRow(client, runId, userId);
+
+            if (!run) {
+                return null;
+            }
+
+            const wavesResult = await client.query<{
+                session_id: string;
+                wave_index: number;
+                score: number;
+                correct_count: number;
+                total_questions: number;
+                clock_ok: boolean | null;
+            }>(
+                `
+                    SELECT
+                        s."id" AS session_id,
+                        s."survivalWaveIndex" AS wave_index,
+                        r."score",
+                        r."correctCount" AS correct_count,
+                        r."totalQuestions" AS total_questions,
+                        s."survivalClockOk" AS clock_ok
+                    FROM "QuizSession" s
+                    INNER JOIN "QuizResult" r
+                        ON r."sessionId" = s."id"
+                    WHERE
+                        s."survivalRunId" = $1
+                        AND s."userId" = $2
+                        AND s."survivalWaveIndex" IS NOT NULL
+                    ORDER BY s."survivalWaveIndex" ASC
+                `,
+                [runId, userId],
+            );
+
+            return {
+                runId: run.id,
+                totalScore: run.total_score,
+                waves: wavesResult.rows.map((row) => ({
+                    sessionId: row.session_id,
+                    waveIndex: row.wave_index,
+                    score: row.score,
+                    correctCount: row.correct_count,
+                    totalQuestions: row.total_questions,
+                    clockOk: row.clock_ok === true,
+                })),
+            };
+        },
+        {
+            debugLabel: 'survival.result.run-board',
+            attemptTimeoutMs: 8_000,
+        },
+    );
+}
+
 export const survivalRunRepository = {
     beginSurvivalRunForUser,
     continueSurvivalRunForUser,
     recordSurvivalWaveAfterComplete,
     findSurvivalNextWaveEligibilityForUser,
     findSurvivalRunBankSecondsForUser,
+    findSurvivalRunResultBoardForUser,
 };

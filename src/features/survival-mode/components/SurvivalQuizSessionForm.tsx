@@ -300,6 +300,11 @@ export function SurvivalQuizSessionForm({
                             wrongDeltaSeconds={wrongDeltaSeconds}
                             remainingLabel={labels.remainingLabel}
                             expiredLabel={labels.expiredLabel}
+                            frozen={
+                                waveSubmitting ||
+                                isPending ||
+                                (allAnswered && !bankExpired)
+                            }
                             onExpired={handleBankExpired}
                         />
                     </div>
