@@ -268,17 +268,34 @@ export async function submitQuizAction(
             (submitResult === 'completed' ||
                 submitResult === 'already_completed')
         ) {
+            const afterCompleteInput = {
+                runId: survivalSubmitMeta.runId,
+                userId: authSession.user.id,
+                questionIds: questions.map((question) => question.id),
+                bankRemainingSeconds: survivalBankRemainingSeconds,
+                waveScore: scoreResult.score,
+                clockOk: survivalClockOk,
+            };
+
             try {
-                await survivalRunRepository.recordSurvivalWaveAfterComplete({
-                    runId: survivalSubmitMeta.runId,
-                    userId: authSession.user.id,
-                    questionIds: questions.map((question) => question.id),
-                    bankRemainingSeconds: survivalBankRemainingSeconds,
-                    waveScore: scoreResult.score,
-                    clockOk: survivalClockOk,
-                });
+                await survivalRunRepository.recordSurvivalWaveAfterComplete(
+                    afterCompleteInput,
+                );
             } catch (error) {
-                console.warn('Survival after-complete record skipped:', error);
+                console.warn(
+                    'Survival after-complete record retry:',
+                    error,
+                );
+                try {
+                    await survivalRunRepository.recordSurvivalWaveAfterComplete(
+                        afterCompleteInput,
+                    );
+                } catch (retryError) {
+                    console.warn(
+                        'Survival after-complete record skipped:',
+                        retryError,
+                    );
+                }
             }
         }
 

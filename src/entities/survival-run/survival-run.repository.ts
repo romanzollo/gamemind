@@ -26,7 +26,8 @@ import {
 import type { Difficulty } from '@/types';
 
 const SURVIVAL_START_POOLED_ATTEMPT_MS = 18_000;
-const SURVIVAL_AFTER_COMPLETE_POOLED_MS = 12_000;
+/** Pooled after-complete: не Direct queue. 12s на cold Neon клинил record → нет continue. */
+const SURVIVAL_AFTER_COMPLETE_POOLED_MS = 18_000;
 
 export type BeginSurvivalRunInput = {
     userId: string;
@@ -401,18 +402,61 @@ export async function continueSurvivalRunForUser(
 
 /**
  * Pooled after successful complete: seen + bank + waveIndex + totalScore.
- * Не вызывать из completeWithResult / Direct queue.
+ * Мало hop'ов на одном клиенте (cold Neon). Не звать из completeWithResult.
  */
 export async function recordSurvivalWaveAfterComplete(
     input: RecordSurvivalWaveAfterCompleteInput,
 ): Promise<RecordSurvivalWaveAfterCompleteResult> {
     return withPooledPgClient(
         async (client) => {
-            const run = await loadSurvivalRunRow(
-                client,
-                input.runId,
-                input.userId,
+            const uniqueQuestionIds = Array.from(
+                new Set(input.questionIds.filter((id) => id.length > 0)),
             );
+            const scoreDelta =
+                input.clockOk && input.waveScore > 0 ? input.waveScore : 0;
+            const bankRemainingSeconds = Math.max(
+                0,
+                Math.floor(input.bankRemainingSeconds),
+            );
+
+            const stateResult = await client.query<{
+                id: string;
+                difficulty: string;
+                status: string;
+                total_score: number;
+                bank_remaining_seconds: number | null;
+                already_seen_n: number;
+                incoming_n: number;
+            }>(
+                `
+                    SELECT
+                        r."id",
+                        r."difficulty"::text AS difficulty,
+                        r."status"::text AS status,
+                        r."totalScore" AS total_score,
+                        r."bankRemainingSeconds" AS bank_remaining_seconds,
+                        (
+                            SELECT COUNT(*)::int
+                            FROM unnest($3::text[]) AS qid(id)
+                            WHERE EXISTS (
+                                SELECT 1
+                                FROM "SurvivalRunSeenQuestion" seen
+                                WHERE
+                                    seen."runId" = r."id"
+                                    AND seen."questionId" = qid.id
+                            )
+                        ) AS already_seen_n,
+                        CARDINALITY($3::text[]) AS incoming_n
+                    FROM "SurvivalRun" r
+                    WHERE
+                        r."id" = $1
+                        AND r."userId" = $2
+                    LIMIT 1
+                `,
+                [input.runId, input.userId, uniqueQuestionIds],
+            );
+
+            const run = stateResult.rows[0];
             const difficulty = run
                 ? parseSurvivalDifficulty(run.difficulty)
                 : null;
@@ -426,121 +470,124 @@ export async function recordSurvivalWaveAfterComplete(
                 };
             }
 
-            const uniqueQuestionIds = Array.from(
-                new Set(input.questionIds.filter((id) => id.length > 0)),
-            );
+            // Idempotent: волна уже записана — не двойной totalScore.
+            if (
+                run.incoming_n > 0 &&
+                run.already_seen_n >= run.incoming_n
+            ) {
+                const remainingUnseen = await countUnseenPublishedOnClient(
+                    client,
+                    input.runId,
+                    difficulty,
+                );
+                return {
+                    remainingUnseen,
+                    runCompleted: false,
+                    totalScore: run.total_score,
+                    bankRemainingSeconds:
+                        run.bank_remaining_seconds ?? 0,
+                };
+            }
 
             if (uniqueQuestionIds.length > 0) {
-                const existingSeen = await client.query<{ n: number }>(
-                    `
-                        SELECT COUNT(*)::int AS n
-                        FROM "SurvivalRunSeenQuestion"
-                        WHERE
-                            "runId" = $1
-                            AND "questionId" = ANY ($2::text[])
-                    `,
-                    [input.runId, uniqueQuestionIds],
-                );
-
-                // Idempotent retry после already_completed: не двойной totalScore.
-                if (
-                    (existingSeen.rows[0]?.n ?? 0) >= uniqueQuestionIds.length
-                ) {
-                    const remainingUnseen = await countUnseenPublishedOnClient(
-                        client,
-                        input.runId,
-                        difficulty,
-                    );
-                    return {
-                        remainingUnseen,
-                        runCompleted: run.status !== 'IN_PROGRESS',
-                        totalScore: run.total_score,
-                        bankRemainingSeconds:
-                            run.bank_remaining_seconds ?? 0,
-                    };
-                }
-
-                const values: unknown[] = [];
-                const placeholders: string[] = [];
-
-                for (const questionId of uniqueQuestionIds) {
-                    const base = values.length;
-                    placeholders.push(
-                        `($${base + 1}, $${base + 2})`,
-                    );
-                    values.push(input.runId, questionId);
-                }
-
                 await client.query(
                     `
                         INSERT INTO "SurvivalRunSeenQuestion" ("runId", "questionId")
-                        VALUES ${placeholders.join(', ')}
+                        SELECT $1, qid.id
+                        FROM unnest($2::text[]) AS qid(id)
                         ON CONFLICT ("runId", "questionId") DO NOTHING
                     `,
-                    values,
+                    [input.runId, uniqueQuestionIds],
                 );
             }
 
-            const scoreDelta =
-                input.clockOk && input.waveScore > 0 ? input.waveScore : 0;
-            const bankRemainingSeconds = Math.max(
-                0,
-                Math.floor(input.bankRemainingSeconds),
-            );
-            const nextWaveIndex = run.current_wave_index + 1;
-
-            await client.query(
+            const updated = await client.query<{
+                total_score: number;
+                bank_remaining_seconds: number;
+                remaining_unseen: number;
+                run_completed: boolean;
+            }>(
                 `
-                    UPDATE "SurvivalRun"
-                    SET
-                        "bankRemainingSeconds" = $2,
-                        "currentWaveIndex" = $3,
-                        "totalScore" = "totalScore" + $4
-                    WHERE
-                        "id" = $1
-                        AND "userId" = $5
-                        AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                    WITH bumped AS (
+                        UPDATE "SurvivalRun" AS sr
+                        SET
+                            "bankRemainingSeconds" = $2,
+                            "currentWaveIndex" = sr."currentWaveIndex" + 1,
+                            "totalScore" = sr."totalScore" + $3
+                        WHERE
+                            sr."id" = $1
+                            AND sr."userId" = $4
+                            AND sr."status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                        RETURNING
+                            sr."id",
+                            sr."difficulty",
+                            sr."totalScore",
+                            sr."bankRemainingSeconds"
+                    ),
+                    remaining AS (
+                        SELECT COUNT(*)::int AS n
+                        FROM "Question" q
+                        INNER JOIN bumped b ON TRUE
+                        WHERE
+                            q."difficulty" = b."difficulty"
+                            AND q."isActive" = true
+                            AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
+                            AND NOT EXISTS (
+                                SELECT 1
+                                FROM "SurvivalRunSeenQuestion" seen
+                                WHERE
+                                    seen."runId" = b."id"
+                                    AND seen."questionId" = q."id"
+                            )
+                    ),
+                    finished AS (
+                        UPDATE "SurvivalRun" AS sr
+                        SET
+                            "status" = 'COMPLETED'::"QuizSessionStatus",
+                            "completedAt" = $5
+                        FROM bumped b, remaining rem
+                        WHERE
+                            sr."id" = b."id"
+                            AND sr."status" = 'IN_PROGRESS'::"QuizSessionStatus"
+                            AND (
+                                b."bankRemainingSeconds" <= 0
+                                OR rem.n <= 0
+                            )
+                        RETURNING sr."id"
+                    )
+                    SELECT
+                        b."totalScore" AS total_score,
+                        b."bankRemainingSeconds" AS bank_remaining_seconds,
+                        rem.n AS remaining_unseen,
+                        EXISTS (SELECT 1 FROM finished) AS run_completed
+                    FROM bumped b
+                    CROSS JOIN remaining rem
                 `,
                 [
                     input.runId,
                     bankRemainingSeconds,
-                    nextWaveIndex,
                     scoreDelta,
                     input.userId,
+                    new Date(),
                 ],
             );
 
-            const remainingUnseen = await countUnseenPublishedOnClient(
-                client,
-                input.runId,
-                difficulty,
-            );
-            const runCompleted =
-                bankRemainingSeconds <= 0 || remainingUnseen <= 0;
-            const totalScore = run.total_score + scoreDelta;
+            const row = updated.rows[0];
 
-            if (runCompleted) {
-                const completedAt = new Date();
-                await client.query(
-                    `
-                        UPDATE "SurvivalRun"
-                        SET
-                            "status" = 'COMPLETED'::"QuizSessionStatus",
-                            "completedAt" = $2
-                        WHERE
-                            "id" = $1
-                            AND "userId" = $3
-                            AND "status" = 'IN_PROGRESS'::"QuizSessionStatus"
-                    `,
-                    [input.runId, completedAt, input.userId],
-                );
+            if (!row) {
+                return {
+                    remainingUnseen: 0,
+                    runCompleted: true,
+                    totalScore: run.total_score,
+                    bankRemainingSeconds,
+                };
             }
 
             return {
-                remainingUnseen,
-                runCompleted,
-                totalScore,
-                bankRemainingSeconds,
+                remainingUnseen: row.remaining_unseen,
+                runCompleted: row.run_completed,
+                totalScore: row.total_score,
+                bankRemainingSeconds: row.bank_remaining_seconds,
             };
         },
         {
