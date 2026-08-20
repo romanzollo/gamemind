@@ -17,7 +17,7 @@ import {
     withDirectPgClient,
     withPooledPgClient,
 } from '@/lib/db/direct-pg';
-import { resolveQuizPlayLoadHandoff } from '@/entities/quiz-session/play-load-handoff';
+import { peekSurvivalSubmitSnapshot, resolveQuizPlayLoadHandoff } from '@/entities/quiz-session/play-load-handoff';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type {
@@ -170,6 +170,84 @@ async function loadSessionForSubmit(
     sessionId: string,
     userId: string,
 ): Promise<SessionForSubmitResult> {
+    const mapJsonSnapshotToReady = (
+        jsonSnapshot: SessionSnapshotJsonRow,
+    ): SessionForSubmitResult | null => {
+        const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);
+
+        if (!snapshotData) {
+            return null;
+        }
+
+        const questions = mapSnapshotDataToScoringQuestions(
+            snapshotData,
+            jsonSnapshot.question_count,
+        );
+
+        if (!questions) {
+            return { status: 'invalid_snapshot' };
+        }
+
+        return {
+            status: 'ready',
+            sessionId: jsonSnapshot.session_id,
+            questions,
+            timedEndsAt: toTimedEndsAtIso(jsonSnapshot.timed_ends_at),
+            snapshotData,
+            survival: (() => {
+                if (
+                    !jsonSnapshot.survival_run_id ||
+                    !jsonSnapshot.started_at
+                ) {
+                    return null;
+                }
+                const startedAt = toIsoTimestamp(jsonSnapshot.started_at);
+                if (!startedAt) {
+                    return null;
+                }
+                return {
+                    runId: jsonSnapshot.survival_run_id,
+                    startedAt,
+                };
+            })(),
+        };
+    };
+
+    // Survival: scoring из памяти create. SELECT snapshotData TOAST после
+    // JSONB write — тот же Aug 14 hang (~18s, phase=operation), не «плохие ответы».
+    const survivalHandoff = peekSurvivalSubmitSnapshot(sessionId, userId);
+
+    if (survivalHandoff) {
+        const questions = mapSnapshotDataToScoringQuestions(
+            survivalHandoff.snapshotData,
+            survivalHandoff.view.questions.length,
+        );
+        const survival = survivalHandoff.view.survival;
+
+        if (questions && survival) {
+            return {
+                status: 'ready',
+                sessionId,
+                questions,
+                timedEndsAt: null,
+                snapshotData: survivalHandoff.snapshotData,
+                survival: {
+                    runId: survival.runId,
+                    startedAt: survival.startedAt,
+                },
+            };
+        }
+    }
+
+    // Dev Survival без handoff: не SELECT TOAST (тот же skip, что play-load).
+    if (process.env.NODE_ENV === 'development') {
+        const survivalMeta = await loadSurvivalPlayLoadMeta(sessionId, userId);
+
+        if (survivalMeta) {
+            return { status: 'snapshot_unavailable' };
+        }
+    }
+
     const jsonSnapshot = await loadQuizSessionSnapshotData(
         sessionId,
         userId,
@@ -177,42 +255,19 @@ async function loadSessionForSubmit(
     );
 
     if (jsonSnapshot) {
-        const snapshotData = parseSnapshotData(jsonSnapshot.snapshot_data);
-
-        if (snapshotData) {
-            const questions = mapSnapshotDataToScoringQuestions(
-                snapshotData,
-                jsonSnapshot.question_count,
-            );
-
-            return questions
-                ? {
-                      status: 'ready',
-                      sessionId: jsonSnapshot.session_id,
-                      questions,
-                      timedEndsAt: toTimedEndsAtIso(jsonSnapshot.timed_ends_at),
-                      snapshotData,
-                      survival: (() => {
-                          if (
-                              !jsonSnapshot.survival_run_id ||
-                              !jsonSnapshot.started_at
-                          ) {
-                              return null;
-                          }
-                          const startedAt = toIsoTimestamp(
-                              jsonSnapshot.started_at,
-                          );
-                          if (!startedAt) {
-                              return null;
-                          }
-                          return {
-                              runId: jsonSnapshot.survival_run_id,
-                              startedAt,
-                          };
-                      })(),
-                  }
-                : { status: 'invalid_snapshot' };
+        const mapped = mapJsonSnapshotToReady(jsonSnapshot);
+        if (mapped) {
+            return mapped;
         }
+        return { status: 'invalid_snapshot' };
+    }
+
+    // TOAST miss: Survival не имеет QuizSessionQuestion rows — не JOIN.
+    // Dev: как play-load, без второго TOAST. Prod: первый 18s hop уже был.
+    const survivalMeta = await loadSurvivalPlayLoadMeta(sessionId, userId);
+
+    if (survivalMeta) {
+        return { status: 'snapshot_unavailable' };
     }
 
     const result = await withDirectPgClient((client) => {

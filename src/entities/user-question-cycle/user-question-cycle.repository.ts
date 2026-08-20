@@ -7,7 +7,11 @@
  *   → ложный DB_TIMEOUT, хотя UPDATE уже прошёл.
  * - Raw `pg` через `withPooledPgClient` (DATABASE_URL), ВНЕ Direct quiz queue:
  *   cycle на Direct клинил start/home/submit (история A).
- * - Один client, 2–3 autocommit query; optimistic UPDATE; без Promise.race budget.
+ * - Один client, 2–3 autocommit query; optimistic UPDATE.
+ * - Pooled hop имеет wall timeout (12s): без него cycle.draw на больном Neon
+ *   держал Survival lobby 63s+. Transient после abort → verify nextState
+ *   (как quiz write recovery). Не путать с Prisma Promise.race, который
+ *   false-fail после успешного COMMIT.
  * - Transient после UPDATE → verify nextState (как quiz write recovery).
  *
  * Mix (Classic/Blitz): compute на pooled, persist на свежем pooled (не тот же
@@ -48,6 +52,12 @@ export type DrawMixedUserQuestionCycleIdsInput = {
 export type DrawMixedUserQuestionCycleIdsResult =
     | { ok: true; questionIds: string[] }
     | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' };
+
+/**
+ * Wall budget pooled cycle hop. Без лимита Survival lobby ловил cycle.draw ~63s
+ * (phase=operation). Не глобальный Direct 18s. Abort → verify nextState.
+ */
+const CYCLE_POOLED_ATTEMPT_MS = 12_000;
 
 type CycleStateRow = {
     cycle_number: number | string;
@@ -221,7 +231,7 @@ async function verifyCycleStateApplied(
     try {
         const current = await withPooledPgClient(
             (client) => loadCycleState(client, userId, difficulty),
-            { debugLabel: 'quiz.cycle.verify' },
+            { debugLabel: 'quiz.cycle.verify', attemptTimeoutMs: CYCLE_POOLED_ATTEMPT_MS },
         );
 
         return current != null && statesEqual(current, expectedNext);
@@ -333,7 +343,7 @@ async function drawQuestionIdsOnce(input: {
                         didReshuffle: computed.bag.didReshuffle,
                     };
                 },
-                { debugLabel: 'quiz.cycle.draw' },
+                { debugLabel: 'quiz.cycle.draw', attemptTimeoutMs: CYCLE_POOLED_ATTEMPT_MS },
             );
 
             if (!result.ok && result.reason === 'CONFLICT') {
@@ -393,7 +403,7 @@ async function drawMixedQuestionIdsOnce(input: {
                         difficulty: draw.difficulty,
                         needed: draw.needed,
                     }),
-                { debugLabel: 'quiz.cycle.draw' },
+                { debugLabel: 'quiz.cycle.draw', attemptTimeoutMs: CYCLE_POOLED_ATTEMPT_MS },
             );
 
             if (!computed.ok) {
@@ -420,7 +430,7 @@ async function drawMixedQuestionIdsOnce(input: {
                             bag.expected,
                             bag.nextState,
                         ),
-                    { debugLabel: 'quiz.cycle.persist' },
+                    { debugLabel: 'quiz.cycle.persist', attemptTimeoutMs: CYCLE_POOLED_ATTEMPT_MS },
                 );
 
                 if (!persisted) {

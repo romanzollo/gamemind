@@ -26,6 +26,7 @@ import type { Difficulty, QuizSessionPoolKind } from '@/types';
 import type { Locale } from '@/shared/i18n';
 import {
     isTransientDirectPgError,
+    DirectPgTimeoutError,
     withDirectPgClient,
     withDirectPgQuizStartClient,
     withDirectPgWriteClient,
@@ -77,11 +78,14 @@ type CreateQuizSessionWithJsonSnapshotInput =
 const QUIZ_START_WRITE_ATTEMPT_MS = 18_000;
 
 /**
- * Survival hop2 (JSONB UPDATE) — только pooled, только survivalRunId != null.
- * Короче 18s abort → late-commit + startedAt до hang; без лимита → вечный POST
- * на Windows next dev. 45s даёт TOAST-классу завершиться; hop3 startedAt после ok.
+ * Survival hop2 JSONB UPDATE — клиент на Windows часто не возвращает ok
+ * (45s phase=operation), хотя late-commit уже в БД. Action не ждёт этот TLS:
+ * poll `snapshotData IS NOT NULL` (без TOAST SELECT). 45s остаётся abort
+ * фонового клиента, не бюджетом лобби.
  */
 const SURVIVAL_JSONB_UPDATE_TIMEOUT_MS = 45_000;
+/** Сколько лобби ждёт scalar commit JSONB, не зависший UPDATE-сокет. */
+const SURVIVAL_JSONB_COMMIT_POLL_MS = 12_000;
 
 type QuizStartJsonWritePath = 'direct' | 'pooled' | 'split';
 
@@ -173,12 +177,17 @@ function stashPlayLoadHandoff(
         return;
     }
 
-    rememberQuizPlayLoad(sessionId, input.userId, {
-        questions: mapped,
-        timedEndsAt: timedEndsAt?.toISOString() ?? null,
-        difficulty: resolveSessionPoolInsert(input).difficulty,
-        survival,
-    });
+    rememberQuizPlayLoad(
+        sessionId,
+        input.userId,
+        {
+            questions: mapped,
+            timedEndsAt: timedEndsAt?.toISOString() ?? null,
+            difficulty: resolveSessionPoolInsert(input).difficulty,
+            survival,
+        },
+        isSurvival ? snapshotData : undefined,
+    );
 }
 
 function resolveSessionPoolInsert(input: CreateQuizSessionWithSnapshotInput): {
@@ -501,8 +510,8 @@ async function recoverSurvivalJsonSnapshotAfterWriteError(
 }
 
 /**
- * Survival wave 1: scalar INSERT → JSONB UPDATE (survival-only 45s) → startedAt UPDATE.
- * Тот же класс разделения, что Timed abandon до pick и Blitz clock после connect.
+ * Survival wave 1: scalar INSERT → JSONB UPDATE в фоне → poll IS NOT NULL
+ * → startedAt. Не ждать hung TOAST-клиент 45s на POST лобби (Aug 14 / Chat F).
  */
 async function createSurvivalJsonSnapshotSession(
     sessionId: string,
@@ -523,7 +532,8 @@ async function createSurvivalJsonSnapshotSession(
             },
         );
 
-        await withPooledPgClient(
+        // Fire JSONB write; не await на critical path лобби.
+        void withPooledPgClient(
             (client) =>
                 updateSurvivalSessionSnapshotOnClient(
                     client,
@@ -535,7 +545,17 @@ async function createSurvivalJsonSnapshotSession(
                 debugLabel: 'quiz.start.create-snapshot',
                 attemptTimeoutMs: SURVIVAL_JSONB_UPDATE_TIMEOUT_MS,
             },
+        ).catch(() => undefined);
+
+        const committed = await waitForSurvivalSnapshotCommitted(
+            sessionId,
+            input.userId,
+            input.questionCount,
         );
+
+        if (!committed) {
+            throw new DirectPgTimeoutError(SURVIVAL_JSONB_COMMIT_POLL_MS);
+        }
 
         const startedAt = await withPooledPgClient(
             (client) =>
@@ -573,6 +593,35 @@ async function createSurvivalJsonSnapshotSession(
 
         throw error;
     }
+}
+
+async function waitForSurvivalSnapshotCommitted(
+    sessionId: string,
+    userId: string,
+    expectedQuestionCount: number,
+): Promise<boolean> {
+    const deadline = Date.now() + SURVIVAL_JSONB_COMMIT_POLL_MS;
+    await waitMs(CREATE_RECOVERY_SETTLE_MS);
+
+    while (Date.now() < deadline) {
+        const check = await findCommittedJsonSnapshotScalars(
+            sessionId,
+            userId,
+            expectedQuestionCount,
+        );
+
+        if (check.complete) {
+            return true;
+        }
+
+        if (Date.now() >= deadline) {
+            break;
+        }
+
+        await waitMs(CREATE_RECOVERY_SETTLE_MS);
+    }
+
+    return false;
 }
 
 async function insertQuizSessionWithSnapshotData(

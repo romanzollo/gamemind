@@ -83,7 +83,9 @@ Do **not** “fix” this by raising global Direct timeouts or re-enabling keep-
 
 ```txt
 OK:   status check → INSERT answers → INSERT QuizResult(scalars) → UPDATE COMPLETED → outbox
+OK:   Survival scoring from create handoff snapshot (no TOAST SELECT on that hop)
 BAD:  anything that SELECT/INSERT/UPDATE large snapshotData / reviewSnapshot / fat JSONB on this hop
+BAD:  Survival submit SELECT snapshotData TOAST after JSONB create (18s hang → false INVALID_ANSWER / never redirect)
 BAD:  sync award TLS before redirect
 ```
 
@@ -169,6 +171,8 @@ Safe and expected:
 - Assuming content import or Vercel redeploy applied Prisma migrations.
 
 Snapshot at **start** already freezes the set. Submit only needs option ids + `isCorrect` from that snapshot (DB or already-loaded memory on the submit request — not a new TOAST read glued to complete).
+
+**Survival submit (Windows lab, Chat F):** peek create handoff (`peekSurvivalSubmitSnapshot`) — same Map as play-load, snapshot already in memory. Do **not** `SELECT snapshotData` after the 12Q JSONB write (18s then 45s retry still `phase=operation`). Dev handoff miss → `snapshot_unavailable` (no TOAST), like play-load. Prod isolate miss → one pooled 18s SELECT. Complete stays scalars-only.
 
 ---
 

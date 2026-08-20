@@ -113,6 +113,11 @@ export async function submitQuizAction(
         redirect(`/${locale}/result/${sessionId}`);
     }
 
+    if (sessionForSubmit.status === 'snapshot_unavailable') {
+        // Survival TOAST miss после retry — не «плохие ответы».
+        return { errorCode: 'SUBMIT_FAILED' };
+    }
+
     if (sessionForSubmit.status === 'invalid_snapshot') {
         return { errorCode: 'INVALID_ANSWER' };
     }
@@ -254,6 +259,15 @@ export async function submitQuizAction(
     // Auto-submit / late timed finish → roast на result.
     if (finishedByTimer || (isTimedSession && timedPastGrace)) {
         resultQuery.set('clock', '1');
+    }
+
+    // Survival bank=0: honest plaque (cut = mid-wave, bank = all locked at 0).
+    const survivalWaveEnd = formData.get('survivalWaveEnd');
+    if (
+        isSurvivalSession &&
+        (survivalWaveEnd === 'cut' || survivalWaveEnd === 'bank')
+    ) {
+        resultQuery.set('wave', survivalWaveEnd);
     }
 
     const querySuffix = resultQuery.toString();

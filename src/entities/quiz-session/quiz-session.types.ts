@@ -126,6 +126,11 @@ export type SessionSnapshotScoringQuestion = {
 export type SessionForSubmitResult =
     | { status: 'not_found' }
     | { status: 'invalid_snapshot' }
+    /**
+     * Survival JSONB TOAST недоступен после retry; JOIN fallback для Survival
+     * невозможен (нет QuizSessionQuestion rows). Не путать с INVALID_ANSWER.
+     */
+    | { status: 'snapshot_unavailable' }
     | {
           status: 'ready';
           sessionId: string;
