@@ -139,6 +139,8 @@ model Question {
   quizAnswers      QuizAnswer[]
   sessionQuestions QuizSessionQuestion[]
   translations     QuestionTranslation[]
+  /// Exclusion ids Survival-забега (wave 2+). Не JSONB на run.
+  survivalRunSeen  SurvivalRunSeenQuestion[]
 
   @@index([difficulty, isActive, publicationStatus])
 }
@@ -174,8 +176,9 @@ model DailyChallenge {
   sessions QuizSession[]
 }
 
-/// Забег Survival: скаляры банка/волны, без JSONB.
-/// Одна волна = один QuizSession (snapshot 12 вопросов). Волна 2+ — новая сессия, не рост TOAST.
+/// Забег Survival: скаляры банка/волны/total, без JSONB.
+/// Одна волна = один QuizSession (обычно 12; последняя может быть 1..11).
+/// Волна 2+ — новая сессия + exclusion seen, не рост TOAST.
 /// Дискриминатор сессии: `survivalRunId IS NOT NULL`. `timedEndsAt` и `dailyChallengeId` запрещены CHECK.
 /// Canon: docs/DECISIONS.md → Survival Mode MVP. Не мержить с Timed (`timedEndsAt`).
 model SurvivalRun {
@@ -190,11 +193,32 @@ model SurvivalRun {
   completedAt      DateTime?
   /// Остаток банка после успешного complete волны. Скаляр на run, не JSONB и не per-answer UPDATE.
   bankRemainingSeconds Int?
+  /// Сумма score волн с survivalClockOk=true. Доска = best run per user по этому скаляру.
+  /// Пишется pooled AFTER complete (не в completeWithResult). Wave clockOk=false не добавляет.
+  totalScore Int @default(0)
 
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sessions QuizSession[]
+  user         User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions     QuizSession[]
+  seenQuestions SurvivalRunSeenQuestion[]
 
   @@index([userId, status])
+  /// Leaderboard ?mode=survival: best totalScore per user.
+  @@index([totalScore])
+}
+
+/// Exclusion ids внутри одного SurvivalRun (без повторов между волнами).
+/// Live pool = isActive+PUBLISHED+difficulty минус эти строки.
+/// Не класть массив ids в SurvivalRun / completeWithResult (TOAST / hot path).
+/// Canon: docs/DECISIONS.md → Survival Mode MVP (wave 2+).
+model SurvivalRunSeenQuestion {
+  runId      String
+  questionId String
+
+  run      SurvivalRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  question Question    @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@id([runId, questionId])
+  @@index([questionId])
 }
 
 model QuizSession {
