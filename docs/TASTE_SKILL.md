@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-20 (Survival last-Q auto-submit; review pooled; lobby copy) |
+| **Last updated** | 2026-08-20 (interim brand mark: header GM + favicon chevrons) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -205,6 +205,7 @@ Introduced / in use:
 - InlineAlert, EmptyState, Skeleton (+ route PageSkeleton)
 - SubmitButton (`aria-busy`), PendingLink
 - SiteHeader + SiteMobileMenu (a11y: skip link, landmarks, focus restore)
+- GameMindMark (interim header lockup; not locked identity)
 
 Still optional later: Input/Label Field system, PageShell, denser Table shell.
 
@@ -217,6 +218,18 @@ Prefer `src/shared/ui/*` + tokens — not one-off page CSS.
 | DESIGN_VARIANCE | 5 | Distinct brand, not chaotic |
 | MOTION_INTENSITY | 4 overall; ≤3 on quiz options | Presence on home/result; calm answering |
 | VISUAL_DENSITY | 5 public / 7 admin | Spacious product; dense admin OK |
+
+### 4.7 Brand mark (interim — 2026-08-20)
+
+Not a locked identity. Replace when a more intentional logo exists.
+
+| Surface | Mark | File |
+|---------|------|------|
+| Favicon / Apple | B — rank chevrons (16px-safe) | `src/app/icon.svg`, `src/app/apple-icon.png` |
+| Header lockup | A — plaque + GM + Oswald wordmark | `src/shared/ui/game-mind-mark.tsx` |
+| Drafts / preview | A, B, C | `docs/brand/` |
+
+Anti: gamepad, `?`, neon, second palette. Wordmark stays text (`dictionary.metadata.title`), not a PNG.
 
 ---
 
@@ -329,6 +342,17 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-20 — Interim brand mark (favicon + header lockup)
+
+- Scope: Feature:brand / Prompt T-Feature (presentation only)
+- Skills used: gamemind-taste-ui
+- Files touched: `src/app/icon.svg`, `src/app/apple-icon.png`, `game-mind-mark.tsx`, `site-header.tsx`, `docs/brand/*`, TASTE §4.7
+- What changed visually: tab/Apple = rank chevrons; header = plaque GM + Oswald wordmark; charcoal plaque + teal rule
+- Tokens/components added: `GameMindMark` (interim, not locked)
+- Explicitly NOT changed: scoring, snapshot, Prisma, Auth, quiz hot path
+- Verify: `/ru` header light/dark at 320; browser tab icon; iOS “Add to Home Screen” if convenient
+- Follow-up: brand mark v2 when a more intentional logo exists (§14)
 
 ### 2026-08-20 — Survival last lock-in auto-submit (no finish CTA)
 
@@ -1677,6 +1701,10 @@ No app routing, no quiz logic.
 - [x] Daily Challenge today’s board under CTA (2026-07-30) — top-10 compact strip; **on prod** (user smoke OK).
 - [x] Toast Notifications MVP (2026-07-30) — Sonner + unlock flash; Scoreboard cards; live theme/locale.
 - [x] Achievement illustration semantics (Quiz Arcade) — 2026-08-16. Pack rules in DECISIONS Achievements MVP. New badges extend the plaque language (no gamepad / no `?` as quiz / no overflow-hidden).
+
+**Ongoing brand:**
+
+- [ ] Brand mark v2 — intentional logo; replace interim header GM + favicon chevrons (`docs/brand/` drafts are not canon).
 
 **Cursor start prompt for Task 1:**
 

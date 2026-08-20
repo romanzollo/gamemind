@@ -2,6 +2,7 @@
 export { Button, buttonClassName } from './button';
 export type { ButtonVariant } from './button';
 export { EmptyState } from './empty-state';
+export { GameMindMark } from './game-mind-mark';
 export { InlineAlert } from './inline-alert';
 export type { InlineAlertTone } from './inline-alert';
 export { LanguageSwitcher } from './language-switcher';

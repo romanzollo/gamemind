@@ -1,0 +1,64 @@
+<!--
+  GameMind mark C: мини-табло 1 / 2 / 3.
+  Зачем: leaderboard-язык продукта (полоски разной длины), не чеклист.
+  На 16px читается как L-угол первого места + два раннера.
+  Без цифр и галочек: они схлопываются во вкладке.
+-->
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 32 32"
+    role="img"
+    aria-label="GameMind"
+>
+    <title>GameMind scoreboard</title>
+    <defs>
+        <clipPath id="mark">
+            <rect width="32" height="32" rx="5" />
+        </clipPath>
+    </defs>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            .bg {
+                fill: #1a212c;
+            }
+            .accent {
+                fill: #3ecf8e;
+            }
+            .row {
+                fill: #c5ccd6;
+            }
+            .row-dim {
+                fill: #8b93a0;
+            }
+        }
+    </style>
+    <g clip-path="url(#mark)">
+        <rect class="bg" width="32" height="32" fill="#14181f" />
+        <rect class="accent" width="5" height="32" fill="#0b6e4f" />
+        <!-- Верхняя полоса с x=0, чтобы L была цельной (rx на x=5 давал щель) -->
+        <rect
+            class="accent"
+            x="0"
+            y="5.2"
+            width="26.4"
+            height="6.6"
+            fill="#0b6e4f"
+        />
+        <rect
+            class="row"
+            x="6.4"
+            y="13.2"
+            width="16.2"
+            height="6.2"
+            fill="#c5ccd6"
+        />
+        <rect
+            class="row-dim"
+            x="6.4"
+            y="20.6"
+            width="11.2"
+            height="6.2"
+            fill="#8b93a0"
+        />
+    </g>
+</svg>

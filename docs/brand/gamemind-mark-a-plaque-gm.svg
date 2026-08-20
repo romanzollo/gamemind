@@ -1,0 +1,55 @@
+<!--
+  GameMind mark A: plaque + GM.
+  Зачем: тот же язык, что header/home (левая primary-полоска + condensed display).
+  Читается на 16px за счёт толстых букв без тонких засечек.
+  Не подключать как шрифт: глифы геометрические path, не text.
+  fill в атрибутах: вкладка браузера часто игнорирует CSS в SVG.
+-->
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 32 32"
+    role="img"
+    aria-label="GameMind"
+>
+    <title>GameMind plaque GM</title>
+    <defs>
+        <clipPath id="mark">
+            <rect width="32" height="32" rx="5" />
+        </clipPath>
+    </defs>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            .bg {
+                fill: #1a212c;
+            }
+            .accent {
+                fill: #3ecf8e;
+            }
+            .fg {
+                fill: #e8ecf1;
+            }
+        }
+    </style>
+    <g clip-path="url(#mark)">
+        <rect class="bg" width="32" height="32" fill="#14181f" />
+        <rect class="accent" width="5" height="32" fill="#0b6e4f" />
+        <path
+            class="fg"
+            fill="#f7fffb"
+            d="M17.7 7.6H12.3A5 5 0 0 0 7.3 12.6v6.8a5 5 0 0 0 5 5h5.4v-2.9h-5.4a2.1 2.1 0 0 1-2.1-2.1v-6.8a2.1 2.1 0 0 1 2.1-2.1h5.4V7.6Z"
+        />
+        <rect
+            class="fg"
+            x="13.1"
+            y="14.65"
+            width="5.4"
+            height="2.7"
+            fill="#f7fffb"
+        />
+        <path
+            class="fg"
+            fill="#f7fffb"
+            d="M19.5 7.6h2.4l2.55 8.1 2.55-8.1H29.4v16.8h-2.3V14.3L24.45 22l-2.65-7.7v10H19.5V7.6Z"
+        />
+    </g>
+</svg>

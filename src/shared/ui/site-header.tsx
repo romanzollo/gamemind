@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import type { Dictionary, Locale } from '@/shared/i18n';
+import { GameMindMark } from './game-mind-mark';
 import { LanguageSwitcher } from './language-switcher';
 import { isNavActive, navActiveClassName } from './nav-active';
 import { PendingLink } from './pending-link';
@@ -90,9 +91,10 @@ export function SiteHeader({
             <div className="relative mx-auto flex max-w-5xl items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
                 <PendingLink
                     href={localizedHref(locale, '/')}
-                    className="shrink-0 text-base font-semibold tracking-tight text-foreground"
+                    className="flex shrink-0 items-center gap-2 rounded-md font-display text-base font-semibold tracking-tight text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
-                    GameMind
+                    <GameMindMark className="size-6 shrink-0 ring-1 ring-border sm:size-7" />
+                    {dictionary.metadata.title}
                 </PendingLink>
 
                 <nav

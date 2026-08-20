@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>GameMind — концепты знака</title>
+        <style>
+            :root {
+                --paper: #f3f5f7;
+                --ink: #14181f;
+                --muted: #5a6573;
+                --surface: #ffffff;
+                --border: #d5dbe3;
+                --charcoal: #0c0f14;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family:
+                    'IBM Plex Sans',
+                    system-ui,
+                    sans-serif;
+                background: var(--paper);
+                color: var(--ink);
+                line-height: 1.45;
+            }
+            main {
+                max-width: 64rem;
+                margin: 0 auto;
+                padding: 2rem 1.25rem 4rem;
+            }
+            h1 {
+                font-family: Oswald, system-ui, sans-serif;
+                font-weight: 600;
+                letter-spacing: -0.03em;
+                margin: 0 0 0.35rem;
+            }
+            .lede {
+                color: var(--muted);
+                max-width: 40rem;
+            }
+            section {
+                margin-top: 2.5rem;
+                padding: 1.25rem;
+                background: var(--surface);
+                border: 1px solid var(--border);
+            }
+            h2 {
+                font-family: Oswald, system-ui, sans-serif;
+                font-size: 1.35rem;
+                margin: 0 0 0.5rem;
+            }
+            .row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1.25rem;
+                align-items: flex-end;
+                margin-top: 1rem;
+            }
+            .swatch {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.35rem;
+                font-size: 0.75rem;
+                color: var(--muted);
+                font-variant-numeric: tabular-nums;
+            }
+            .swatch img,
+            .swatch .pad {
+                display: block;
+                image-rendering: auto;
+            }
+            .boards {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+                margin-top: 1rem;
+            }
+            .board {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1rem;
+                min-height: 5.5rem;
+                padding: 1rem;
+            }
+            .board.light {
+                background: var(--paper);
+                border: 1px solid var(--border);
+            }
+            .board.dark {
+                background: var(--charcoal);
+            }
+            .mood {
+                width: min(100%, 16rem);
+                height: auto;
+                border: 1px solid var(--border);
+            }
+            p {
+                margin: 0.4rem 0 0;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>GameMind — 3 знака</h1>
+            <p class="lede">
+                Растр слева — мудборд. SVG справа — рабочий знак на сетке 32×32.
+                Смотри столбец 16px: это вкладка браузера. Открой файл локально
+                (не через Next).
+            </p>
+
+            <section>
+                <h2>A — plaque + GM</h2>
+                <p>
+                    Ближе всего к шапке и home: левая teal-полоска + condensed
+                    инициалы. Минус: на 16px буквы требуют внимания.
+                </p>
+                <div class="row">
+                    <img
+                        class="mood"
+                        src="concepts/gamemind-mark-a-plaque-gm.webp"
+                        alt="Мудборд знака A"
+                    />
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-a-plaque-gm.svg"
+                            width="16"
+                            height="16"
+                            alt=""
+                        />
+                        16
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-a-plaque-gm.svg"
+                            width="24"
+                            height="24"
+                            alt=""
+                        />
+                        24
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-a-plaque-gm.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                        32
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-a-plaque-gm.svg"
+                            width="64"
+                            height="64"
+                            alt=""
+                        />
+                        64
+                    </div>
+                </div>
+                <div class="boards">
+                    <div class="board light">
+                        <img
+                            src="gamemind-mark-a-plaque-gm.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                    </div>
+                    <div class="board dark">
+                        <img
+                            src="gamemind-mark-a-plaque-gm.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>B — rank chevrons</h2>
+                <p>
+                    Примитив из достижений (RankChevron). Без букв, поэтому
+                    обычно лучше живёт во вкладке. Не геймпад и не «стрелка
+                    приложения».
+                </p>
+                <div class="row">
+                    <img
+                        class="mood"
+                        src="concepts/gamemind-mark-b-rank-chevrons.webp"
+                        alt="Мудборд знака B"
+                    />
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-b-rank-chevrons.svg"
+                            width="16"
+                            height="16"
+                            alt=""
+                        />
+                        16
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-b-rank-chevrons.svg"
+                            width="24"
+                            height="24"
+                            alt=""
+                        />
+                        24
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-b-rank-chevrons.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                        32
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-b-rank-chevrons.svg"
+                            width="64"
+                            height="64"
+                            alt=""
+                        />
+                        64
+                    </div>
+                </div>
+                <div class="boards">
+                    <div class="board light">
+                        <img
+                            src="gamemind-mark-b-rank-chevrons.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                    </div>
+                    <div class="board dark">
+                        <img
+                            src="gamemind-mark-b-rank-chevrons.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>C — scoreboard</h2>
+                <p>
+                    Мини-рейтинг: L первого места + два раннера. SVG нарочно без
+                    галочек из мудборда — на 16px они превращаются в шум.
+                </p>
+                <div class="row">
+                    <img
+                        class="mood"
+                        src="concepts/gamemind-mark-c-scoreboard.webp"
+                        alt="Мудборд знака C"
+                    />
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-c-scoreboard.svg"
+                            width="16"
+                            height="16"
+                            alt=""
+                        />
+                        16
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-c-scoreboard.svg"
+                            width="24"
+                            height="24"
+                            alt=""
+                        />
+                        24
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-c-scoreboard.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                        32
+                    </div>
+                    <div class="swatch">
+                        <img
+                            src="gamemind-mark-c-scoreboard.svg"
+                            width="64"
+                            height="64"
+                            alt=""
+                        />
+                        64
+                    </div>
+                </div>
+                <div class="boards">
+                    <div class="board light">
+                        <img
+                            src="gamemind-mark-c-scoreboard.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                    </div>
+                    <div class="board dark">
+                        <img
+                            src="gamemind-mark-c-scoreboard.svg"
+                            width="32"
+                            height="32"
+                            alt=""
+                        />
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

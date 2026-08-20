@@ -1,0 +1,60 @@
+<!--
+  GameMind mark B: ??? rank-???????.
+  ?????: ??? ?? ????????, ??? Quiz Arcade RankChevron (????? / ????),
+  ??? ????, ?????????? ?? 16px, ??? GM.
+  ??????? ?????? ????? ? teal: ??????? ????, ?? ??????? ??????????.
+-->
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 32 32"
+    role="img"
+    aria-label="GameMind"
+>
+    <title>GameMind rank chevrons</title>
+    <defs>
+        <clipPath id="mark">
+            <rect width="32" height="32" rx="5" />
+        </clipPath>
+    </defs>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            .bg {
+                fill: #1a212c;
+            }
+            .fg {
+                stroke: #e8ecf1;
+            }
+            .accent {
+                stroke: #3ecf8e;
+            }
+        }
+    </style>
+    <g clip-path="url(#mark)">
+        <rect class="bg" width="32" height="32" fill="#14181f" />
+        <g
+            fill="none"
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+            stroke-miterlimit="2"
+        >
+            <path
+                class="fg"
+                stroke="#f7fffb"
+                stroke-width="2.4"
+                d="M9.2 13.1 16 8.2 22.8 13.1"
+            />
+            <path
+                class="accent"
+                stroke="#0b6e4f"
+                stroke-width="3.3"
+                d="M6.8 20.2 16 13.6 25.2 20.2"
+            />
+            <path
+                class="fg"
+                stroke="#f7fffb"
+                stroke-width="2.4"
+                d="M9.2 26.8 16 21.9 22.8 26.8"
+            />
+        </g>
+    </g>
+</svg>
