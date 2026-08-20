@@ -81,6 +81,7 @@ This file is gitignored local working documentation.
 - [x] Difficulty filter on `/leaderboard` (`?difficulty=`; JOIN `QuizSession`; July 29; committed `14dc97c`)
 - [x] Period filter on `/leaderboard` (`?period=week|month`; rolling 7/30d on `QuizResult.completedAt`; July 29; committed `019c071`; on prod)
 - [x] Retention Layer 1 (Aug 19): default rolling week; exclusive Classic/Blitz/Daily boards; Blitz tie-break by duration; 7-day copy on board + Classic/Blitz lobby
+- [x] Survival board chip + compact copy (Aug 20): `?mode=survival`; mode chips 2×2 on 320px; scoring `<details>` under table
 - [ ] Later: category leaderboards (product, not presentation; needs taxonomy)
 
 ### 7. Admin Panel
@@ -187,9 +188,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 19, 2026 — Survival start 12Q: Direct JSONB after 3× resolve abort@18s (13KB) + late-commit → page 00:00 (T0=20s eaten). **Landed:** pooled JSONB create for `survivalRunId` only; 500ms settle measured, did not help. Chat D play-load + bank + CTA still shipped. Submit still Chat E. TEXT pool **378** (126/126/126).
+**Last updated:** August 20, 2026 — Survival **wave 1** locally complete (schema→start→play→submit clock→auto-submit last lock-in / bank=0→result; exclusive board; compact lobby/leaderboard copy). Review 503 after complete: `reviewPayload` attach+API **pooled**, payload-first. Wave 2+ is **not** started.
 
-**Preferred next:** Verify Survival HARD 12 start (12 questions, bank ≈20s on first paint, `writePath=pooled`, create `phase=ok`) + Classic EASY 3 start+submit + Blitz MIX countdown ≈60s. Then Survival **chat E** = separate submit + `survivalClockOk` + JS `completedAt` after connect (not SQL `NOW()`); partial answers OK when bank hits 0. Then exclusive Survival board + honest wave-record copy (ADR 6–7). In parallel / separately: commit Layer 1 + schema + Survival start/play when asked → `migrate deploy` on **prod** (`CONTENT_PIPELINE.md` §10; Windows `P1002` → SQL + `_prisma_migrations`) → www smoke `/leaderboard` week + Classic EASY 3 + Survival HARD 12 start. Then optional mechanics TEXT **wave 6** ×24 — **new loops only**; stems `QUESTION_I18N.md` §10; distractors **§3 D**. Mix lobby is live — do not re-implement. Do **not** re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24 (TEXT = new UUIDs). Published stem fixes = UPDATE (`voice-pass-mechanics-stems.cjs`), never import. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Do not merge Survival into Timed.
+**Preferred next:** new chat — **Survival wave 2+ carry**. Use the prompt in `PROJECT_CONTEXT.md` → Next Recommended Step. Do not grow `snapshotData`. Do not pick during play. Do not fake Continue→Classic. Separately: www smoke `/leaderboard?mode=survival` + Survival HARD 12 start→last-Q auto-redirect→score+review. Optional mechanics TEXT **wave 6** ×24 — **new loops only**. Mix lobby is live — do not re-implement. No keep-warm / no timeout bumps / no JSONB on submit complete / no cycle on Prisma or Direct queue. Do not merge Survival into Timed.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -242,12 +243,16 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 49. ~~**Mechanics stem voice-pass (12 / w2 / w3)**~~ — Aug 18 evening: in-place `UPDATE` local+prod (`scripts/voice-pass-mechanics-stems.cjs`); same 60 UUIDs; pool still **354**. Canon: `QUESTION_I18N.md` §10.
 50. ~~**Mechanics TEXT wave 5 ×24**~~ — Aug 18 night: `2026-08-18-text-mechanics-w5-24.json` (8×EASY/MEDIUM/HARD); TEXT pool **378** (126/126/126) local+prod. Distractors: `QUESTION_I18N.md` §3 D.
 51. ~~**Admin hub format glance**~~ — Aug 18: Questions 2×2 (`Question.type` TEXT/IMAGE_GUESS) + Users total caption; same COUNT round-trip; user smoke OK.
-52. ~~**Leaderboard retention Layer 1**~~ — Aug 19: default rolling week; exclusive Classic/Blitz/Daily; Blitz duration tie-break; 7-day copy on board + Classic/Blitz lobby; **local user smoke OK**; www deploy pending.
-53. ~~**Survival Mode MVP contract**~~ — Aug 19: ADR + `src/features/survival-mode/types.ts` (time-bank waves, not instant-death). Schema / start / submit **not** started.
+52. ~~**Leaderboard retention Layer 1**~~ — Aug 19: default rolling week; exclusive Classic/Blitz/Daily; Blitz duration tie-break; 7-day copy on board + Classic/Blitz lobby; **local user smoke OK**.
+53. ~~**Survival Mode MVP contract**~~ — Aug 19: ADR + `src/features/survival-mode/types.ts` (time-bank waves, not instant-death).
 54. ~~**Survival schema + discriminator (chat A)**~~ — Aug 19: `SurvivalRun` + `QuizSession.survivalRunId` / `survivalWaveIndex` / `survivalClockOk`; CHECK not Blitz/Daily; Classic `findBestScores` + `EVAL_FACTS_SQL` `AND survivalRunId IS NULL`.
-55. ~~**Survival clock gate (chat B)**~~ — Aug 19: `isSurvivalClockOk` + Vitest (elapsed vs budget+grace; floor 0; unanswered not −6).
-56. ~~**Survival start runner (chat C)**~~ — Aug 19: `beginSurvivalRunForUser` + `runSurvivalQuizStart` + `startSurvivalQuizAction`. No Mix, no `timedEndsAt`. Night: 12Q Direct JSONB abort@18s after 3× resolve → late-commit page with bank 00:00. **Fix:** pooled JSONB create for `survivalRunId` only (500ms settle measured, did not help).
-57. ~~**Survival play-load DTO + client bank + lobby CTA (chat D)**~~ — Aug 19: Survival play view (`startedAt` + runId + `isCorrect` leak); sequential lock-in +4/−6; bank=0 freeze (existing submit still `ANSWER_ALL`); thin `/quiz` CTA. Submit clock **not** started.
+55. ~~**Survival clock gate (chat B)**~~ — Aug 19: `isSurvivalClockOk` + Vitest.
+56. ~~**Survival start runner (chat C)**~~ — Aug 19: `runSurvivalQuizStart`; pooled JSONB create for `survivalRunId` (Direct 12Q abort@18s).
+57. ~~**Survival play-load + bank + lobby CTA (chat D)**~~ — Aug 19: sequential lock-in +4/−6; `isCorrect` leak accepted.
+58. ~~**Survival submit clock (chat E)**~~ — Aug 19–20: `survivalClockOk` on scalar complete; handoff snapshot scoring (no TOAST); exclusive board SQL.
+59. ~~**Survival end-of-wave UX (chat F)**~~ — Aug 20: bank=0 always submit; last lock-in auto-submit (no finish CTA); `?wave=cut|bank`; rematch; `?mode=survival` chip.
+60. ~~**Result review after Survival complete**~~ — Aug 20: `reviewPayload` attach on pooled + `already_completed`; review API pooled payload-first; pending 503 in attach race.
+61. **Survival wave 2+ carry** — next chat. `bankRemainingSeconds` once after complete; new `QuizSession` per wave; stop when bank=0 or pool policy decided. Prompt: `PROJECT_CONTEXT.md`.
 
 ### Deploy / hosting checklist (tracking)
 
@@ -329,7 +334,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 - [x] Toast notifications (Sonner + achievement flash) — **shipped** July 30; see DECISIONS “How to add a new toast”
 - [x] Daily challenge — **MVP on prod** July 30 (Moscow day, freeze, one attempt, CTA home+quiz, today’s board; migration `20260729234500_daily_challenge`)
 - [x] Timed mode — **on origin** July 31; **abandon + rematch + review Neon harden + RU labels** Aug 2 (local verified; redeploy pending)
-- [ ] Survival/streak mode — **ADR + types Aug 19**; **schema chat A** (`SurvivalRun` + Classic/achievements `survivalRunId IS NULL`). Next: pure clock tests, then start runner. Not merged into Timed.
+- [x] Survival mode wave 1 — **shipped locally Aug 20** (time-bank 12Q, exclusive board, auto-submit). Wave 2+ carry = next epic. Not merged into Timed.
 - [ ] Category/platform/genre-specific quiz — defer until real filter demand + more tagged content
 - [x] Period-based leaderboards (difficulty `14dc97c` + rolling week/month `019c071`; Layer 1 default week + mode + Blitz speed Aug 19)
 - [ ] API-assisted draft question generation with admin review

@@ -4,14 +4,16 @@
  * Зачем отдельный файл:
  * - одна точка правды для T0 / +4 / −6 / grace / волны 12;
  * - UI и actions импортируют константы отсюда, а не «магические числа»;
- * - start уже зовёт `runSurvivalQuizStart`; submit clock — следующий чат.
+ * - start уже зовёт `runSurvivalQuizStart`; submit clock (`survivalClockOk`) shipped.
+ * Волна 2+ (carry банка) — отдельный эпик, не этот файл.
  *
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  * Не мержить с Timed: Blitz = `timedEndsAt` + фиксированные 60с;
  * Survival = `timedEndsAt` NULL + банк, реконструкция на submit.
  * Схема: `SurvivalRun` + `QuizSession.survivalRunId` (миграция
  * `20260819163000_survival_run`). Старт волны 1: `runSurvivalQuizStart`.
- * Play-load DTO / клиентский банк — chat D; submit clock — следующий чат.
+ * Play-load DTO / клиентский банк / submit clock / end-of-wave UX — shipped.
+ * Волна 2: `bankRemainingSeconds` на SurvivalRun + новый QuizSession.
  */
 
 /**

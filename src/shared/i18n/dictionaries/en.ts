@@ -88,7 +88,7 @@ export const enDictionary = {
         remainingLabel: 'Time left',
         expiredLabel: 'Time is up',
         timeUpHint: 'Time is up. Answers are frozen.',
-        savingAnswers: 'Time’s up — saving what you got…',
+        savingAnswers: 'Saving the wave…',
         chooseAnswerHint: 'Choose an answer to continue the wave.',
         finishWaveButton: 'Finish wave',
         restartButton: 'Start over',

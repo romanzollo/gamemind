@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-20 (Lobby + leaderboard copy density; Survival CTA primary) |
+| **Last updated** | 2026-08-20 (Survival last-Q auto-submit; review pooled; lobby copy) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -48,7 +48,7 @@ Phase 5 modes / achievements inherit the system
 | **Ongoing mode** | **Active** — every new feature UI extends the lock (Prompt T-Feature + §7) |
 | **Related: §11.9 Perceived performance** | Light July 18 + **pending spinner pass** July 28 (`PendingSpinner` / `SubmitButton`) |
 
-**Next:** commit lobby/leaderboard presentation pass when asked → smoke `/quiz` + `/leaderboard` at 320. Optional mechanics TEXT wave 6.
+**Next:** commit lobby/leaderboard presentation + Survival last-Q auto-submit + review pooled when asked → smoke `/quiz` + Survival last lock-in → result review + `/leaderboard` at 320. Wave 2 = new chat.
 
 ---
 
@@ -329,6 +329,17 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-20 — Survival last lock-in auto-submit (no finish CTA)
+
+- Scope: Feature:Survival end-of-wave
+- Skills used: gamemind-taste-ui (sticky chrome only)
+- Files touched: `SurvivalQuizSessionForm.tsx`, i18n `savingAnswers`
+- What changed visually: full 12 lock-ins with bank > 0 → spinner «Сохраняем волну…» and redirect; Finish CTA only after a failed hop
+- Tokens/components added: none
+- Explicitly NOT changed: scoring, snapshot, Direct complete hop, wave 2
+- Verify: Survival HARD 12 all-correct → result without a finish click; bank=0 mid-wave still auto-saves
+- Follow-up: wave 2 prompt in PROJECT_CONTEXT
 
 ### 2026-08-20 — Lobby + leaderboard: equal arenas, compact board, living copy
 

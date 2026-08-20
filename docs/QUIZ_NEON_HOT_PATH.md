@@ -5,7 +5,7 @@
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
 **Overview:** `docs/ARCHITECTURE.md`.  
-**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. Schema chat A: `SurvivalRun` + `QuizSession.survivalRunId` (Classic/`EVAL_FACTS_SQL` `AND survivalRunId IS NULL`). Runner chat C: `runSurvivalQuizStart` (pooled abandon+run → cycle 12 → INSERT-only). Play DTO chat D: handoff + pooled `snapshotData`; Survival view may include `isCorrect` (Classic/Blitz/Daily do not). `timedEndsAt` NULL; bank UX from `startedAt` + lock-ins. Submit clock (`survivalClockOk`) not shipped.
+**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. **Wave 1 shipped (Aug 19–20):** schema A + clock B + start C (pooled JSONB create) + play D + submit E (`survivalClockOk`) + end-of-wave F (bank=0 / last lock-in auto-submit → result; rematch; `?mode=survival`). `timedEndsAt` NULL. Survival play DTO may include `isCorrect`. Wave 2+ (carry bank, new session) is **not** shipped.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 
@@ -13,7 +13,7 @@
 
 ## Product priority (do not invert)
 
-1. **Production** Classic / Blitz / Daily: start → questions on screen → **submit saves score** → result summary paints. That path is the release gate. Survival is contracted, not in the gate until schema+start+submit ship.
+1. **Production** Classic / Blitz / Daily: start → questions on screen → **submit saves score** → result summary paints. That path is the release gate. Survival **wave 1** is in the gate once www has the schema: HARD 12 start→score (auto-submit on last lock-in or bank=0); review is best-effort.
 2. Local Windows `next dev` must not wedge the shared Direct queue (home/Daily/start look dead). Workarounds (queue, 300ms settle, 5s play-load timeout, in-memory handoff) exist **because** of that lab — they must not make prod worse (example: 5s play-load timeout → false soft-miss on cold Neon).
 3. Answer **review** and polish are best-effort — never block (1).
 
@@ -26,13 +26,13 @@ On **Windows + Neon unpooled + `next dev`**, quiz uses a **single process-wide D
 | Symptom | Real cause |
 |---------|------------|
 | `SUBMIT_FAILED`, complete ~19s, `Connection terminated` | Critical hop wrote/read **large JSONB/TOAST** together with answers + COMPLETED |
-| Result score OK, review hangs / soft-fail | Reading `reviewSnapshot` / session `snapshotData` TOAST right after write |
+| Result score OK, review hangs / 503 ×3 | Reading `reviewSnapshot` / session `snapshotData` TOAST on **Direct** right after write; or `reviewPayload` UPDATE on Direct queue behind hung complete |
 | Home / Daily CTA “freezes” after quiz | Hung hop held the **same** Direct queue (`waiters` climb) |
 | Sticky 404 on `/result/:id` though row exists | `notFound()` + App Router cache |
 
 SQL outside Next for the same rows was fine (~ms). Indexes were not the bug.
 
-**Working fix:** complete = scalars only; `reviewPayload` after success, non-blocking; result summary first; soft-miss, never sticky `notFound()`.
+**Working fix:** complete = scalars only; `reviewPayload` after success on **pooled** (not Direct queue); result summary first; review API pooled payload-first; soft-miss, never sticky `notFound()`.
 
 ---
 
@@ -205,11 +205,12 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
    - SELECT/UPDATE TOAST on **play-load** → handoff + pooled fallback; no UPDATE on that client.
    - SQL `NOW()` into naive `TIMESTAMP` → JS Date after connect.
    - abandon+INSERT on one Direct client → pooled abandon before pick.
-4. Score broken → complete scalars. Review broken → soft-fail OK. Soft-miss on known new session → handoff miss + TOAST read, not “row missing”.
+4. Score broken → complete scalars. Review broken → API + `quiz.result.review` on **pooled**; do not SELECT session TOAST during attach race. Soft-miss on known new session → handoff miss + TOAST read, not “row missing”.
 5. Do not re-enable keep-warm; do not merge Classic/Timed start; do not fold Survival into Timed/`timedEndsAt`; do not expand Daily lobby TLS; do not change chunk size without matrix.
 6. Classic/Timed start dies after cycle with Prisma `Connection terminated` → cycle stays on `withPooledPgClient`.
 7. Start UI generic filter error + Vercel `42703` `poolKind` (or any missing Mix/session column) → prod schema lag. Ops: `CONTENT_PIPELINE.md` §10. Do not change handoff/clock/Direct.
 8. Survival HARD 12: `quiz.start.create` ~18s `phase=operation` then page paints **00:00** / bank frozen → Direct JSONB INSERT after 3 resolve (payload ~13KB). Late-commit recover finds the row; `startedAt` was stamped before the 18s hang so T0=20s is already gone. Not play-load TOAST, not SQL `NOW()`. Fix: pooled create for `survivalRunId` only. Do not bump global timeout. Do not add more settles.
+9. Survival all-correct: score on result, review 503 `Direct pg operation timed out after 8000ms` (`quiz.result.review` waiters=1). Complete hung ~19s `Connection terminated`; `review-payload` hop missing or on Direct; API SELECTed `reviewSnapshot`+`snapshotData` TOAST on the same queue. Fix: attach payload on pooled + also after `already_completed` recover; review API pooled payload-only; pending 503 while attach races. Do not bump Direct read timeout.
 
 ---
 

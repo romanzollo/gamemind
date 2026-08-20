@@ -7,8 +7,10 @@
  * верный → +4с к remaining, неверный → −6с, unanswered не штрафуем.
  * Банк = UX от startedAt; сервер remaining не читает.
  * На 0: всегда Survival submit (partial OK) → /result — без мёртвого freeze.
+ * Все 12 lock-in при банке > 0: тот же auto-submit (`waveEnd` null), без CTA
+ * «Завершить квиз» — иначе игрок смотрит на уже закрытую волну.
  * `survivalWaveEnd=cut|bank` → honest plaque на result. Не фейковый score.
- * Во время save: spinner + savingAnswers, не disabled «Завершить волну».
+ * Во время save: spinner + savingAnswers. Retry CTA только после ошибки hop.
  * Не звать isSurvivalClockOk на клиенте. Не TimedQuizCountdown.
  *
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
@@ -76,6 +78,7 @@ export function SurvivalQuizSessionForm({
     const [correctCount, setCorrectCount] = useState(0);
     const [wrongCount, setWrongCount] = useState(0);
     const [bankExpired, setBankExpired] = useState(false);
+    const [waveSubmitting, setWaveSubmitting] = useState(false);
 
     useEffect(() => {
         selectedAnswersRef.current = selectedAnswers;
@@ -85,6 +88,7 @@ export function SurvivalQuizSessionForm({
     useEffect(() => {
         if (state.errorCode) {
             autoSubmitStartedRef.current = false;
+            setWaveSubmitting(false);
         }
     }, [state.errorCode]);
 
@@ -106,11 +110,10 @@ export function SurvivalQuizSessionForm({
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
     const submitHintId = 'survival-submit-hint';
     const progressLabel = `${answeredCount} / ${totalQuestions}`;
-    const showSubmitCta = allAnswered && !bankExpired;
-    const showBankRetry =
-        bankExpired && Boolean(state.errorCode) && !isPending;
+    const showRetryCta = Boolean(state.errorCode) && !isPending;
     // Пока идёт auto-submit / redirect — только статус+spinner, без мёртвой CTA.
-    const showSavingState = bankExpired && !state.errorCode;
+    const showSavingState =
+        (waveSubmitting || bankExpired || isPending) && !state.errorCode;
 
     const {
         initialBankSeconds,
@@ -150,6 +153,7 @@ export function SurvivalQuizSessionForm({
             }
 
             autoSubmitStartedRef.current = true;
+            setWaveSubmitting(true);
             startTransition(() => {
                 formAction(buildSubmitFormData(waveEnd));
             });
@@ -209,7 +213,12 @@ export function SurvivalQuizSessionForm({
 
             if (currentIndex < totalQuestions - 1) {
                 setCurrentIndex((index) => index + 1);
+                return;
             }
+
+            // Последний вопрос закрыт, банк ещё жив — волна 1 кончилась.
+            // Редирект на result без отдельной «Завершить квиз».
+            submitWave(null);
         },
         [
             answersLocked,
@@ -347,7 +356,7 @@ export function SurvivalQuizSessionForm({
                     </p>
                 ) : null}
 
-                {!allAnswered && !bankExpired ? (
+                {!allAnswered && !bankExpired && !waveSubmitting ? (
                     <p
                         id={submitHintId}
                         className="mb-2 text-sm leading-snug text-muted sm:mb-3"
@@ -356,7 +365,7 @@ export function SurvivalQuizSessionForm({
                     </p>
                 ) : null}
 
-                {showSubmitCta || showBankRetry ? (
+                {showRetryCta ? (
                     <SubmitButton
                         disabled={isPending}
                         pendingLabel={dictionary.common.submitting}

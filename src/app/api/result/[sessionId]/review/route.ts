@@ -46,6 +46,10 @@ export async function GET(
             return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
         }
 
+        if (review.kind === 'pending') {
+            return NextResponse.json({ error: 'PENDING' }, { status: 503 });
+        }
+
         let items: QuizResultReviewItem[] = [];
 
         if (review.kind === 'payload') {

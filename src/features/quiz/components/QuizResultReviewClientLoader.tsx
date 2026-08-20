@@ -22,8 +22,8 @@ type QuizResultReviewClientLoaderProps = {
     retryLabel: string;
 };
 
-/** Паузы перед попытками: payload path быстрый; legacy TOAST — короткий backoff. */
-const ATTEMPT_DELAYS_MS = [200, 800, 1_500] as const;
+/** Паузы перед попытками: payload path быстрый; pending/legacy — чуть длиннее гонки attach. */
+const ATTEMPT_DELAYS_MS = [200, 800, 1_500, 3_000] as const;
 
 export function QuizResultReviewClientLoader({
     sessionId,

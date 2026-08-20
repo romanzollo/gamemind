@@ -5,14 +5,14 @@ Dated “why we chose this” lives in [`DECISIONS.md`](./DECISIONS.md). Binding
 
 ## Product shape
 
-Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **start + play DTO + lobby CTA shipped** (Aug 19 chats A–D); submit clock (`survivalClockOk`) is chat E.
+Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **wave 1 shipped** (Aug 19–20: schema → start → play-load → submit clock → end-of-wave UX → exclusive board). Wave 2+ (carry `bankRemainingSeconds`, new session per wave) is the next Survival epic — not in this file’s invariants yet.
 
 | Mode | Discriminator | Player contract |
 |------|----------------|-----------------|
 | Classic | `dailyChallengeId`, `timedEndsAt`, and `survivalRunId` all NULL | Difficulty + 1–10 questions; rematch; anti-repeat cycle |
 | Blitz (Timed) | `timedEndsAt` set | 10 questions, 60s **server** deadline, 3s grace; partial answers OK |
 | Daily | `dailyChallengeId` set | Moscow calendar day; `MEDIUM` × 10; one attempt; no cycle |
-| Survival | `survivalRunId` set; **`timedEndsAt` NULL** | Wave of 12; time-bank T0=20 +4/−6; same weights; exclusive board. Canon: `DECISIONS.md` → Survival Mode MVP |
+| Survival | `survivalRunId` set; **`timedEndsAt` NULL** | Wave 1 = 12Q; time-bank T0=20 +4/−6; same weights; exclusive `?mode=survival` board. Last lock-in auto-submits (no «finish quiz» CTA). Canon: `DECISIONS.md` → Survival Mode MVP |
 
 Quiz pool = `Question.isActive = true` **and** `publicationStatus = PUBLISHED`.  
 `isActive` is archive/soft-hide; `publicationStatus` is draft → review → publish. They are orthogonal.
@@ -72,7 +72,7 @@ flowchart TB
 
 **Direct `pg`:** confirmed fragile Neon paths — quiz start resolve/snapshot INSERT, submit complete, result summary, admin list/writes, leaderboard `DISTINCT ON`. One process-wide Direct queue in **`next dev` only**; a hung hop stalls Home / Daily / start. **Production has no that queue.** Play-load snapshot read is **pooled**, not Direct.
 
-**Public leaderboard (Layer 1, Aug 19):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`, `survivalRunId`) — never `snapshotData`. Classic WHERE includes `survivalRunId IS NULL`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily keep `completedAt` only. Page `loadFailed` on error, not 500. Survival is a **separate** board (no Layer 1 chip yet). Detail: `DECISIONS.md` → Leaderboard retention meta + Survival Mode MVP.
+**Public leaderboard (Layer 1, Aug 19 + Survival chip Aug 20):** default board is **rolling 7×24h Classic**. Exclusive `?mode=classic|blitz|daily|survival` (omit = classic). All-time is `?period=all`. SQL: `findBestScores` JOIN `QuizSession` **scalars only** (`dailyChallengeId`, `timedEndsAt`, `startedAt`, `poolKind`, `difficulty`, `survivalRunId`) — never `snapshotData`. Classic WHERE includes `survivalRunId IS NULL`. Blitz ties: shorter `(completedAt − startedAt)` after score; Classic/Daily/Survival keep `completedAt` only unless a later Survival-run SUM is decided. Page `loadFailed` on error, not 500. Mode chips wrap 2×2 on narrow screens. Scoring rules sit in `<details>` under the table, not a hero FAQ. Detail: `DECISIONS.md` → Leaderboard retention meta + Survival Mode MVP.
 
 **UserQuestionCycle** (Classic / Blitz / Survival pick): scalars only (`cycleSeed` / `cursor` / `poolSize`) via `withPooledPgClient` **outside** the Direct queue. After cycle (SINGLE and Mix): 300ms settle, then Direct resolve chunks of 5. Daily does not use the cycle. Survival MVP shares the Classic/Timed bag (`userId + difficulty`); no Mix. Boundary is **reshuffle-first**. No silent `ORDER BY RANDOM` fallback.
 
@@ -122,7 +122,7 @@ Invariants:
 1. Snapshot at **start** freezes question ids, option order, `isCorrect`, bilingual texts, image URLs. Mid-session bank edits must not change that session.
 2. Public quiz UI never exposes `isCorrect` for Classic / Blitz / Daily. Survival play DTO **may** include correctness for client bank UX (no per-question API) — accepted friends-MVP leak; scoring still uses the frozen snapshot on submit. See Survival Mode MVP.
 3. **Complete hop** writes answers + **scalar** `QuizResult` + `COMPLETED` + achievement outbox. No fat `snapshotData` / `reviewSnapshot` JSON into pg on that hop.
-4. `reviewPayload` is after successful complete, non-blocking. Review failure must not fail submit.
+4. `reviewPayload` is after successful complete, **pooled** JSONB UPDATE (not Direct queue), non-blocking. Review API reads payload on **pooled** (payload-only first; no `snapshotData` TOAST during the attach race). Review failure must not fail submit.
 5. Result: paint score first. Soft-miss on transient read — never `notFound()` (sticky App Router 404).
 6. Client timer / client score / client `userId` are not authority. Blitz deadline is `timedEndsAt` on the row (`Date.now()+duration` after create connect — not SQL `NOW()` into naive `TIMESTAMP`). Survival does **not** use `timedEndsAt`; bank is reconstructed on submit from `startedAt` (JS Date after connect, not SQL `NOW()`) + correct/wrong counts.
 7. Adding questions is a **content** change (draft → publish). Do not “optimize” by stuffing more JSON into submit/result.

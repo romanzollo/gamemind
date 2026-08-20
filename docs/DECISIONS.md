@@ -558,7 +558,8 @@ Then step 2 must include image data in `snapshotData.questions[].image` (and opt
 | Survival HARD 12: long lobby then page paints **00:00** / answers frozen; or `DB_TIMEOUT` on `quiz.start.create` ~18s `phase=operation` | 12Q JSONB INSERT is the **4th Direct hop** after 3× chunk-5 (~13KB, not payload size). `abort()` at 18s; late-commit recover can still find the row; `startedAt` was stamped before the hang so T0=20s is gone. Same class as Blitz clock armed before hop + 4th Direct TOAST (Aug 14). Not play-load SELECT. Classic/Blitz lobby ≤10Q = 2 resolve + create | **Landed:** Survival JSONB create on `withPooledPgClient` (`survivalRunId != null`). Classic/Timed/Daily stay Direct. SurvivalRun remains a **separate** pooled hop before pick. Extra 500ms after pick **measured, did not help**. Do not raise global Direct timeout |
 | Survival HARD 12: lobby spinner 2+ min, POST `/quiz` **200** not 303 | `cycle.draw` without pooled timeout (~63s) + await hop2 JSONB 45s (`phase=operation`) — client never ok, late-commit already in DB. Next aborts action | **Landed:** cycle pooled hops 12s + verify; Survival hop2 fire-and-forget, lobby polls `snapshotData IS NOT NULL` (no TOAST). Do not await hung UPDATE. Do not raise Direct 18s |
 | Survival HARD 12: bank=0 → submit ~18s+45s `load-snapshot` `phase=operation`, never `/result` | SELECT `snapshotData` TOAST after 12Q JSONB write (same Aug 14 play-load class). JOIN fallback has no Survival rows → false `INVALID_ANSWER`. 45s retry is a timeout bump, not a fix | **Landed:** Survival submit peeks create handoff snapshot (in-memory); no TOAST on that hop in next-dev. Complete scalars. Prod isolate miss = one pooled 18s. Do not retry 45s TOAST |
-| After submit, `/result/:id` soft-fail; GET 38s–2+min; `Quiz result load failed` | Result Direct read of large JSONB right after write + award on shared queue | **Landed:** summary scalars + client review API + outbox; **open:** review TOAST slow → option B `reviewPayload` |
+| After Survival complete: score OK, review 503 ×3 (`quiz.result.review` 8s) | Direct queue: hung `complete` ~19s + `reviewPayload` UPDATE on Direct + SELECT `reviewSnapshot`/`snapshotData` TOAST; recover `already_completed` skipped attach | **Landed (Aug 20):** attach on **pooled**; attach also after `already_completed`; review API **pooled** payload-first; `pending` 503 during attach race (no TOAST). Do not bump Direct 8s. |
+| After submit, `/result/:id` soft-fail; GET 38s–2+min; `Quiz result load failed` | Result Direct read of large JSONB right after write + award on shared queue | **Landed:** summary scalars + client review API + outbox; option B `reviewPayload` |
 | Quiz page loads but submit scores wrong set | Scoring still reads live pool, not snapshot | `findSnapshotForScoring` ? validate `optionId` only against snapshot rows |
 | Migration `P1017` on Windows | Prisma migrate vs Neon | `scripts/apply-named-migration.cjs` |
 | Timed auto-submit `syntax error at or near "ON"` | empty `QuizAnswer` INSERT (`VALUES` + `ON CONFLICT` with 0 rows) | Guard: skip answers INSERT when `answerRows.length === 0`; still write QuizResult + COMPLETED |
@@ -594,10 +595,10 @@ When Survival start/submit exist: add Survival HARD 12 start→score; bank UX fr
 | Daily lobby | `getDailyLobbyView` | `findLobbyPanelState` **1 TLS** | |
 | Daily start | frozen ids → chunked resolve → create | | **No** UserQuestionCycle. |
 | Submit | `submitQuizAction` → `completeWithResult` | answers + **scalar** QuizResult `VALUES` + COMPLETED + outbox | **No JSONB on this hop.** |
-| reviewPayload | fire-and-forget after complete | `UPDATE QuizResult.reviewPayload` | Must not fail submit. |
+| reviewPayload | fire-and-forget after complete | pooled `UPDATE QuizResult.reviewPayload` (not Direct queue) | Must not fail submit. Also after recover `already_completed`. |
 | Result score | `findSummaryBySessionIdForUser` | scalars only | Soft-miss (no `notFound`); retry 400ms. |
 | Result award | `ResultSecondaryPanel` | outbox process | Suspense after score. |
-| Result review | `QuizResultReviewClientLoader` → API | prefers `reviewPayload` | Soft-fail OK. |
+| Result review | `QuizResultReviewClientLoader` → API | pooled; prefers `reviewPayload`; pending 503 in attach race | Soft-fail OK. No session TOAST on Direct. |
 
 **Pick detail:** `SNAPSHOT_RESOLVE_CHUNK_SIZE = 5`. One 10-id resolve → DB_TIMEOUT; 5-id OK. Changing chunk/pick = full matrix.
 
@@ -615,7 +616,7 @@ When Survival start/submit exist: add Survival HARD 12 start→score; bank UX fr
 **Result incident — landed (Aug 4 night + afternoon):**
 - Proven: SQL outside Next ~3ms; hang was connect-OK / operation timeout inside next-dev after submit (TOAST / queue).
 - Fixes landed: (1) Direct success teardown = graceful `end()`, destroy only abort; (2) `reviewSnapshot` SQL copy on complete; score path never needs session snapshot TOAST; (3) `AchievementOutbox` same write hop; award after score; (4) summary vs review split; review deferred to client API; (5) soft-miss result page.
-- **Still open → landing:** reading full `reviewSnapshot` for UI is often 8–18s. **Option B:** at submit, build compact bilingual review DTO from already-loaded snapshot → column `QuizResult.reviewPayload`; API prefers it; keep `reviewSnapshot` as legacy fallback. Do not raise `READ_ATTEMPT_TIMEOUT` or re-enable keep-warm.
+- **Still open:** none on the option-B path itself. Aug 20: attach+read must stay **pooled**; do not put `reviewPayload` JSONB back on Direct or SELECT `snapshotData` during the attach race. Do not raise `READ_ATTEMPT_TIMEOUT` or re-enable keep-warm.
 
 **Recovery if result path regresses:**
 1. Restart `npm run dev`.
@@ -701,7 +702,7 @@ When Survival start/submit exist: add Survival HARD 12 start→score; bank UX fr
 
 **Future cleanup options:**
 
-- **Option B (next):** `reviewPayload` slim bilingual DTO at submit; stop hot-path reads of full `reviewSnapshot`.
+- **Option B (landed Aug 4, hardened Aug 20):** `reviewPayload` slim DTO after complete on **pooled**; review API pooled payload-first; do not read session TOAST on Direct during attach race.
 - Extract raw snapshot writer to `src/lib/db/quiz-session-snapshot.ts` with a smoke test script.
 - On production/Vercel, re-test whether Prisma-only writes work; if stable, consider simplifying — but do not regress Windows + Neon dev without a local Postgres option.
 - Keep schema as source of truth; raw SQL must stay aligned with Prisma models/migrations.
@@ -1030,11 +1031,11 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 **Decision (competition layer only — no new play mode):** keep the same `QuizResult` rows and the same scoring. Change **which board is the default** and **how ties break**.
 
 1. **Default period = rolling week.** Empty `/leaderboard` (no `?period=`) means last 7×24h. All-time stays an **explicit** tab: `?period=all`. Month stays `?period=month`. Same rolling math as July 29 (`getLeaderboardPeriodCutoff`); only the Zod/URL default flips from `all` → `week`. `buildLeaderboardHref` omits `period` when it is `week`, and **writes** `period=all`.
-2. **Mode filter is mandatory and exclusive:** `classic` | `blitz` | `daily`. No “all modes” chip — that would mix ceilings. Default `classic`. URL `?mode=blitz|daily`; omit `mode` = classic. Discriminate with **session scalars only** (Prisma comments already define this):
+2. **Mode filter is mandatory and exclusive:** `classic` | `blitz` | `daily` | `survival`. No “all modes” chip — that would mix ceilings. Default `classic`. URL `?mode=blitz|daily|survival`; omit `mode` = classic. Discriminate with **session scalars only** (Prisma comments already define this):
    - Classic: `dailyChallengeId IS NULL AND timedEndsAt IS NULL AND survivalRunId IS NULL`;
    - Blitz: `dailyChallengeId IS NULL AND timedEndsAt IS NOT NULL`;
    - Daily: `dailyChallengeId IS NOT NULL`.
-   - Survival (not a Layer 1 chip yet): `survivalRunId IS NOT NULL` — exclusive board; `timedEndsAt` stays NULL so it must **not** look like Classic. Schema chat A patched Classic WHERE **before** any Survival result.
+   - Survival: `survivalRunId IS NOT NULL` — exclusive board (`?mode=survival` chip shipped Aug 20); `timedEndsAt` stays NULL so it must **not** look like Classic. Schema chat A patched Classic WHERE **before** any Survival result.
 3. **Blitz tie-break:** after `score DESC`, shorter duration ranks higher: `(QuizResult.completedAt − QuizSession.startedAt)` ASC, then `completedAt` ASC as a last resort. **Classic and Daily must not** use duration in `ORDER BY` — keep `score DESC, completedAt ASC`. Duration is computed in the leaderboard SELECT; do **not** persist it, do **not** write it on complete.
 4. **Copy (ru/en):** say honestly that 30 is the Classic HARD 10Q ceiling; after that the race is the rolling week, and in Blitz equal scores lose to speed. All-time is a hall-of-fame tab, not the live ladder.
 
@@ -1046,7 +1047,7 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 
 **UI:** third Scoreboard segmented control (mode), same chrome as period/difficulty; preserve all three query params when switching any chip. Order on the page: mode → period → difficulty. Period chips: **Week → Month → All time** (live race first). Captions: rolling 7 days (not “falls off the board” / not calendar Monday); Classic/Blitz lobby gets one `text-xs` line under meta, not a modal.
 
-**Status (August 19, 2026):** shipped locally; user smoke OK (`/ru/leaderboard` week+modes, lobby captions). Blitz MIX start `DB_TIMEOUT` on `quiz.start.create` ~18s is the existing Neon/`next dev` INSERT class — **not** this slice. Commit + www smoke still pending.
+**Status (August 20, 2026):** Layer 1 + Survival mode chip shipped locally; lobby copy compact; mode chips wrap 2×2 on 320px. www smoke of week default + Survival board still pending if not yet on prod.
 
 ## Admin Panel
 
@@ -1884,7 +1885,7 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 
 ## Survival Mode MVP (August 19, 2026 — contract kickoff)
 
-**Date:** 2026-08-19 (ADR + types). **Status:** schema (chat A) + `isSurvivalClockOk` (chat B) + `runSurvivalQuizStart` (chat C) + play-load DTO / client bank / lobby CTA (chat D) + submit clock (chat E) + end-of-wave UX / rematch (chat F).
+**Date:** 2026-08-19 (ADR + types). **Status (Aug 20):** wave 1 **shipped locally** — schema A, clock B, start C (pooled JSONB), play D, submit E (`survivalClockOk`), end-of-wave F (bank=0 **and** last lock-in auto-submit → `/result`; rematch; exclusive `?mode=survival`). Wave 2+ carry is **not** shipped.
 
 **Decision:** Phase 5 leftover after Timed is **Survival as a separate play mode**: fixed-size **waves**, a **server-reconstructed time-bank**, existing weighted scoring, same Neon snapshot/complete shape as Classic/Blitz. Not instant-death. Not a longer Classic. Not merged into `runTimedQuizStart`.
 
@@ -1910,7 +1911,7 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 | Scoring | Unchanged `scoring.ts`: EASY=1 / MEDIUM=2 / HARD=3. Wrong / blank = 0 points |
 | Time-bank T0 | 20s at wave 1 start |
 | Correct / wrong | +4s / −6s (bank only, not score) |
-| End of wave | Bank reaches 0 **or** all 12 answered with bank > 0 |
+| End of wave | Bank reaches 0 **or** all 12 answered with bank > 0. Client **auto-submits** (no «Завершить квиз» / Finish quiz CTA). Retry button only if the hop failed. |
 | Mix | **No.** SINGLE `EASY\|MEDIUM\|HARD` only |
 | Clock UX | Client remaining from `startedAt` + local lock-ins. Not authority |
 | Clock authority | `elapsed = completedAt − startedAt`; `budget = max(0, T0 + 4×correct − 6×wrong)`; `clockOk ⇔ elapsed ≤ budget + grace` |
@@ -1966,7 +1967,7 @@ Reuse existing `pickClassicSnapshotBundle` / `pickTimedSnapshotBundle` with `que
 
 ### Waves (contract only)
 
-Endless Survival is **N sessions**, not one growing JSONB. Wave 1 MVP: one `SurvivalRun` + one `QuizSession` (`waveIndex = 1`). If the player finishes 12 with reconstructed remaining > 0, later wave 2 uses `T0' = bankRemainingSeconds` written **once after successful complete**, then a **new** start hop. This kickoff does not implement wave 2 or a fake “Continue” that starts Classic.
+Endless Survival is **N sessions**, not one growing JSONB. Wave 1 MVP: one `SurvivalRun` + one `QuizSession` (`waveIndex = 1`). If the player finishes 12 with reconstructed remaining > 0, later wave 2 uses `T0' = bankRemainingSeconds` written **once after successful complete**, then a **new** start hop. Wave 1 does **not** implement wave 2 or a fake “Continue” that starts Classic. Prompt for the next chat lives in `PROJECT_CONTEXT.md` → Next Recommended Step.
 
 ### Do not (kickoff + implementation chats)
 
@@ -2003,8 +2004,9 @@ Classic / Blitz / Daily public play-load stays without `isCorrect`. Survival seq
 3. ~~Separate start runner (pooled abandon + `SurvivalRun` + cycle 12 + INSERT-only). Not `runTimedQuizStart`.~~
 4. ~~Play-load Survival DTO + client bank + lobby CTA.~~
 5. ~~Submit clock: scalar complete + `survivalClockOk`; Survival partial OK (chat E).~~
-6. ~~End-of-wave UX (chat F): bank=0 → always partial submit → result; honest `?wave=cut|bank`; `SurvivalRematchButton`; leaderboard `?mode=survival`. No wave 2.~~
-7. Taste CTA polish / wave-2 carry (later) — presentation or next epic.
+6. ~~End-of-wave UX (chat F): bank=0 → always partial submit → result; last lock-in with bank>0 also auto-submits (no finish CTA); honest `?wave=cut|bank`; `SurvivalRematchButton`; leaderboard `?mode=survival`. No wave 2.~~
+7. **Wave 2+ carry** (next epic, new chat) — `bankRemainingSeconds` scalar after complete; new `QuizSession` per wave; same runner; do not grow snapshot. Prompt: `PROJECT_CONTEXT.md`.
+8. Taste lobby copy / Survival primary CTA / compact leaderboard — presentation only (Aug 20).
 
 ### How this affects growth
 

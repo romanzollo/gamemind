@@ -10,7 +10,8 @@
  * Не писать reviewSnapshot/reviewPayload в том же hop — Node→JSONB и/или
  * SELECT s.snapshotData клинили complete ~19s (Connection terminated) на
  * Windows+Neon next-dev. Slim reviewPayload — отдельный best-effort hop
- * после успешного complete (ошибка не валит submit).
+ * после успешного complete (ошибка не валит submit). JSONB UPDATE — pooled,
+ * не Direct queue: иначе `/api/result/.../review` ждёт TOAST и ловит 503.
  *
  * Публичный фасад: quiz-session.repository.ts.
  * См. docs/DECISIONS.md → Quiz Start / Session Load Playbook.
@@ -22,6 +23,7 @@ import {
     isTransientDirectPgError,
     withDirectPgClient,
     withDirectPgWriteClient,
+    withPooledPgClient,
 } from '@/lib/db/direct-pg';
 import { prisma } from '@/lib/prisma';
 import type { CompactReviewPayloadV1 } from '@/entities/quiz-result/compact-review-payload';
@@ -162,7 +164,7 @@ async function attachReviewPayloadBestEffort(
     reviewPayload: CompactReviewPayloadV1,
 ) {
     try {
-        await withDirectPgWriteClient(
+        await withPooledPgClient(
             async (client) => {
                 await client.query(
                     `
@@ -340,7 +342,11 @@ async function completeQuizSessionWithPgClient(
         );
 
         if (recovered) {
-            if (recovered === 'completed' && input.reviewPayload) {
+            if (
+                (recovered === 'completed' ||
+                    recovered === 'already_completed') &&
+                input.reviewPayload
+            ) {
                 void attachReviewPayloadBestEffort(
                     input.sessionId,
                     input.userId,

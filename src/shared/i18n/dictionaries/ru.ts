@@ -88,7 +88,7 @@ export const ruDictionary: Dictionary = {
         remainingLabel: 'Осталось',
         expiredLabel: 'Время вышло',
         timeUpHint: 'Время вышло. Ответы заморожены.',
-        savingAnswers: 'Время вышло — сохраняем, что успел…',
+        savingAnswers: 'Сохраняем волну…',
         chooseAnswerHint: 'Выбери ответ, чтобы продолжить волну.',
         finishWaveButton: 'Завершить волну',
         restartButton: 'Начать заново',

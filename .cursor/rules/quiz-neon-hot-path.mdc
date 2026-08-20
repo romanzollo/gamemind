@@ -34,7 +34,7 @@ Full canon: `docs/QUIZ_NEON_HOT_PATH.md` + `docs/DECISIONS.md` → Quiz Start / 
 ## Required shape
 
 - Complete: answers + **scalar** `QuizResult` (`VALUES`) + COMPLETED + outbox only.
-- `reviewPayload`: only **after** successful complete, non-blocking; failure must not fail submit.
+- `reviewPayload`: only **after** successful complete, non-blocking; **pooled** UPDATE (not Direct queue). Review API = pooled payload-first SELECT. Failure must not fail submit. Do not SELECT `snapshotData` TOAST on Direct/pooled during the attach race.
 - Result: summary first; review via client API; soft-miss, not `notFound()`.
 - Play-load: handoff from create, else pooled snapshot read; quiz page soft-miss, not `notFound()`.
 - One shared Direct queue in `next dev` only — a hung hop blocks home/Daily/start. Production has **no** that queue.

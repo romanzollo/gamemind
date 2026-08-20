@@ -1,5 +1,5 @@
 // Работа с результатами викторин
-import { withDirectPgClient } from '@/lib/db/direct-pg';
+import { withDirectPgClient, withPooledPgClient } from '@/lib/db/direct-pg';
 import { parseSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
 import {
     parseCompactReviewPayload,
@@ -61,7 +61,7 @@ export type QuizResultReviewBundle = {
     }>;
 };
 
-/** Result review load: slim payload (B) или legacy snapshot+answers. */
+/** Result review load: slim payload (B), legacy snapshot+answers, или ещё нет payload. */
 export type QuizResultReviewLoad =
     | {
           kind: 'payload';
@@ -71,6 +71,10 @@ export type QuizResultReviewLoad =
     | {
           kind: 'snapshot';
           bundle: QuizResultReviewBundle;
+      }
+    | {
+          kind: 'pending';
+          sessionId: string;
       };
 
 type LeaderboardScoreRow = {
@@ -291,24 +295,31 @@ async function loadResultSummaryBySessionIdForUser(
 }
 
 /**
- * Review: сначала slim reviewPayload (option B), иначе legacy reviewSnapshot/TOAST.
- * Не блокирует summary.
+ * Review: сначала slim reviewPayload (option B), без TOAST на Direct.
+ *
+ * Почему pooled: в next-dev Direct queue одна на процесс. Complete ~19s
+ * + JSONB attach на той же очереди → review API 8s 503, score уже на экране.
+ * Payload-only SELECT не трогает `reviewSnapshot` / `snapshotData`.
+ * Legacy TOAST — только если строка старше гонки attach (~20с).
+ * Нет payload и нет snapshot → `pending` (API 503, клиент ретраит).
  */
 async function loadResultReviewBySessionIdForUser(
     sessionId: string,
     userId: string,
 ): Promise<QuizResultReviewLoad | null> {
-    const loaded = await withDirectPgClient(
+    const REVIEW_ATTACH_RACE_MS = 20_000;
+
+    return withPooledPgClient(
         async (client) => {
-            const result = await client.query<{
+            const payloadResult = await client.query<{
                 review_payload: unknown;
-                review_snapshot: unknown;
+                completed_at: Date;
                 question_count: number;
             }>(
                 `
                 SELECT
                     r."reviewPayload" AS "review_payload",
-                    r."reviewSnapshot" AS "review_snapshot",
+                    r."completedAt" AS "completed_at",
                     s."questionCount" AS "question_count"
                 FROM "QuizResult" r
                 INNER JOIN "QuizSession" s
@@ -319,7 +330,7 @@ async function loadResultReviewBySessionIdForUser(
                 [sessionId, userId],
             );
 
-            const row = result.rows[0];
+            const row = payloadResult.rows[0];
 
             if (!row) {
                 return null;
@@ -335,8 +346,33 @@ async function loadResultReviewBySessionIdForUser(
                 };
             }
 
+            const completedAtMs = new Date(row.completed_at).getTime();
+            const ageMs = Number.isNaN(completedAtMs)
+                ? Number.POSITIVE_INFINITY
+                : Date.now() - completedAtMs;
+
+            // Свежий complete: attach ещё в полёте — не читать snapshot TOAST.
+            if (ageMs < REVIEW_ATTACH_RACE_MS) {
+                return {
+                    kind: 'pending' as const,
+                    sessionId,
+                };
+            }
+
+            const toastResult = await client.query<{
+                review_snapshot: unknown;
+            }>(
+                `
+                SELECT r."reviewSnapshot" AS "review_snapshot"
+                FROM "QuizResult" r
+                WHERE r."sessionId" = $1 AND r."userId" = $2
+                LIMIT 1
+            `,
+                [sessionId, userId],
+            );
+
             let snapshot = parseSnapshotData(
-                row.review_snapshot as string | null,
+                toastResult.rows[0]?.review_snapshot as string | null,
             );
 
             if (!snapshot) {
@@ -357,7 +393,10 @@ async function loadResultReviewBySessionIdForUser(
             }
 
             if (!snapshot || snapshot.questions.length !== row.question_count) {
-                return null;
+                return {
+                    kind: 'pending' as const,
+                    sessionId,
+                };
             }
 
             const answersResult = await client.query<ReviewAnswerRow>(
@@ -388,13 +427,9 @@ async function loadResultReviewBySessionIdForUser(
         },
         {
             debugLabel: 'quiz.result.review',
-            // Payload path should be fast; legacy TOAST: 1×8s soft-fail.
-            maxAttempts: 1,
             attemptTimeoutMs: 8_000,
         },
     );
-
-    return loaded;
 }
 
 // репозиторий для работы с результатами викторины

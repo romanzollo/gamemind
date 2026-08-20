@@ -42,7 +42,7 @@ export async function QuizResultReviewSection({
         );
     }
 
-    if (!review) {
+    if (!review || review.kind === 'pending') {
         return (
             <InlineAlert className="mt-4" tone="warning" role="status">
                 {dictionary.quiz.errors.reviewLoadFailed}
