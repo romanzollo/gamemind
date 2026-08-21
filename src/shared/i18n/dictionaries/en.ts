@@ -118,7 +118,7 @@ export const enDictionary = {
         waveCurrentMarker: 'this',
         waveAttemptLabel: 'attempt',
         waveRunContributionLabel: 'to run {n}',
-        thisWaveContext: '{score} · correct {correct}/{total}',
+        thisWaveContext: '{correct}/{total} correct',
         reviewWavesEyebrow: 'Review by wave',
         reviewWaveTabLabel: 'Wave {n}',
         reviewWavesEmpty: 'Wave review is not available yet.',

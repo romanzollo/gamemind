@@ -4,7 +4,7 @@
  * Pattern (roguelike / sports box score):
  * 1) hero = run total (то, что на leaderboard);
  * 2) волны = строки матча: статус текстом, попытка ≠ вклад в забег;
- * 3) «эта волна» — компактный context для разбора, не второй hero.
+ * 3) «эта волна» — компактный context для разбора (верных N/M), не второй hero.
  *
  * Cut / clockOk=false: очки волны не входят в totalScore — UI это объясняет,
  * математику не «чинит». Canon: docs/DECISIONS.md → Survival Mode MVP.
@@ -133,8 +133,8 @@ export function SurvivalRunResultBoardView({
                                         </p>
                                     </div>
 
-                                    <div className="flex flex-col gap-0.5 sm:items-end">
-                                        <p className="flex items-baseline justify-between gap-3 text-sm sm:justify-end">
+                                    <div className="flex min-w-30 flex-col gap-0.5 sm:items-end">
+                                        <p className="flex w-full items-baseline justify-between gap-3 text-sm sm:justify-end sm:gap-4">
                                             <span className="text-muted">
                                                 {labels.waveAttemptLabel}
                                             </span>
@@ -149,9 +149,12 @@ export function SurvivalRunResultBoardView({
                                                 {wave.score}
                                             </span>
                                         </p>
-                                        <p className="font-mono text-xs tabular-nums text-muted sm:text-right">
-                                            {contributionLabel}
-                                        </p>
+                                        {/* Дубль «к забегу N» только если вклад ≠ попытка (cut / 0). */}
+                                        {contribution !== wave.score ? (
+                                            <p className="font-mono text-xs tabular-nums text-muted sm:text-right">
+                                                {contributionLabel}
+                                            </p>
+                                        ) : null}
                                     </div>
                                 </div>
                             </li>
@@ -170,7 +173,7 @@ export function SurvivalRunResultBoardView({
             </div>
 
             <nav
-                className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-start sm:gap-3"
+                className="mt-6 flex flex-col gap-2 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3"
                 aria-label={labels.runScoreTitle}
             >
                 {playAgainAction}
@@ -187,7 +190,8 @@ export function SurvivalRunResultBoardView({
                     href={`/${locale}`}
                     className={buttonClassName({
                         variant: 'ghost',
-                        className: 'w-full sm:w-auto',
+                        className:
+                            'w-full justify-center text-muted sm:w-auto sm:justify-start',
                     })}
                 >
                     {quizLabels.backHome}

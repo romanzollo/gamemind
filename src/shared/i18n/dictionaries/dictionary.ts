@@ -164,8 +164,8 @@ export type Dictionary = {
         /** Колонка: вклад в забег. `{n}` = очки (0 если not counted). */
         waveRunContributionLabel: string;
         /**
-         * Компактный context под box score.
-         * `{score}` / `{correct}` / `{total}` — эта сессия result page.
+         * Компактный context под box score (без дубля очков волны).
+         * `{correct}` / `{total}` — эта сессия; `{score}` опционально legacy.
          */
         thisWaveContext: string;
         /** Review: eyebrow над сегментом волн. */

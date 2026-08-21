@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-21 (Survival result box score + per-wave review) |
+| **Last updated** | 2026-08-21 (Survival result polish: hide single-wave tabs) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -48,7 +48,7 @@ Phase 5 modes / achievements inherit the system
 | **Ongoing mode** | **Active** — every new feature UI extends the lock (Prompt T-Feature + §7) |
 | **Related: §11.9 Perceived performance** | Light July 18 + **pending spinner pass** July 28 (`PendingSpinner` / `SubmitButton`) |
 
-**Next:** Survival result box score + per-wave review — smoke (2 waves, one cut; 320px; light/dark; ru/en), then commit. Brand mark v2 = separate Taste chat (§14).
+**Next:** Brand mark v2 = separate Taste chat (§14). Survival result polish — smoke 1 wave (no tabs) + 2 waves (quiet segment); 320px; light/dark.
 
 ---
 
@@ -343,16 +343,27 @@ Format:
 - Follow-up: ...
 ```
 
+### 2026-08-21 — Survival result polish (tabs + box-score density)
+
+- Scope: Feature:Survival result polish / Prompt T-Feature (Scoreboard Editorial)
+- Skills used: gamemind-taste-ui
+- Files touched: `SurvivalWaveReviewTabs.tsx`, `SurvivalRunResultBoard.tsx`, i18n `thisWaveContext` ru/en, TASTE §1/§7/§14
+- What changed visually: 1 wave → no «Разбор по волнам» tab chrome (straight to answer review); 2+ waves → quieter segmented control (not primary CTA); hide «к забегу N» when contribution = attempt; «эта волна» = `{correct}/{total}` only; home CTA softer ghost on mobile
+- Tokens/components added: none
+- Explicitly NOT changed: scoring, snapshot, complete/Direct, review API, leaderboard
+- Verify: wave 1 only (no tabs); 2 waves switch; one cut shows contribution line; 320px light/dark; Classic/Blitz unchanged
+- Follow-up: brand mark v2 (§14)
+
 ### 2026-08-21 — Survival result box score + per-wave review
 
 - Scope: Feature:Survival result / Prompt T-Feature (Scoreboard Editorial)
 - Skills used: gamemind-taste-ui, design-taste-frontend (Scoreboard Editorial)
 - Files touched: `SurvivalRunResultBoard.tsx`, `SurvivalWaveReviewTabs.tsx`, `ResultSecondaryPanel.tsx`, result `page.tsx`, i18n `survivalMode`, TASTE §7/§14
-- What changed visually: hero = run total; waves as box-score rows (attempt vs contribution; counted / counted·0 / 0-to-run); compact «this wave»; review always shows wave chrome (tab even after wave 1); 2+ waves switch session review API
+- What changed visually: hero = run total; waves as box-score rows (attempt vs contribution; counted / counted·0 / 0-to-run); compact «this wave»; review wave chrome; 2+ waves switch session review API
 - Tokens/components added: `SurvivalWaveReviewTabs` (client; no new palette)
 - Explicitly NOT changed: scoring, snapshot, complete/Direct, leaderboard SQL, Classic/Blitz/Daily summary, IMAGE_GUESS
 - Verify: run 2 waves with one cut; 320/390/768; light/dark; ru/en; Classic result still has no wave chrome
-- Follow-up: paint-arm bank clock rejected (local wedge); keep create-time `startedAt`
+- Follow-up: paint-arm bank clock rejected (local wedge); keep create-time `startedAt`; tab chrome refined in same-day polish entry above
 
 ### 2026-08-20 — Interim brand mark (favicon + header lockup)
 
@@ -1716,6 +1727,7 @@ No app routing, no quiz logic.
 **Ongoing Survival UI:**
 
 - [x] Survival result box score + per-wave review tabs (2026-08-21) — hero run total, counted vs 0-to-run, review by `sessionId` (no merged payload).
+- [x] Survival result polish (2026-08-21) — hide single-wave tab chrome; quieter 2+ segment; less score duplication in box score / this-wave line.
 
 **Ongoing brand:**
 

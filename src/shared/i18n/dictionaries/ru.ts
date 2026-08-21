@@ -118,7 +118,7 @@ export const ruDictionary: Dictionary = {
         waveCurrentMarker: 'эта',
         waveAttemptLabel: 'попытка',
         waveRunContributionLabel: 'к забегу {n}',
-        thisWaveContext: '{score} · верных {correct}/{total}',
+        thisWaveContext: '{correct}/{total} верных',
         reviewWavesEyebrow: 'Разбор по волнам',
         reviewWaveTabLabel: 'Волна {n}',
         reviewWavesEmpty: 'Разбор волн пока недоступен.',

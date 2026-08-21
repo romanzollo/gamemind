@@ -5,8 +5,9 @@
  *
  * Каждая волна = отдельная QuizSession. Грузим `/api/result/:id/review`
  * выбранной волны (payload-first, soft-miss). Не мержим run в один JSONB.
- * Таб-хром всегда (и после волны 1) — Scoreboard Editorial, не «голый» Classic.
- * 2+ волны — переключение сессий.
+ *
+ * UX: tab chrome только при 2+ волнах (выбор). Одна волна — сразу panel
+ * разбора без «ложной» CTA-кнопки «Волна 1». Canon: Scoreboard Editorial.
  *
  * Canon: docs/QUIZ_NEON_HOT_PATH.md (review after complete, non-blocking).
  */
@@ -69,6 +70,22 @@ export function SurvivalWaveReviewTabs({
     const canSwitch = waves.length > 1;
     const selectedWave =
         waves.find((wave) => wave.sessionId === selectedSessionId) ?? waves[0];
+    const reviewSessionId = selectedWave?.sessionId ?? selectedSessionId;
+
+    const reviewPanel = (
+        <QuizResultReviewClientLoader
+            sessionId={reviewSessionId}
+            locale={locale}
+            labels={quizLabels}
+            loadingLabel={loadingLabel}
+            retryLabel={retryLabel}
+        />
+    );
+
+    // Одна волна: без сегмента — иначе «Волна 1» конкурирует с primary CTA.
+    if (!canSwitch) {
+        return <section className="mt-8 sm:mt-10">{reviewPanel}</section>;
+    }
 
     return (
         <section
@@ -83,8 +100,8 @@ export function SurvivalWaveReviewTabs({
             </p>
 
             <div
-                className="mt-2 grid grid-cols-2 gap-1 rounded-md border border-border bg-surface p-1 sm:flex sm:flex-wrap"
-                role={canSwitch ? 'tablist' : 'group'}
+                className="mt-2 flex flex-wrap gap-0.5 rounded-md border border-border bg-surface-muted/60 p-0.5"
+                role="tablist"
                 aria-label={survivalLabels.reviewWavesEyebrow}
             >
                 {waves.map((wave) => {
@@ -101,30 +118,21 @@ export function SurvivalWaveReviewTabs({
                         <button
                             key={wave.sessionId}
                             type="button"
-                            role={canSwitch ? 'tab' : undefined}
+                            role="tab"
                             id={`survival-wave-tab-${wave.sessionId}`}
-                            aria-selected={canSwitch ? isSelected : undefined}
-                            aria-current={
-                                !canSwitch && isSelected ? 'true' : undefined
-                            }
+                            aria-selected={isSelected}
                             aria-controls="survival-wave-review-panel"
                             aria-label={`${tabLabel}, ${statusLabel}`}
-                            disabled={!canSwitch}
                             onClick={() => {
-                                if (canSwitch) {
-                                    setSelectedSessionId(wave.sessionId);
-                                }
+                                setSelectedSessionId(wave.sessionId);
                             }}
                             className={[
-                                'min-h-11 rounded-sm px-2 py-2 text-center text-sm font-semibold',
-                                'motion-safe:transition-colors sm:min-w-22 sm:flex-1',
+                                'min-h-10 flex-1 rounded-sm px-3 py-1.5 text-center text-sm font-medium',
+                                'motion-safe:transition-colors sm:min-w-22 sm:flex-none',
                                 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
                                 isSelected
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'text-muted hover:bg-surface-hover hover:text-foreground',
-                                !canSwitch
-                                    ? 'col-span-2 cursor-default sm:flex-none sm:min-w-28'
-                                    : '',
+                                    ? 'bg-surface text-foreground shadow-sm'
+                                    : 'text-muted hover:text-foreground',
                             ].join(' ')}
                         >
                             {tabLabel}
@@ -134,7 +142,7 @@ export function SurvivalWaveReviewTabs({
             </div>
 
             <div
-                role={canSwitch ? 'tabpanel' : undefined}
+                role="tabpanel"
                 id="survival-wave-review-panel"
                 aria-labelledby={
                     selectedWave
@@ -142,13 +150,7 @@ export function SurvivalWaveReviewTabs({
                         : 'survival-wave-review-tabs-title'
                 }
             >
-                <QuizResultReviewClientLoader
-                    sessionId={selectedSessionId}
-                    locale={locale}
-                    labels={quizLabels}
-                    loadingLabel={loadingLabel}
-                    retryLabel={retryLabel}
-                />
+                {reviewPanel}
             </div>
         </section>
     );
