@@ -143,8 +143,37 @@ export type Dictionary = {
         runTotalLabel: string;
         /** `{n}` = номер волны. */
         waveLineLabel: string;
+        /** Legacy / короткий статус cut: «не в зачёт». */
         waveNotCounted: string;
         thisWaveLabel: string;
+        /**
+         * Box score: статусы волны (текст + a11y; не только цвет).
+         * counted = clockOk; notCounted = cut / clockOk false → 0 к totalScore.
+         */
+        waveCountedStatus: string;
+        /**
+         * clockOk, но вклад 0 (cut с нулём / пустая волна) —
+         * не путать с «0 к забегу» (not counted).
+         */
+        waveCountedZeroStatus: string;
+        waveNotCountedStatus: string;
+        /** Marker текущей волны в box score (коротко). */
+        waveCurrentMarker: string;
+        /** Колонка: очки попытки волны (могут не войти в run). */
+        waveAttemptLabel: string;
+        /** Колонка: вклад в забег. `{n}` = очки (0 если not counted). */
+        waveRunContributionLabel: string;
+        /**
+         * Компактный context под box score.
+         * `{score}` / `{correct}` / `{total}` — эта сессия result page.
+         */
+        thisWaveContext: string;
+        /** Review: eyebrow над сегментом волн. */
+        reviewWavesEyebrow: string;
+        /** Review tab: `{n}` = номер волны. */
+        reviewWaveTabLabel: string;
+        /** Review: нет волн / пустой board (edge). */
+        reviewWavesEmpty: string;
     };
     auth: {
         loginTitle: string;

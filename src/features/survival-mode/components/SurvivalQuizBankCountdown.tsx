@@ -1,11 +1,9 @@
-'use client';
-
 /**
  * Countdown банка Survival.
  *
  * Remaining = max(0, T0 + 4×correct − 6×wrong − elapsed) от `startedAt`.
  * Не `timedEndsAt`. Grace на клиенте нет — 00:00 замирает UX; авторитет
- * часов на submit (`isSurvivalClockOk`) в Chat E.
+ * часов на submit (`isSurvivalClockOk`).
  * Цифры только после mount — иначе hydration mismatch.
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  */

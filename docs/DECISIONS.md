@@ -1921,7 +1921,7 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 | Clock authority | `elapsed = completedAt − startedAt`; `budget = max(0, T0 + 4×correct − 6×wrong)`; `clockOk ⇔ elapsed ≤ budget + grace` |
 | Grace | 3s for clockOk only. **T0' reconstruct has no grace** |
 | `timedEndsAt` | **NULL**. Never SET. Never UPDATE |
-| `startedAt` | JS `Date` **after connect** on Survival INSERT. Not SQL `NOW()` into naive `TIMESTAMP` |
+| `startedAt` | JS `Date` **after connect** on Survival INSERT (create hop 3 after JSONB). Not SQL `NOW()` into naive `TIMESTAMP` |
 | Late / paused client | Still `completeWithResult`. Wave score enters run total only if `survivalClockOk = true` |
 | Answers | Partial OK; unanswered do not apply −6 |
 | Daily | `dailyChallengeId` NULL. Daily does **not** use the cycle |
@@ -1962,6 +1962,7 @@ Submit:   score + survivalClockOk (T0 from play/run)
 - JSONB bank/seen/duration on `completeWithResult`; bump timeouts / keep-warm
 - Fold Survival into `runTimedQuizStart`; Mix; Classic cycle for Survival continue
 - Put Survival points into Classic/Blitz/Daily best
+- **Paint-arm / play-ready re-arm `startedAt` on quiz page or client mount** to “fix” create+load eating T0' — rejected Aug 21 (local freeze / infinite load / Strict Mode). Clock stays create hop 3; prod Neon is usually fast enough. Revisit only with measured prod evidence + ADR.
 
 ### Implementation order
 

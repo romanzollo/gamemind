@@ -10,6 +10,10 @@ import { AchievementUnlockFlash } from '@/features/achievements/components/Achie
 import { processAchievementOutboxForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import type { AchievementCode } from '@/features/achievements/types';
 import { QuizResultReviewClientLoader } from '@/features/quiz/components/QuizResultReviewClientLoader';
+import {
+    SurvivalWaveReviewTabs,
+    type SurvivalWaveReviewTab,
+} from '@/features/survival-mode/components/SurvivalWaveReviewTabs';
 import type { Dictionary, Locale } from '@/shared/i18n';
 
 type ResultSecondaryPanelProps = {
@@ -19,6 +23,11 @@ type ResultSecondaryPanelProps = {
     dictionary: Dictionary;
     resultPath: string;
     urlUnlockedCodes: AchievementCode[];
+    /**
+     * Survival multi-wave: скаляры board. Без массива — Classic/Blitz/Daily
+     * loader как раньше. Не JSONB и не hot path complete.
+     */
+    survivalWaves?: SurvivalWaveReviewTab[];
 };
 
 export async function ResultSecondaryPanel({
@@ -28,6 +37,7 @@ export async function ResultSecondaryPanel({
     dictionary,
     resultPath,
     urlUnlockedCodes,
+    survivalWaves,
 }: ResultSecondaryPanelProps) {
     let awardedCodes: AchievementCode[] = [];
 
@@ -53,13 +63,25 @@ export async function ResultSecondaryPanel({
                 />
             ) : null}
 
-            <QuizResultReviewClientLoader
-                sessionId={sessionId}
-                locale={locale}
-                labels={dictionary.quiz}
-                loadingLabel={dictionary.common.loading}
-                retryLabel={dictionary.admin.retryLoad}
-            />
+            {survivalWaves ? (
+                <SurvivalWaveReviewTabs
+                    waves={survivalWaves}
+                    currentSessionId={sessionId}
+                    locale={locale}
+                    quizLabels={dictionary.quiz}
+                    survivalLabels={dictionary.survivalMode}
+                    loadingLabel={dictionary.common.loading}
+                    retryLabel={dictionary.admin.retryLoad}
+                />
+            ) : (
+                <QuizResultReviewClientLoader
+                    sessionId={sessionId}
+                    locale={locale}
+                    labels={dictionary.quiz}
+                    loadingLabel={dictionary.common.loading}
+                    retryLabel={dictionary.admin.retryLoad}
+                />
+            )}
         </>
     );
 }

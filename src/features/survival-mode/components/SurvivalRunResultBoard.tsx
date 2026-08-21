@@ -1,11 +1,13 @@
 /**
  * Scoreboard забега Survival на result.
  *
- * Pattern (roguelike / endless runs): hero = run total (то, что на доске),
- * ниже — строки волн, ещё ниже — эта волна как контекст разбора.
- * Scoreboard Editorial: caps eyebrow, mono tabular, hairline — без card soup.
+ * Pattern (roguelike / sports box score):
+ * 1) hero = run total (то, что на leaderboard);
+ * 2) волны = строки матча: статус текстом, попытка ≠ вклад в забег;
+ * 3) «эта волна» — компактный context для разбора, не второй hero.
  *
- * Canon: docs/DECISIONS.md → Survival Mode MVP (board = totalScore).
+ * Cut / clockOk=false: очки волны не входят в totalScore — UI это объясняет,
+ * математику не «чинит». Canon: docs/DECISIONS.md → Survival Mode MVP.
  */
 
 import Link from 'next/link';
@@ -46,6 +48,10 @@ export function SurvivalRunResultBoardView({
         waveMaxPossibleScore != null && waveMaxPossibleScore > 0
             ? `${waveScore} / ${waveMaxPossibleScore}`
             : String(waveScore);
+    const thisWaveContext = labels.thisWaveContext
+        .replace('{score}', waveScoreText)
+        .replace('{correct}', String(waveCorrectCount))
+        .replace('{total}', String(waveTotalQuestions));
 
     return (
         <section
@@ -66,68 +72,105 @@ export function SurvivalRunResultBoardView({
                 <p className="text-xs font-medium tracking-wide text-muted uppercase sm:text-sm">
                     {labels.runTotalLabel}
                 </p>
-                <p className="font-display mt-1.5 text-4xl font-semibold tabular-nums tracking-tight text-foreground sm:mt-2 sm:text-6xl">
+                <p className="font-display mt-1.5 text-4xl font-semibold tabular-nums tracking-tight text-foreground motion-safe:transition-opacity sm:mt-2 sm:text-6xl">
                     {board.totalScore}
                 </p>
             </div>
 
             {board.waves.length > 0 ? (
-                <ol className="mt-5 space-y-2 border-t border-border pt-4 sm:mt-6">
+                <ol className="mt-5 border-t border-border sm:mt-6">
                     {board.waves.map((wave) => {
                         const isCurrent = wave.sessionId === currentSessionId;
+                        const contribution = wave.clockOk ? wave.score : 0;
                         const waveTitle = labels.waveLineLabel.replace(
                             '{n}',
                             String(wave.waveIndex),
                         );
+                        const statusLabel = !wave.clockOk
+                            ? labels.waveNotCountedStatus
+                            : wave.score === 0
+                              ? labels.waveCountedZeroStatus
+                              : labels.waveCountedStatus;
+                        const contributionLabel =
+                            labels.waveRunContributionLabel.replace(
+                                '{n}',
+                                String(contribution),
+                            );
+                        const statusToneClass = !wave.clockOk
+                            ? 'text-muted'
+                            : wave.score === 0
+                              ? 'text-muted'
+                              : 'text-success';
 
                         return (
                             <li
                                 key={wave.sessionId}
-                                className="flex items-baseline justify-between gap-3 text-sm"
+                                className={[
+                                    'border-b border-border py-3 last:border-b-0 sm:py-3.5',
+                                    isCurrent
+                                        ? '-mx-4 border-l-2 border-l-primary bg-surface-muted/50 px-4 sm:-mx-7 sm:px-7'
+                                        : '',
+                                ].join(' ')}
+                                aria-current={isCurrent ? 'true' : undefined}
                             >
-                                <span
-                                    className={
-                                        isCurrent
-                                            ? 'font-medium text-foreground'
-                                            : 'text-muted'
-                                    }
-                                >
-                                    {waveTitle}
-                                    {!wave.clockOk ? (
-                                        <span className="ml-2 font-mono text-[0.65rem] uppercase tracking-wide text-muted">
-                                            {labels.waveNotCounted}
-                                        </span>
-                                    ) : null}
-                                </span>
-                                <span className="font-mono tabular-nums text-foreground">
-                                    {wave.score}
-                                </span>
+                                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                                    <div className="min-w-0">
+                                        <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm font-medium text-foreground">
+                                            <span>{waveTitle}</span>
+                                            {isCurrent ? (
+                                                <span className="font-mono text-[0.7rem] font-medium tracking-wide text-primary">
+                                                    {labels.waveCurrentMarker}
+                                                </span>
+                                            ) : null}
+                                        </p>
+                                        <p
+                                            className={[
+                                                'mt-0.5 text-xs font-medium',
+                                                statusToneClass,
+                                            ].join(' ')}
+                                        >
+                                            {statusLabel}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex flex-col gap-0.5 sm:items-end">
+                                        <p className="flex items-baseline justify-between gap-3 text-sm sm:justify-end">
+                                            <span className="text-muted">
+                                                {labels.waveAttemptLabel}
+                                            </span>
+                                            <span
+                                                className={[
+                                                    'font-mono tabular-nums',
+                                                    wave.clockOk
+                                                        ? 'text-foreground'
+                                                        : 'text-muted line-through',
+                                                ].join(' ')}
+                                            >
+                                                {wave.score}
+                                            </span>
+                                        </p>
+                                        <p className="font-mono text-xs tabular-nums text-muted sm:text-right">
+                                            {contributionLabel}
+                                        </p>
+                                    </div>
+                                </div>
                             </li>
                         );
                     })}
                 </ol>
             ) : null}
 
-            <div className="mt-5 border-t border-border pt-4 sm:mt-6">
+            <div className="mt-4 border-t border-border pt-3 sm:mt-5 sm:pt-4">
                 <p className="text-xs font-medium tracking-wide text-muted uppercase">
                     {labels.thisWaveLabel}
                 </p>
-                <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-foreground sm:text-3xl">
-                    {waveScoreText}
-                </p>
-                <p className="mt-2 text-sm text-muted">
-                    <span className="font-medium text-foreground">
-                        {quizLabels.correctAnswersLabel}
-                    </span>
-                    {': '}
-                    <span className="tabular-nums font-semibold text-foreground">
-                        {waveCorrectCount} / {waveTotalQuestions}
-                    </span>
+                <p className="mt-1 text-sm tabular-nums text-foreground">
+                    {thisWaveContext}
                 </p>
             </div>
 
             <nav
-                className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3 sm:items-start"
+                className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-start sm:gap-3"
                 aria-label={labels.runScoreTitle}
             >
                 {playAgainAction}

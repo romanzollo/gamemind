@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-20 (interim brand mark: header GM + favicon chevrons) |
+| **Last updated** | 2026-08-21 (Survival result box score + per-wave review) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -48,7 +48,7 @@ Phase 5 modes / achievements inherit the system
 | **Ongoing mode** | **Active** — every new feature UI extends the lock (Prompt T-Feature + §7) |
 | **Related: §11.9 Perceived performance** | Light July 18 + **pending spinner pass** July 28 (`PendingSpinner` / `SubmitButton`) |
 
-**Next:** interim brand mark **smoke OK** (user 2026-08-20). Commit brand + pending lobby/Survival/review when asked. Brand mark v2 = separate Taste chat (§14). Survival wave 2 = new chat.
+**Next:** Survival result box score + per-wave review — smoke (2 waves, one cut; 320px; light/dark; ru/en), then commit. Brand mark v2 = separate Taste chat (§14).
 
 ---
 
@@ -342,6 +342,17 @@ Format:
 - Verify: light/dark, ru/en, mobile quiz
 - Follow-up: ...
 ```
+
+### 2026-08-21 — Survival result box score + per-wave review
+
+- Scope: Feature:Survival result / Prompt T-Feature (Scoreboard Editorial)
+- Skills used: gamemind-taste-ui, design-taste-frontend (Scoreboard Editorial)
+- Files touched: `SurvivalRunResultBoard.tsx`, `SurvivalWaveReviewTabs.tsx`, `ResultSecondaryPanel.tsx`, result `page.tsx`, i18n `survivalMode`, TASTE §7/§14
+- What changed visually: hero = run total; waves as box-score rows (attempt vs contribution; counted / counted·0 / 0-to-run); compact «this wave»; review always shows wave chrome (tab even after wave 1); 2+ waves switch session review API
+- Tokens/components added: `SurvivalWaveReviewTabs` (client; no new palette)
+- Explicitly NOT changed: scoring, snapshot, complete/Direct, leaderboard SQL, Classic/Blitz/Daily summary, IMAGE_GUESS
+- Verify: run 2 waves with one cut; 320/390/768; light/dark; ru/en; Classic result still has no wave chrome
+- Follow-up: paint-arm bank clock rejected (local wedge); keep create-time `startedAt`
 
 ### 2026-08-20 — Interim brand mark (favicon + header lockup)
 
@@ -1701,6 +1712,10 @@ No app routing, no quiz logic.
 - [x] Daily Challenge today’s board under CTA (2026-07-30) — top-10 compact strip; **on prod** (user smoke OK).
 - [x] Toast Notifications MVP (2026-07-30) — Sonner + unlock flash; Scoreboard cards; live theme/locale.
 - [x] Achievement illustration semantics (Quiz Arcade) — 2026-08-16. Pack rules in DECISIONS Achievements MVP. New badges extend the plaque language (no gamepad / no `?` as quiz / no overflow-hidden).
+
+**Ongoing Survival UI:**
+
+- [x] Survival result box score + per-wave review tabs (2026-08-21) — hero run total, counted vs 0-to-run, review by `sessionId` (no merged payload).
 
 **Ongoing brand:**
 

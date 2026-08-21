@@ -320,6 +320,15 @@ export default async function QuizResultPage({
                             dictionary={dictionary}
                             resultPath={resultPathAfterFlash}
                             urlUnlockedCodes={unlockedCodes}
+                            survivalWaves={
+                                summary.isSurvival && survivalRunBoard
+                                    ? survivalRunBoard.waves.map((wave) => ({
+                                          sessionId: wave.sessionId,
+                                          waveIndex: wave.waveIndex,
+                                          clockOk: wave.clockOk,
+                                      }))
+                                    : undefined
+                            }
                         />
                     </Suspense>
                 </>
