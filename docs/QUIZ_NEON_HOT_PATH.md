@@ -5,7 +5,7 @@
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
 **Overview:** `docs/ARCHITECTURE.md`.  
-**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. **Wave 1 + wave 2+ shipped (Aug 20):** schema A + clock B + start C (pooled JSONB) + play D + submit E + end-of-wave F + carry (seen table, `totalScore`, continue CTA, board = best run total). `timedEndsAt` NULL. Survival play DTO may include `isCorrect` + `initialBankSeconds`. After successful complete: **pooled** `recordSurvivalWaveAfterComplete` (bank/seen/total) — not in `completeWithResult`.
+**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. **Wave 1 + wave 2+ on prod (Aug 21):** schema A + clock B + start C (pooled JSONB) + play D + submit E + end-of-wave F + carry (seen table, `totalScore`, continue CTA, board = best run total). Prod schema catch-up Aug 21 after `42703` `survivalRunId`. `timedEndsAt` NULL. Survival play DTO may include `isCorrect` + `initialBankSeconds`. After successful complete: **pooled** `recordSurvivalWaveAfterComplete` (bank/seen/total) — not in `completeWithResult`.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 
@@ -13,7 +13,7 @@
 
 ## Product priority (do not invert)
 
-1. **Production** Classic / Blitz / Daily: start → questions on screen → **submit saves score** → result summary paints. That path is the release gate. Survival **wave 1** is in the gate once www has the schema: HARD 12 start→score (auto-submit on last lock-in or bank=0); review is best-effort.
+1. **Production** Classic / Blitz / Daily: start → questions on screen → **submit saves score** → result summary paints. That path is the release gate. Survival is in the gate (**on www Aug 21**): HARD wave1→continue→wave2 (bank carry + run total); auto-submit on last lock-in or bank=0; review is best-effort.
 2. Local Windows `next dev` must not wedge the shared Direct queue (home/Daily/start look dead). Workarounds (queue, 300ms settle, 5s play-load timeout, in-memory handoff) exist **because** of that lab — they must not make prod worse (example: 5s play-load timeout → false soft-miss on cold Neon).
 3. Answer **review** and polish are best-effort — never block (1).
 
@@ -160,7 +160,7 @@ Safe and expected:
 
 - Draft JSON → validate → import DRAFT → admin publish.
 - Larger pool, more bilingual rows, images via existing media path.
-- Prod import against **prod** Neon only; after any schema-changing quiz deploy, run `prisma migrate deploy` on prod (Windows may need SQL + `_prisma_migrations` if `P1002`). Ops: `docs/CONTENT_PIPELINE.md` §10. Aug 15: missing `QuizSession.poolKind` (`42703`) broke all Classic/Blitz starts on www until that catch-up — not a handoff/clock bug.
+- Prod import against **prod** Neon only; after any schema-changing quiz deploy, run `prisma migrate deploy` on prod (Windows may need SQL + `_prisma_migrations` if `P1002`). Ops: `docs/CONTENT_PIPELINE.md` §10. Aug 15: missing `QuizSession.poolKind` (`42703`) broke Classic/Blitz on www until catch-up. Aug 21: missing `survivalRunId` (`42703`) broke Survival until `survival_run` + `wave2_carry` — not a handoff/clock bug.
 
 **Not required and often harmful:**
 

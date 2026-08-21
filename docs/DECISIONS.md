@@ -1047,7 +1047,7 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 
 **UI:** third Scoreboard segmented control (mode), same chrome as period/difficulty; preserve all three query params when switching any chip. Order on the page: mode → period → difficulty. Period chips: **Week → Month → All time** (live race first). Captions: rolling 7 days (not “falls off the board” / not calendar Monday); Classic/Blitz lobby gets one `text-xs` line under meta, not a modal.
 
-**Status (August 20, 2026):** Layer 1 + Survival mode chip shipped locally; lobby copy compact; mode chips wrap 2×2 on 320px. www smoke of week default + Survival board still pending if not yet on prod.
+**Status (August 21, 2026):** Layer 1 + Survival mode chip **on prod**; lobby copy compact; mode chips wrap 2×2 on 320px. User www smoke OK after Survival schema catch-up (Aug 21).
 
 ## Admin Panel
 
@@ -1887,7 +1887,7 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 
 ## Survival Mode MVP (August 19, 2026 — contract kickoff)
 
-**Date:** 2026-08-19 (ADR + types). **Status (Aug 20):** wave 1 shipped; **wave 2+ carry shipped** — run `totalScore`, `SurvivalRunSeenQuestion` exclusion, continue CTA, short last wave 1..11, leaderboard = best run total. Old A/B (exclusive best wave + cycle reshuffle) **superseded**.
+**Date:** 2026-08-19 (ADR + types). **Status (Aug 21):** wave 1 + **wave 2+ carry on prod** — run `totalScore`, `SurvivalRunSeenQuestion` exclusion, continue CTA, short last wave 1..11, leaderboard = best run total; result box-score polish. Prod Neon catch-up Aug 21 (`survival_run` + `wave2_carry`) after www `42703` `survivalRunId` — same ops class as Aug 15 `poolKind`. User smoke OK. Old A/B (exclusive best wave + cycle reshuffle) **superseded**.
 
 **Decision:** Phase 5 leftover after Timed is **Survival as a separate play mode**: fixed-size **waves**, a **server-reconstructed time-bank**, existing weighted scoring, same Neon snapshot/complete shape as Classic/Blitz. Not instant-death. Not a longer Classic. Not merged into `runTimedQuizStart`.
 

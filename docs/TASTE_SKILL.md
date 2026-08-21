@@ -39,7 +39,7 @@ Phase 5 modes / achievements inherit the system
 |-------|--------|
 | **Status** | `ongoing` — foundation §11.8 **closed** (Wave A + Wave B on prod) |
 | **Product stage** | **public beta** (live at www.game-mind.ru) |
-| **Last updated** | 2026-08-21 (Survival result polish: hide single-wave tabs) |
+| **Last updated** | 2026-08-21 (Survival on www — prod smoke OK) |
 | **Skills installed** | Yes — `redesign-existing-projects` + `design-taste-frontend` (v2) in `.agents/skills/` |
 | **Design system locked** | Yes in code — **Scoreboard Editorial** (`globals.css` tokens + Oswald / IBM Plex Sans / IBM Plex Mono via `@fontsource`) |
 | **Direction name** | Scoreboard Editorial |
@@ -48,7 +48,7 @@ Phase 5 modes / achievements inherit the system
 | **Ongoing mode** | **Active** — every new feature UI extends the lock (Prompt T-Feature + §7) |
 | **Related: §11.9 Perceived performance** | Light July 18 + **pending spinner pass** July 28 (`PendingSpinner` / `SubmitButton`) |
 
-**Next:** Brand mark v2 = separate Taste chat (§14). Survival result polish — smoke 1 wave (no tabs) + 2 waves (quiet segment); 320px; light/dark.
+**Next:** Brand mark v2 = separate Taste chat (§14). Optional content TEXT wave 6.
 
 ---
 
@@ -343,6 +343,17 @@ Format:
 - Follow-up: ...
 ```
 
+### 2026-08-21 — Survival on www (prod schema + smoke)
+
+- Scope: Ops / Feature:Survival prod gate
+- Skills used: n/a (ops)
+- Files touched: prod Neon via `apply-named-migration.cjs` (`survival_run` + `wave2_carry`); docs ROADMAP / DECISIONS / TASTE / CONTENT_PIPELINE / DEPLOY / QUIZ_NEON_HOT_PATH / PROJECT_CONTEXT
+- What changed visually: none (schema catch-up — www already had JS)
+- Tokens/components added: none
+- Explicitly NOT changed: hot path, scoring, timeouts
+- Verify: **OK** (user 2026-08-21) — Survival HARD wave1→continue→wave2; result polish; Classic/Blitz regression
+- Follow-up: brand mark v2 (§14); optional TEXT wave 6
+
 ### 2026-08-21 — Survival result polish (tabs + box-score density)
 
 - Scope: Feature:Survival result polish / Prompt T-Feature (Scoreboard Editorial)
@@ -351,7 +362,7 @@ Format:
 - What changed visually: 1 wave → no «Разбор по волнам» tab chrome (straight to answer review); 2+ waves → quieter segmented control (not primary CTA); hide «к забегу N» when contribution = attempt; «эта волна» = `{correct}/{total}` only; home CTA softer ghost on mobile
 - Tokens/components added: none
 - Explicitly NOT changed: scoring, snapshot, complete/Direct, review API, leaderboard
-- Verify: wave 1 only (no tabs); 2 waves switch; one cut shows contribution line; 320px light/dark; Classic/Blitz unchanged
+- Verify: local OK; **www OK** after Aug 21 prod schema catch-up
 - Follow-up: brand mark v2 (§14)
 
 ### 2026-08-21 — Survival result box score + per-wave review
@@ -1728,6 +1739,7 @@ No app routing, no quiz logic.
 
 - [x] Survival result box score + per-wave review tabs (2026-08-21) — hero run total, counted vs 0-to-run, review by `sessionId` (no merged payload).
 - [x] Survival result polish (2026-08-21) — hide single-wave tab chrome; quieter 2+ segment; less score duplication in box score / this-wave line.
+- [x] Survival on www (2026-08-21) — prod migrations + user smoke OK (wave1→wave2 + result polish).
 
 **Ongoing brand:**
 

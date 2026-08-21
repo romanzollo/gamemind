@@ -123,6 +123,7 @@ npm run build
 | Сайт есть, login сломан | Нет/неверный `AUTH_SECRET` или `AUTH_URL` |
 | Ошибки БД в quiz/admin | Перепутаны pooled/unpooled; миграции на prod не применены |
 | Старт квиза: «Проверь сложность…»; Vercel `42703` `poolKind` | JS на Vercel новее схемы Neon. Не трогать hot-path — `migrate deploy` / SQL fallback на **prod** (`CONTENT_PIPELINE.md` §10). Aug 15: после catch-up Classic/Blitz MIX на www OK |
+| Survival: `42703` `survivalRunId` (abandon skipped) | Тот же класс: JS новее схемы. Миграции `survival_run` + `wave2_carry` на **prod** unpooled. Aug 21: catch-up + user smoke wave1→wave2 OK |
 | `IMAGE_GUESS` — битая картинка | WebP не в деплое (Aug 6: DB URL ок, файлов на Vercel нет → 404); на prod DB не обновлены asset URL; DRAFT не Publish |
 | Admin thumbs broken, quiz seed OK | Новый batch WebP не закоммичен/не задеплоен; seed WebP уже в git |
 | `Body exceeded 1 MB limit` на upload | Нет `experimental.serverActions.bodySizeLimit` / нужен restart после next.config |

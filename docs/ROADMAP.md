@@ -188,9 +188,9 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 
 ## Immediate Next Step
 
-**Last updated:** August 20, 2026 — Survival **wave 2+** shipped locally (exclusion seen + run `totalScore` + continue CTA + board = best run total). Wave 1 path unchanged. Review attach stays pooled.
+**Last updated:** August 21, 2026 — Survival **wave 2+ + result polish on prod**. Prod Neon catch-up: `20260819163000_survival_run` + `20260820103000_survival_run_wave2_carry` (was `42703` `survivalRunId` until apply). User www smoke **OK**.
 
-**Preferred next:** www smoke Survival HARD wave1→continue wave2 (bank ≠ 20) → board total grows; Classic EASY 3 + Blitz MIX. Optional: content TEXT wave 6. No keep-warm / no timeout bumps / no JSONB on submit complete. Do not merge Survival into Timed.
+**Preferred next:** optional content TEXT wave 6 ×24; or Taste brand mark v2 (separate chat). No keep-warm / no timeout bumps / no JSONB on submit complete. Do not merge Survival into Timed.
 
 1. ~~Finish Phase 1 cleanup~~ — done.
 2. ~~Question bank (60 seed, 9 IMAGE_GUESS)~~ — done.
@@ -253,6 +253,8 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 59. ~~**Survival end-of-wave UX (chat F)**~~ — Aug 20: bank=0 always submit; last lock-in auto-submit (no finish CTA); `?wave=cut|bank`; rematch; `?mode=survival` chip.
 60. ~~**Result review after Survival complete**~~ — Aug 20: `reviewPayload` attach on pooled + `already_completed`; review API pooled payload-first; pending 503 in attach race.
 61. ~~**Survival wave 2+ carry**~~ — Aug 20: `SurvivalRunSeenQuestion` + `totalScore`; pooled after-complete; continue CTA; board = best run total; short last wave 1..11.
+62. ~~**Survival result UI polish**~~ — Aug 21: hide single-wave review tabs; quieter 2+ segment; box-score density.
+63. ~~**Survival on www (prod schema + smoke)**~~ — Aug 21: prod migrations `survival_run` + `wave2_carry`; user smoke OK (wave1→continue→wave2; Classic/Blitz regression).
 
 ### Deploy / hosting checklist (tracking)
 
@@ -334,7 +336,7 @@ Goal: quiz cards with images — guess game / level / character from screenshot;
 - [x] Toast notifications (Sonner + achievement flash) — **shipped** July 30; see DECISIONS “How to add a new toast”
 - [x] Daily challenge — **MVP on prod** July 30 (Moscow day, freeze, one attempt, CTA home+quiz, today’s board; migration `20260729234500_daily_challenge`)
 - [x] Timed mode — **on origin** July 31; **abandon + rematch + review Neon harden + RU labels** Aug 2 (local verified; redeploy pending)
-- [x] Survival mode wave 1 + wave 2+ carry — **shipped locally Aug 20** (time-bank waves, exclusion pool, run total board). Not merged into Timed.
+- [x] Survival mode wave 1 + wave 2+ carry — **on prod Aug 21** (time-bank waves, exclusion pool, run total board; result polish; user www smoke OK). Not merged into Timed.
 - [ ] Category/platform/genre-specific quiz — defer until real filter demand + more tagged content
 - [x] Period-based leaderboards (difficulty `14dc97c` + rolling week/month `019c071`; Layer 1 default week + mode + Blitz speed Aug 19)
 - [ ] API-assisted draft question generation with admin review

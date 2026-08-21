@@ -332,6 +332,8 @@ Vercel JS does **not** apply Prisma migrations. Publishing questions does **not*
 
 **Aug 15:** Classic/Blitz start UI «Проверь сложность и количество вопросов.»; Vercel `column "poolKind" of relation "QuizSession" does not exist` (`42703`). Mix JS on Vercel already wrote `poolKind`; prod lacked `20260813220000_quiz_session_pool_kind`. **Not** a hot-path / handoff / clock bug — do not change start/submit/Direct. After catch-up, user-verified on www: Classic EASY 3, Classic MIX, Blitz EASY, Blitz MIX → questions on screen → submit → score.
 
+**Aug 21:** Survival abandon / start: Vercel `column "survivalRunId" does not exist` (`42703`). Survival JS + result polish already on Vercel; prod lacked `20260819163000_survival_run` + `20260820103000_survival_run_wave2_carry`. Same ops class as Aug 15 — apply via `scripts/apply-named-migration.cjs <name> PROD_DATABASE_URL_UNPOOLED` (Windows). After catch-up, user-verified on www: Survival HARD wave1→continue→wave2 + Classic/Blitz regression.
+
 Fix:
 
 1. Confirm host ≠ local `ep-jolly-river…`. Use **`PROD_DATABASE_URL_UNPOOLED`** (direct, not `-pooler`). Do not point local `DATABASE_URL` at prod permanently.

@@ -5,7 +5,7 @@ Dated “why we chose this” lives in [`DECISIONS.md`](./DECISIONS.md). Binding
 
 ## Product shape
 
-Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **wave 1 + wave 2+ shipped** (Aug 20: exclusion seen, run `totalScore`, continue CTA, board = best run total).
+Four play modes share one session model (`QuizSession` + frozen `snapshotData` + server scoring). Survival **wave 1 + wave 2+ on prod** (Aug 21: exclusion seen, run `totalScore`, continue CTA, board = best run total; prod schema catch-up after `42703` `survivalRunId`).
 
 | Mode | Discriminator | Player contract |
 |------|----------------|-----------------|
