@@ -79,11 +79,18 @@ export async function startQuizAction(
 /**
  * Submit квиза. Rate limit по userId — до read snapshot / scoring / write.
  * Логика scoring и snapshot не менялась: лимит только у входа в action.
+ *
+ * Время сдачи = момент прихода запроса, до auth и Neon-hop'ов.
+ * Survival auto-submit приходит ровно на budget (банк 00:00): если мерить
+ * после load-snapshot, наша же задержка БД (0.5–10с) съедала grace 3с →
+ * clockOk=false и 0 очков честной волне. Время ставит сервер — клиент
+ * на него не влияет, анти-чит не ослаблен.
  */
 export async function submitQuizAction(
     _prevState: QuizFormState,
     formData: FormData,
 ): Promise<QuizFormState> {
+    const receivedAt = new Date();
     // получаем локаль из формы
     const locale = getLocaleFromFormData(formData);
     // получаем ID сессии из формы
@@ -139,7 +146,10 @@ export async function submitQuizAction(
     // Дедлайн прошёл (с grace) — всё равно сохраняем partial и идём на result
     // с roast (?clock=1). Раньше здесь был TIMED_OUT void + recovery на квизе;
     // продукт: всегда страница результата, как Kahoot/LMS.
-    const timedPastGrace = isTimedSubmitExpired(sessionForSubmit.timedEndsAt);
+    const timedPastGrace = isTimedSubmitExpired(
+        sessionForSubmit.timedEndsAt,
+        receivedAt.getTime(),
+    );
     const finishedByTimer = formData.get('finishedByTimer') === '1';
 
     // собираем ответы пользователя из формы
@@ -208,7 +218,7 @@ export async function submitQuizAction(
             isCorrect: selectedOption?.isCorrect ?? false,
         };
     });
-    const completedAt = new Date();
+    const completedAt = receivedAt;
     const survivalClockOk = survivalSubmitMeta
         ? isSurvivalClockOk({
               startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
