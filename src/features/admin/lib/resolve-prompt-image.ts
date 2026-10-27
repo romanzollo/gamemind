@@ -6,7 +6,6 @@ import {
     buildQuizStorageKey,
     getMediaStorage,
     processQuizImageToWebp,
-    storageKeyFromPublicUrl,
 } from '@/lib/storage';
 
 /**
@@ -14,6 +13,9 @@ import {
  *
  * Приоритет: загруженный файл → URL-поле (legacy /quiz-images или ручной путь).
  * File: MIME/size → sharp (полный кадр) → storage.put → same-origin `/media/quiz/...`.
+ * Только put: старый объект удаляет action ПОСЛЕ успешного UPDATE
+ * (deleteReplacedMediaObject), иначе упавшая запись оставила бы вопрос
+ * со ссылкой на удалённую картинку.
  * Не вызывать из quiz start — только из admin Server Actions.
  */
 
@@ -42,20 +44,14 @@ export async function resolveAdminPromptImage(options: {
     type: 'TEXT' | 'IMAGE_GUESS';
     /** Для ключа объекта и привязки к вопросу (create — сгенерированный id). */
     questionIdForKey: string;
-    /** Предыдущий URL при edit — best-effort delete старого `/media/...`. */
-    previousPublicUrl?: string | null;
 }): Promise<ResolveAdminPromptImageResult> {
     if (options.type !== 'IMAGE_GUESS') {
         return { ok: true, value: { promptImageUrl: '' } };
     }
 
-    const file = options.formData.get('promptImageFile');
-    const hasFile =
-        typeof File !== 'undefined' &&
-        file instanceof File &&
-        file.size > 0;
+    const file = getPromptImageFile(options.formData, options.type);
 
-    if (hasFile) {
+    if (file) {
         try {
             assertAllowedImageMime(file.type || 'application/octet-stream');
             assertImageWithinUploadLimit(file.size);
@@ -72,8 +68,6 @@ export async function resolveAdminPromptImage(options: {
                 body: processed.buffer,
                 contentType: processed.mimeType,
             });
-
-            await deletePreviousMediaObject(options.previousPublicUrl);
 
             return {
                 ok: true,
@@ -121,19 +115,21 @@ export async function resolveAdminPromptImage(options: {
     };
 }
 
-async function deletePreviousMediaObject(
-    previousPublicUrl: string | null | undefined,
-): Promise<void> {
-    const key = previousPublicUrl
-        ? storageKeyFromPublicUrl(previousPublicUrl)
-        : null;
-    if (!key) {
-        return;
+/**
+ * Непустой файл prompt-картинки из формы (только для IMAGE_GUESS).
+ * Отдельно от resolve: action по нему решает, тратить ли `upload` rate limit.
+ */
+export function getPromptImageFile(
+    formData: FormData,
+    type: 'TEXT' | 'IMAGE_GUESS',
+): File | null {
+    if (type !== 'IMAGE_GUESS') {
+        return null;
     }
 
-    try {
-        await getMediaStorage().delete({ key });
-    } catch {
-        // orphan cleanup later — не блокируем сохранение вопроса
-    }
+    const file = formData.get('promptImageFile');
+
+    return typeof File !== 'undefined' && file instanceof File && file.size > 0
+        ? file
+        : null;
 }

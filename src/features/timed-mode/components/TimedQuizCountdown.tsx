@@ -5,12 +5,15 @@
  *
  * Показывает оставшееся время; при переходе на 00:00 один раз зовёт
  * `onExpired` (родитель делает auto-submit — как Kahoot/LMS).
- * Цифры только после mount — иначе hydration mismatch (SSR vs Date.now()).
+ * Цифры только после гидрации — иначе hydration mismatch (SSR vs Date.now()).
+ * Remaining выводится из `nowMs` в render; interval только двигает часы.
  * Авторитет дедлайна всё равно сервер (`timedEndsAt` + grace).
  * Canon: docs/DECISIONS.md → Timed Mode MVP.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
+
+import { useHydrated } from '@/shared/ui/use-hydrated';
 
 type TimedQuizCountdownProps = {
     /** ISO UTC с сервера (QuizSession.timedEndsAt). */
@@ -45,26 +48,30 @@ export function TimedQuizCountdown({
     expiredLabel,
     onExpired,
 }: TimedQuizCountdownProps) {
-    const [mounted, setMounted] = useState(false);
-    const [remainingMs, setRemainingMs] = useState(0);
+    const hydrated = useHydrated();
+    const [nowMs, setNowMs] = useState(() => Date.now());
     const expiredNotifiedRef = useRef(false);
-    const onExpiredRef = useRef(onExpired);
-    onExpiredRef.current = onExpired;
+    // Свежий onExpired без перезапуска interval при каждом render родителя.
+    const notifyExpired = useEffectEvent(() => {
+        onExpired?.();
+    });
 
     useEffect(() => {
-        setMounted(true);
-
+        // Первый tick через 250 мс: initial nowMs уже взят в render,
+        // уже истёкшая сессия получит onExpired на первом tick.
         const tick = () => {
-            const next = getRemainingMs(timedEndsAt, Date.now());
-            setRemainingMs(next);
+            const now = Date.now();
+            setNowMs(now);
 
-            if (next <= 0 && !expiredNotifiedRef.current) {
+            if (
+                getRemainingMs(timedEndsAt, now) <= 0 &&
+                !expiredNotifiedRef.current
+            ) {
                 expiredNotifiedRef.current = true;
-                onExpiredRef.current?.();
+                notifyExpired();
             }
         };
 
-        tick();
         const intervalId = window.setInterval(tick, 250);
 
         return () => {
@@ -72,8 +79,9 @@ export function TimedQuizCountdown({
         };
     }, [timedEndsAt]);
 
-    const expired = mounted && remainingMs <= 0;
-    const display = mounted ? formatRemaining(remainingMs) : '--:--';
+    const remainingMs = getRemainingMs(timedEndsAt, nowMs);
+    const expired = hydrated && remainingMs <= 0;
+    const display = hydrated ? formatRemaining(remainingMs) : '--:--';
 
     return (
         <div

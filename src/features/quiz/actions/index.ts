@@ -105,11 +105,19 @@ export async function submitQuizAction(
         return { errorCode: 'RATE_LIMITED' };
     }
 
-    // одна read-операция: активная сессия + snapshot для scoring
-    const sessionForSubmit = await quizSessionRepository.findSessionForSubmit(
-        sessionId,
-        authSession.user.id,
-    );
+    // одна read-операция: активная сессия + snapshot для scoring.
+    // Сбой connect/socket Neon → SUBMIT_FAILED с retry на форме, а не throw
+    // в error.tsx: иначе игрок теряет ответы (Blitz — всю попытку).
+    const sessionForSubmit = await quizSessionRepository
+        .findSessionForSubmit(sessionId, authSession.user.id)
+        .catch((error: unknown) => {
+            console.error('Quiz submit snapshot load failed:', error);
+            return null;
+        });
+
+    if (!sessionForSubmit) {
+        return { errorCode: 'SUBMIT_FAILED' };
+    }
 
     if (sessionForSubmit.status === 'not_found') {
         redirect(`/${locale}/result/${sessionId}`);

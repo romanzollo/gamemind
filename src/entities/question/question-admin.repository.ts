@@ -34,6 +34,7 @@ import {
 } from '@/lib/db/direct-pg';
 import type {
     AdminQuestionForEdit,
+    AdminQuestionUpdateResult,
     BulkIsActiveMutationResult,
     BulkPublicationMutationResult,
     LocalizedAdminText,
@@ -374,30 +375,6 @@ function buildAdminTranslations(
     };
 }
 
-function groupOptionTranslationsByOptionId(
-    rows: Array<{
-        optionId: string;
-        locale: ContentLocale;
-        text: string;
-    }>,
-) {
-    const grouped = new Map<string, TranslationRow[]>();
-
-    for (const row of rows) {
-        const existing = grouped.get(row.optionId);
-
-        if (existing) {
-            existing.push({ locale: row.locale, text: row.text });
-        } else {
-            grouped.set(row.optionId, [
-                { locale: row.locale, text: row.text },
-            ]);
-        }
-    }
-
-    return grouped;
-}
-
 function buildValuesPlaceholder(
     rowCount: number,
     columnCount: number,
@@ -452,20 +429,38 @@ function adminQuestionMatchesUpdateInput(
     return true;
 }
 
+type AdminQuestionDetailRow = {
+    id: string;
+    text: string;
+    type: QuestionType;
+    promptImageUrl: string | null;
+    difficulty: Difficulty;
+    category: string;
+    isActive: boolean;
+    publicationStatus: string;
+    translations: TranslationRow[];
+    options: Array<{
+        id: string;
+        text: string;
+        isCorrect: boolean;
+        order: number;
+        translations: TranslationRow[];
+    }>;
+};
+
+/**
+ * Вопрос для edit-страницы и recovery после write-ошибки — ОДНИМ запросом.
+ *
+ * Почему не 4 SELECT подряд: каждый round-trip Vercel → Neon (а в dev на
+ * Windows — секунды на hop) складывался в время открытия edit-страницы.
+ * Переводы и варианты собираются json_agg прямо в Postgres; `pg` отдаёт их
+ * уже как JS-объекты. Порядок вариантов = `order`, tie-break по id.
+ */
 async function findByIdForAdminWithDirectPg(
     id: string,
 ): Promise<AdminQuestionForEdit | null> {
-    return withDirectPgClient(async (client) => {
-        const questionResult = await client.query<{
-            id: string;
-            text: string;
-            type: QuestionType;
-            promptImageUrl: string | null;
-            difficulty: Difficulty;
-            category: string;
-            isActive: boolean;
-            publicationStatus: string;
-        }>(
+    const result = await withDirectPgClient((client) =>
+        client.query<AdminQuestionDetailRow>(
             `
                 SELECT
                     q."id",
@@ -483,97 +478,87 @@ async function findByIdForAdminWithDirectPg(
                     q."difficulty"::text AS "difficulty",
                     q."category",
                     q."isActive",
-                    q."publicationStatus"::text AS "publicationStatus"
+                    q."publicationStatus"::text AS "publicationStatus",
+                    COALESCE(
+                        (
+                            SELECT json_agg(
+                                json_build_object(
+                                    'locale', qt."locale"::text,
+                                    'text', qt."text"
+                                )
+                            )
+                            FROM "QuestionTranslation" qt
+                            WHERE qt."questionId" = q."id"
+                        ),
+                        '[]'::json
+                    ) AS "translations",
+                    COALESCE(
+                        (
+                            SELECT json_agg(
+                                json_build_object(
+                                    'id', ao."id",
+                                    'text', ao."text",
+                                    'isCorrect', ao."isCorrect",
+                                    'order', ao."order",
+                                    'translations', COALESCE(
+                                        (
+                                            SELECT json_agg(
+                                                json_build_object(
+                                                    'locale', aot."locale"::text,
+                                                    'text', aot."text"
+                                                )
+                                            )
+                                            FROM "AnswerOptionTranslation" aot
+                                            WHERE aot."optionId" = ao."id"
+                                        ),
+                                        '[]'::json
+                                    )
+                                )
+                                ORDER BY ao."order" ASC, ao."id" ASC
+                            )
+                            FROM "AnswerOption" ao
+                            WHERE ao."questionId" = q."id"
+                        ),
+                        '[]'::json
+                    ) AS "options"
                 FROM "Question" q
                 WHERE q."id" = $1
             `,
             [id],
-        );
+        ),
+    );
 
-        const row = questionResult.rows[0];
+    const row = result.rows[0];
 
-        if (!row) {
-            return null;
-        }
+    if (!row) {
+        return null;
+    }
 
-        const optionsResult = await client.query<{
-            id: string;
-            text: string;
-            isCorrect: boolean;
-            order: number;
-        }>(
-            `
-                SELECT "id", "text", "isCorrect", "order"
-                FROM "AnswerOption"
-                WHERE "questionId" = $1
-                ORDER BY "order" ASC
-            `,
-            [id],
-        );
-
-        const questionTranslationsResult = await client.query<TranslationRow>(
-            `
-                SELECT "locale"::text AS "locale", "text"
-                FROM "QuestionTranslation"
-                WHERE "questionId" = $1
-            `,
-            [id],
-        );
-
-        const optionIds = optionsResult.rows.map((option) => option.id);
-        const optionTranslationRows =
-            optionIds.length === 0
-                ? []
-                : (
-                      await client.query<{
-                          optionId: string;
-                          locale: ContentLocale;
-                          text: string;
-                      }>(
-                          `
-                              SELECT
-                                  "optionId",
-                                  "locale"::text AS "locale",
-                                  "text"
-                              FROM "AnswerOptionTranslation"
-                              WHERE "optionId" = ANY($1::text[])
-                          `,
-                          [optionIds],
-                      )
-                  ).rows;
-
-        const optionTranslationsByOptionId =
-            groupOptionTranslationsByOptionId(optionTranslationRows);
-
-        return {
-            id: row.id,
-            type: row.type,
-            promptImageUrl: row.promptImageUrl,
-            difficulty: row.difficulty,
-            category: row.category,
-            isActive: row.isActive,
-            publicationStatus: toPublicationStatus(row.publicationStatus),
+    return {
+        id: row.id,
+        type: row.type,
+        promptImageUrl: row.promptImageUrl,
+        difficulty: row.difficulty,
+        category: row.category,
+        isActive: row.isActive,
+        publicationStatus: toPublicationStatus(row.publicationStatus),
+        translations: buildAdminTranslations(row.translations, row.text),
+        options: row.options.map((option) => ({
+            id: option.id,
+            isCorrect: option.isCorrect,
+            order: option.order,
             translations: buildAdminTranslations(
-                questionTranslationsResult.rows,
-                row.text,
+                option.translations,
+                option.text,
             ),
-            options: optionsResult.rows.map((option) => ({
-                id: option.id,
-                isCorrect: option.isCorrect,
-                order: option.order,
-                translations: buildAdminTranslations(
-                    optionTranslationsByOptionId.get(option.id) ?? [],
-                    option.text,
-                ),
-            })),
-        };
-    });
+        })),
+    };
 }
 
 async function recoverAdminUpdateAfterWriteError(
     input: UpdateQuestionInput,
     error: unknown,
-): Promise<{ id: string } | null> {
+): Promise<AdminQuestionUpdateResult | null> {
     if (!isTransientDirectPgError(error)) {
         return null;
     }
@@ -586,7 +571,8 @@ async function recoverAdminUpdateAfterWriteError(
         return null;
     }
 
-    return { id: input.questionId };
+    // Запись уже прошла, прежний url не восстановить → не удаляем (orphan безопаснее).
+    return { id: input.questionId, previousPromptImageUrl: null };
 }
 
 async function applyAdminQuestionCreateWithPg(
@@ -885,7 +871,7 @@ async function createWithOptionsWithDirectPg(
 async function applyAdminQuestionUpdateWithPg(
     client: Client,
     input: UpdateQuestionInput,
-): Promise<{ id: string } | null> {
+): Promise<AdminQuestionUpdateResult | null> {
     const questionTranslationRows = [
         {
             id: randomUUID(),
@@ -974,9 +960,21 @@ async function applyAdminQuestionUpdateWithPg(
         option_count: number;
         question_translation_count: number;
         option_translation_count: number;
+        previous_prompt_url: string | null;
     }>(
         `
-            WITH updated_question AS (
+            WITH previous_prompt AS (
+                -- Все CTE одного statement видят снимок ДО изменений:
+                -- это url, который UPDATE ниже заменит или удалит.
+                SELECT qa."url"
+                FROM "QuestionAsset" qa
+                WHERE
+                    qa."questionId" = $5
+                    AND qa."role" = 'PROMPT'::"QuestionAssetRole"
+                ORDER BY qa."order" ASC, qa."id" ASC
+                LIMIT 1
+            ),
+            updated_question AS (
                 UPDATE "Question"
                 SET
                     "text" = $1,
@@ -1115,7 +1113,8 @@ async function applyAdminQuestionUpdateWithPg(
                 (
                     SELECT COUNT(*)::int
                     FROM upsert_option_translations
-                ) AS "option_translation_count"
+                ) AS "option_translation_count",
+                (SELECT "url" FROM previous_prompt) AS "previous_prompt_url"
         `,
         allParams,
     );
@@ -1139,12 +1138,15 @@ async function applyAdminQuestionUpdateWithPg(
         );
     }
 
-    return { id: input.questionId };
+    return {
+        id: input.questionId,
+        previousPromptImageUrl: summary.previous_prompt_url,
+    };
 }
 
 async function updateWithOptionsWithDirectPg(
     input: UpdateQuestionInput,
-): Promise<{ id: string } | null> {
+): Promise<AdminQuestionUpdateResult | null> {
     try {
         return await withDirectPgWriteRetry(
             (client) => applyAdminQuestionUpdateWithPg(client, input),

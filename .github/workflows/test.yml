@@ -1,13 +1,13 @@
-# Unit CI для GameMind (Phase E).
+# CI для GameMind (Phase E).
 #
-# Зачем: на каждый push/PR в master автоматически гонять `npm run test`
-# (Vitest), чтобы сломанные pure rules не уезжали незамеченными.
+# Зачем: на каждый push/PR в master автоматически гонять unit Vitest,
+# ESLint (включая react-hooks / React Compiler rules) и `tsc --noEmit`,
+# чтобы сломанные pure rules, hooks-ошибки и типы не уезжали незамеченными.
 #
-# Границы этого job:
-# - только unit Vitest (`npm run test`);
+# Границы:
 # - без Playwright / E2E;
 # - без Neon smoke и без DATABASE_URL / секретов;
-# - без `npm run build` (Prisma/env не нужны для unit).
+# - без `npm run build` (Prisma generate нужен только для типов client).
 #
 # См. docs/TESTING.md Phase E; DECISIONS → Automated Testing Adoption.
 
@@ -46,3 +46,31 @@ jobs:
 
       - name: Run unit tests
         run: npm run test
+
+  static:
+    name: Lint + types
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Generate Prisma Client
+        # Только типы для tsc: generate не ходит в БД, DATABASE_URL не нужен.
+        run: npx prisma generate
+
+      - name: Typecheck
+        run: npx tsc --noEmit

@@ -29,12 +29,14 @@ export {
     buildAvatarStorageKey,
     buildQuizStorageKey,
     buildStorageKey,
+    isStorageKeyOwnedBy,
     normalizeStorageKey,
     publicUrlFromKey,
     storageKeyFromPublicUrl,
 } from '@/lib/storage/paths';
 
 export { getMediaStorage } from '@/lib/storage/get-media-storage';
+export { deleteReplacedMediaObject } from '@/lib/storage/delete-replaced-media';
 
 export {
     AVATAR_SIZE_PX,

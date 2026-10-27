@@ -4,13 +4,16 @@
  * Remaining = max(0, T0 + 4×correct − 6×wrong − elapsed) от `startedAt`.
  * Не `timedEndsAt`. Grace на клиенте нет — 00:00 замирает UX; авторитет
  * часов на submit (`isSurvivalClockOk`).
- * Цифры только после mount — иначе hydration mismatch.
+ * Цифры только после гидрации — иначе hydration mismatch.
+ * Remaining выводится в render из `nowMs` + текущих correct/wrong:
+ * штраф/бонус виден сразу на lock-in, interval только двигает часы.
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-survival-bank-remaining-ms';
+import { useHydrated } from '@/shared/ui/use-hydrated';
 
 type SurvivalQuizBankCountdownProps = {
     startedAt: string;
@@ -76,20 +79,29 @@ export function SurvivalQuizBankCountdown({
     frozen = false,
     onExpired,
 }: SurvivalQuizBankCountdownProps) {
-    const [mounted, setMounted] = useState(false);
-    const [remainingMs, setRemainingMs] = useState(0);
+    const hydrated = useHydrated();
+    const [nowMs, setNowMs] = useState(() => Date.now());
     const expiredNotifiedRef = useRef(false);
-    const onExpiredRef = useRef(onExpired);
-    onExpiredRef.current = onExpired;
+    // Свежий onExpired без перезапуска interval при каждом render родителя.
+    const notifyExpired = useEffectEvent(() => {
+        onExpired?.();
+    });
 
     useEffect(() => {
-        setMounted(true);
         expiredNotifiedRef.current = false;
 
-        const readRemaining = () =>
-            getRemainingMs({
+        // Конец волны / submit: часы стоят на последнем tick, без interval.
+        if (frozen) {
+            return;
+        }
+
+        const tick = () => {
+            const now = Date.now();
+            setNowMs(now);
+
+            const next = getRemainingMs({
                 startedAt,
-                nowMs: Date.now(),
+                nowMs: now,
                 correctCount,
                 wrongCount,
                 initialBankSeconds,
@@ -97,23 +109,12 @@ export function SurvivalQuizBankCountdown({
                 wrongDeltaSeconds,
             });
 
-        // Конец волны / submit: один снимок remaining, без interval.
-        if (frozen) {
-            setRemainingMs(readRemaining());
-            return;
-        }
-
-        const tick = () => {
-            const next = readRemaining();
-            setRemainingMs(next);
-
             if (next <= 0 && !expiredNotifiedRef.current) {
                 expiredNotifiedRef.current = true;
-                onExpiredRef.current?.();
+                notifyExpired();
             }
         };
 
-        tick();
         const intervalId = window.setInterval(tick, 250);
 
         return () => {
@@ -129,8 +130,17 @@ export function SurvivalQuizBankCountdown({
         frozen,
     ]);
 
-    const expired = mounted && remainingMs <= 0 && !frozen;
-    const display = mounted ? formatRemaining(remainingMs) : '--:--';
+    const remainingMs = getRemainingMs({
+        startedAt,
+        nowMs,
+        correctCount,
+        wrongCount,
+        initialBankSeconds,
+        correctDeltaSeconds,
+        wrongDeltaSeconds,
+    });
+    const expired = hydrated && remainingMs <= 0 && !frozen;
+    const display = hydrated ? formatRemaining(remainingMs) : '--:--';
 
     return (
         <div

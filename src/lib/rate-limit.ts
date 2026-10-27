@@ -67,7 +67,16 @@ export const RATE_LIMIT_PRESETS = {
      * короткое окно 60с при медленных попытках не набирает лимит.
      */
     avatar: { limit: 10, windowMs: 15 * 60_000 },
-    /** Admin create/update (в т.ч. image upload). */
+    /**
+     * Любое admin create/update вопроса (текстовая правка дешёвая).
+     * Потолок от runaway-скрипта / угнанной сессии, а не от обычной
+     * редактуры: 120 / 15 мин ≈ 8 сохранений в минуту подряд.
+     */
+    adminWrite: { limit: 120, windowMs: 15 * 60_000 },
+    /**
+     * Admin image upload: sharp + Blob put — дорого. Тратится только когда
+     * к create/update приложен файл (поверх adminWrite).
+     */
     upload: { limit: 20, windowMs: 15 * 60_000 },
     /**
      * startQuiz + submitQuiz (общий bucket на userId).

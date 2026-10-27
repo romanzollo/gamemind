@@ -36,6 +36,18 @@ export const enDictionary = {
         skipToContent: 'Skip to content',
         mainNav: 'Main navigation',
     },
+    errorPage: {
+        notFoundTitle: 'Page not found',
+        notFoundDescription:
+            'This address does not exist: the link is outdated or has a typo. Modes and the leaderboard are still here.',
+        errorTitle: 'Something went wrong',
+        errorDescription:
+            'The page did not load. Retrying in a few seconds usually helps.',
+        errorReference: 'Error code',
+        retry: 'Retry',
+        backHome: 'Home',
+        toModes: 'Play modes',
+    },
     home: {
         title: 'GameMind',
         headline: 'Remember the games you played',
@@ -295,6 +307,8 @@ export const enDictionary = {
         formPromptImageFileHint:
             'JPEG, PNG, or WebP, max 2 MB. Converted to WebP on the server without cropping the frame.',
         formPromptImageCurrent: 'Current URL',
+        formPromptImageNewFile: 'New file — replaces the current image on save',
+        formPromptImagePreviewAlt: 'Question image preview',
         formPromptImageUrl: 'Or URL (advanced)',
         formPromptImageUrlHint:
             'Path under public/ (e.g. /quiz-images/...) or an existing /media/... path. File upload wins over URL.',
@@ -360,6 +374,12 @@ export const enDictionary = {
                 'Failed to load questions. Check the database connection and refresh the page.',
             usersLoadFailed:
                 'Failed to load users. Check the database connection and refresh the page.',
+            questionLoadFailed:
+                'Could not load the question: the database did not respond in time. Retry in a few seconds.',
+            userLoadFailed:
+                'Could not load the user: the database did not respond in time. Retry in a few seconds.',
+            unexpected:
+                'Something went wrong while loading this page. Try again or go back to admin home.',
             invalidInput:
                 'Check question text in Russian and English, difficulty, category, and answer options.',
             notFound: 'Record not found.',

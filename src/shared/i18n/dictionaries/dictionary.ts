@@ -36,6 +36,18 @@ export type Dictionary = {
         /** Подпись landmark основной навигации (desktop / mobile). */
         mainNav: string;
     };
+    /** 404 и error boundaries (`[locale]/not-found`, `[locale]/error`, `global-error`). */
+    errorPage: {
+        notFoundTitle: string;
+        notFoundDescription: string;
+        errorTitle: string;
+        errorDescription: string;
+        /** Подпись к error.digest — по нему ищем запись в Vercel Runtime Logs. */
+        errorReference: string;
+        retry: string;
+        backHome: string;
+        toModes: string;
+    };
     home: {
         title: string;
         headline: string;
@@ -365,6 +377,8 @@ export type Dictionary = {
         formPromptImageFile: string;
         formPromptImageFileHint: string;
         formPromptImageCurrent: string;
+        formPromptImageNewFile: string;
+        formPromptImagePreviewAlt: string;
         formPromptImageUrl: string;
         formPromptImageUrlHint: string;
         formOptionTextRu: string;
@@ -439,6 +453,12 @@ export type Dictionary = {
         errors: {
             loadFailed: string;
             usersLoadFailed: string;
+            /** Edit: transient Neon read одного вопроса (не 404). */
+            questionLoadFailed: string;
+            /** users/[id]: transient Neon read карточки пользователя (не 404). */
+            userLoadFailed: string;
+            /** admin/error.tsx: необработанное исключение в admin-сегменте. */
+            unexpected: string;
             invalidInput: string;
             notFound: string;
             exactlyOneCorrectRequired: string;

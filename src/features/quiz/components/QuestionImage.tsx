@@ -181,6 +181,8 @@ export function QuestionImage({
         }
 
         const previousOverflow = document.body.style.overflow;
+        // Кнопка-превью, с которой открыли lightbox: вернуть на неё фокус.
+        const openButton = openButtonRef.current;
         document.body.style.overflow = 'hidden';
         dialogRef.current?.focus();
         resetTransform();
@@ -198,7 +200,7 @@ export function QuestionImage({
         return () => {
             document.body.style.overflow = previousOverflow;
             window.removeEventListener('keydown', onKeyDown);
-            openButtonRef.current?.focus();
+            openButton?.focus();
         };
     }, [isOpen, close, resetTransform]);
 

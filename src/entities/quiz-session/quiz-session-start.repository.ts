@@ -47,7 +47,6 @@ import {
     assertSnapshotDisplayTexts,
     buildSnapshotData,
     mapSnapshotDataToPublicQuestions,
-    parseSnapshotData,
 } from '@/entities/quiz-session/quiz-session-snapshot';
 
 type SessionSnapshotCreateResult = {

@@ -76,6 +76,19 @@ export type AdminQuestionForEdit = {
     }>;
 };
 
+/**
+ * Результат admin update вопроса.
+ *
+ * previousPromptImageUrl — PROMPT url ДО этого UPDATE (CTE видит снимок
+ * на начало statement). Action удаляет заменённый объект storage только
+ * после успеха; null — картинки не было или значение неизвестно
+ * (recovery после transient write error) → ничего не удаляем.
+ */
+export type AdminQuestionUpdateResult = {
+    id: string;
+    previousPromptImageUrl: string | null;
+};
+
 /** Результат смены publicationStatus (как deactivate/activate). */
 export type PublicationStatusMutationResult =
     | { status: 'not_found' }

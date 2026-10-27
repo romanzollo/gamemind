@@ -13,11 +13,7 @@
  */
 'use client';
 
-import {
-    useEffect,
-    useState,
-    type CSSProperties,
-} from 'react';
+import { useSyncExternalStore, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Toaster } from 'sonner';
 
@@ -26,6 +22,7 @@ import {
     THEME_CHANGE_EVENT,
     type ClientTheme,
 } from '@/shared/ui/theme-client';
+import { useHydrated } from '@/shared/ui/use-hydrated';
 
 type AppToasterProps = {
     theme: ClientTheme;
@@ -54,41 +51,47 @@ const sonnerTokenStyle = {
 /** Совпадает с Tailwind `lg`: до desktop toast снизу, не под sticky chrome. */
 const COMPACT_VIEWPORT_MQ = '(max-width: 1023px)';
 
+/** `data-theme` на <html>: ThemeToggle шлёт event, observer ловит прочие правки. */
+function subscribeDocumentTheme(onChange: () => void): () => void {
+    window.addEventListener(THEME_CHANGE_EVENT, onChange);
+
+    const observer = new MutationObserver(onChange);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+    });
+
+    return () => {
+        window.removeEventListener(THEME_CHANGE_EVENT, onChange);
+        observer.disconnect();
+    };
+}
+
+function subscribeCompactViewport(onChange: () => void): () => void {
+    const media = window.matchMedia(COMPACT_VIEWPORT_MQ);
+    media.addEventListener('change', onChange);
+
+    return () => media.removeEventListener('change', onChange);
+}
+
+function getCompactViewport(): boolean {
+    return window.matchMedia(COMPACT_VIEWPORT_MQ).matches;
+}
+
 export function AppToaster({ theme: initialTheme }: AppToasterProps) {
-    const [theme, setTheme] = useState<ClientTheme>(initialTheme);
-    const [mounted, setMounted] = useState(false);
-    const [isCompactViewport, setIsCompactViewport] = useState(false);
+    const hydrated = useHydrated();
+    const theme = useSyncExternalStore<ClientTheme>(
+        subscribeDocumentTheme,
+        getDocumentTheme,
+        () => initialTheme,
+    );
+    const isCompactViewport = useSyncExternalStore(
+        subscribeCompactViewport,
+        getCompactViewport,
+        () => false,
+    );
 
-    useEffect(() => {
-        setMounted(true);
-
-        const syncTheme = () => {
-            setTheme(getDocumentTheme());
-        };
-
-        window.addEventListener(THEME_CHANGE_EVENT, syncTheme);
-
-        const observer = new MutationObserver(syncTheme);
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme'],
-        });
-
-        const media = window.matchMedia(COMPACT_VIEWPORT_MQ);
-        const syncCompact = () => {
-            setIsCompactViewport(media.matches);
-        };
-        syncCompact();
-        media.addEventListener('change', syncCompact);
-
-        return () => {
-            window.removeEventListener(THEME_CHANGE_EVENT, syncTheme);
-            observer.disconnect();
-            media.removeEventListener('change', syncCompact);
-        };
-    }, []);
-
-    if (!mounted) {
+    if (!hydrated) {
         return null;
     }
 

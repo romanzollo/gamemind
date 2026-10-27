@@ -5,6 +5,7 @@
  *
  * Timed: «Завершить» только когда отвечены все; при 00:00 — auto-submit
  * partial → `/result?clock=1` (roast). Late submit после grace тоже на result.
+ * Если auto-submit вернул ошибку — та же кнопка = retry partial.
  * Classic/daily: все ответы обязательны; кнопка disabled пока не все.
  *
  * Submit всегда собирает FormData из React state `selectedAnswers`, а не только
@@ -66,8 +67,6 @@ export function QuizSessionForm({
         return new Date(timedEndsAt).getTime() <= Date.now();
     });
 
-    selectedAnswersRef.current = selectedAnswers;
-
     const answeredCount = useMemo(
         () =>
             questions.filter((question) => selectedAnswers[question.id])
@@ -127,14 +126,16 @@ export function QuizSessionForm({
         });
     }, [buildSubmitFormData, formAction]);
 
+    // После 00:00 ручной submit возможен только как retry упавшего
+    // auto-submit: снова partial (finishedByTimer), иначе сервер ждёт все ответы.
     const handleSubmit = useCallback(
         (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
             startTransition(() => {
-                formAction(buildSubmitFormData(false));
+                formAction(buildSubmitFormData(timedExpired));
             });
         },
-        [buildSubmitFormData, formAction],
+        [buildSubmitFormData, formAction, timedExpired],
     );
 
     return (
@@ -207,10 +208,14 @@ export function QuizSessionForm({
                                 return;
                             }
 
-                            setSelectedAnswers((current) => ({
-                                ...current,
+                            // Ref пишется в handler, а не в render: auto-submit
+                            // по таймеру читает его вне render-цикла.
+                            const nextAnswers = {
+                                ...selectedAnswersRef.current,
                                 [question.id]: optionId,
-                            }));
+                            };
+                            selectedAnswersRef.current = nextAnswers;
+                            setSelectedAnswers(nextAnswers);
                         }}
                     />
                 ))}
@@ -242,7 +247,10 @@ export function QuizSessionForm({
                 <SubmitButton
                     disabled={
                         isTimed
-                            ? !allAnswered || timedExpired || isPending
+                            ? isPending ||
+                              (timedExpired
+                                  ? !state.errorCode
+                                  : !allAnswered)
                             : !allAnswered
                     }
                     pendingLabel={dictionary.common.submitting}

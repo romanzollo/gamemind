@@ -9,6 +9,7 @@ import { unstable_update } from '@/lib/auth';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
+import { deleteReplacedMediaObject, STORAGE_PREFIX } from '@/lib/storage';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -46,7 +47,6 @@ export async function changeAvatarAction(
     const resolved = await resolveAvatarImage({
         formData,
         userId: session.user.id,
-        previousPublicUrl,
     });
 
     if (!resolved.ok) {
@@ -78,6 +78,14 @@ export async function changeAvatarAction(
         console.error('Change avatar failed:', error);
         return { errorCode: 'UPDATE_FAILED' };
     }
+
+    // Только после успешного UPDATE и только свой `avatars/{userId}-…`:
+    // previous мог быть вписан вручную как чужой `/media/avatars/...`.
+    await deleteReplacedMediaObject({
+        previousPublicUrl,
+        nextPublicUrl: nextImage,
+        owner: { prefix: STORAGE_PREFIX.avatars, idPart: session.user.id },
+    });
 
     try {
         await unstable_update({ user: { image: nextImage } });

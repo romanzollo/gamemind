@@ -11,6 +11,7 @@ export { PendingSpinner } from './pending-spinner';
 export { PageSkeleton, Skeleton } from './skeleton';
 export { SiteHeader } from './site-header';
 export { SiteMobileMenu } from './site-mobile-menu';
+export { StatusPage } from './status-page';
 export { SubmitButton } from './submit-button';
 export { ThemeToggle } from './theme-toggle';
 export {

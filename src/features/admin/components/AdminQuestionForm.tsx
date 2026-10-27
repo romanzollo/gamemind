@@ -10,9 +10,13 @@
  *
  * Bilingual: для каждого варианта заполнять RU и EN согласованно
  * (не локализовать только правильный ответ). Canon: docs/QUESTION_I18N.md.
+ * RU и EN стоят рядом (sm+), чтобы расхождение переводов было видно сразу.
+ *
+ * IMAGE_GUESS: превью нового файла (blob: URL) или текущего/введённого URL —
+ * админ видит кадр до сохранения, а не только путь.
  */
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
 import {
     createQuestionAction,
@@ -33,6 +37,23 @@ const IMAGE_GUESS_DEFAULT_TEXT = {
 /** Общий стиль полей — Scoreboard tokens + focus ring (как на Profile). */
 const fieldClassName =
     'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
+/** Пара RU | EN: колонками от sm, стопкой на телефоне. */
+const bilingualGridClassName = 'grid gap-3 sm:grid-cols-2';
+
+/**
+ * URL для превью: same-origin путь или https (как allowlist server-валидации).
+ * `//host` отсекаем — protocol-relative ушёл бы на чужой домен.
+ */
+function getPreviewableImageUrl(value: string): string | null {
+    const trimmed = value.trim();
+
+    if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
+        return trimmed;
+    }
+
+    return trimmed.startsWith('https://') ? trimmed : null;
+}
 
 type OptionDraft = {
     id: string;
@@ -131,12 +152,27 @@ export function AdminQuestionForm({
         );
         return index >= 0 ? index : 0;
     });
+    /** blob: URL выбранного файла; сбрасывается при reset формы и смене типа. */
+    const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null);
+
+    // Освобождаем blob: при замене файла / unmount — иначе утечка памяти.
+    useEffect(() => {
+        if (!filePreviewUrl) {
+            return;
+        }
+
+        return () => {
+            URL.revokeObjectURL(filePreviewUrl);
+        };
+    }, [filePreviewUrl]);
 
     if (isEdit && !initialValues) {
         return null;
     }
 
     const editValues = isEdit ? initialValues : undefined;
+    const urlPreviewSrc = getPreviewableImageUrl(promptImageUrl);
+    const imagePreviewSrc = filePreviewUrl ?? urlPreviewSrc;
 
     function updateOptionText(
         index: number,
@@ -156,6 +192,11 @@ export function AdminQuestionForm({
         <>
             <form
                 action={formAction}
+                // React 19 сбрасывает форму после action → file input пуст,
+                // превью «нового файла» тоже должно уйти.
+                onReset={() => {
+                    setFilePreviewUrl(null);
+                }}
                 className="mt-6 flex flex-col gap-4"
             >
                 <input type="hidden" name="locale" value={locale} />
@@ -172,37 +213,39 @@ export function AdminQuestionForm({
                         {dictionary.admin.formQuestionText}
                     </legend>
 
-                    <label className="flex flex-col gap-2 text-sm text-foreground">
-                        <span>{dictionary.admin.formQuestionTextRu}</span>
-                        <textarea
-                            name="questionTextRu"
-                            required
-                            minLength={10}
-                            maxLength={500}
-                            rows={3}
-                            value={questionTextRu}
-                            onChange={(event) => {
-                                setQuestionTextRu(event.target.value);
-                            }}
-                            className={fieldClassName}
-                        />
-                    </label>
+                    <div className={bilingualGridClassName}>
+                        <label className="flex flex-col gap-2 text-sm text-foreground">
+                            <span>{dictionary.admin.formQuestionTextRu}</span>
+                            <textarea
+                                name="questionTextRu"
+                                required
+                                minLength={10}
+                                maxLength={500}
+                                rows={3}
+                                value={questionTextRu}
+                                onChange={(event) => {
+                                    setQuestionTextRu(event.target.value);
+                                }}
+                                className={fieldClassName}
+                            />
+                        </label>
 
-                    <label className="flex flex-col gap-2 text-sm text-foreground">
-                        <span>{dictionary.admin.formQuestionTextEn}</span>
-                        <textarea
-                            name="questionTextEn"
-                            required
-                            minLength={10}
-                            maxLength={500}
-                            rows={3}
-                            value={questionTextEn}
-                            onChange={(event) => {
-                                setQuestionTextEn(event.target.value);
-                            }}
-                            className={fieldClassName}
-                        />
-                    </label>
+                        <label className="flex flex-col gap-2 text-sm text-foreground">
+                            <span>{dictionary.admin.formQuestionTextEn}</span>
+                            <textarea
+                                name="questionTextEn"
+                                required
+                                minLength={10}
+                                maxLength={500}
+                                rows={3}
+                                value={questionTextEn}
+                                onChange={(event) => {
+                                    setQuestionTextEn(event.target.value);
+                                }}
+                                className={fieldClassName}
+                            />
+                        </label>
+                    </div>
                 </fieldset>
 
                 <label className="flex flex-col gap-2 text-sm text-foreground">
@@ -217,6 +260,11 @@ export function AdminQuestionForm({
                                     : 'TEXT';
 
                             setQuestionType(nextType);
+
+                            // TEXT размонтирует file input — старое превью ложное.
+                            if (nextType !== 'IMAGE_GUESS') {
+                                setFilePreviewUrl(null);
+                            }
 
                             if (nextType === 'IMAGE_GUESS' && !isEdit) {
                                 setQuestionTextRu((current) =>
@@ -255,6 +303,12 @@ export function AdminQuestionForm({
                                 type="file"
                                 name="promptImageFile"
                                 accept="image/jpeg,image/png,image/webp"
+                                onChange={(event) => {
+                                    const file = event.target.files?.[0];
+                                    setFilePreviewUrl(
+                                        file ? URL.createObjectURL(file) : null,
+                                    );
+                                }}
                                 className={fieldClassName}
                             />
                             <span className="text-sm text-muted">
@@ -262,20 +316,39 @@ export function AdminQuestionForm({
                             </span>
                         </label>
 
-                        {editValues?.promptImageUrl ? (
-                            <>
-                                <input
-                                    type="hidden"
-                                    name="previousPromptImageUrl"
-                                    value={editValues.promptImageUrl}
-                                />
-                                <p className="text-sm text-muted">
-                                    {dictionary.admin.formPromptImageCurrent}:{' '}
-                                    <span className="break-all text-foreground">
-                                        {editValues.promptImageUrl}
-                                    </span>
-                                </p>
-                            </>
+                        {/* Прежний URL для delete action берёт из БД, не из формы. */}
+                        {imagePreviewSrc ? (
+                            <figure className="flex flex-col gap-2">
+                                <div className="flex items-center justify-center overflow-hidden rounded-md border border-border bg-surface-muted">
+                                    {/* eslint-disable-next-line @next/next/no-img-element -- admin preview: весь кадр, blob: или произвольный URL */}
+                                    <img
+                                        key={imagePreviewSrc}
+                                        src={imagePreviewSrc}
+                                        alt={
+                                            dictionary.admin
+                                                .formPromptImagePreviewAlt
+                                        }
+                                        decoding="async"
+                                        className="max-h-72 w-full object-contain object-center"
+                                    />
+                                </div>
+                                <figcaption className="text-sm text-muted">
+                                    {filePreviewUrl ? (
+                                        dictionary.admin.formPromptImageNewFile
+                                    ) : (
+                                        <>
+                                            {
+                                                dictionary.admin
+                                                    .formPromptImageCurrent
+                                            }
+                                            :{' '}
+                                            <span className="break-all text-foreground">
+                                                {urlPreviewSrc}
+                                            </span>
+                                        </>
+                                    )}
+                                </figcaption>
+                            </figure>
                         ) : null}
 
                         <label className="flex flex-col gap-2 text-sm text-foreground">
@@ -377,43 +450,49 @@ export function AdminQuestionForm({
                                 </span>
                             </label>
 
-                            <label className="flex flex-col gap-2 text-sm text-foreground">
-                                <span>{dictionary.admin.formOptionTextRu}</span>
-                                <input
-                                    type="text"
-                                    name={`optionTextRu-${index}`}
-                                    required
-                                    maxLength={200}
-                                    value={option.textRu}
-                                    onChange={(event) => {
-                                        updateOptionText(
-                                            index,
-                                            'textRu',
-                                            event.target.value,
-                                        );
-                                    }}
-                                    className={fieldClassName}
-                                />
-                            </label>
+                            <div className={bilingualGridClassName}>
+                                <label className="flex flex-col gap-2 text-sm text-foreground">
+                                    <span>
+                                        {dictionary.admin.formOptionTextRu}
+                                    </span>
+                                    <input
+                                        type="text"
+                                        name={`optionTextRu-${index}`}
+                                        required
+                                        maxLength={200}
+                                        value={option.textRu}
+                                        onChange={(event) => {
+                                            updateOptionText(
+                                                index,
+                                                'textRu',
+                                                event.target.value,
+                                            );
+                                        }}
+                                        className={fieldClassName}
+                                    />
+                                </label>
 
-                            <label className="flex flex-col gap-2 text-sm text-foreground">
-                                <span>{dictionary.admin.formOptionTextEn}</span>
-                                <input
-                                    type="text"
-                                    name={`optionTextEn-${index}`}
-                                    required
-                                    maxLength={200}
-                                    value={option.textEn}
-                                    onChange={(event) => {
-                                        updateOptionText(
-                                            index,
-                                            'textEn',
-                                            event.target.value,
-                                        );
-                                    }}
-                                    className={fieldClassName}
-                                />
-                            </label>
+                                <label className="flex flex-col gap-2 text-sm text-foreground">
+                                    <span>
+                                        {dictionary.admin.formOptionTextEn}
+                                    </span>
+                                    <input
+                                        type="text"
+                                        name={`optionTextEn-${index}`}
+                                        required
+                                        maxLength={200}
+                                        value={option.textEn}
+                                        onChange={(event) => {
+                                            updateOptionText(
+                                                index,
+                                                'textEn',
+                                                event.target.value,
+                                            );
+                                        }}
+                                        className={fieldClassName}
+                                    />
+                                </label>
+                            </div>
                         </div>
                     ))}
                 </fieldset>

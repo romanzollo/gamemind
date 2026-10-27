@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import type { ZodError } from 'zod';
 
 import { questionRepository } from '@/entities/question/question.repository';
 import { parseBulkQuestionIdsFromFormData } from '@/features/admin/lib/parse-bulk-question-ids';
@@ -12,7 +13,10 @@ import {
     getQuestionPublishQualityIssues,
     hasPublishQualityBlockers,
 } from '@/features/admin/lib/question-publish-quality';
-import { resolveAdminPromptImage } from '@/features/admin/lib/resolve-prompt-image';
+import {
+    getPromptImageFile,
+    resolveAdminPromptImage,
+} from '@/features/admin/lib/resolve-prompt-image';
 import {
     createQuestionSchema,
     updateQuestionSchema,
@@ -24,6 +28,7 @@ import type {
 import { requireAdmin } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
+import { deleteReplacedMediaObject, STORAGE_PREFIX } from '@/lib/storage';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -193,6 +198,29 @@ async function collectEligibleBulkPublicationIds(
     return { ok: true, eligibleIds, firstBlockedId };
 }
 
+/**
+ * Код ошибки формы create/edit по Zod issues.
+ *
+ * EXACTLY_ONE_CORRECT_REQUIRED — только superRefine «ровно один правильный»
+ * (path === ['options'], code custom). Ошибки внутри варианта (пустой EN,
+ * >200 символов) → INVALID_INPUT, чтобы админ не искал проблему
+ * в выборе правильного ответа.
+ */
+function getQuestionFormErrorCode(
+    error: ZodError,
+): 'EXACTLY_ONE_CORRECT_REQUIRED' | 'INVALID_INPUT' {
+    const hasCorrectOptionError = error.issues.some(
+        (issue) =>
+            issue.code === 'custom' &&
+            issue.path.length === 1 &&
+            issue.path[0] === 'options',
+    );
+
+    return hasCorrectOptionError
+        ? 'EXACTLY_ONE_CORRECT_REQUIRED'
+        : 'INVALID_INPUT';
+}
+
 function getFormString(formData: FormData, name: string): string {
     const value = formData.get(name);
 
@@ -301,9 +329,28 @@ function parseOptionsForUpdateFromFormData(formData: FormData) {
 }
 
 /**
+ * Rate limit admin create/update по userId — до sharp/Blob и до записи в Neon.
+ * `adminWrite` тратится на каждое сохранение, `upload` — только если приложен
+ * файл: текстовая редактура не должна упираться в лимит дорогих загрузок.
+ */
+function consumeAdminQuestionWriteRateLimit(
+    userId: string,
+    hasImageFile: boolean,
+): boolean {
+    const identity = getUserRateLimitIdentity(userId);
+
+    if (!checkPresetRateLimit('adminWrite', identity).ok) {
+        return false;
+    }
+
+    return !hasImageFile || checkPresetRateLimit('upload', identity).ok;
+}
+
+/**
  * Создание вопроса.
  * Для IMAGE_GUESS: file → sharp → storage.put → URL в QuestionAsset (или URL-поле).
- * Rate limit по admin userId — до sharp/Blob и до записи в Neon.
+ * Упавший INSERT после upload оставляет orphan-объект в storage — безопасно
+ * (битых ссылок нет), чистка сирот отдельно.
  */
 export async function createQuestionAction(
     _prevState: AdminFormState,
@@ -311,16 +358,17 @@ export async function createQuestionAction(
 ): Promise<AdminFormState> {
     const locale = getLocaleFromFormData(formData);
     const session = await requireAdmin(locale);
+    const type = parseQuestionTypeFromFormData(formData);
 
-    const rate = checkPresetRateLimit(
-        'upload',
-        getUserRateLimitIdentity(session.user.id),
-    );
-    if (!rate.ok) {
+    if (
+        !consumeAdminQuestionWriteRateLimit(
+            session.user.id,
+            getPromptImageFile(formData, type) !== null,
+        )
+    ) {
         return { errorCode: 'RATE_LIMITED' };
     }
 
-    const type = parseQuestionTypeFromFormData(formData);
     // id заранее — совпадает со storage key до INSERT
     const questionId = randomUUID();
 
@@ -346,20 +394,14 @@ export async function createQuestionAction(
     });
 
     if (!parsed.success) {
-        const hasCorrectOptionError = parsed.error.issues.some(
-            (issue) => issue.path[0] === 'options',
-        );
-
-        return {
-            errorCode: hasCorrectOptionError
-                ? 'EXACTLY_ONE_CORRECT_REQUIRED'
-                : 'INVALID_INPUT',
-        };
+        return { errorCode: getQuestionFormErrorCode(parsed.error) };
     }
 
     try {
         await questionRepository.createWithOptions(parsed.data);
-    } catch {
+    } catch (error) {
+        // Всегда в Runtime Logs: на prod иначе SAVE_FAILED без причины.
+        console.error('createQuestionAction failed:', error);
         return { errorCode: 'SAVE_FAILED' };
     }
 
@@ -768,8 +810,10 @@ export async function returnQuestionToDraftAction(formData: FormData) {
 
 /**
  * Редактирование вопроса.
- * Новый file заменяет prompt URL; старый `/media/...` удаляется best-effort.
- * Rate limit по admin userId — до sharp/Blob и до записи в Neon.
+ * Новый file / URL заменяет prompt; заменённый собственный `/media/quiz/...`
+ * удаляется best-effort ТОЛЬКО после успешного UPDATE. Прежний URL берём
+ * из БД (результат UPDATE), не из формы: клиенту не доверяем цель delete,
+ * и при смене IMAGE_GUESS → TEXT поле картинки в форме не отправляется.
  */
 export async function updateQuestionAction(
     _prevState: AdminFormState,
@@ -777,12 +821,14 @@ export async function updateQuestionAction(
 ): Promise<AdminFormState> {
     const locale = getLocaleFromFormData(formData);
     const session = await requireAdmin(locale);
+    const type = parseQuestionTypeFromFormData(formData);
 
-    const rate = checkPresetRateLimit(
-        'upload',
-        getUserRateLimitIdentity(session.user.id),
-    );
-    if (!rate.ok) {
+    if (
+        !consumeAdminQuestionWriteRateLimit(
+            session.user.id,
+            getPromptImageFile(formData, type) !== null,
+        )
+    ) {
         return { errorCode: 'RATE_LIMITED' };
     }
 
@@ -792,14 +838,10 @@ export async function updateQuestionAction(
     }
     const questionId = questionIdRaw.trim();
 
-    const type = parseQuestionTypeFromFormData(formData);
-    const previousPublicUrl = getFormString(formData, 'previousPromptImageUrl');
-
     const resolved = await resolveAdminPromptImage({
         formData,
         type,
         questionIdForKey: questionId,
-        previousPublicUrl: previousPublicUrl || null,
     });
 
     if (!resolved.ok) {
@@ -818,30 +860,34 @@ export async function updateQuestionAction(
     });
 
     if (!parsed.success) {
-        const hasCorrectOptionError = parsed.error.issues.some(
-            (issue) => issue.path[0] === 'options',
-        );
-
-        return {
-            errorCode: hasCorrectOptionError
-                ? 'EXACTLY_ONE_CORRECT_REQUIRED'
-                : 'INVALID_INPUT',
-        };
+        return { errorCode: getQuestionFormErrorCode(parsed.error) };
     }
 
-    try {
-        const result = await questionRepository.updateWithOptions(parsed.data);
+    let updated: Awaited<
+        ReturnType<typeof questionRepository.updateWithOptions>
+    >;
 
-        if (!result) {
-            return { errorCode: 'NOT_FOUND' };
-        }
+    try {
+        updated = await questionRepository.updateWithOptions(parsed.data);
     } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-            console.error('updateQuestionAction failed:', error);
-        }
+        // Всегда в Runtime Logs: на prod иначе SAVE_FAILED без причины.
+        console.error('updateQuestionAction failed:', error);
 
         return { errorCode: 'SAVE_FAILED' };
     }
+
+    if (!updated) {
+        return { errorCode: 'NOT_FOUND' };
+    }
+
+    await deleteReplacedMediaObject({
+        previousPublicUrl: updated.previousPromptImageUrl,
+        nextPublicUrl:
+            parsed.data.type === 'IMAGE_GUESS'
+                ? parsed.data.promptImageUrl
+                : null,
+        owner: { prefix: STORAGE_PREFIX.quiz, idPart: questionId },
+    });
 
     revalidatePath(`/${locale}/admin/questions`);
     revalidatePath(`/${locale}/admin/questions/${parsed.data.questionId}/edit`);

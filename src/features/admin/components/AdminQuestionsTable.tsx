@@ -330,8 +330,10 @@ function QuestionRowActions({
     if (layout === 'compact') {
         return (
             <div className="flex flex-nowrap items-center gap-x-3">
+                {/* prefetch off: 25 строк × RSC-запрос с auth на каждый скролл. */}
                 <Link
                     href={`/${locale}/admin/questions/${entry.id}/edit`}
+                    prefetch={false}
                     className={`${rowActionClassName} text-primary hover:text-primary-hover`}
                 >
                     {labels.editLink}
@@ -353,6 +355,7 @@ function QuestionRowActions({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <Link
                 href={`/${locale}/admin/questions/${entry.id}/edit`}
+                prefetch={false}
                 className={`${rowActionClassName} text-primary hover:text-primary-hover`}
             >
                 {labels.editLink}
@@ -454,11 +457,9 @@ function CardHeroImage({
 
 function ListCardMeta({
     entry,
-    labels,
     locale,
 }: {
     entry: AdminQuestionListItem;
-    labels: Dictionary['admin'];
     locale: Locale;
 }) {
     return (
@@ -644,7 +645,9 @@ function BulkQuestionsToolbar({
     onSelectAll: () => void;
     onClear: () => void;
 }) {
-    const [bulkPending, setBulkPending] = useState(false);
+    const [pendingFingerprint, setPendingFingerprint] = useState<
+        string | null
+    >(null);
     const selectedCount = selectedEntries.length;
     const hasSelection = selectedCount > 0;
     const selectedLabel = labels.bulkSelected.replace(
@@ -671,8 +674,8 @@ function BulkQuestionsToolbar({
         )
         .map((entry) => entry.id);
 
-    // Отпечаток статусов выбора: после deactivate/activate RSC обновит
-    // isActive → fingerprint сменится → снимем stuck pending.
+    // Отпечаток статусов выбора. Pending = отпечаток не изменился с submit:
+    // RSC обновил isActive/status → отпечаток другой → pending снят сам.
     const selectionFingerprint = selectedEntries
         .map(
             (entry) =>
@@ -680,10 +683,7 @@ function BulkQuestionsToolbar({
         )
         .sort()
         .join('|');
-
-    useEffect(() => {
-        setBulkPending(false);
-    }, [selectionFingerprint]);
+    const bulkPending = pendingFingerprint === selectionFingerprint;
 
     // Если redirect/error не изменил статусы — не держим UI disabled вечно.
     useEffect(() => {
@@ -692,16 +692,16 @@ function BulkQuestionsToolbar({
         }
 
         const timer = window.setTimeout(() => {
-            setBulkPending(false);
+            setPendingFingerprint(null);
         }, 8_000);
 
         return () => window.clearTimeout(timer);
     }, [bulkPending]);
 
-    const markPending = () => setBulkPending(true);
+    const markPending = () => setPendingFingerprint(selectionFingerprint);
 
     function handleClear() {
-        setBulkPending(false);
+        setPendingFingerprint(null);
         onClear();
     }
 
@@ -863,8 +863,12 @@ export function AdminQuestionsTable({
         !allVisibleSelected &&
         entries.some((entry) => selectedIds.has(entry.id));
 
-    // После смены фильтра URL: убрать id, которых больше нет в списке.
-    useEffect(() => {
+    // После смены фильтра URL / RSC refresh: убрать id, которых больше нет
+    // в списке. Сравнение с прошлым `entries` прямо в render (паттерн React
+    // «adjusting state when a prop changes») — без лишнего effect-прохода.
+    const [prunedForEntries, setPrunedForEntries] = useState(entries);
+    if (prunedForEntries !== entries) {
+        setPrunedForEntries(entries);
         const visible = new Set(visibleIds);
         setSelectedIds((prev) => {
             let changed = false;
@@ -878,9 +882,7 @@ export function AdminQuestionsTable({
             }
             return changed ? next : prev;
         });
-        // visibleIds как массив каждый рендер новый — ключ по составу строк.
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- sync to entry id set
-    }, [entries]);
+    }
 
     useEffect(() => {
         if (selectAllRef.current) {
@@ -986,7 +988,6 @@ export function AdminQuestionsTable({
                                                 </p>
                                                 <ListCardMeta
                                                     entry={entry}
-                                                    labels={labels}
                                                     locale={locale}
                                                 />
                                             </div>
@@ -1020,7 +1021,6 @@ export function AdminQuestionsTable({
                                             </p>
                                             <ListCardMeta
                                                 entry={entry}
-                                                labels={labels}
                                                 locale={locale}
                                             />
                                         </div>

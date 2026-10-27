@@ -22,7 +22,6 @@ import {
     useMemo,
     useRef,
     useState,
-    useEffect,
     startTransition,
     type FormEvent,
 } from 'react';
@@ -80,17 +79,9 @@ export function SurvivalQuizSessionForm({
     const [bankExpired, setBankExpired] = useState(false);
     const [waveSubmitting, setWaveSubmitting] = useState(false);
 
-    useEffect(() => {
-        selectedAnswersRef.current = selectedAnswers;
-    }, [selectedAnswers]);
-
-    // После failed auto-submit можно повторить; банк остаётся expired.
-    useEffect(() => {
-        if (state.errorCode) {
-            autoSubmitStartedRef.current = false;
-            setWaveSubmitting(false);
-        }
-    }, [state.errorCode]);
+    // Ошибка hop снимает «идёт отправка»: выводим, а не сбрасываем в effect.
+    // Guard авто-submit снимает явный retry в handleSubmit.
+    const waveSaving = waveSubmitting && !state.errorCode;
 
     const totalQuestions = questions.length;
     const answeredCount = useMemo(
@@ -113,7 +104,7 @@ export function SurvivalQuizSessionForm({
     const showRetryCta = Boolean(state.errorCode) && !isPending;
     // Пока идёт auto-submit / redirect — только статус+spinner, без мёртвой CTA.
     const showSavingState =
-        (waveSubmitting || bankExpired || isPending) && !state.errorCode;
+        (waveSaving || bankExpired || isPending) && !state.errorCode;
 
     const {
         initialBankSeconds = SURVIVAL_MODE_MVP_RULES.initialBankSeconds,
@@ -249,6 +240,12 @@ export function SurvivalQuizSessionForm({
                 return;
             }
 
+            // Retry CTA виден только после ошибки hop: явный клик снимает
+            // guard авто-submit (в т.ч. при повторной ошибке с тем же кодом).
+            if (state.errorCode) {
+                autoSubmitStartedRef.current = false;
+            }
+
             // Retry after failed bank auto-submit.
             if (bankExpired && state.errorCode) {
                 const lockedAll = questions.every(
@@ -301,7 +298,7 @@ export function SurvivalQuizSessionForm({
                             remainingLabel={labels.remainingLabel}
                             expiredLabel={labels.expiredLabel}
                             frozen={
-                                waveSubmitting ||
+                                waveSaving ||
                                 isPending ||
                                 (allAnswered && !bankExpired)
                             }
@@ -365,7 +362,7 @@ export function SurvivalQuizSessionForm({
                     </p>
                 ) : null}
 
-                {!allAnswered && !bankExpired && !waveSubmitting ? (
+                {!allAnswered && !bankExpired && !waveSaving ? (
                     <p
                         id={submitHintId}
                         className="mb-2 text-sm leading-snug text-muted sm:mb-3"

@@ -23,7 +23,7 @@ export default async function AdminNewQuestionPage({
     await requireAdmin(safeLocale);
 
     return (
-        <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
+        <main className="mx-auto max-w-4xl px-4 py-5 sm:px-8 sm:py-10">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                     {dictionary.admin.createTitle}

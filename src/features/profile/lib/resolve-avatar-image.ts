@@ -6,7 +6,6 @@ import {
     buildAvatarStorageKey,
     getMediaStorage,
     processAvatarToWebp,
-    storageKeyFromPublicUrl,
 } from '@/lib/storage';
 
 /**
@@ -14,7 +13,8 @@ import {
  *
  * Приоритет: загруженный файл → URL-поле (advanced) → пустая строка (clear).
  * File: MIME/size → sharp square cover → storage.put → `/media/avatars/...`.
- * Старый `/media/...` удаляется best-effort при replace/clear.
+ * Только put: старый объект удаляет changeAvatarAction ПОСЛЕ успешного
+ * UPDATE (deleteReplacedMediaObject с проверкой владельца).
  */
 
 export type ResolveAvatarImageResult =
@@ -27,7 +27,6 @@ export type ResolveAvatarImageResult =
 export async function resolveAvatarImage(options: {
     formData: FormData;
     userId: string;
-    previousPublicUrl: string | null;
 }): Promise<ResolveAvatarImageResult> {
     const file = options.formData.get('avatarFile');
     const hasFile =
@@ -49,8 +48,6 @@ export async function resolveAvatarImage(options: {
                 body: processed.buffer,
                 contentType: processed.mimeType,
             });
-
-            await deletePreviousMediaObject(options.previousPublicUrl);
 
             return { ok: true, imageUrl: putResult.publicUrl };
         } catch (error) {
@@ -74,7 +71,6 @@ export async function resolveAvatarImage(options: {
 
     const clearRequested = options.formData.get('clearAvatar') === '1';
     if (clearRequested) {
-        await deletePreviousMediaObject(options.previousPublicUrl);
         return { ok: true, imageUrl: '' };
     }
 
@@ -101,21 +97,4 @@ export async function resolveAvatarImage(options: {
     }
 
     return { ok: true, imageUrl };
-}
-
-async function deletePreviousMediaObject(
-    previousPublicUrl: string | null,
-): Promise<void> {
-    const key = previousPublicUrl
-        ? storageKeyFromPublicUrl(previousPublicUrl)
-        : null;
-    if (!key) {
-        return;
-    }
-
-    try {
-        await getMediaStorage().delete({ key });
-    } catch {
-        // orphan cleanup later
-    }
 }

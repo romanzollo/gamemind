@@ -36,6 +36,18 @@ export const ruDictionary: Dictionary = {
         skipToContent: 'Перейти к содержимому',
         mainNav: 'Основная навигация',
     },
+    errorPage: {
+        notFoundTitle: 'Страница не найдена',
+        notFoundDescription:
+            'Такого адреса нет: ссылка устарела или в ней опечатка. Режимы и рейтинг — на месте.',
+        errorTitle: 'Что-то пошло не так',
+        errorDescription:
+            'Страница не загрузилась. Чаще всего помогает повторная попытка через пару секунд.',
+        errorReference: 'Код ошибки',
+        retry: 'Повторить',
+        backHome: 'На главную',
+        toModes: 'К режимам',
+    },
     home: {
         title: 'GameMind',
         headline: 'Вспомни игры, которые прошёл',
@@ -301,6 +313,9 @@ export const ruDictionary: Dictionary = {
         formPromptImageFileHint:
             'JPEG, PNG или WebP, до 2 MB. На сервере будет WebP без обрезки кадра.',
         formPromptImageCurrent: 'Текущий URL',
+        formPromptImageNewFile:
+            'Новый файл — заменит текущую картинку после сохранения',
+        formPromptImagePreviewAlt: 'Превью картинки вопроса',
         formPromptImageUrl: 'Или URL (advanced)',
         formPromptImageUrlHint:
             'Путь из public/ (например /quiz-images/...) или уже сохранённый /media/.... Файл имеет приоритет над URL.',
@@ -367,6 +382,12 @@ export const ruDictionary: Dictionary = {
                 'Не удалось загрузить вопросы. Проверь подключение к базе данных и попробуй обновить страницу.',
             usersLoadFailed:
                 'Не удалось загрузить пользователей. Проверь подключение к базе данных и попробуй обновить страницу.',
+            questionLoadFailed:
+                'Не удалось загрузить вопрос: база данных не ответила вовремя. Повтори загрузку через пару секунд.',
+            userLoadFailed:
+                'Не удалось загрузить пользователя: база данных не ответила вовремя. Повтори загрузку через пару секунд.',
+            unexpected:
+                'Что-то пошло не так при загрузке страницы. Повтори попытку или вернись в админ-панель.',
             invalidInput:
                 'Проверь текст вопроса на русском и английском, сложность, категорию и варианты ответов.',
             notFound: 'Запись не найдена.',

@@ -26,6 +26,15 @@ export function normalizeStorageKey(key: string): string {
     return trimmed;
 }
 
+/** Та же чистка idPart, что в buildStorageKey — для проверки владельца. */
+function sanitizeStorageIdPart(idPart: string): string {
+    return idPart.trim().replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
+/** crypto.randomUUID(): lowercase v4. */
+const STORAGE_KEY_UUID_PATTERN =
+    '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+
 /**
  * Формат ключа: `{prefix}/{idPart}-{uuid}.webp`
  * uuid в имени даёт cache-bust при замене аватара/картинки.
@@ -36,7 +45,7 @@ export function buildStorageKey(options: {
     uuid: string;
     extension?: 'webp';
 }): string {
-    const idPart = options.idPart.trim().replace(/[^a-zA-Z0-9_-]/g, '');
+    const idPart = sanitizeStorageIdPart(options.idPart);
     const uuid = options.uuid.trim().replace(/[^a-zA-Z0-9-]/g, '');
     const extension = options.extension ?? 'webp';
 
@@ -51,6 +60,32 @@ export function buildStorageKey(options: {
     return normalizeStorageKey(
         `${options.prefix}/${idPart}-${uuid}.${extension}`,
     );
+}
+
+/**
+ * Принадлежит ли ключ владельцу (вопросу / пользователю).
+ *
+ * Зачем: перед delete заменённого объекта. URL в БД может указывать на
+ * чужой `/media/...` (поле URL заполняется вручную) — без проверки замена
+ * своей картинки удалила бы чужой файл.
+ * Точное совпадение формата buildStorageKey, не startsWith: иначе id `q1`
+ * совпал бы с ключами вопроса `q1-x` (`quiz/q1-x-<uuid>.webp`).
+ */
+export function isStorageKeyOwnedBy(
+    key: string,
+    owner: { prefix: StoragePrefix; idPart: string },
+): boolean {
+    const idPart = sanitizeStorageIdPart(owner.idPart);
+    if (!idPart) {
+        return false;
+    }
+
+    // idPart после чистки — только [a-zA-Z0-9_-]: экранировать для RegExp нечего.
+    const pattern = new RegExp(
+        `^${owner.prefix}/${idPart}-${STORAGE_KEY_UUID_PATTERN}\\.webp$`,
+    );
+
+    return pattern.test(key);
 }
 
 /** Ключ для PROMPT-картинки вопроса (IMAGE_GUESS). */

@@ -44,7 +44,71 @@ export default async function AdminEditQuestionPage({
     const dictionary = getDictionary(safeLocale);
 
     await requireAdmin(safeLocale);
-    const rawQuestion = await questionRepository.findByIdForAdmin(id);
+
+    const editHref = localizedHref(
+        safeLocale,
+        `/admin/questions/${encodeURIComponent(id)}/edit`,
+    );
+
+    const header = (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+            <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                {dictionary.admin.editTitle}
+            </h1>
+            <Link
+                href={localizedHref(safeLocale, '/admin/questions')}
+                prefetch={false}
+                className={buttonClassName({
+                    variant: 'secondary',
+                    className: 'min-h-10 px-3 text-sm sm:min-h-11',
+                })}
+            >
+                {dictionary.admin.questionsLink}
+            </Link>
+        </div>
+    );
+
+    // Transient Neon read (DirectPgTimeout / Connection terminated) ≠ «вопроса нет»:
+    // ловим и показываем InlineAlert + retry, иначе исключение уходит в дефолтную
+    // ошибку Next (redbox в dev, «Application error» на prod).
+    // notFound() — только для реального null (вопрос удалён).
+    let rawQuestion: Awaited<
+        ReturnType<typeof questionRepository.findByIdForAdmin>
+    > = null;
+    let loadFailed = false;
+
+    try {
+        rawQuestion = await questionRepository.findByIdForAdmin(id);
+    } catch (loadError) {
+        // console.warn: console.error в Server Component поднимает Next redbox
+        // даже когда ошибка уже обработана (InlineAlert + retry).
+        console.warn(
+            '[admin/questions/edit] findByIdForAdmin failed:',
+            loadError instanceof Error ? loadError.message : loadError,
+        );
+        loadFailed = true;
+    }
+
+    if (loadFailed) {
+        return (
+            <main className="mx-auto max-w-4xl px-4 py-5 sm:px-8 sm:py-10">
+                {header}
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                    <InlineAlert>
+                        {dictionary.admin.errors.questionLoadFailed}
+                    </InlineAlert>
+                    <Link
+                        href={editHref}
+                        prefetch={false}
+                        className="rounded-sm text-sm font-medium text-primary underline-offset-2 hover:underline hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    >
+                        {dictionary.admin.retryLoad}
+                    </Link>
+                </div>
+            </main>
+        );
+    }
+
     const question = mapAdminQuestionDetail(rawQuestion);
     if (!question) {
         notFound();
@@ -63,22 +127,8 @@ export default async function AdminEditQuestionPage({
     const qualityIssues = getQuestionPublishQualityIssues(question);
 
     return (
-        <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                    {dictionary.admin.editTitle}
-                </h1>
-                <Link
-                    href={localizedHref(safeLocale, '/admin/questions')}
-                    prefetch={false}
-                    className={buttonClassName({
-                        variant: 'secondary',
-                        className: 'min-h-10 px-3 text-sm sm:min-h-11',
-                    })}
-                >
-                    {dictionary.admin.questionsLink}
-                </Link>
-            </div>
+        <main className="mx-auto max-w-4xl px-4 py-5 sm:px-8 sm:py-10">
+            {header}
 
             {actionErrorMessage ? (
                 <div className="mt-4">
