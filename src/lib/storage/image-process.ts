@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import type { Sharp } from 'sharp';
 
 import {
     MEDIA_ALLOWED_MIME_TYPES,
@@ -26,6 +26,32 @@ export const QUIZ_IMAGE_WEBP_QUALITY = 80;
 /** Сторона квадрата аватара после crop. */
 export const AVATAR_SIZE_PX = 512;
 export const AVATAR_WEBP_QUALITY = 82;
+
+type SharpFactory = typeof import('sharp')['default'];
+
+let sharpFactoryPromise: Promise<SharpFactory> | null = null;
+
+/**
+ * Ленивая загрузка native sharp — только в момент обработки upload.
+ *
+ * Почему не top-level import: этот модуль тянут Server Actions (admin
+ * questions, avatar), а значит и page-модули edit/new/profile. Если на
+ * Vercel не загрузится libvips (.so не попал в трассировку функции —
+ * см. outputFileTracingIncludes в next.config.ts), top-level import ронял
+ * рендер всей страницы 500-кой. Теперь падает только сам upload
+ * (UPLOAD_FAILED + лог), страница и сохранение без файла работают.
+ * Неудачная загрузка не кэшируется — следующий upload попробует снова.
+ */
+function loadSharp(): Promise<SharpFactory> {
+    sharpFactoryPromise ??= import('sharp')
+        .then((module) => module.default)
+        .catch((error: unknown) => {
+            sharpFactoryPromise = null;
+            throw error;
+        });
+
+    return sharpFactoryPromise;
+}
 
 export type ProcessedImage = {
     buffer: Buffer;
@@ -69,7 +95,8 @@ export async function processQuizImageToWebp(
 ): Promise<ProcessedImage> {
     assertImageWithinUploadLimit(input.byteLength);
 
-    let pipeline = sharp(input).rotate();
+    const sharp = await loadSharp();
+    let pipeline: Sharp = sharp(input).rotate();
     const before = await pipeline.metadata();
 
     // Убрать чёрные поля, часто прилипающие к ретро-скриншотам
@@ -135,6 +162,7 @@ export async function processAvatarToWebp(
 ): Promise<ProcessedImage> {
     assertImageWithinUploadLimit(input.byteLength);
 
+    const sharp = await loadSharp();
     const { data, info } = await sharp(input)
         .rotate()
         .resize({

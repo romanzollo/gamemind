@@ -13,7 +13,29 @@ const blobPublicBase = process.env.BLOB_PUBLIC_BASE_URL?.trim().replace(
     '',
 );
 
+/**
+ * Native libvips для sharp на Vercel (linux-x64, glibc).
+ *
+ * `@img/sharp-linux-x64/*.node` грузит `libvips-cpp.so.*` через dlopen по
+ * RPATH — file tracing (nft) этого не видит, .so не попадал в функцию:
+ * "libvips-cpp.so.8.x: cannot open shared object file" → 500 на admin edit.
+ * На Windows/macOS этих пакетов нет в node_modules — glob просто пустой.
+ */
+const SHARP_LINUX_NATIVE_FILES = [
+    './node_modules/@img/sharp-linux-x64/**/*',
+    './node_modules/@img/sharp-libvips-linux-x64/**/*',
+];
+
 const nextConfig: NextConfig = {
+    /**
+     * Только маршруты, чьи Server Actions делают upload (admin questions,
+     * avatar в profile): +~15 МБ libvips не нужны функциям quiz hot path.
+     * Ключ — picomatch по route без групп: `/[locale]/admin/questions/[id]/edit`.
+     */
+    outputFileTracingIncludes: {
+        '/*/admin/questions/**': SHARP_LINUX_NATIVE_FILES,
+        '/*/profile': SHARP_LINUX_NATIVE_FILES,
+    },
     /**
      * В Next 16.2 bodySizeLimit живёт в experimental.serverActions
      * (top-level serverActions конфиг отвергает как unrecognized).
