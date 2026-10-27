@@ -39,6 +39,32 @@ function getScrollbarGap() {
 const mobileNavLinkClassName =
     'rounded-md px-3 py-2.5 text-sm text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
+/**
+ * ☰ ↔ ✕ на CSS transitions, состояние — `aria-expanded` кнопки (group):
+ * отдельный React-state для иконки не нужен, a11y и вид не разъедутся.
+ * Открытие: крайние полоски сходятся в центр → поворот ±45° (лёгкий
+ * overshoot), средняя гаснет. Закрытие — та же хореография в обратном
+ * порядке (разворот → разъезд). Tailwind v4 rotate/translate/scale —
+ * отдельные CSS-свойства, поэтому у фаз разные delay.
+ * prefers-reduced-motion гасит transitions глобально (globals.css).
+ */
+const menuBarClassName =
+    'absolute left-0 block h-0.5 w-full rounded-full bg-current';
+const menuOuterBarMotionClassName =
+    'motion-safe:[transition:rotate_160ms_ease-in,translate_160ms_ease-out_160ms] motion-safe:group-aria-expanded:[transition:translate_160ms_ease-in,rotate_220ms_cubic-bezier(0.34,1.56,0.64,1)_160ms]';
+const menuMiddleBarMotionClassName =
+    'motion-safe:[transition:opacity_120ms_ease_150ms,scale_120ms_ease_150ms] motion-safe:group-aria-expanded:[transition:opacity_120ms_ease,scale_120ms_ease]';
+
+/**
+ * Панель/scrim: въезд сверху и обратный выезд (keyframes в globals.css).
+ * Без motion-safe: размонтирование ждёт animationend, а reduced-motion
+ * укорачивает анимацию до 0.01ms глобально — событие всё равно придёт.
+ */
+const menuPanelMotionClassName =
+    'animate-[gm-menu-panel-in_220ms_cubic-bezier(0.22,1,0.36,1)_both] data-[state=closed]:animate-[gm-menu-panel-out_160ms_ease-in_both]';
+const menuScrimMotionClassName =
+    'animate-[gm-menu-scrim-in_220ms_ease-out_both] data-[state=closed]:animate-[gm-menu-scrim-out_160ms_ease-in_both]';
+
 export function SiteMobileMenu({
     locale,
     links,
@@ -50,6 +76,8 @@ export function SiteMobileMenu({
 }: SiteMobileMenuProps) {
     const pathname = usePathname();
     const [open, setOpen] = useState(false);
+    /** Панель ещё в DOM, пока играет выезд; снимается onAnimationEnd. */
+    const [exiting, setExiting] = useState(false);
     const [scrollbarGap, setScrollbarGap] = useState(0);
     const panelId = useId();
     const toggleRef = useRef<HTMLButtonElement>(null);
@@ -63,6 +91,7 @@ export function SiteMobileMenu({
 
     function closeMenu() {
         setOpen(false);
+        setExiting(true);
         setScrollbarGap(0);
         focusToggle();
     }
@@ -75,6 +104,7 @@ export function SiteMobileMenu({
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 setOpen(false);
+                setExiting(true);
                 setScrollbarGap(0);
                 focusToggle();
             }
@@ -97,49 +127,72 @@ export function SiteMobileMenu({
         };
     }, [open, scrollbarGap]);
 
-    function toggleMenu() {
-        setOpen((wasOpen) => {
-            if (wasOpen) {
-                setScrollbarGap(0);
-                return false;
-            }
+    // Страховка к onAnimationEnd: событие может не прийти (фоновая вкладка
+    // троттлит анимации, CSS не применился) — не держим невидимую панель.
+    useEffect(() => {
+        if (!exiting) {
+            return;
+        }
 
-            setScrollbarGap(getScrollbarGap());
-            return true;
-        });
+        const timer = window.setTimeout(() => {
+            setExiting(false);
+        }, 400);
+
+        return () => window.clearTimeout(timer);
+    }, [exiting]);
+
+    function toggleMenu() {
+        if (open) {
+            setOpen(false);
+            setExiting(true);
+            setScrollbarGap(0);
+            return;
+        }
+
+        setExiting(false);
+        setScrollbarGap(getScrollbarGap());
+        setOpen(true);
     }
 
     const lockStyle =
         scrollbarGap > 0 ? ({ right: scrollbarGap } as const) : undefined;
+    const panelVisible = open || exiting;
+    const panelState = open ? 'open' : 'closed';
 
     return (
         <div className="lg:hidden">
             <button
                 ref={toggleRef}
                 type="button"
-                className="relative z-50 inline-flex size-10 shrink-0 items-center justify-center overflow-visible rounded-md border border-border text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className="group relative z-50 inline-flex size-10 shrink-0 items-center justify-center overflow-visible rounded-md border border-border text-foreground hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 aria-expanded={open}
                 aria-controls={panelId}
                 aria-label={open ? closeLabel : openLabel}
                 onClick={toggleMenu}
             >
-                <span
-                    aria-hidden
-                    className="flex h-3.5 w-4 flex-col justify-between"
-                >
-                    <span className="block h-0.5 w-full rounded-full bg-current" />
-                    <span className="block h-0.5 w-full rounded-full bg-current" />
-                    <span className="block h-0.5 w-full rounded-full bg-current" />
+                {/* 14px: полоски на 0 / 6 / 12px, ±6px сводят их в центр. */}
+                <span aria-hidden className="relative block h-3.5 w-4">
+                    <span
+                        className={`${menuBarClassName} ${menuOuterBarMotionClassName} top-0 group-aria-expanded:translate-y-1.5 group-aria-expanded:rotate-45`}
+                    />
+                    <span
+                        className={`${menuBarClassName} ${menuMiddleBarMotionClassName} top-1.5 group-aria-expanded:scale-x-0 group-aria-expanded:opacity-0`}
+                    />
+                    <span
+                        className={`${menuBarClassName} ${menuOuterBarMotionClassName} top-3 group-aria-expanded:-translate-y-1.5 group-aria-expanded:-rotate-45`}
+                    />
                 </span>
             </button>
 
-            {open ? (
+            {panelVisible ? (
                 <div>
                     <button
                         type="button"
                         style={lockStyle}
-                        className="fixed inset-x-0 bottom-0 top-[var(--site-header-sticky-offset)] z-40 bg-background/50 backdrop-blur-md supports-backdrop-filter:bg-background/35"
+                        data-state={panelState}
+                        className={`fixed inset-x-0 bottom-0 top-[var(--site-header-sticky-offset)] z-40 bg-background/50 backdrop-blur-md supports-backdrop-filter:bg-background/35 data-[state=closed]:pointer-events-none ${menuScrimMotionClassName}`}
                         aria-label={closeLabel}
+                        tabIndex={open ? undefined : -1}
                         onClick={closeMenu}
                     />
 
@@ -147,8 +200,17 @@ export function SiteMobileMenu({
                         id={panelId}
                         role="dialog"
                         aria-modal="true"
+                        aria-hidden={open ? undefined : true}
                         style={lockStyle}
-                        className="fixed inset-x-0 top-[var(--site-header-sticky-offset)] z-50 max-h-[min(70vh,calc(100dvh-var(--site-header-sticky-offset)))] overflow-y-auto border-b border-border bg-surface px-3 py-3 shadow-md sm:px-4"
+                        data-state={panelState}
+                        onAnimationEnd={(event) => {
+                            // Выезд самой панели доиграл (не всплытие от
+                            // spinner-ссылок внутри) — снимаем её из DOM.
+                            if (!open && event.target === event.currentTarget) {
+                                setExiting(false);
+                            }
+                        }}
+                        className={`fixed inset-x-0 top-[var(--site-header-sticky-offset)] z-50 max-h-[min(70vh,calc(100dvh-var(--site-header-sticky-offset)))] overflow-y-auto border-b border-border bg-surface px-3 py-3 shadow-md data-[state=closed]:pointer-events-none sm:px-4 ${menuPanelMotionClassName}`}
                     >
                         <div className="mx-auto max-w-5xl">
                             <nav

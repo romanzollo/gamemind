@@ -215,6 +215,53 @@ html {
 }
 
 /*
+ * Мобильное меню (site-mobile-menu.tsx): панель выезжает из-под sticky
+ * хедера, scrim проявляется. Только opacity/transform — без layout.
+ * Выезд — ОТДЕЛЬНЫЕ keyframes, не `reverse` тех же: при смене только
+ * duration/direction браузер не перезапускает анимацию и не шлёт
+ * animationend → панель не размонтируется.
+ */
+@keyframes gm-menu-panel-in {
+    from {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gm-menu-panel-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+    }
+}
+
+@keyframes gm-menu-scrim-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes gm-menu-scrim-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/*
  * Уважаем prefers-reduced-motion:
  * — без плавного скролла;
  * — без бесконечного pulse (skeleton / pending cue);
