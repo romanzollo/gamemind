@@ -131,7 +131,8 @@ Do not paste the same string into both. Production also needs `AUTH_SECRET`, `AU
 | [`docs/CONTENT_PIPELINE.md`](docs/CONTENT_PIPELINE.md) | Draft JSON → import → publish |
 | [`docs/QUESTION_I18N.md`](docs/QUESTION_I18N.md) | RU/EN question and option rules |
 | [`docs/QUIZ_IMAGES.md`](docs/QUIZ_IMAGES.md) | IMAGE_GUESS assets and optimize pipeline |
-| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Product growth (next: mixed-difficulty quiz) |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Roadmap from Oct 2026: phases, steps, status (MVP history in `docs/archive/`) |
+| [`AGENTS.md`](AGENTS.md) | How AI assistants work in this repo (`CLAUDE.md` imports it) |
 
 Quiz setup URL: `/:locale/quiz` (not `/quiz/setup`).
 
@@ -143,4 +144,4 @@ Unit tests cover pure domain rules (scoring, publish quality, cycle draw, filter
 npm run test
 ```
 
-CI: `.github/workflows/test.yml` runs the same command on push/PR to `master`. Fragile Windows + Neon paths stay as manual/`scripts/smoke-*.cjs` checks.
+CI: `.github/workflows/test.yml` runs unit tests plus lint and `tsc` on push/PR to `master`. Fragile Windows + Neon paths stay as manual/`scripts/smoke-*.cjs` checks.

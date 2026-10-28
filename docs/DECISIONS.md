@@ -1971,3 +1971,66 @@ Submit:   score + survivalClockOk (T0 from play/run)
 8. Taste lobby / compact leaderboard — presentation (Aug 20).
 
 **References:** Timed Mode MVP; Quiz Start / Session Load Playbook; User Question Cycle (Survival continue **supersedes** “same bag for all waves”); Weighted scoring; Leaderboard Layer 1; `docs/QUIZ_NEON_HOT_PATH.md`; `src/features/survival-mode/types.ts`.
+
+## October 2026 — reliability pass (Claude Code)
+
+Context: first pass after moving from Cursor (learning mode) to Claude Code
+(implementation mode). Roadmap: `docs/ROADMAP.md`.
+
+### Loading boundary lives in `(public)`, not `[locale]`
+
+- **Decision:** `src/app/[locale]/(public)/loading.tsx`; no `loading.tsx` at `[locale]/`.
+- **Why:** a Suspense boundary above the `[locale]/[...rest]` catch-all streams
+  the response before `notFound()` runs → unknown URLs got **200 + noindex**
+  instead of 404.
+- **Do not:** move it back up; every other route keeps its own `loading.tsx`.
+
+### Replaced media is deleted only after a successful UPDATE, owner-scoped
+
+- **Decision:** previous prompt-image URL is read from the DB inside the same
+  UPDATE (CTE snapshot), not from a hidden form field; delete runs after the
+  write succeeds and only for keys matching `{prefix}/{ownerId}-{uuid}.webp`
+  (`isStorageKeyOwnedBy`).
+- **Why:** worst case is an orphan object (safe), never a broken image; a typed
+  avatar URL could previously make the server delete another user's avatar.
+- **Trade-off:** reviews of older sessions keep the frozen old URL and lose the
+  image after a replace.
+
+### sharp on Vercel: lazy import + traced libvips
+
+- **Decision:** `import('sharp')` inside the image processors; upload routes get
+  `@img/sharp-linux-x64` + `@img/sharp-libvips-linux-x64` via
+  `outputFileTracingIncludes` (`/*/admin/questions/**`, `/*/profile`).
+- **Why:** libvips `.so` is loaded by RPATH dlopen, invisible to nft → missing in
+  the function → top-level import made admin edit/new and profile return 500.
+- **Do not:** go back to a top-level `sharp` import in modules reachable from pages.
+
+### Submit time = request arrival
+
+- **Decision:** `submitQuizAction` stamps `receivedAt` before auth and Neon hops
+  and uses it for `completedAt`, `isSurvivalClockOk`, bank reconstruction and the
+  Blitz deadline.
+- **Why:** Survival auto-submits exactly at budget; measuring after the snapshot
+  hop let our own DB latency eat the 3 s grace → honest bank-out waves scored 0.
+- **Still server time:** the client cannot influence it.
+
+### Vercel functions region: `fra1`
+
+- **Decision:** `vercel.json` → `"regions": ["fra1"]` (was the default `iad1`).
+- **Why:** prod Neon is `eu-central-1` (Frankfurt) and the audience is in Russia
+  (edge PoP `arn1`). With `iad1` every DB round trip crossed the Atlantic
+  (~90 ms) several times per page. Code next to the DB wins: a page makes one
+  user↔function trip but many function↔DB trips, so `fra1` beats `arn1`/`hel1`.
+- **In git, not dashboard:** reviewable and revertible; `vercel.json` overrides
+  the dashboard setting anyway.
+- **Baseline (Oct 28, RU network, median of 7):** `/ru/leaderboard` full HTML
+  1.11 s, `/ru` 0.59 s, server-to-first-byte ~0.25 s, `x-vercel-id arn1::iad1`.
+- **Rollback:** delete `vercel.json` and redeploy.
+- **If prod Neon ever moves:** move the function region with it.
+
+### Russia-first infrastructure
+
+- Prod domain points at Vercel's legacy anycast `76.76.21.21`: RU networks cut
+  responses from the newer Vercel ranges at ~14 KB (pages without CSS).
+- Any new external service (monitoring, analytics, auth) must be reachable from
+  RU without VPN before adoption.
