@@ -9,7 +9,7 @@ import { userRepository } from '@/entities/user/user.repository';
 import type { AuthFormState } from '@/features/auth/types';
 import { loginSchema } from '@/features/auth/lib/validation';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
-import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
 import { getIpRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
@@ -32,7 +32,7 @@ export async function registerAction(
     formData: FormData,
 ): Promise<AuthFormState> {
     const identity = await getIpRateLimitIdentity();
-    const rate = checkPresetRateLimit('auth', identity);
+    const rate = await checkSharedPresetRateLimit('auth', identity);
     if (!rate.ok) {
         return { errorCode: 'RATE_LIMITED' };
     }
@@ -118,7 +118,7 @@ export async function loginAction(
     formData: FormData,
 ): Promise<AuthFormState> {
     const identity = await getIpRateLimitIdentity();
-    const rate = checkPresetRateLimit('auth', identity);
+    const rate = await checkSharedPresetRateLimit('auth', identity);
     if (!rate.ok) {
         return { errorCode: 'RATE_LIMITED' };
     }

@@ -123,6 +123,19 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+/// Общий счётчик rate limit (фиксированное окно) для всех инстансов Vercel.
+/// Пишется только сырым SQL из src/lib/rate-limit-shared.ts (атомарный upsert).
+/// Просроченные строки чистятся там же; IP в ключе живёт не дольше окна.
+model RateLimitBucket {
+  /// `preset:identity`, например `auth:ip:203.0.113.7` или `password:user:<id>`.
+  key     String   @id
+  count   Int
+  /// timestamptz: сравнение в сыром SQL не зависит от часового пояса сессии.
+  resetAt DateTime @db.Timestamptz(3)
+
+  @@index([resetAt])
+}
+
 model Question {
   id                 String                     @id @default(cuid())
   text               String

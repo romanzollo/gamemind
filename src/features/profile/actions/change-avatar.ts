@@ -7,7 +7,7 @@ import { resolveAvatarImage } from '@/features/profile/lib/resolve-avatar-image'
 import type { ProfileFormState } from '@/features/profile/types';
 import { unstable_update } from '@/lib/auth';
 import { requireUser } from '@/lib/auth/guards';
-import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { deleteReplacedMediaObject, STORAGE_PREFIX } from '@/lib/storage';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
@@ -34,7 +34,7 @@ export async function changeAvatarAction(
     const locale = getLocaleFromFormData(formData);
     const session = await requireUser(locale);
 
-    const rate = checkPresetRateLimit(
+    const rate = await checkSharedPresetRateLimit(
         'avatar',
         getUserRateLimitIdentity(session.user.id),
     );

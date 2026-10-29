@@ -26,6 +26,7 @@ export type AppErrorArea =
     | 'admin-question'
     | 'achievements'
     | 'auth'
+    | 'rate-limit'
     | 'error-boundary'
     | 'monitoring-check';
 

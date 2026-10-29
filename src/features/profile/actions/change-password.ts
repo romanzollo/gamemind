@@ -7,7 +7,7 @@ import { userRepository } from '@/entities/user/user.repository';
 import { changePasswordSchema } from '@/features/profile/lib/validation';
 import type { ProfileFormState } from '@/features/profile/types';
 import { requireUser } from '@/lib/auth/guards';
-import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
@@ -32,7 +32,7 @@ export async function changePasswordAction(
     const locale = getLocaleFromFormData(formData);
     const session = await requireUser(locale);
 
-    const rate = checkPresetRateLimit(
+    const rate = await checkSharedPresetRateLimit(
         'password',
         getUserRateLimitIdentity(session.user.id),
     );

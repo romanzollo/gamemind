@@ -75,6 +75,8 @@ For a stable overview of layers, Neon access, quiz invariants, auth, and media, 
 
 **Why in-memory (not Redis/Upstash yet):** zero new deps; enough best-effort protection for Hobby MVP. On Vercel, each instance has its own Map ? not a global quota. Upgrade to Redis when abuse or multi-instance fairness becomes a real problem.
 
+**Superseded in part (Oct 29, 2026):** auth/password/avatar/admin now use a shared Postgres counter; only `quiz` stays in-memory — see **Shared rate limit and favicon.ico**.
+
 **Do not:** put rate limit logic in Client Components; import `rate-limit-key` (uses `next/headers`) from the client; rely on proxy-only throttling as the sole defense.
 
 ### Admin home counts on hub (July 25, 2026)
@@ -2101,6 +2103,41 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
   player (`.env` `SMOKE_EMAIL` / `SMOKE_PASSWORD`).
 - **Deploy order:** apply the migration on prod **before** pushing code that
   filters by the column, otherwise the leaderboard fails with `42703`.
+
+### Shared rate limit and favicon.ico
+
+- **Problem:** the in-memory limiter (July 25) lives per Vercel instance, so
+  "10 logins / 15 min per IP" was really "10 × instances". `/favicon.ico` had no
+  file: it fell into `[locale]` and a function rendered a 404 on every first visit.
+- **Decision (rate limit):** `auth`, `password`, `avatar`, `adminWrite`, `upload`
+  go through `checkSharedPresetRateLimit` (`src/lib/rate-limit-shared.ts`): one
+  atomic `INSERT … ON CONFLICT DO UPDATE … RETURNING` into `RateLimitBucket`
+  (migration `20261029180000_rate_limit_bucket`) via the Prisma pool — the same
+  pool these actions use next anyway, so no new connection. Window time comes
+  from JS, same fixed-window semantics as in-memory: over the limit `count` keeps
+  growing and `resetAt` is not extended.
+- **`quiz` stays in-memory on purpose** (excluded by type
+  `SharedRateLimitPresetName`): it gates quiz start **and submit**, and an extra
+  Neon hop on the submit critical path is forbidden (`QUIZ_NEON_HOT_PATH.md`).
+  Server-side scoring already makes quiz spam a cost problem, not a cheating one.
+- **Failure mode:** DB error or > 4 s → fall back to the in-memory counter for
+  the same key + `captureAppError` (`area: rate-limit`, `warning`, only `preset`
+  in extra — never IP/userId). A broken limiter must not break login.
+- **Cleanup:** ~2 % of checks delete expired rows in `after()` (post-response).
+  IPs in keys live no longer than their window plus the next cleanup.
+- **Why Postgres, not Upstash Redis:** no new vendor, secret or dependency; one
+  upsert is a few ms between fra1 and Neon Frankfurt (local measurement: upsert
+  ≈ `SELECT 1`, i.e. pure network RTT). Swapping the store later touches only
+  `prismaRateLimitStore`.
+- **Verified (dev):** 5 failed logins from one IP → dev server restart (empty
+  memory) → attempts 6–10 pass, 11th gets `RATE_LIMITED`, row `count = 11`.
+- **Decision (favicon):** `src/app/favicon.ico` (16/32/48 PNG-in-ICO) built from
+  `src/app/icon.svg` by `scripts/build-favicon.cjs` (sharp, no new deps). Next
+  prerenders it as a static route → served by the CDN. Rebuild when the mark
+  changes (phase 4 redesign).
+- **Deploy order:** apply the migration on prod before pushing. If pushed first,
+  nothing breaks for players, but every limited action falls back to memory and
+  reports a warning to Sentry.
 
 ### Russia-first infrastructure
 

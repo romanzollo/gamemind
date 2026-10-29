@@ -6,8 +6,9 @@
  *
  * Ограничение serverless: счётчик живёт в памяти инстанса Node.
  * На Vercel несколько инстансов не делят Map — это best-effort защита,
- * не строгий глобальный квотер. Если понадобится жёсткий лимит across
- * instances — заменить store на Upstash/Redis (см. ROADMAP §11.6).
+ * не строгий глобальный квотер. Поэтому auth/password/avatar/admin идут
+ * через общий счётчик в Postgres (`rate-limit-shared.ts`), а сюда — только
+ * `quiz` (горячий путь без лишнего hop) и fallback общего счётчика при сбое БД.
  *
  * Dev/HMR: store на `globalThis` (как Prisma), иначе Turbopack пересоздаёт
  * модуль и Map обнуляется между попытками login — лимит «не срабатывает».

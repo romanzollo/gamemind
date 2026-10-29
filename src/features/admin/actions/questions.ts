@@ -27,7 +27,7 @@ import type {
 } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
-import { checkPresetRateLimit } from '@/lib/rate-limit';
+import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { deleteReplacedMediaObject, STORAGE_PREFIX } from '@/lib/storage';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
@@ -334,17 +334,20 @@ function parseOptionsForUpdateFromFormData(formData: FormData) {
  * `adminWrite` тратится на каждое сохранение, `upload` — только если приложен
  * файл: текстовая редактура не должна упираться в лимит дорогих загрузок.
  */
-function consumeAdminQuestionWriteRateLimit(
+async function consumeAdminQuestionWriteRateLimit(
     userId: string,
     hasImageFile: boolean,
-): boolean {
+): Promise<boolean> {
     const identity = getUserRateLimitIdentity(userId);
 
-    if (!checkPresetRateLimit('adminWrite', identity).ok) {
+    if (!(await checkSharedPresetRateLimit('adminWrite', identity)).ok) {
         return false;
     }
 
-    return !hasImageFile || checkPresetRateLimit('upload', identity).ok;
+    return (
+        !hasImageFile ||
+        (await checkSharedPresetRateLimit('upload', identity)).ok
+    );
 }
 
 /**
@@ -362,10 +365,10 @@ export async function createQuestionAction(
     const type = parseQuestionTypeFromFormData(formData);
 
     if (
-        !consumeAdminQuestionWriteRateLimit(
+        !(await consumeAdminQuestionWriteRateLimit(
             session.user.id,
             getPromptImageFile(formData, type) !== null,
-        )
+        ))
     ) {
         return { errorCode: 'RATE_LIMITED' };
     }
@@ -829,10 +832,10 @@ export async function updateQuestionAction(
     const type = parseQuestionTypeFromFormData(formData);
 
     if (
-        !consumeAdminQuestionWriteRateLimit(
+        !(await consumeAdminQuestionWriteRateLimit(
             session.user.id,
             getPromptImageFile(formData, type) !== null,
-        )
+        ))
     ) {
         return { errorCode: 'RATE_LIMITED' };
     }
