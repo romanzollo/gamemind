@@ -1,0 +1,1264 @@
+{
+    "version": 1,
+    "note": "Аудит банка 29 окт 2026, часть 1: ответ в формулировке, два верных ответа, имена RU≠EN, «вы» → «ты», английский в RU-наборе, опечатки. Применять scripts/apply-question-fixes.cjs; реимпорт запрещён.",
+    "fixes": [
+        {
+            "key": "audit-p1-006-rogue-genre-name",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая игра дала название жанру roguelike?",
+            "matchRu": [
+                "Rogue",
+                "NetHack",
+                "Diablo",
+                "Spelunky"
+            ],
+            "question": {
+                "ru": "Какая игра 1980 года с ASCII-графикой и вечной смертью дала имя целому жанру?",
+                "en": "Which 1980 ASCII game with permadeath gave a whole genre its name?"
+            },
+            "options": [
+                {
+                    "fromRu": "Diablo",
+                    "ru": "Hack",
+                    "en": "Hack"
+                },
+                {
+                    "fromRu": "Spelunky",
+                    "ru": "Moria",
+                    "en": "Moria"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-036-tes-oblivion-province",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "В какой провинции Империи происходит действие The Elder Scrolls V: Skyrim?",
+            "matchRu": [
+                "Скайрим",
+                "Морровинд",
+                "Сиродил",
+                "Хаммерфелл"
+            ],
+            "question": {
+                "ru": "В какой провинции Империи происходит действие The Elder Scrolls IV: Oblivion?",
+                "en": "In which province of the Empire is The Elder Scrolls IV: Oblivion set?"
+            },
+            "options": [
+                {
+                    "fromRu": "Скайрим",
+                    "ru": "Сиродил",
+                    "en": "Cyrodiil"
+                },
+                {
+                    "fromRu": "Сиродил",
+                    "ru": "Хай Рок",
+                    "en": "High Rock"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-048-planescape-hero",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как зовут безымянного героя Planescape: Torment?",
+            "matchRu": [
+                "Безымянный",
+                "Воскресший",
+                "Путник",
+                "Скиталец"
+            ],
+            "question": {
+                "ru": "Как в Planescape: Torment называют героя, который очнулся в морге без памяти?",
+                "en": "What is the amnesiac hero of Planescape: Torment, who wakes up in a mortuary, called?"
+            }
+        },
+        {
+            "key": "audit-p1-054-tes-first-game",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как называлась первая игра серии The Elder Scrolls (1994)?",
+            "matchRu": [
+                "The Elder Scrolls: Arena",
+                "Daggerfall",
+                "Morrowind",
+                "Battlespire"
+            ],
+            "options": [
+                {
+                    "fromRu": "The Elder Scrolls: Arena",
+                    "ru": "Arena",
+                    "en": "Arena"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-063-crash-name",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как зовут оранжевого бандикута — героя классических платформеров Naughty Dog / Activision?",
+            "matchRu": [
+                "Crash Bandicoot",
+                "Spyro",
+                "Jak",
+                "Ratchet"
+            ],
+            "options": [
+                {
+                    "fromRu": "Crash Bandicoot",
+                    "ru": "Крэш",
+                    "en": "Crash"
+                },
+                {
+                    "fromRu": "Spyro",
+                    "ru": "Спайро",
+                    "en": "Spyro"
+                },
+                {
+                    "fromRu": "Jak",
+                    "ru": "Джак",
+                    "en": "Jak"
+                },
+                {
+                    "fromRu": "Ratchet",
+                    "ru": "Рэтчет",
+                    "en": "Ratchet"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-068-sims-series",
+            "difficulty": "EASY",
+            "matchQuestionRu": "В какой серии симуляторов жизни вы управляете бытом виртуальных «симов»?",
+            "matchRu": [
+                "The Sims",
+                "Second Life",
+                "Animal Crossing",
+                "Stardew Valley"
+            ],
+            "question": {
+                "ru": "В какой серии ты строишь человечкам дом, устраиваешь их на работу и следишь, чтобы они не забыли поесть?",
+                "en": "In which series do you build your little people a house, get them jobs and make sure they remember to eat?"
+            }
+        },
+        {
+            "key": "audit-p1-107-mega-man-name",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как в англоязычных регионах зовут синего робота-героя серии Mega Man?",
+            "matchRu": [
+                "Мегамен",
+                "Протомен",
+                "Басс",
+                "Ролл"
+            ],
+            "question": {
+                "ru": "Как зовут синего робота с пушкой вместо руки — героя классических платформеров Capcom?",
+                "en": "What is the name of the blue robot with an arm cannon who stars in Capcom’s classic platformers?"
+            }
+        },
+        {
+            "key": "audit-p1-108-banjo-villain",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как зовут медведя — героя платформера Banjo-Kazooie от Rare?",
+            "matchRu": [
+                "Banjo",
+                "Conker",
+                "Yooka",
+                "Donkey Kong"
+            ],
+            "question": {
+                "ru": "Как зовут ведьму — главную злодейку Banjo-Kazooie?",
+                "en": "What is the name of the witch who is the main villain of Banjo-Kazooie?"
+            },
+            "options": [
+                {
+                    "fromRu": "Banjo",
+                    "ru": "Gruntilda",
+                    "en": "Gruntilda"
+                },
+                {
+                    "fromRu": "Conker",
+                    "ru": "Brentilda",
+                    "en": "Brentilda"
+                },
+                {
+                    "fromRu": "Yooka",
+                    "ru": "Tooty",
+                    "en": "Tooty"
+                },
+                {
+                    "fromRu": "Donkey Kong",
+                    "ru": "Mumbo Jumbo",
+                    "en": "Mumbo Jumbo"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-341-gta-sa-gang",
+            "difficulty": "EASY",
+            "matchQuestionRu": "В каком вымышленном штате происходит действие Grand Theft Auto: San Andreas?",
+            "matchRu": [
+                "San Andreas",
+                "Leonida",
+                "Ambrosia",
+                "Hope County"
+            ],
+            "question": {
+                "ru": "Какая банда в GTA: San Andreas — родная для CJ?",
+                "en": "Which gang is CJ’s own in GTA: San Andreas?"
+            },
+            "options": [
+                {
+                    "fromRu": "San Andreas",
+                    "ru": "Grove Street Families",
+                    "en": "Grove Street Families"
+                },
+                {
+                    "fromRu": "Leonida",
+                    "ru": "Ballas",
+                    "en": "Ballas"
+                },
+                {
+                    "fromRu": "Ambrosia",
+                    "ru": "Los Santos Vagos",
+                    "en": "Los Santos Vagos"
+                },
+                {
+                    "fromRu": "Hope County",
+                    "ru": "Varrios Los Aztecas",
+                    "en": "Varrios Los Aztecas"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-366-duke-mirror",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какие враги-полицейские со свиными мордами стали мемным символом Duke Nukem 3D?",
+            "matchRu": [
+                "Pig Cops",
+                "Zombies",
+                "Flood Infection Forms",
+                "Headcrabs"
+            ],
+            "question": {
+                "ru": "Что Дюк делает в Duke Nukem 3D, если подойти к зеркалу и нажать «использовать»?",
+                "en": "In Duke Nukem 3D, what does Duke do if you walk up to a mirror and press “use”?"
+            },
+            "options": [
+                {
+                    "fromRu": "Pig Cops",
+                    "ru": "Любуется собой и острит",
+                    "en": "Admires himself and quips"
+                },
+                {
+                    "fromRu": "Zombies",
+                    "ru": "Разбивает его кулаком",
+                    "en": "Punches it to pieces"
+                },
+                {
+                    "fromRu": "Flood Infection Forms",
+                    "ru": "Сохраняет игру",
+                    "en": "Saves the game"
+                },
+                {
+                    "fromRu": "Headcrabs",
+                    "ru": "Открывает тайник",
+                    "en": "Opens a secret stash"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-416-dragon-age-blight-horde",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как называются порождения тьмы — главная угроза Мора в Dragon Age?",
+            "matchRu": [
+                "Порождения тьмы / darkspawn",
+                "Reapers",
+                "Flood",
+                "Necromorphs"
+            ],
+            "question": {
+                "ru": "Как в Dragon Age называют орды с Глубинных троп, которые несут Мор?",
+                "en": "In Dragon Age, what are the hordes from the Deep Roads that bring the Blight called?"
+            },
+            "options": [
+                {
+                    "fromRu": "Порождения тьмы / darkspawn",
+                    "ru": "Порождения тьмы",
+                    "en": "Darkspawn"
+                },
+                {
+                    "fromRu": "Reapers",
+                    "ru": "Демоны Тени",
+                    "en": "Fade demons"
+                },
+                {
+                    "fromRu": "Flood",
+                    "ru": "Мерзости",
+                    "en": "Abominations"
+                },
+                {
+                    "fromRu": "Necromorphs",
+                    "ru": "Красные храмовники",
+                    "en": "Red Templars"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-421-civ6-tourism-victory",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какой тип победы в Civilization связан с туризмом, великими людьми и культурным влиянием?",
+            "matchRu": [
+                "Культурная победа",
+                "Только победа по очкам в FIFA",
+                "Победа за скорость прохождения спидрана",
+                "Победа за количество лайков в соцсетях вне игры"
+            ],
+            "question": {
+                "ru": "Какую победу в Civilization VI приносят туристы из других цивилизаций?",
+                "en": "Which Civilization VI victory do you win by drawing tourists from other civilizations?"
+            },
+            "options": [
+                {
+                    "fromRu": "Только победа по очкам в FIFA",
+                    "ru": "Научная победа",
+                    "en": "Science victory"
+                },
+                {
+                    "fromRu": "Победа за скорость прохождения спидрана",
+                    "ru": "Дипломатическая победа",
+                    "en": "Diplomatic victory"
+                },
+                {
+                    "fromRu": "Победа за количество лайков в соцсетях вне игры",
+                    "ru": "Религиозная победа",
+                    "en": "Religious victory"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-431-spyro-sparx",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Кто является главным героем классической платформерной серии Spyro на PlayStation?",
+            "matchRu": [
+                "Фиолетовый дракон Спайро",
+                "Зелёный динозавр Крэш",
+                "Синий ёж Соник",
+                "Рыцарь Артус"
+            ],
+            "question": {
+                "ru": "Как зовут стрекозу, которая летает рядом со Спайро и цветом показывает его здоровье?",
+                "en": "What is the name of the dragonfly who follows Spyro and shows his health by color?"
+            },
+            "options": [
+                {
+                    "fromRu": "Фиолетовый дракон Спайро",
+                    "ru": "Спаркс",
+                    "en": "Sparx"
+                },
+                {
+                    "fromRu": "Зелёный динозавр Крэш",
+                    "ru": "Хантер",
+                    "en": "Hunter"
+                },
+                {
+                    "fromRu": "Синий ёж Соник",
+                    "ru": "Элора",
+                    "en": "Elora"
+                },
+                {
+                    "fromRu": "Рыцарь Артус",
+                    "ru": "Гнасти Гнорк",
+                    "en": "Gnasty Gnorc"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-338-hl2-combine",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как называется инопланетная империя, оккупировавшая Землю в Half-Life 2?",
+            "matchRu": [
+                "Альянс (Combine)",
+                "Ковенант",
+                "Жнецы",
+                "Цефы"
+            ],
+            "options": [
+                {
+                    "fromRu": "Альянс (Combine)",
+                    "ru": "Альянс",
+                    "en": "The Combine"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-414-dao-grey-wardens",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как называется орден, с которым связан герой Dragon Age: Origins и борьба с Мором?",
+            "matchRu": [
+                "Серые Стражи (Grey Wardens)",
+                "Ночной дозор",
+                "Ассасины",
+                "S.T.A.R.S."
+            ],
+            "options": [
+                {
+                    "fromRu": "Серые Стражи (Grey Wardens)",
+                    "ru": "Серые Стражи",
+                    "en": "Grey Wardens"
+                },
+                {
+                    "fromRu": "Ночной дозор",
+                    "ru": "Храмовники",
+                    "en": "Templars"
+                },
+                {
+                    "fromRu": "Ассасины",
+                    "ru": "Искатели Истины",
+                    "en": "Seekers of Truth"
+                },
+                {
+                    "fromRu": "S.T.A.R.S.",
+                    "ru": "Антиванские Вороны",
+                    "en": "Antivan Crows"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-360-atomic-heart-setting",
+            "difficulty": "EASY",
+            "matchQuestionRu": "В каком альтернативном сеттинге происходит Atomic Heart?",
+            "matchRu": [
+                "Альтернативный СССР / советская утопия с роботами",
+                "Феодальная Япония",
+                "Космическая станция у чёрной дыры",
+                "Средневековая Англия"
+            ],
+            "question": {
+                "ru": "Где и когда происходит действие Atomic Heart?",
+                "en": "Where and when is Atomic Heart set?"
+            },
+            "options": [
+                {
+                    "fromRu": "Альтернативный СССР / советская утопия с роботами",
+                    "ru": "Альтернативный СССР 1950-х",
+                    "en": "An alternate 1950s USSR"
+                },
+                {
+                    "fromRu": "Феодальная Япония",
+                    "ru": "Альтернативные США 1960-х",
+                    "en": "An alternate 1960s USA"
+                },
+                {
+                    "fromRu": "Космическая станция у чёрной дыры",
+                    "ru": "Москва после ядерной войны",
+                    "en": "Moscow after a nuclear war"
+                },
+                {
+                    "fromRu": "Средневековая Англия",
+                    "ru": "Германия, выигравшая войну",
+                    "en": "A Germany that won the war"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-361-atomic-heart-glove",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какой фирменный гаджет в Atomic Heart даёт герою особые «полимерные» способности?",
+            "matchRu": [
+                "Перчатка / polymer glove",
+                "Пип-бой",
+                "Омни-инструмент",
+                "Световой меч"
+            ],
+            "question": {
+                "ru": "Что в Atomic Heart даёт майору Нечаеву телекинез, заморозку и удар током?",
+                "en": "In Atomic Heart, what gives Major Nechaev telekinesis, freezing and electric shocks?"
+            },
+            "options": [
+                {
+                    "fromRu": "Перчатка / polymer glove",
+                    "ru": "Перчатка ХРАЗ",
+                    "en": "The CHAR-les glove"
+                },
+                {
+                    "fromRu": "Пип-бой",
+                    "ru": "Плазмиды в крови",
+                    "en": "Plasmids in his blood"
+                },
+                {
+                    "fromRu": "Омни-инструмент",
+                    "ru": "Нейроимплант в затылке",
+                    "en": "A neural implant in his skull"
+                },
+                {
+                    "fromRu": "Световой меч",
+                    "ru": "Пси-шлем",
+                    "en": "A psi helmet"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-086-outer-wilds-loop-end",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что запускает 22-минутный цикл в Outer Wilds?",
+            "matchRu": [
+                "Взрыв солнца",
+                "Смерть персонажа",
+                "Конец смены на станции",
+                "Перезагрузка симуляции"
+            ],
+            "question": {
+                "ru": "Чем заканчивается каждый 22-минутный цикл в Outer Wilds, если дожить до конца?",
+                "en": "How does each 22-minute loop in Outer Wilds end if you survive to the end?"
+            },
+            "options": [
+                {
+                    "fromRu": "Взрыв солнца",
+                    "ru": "Солнце взрывается сверхновой",
+                    "en": "The sun goes supernova"
+                },
+                {
+                    "fromRu": "Смерть персонажа",
+                    "ru": "Чёрная дыра поглощает систему",
+                    "en": "A black hole swallows the system"
+                },
+                {
+                    "fromRu": "Конец смены на станции",
+                    "ru": "Луна падает на планету",
+                    "en": "A moon crashes into the planet"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-154-hotline-miami-developer",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая студия выпустила Hotline Miami?",
+            "matchRu": [
+                "Dennaton Games",
+                "Devolver Digital",
+                "Croteam",
+                "Galactic Cafe"
+            ],
+            "question": {
+                "ru": "Какая студия разработала Hotline Miami?",
+                "en": "Which studio developed Hotline Miami?"
+            }
+        },
+        {
+            "key": "audit-p1-148-deus-ex-developer",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая студия выпустила оригинальный Deus Ex (2000)?",
+            "matchRu": [
+                "Ion Storm",
+                "Looking Glass Studios",
+                "Irrational Games",
+                "Black Isle Studios"
+            ],
+            "question": {
+                "ru": "Какая студия разработала оригинальный Deus Ex (2000)?",
+                "en": "Which studio developed the original Deus Ex (2000)?"
+            }
+        },
+        {
+            "key": "audit-p1-441-sor-max-skate",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какой культовый beat ’em up Sega на Mega Drive часто называют вершиной серии Streets of Rage?",
+            "matchRu": [
+                "Streets of Rage 2",
+                "Streets of Rage 4 only (и больше ничего)",
+                "Final Fight 3 на PS5",
+                "Tekken 8"
+            ],
+            "question": {
+                "ru": "В какой части Streets of Rage впервые появились Макс и Скейт?",
+                "en": "Which Streets of Rage game introduced Max and Skate?"
+            },
+            "options": [
+                {
+                    "fromRu": "Streets of Rage 4 only (и больше ничего)",
+                    "ru": "Streets of Rage",
+                    "en": "Streets of Rage"
+                },
+                {
+                    "fromRu": "Final Fight 3 на PS5",
+                    "ru": "Streets of Rage 3",
+                    "en": "Streets of Rage 3"
+                },
+                {
+                    "fromRu": "Tekken 8",
+                    "ru": "Streets of Rage 4",
+                    "en": "Streets of Rage 4"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-121-kingdom-hearts-sora",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как зовут мальчика с Кеем-Клинком — героя Kingdom Hearts?",
+            "matchRu": [
+                "Сора",
+                "Рику",
+                "Роксас",
+                "Вентус"
+            ],
+            "question": {
+                "ru": "Как зовут мальчика с огромным ключом вместо меча — героя Kingdom Hearts?",
+                "en": "What is the name of the boy who fights with a giant key — the hero of Kingdom Hearts?"
+            }
+        },
+        {
+            "key": "audit-p1-056-katamari-iwatani",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Кто придумал и возглавил разработку Katamari Damacy?",
+            "matchRu": [
+                "Кейта Такахаси",
+                "Тору Ивасаки",
+                "Юдзи Нака",
+                "Гоити Суда"
+            ],
+            "options": [
+                {
+                    "fromRu": "Тору Ивасаки",
+                    "ru": "Тору Иватани",
+                    "en": "Toru Iwatani"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-126-horizon-varl-erend",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут охотницу — главную героиню Horizon Zero Dawn?",
+            "matchRu": [
+                "Элой",
+                "Элизабет",
+                "Варух",
+                "Эренда"
+            ],
+            "options": [
+                {
+                    "fromRu": "Варух",
+                    "ru": "Варл",
+                    "en": "Varl"
+                },
+                {
+                    "fromRu": "Эренда",
+                    "ru": "Эренд",
+                    "en": "Erend"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-133-silent-hill-bright-falls",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как называется туманный город — центр серии Silent Hill?",
+            "matchRu": [
+                "Сайлент Хилл",
+                "Раккун-Сити",
+                "Сполдинг",
+                "Брайтуол"
+            ],
+            "options": [
+                {
+                    "fromRu": "Брайтуол",
+                    "ru": "Брайт-Фоллс",
+                    "en": "Bright Falls"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-139-yakuza-nishikiyama",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут легендарного якудзу по прозвищу «Дракон Доджимы»?",
+            "matchRu": [
+                "Кадзума Кирю",
+                "Ичибан Касуга",
+                "Горо Маджима",
+                "Акира Нишики"
+            ],
+            "options": [
+                {
+                    "fromRu": "Акира Нишики",
+                    "ru": "Акира Нисикияма",
+                    "en": "Akira Nishikiyama"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-330-witcher-shadowmere",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут лошадь Геральта в The Witcher 3: Wild Hunt?",
+            "matchRu": [
+                "Плотва",
+                "Тень",
+                "Эпона",
+                "Агро"
+            ],
+            "options": [
+                {
+                    "fromRu": "Тень",
+                    "ru": "Тенегрив",
+                    "en": "Shadowmere"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-395-diablo-faerun",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как называется мир людей в вселенной Diablo, где происходит Diablo IV?",
+            "matchRu": [
+                "Санктуарий",
+                "Азерот",
+                "Тедас",
+                "Феердун"
+            ],
+            "question": {
+                "ru": "Как называется мир людей во вселенной Diablo, где происходит Diablo IV?",
+                "en": "What is the name of the mortal world in the Diablo universe where Diablo IV is set?"
+            },
+            "options": [
+                {
+                    "fromRu": "Феердун",
+                    "ru": "Фаэрун",
+                    "en": "Faerûn"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-128-rdr2-dutch",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут главного протагониста Red Dead Redemption 2?",
+            "matchRu": [
+                "Артур Морган",
+                "Джон Марстон",
+                "Дач ван дер Линде",
+                "Мика Белл"
+            ],
+            "question": {
+                "ru": "Как зовут главного героя Red Dead Redemption 2?",
+                "en": "What is the name of the protagonist of Red Dead Redemption 2?"
+            },
+            "options": [
+                {
+                    "fromRu": "Дач ван дер Линде",
+                    "ru": "Датч ван дер Линде",
+                    "en": "Dutch van der Linde"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-111-celeste-granny",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как зовут героиню платформера Celeste, которая поднимается на гору?",
+            "matchRu": [
+                "Мадлен",
+                "Бэдлайн",
+                "Тео",
+                "Гранма"
+            ],
+            "options": [
+                {
+                    "fromRu": "Гранма",
+                    "ru": "Бабуля",
+                    "en": "Granny"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-331-celeste-dash-crystal",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "В Celeste что происходит, когда Мэдлин касается кристалла рывка (dash crystal)?",
+            "matchRu": [
+                "Рывок снова становится доступен",
+                "Она получает дополнительную жизнь",
+                "Уровень перезапускается",
+                "Открывается скрытый выход"
+            ],
+            "question": {
+                "ru": "Что в Celeste происходит, когда Мадлен касается кристалла рывка?",
+                "en": "In Celeste, what happens when Madeline touches a dash crystal?"
+            }
+        },
+        {
+            "key": "audit-p1-029-tomb-raider-bayonetta-spelling",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут археолога — главную героиню серии Tomb Raider?",
+            "matchRu": [
+                "Лара Крофт",
+                "Самус Аран",
+                "Бэйонетта",
+                "Элли"
+            ],
+            "options": [
+                {
+                    "fromRu": "Бэйонетта",
+                    "ru": "Байонетта",
+                    "en": "Bayonetta"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-106-metroid-bayonetta-spelling",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как зовут охотницу за головами в скафандре из серии Metroid?",
+            "matchRu": [
+                "Самус Аран",
+                "Лара Крофт",
+                "Джилл Валентайн",
+                "Бейонетта"
+            ],
+            "options": [
+                {
+                    "fromRu": "Бейонетта",
+                    "ru": "Байонетта",
+                    "en": "Bayonetta"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-453-bayonetta-witch-time-spelling",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Bayonetta включает уклон в самый последний кадр перед ударом?",
+            "matchRu": [
+                "Время вокруг замедляется (Witch Time)",
+                "Заполняется стойкость врага для добивания, как в Sekiro",
+                "Включается bullet time до конца уровня, как в Max Payne",
+                "Байонэтта теряет все магические очки"
+            ],
+            "options": [
+                {
+                    "fromRu": "Байонэтта теряет все магические очки",
+                    "ru": "Байонетта теряет все магические очки",
+                    "en": "Bayonetta loses all of her magic gauge"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-146-shenmue-mizuguchi-spelling",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Кто руководил разработкой Shenmue на Sega Dreamcast?",
+            "matchRu": [
+                "Ю Судзуки",
+                "Сигэру Миямото",
+                "Хидэо Кодзима",
+                "Тэцуя Мизугути"
+            ],
+            "options": [
+                {
+                    "fromRu": "Тэцуя Мизугути",
+                    "ru": "Тэцуя Мидзугути",
+                    "en": "Tetsuya Mizuguchi"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-157-rez-mizuguchi-spelling",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Кто был ключевым креативным лидером синестетического шутера Rez?",
+            "matchRu": [
+                "Тэцуя Мизугути",
+                "Фумито Уэда",
+                "Гоити Суда",
+                "Кэйта Такахаси"
+            ],
+            "options": [
+                {
+                    "fromRu": "Тэцуя Мизугути",
+                    "ru": "Тэцуя Мидзугути",
+                    "en": "Tetsuya Mizuguchi"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-085-dead-space-yo",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как называется инопланетный артефакт, связанный с некроморфами в Dead Space?",
+            "matchRu": [
+                "Маркер",
+                "Репликант",
+                "Черный камень",
+                "Артефакт Предтеч"
+            ],
+            "options": [
+                {
+                    "fromRu": "Черный камень",
+                    "ru": "Чёрный камень",
+                    "en": "Blackstone"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-064-animal-crossing-ty",
+            "difficulty": "EASY",
+            "matchQuestionRu": "В какой серии Nintendo вы строите жизнь на острове среди антропоморфных животных-соседей?",
+            "matchRu": [
+                "Animal Crossing",
+                "Harvest Moon",
+                "The Sims",
+                "Tomodachi Life"
+            ],
+            "question": {
+                "ru": "В какой серии Nintendo ты строишь жизнь на острове среди антропоморфных животных-соседей?",
+                "en": "In which Nintendo series do you build a life on an island among animal neighbors?"
+            }
+        },
+        {
+            "key": "audit-p1-142-papers-please-ty",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Кем вы работаете в Papers, Please?",
+            "matchRu": [
+                "Пограничным инспектором",
+                "Пилотом авиалайнера",
+                "Судьёй в суде",
+                "Врачом скорой помощи"
+            ],
+            "question": {
+                "ru": "Кем ты работаешь в Papers, Please?",
+                "en": "What job do you perform in Papers, Please?"
+            }
+        },
+        {
+            "key": "audit-p1-482-among-us-ty",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Among Us начинается сразу после report по найденному телу?",
+            "matchRu": [
+                "Начинается обсуждение, после которого можно голосовать, кого выгнать",
+                "Вы сразу побеждаете как предатель",
+                "Тело превращается в задание на провода и больше ни на что не влияет",
+                "Корабль взрывается, как после заложенной бомбы"
+            ],
+            "options": [
+                {
+                    "fromRu": "Вы сразу побеждаете как предатель",
+                    "ru": "Ты сразу побеждаешь как предатель",
+                    "en": "You instantly win as the impostor"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-483-hotline-miami-ty",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Hotline Miami будет с зачисткой, если вас хоть раз ударили?",
+            "matchRu": [
+                "Вы сразу погибаете и перезапускаете текущий уровень с начала",
+                "Вы уменьшаетесь и можете продолжить, не теряя жизнь сразу",
+                "Вы становитесь старше, но попытка продолжается",
+                "Время вокруг почти останавливается, пока вы стоите"
+            ],
+            "question": {
+                "ru": "Что в Hotline Miami будет с зачисткой, если тебя хоть раз ударили?",
+                "en": "In Hotline Miami, what happens to the takedown if you get hit even once?"
+            },
+            "options": [
+                {
+                    "fromRu": "Вы сразу погибаете и перезапускаете текущий уровень с начала",
+                    "ru": "Ты сразу погибаешь и начинаешь уровень заново",
+                    "en": "You die immediately and restart the current level from the start"
+                },
+                {
+                    "fromRu": "Вы уменьшаетесь и можете продолжить, не теряя жизнь сразу",
+                    "ru": "Ты уменьшаешься и бежишь дальше, жизнь не теряется",
+                    "en": "You shrink and can keep going without losing a life right away"
+                },
+                {
+                    "fromRu": "Вы становитесь старше, но попытка продолжается",
+                    "ru": "Ты стареешь, но попытка продолжается",
+                    "en": "You get older, but the attempt continues"
+                },
+                {
+                    "fromRu": "Время вокруг почти останавливается, пока вы стоите",
+                    "ru": "Время почти замирает, пока ты стоишь",
+                    "en": "Time around you nearly stops while you stand still"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-486-persona5-ty",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в Persona 5 даёт удар по слабости врага — в том же ходе?",
+            "matchRu": [
+                "Враг падает, и вы получаете ещё одно действие",
+                "Тратится энергия хода, как в картах Slay the Spire",
+                "Срабатывает активная перезарядка магазина",
+                "Время вокруг замедляется, как Witch Time"
+            ],
+            "options": [
+                {
+                    "fromRu": "Враг падает, и вы получаете ещё одно действие",
+                    "ru": "Враг падает, и ты получаешь ещё одно действие",
+                    "en": "The enemy is knocked down and you get another action"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-495-mgs-alert-ty",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Metal Gear Solid происходит с тревогой, если после обнаружения спрятаться и подождать?",
+            "matchRu": [
+                "Тревога спадает фазами: сначала ищут, потом осторожность, затем снова тихо",
+                "Достаточно надеть любую форму — вас сразу перестают искать",
+                "Растут звёзды розыска, и приезжает всё более тяжёлая полиция",
+                "Вы стареете на год, но побег продолжается"
+            ],
+            "options": [
+                {
+                    "fromRu": "Достаточно надеть любую форму — вас сразу перестают искать",
+                    "ru": "Достаточно надеть любую форму — тебя сразу перестают искать",
+                    "en": "Putting on any uniform instantly makes them stop searching"
+                },
+                {
+                    "fromRu": "Вы стареете на год, но побег продолжается",
+                    "ru": "Ты стареешь на год, но побег продолжается",
+                    "en": "You age a year, but the escape continues"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-498-ikaruga-ty",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Зачем в Ikaruga переключают цвет корабля посреди потока пуль?",
+            "matchRu": [
+                "Пули своего цвета поглощаются; противоположный цвет ранит",
+                "Холостой патрон стирает все снаряды на экране",
+                "Время почти останавливается, пока вы стоите",
+                "Нужно резать блоки строго по стрелке на них"
+            ],
+            "options": [
+                {
+                    "fromRu": "Время почти останавливается, пока вы стоите",
+                    "ru": "Время почти останавливается, пока ты стоишь",
+                    "en": "Time nearly stops while you stand still"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-499-dont-starve-ty",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Don't Starve будет, если ночью остаться совсем без света?",
+            "matchRu": [
+                "Из темноты бьёт невидимый урон, пока не зажжёте источник света",
+                "Нужно выжечь тьму с врага фонариком, иначе пули не вредят",
+                "Кончается кислород, как под водой",
+                "Отряд ломается от стресса и получает срыв"
+            ],
+            "options": [
+                {
+                    "fromRu": "Из темноты бьёт невидимый урон, пока не зажжёте источник света",
+                    "ru": "Из темноты бьёт невидимый урон, пока не зажжёшь источник света",
+                    "en": "Unseen damage hits you from the dark until you light a source"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-113-cs-genre-rhythm",
+            "difficulty": "EASY",
+            "matchQuestionRu": "К какому жанру ближе всего классический Counter-Strike?",
+            "matchRu": [
+                "Тактический шутер",
+                "MOBA",
+                "Автобатлер",
+                "Rhythm game"
+            ],
+            "options": [
+                {
+                    "fromRu": "Rhythm game",
+                    "ru": "Ритм-игра",
+                    "en": "Rhythm game"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-352-gears-locust",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как называется подземная раса-антагонист в ранних Gears of War?",
+            "matchRu": [
+                "Саранча (Locust)",
+                "Flood",
+                "Necromorphs",
+                "Chimera"
+            ],
+            "options": [
+                {
+                    "fromRu": "Саранча (Locust)",
+                    "ru": "Саранча",
+                    "en": "Locust Horde"
+                },
+                {
+                    "fromRu": "Flood",
+                    "ru": "Потоп",
+                    "en": "The Flood"
+                },
+                {
+                    "fromRu": "Necromorphs",
+                    "ru": "Некроморфы",
+                    "en": "Necromorphs"
+                },
+                {
+                    "fromRu": "Chimera",
+                    "ru": "Химера",
+                    "en": "Chimera"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-374-re3-nemesis",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут огромного преследователя в плаще из Resident Evil 3, который постоянно охотится на героиню?",
+            "matchRu": [
+                "Nemesis",
+                "Mr. X",
+                "Pyramid Head",
+                "The Flood"
+            ],
+            "options": [
+                {
+                    "fromRu": "Nemesis",
+                    "ru": "Немезис",
+                    "en": "Nemesis"
+                },
+                {
+                    "fromRu": "Mr. X",
+                    "ru": "Мистер Икс",
+                    "en": "Mr. X"
+                },
+                {
+                    "fromRu": "Pyramid Head",
+                    "ru": "Пирамидоголовый",
+                    "en": "Pyramid Head"
+                },
+                {
+                    "fromRu": "The Flood",
+                    "ru": "Джек Бейкер",
+                    "en": "Jack Baker"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-060-roguelite-term",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какой термин описывает игры в духе Rogue, но с постоянным meta-progress между забегами?",
+            "matchRu": [
+                "Roguelite",
+                "Metroidvania",
+                "Soulslike",
+                "Visual novel"
+            ],
+            "question": {
+                "ru": "Как называют игры в духе Rogue, где прогресс частично сохраняется между забегами?",
+                "en": "What term describes Rogue-like games where some progress carries over between runs?"
+            },
+            "options": [
+                {
+                    "fromRu": "Roguelite",
+                    "ru": "Рогалайт",
+                    "en": "Roguelite"
+                },
+                {
+                    "fromRu": "Metroidvania",
+                    "ru": "Метроидвания",
+                    "en": "Metroidvania"
+                },
+                {
+                    "fromRu": "Soulslike",
+                    "ru": "Соулслайк",
+                    "en": "Soulslike"
+                },
+                {
+                    "fromRu": "Visual novel",
+                    "ru": "Визуальная новелла",
+                    "en": "Visual novel"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-363-atomic-heart-facility",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как называется ключевой научно-производственный комплекс в Atomic Heart, где разворачивается много событий?",
+            "matchRu": [
+                "Предприятие 3826",
+                "Black Mesa",
+                "Aperture Science Enrichment Center",
+                "Raccoon City Police Department"
+            ],
+            "options": [
+                {
+                    "fromRu": "Black Mesa",
+                    "ru": "Объект «Восток-9»",
+                    "en": "Site Vostok-9"
+                },
+                {
+                    "fromRu": "Aperture Science Enrichment Center",
+                    "ru": "НИИ «Атом-12»",
+                    "en": "Atom-12 Institute"
+                },
+                {
+                    "fromRu": "Raccoon City Police Department",
+                    "ru": "Комбинат «Прогресс-1955»",
+                    "en": "Progress-1955 Plant"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-032-stardew-genre-arcade",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "К какому жанру относится Stardew Valley?",
+            "matchRu": [
+                "Фермерский симулятор",
+                "Космический шутер",
+                "Тактическая RPG",
+                "Гоночный аркад"
+            ],
+            "options": [
+                {
+                    "fromRu": "Гоночный аркад",
+                    "ru": "Аркадные гонки",
+                    "en": "Arcade racing"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-368-duke-build-engine",
+            "difficulty": "HARD",
+            "matchQuestionRu": "На каком движке сделан Duke Nukem 3D (тот же «семейство», что у Blood / Shadow Warrior)?",
+            "matchRu": [
+                "Build engine",
+                "Unreal Engine 1",
+                "Source",
+                "Unity"
+            ],
+            "question": {
+                "ru": "На каком движке сделан Duke Nukem 3D (на нём же сделаны Blood и Shadow Warrior)?",
+                "en": "Which engine powers Duke Nukem 3D (the same one behind Blood and Shadow Warrior)?"
+            }
+        },
+        {
+            "key": "audit-p1-443-minecraft-torches-typo",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Minecraft на Выживании нужно сделать, чтобы сердца начали восстанавливаться сами?",
+            "matchRu": [
+                "Наесться, чтобы шкала голода была достаточно полной",
+                "Постоять в воде, пока сердца не заполнятся",
+                "Спать в кровати каждую минуту",
+                "Сломать все факела на базе"
+            ],
+            "options": [
+                {
+                    "fromRu": "Сломать все факела на базе",
+                    "ru": "Сломать все факелы на базе",
+                    "en": "Break every torch at your base"
+                }
+            ]
+        },
+        {
+            "key": "audit-p1-096-panzer-dragoon-saga-cult",
+            "difficulty": "HARD",
+            "matchQuestionRu": "На какой консоли вышла редкостная RPG Panzer Dragoon Saga?",
+            "matchRu": [
+                "Sega Saturn",
+                "PlayStation",
+                "Nintendo 64",
+                "Sega Dreamcast"
+            ],
+            "question": {
+                "ru": "На какой консоли вышла культовая RPG Panzer Dragoon Saga?",
+                "en": "On which console did the cult RPG Panzer Dragoon Saga release?"
+            }
+        }
+    ]
+}
