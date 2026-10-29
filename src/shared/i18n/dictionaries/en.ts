@@ -231,6 +231,16 @@ export const enDictionary = {
         questionsCardDescription:
             'List, create, edit, and activate quiz questions.',
         usersCardDescription: 'Roles, deactivation, and account deletion.',
+        monitoring: {
+            title: 'Error monitoring',
+            description:
+                'Send a test error and look it up in Sentry by its ID to confirm production is not losing any.',
+            checkServer: 'Server error',
+            checkClient: 'Browser error',
+            sent: 'Sent. Sentry ID: {id}',
+            disabled: 'Sentry is off: NEXT_PUBLIC_SENTRY_DSN is not set (expected locally).',
+            failed: 'Could not send it. Check the Vercel logs.',
+        },
         homeStatUsers: 'Total',
         homeStatQuestionsActive: 'Active',
         homeStatQuestionsInactive: 'Inactive',

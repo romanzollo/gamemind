@@ -8,6 +8,7 @@ import { registerSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
 import type { AuthFormState } from '@/features/auth/types';
 import { loginSchema } from '@/features/auth/lib/validation';
+import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getIpRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
@@ -81,6 +82,11 @@ export async function registerAction(
         });
     } catch (error) {
         console.error('Register failed:', error);
+        // Без email/username в extra: это PII.
+        captureAppError(error, {
+            area: 'auth',
+            extra: { action: 'register' },
+        });
         return { errorCode: 'CREATE_FAILED' };
     }
 

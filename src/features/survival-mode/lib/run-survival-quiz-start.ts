@@ -17,7 +17,10 @@
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { buildQuizSnapshotQuestions } from '@/features/quiz/lib/build-quiz-snapshot-questions';
-import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
+import {
+    captureQuizStartError,
+    mapQuizStartError,
+} from '@/features/quiz/lib/map-quiz-start-error';
 import { getQuizSessionPoolWrite } from '@/features/quiz/lib/mixed-difficulty-split';
 import type { QuizErrorCode } from '@/features/quiz/types';
 import { pickSurvivalSnapshotBundle } from '@/features/survival-mode/lib/pick-survival-snapshot-bundle';
@@ -144,6 +147,7 @@ export async function runSurvivalQuizStart(
         } else {
             console.error('Survival quiz start failed:', errorCode, error);
         }
+        captureQuizStartError(error, errorCode, 'survival');
         return { ok: false, errorCode };
     }
 }

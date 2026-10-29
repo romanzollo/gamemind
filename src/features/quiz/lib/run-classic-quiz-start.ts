@@ -16,7 +16,10 @@
 
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { buildQuizSnapshotQuestions } from '@/features/quiz/lib/build-quiz-snapshot-questions';
-import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
+import {
+    captureQuizStartError,
+    mapQuizStartError,
+} from '@/features/quiz/lib/map-quiz-start-error';
 import { getQuizSessionPoolWrite } from '@/features/quiz/lib/mixed-difficulty-split';
 import {
     pickClassicSnapshotBundle,
@@ -84,6 +87,7 @@ export async function runClassicQuizStart(
         } else {
             console.error('Quiz start failed:', errorCode, error);
         }
+        captureQuizStartError(error, errorCode, 'classic');
         return { ok: false, errorCode };
     }
 }

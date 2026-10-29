@@ -1,3 +1,4 @@
+import { withSentryConfig } from '@sentry/nextjs/config';
 import type { NextConfig } from 'next';
 
 /**
@@ -87,4 +88,35 @@ const nextConfig: NextConfig = {
     },
 };
 
-export default nextConfig;
+/**
+ * Sentry (ADR: DECISIONS → Error monitoring: Sentry EU) — только ошибки.
+ *
+ * - `tunnelRoute` `/api/m`: браузер шлёт события на наш домен, handler
+ *   `src/app/sentry-tunnel/route.ts` пересылает их в Sentry без IP/cookie.
+ *   Под `/api` — proxy.ts его не трогает (matcher исключает `api`);
+ *   короткое нейтральное имя реже попадает в списки блокировщиков.
+ * - `excludeTracing` + без `tracesSampleRate` в init: tracing вырезан из
+ *   бандла. Включать tracing — отдельным шагом с замером горячего пути.
+ * - `buildTimeInstrumentation: false`: сборка не оборачивает серверные
+ *   зависимости (pg и др.) — пока tracing нет, это лишний риск для Neon.
+ * - `routeManifestInjection: false`: карта маршрутов нужна только для имён
+ *   транзакций tracing, а в клиентский бандл она добавляла килобайты.
+ * - Source maps не грузим (нужен секретный токен) — отдельный подшаг.
+ * - В браузере SDK грузится лениво после `load` (sentry-browser.ts).
+ */
+export default withSentryConfig(nextConfig, {
+    tunnelRoute: '/api/m',
+    sourcemaps: { disable: true },
+    buildTimeInstrumentation: false,
+    routeManifestInjection: false,
+    bundleSizeOptimizations: {
+        excludeDebugStatements: true,
+        excludeTracing: true,
+        excludeReplayIframe: true,
+        excludeReplayShadowDom: true,
+        excludeReplayWorker: true,
+    },
+    suppressOnRouterTransitionStartWarning: true,
+    telemetry: false,
+    silent: !process.env.CI,
+});

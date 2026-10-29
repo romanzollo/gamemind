@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
+import { captureBoundaryError } from '@/lib/monitoring/sentry-browser';
 import {
     defaultLocale,
     getDictionary,
@@ -41,6 +42,7 @@ export default function AdminError({ error, unstable_retry }: AdminErrorProps) {
     useEffect(() => {
         // На prod message скрыт Next; digest связывает с Vercel Runtime Logs.
         console.error('[admin] unhandled error:', error.digest ?? error.message);
+        captureBoundaryError(error, 'admin');
     }, [error]);
 
     return (

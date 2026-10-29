@@ -284,6 +284,17 @@ export type Dictionary = {
         homeDescription: string;
         questionsCardDescription: string;
         usersCardDescription: string;
+        /** Блок проверки мониторинга ошибок (Sentry) на хабе `/admin`. */
+        monitoring: {
+            title: string;
+            description: string;
+            checkServer: string;
+            checkClient: string;
+            /** {id} — id события в Sentry. */
+            sent: string;
+            disabled: string;
+            failed: string;
+        };
         /**
          * Подписи агрегатов на хабе `/admin` (числа подставляются в JSX).
          * homeStatUsers — подпись числа на карточке Users, не дублирует usersLink.

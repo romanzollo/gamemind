@@ -16,6 +16,7 @@ import { SurvivalRunResultBoardView } from '@/features/survival-mode/components/
 import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClockRoastBanner';
 import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
+import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { getDictionary, isLocale } from '@/shared/i18n';
 import { InlineAlert } from '@/shared/ui';
 
@@ -98,6 +99,12 @@ export default async function QuizResultPage({
         }
     } catch (error) {
         console.error('Quiz result summary load failed:', error);
+        // warning: страница показывает soft-fail с retry, результат в БД цел.
+        captureAppError(error, {
+            area: 'quiz-result',
+            level: 'warning',
+            extra: { stage: 'summary-load', sessionId },
+        });
         summaryLoadFailed = true;
     }
 

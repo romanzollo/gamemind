@@ -22,6 +22,7 @@ import {
     getNewlyEarnedAchievementCodes,
 } from '@/features/achievements/lib/evaluate-achievements';
 import type { AchievementCode } from '@/features/achievements/types';
+import { captureAppError } from '@/lib/monitoring/capture-app-error';
 
 export type AwardAchievementsResult = {
     /** Коды, которые пытались вставить как новые (после diff). */
@@ -58,6 +59,12 @@ export async function awardAchievementsForUser(
         return { awardedCodes: newlyEarned, ok: true };
     } catch (error) {
         console.error('Achievement award failed (non-fatal):', error);
+        // warning: outbox остаётся pending, catch-up в профиле довыдаст.
+        captureAppError(error, {
+            area: 'achievements',
+            level: 'warning',
+            extra: { stage: 'award', userId },
+        });
         return { awardedCodes: [], ok: false };
     }
 }

@@ -2025,8 +2025,43 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
   the dashboard setting anyway.
 - **Baseline (Oct 28, RU network, median of 7):** `/ru/leaderboard` full HTML
   1.11 s, `/ru` 0.59 s, server-to-first-byte ~0.25 s, `x-vercel-id arn1::iad1`.
+- **After (`arn1::fra1`, same method):** `/ru/leaderboard` 0.42 s (−62%), `/ru`
+  0.41 s (−31%), server-to-first-byte ~0.17 s.
 - **Rollback:** delete `vercel.json` and redeploy.
 - **If prod Neon ever moves:** move the function region with it.
+
+### Error monitoring: Sentry EU
+
+- **Decision:** `@sentry/nextjs` v11, org data region **EU** (`ingest.de.sentry.io`),
+  errors only. DSN in `NEXT_PUBLIC_SENTRY_DSN` (Production env on Vercel only;
+  unset locally → SDK disabled).
+- **Why Sentry:** grouping, stack traces, release tagging, official Next 16 SDK.
+  Reachability from RU checked (no 14 KB cutoff). **Exit:** GlitchTip speaks the
+  same protocol — swap the DSN, keep the code.
+- **No tracing / no replay:** no `tracesSampleRate` → Node SDK does not add
+  tracing integrations (no `pg` wrapping on the Neon hot path);
+  `buildTimeInstrumentation: false`, `excludeTracing`, `routeManifestInjection: false`.
+  Turning tracing on later = separate step with a hot-path matrix and a latency check.
+- **Tunnel:** `tunnelRoute: '/api/m'` + handler `src/app/sentry-tunnel/route.ts`
+  (`@sentry/nextjs/tunnel`): our server forwards only the envelope (no player
+  IP/cookies) and accepts only our DSN. Under `/api` so `proxy.ts` matcher skips it.
+- **Privacy:** `sendDefaultPii: false`; `extra` carries ids/codes only, never
+  email/username/input. Sentry project: "Prevent storing IP addresses" on.
+- **Bundle:** a static client SDK cost **+54 KB gzip (+22%)** per page; the
+  browser SDK is now lazy (`src/lib/monitoring/sentry-browser.ts`, dynamic
+  import after `load` in idle) → **+15 KB (+6%)** on the critical path.
+  Trade-off: uncaught browser errors in the first seconds before init are lost;
+  error-boundary errors load the SDK on demand and are not lost.
+- **Handled errors** (soft-fail paths) are sent explicitly via
+  `captureAppError` (server) / `captureBoundaryError` (client) with an `area` tag:
+  quiz-start (not `QuizSessionStartError`), quiz-submit, quiz-result,
+  media-upload (only `UPLOAD_FAILED`), admin-question, achievements, auth.
+  Boundaries skip errors with `digest` (already sent by `onRequestError`).
+- **Do not:** import `@sentry/nextjs` or `capture-app-error.ts` from client
+  components (pulls the SDK back into the main bundle); put PII into events.
+- **Verify:** admin hub → "Мониторинг ошибок" → server + browser test events.
+- **Known log noise:** `[Sentry] Failed to register diagnostics-channel injection
+  hooks` on `next start` — affects spans only (tracing is off).
 
 ### Russia-first infrastructure
 

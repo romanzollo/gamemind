@@ -14,6 +14,7 @@ import { mapQuizResultReview } from '@/features/quiz/lib/map-quiz-result-review'
 import type { QuizResultReviewItem } from '@/features/quiz/types';
 import { DirectPgTimeoutError } from '@/lib/db/direct-pg';
 import { auth } from '@/lib/auth';
+import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { isLocale } from '@/shared/i18n';
 
 type ReviewRouteContext = {
@@ -76,6 +77,12 @@ export async function GET(
         }
 
         console.error('Quiz result review API failed:', error);
+        // Таймаут Neon выше — ожидаемый (клиент повторит); сюда — непонятный сбой.
+        captureAppError(error, {
+            area: 'quiz-result',
+            level: 'warning',
+            extra: { stage: 'review-api', sessionId },
+        });
         return NextResponse.json({ error: 'FAILED' }, { status: 500 });
     }
 }

@@ -26,6 +26,7 @@ import type {
     AdminFormState,
 } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
+import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { deleteReplacedMediaObject, STORAGE_PREFIX } from '@/lib/storage';
@@ -402,6 +403,10 @@ export async function createQuestionAction(
     } catch (error) {
         // Всегда в Runtime Logs: на prod иначе SAVE_FAILED без причины.
         console.error('createQuestionAction failed:', error);
+        captureAppError(error, {
+            area: 'admin-question',
+            extra: { action: 'create' },
+        });
         return { errorCode: 'SAVE_FAILED' };
     }
 
@@ -872,6 +877,10 @@ export async function updateQuestionAction(
     } catch (error) {
         // Всегда в Runtime Logs: на prod иначе SAVE_FAILED без причины.
         console.error('updateQuestionAction failed:', error);
+        captureAppError(error, {
+            area: 'admin-question',
+            extra: { action: 'update', questionId },
+        });
 
         return { errorCode: 'SAVE_FAILED' };
     }

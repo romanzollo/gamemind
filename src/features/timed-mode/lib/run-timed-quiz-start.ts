@@ -21,7 +21,10 @@
 
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { buildQuizSnapshotQuestions } from '@/features/quiz/lib/build-quiz-snapshot-questions';
-import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
+import {
+    captureQuizStartError,
+    mapQuizStartError,
+} from '@/features/quiz/lib/map-quiz-start-error';
 import { getQuizSessionPoolWrite } from '@/features/quiz/lib/mixed-difficulty-split';
 import {
     pickMixedSnapshotBundle,
@@ -104,6 +107,7 @@ export async function runTimedQuizStart(
         } else {
             console.error('Timed quiz start failed:', errorCode, error);
         }
+        captureQuizStartError(error, errorCode, 'timed');
         return { ok: false, errorCode };
     }
 }

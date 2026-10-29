@@ -236,6 +236,16 @@ export const ruDictionary: Dictionary = {
             'Список, создание, редактирование и активация вопросов.',
         usersCardDescription:
             'Роли, деактивация и удаление аккаунтов.',
+        monitoring: {
+            title: 'Мониторинг ошибок',
+            description:
+                'Отправь тестовую ошибку и найди её в Sentry по ID — так видно, что прод ничего не теряет.',
+            checkServer: 'Ошибка с сервера',
+            checkClient: 'Ошибка из браузера',
+            sent: 'Отправлено. ID в Sentry: {id}',
+            disabled: 'Sentry выключен: нет NEXT_PUBLIC_SENTRY_DSN (так и задумано локально).',
+            failed: 'Не получилось отправить. Загляни в логи Vercel.',
+        },
         homeStatUsers: 'Всего',
         homeStatQuestionsActive: 'Активные',
         homeStatQuestionsInactive: 'Неактивные',

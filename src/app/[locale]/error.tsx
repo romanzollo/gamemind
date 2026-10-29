@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
+import { captureBoundaryError } from '@/lib/monitoring/sentry-browser';
 import {
     defaultLocale,
     getDictionary,
@@ -37,6 +38,7 @@ export default function LocaleError({ error, unstable_retry }: LocaleErrorProps)
 
     useEffect(() => {
         console.error('[page] unhandled error:', error.digest ?? error.message);
+        captureBoundaryError(error, 'page');
     }, [error]);
 
     return (

@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
+import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import {
     assertAllowedImageMime,
     assertImageWithinUploadLimit,
@@ -97,6 +98,11 @@ export async function resolveAdminPromptImage(options: {
                 return { ok: false, errorCode: 'INVALID_IMAGE' };
             }
 
+            // Невалидный файл — ошибка ввода; сюда доходит наш сбой (sharp, Blob).
+            captureAppError(error, {
+                area: 'media-upload',
+                extra: { target: 'question-prompt' },
+            });
             return { ok: false, errorCode: 'UPLOAD_FAILED' };
         }
     }

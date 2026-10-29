@@ -5,6 +5,7 @@ import {
     type AdminHomeCounts,
 } from '@/entities/admin/admin-home.repository';
 import { warmAdminListConnection } from '@/entities/question/question.repository';
+import { AdminMonitoringCheck } from '@/features/admin/components/AdminMonitoringCheck';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
 
@@ -201,6 +202,8 @@ export default async function AdminHomePage({ params }: AdminHomePageProps) {
                     </p>
                 </Link>
             </div>
+
+            <AdminMonitoringCheck labels={dictionary.admin.monitoring} />
         </main>
     );
 }

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
 import { requireUser } from '@/lib/auth/guards';
+import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
@@ -119,6 +120,12 @@ export async function submitQuizAction(
         .findSessionForSubmit(sessionId, authSession.user.id)
         .catch((error: unknown) => {
             console.error('Quiz submit snapshot load failed:', error);
+            // warning: чаще всего Neon-флейк, у игрока есть retry на форме.
+            captureAppError(error, {
+                area: 'quiz-submit',
+                level: 'warning',
+                extra: { stage: 'snapshot-load', sessionId },
+            });
             return null;
         });
 
@@ -313,6 +320,12 @@ export async function submitQuizAction(
                         'Survival after-complete record skipped:',
                         retryError,
                     );
+                    // Волна сохранена, но банк/очки забега не перенесены.
+                    captureAppError(retryError, {
+                        area: 'quiz-submit',
+                        level: 'warning',
+                        extra: { stage: 'survival-after-complete', sessionId },
+                    });
                 }
             }
         }
@@ -320,6 +333,10 @@ export async function submitQuizAction(
         // already_completed: QuizResult уже есть — идём на result; outbox/award ниже.
     } catch (error) {
         console.error('Quiz submit failed:', error);
+        captureAppError(error, {
+            area: 'quiz-submit',
+            extra: { stage: 'complete', sessionId },
+        });
         return { errorCode: 'SUBMIT_FAILED' };
     }
 

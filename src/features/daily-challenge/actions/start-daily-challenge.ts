@@ -19,7 +19,10 @@ import { dailyChallengeRepository } from '@/entities/daily-challenge/daily-chall
 import { questionRepository } from '@/entities/question/question.repository';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { ensureDailyChallenge } from '@/features/daily-challenge/lib/ensure-daily-challenge';
-import { mapQuizStartError } from '@/features/quiz/lib/map-quiz-start-error';
+import {
+    captureQuizStartError,
+    mapQuizStartError,
+} from '@/features/quiz/lib/map-quiz-start-error';
 import type { QuizFormState } from '@/features/quiz/types';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
@@ -172,6 +175,7 @@ export async function startDailyChallengeAction(
         } else {
             console.error('Daily challenge start failed:', errorCode, error);
         }
+        captureQuizStartError(error, errorCode, 'daily');
         return { errorCode };
     }
 
