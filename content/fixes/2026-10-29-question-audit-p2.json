@@ -1,0 +1,1050 @@
+{
+    "version": 1,
+    "note": "Аудит банка 29 окт 2026, часть 2: шуточные и слишком лёгкие неверные варианты → правдоподобные; заодно латиница в RU-наборах и слэши в затронутых вариантах. Применять scripts/apply-question-fixes.cjs; реимпорт запрещён.",
+    "fixes": [
+        {
+            "key": "audit-p2-021-pokemon-catch",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что игрок делает с дикими покемонами в основной механике серии Pokémon?",
+            "matchRu": [
+                "Ловит и тренирует их",
+                "Только сражается без поимки",
+                "Собирает как строительные блоки",
+                "Разводит на ферме как скот"
+            ],
+            "options": [
+                {
+                    "fromRu": "Только сражается без поимки",
+                    "ru": "Сражается, а команду выдаёт сюжет",
+                    "en": "Battles them; the story hands you your team"
+                },
+                {
+                    "fromRu": "Собирает как строительные блоки",
+                    "ru": "Побеждает — и они сами вступают в команду",
+                    "en": "Beats them, and they join the team on their own"
+                },
+                {
+                    "fromRu": "Разводит на ферме как скот",
+                    "ru": "Уговаривает в диалоге примкнуть к нему",
+                    "en": "Talks them into joining through dialogue"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-026-half-life-eli",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут главного героя серии Half-Life?",
+            "matchRu": [
+                "Гордон Фримен",
+                "Адриан Шепард",
+                "Барни Калхаун",
+                "Гейб Ньюэлл"
+            ],
+            "options": [
+                {
+                    "fromRu": "Гейб Ньюэлл",
+                    "ru": "Илай Вэнс",
+                    "en": "Eli Vance"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-034-doom-marauder",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как называют безымянного героя современных игр DOOM (2016 и далее)?",
+            "matchRu": [
+                "Палач Рока",
+                "Дюк Нюкем",
+                "Думгай-младший",
+                "Би.Джей Блазкович"
+            ],
+            "options": [
+                {
+                    "fromRu": "Думгай-младший",
+                    "ru": "Мародёр",
+                    "en": "Marauder"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-120-monster-hunter-hunt",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в серии Monster Hunter игрок в основном делает с огромными существами?",
+            "matchRu": [
+                "Охотится на них",
+                "Приручает как покемонов",
+                "Гонки на них",
+                "Строит из них города"
+            ],
+            "options": [
+                {
+                    "fromRu": "Охотится на них",
+                    "ru": "Охотится на них",
+                    "en": "Hunts them"
+                },
+                {
+                    "fromRu": "Приручает как покемонов",
+                    "ru": "Защищает от браконьеров",
+                    "en": "Protects them from poachers"
+                },
+                {
+                    "fromRu": "Гонки на них",
+                    "ru": "Прячется и убегает от них",
+                    "en": "Hides and runs from them"
+                },
+                {
+                    "fromRu": "Строит из них города",
+                    "ru": "Лечит и выпускает на волю",
+                    "en": "Heals them and sets them free"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-125-slay-the-spire-genre",
+            "difficulty": "EASY",
+            "matchQuestionRu": "К какому жанру ближе всего Slay the Spire?",
+            "matchRu": [
+                "Колодостроительный roguelike",
+                "Футбольный симулятор",
+                "Гоночный аркадный",
+                "Танцевальная ритм-игра"
+            ],
+            "options": [
+                {
+                    "fromRu": "Колодостроительный roguelike",
+                    "ru": "Рогалик с колодостроением",
+                    "en": "Deck-building roguelike"
+                },
+                {
+                    "fromRu": "Футбольный симулятор",
+                    "ru": "Сетевая ККИ с дуэлями",
+                    "en": "Online CCG with duels"
+                },
+                {
+                    "fromRu": "Гоночный аркадный",
+                    "ru": "Пошаговая тактика на сетке",
+                    "en": "Turn-based grid tactics"
+                },
+                {
+                    "fromRu": "Танцевальная ритм-игра",
+                    "ru": "Защита башен",
+                    "en": "Tower defense"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-358-fable-appearance",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в Fable заметно меняет внешность героя по мере игры?",
+            "matchRu": [
+                "Моральные поступки (добро / зло)",
+                "Только смена брони в меню",
+                "Случайный генератор лиц каждый день",
+                "Погода в Альбионе"
+            ],
+            "options": [
+                {
+                    "fromRu": "Моральные поступки (добро / зло)",
+                    "ru": "Добрые и злые поступки",
+                    "en": "Good and evil deeds"
+                },
+                {
+                    "fromRu": "Только смена брони в меню",
+                    "ru": "Класс, выбранный в начале",
+                    "en": "The class you pick at the start"
+                },
+                {
+                    "fromRu": "Случайный генератор лиц каждый день",
+                    "ru": "Фракция, к которой примкнул",
+                    "en": "The faction you side with"
+                },
+                {
+                    "fromRu": "Погода в Альбионе",
+                    "ru": "Выбранный уровень сложности",
+                    "en": "The difficulty level you chose"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-359-fable3-ruler",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Кем становится герой во второй половине Fable III (ключевой сюжетный поворот)?",
+            "matchRu": [
+                "Правителем / монархом Альбиона",
+                "Главой гильдии воров",
+                "Капитаном космического корабля",
+                "Бессмертным вампиром"
+            ],
+            "options": [
+                {
+                    "fromRu": "Правителем / монархом Альбиона",
+                    "ru": "Королём или королевой Альбиона",
+                    "en": "The King or Queen of Albion"
+                },
+                {
+                    "fromRu": "Капитаном космического корабля",
+                    "ru": "Генералом в армии Логана",
+                    "en": "A general in Logan’s army"
+                },
+                {
+                    "fromRu": "Бессмертным вампиром",
+                    "ru": "Главой Гильдии героев",
+                    "en": "Head of the Heroes’ Guild"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-365-duke3d-genre",
+            "difficulty": "EASY",
+            "matchQuestionRu": "К какому жанру относится культовый Duke Nukem 3D?",
+            "matchRu": [
+                "Шутер от первого лица (FPS)",
+                "Пошаговая стратегия",
+                "Визуальная новелла",
+                "Симулятор фермы"
+            ],
+            "options": [
+                {
+                    "fromRu": "Шутер от первого лица (FPS)",
+                    "ru": "Шутер от первого лица",
+                    "en": "First-person shooter"
+                },
+                {
+                    "fromRu": "Пошаговая стратегия",
+                    "ru": "Шутер от третьего лица",
+                    "en": "Third-person shooter"
+                },
+                {
+                    "fromRu": "Визуальная новелла",
+                    "ru": "Платформер с видом сбоку",
+                    "en": "Side-scrolling platformer"
+                },
+                {
+                    "fromRu": "Симулятор фермы",
+                    "ru": "Изометрический экшен",
+                    "en": "Isometric action game"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-372-re-early-enemies",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Какой тип врагов стал «визитной карточкой» ранних Resident Evil?",
+            "matchRu": [
+                "Зомби",
+                "Госты (призраки-невидимки)",
+                "Только роботы без биоугрозы",
+                "Только динозавры"
+            ],
+            "options": [
+                {
+                    "fromRu": "Госты (призраки-невидимки)",
+                    "ru": "Призраки",
+                    "en": "Ghosts"
+                },
+                {
+                    "fromRu": "Только роботы без биоугрозы",
+                    "ru": "Демоны",
+                    "en": "Demons"
+                },
+                {
+                    "fromRu": "Только динозавры",
+                    "ru": "Пришельцы",
+                    "en": "Aliens"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-378-stalker-zone",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как в серии S.T.A.L.K.E.R. называют аномальную территорию вокруг Чернобыля?",
+            "matchRu": [
+                "Зона",
+                "Пустоши",
+                "Космос",
+                "Подземелье"
+            ],
+            "options": [
+                {
+                    "fromRu": "Космос",
+                    "ru": "Мёртвые земли",
+                    "en": "The Dead Lands"
+                },
+                {
+                    "fromRu": "Подземелье",
+                    "ru": "Карантин",
+                    "en": "The Quarantine"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-380-stalker-artifacts",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как в S.T.A.L.K.E.R. называют странные объекты из аномалий, которые сталкеры продают учёным?",
+            "matchRu": [
+                "Артефакты",
+                "Чипы",
+                "Ключи от сейфов",
+                "Покеболы"
+            ],
+            "options": [
+                {
+                    "fromRu": "Ключи от сейфов",
+                    "ru": "Реликвии",
+                    "en": "Relics"
+                },
+                {
+                    "fromRu": "Покеболы",
+                    "ru": "Самородки",
+                    "en": "Nuggets"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-383-stalker-emission",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как в S.T.A.L.K.E.R. называют смертельные энергетические волны, от которых нужно прятаться в укрытии?",
+            "matchRu": [
+                "Выброс",
+                "Радарный пинг",
+                "Кулдаун ульты",
+                "Смена дня и ночи"
+            ],
+            "options": [
+                {
+                    "fromRu": "Радарный пинг",
+                    "ru": "Радиационный фронт",
+                    "en": "Radiation front"
+                },
+                {
+                    "fromRu": "Кулдаун ульты",
+                    "ru": "Вспышка",
+                    "en": "Flare"
+                },
+                {
+                    "fromRu": "Смена дня и ночи",
+                    "ru": "Чёрный дождь",
+                    "en": "Black rain"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-384-cs-terrorist-goal",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Какая классическая цель раунда есть у террористов в режиме Bomb Defusal в Counter-Strike?",
+            "matchRu": [
+                "Установить бомбу и дать ей взорваться (или уничтожить CT)",
+                "Построить базу из блоков",
+                "Собрать все артефакты на карте",
+                "Выиграть гонку на машинах"
+            ],
+            "options": [
+                {
+                    "fromRu": "Установить бомбу и дать ей взорваться (или уничтожить CT)",
+                    "ru": "Заложить бомбу и дождаться взрыва",
+                    "en": "Plant the bomb and let it go off"
+                },
+                {
+                    "fromRu": "Построить базу из блоков",
+                    "ru": "Обезвредить бомбу до взрыва",
+                    "en": "Defuse the bomb before it goes off"
+                },
+                {
+                    "fromRu": "Собрать все артефакты на карте",
+                    "ru": "Спасти заложников",
+                    "en": "Rescue the hostages"
+                },
+                {
+                    "fromRu": "Выиграть гонку на машинах",
+                    "ru": "Захватить и удержать флаг",
+                    "en": "Capture and hold the flag"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-385-cs-dust2",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Какая карта Counter-Strike стала самой узнаваемой «визиткой» серии (пустынный бомб-дефьюз)?",
+            "matchRu": [
+                "Dust II",
+                "Nuketown",
+                "Blood Gulch",
+                "de_minecraft"
+            ],
+            "options": [
+                {
+                    "fromRu": "de_minecraft",
+                    "ru": "Rust",
+                    "en": "Rust"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-386-cs-awp",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как в Counter-Strike обычно сокращённо называют мощную снайперскую винтовку Magnum Sniper Rifle?",
+            "matchRu": [
+                "AWP",
+                "RPG",
+                "SMG",
+                "NPC"
+            ],
+            "options": [
+                {
+                    "fromRu": "RPG",
+                    "ru": "Scout",
+                    "en": "Scout"
+                },
+                {
+                    "fromRu": "SMG",
+                    "ru": "Deagle",
+                    "en": "Deagle"
+                },
+                {
+                    "fromRu": "NPC",
+                    "ru": "AUG",
+                    "en": "AUG"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-391-diablo-genre",
+            "difficulty": "EASY",
+            "matchQuestionRu": "К какому жанру ближе всего серия Diablo?",
+            "matchRu": [
+                "Action RPG / dungeon crawler",
+                "Футбольный симулятор",
+                "Только текстовый квест без боя",
+                "Гоночный аркадный симулятор"
+            ],
+            "options": [
+                {
+                    "fromRu": "Action RPG / dungeon crawler",
+                    "ru": "Ролевой экшен с подземельями",
+                    "en": "Action RPG / dungeon crawler"
+                },
+                {
+                    "fromRu": "Футбольный симулятор",
+                    "ru": "Стратегия в реальном времени",
+                    "en": "Real-time strategy"
+                },
+                {
+                    "fromRu": "Только текстовый квест без боя",
+                    "ru": "Пошаговая ролевая тактика",
+                    "en": "Turn-based tactical RPG"
+                },
+                {
+                    "fromRu": "Гоночный аркадный симулятор",
+                    "ru": "Шутер от первого лица",
+                    "en": "First-person shooter"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-392-diablo2-classes",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какой класс есть в классическом Diablo II среди стартовых?",
+            "matchRu": [
+                "Некромант",
+                "Инженер",
+                "Пилот истребителя",
+                "Футболист"
+            ],
+            "options": [
+                {
+                    "fromRu": "Инженер",
+                    "ru": "Охотник на демонов",
+                    "en": "Demon Hunter"
+                },
+                {
+                    "fromRu": "Пилот истребителя",
+                    "ru": "Монах",
+                    "en": "Monk"
+                },
+                {
+                    "fromRu": "Футболист",
+                    "ru": "Крестоносец",
+                    "en": "Crusader"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-397-agent47-look",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какой элемент внешнего вида Агента 47 стал его визуальной визитной карточкой?",
+            "matchRu": [
+                "Лысина и костюм + штрихкод на затылке",
+                "Зелёный комбинезон сантехника",
+                "Шлем со щитком как у Master Chief",
+                "Плащ ассасина с капюшоном"
+            ],
+            "options": [
+                {
+                    "fromRu": "Лысина и костюм + штрихкод на затылке",
+                    "ru": "Лысина, костюм и штрихкод на затылке",
+                    "en": "Bald head, suit, and a barcode on the back of the head"
+                },
+                {
+                    "fromRu": "Зелёный комбинезон сантехника",
+                    "ru": "Повязка на глазу и бандана",
+                    "en": "An eyepatch and a bandana"
+                },
+                {
+                    "fromRu": "Шлем со щитком как у Master Chief",
+                    "ru": "Тёмные очки и кожаный плащ",
+                    "en": "Sunglasses and a leather trench coat"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-398-hitman-disguise",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какая механика — сердце геймплея Hitman: проникновение без «лобовой» перестрелки?",
+            "matchRu": [
+                "Маскировка / смена одежды NPC",
+                "Строительство укреплений",
+                "Пошаговые бои на сетке",
+                "Только гонки на время"
+            ],
+            "options": [
+                {
+                    "fromRu": "Маскировка / смена одежды NPC",
+                    "ru": "Переодевание в чужую одежду",
+                    "en": "Disguises: wearing other people’s outfits"
+                },
+                {
+                    "fromRu": "Строительство укреплений",
+                    "ru": "Невидимость по кнопке",
+                    "en": "Turning invisible at will"
+                },
+                {
+                    "fromRu": "Пошаговые бои на сетке",
+                    "ru": "Телепорт за спину врагу",
+                    "en": "Teleporting behind enemies"
+                },
+                {
+                    "fromRu": "Только гонки на время",
+                    "ru": "Вызов подкрепления по рации",
+                    "en": "Calling in backup over the radio"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-401-tomb-raider-profession",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Чем по сюжету занимается героиня серии Tomb Raider (помимо приключений)?",
+            "matchRu": [
+                "Археология / поиск древних артефактов",
+                "Только гонки на выживание",
+                "Управление футбольным клубом",
+                "Приготовление еды в ресторане"
+            ],
+            "options": [
+                {
+                    "fromRu": "Археология / поиск древних артефактов",
+                    "ru": "Археологией и поиском артефактов",
+                    "en": "Archaeology and hunting ancient artifacts"
+                },
+                {
+                    "fromRu": "Только гонки на выживание",
+                    "ru": "Охотой за головами",
+                    "en": "Bounty hunting"
+                },
+                {
+                    "fromRu": "Управление футбольным клубом",
+                    "ru": "Журналистскими расследованиями",
+                    "en": "Investigative journalism"
+                },
+                {
+                    "fromRu": "Приготовление еды в ресторане",
+                    "ru": "Службой в спецназе",
+                    "en": "Serving in special forces"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-402-lara-classic-weapons",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Какое оружие стало классическим «образом» Лары Крофт в ранних Tomb Raider?",
+            "matchRu": [
+                "Два пистолета",
+                "Только арбалет без пистолетов",
+                "Световой меч",
+                "Гравипушка"
+            ],
+            "options": [
+                {
+                    "fromRu": "Только арбалет без пистолетов",
+                    "ru": "Лук и стрелы",
+                    "en": "A bow and arrows"
+                },
+                {
+                    "fromRu": "Световой меч",
+                    "ru": "Пара ледорубов",
+                    "en": "A pair of climbing axes"
+                },
+                {
+                    "fromRu": "Гравипушка",
+                    "ru": "Помповый дробовик",
+                    "en": "A pump-action shotgun"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-405-tomb-raider-yamatai",
+            "difficulty": "HARD",
+            "matchQuestionRu": "На каком легендарном острове / королевстве терпит крушение Лара в перезапуске Tomb Raider (2013)?",
+            "matchRu": [
+                "Yamatai",
+                "Koholint",
+                "The Island (Lost)",
+                "Spooky Island"
+            ],
+            "question": {
+                "ru": "Как называется легендарное королевство, у берегов которого терпит крушение Лара в Tomb Raider (2013)?",
+                "en": "What is the legendary kingdom off whose shores Lara is shipwrecked in Tomb Raider (2013)?"
+            },
+            "options": [
+                {
+                    "fromRu": "Yamatai",
+                    "ru": "Яматай",
+                    "en": "Yamatai"
+                },
+                {
+                    "fromRu": "Koholint",
+                    "ru": "Китеж",
+                    "en": "Kitezh"
+                },
+                {
+                    "fromRu": "The Island (Lost)",
+                    "ru": "Пайтити",
+                    "en": "Paititi"
+                },
+                {
+                    "fromRu": "Spooky Island",
+                    "ru": "Атлантида",
+                    "en": "Atlantis"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-408-majoras-mask-cycle",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Сколько внутриигровых дней длится цикл перед катастрофой в Majora’s Mask?",
+            "matchRu": [
+                "Три дня",
+                "Семь дней",
+                "Один час реального времени без цикла",
+                "Тридцать дней"
+            ],
+            "options": [
+                {
+                    "fromRu": "Один час реального времени без цикла",
+                    "ru": "Пять дней",
+                    "en": "Five days"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-409-wind-waker-style",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какой визуальный стиль стал визитной карточкой The Wind Waker?",
+            "matchRu": [
+                "Целл-шейдинг / «мультяшный» toon-стиль",
+                "Фотореализм как в современных AAA",
+                "Только ASCII-арт",
+                "Чёрно-белый нуар без цвета"
+            ],
+            "options": [
+                {
+                    "fromRu": "Целл-шейдинг / «мультяшный» toon-стиль",
+                    "ru": "Мультяшный сел-шейдинг",
+                    "en": "Cartoony cel-shading"
+                },
+                {
+                    "fromRu": "Фотореализм как в современных AAA",
+                    "ru": "Мрачный реализм",
+                    "en": "Gritty realism"
+                },
+                {
+                    "fromRu": "Только ASCII-арт",
+                    "ru": "Пиксельная 2D-графика",
+                    "en": "2D pixel art"
+                },
+                {
+                    "fromRu": "Чёрно-белый нуар без цвета",
+                    "ru": "Пластилиновая анимация",
+                    "en": "Claymation"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-411-twilight-princess-wolf",
+            "difficulty": "HARD",
+            "matchQuestionRu": "В кого периодически превращается Линк в Twilight Princess?",
+            "matchRu": [
+                "В волка",
+                "В дракона",
+                "В машину",
+                "В кубик"
+            ],
+            "options": [
+                {
+                    "fromRu": "В машину",
+                    "ru": "В кролика",
+                    "en": "A rabbit"
+                },
+                {
+                    "fromRu": "В кубик",
+                    "ru": "В горона",
+                    "en": "A Goron"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-417-civ-genre",
+            "difficulty": "EASY",
+            "matchQuestionRu": "К какому жанру относится серия Sid Meier’s Civilization?",
+            "matchRu": [
+                "Пошаговая 4X-стратегия",
+                "Шутер от первого лица",
+                "Ритм-игра",
+                "Симулятор фермы"
+            ],
+            "options": [
+                {
+                    "fromRu": "Ритм-игра",
+                    "ru": "Стратегия в реальном времени",
+                    "en": "Real-time strategy"
+                },
+                {
+                    "fromRu": "Симулятор фермы",
+                    "ru": "Пошаговая тактика отряда",
+                    "en": "Turn-based squad tactics"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-422-hogwarts-universe",
+            "difficulty": "EASY",
+            "matchQuestionRu": "В какой вселенной происходит Hogwarts Legacy?",
+            "matchRu": [
+                "Вселенная Гарри Поттера (Wizarding World)",
+                "Вселенная Властелина колец",
+                "Вселенная Star Wars",
+                "Вселенная Marvel"
+            ],
+            "options": [
+                {
+                    "fromRu": "Вселенная Гарри Поттера (Wizarding World)",
+                    "ru": "Вселенная Гарри Поттера",
+                    "en": "The Harry Potter / Wizarding World"
+                },
+                {
+                    "fromRu": "Вселенная Властелина колец",
+                    "ru": "Вселенная «Властелина колец»",
+                    "en": "The Lord of the Rings universe"
+                },
+                {
+                    "fromRu": "Вселенная Star Wars",
+                    "ru": "Вселенная «Ведьмака»",
+                    "en": "The Witcher universe"
+                },
+                {
+                    "fromRu": "Вселенная Marvel",
+                    "ru": "Вселенная «Хроник Нарнии»",
+                    "en": "The Chronicles of Narnia universe"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-423-hogwarts-genre",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какой тип игры лучше всего описывает Hogwarts Legacy?",
+            "matchRu": [
+                "Action RPG с открытым миром в школе магии",
+                "Только текстовая новелла без исследования",
+                "Чисто соревновательный киберспортивный шутер",
+                "Симулятор фермы без магии"
+            ],
+            "options": [
+                {
+                    "fromRu": "Action RPG с открытым миром в школе магии",
+                    "ru": "Ролевой экшен с открытым миром",
+                    "en": "An open-world action RPG"
+                },
+                {
+                    "fromRu": "Только текстовая новелла без исследования",
+                    "ru": "Линейный экшен по сюжету фильмов",
+                    "en": "A linear action game that follows the films"
+                },
+                {
+                    "fromRu": "Чисто соревновательный киберспортивный шутер",
+                    "ru": "Пошаговая ролевая игра с картами заклинаний",
+                    "en": "A turn-based RPG with spell cards"
+                },
+                {
+                    "fromRu": "Симулятор фермы без магии",
+                    "ru": "Онлайн-игра с дуэлями магов",
+                    "en": "An online wizard-dueling game"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-425-nfs-genre",
+            "difficulty": "EASY",
+            "matchQuestionRu": "К какому жанру относится серия Need for Speed?",
+            "matchRu": [
+                "Гоночные игры / racing",
+                "Пошаговые RPG",
+                "Хоррор от первого лица без машин",
+                "Симулятор жизни без транспорта"
+            ],
+            "options": [
+                {
+                    "fromRu": "Гоночные игры / racing",
+                    "ru": "Гонки",
+                    "en": "Racing games"
+                },
+                {
+                    "fromRu": "Пошаговые RPG",
+                    "ru": "Файтинги",
+                    "en": "Fighting games"
+                },
+                {
+                    "fromRu": "Хоррор от первого лица без машин",
+                    "ru": "Шутеры от третьего лица",
+                    "en": "Third-person shooters"
+                },
+                {
+                    "fromRu": "Симулятор жизни без транспорта",
+                    "ru": "Платформеры",
+                    "en": "Platformers"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-427-nfs-underground",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Чем особенно запомнилась линейка Need for Speed: Underground?",
+            "matchRu": [
+                "Уличный тюнинг, винил и ночные гонки",
+                "Только реалистичные шинные симуляции Формулы-1",
+                "Пошаговые бои на арене",
+                "Строительство фермы"
+            ],
+            "options": [
+                {
+                    "fromRu": "Только реалистичные шинные симуляции Формулы-1",
+                    "ru": "Реалистичная Формула-1 с пит-стопами",
+                    "en": "Realistic Formula 1 with pit stops"
+                },
+                {
+                    "fromRu": "Пошаговые бои на арене",
+                    "ru": "Погони за гонщиками за рулём полиции",
+                    "en": "Chasing racers from behind the wheel of a cop car"
+                },
+                {
+                    "fromRu": "Строительство фермы",
+                    "ru": "Ралли и гонки по бездорожью",
+                    "en": "Rally and off-road racing"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-436-alan-wake-profession",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Кем по профессии является главный герой Alan Wake?",
+            "matchRu": [
+                "Писатель",
+                "Повар",
+                "Футбольный тренер",
+                "Космонавт"
+            ],
+            "options": [
+                {
+                    "fromRu": "Повар",
+                    "ru": "Журналист",
+                    "en": "A journalist"
+                },
+                {
+                    "fromRu": "Футбольный тренер",
+                    "ru": "Детектив",
+                    "en": "A detective"
+                },
+                {
+                    "fromRu": "Космонавт",
+                    "ru": "Радиоведущий",
+                    "en": "A radio host"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-439-patapon-rhythm",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Чем уникален геймплей Patapon на PSP?",
+            "matchRu": [
+                "Ритм-команды армии через барабанные удары",
+                "Только открытый мир без боя",
+                "Симулятор полётов Airbus",
+                "Чисто текстовый чат без игры"
+            ],
+            "options": [
+                {
+                    "fromRu": "Ритм-команды армии через барабанные удары",
+                    "ru": "Приказы армии в ритм барабана",
+                    "en": "Commanding an army to a drum rhythm"
+                },
+                {
+                    "fromRu": "Только открытый мир без боя",
+                    "ru": "Постройка башен на пути врагов",
+                    "en": "Building towers along the enemy path"
+                },
+                {
+                    "fromRu": "Симулятор полётов Airbus",
+                    "ru": "Пошаговые бои карточками",
+                    "en": "Turn-based card battles"
+                },
+                {
+                    "fromRu": "Чисто текстовый чат без игры",
+                    "ru": "Тактическая пауза для приказов отряду",
+                    "en": "A tactical pause to give squad orders"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-438-gravity-rush-mechanic",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая механика — визитная карточка Gravity Rush на PS Vita?",
+            "matchRu": [
+                "Управление направлением гравитации",
+                "Только пошаговые бои в сетке",
+                "Строительство фермы",
+                "Футбольные пенальти"
+            ],
+            "options": [
+                {
+                    "fromRu": "Управление направлением гравитации",
+                    "ru": "Смена направления своей гравитации",
+                    "en": "Shifting the direction of her own gravity"
+                },
+                {
+                    "fromRu": "Только пошаговые бои в сетке",
+                    "ru": "Переворот гравитации для всего уровня",
+                    "en": "Flipping gravity for the whole level"
+                },
+                {
+                    "fromRu": "Строительство фермы",
+                    "ru": "Ходьба по стенам в магнитных ботинках",
+                    "en": "Walking on walls in magnetic boots"
+                },
+                {
+                    "fromRu": "Футбольные пенальти",
+                    "ru": "Раскачивание на гравитационном тросе",
+                    "en": "Swinging on a gravity tether"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-485-beat-saber-cut",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Beat Saber нужно сделать с цветным блоком, чтобы удар засчитали чисто?",
+            "matchRu": [
+                "Разрезать его мечом в направлении стрелки на блоке",
+                "Поймать блок как покеболом и подождать тряски",
+                "Наступить на клетку строго в такт, иначе сразу урон",
+                "Стоять неподвижно, пока блок сам не разобьётся"
+            ],
+            "options": [
+                {
+                    "fromRu": "Поймать блок как покеболом и подождать тряски",
+                    "ru": "Ударить блок кулаком строго в такт",
+                    "en": "Punch the block exactly on the beat"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-497-risk-of-rain-difficulty",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Risk of Rain делает сложность со временем, даже если почти никого не убивать?",
+            "matchRu": [
+                "Она растёт сама: враги опаснее, появляются элитные",
+                "Пикминов ночью съедят, если не вернуть их к луковице",
+                "Карта сужается штормом, и вне круга тает HP",
+                "Энергия фермы падает до нуля, и персонаж телепортируется в кровать"
+            ],
+            "options": [
+                {
+                    "fromRu": "Пикминов ночью съедят, если не вернуть их к луковице",
+                    "ru": "Почти не меняется: она растёт от убийств, а не от времени",
+                    "en": "It barely moves: it grows with kills, not with time"
+                },
+                {
+                    "fromRu": "Энергия фермы падает до нуля, и персонаж телепортируется в кровать",
+                    "ru": "Меняется только между забегами, в меню",
+                    "en": "It only changes between runs, in the menu"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-437-phantasy-star-iv-platform",
+            "difficulty": "HARD",
+            "matchQuestionRu": "На какой платформе Sega вышла культовая JRPG Phantasy Star IV?",
+            "matchRu": [
+                "Sega Mega Drive / Genesis",
+                "PlayStation 2",
+                "Xbox One",
+                "Nintendo Switch"
+            ],
+            "question": {
+                "ru": "На какой платформе Sega изначально вышла культовая JRPG Phantasy Star IV?",
+                "en": "On which Sega platform did the cult JRPG Phantasy Star IV originally release?"
+            },
+            "options": [
+                {
+                    "fromRu": "PlayStation 2",
+                    "ru": "Sega Master System",
+                    "en": "Sega Master System"
+                },
+                {
+                    "fromRu": "Xbox One",
+                    "ru": "Sega Saturn",
+                    "en": "Sega Saturn"
+                },
+                {
+                    "fromRu": "Nintendo Switch",
+                    "ru": "Sega Dreamcast",
+                    "en": "Sega Dreamcast"
+                }
+            ]
+        },
+        {
+            "key": "audit-p2-440-jade-empire-xbox",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая action-RPG BioWare в духе уся вышла эксклюзивом на оригинальный Xbox?",
+            "matchRu": [
+                "Jade Empire",
+                "Mass Effect 3",
+                "Dragon Age II",
+                "Anthem"
+            ],
+            "options": [
+                {
+                    "fromRu": "Mass Effect 3",
+                    "ru": "Star Wars: Knights of the Old Republic",
+                    "en": "Star Wars: Knights of the Old Republic"
+                },
+                {
+                    "fromRu": "Dragon Age II",
+                    "ru": "Fable",
+                    "en": "Fable"
+                },
+                {
+                    "fromRu": "Anthem",
+                    "ru": "Mass Effect",
+                    "en": "Mass Effect"
+                }
+            ]
+        }
+    ]
+}
