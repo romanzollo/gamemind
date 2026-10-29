@@ -3,7 +3,8 @@ import type { Dictionary } from './dictionary';
 export const enDictionary = {
     metadata: {
         title: 'GameMind',
-        description: 'Video game quiz platform',
+        description:
+            'Video game quiz: guess the game from a screenshot, one-minute blitz, survival and a daily challenge.',
     },
     nav: {
         home: 'Home',
@@ -11,9 +12,9 @@ export const enDictionary = {
         leaderboard: 'Leaderboard',
         profile: 'Profile',
         admin: 'Admin',
-        login: 'Login',
-        register: 'Register',
-        logout: 'Log out',
+        login: 'Sign in',
+        register: 'Sign up',
+        logout: 'Sign out',
     },
     language: {
         label: 'Language',
@@ -30,7 +31,7 @@ export const enDictionary = {
     common: {
         loading: 'Loading…',
         submitting: 'Submitting…',
-        working: 'Please wait…',
+        working: 'One sec…',
         openMenu: 'Open menu',
         closeMenu: 'Close menu',
         skipToContent: 'Skip to content',
@@ -52,7 +53,7 @@ export const enDictionary = {
         title: 'GameMind',
         headline: 'Remember the games you played',
         description:
-            'Screenshots, facts, series, and details from video games. Answer fast, score points, and see if your memory holds up.',
+            'Guess games from screenshots, recall the details, rack up points. Harder questions pay more.',
         cta: 'Choose a mode',
         ctaAllModes: 'All modes',
         dailyTease: "Today's challenge →",
@@ -63,29 +64,29 @@ export const enDictionary = {
         eyebrow: 'Today',
         title: "Today's challenge",
         description: 'One shared set. One shot. Rematch tomorrow.',
-        meta: 'Medium · 10 · 1 attempt',
+        meta: '10 questions · medium · 1 attempt',
         startButton: 'Accept the challenge',
         continueButton: 'Continue challenge',
         viewResultButton: 'View result',
         loginPrompt: 'Sign in to play today’s challenge.',
         loginLink: 'Sign in',
         unavailablePool:
-            'Today’s challenge is unavailable — not enough published questions in the pool.',
+            'Today’s challenge didn’t come together: not enough questions. Try another mode for now.',
         attemptAbandoned:
             'Today’s attempt is already closed. A new challenge opens tomorrow.',
         completedScore: 'Points: {score} · {correct}/{total}',
-        boardTitle: 'Today’s ranking',
+        boardTitle: 'Today’s leaderboard',
         boardEmpty: 'The arena is empty. Time to claim first place.',
     },
     timedMode: {
         eyebrow: 'Timed',
         title: 'Blitz',
         description: 'Ten questions. One minute. No pauses.',
-        meta: '10 · 60s · difficulty',
+        meta: '10 questions · 60s',
         leaderboardHint:
-            'The week counts the last 7 days. Ties go to the faster finish.',
+            'The weekly board counts the last 7 days. Ties go to the faster finish.',
         startButton: 'Start the blitz',
-        loginPrompt: 'Sign in to play timed mode.',
+        loginPrompt: 'Sign in to play Blitz.',
         loginLink: 'Sign in',
     },
     survivalMode: {
@@ -93,9 +94,9 @@ export const enDictionary = {
         title: 'Survival',
         description:
             'A hit feeds the clock. A miss eats it. Zero ends the wave.',
-        meta: '12 · 20s to start · difficulty',
+        meta: '12 questions · 20s to start',
         startButton: 'Start the wave',
-        loginPrompt: 'Sign in to play survival.',
+        loginPrompt: 'Sign in to play Survival.',
         loginLink: 'Sign in',
         remainingLabel: 'Time left',
         expiredLabel: 'Time is up',
@@ -427,11 +428,12 @@ export const enDictionary = {
         setupDescription: 'Four arenas. Memory on the line.',
         classicEyebrow: 'No timer',
         classicTitle: 'Classic',
-        classicDescription: 'No clock. Your pace, your set.',
-        classicMeta: 'No time limit · your set',
-        classicLeaderboardHint: 'The week counts games from the last 7 days.',
+        classicDescription:
+            'No timer, no rush. You pick the difficulty and how many questions.',
+        classicMeta: '3, 5 or 10 questions',
+        classicLeaderboardHint: 'The weekly board counts the last 7 days.',
         difficultyLabel: 'Difficulty',
-        questionCountLabel: 'Question count',
+        questionCountLabel: 'Questions',
         progressAnsweredLabel: 'Answered',
         timedRemainingLabel: 'Time left',
         timedExpiredLabel: 'Time is up',
@@ -448,10 +450,12 @@ export const enDictionary = {
         medium: 'Medium',
         hard: 'Hard',
         mixed: 'Mixed',
-        mixedSplitMeta3: 'Mix: 1 easy + 1 medium + 1 hard · points 1 / 2 / 3',
-        mixedSplitMeta5: 'Mix: 2 easy + 2 medium + 1 hard · points 1 / 2 / 3',
+        mixedSplitMeta3:
+            '1 easy · 1 medium · 1 hard — worth 1, 2 and 3 points',
+        mixedSplitMeta5:
+            '2 easy · 2 medium · 1 hard — worth 1, 2 and 3 points',
         mixedSplitMeta10:
-            'Mix: 4 easy + 3 medium + 3 hard · points 1 / 2 / 3',
+            '4 easy · 3 medium · 3 hard — worth 1, 2 and 3 points',
         startButton: 'Start classic',
         sessionTitle: 'Quiz session',
         resultTitle: 'Quiz result',

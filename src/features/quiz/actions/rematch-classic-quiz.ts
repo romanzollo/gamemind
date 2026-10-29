@@ -6,7 +6,7 @@
  *
  * Settle 500ms перед pick: form POST идёт с `/result/:id` сразу после
  * тяжёлого submit/result Direct TLS; без паузы Windows+Neon часто даёт
- * ложный DB_TIMEOUT и кнопка висит на «Подождите…» ~25с.
+ * ложный DB_TIMEOUT и кнопка ~25с висит в pending.
  */
 
 'use server';

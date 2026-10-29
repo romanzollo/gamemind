@@ -3,7 +3,8 @@ import type { Dictionary } from './dictionary';
 export const ruDictionary: Dictionary = {
     metadata: {
         title: 'GameMind',
-        description: 'Платформа викторин о видеоиграх',
+        description:
+            'Квиз по видеоиграм: угадай игру по скриншоту, блиц на минуту, выживание и челлендж дня.',
     },
     nav: {
         home: 'Главная',
@@ -30,7 +31,7 @@ export const ruDictionary: Dictionary = {
     common: {
         loading: 'Загрузка…',
         submitting: 'Отправка…',
-        working: 'Подождите…',
+        working: 'Секунду…',
         openMenu: 'Открыть меню',
         closeMenu: 'Закрыть меню',
         skipToContent: 'Перейти к содержимому',
@@ -52,7 +53,7 @@ export const ruDictionary: Dictionary = {
         title: 'GameMind',
         headline: 'Вспомни игры, которые прошёл',
         description:
-            'Скриншоты, факты, серии и детали из видеоигр. Отвечай быстро, собирай очки и смотри, выдержит ли память проверку.',
+            'Угадывай игры по скриншотам, вспоминай детали и набирай очки. Сложнее вопрос — больше очков.',
         cta: 'Выбрать режим',
         ctaAllModes: 'Все режимы',
         dailyTease: 'Челлендж дня →',
@@ -63,29 +64,29 @@ export const ruDictionary: Dictionary = {
         eyebrow: 'Сегодня',
         title: 'Челлендж дня',
         description: 'Общий сет. Одна попытка. Реванш — завтра.',
-        meta: 'Средне · 10 · 1 попытка',
+        meta: '10 вопросов · средне · 1 попытка',
         startButton: 'Принять вызов',
         continueButton: 'Продолжить челлендж',
         viewResultButton: 'Смотреть результат',
-        loginPrompt: 'Войдите, чтобы сыграть сегодняшний челлендж.',
+        loginPrompt: 'Войди, чтобы сыграть челлендж дня.',
         loginLink: 'Войти',
         unavailablePool:
-            'Сегодня челлендж недоступен — в пуле мало опубликованных вопросов.',
+            'Сегодня челлендж не собрался: не хватило вопросов. Пока можно сыграть в другой режим.',
         attemptAbandoned:
             'Попытка на сегодня уже закрыта. Завтра будет новый челлендж.',
         completedScore: 'Очки: {score} · {correct}/{total}',
-        boardTitle: 'Рейтинг сегодня',
+        boardTitle: 'Рейтинг дня',
         boardEmpty: 'Арена пуста. Самое время занять первое место.',
     },
     timedMode: {
         eyebrow: 'На время',
         title: 'Блиц',
         description: 'Десять вопросов. Минута на всё. Паузы нет.',
-        meta: '10 · 60 сек · сложность',
+        meta: '10 вопросов · 60 сек',
         leaderboardHint:
-            'Неделя считает последние 7 дней. Ничья — кто быстрее.',
+            'В рейтинге недели — игры за 7 дней. При равных очках выше тот, кто быстрее.',
         startButton: 'Начать блиц',
-        loginPrompt: 'Войдите, чтобы сыграть режим на время.',
+        loginPrompt: 'Войди, чтобы сыграть в Блиц.',
         loginLink: 'Войти',
     },
     survivalMode: {
@@ -93,9 +94,9 @@ export const ruDictionary: Dictionary = {
         title: 'Выживание',
         description:
             'Верный ответ дарит секунды. Ошибка их ест. Ноль — конец волны.',
-        meta: '12 · старт 20 сек · сложность',
+        meta: '12 вопросов · 20 сек на старте',
         startButton: 'Начать волну',
-        loginPrompt: 'Войдите, чтобы сыграть на выживание.',
+        loginPrompt: 'Войди, чтобы сыграть в Выживание.',
         loginLink: 'Войти',
         remainingLabel: 'Осталось',
         expiredLabel: 'Время вышло',
@@ -441,11 +442,12 @@ export const ruDictionary: Dictionary = {
         setupDescription: 'Четыре арены. Память на кону.',
         classicEyebrow: 'Без таймера',
         classicTitle: 'Классика',
-        classicDescription: 'Без часов. Свой темп, свой набор.',
-        classicMeta: 'Без лимита · свой набор',
-        classicLeaderboardHint: 'Неделя считает игры за последние 7 дней.',
+        classicDescription:
+            'Ни таймера, ни спешки. Сложность и число вопросов выбираешь сам.',
+        classicMeta: '3, 5 или 10 вопросов',
+        classicLeaderboardHint: 'В рейтинге недели — игры за 7 дней.',
         difficultyLabel: 'Сложность',
-        questionCountLabel: 'Количество вопросов',
+        questionCountLabel: 'Сколько вопросов',
         progressAnsweredLabel: 'Отвечено',
         timedRemainingLabel: 'Осталось',
         timedExpiredLabel: 'Время вышло',
@@ -463,11 +465,11 @@ export const ruDictionary: Dictionary = {
         hard: 'Сложно',
         mixed: 'Смешанная',
         mixedSplitMeta3:
-            'Смесь: 1 легко + 1 средне + 1 сложно · очки 1 / 2 / 3',
+            '1 лёгкий · 1 средний · 1 сложный — 1, 2 и 3 очка',
         mixedSplitMeta5:
-            'Смесь: 2 легко + 2 средне + 1 сложно · очки 1 / 2 / 3',
+            '2 лёгких · 2 средних · 1 сложный — 1, 2 и 3 очка',
         mixedSplitMeta10:
-            'Смесь: 4 легко + 3 средне + 3 сложно · очки 1 / 2 / 3',
+            '4 лёгких · 3 средних · 3 сложных — 1, 2 и 3 очка',
         startButton: 'Начать классику',
         sessionTitle: 'Квиз-сессия',
         resultTitle: 'Результат квиза',
