@@ -1,0 +1,1002 @@
+{
+    "version": 1,
+    "note": "Аудит банка 29 окт 2026, часть 3: стиль формулировок (латиница, слэши, скобки, длина) и неверные варианты без ссылок «как в X» на другие игры. Применять scripts/apply-question-fixes.cjs; реимпорт запрещён.",
+    "fixes": [
+        {
+            "key": "audit-p3-079-sekiro-shinobi-prosthetic",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какой инструмент помогает Секиро сражаться после потери руки?",
+            "matchRu": [
+                "Протез с инструментами",
+                "Эстус-фляга",
+                "Фляга крови",
+                "Камень душ"
+            ],
+            "options": [
+                {
+                    "fromRu": "Протез с инструментами",
+                    "ru": "Протез синоби",
+                    "en": "Shinobi Prosthetic"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-092-myst-kvest",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая компания создала культовый adventure Myst (1993)?",
+            "matchRu": [
+                "Cyan",
+                "LucasArts",
+                "Sierra On-Line",
+                "Infocom"
+            ],
+            "question": {
+                "ru": "Какая компания создала культовый квест Myst (1993)?",
+                "en": "Which company created the cult adventure Myst (1993)?"
+            }
+        },
+        {
+            "key": "audit-p3-097-grim-fandango-kvest",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая студия выпустила adventure Grim Fandango (1998)?",
+            "matchRu": [
+                "LucasArts",
+                "Sierra On-Line",
+                "Tim Schafer’s Double Fine",
+                "Telltale Games"
+            ],
+            "question": {
+                "ru": "Какая студия выпустила квест Grim Fandango (1998)?",
+                "en": "Which studio released the adventure Grim Fandango (1998)?"
+            },
+            "options": [
+                {
+                    "fromRu": "Tim Schafer’s Double Fine",
+                    "ru": "Double Fine Productions",
+                    "en": "Double Fine Productions"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-100-snatcher-kvest",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Кто руководил разработкой киберпанк-adventure Snatcher?",
+            "matchRu": [
+                "Хидэо Кодзима",
+                "Синдзи Миками",
+                "Юдзи Хории",
+                "Сигэру Миямото"
+            ],
+            "question": {
+                "ru": "Кто руководил разработкой киберпанк-квеста Snatcher?",
+                "en": "Who directed the cyberpunk adventure Snatcher?"
+            }
+        },
+        {
+            "key": "audit-p3-101-outcast-appeal",
+            "difficulty": "HARD",
+            "matchQuestionRu": "В каком году вышла оригинальная Outcast (Appeal)?",
+            "matchRu": [
+                "1999",
+                "1996",
+                "2001",
+                "2004"
+            ],
+            "question": {
+                "ru": "В каком году вышла оригинальная Outcast от бельгийской студии Appeal?",
+                "en": "In what year did the original Outcast by Belgian studio Appeal come out?"
+            }
+        },
+        {
+            "key": "audit-p3-127-death-stranding-die-hardman",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут курьера — главного героя Death Stranding?",
+            "matchRu": [
+                "Сэм Портер Бриджес",
+                "Хиггс",
+                "Клифф",
+                "Дие-Хардман"
+            ],
+            "options": [
+                {
+                    "fromRu": "Дие-Хардман",
+                    "ru": "Дайхардмэн",
+                    "en": "Die-Hardman"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-134-journey-adventure",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какая студия создала атмосферный adventure Journey?",
+            "matchRu": [
+                "thatgamecompany",
+                "Playdead",
+                "Team Ico",
+                "Giant Squid"
+            ],
+            "question": {
+                "ru": "Какая студия создала атмосферное приключение Journey?",
+                "en": "Which studio created the atmospheric adventure Journey?"
+            }
+        },
+        {
+            "key": "audit-p3-144-splinter-cell-anb",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как зовут агента NSA — главного героя серии Splinter Cell?",
+            "matchRu": [
+                "Сэм Фишер",
+                "Солид Снейк",
+                "Джейсон Борн",
+                "Агент 47"
+            ],
+            "question": {
+                "ru": "Как зовут агента АНБ — главного героя серии Splinter Cell?",
+                "en": "What is the name of the NSA agent protagonist of the Splinter Cell series?"
+            }
+        },
+        {
+            "key": "audit-p3-165-day-of-the-tentacle-kvest",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая студия выпустила adventure Day of the Tentacle?",
+            "matchRu": [
+                "LucasArts",
+                "Sierra On-Line",
+                "Revolution Software",
+                "Telltale Games"
+            ],
+            "question": {
+                "ru": "Какая студия выпустила квест Day of the Tentacle?",
+                "en": "Which studio released the adventure Day of the Tentacle?"
+            }
+        },
+        {
+            "key": "audit-p3-346-gta3-full-3d",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какая часть GTA первой перевела серию в полноценный 3D open-world (а не top-down)?",
+            "matchRu": [
+                "Grand Theft Auto III",
+                "Grand Theft Auto 2",
+                "Grand Theft Auto: Vice City",
+                "Grand Theft Auto IV"
+            ],
+            "question": {
+                "ru": "Какая часть GTA первой перевела серию в полноценное 3D с открытым миром — вместо вида сверху?",
+                "en": "Which GTA entry first moved the series to full 3D with an open world instead of a top-down view?"
+            }
+        },
+        {
+            "key": "audit-p3-355-fable-albion-world",
+            "difficulty": "EASY",
+            "matchQuestionRu": "В каком вымышленном мире / королевстве происходит действие классических Fable?",
+            "matchRu": [
+                "Альбион",
+                "Тамириэль",
+                "Тедас",
+                "Азерот"
+            ],
+            "question": {
+                "ru": "В каком вымышленном мире происходит действие классических Fable?",
+                "en": "In which fictional world are the classic Fable games set?"
+            }
+        },
+        {
+            "key": "audit-p3-357-fable2-dog",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Какой постоянный компаньон помогает герою в Fable II (поиск сокровищ, бой, эмоции)?",
+            "matchRu": [
+                "Собака",
+                "Дракон",
+                "Голем",
+                "Фея"
+            ],
+            "question": {
+                "ru": "Какой верный спутник ищет клады, дерётся и радуется вместе с героем Fable II?",
+                "en": "Which loyal companion digs up treasure, fights, and celebrates alongside the hero of Fable II?"
+            }
+        },
+        {
+            "key": "audit-p3-369-duke3d-atomic",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как называется расширенное издание Duke Nukem 3D с доп. эпизодом и оружием (не Forever)?",
+            "matchRu": [
+                "Atomic Edition",
+                "Game of the Year Edition",
+                "Definitive Director’s Cut",
+                "Complete Platinum Hits"
+            ],
+            "question": {
+                "ru": "Как называется расширенное издание Duke Nukem 3D с четвёртым эпизодом и новым оружием?",
+                "en": "What is the expanded Duke Nukem 3D release with a fourth episode and new weapons called?"
+            }
+        },
+        {
+            "key": "audit-p3-399-hitman-blood-money-peak",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какую часть Hitman 2000-х часто называют пиком классической серии до перезапуска WOA?",
+            "matchRu": [
+                "Hitman: Blood Money",
+                "Hitman: Absolution",
+                "Hitman Go",
+                "Hitman: Sniper Challenge"
+            ],
+            "question": {
+                "ru": "Какую часть Hitman до перезапуска 2016 года фанаты чаще всего называют вершиной классической серии?",
+                "en": "Which pre-2016 Hitman game do fans most often call the peak of the classic series?"
+            },
+            "options": [
+                {
+                    "fromRu": "Hitman Go",
+                    "ru": "Hitman: Contracts",
+                    "en": "Hitman: Contracts"
+                },
+                {
+                    "fromRu": "Hitman: Sniper Challenge",
+                    "ru": "Hitman: Codename 47",
+                    "en": "Hitman: Codename 47"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-403-tomb-raider-reboot-year",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "В каком году вышел перезапуск Tomb Raider от Crystal Dynamics, с которого началась «survivor»-трилогия?",
+            "matchRu": [
+                "2013",
+                "2001",
+                "1996",
+                "2020"
+            ],
+            "question": {
+                "ru": "В каком году вышел перезапуск Tomb Raider от Crystal Dynamics — начало трилогии о юной Ларе?",
+                "en": "In which year did Crystal Dynamics’ Tomb Raider reboot, the start of the trilogy about a young Lara, come out?"
+            }
+        },
+        {
+            "key": "audit-p3-412-dragon-age-thedas",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как называется континент / мир, где происходит серия Dragon Age?",
+            "matchRu": [
+                "Тедас",
+                "Тамириэль",
+                "Азерот",
+                "Санктуарий"
+            ],
+            "question": {
+                "ru": "Как называется континент, где происходит серия Dragon Age?",
+                "en": "What is the name of the continent where the Dragon Age series is set?"
+            }
+        },
+        {
+            "key": "audit-p3-504-crash-aku-aku",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Новичок в Crash Bandicoot ловит маску Aku Aku и думает, что это просто очки. На деле она обычно…",
+            "matchRu": [
+                "Держит лишний удар: маска ломается, Крэш остаётся жив",
+                "Сразу открывает секретный выход с уровня",
+                "Навсегда делает Крэша неуязвимым до конца игры",
+                "Меняет ящики с TNT на обычные фрукты"
+            ],
+            "question": {
+                "ru": "Новичок в Crash Bandicoot хватает маску Аку-Аку, думая, что это просто очки. Что она делает на самом деле?",
+                "en": "A Crash Bandicoot newbie grabs an Aku Aku mask thinking it’s just points. What does it actually do?"
+            }
+        },
+        {
+            "key": "audit-p3-522-frostpunk-hope-discontent",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Город в морозе в Frostpunk ещё стоит, уголь есть, но на панели два счётчика — надежда и недовольство. Что будет, если один рухнет в ноль, а другой зашкалит?",
+            "matchRu": [
+                "Люди теряют веру в лидера: это штатный путь к провалу города",
+                "Счётчики только для концовки: на зиму и смены они не влияют",
+                "Надежда в нуле включает бесконечный рабочий день без штрафов",
+                "Высокое недовольство автоматически строит новые дома"
+            ],
+            "question": {
+                "ru": "В Frostpunk на панели два счётчика — надежда и недовольство. Что будет, если надежда упадёт до нуля или недовольство зашкалит?",
+                "en": "Frostpunk’s panel has two meters: Hope and Discontent. What happens if Hope drops to zero or Discontent maxes out?"
+            }
+        },
+        {
+            "key": "audit-p3-446-bloodborne-no-estus",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Как в Bloodborne сразу после удара вернуть часть только что снятого здоровья?",
+            "matchRu": [
+                "Быстро атаковать в ответ, пока здоровье ещё «отыгрывается» (Rally)",
+                "Постоять в укрытии, пока щит сам не восстановится",
+                "Отдохнуть у фонаря, не продолжая бой",
+                "Выпить эстус, как в Dark Souls"
+            ],
+            "options": [
+                {
+                    "fromRu": "Выпить эстус, как в Dark Souls",
+                    "ru": "Выпить эстус из фляги",
+                    "en": "Drink Estus from the flask"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-449-hollow-knight-soul",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Откуда в Hollow Knight берётся Душа на Фокус и заклинания?",
+            "matchRu": [
+                "С ударов ногтем по врагам",
+                "Только сидя на скамейке",
+                "Автоматически со временем, как щит Halo",
+                "Из шкалы голода после еды"
+            ],
+            "options": [
+                {
+                    "fromRu": "Автоматически со временем, как щит Halo",
+                    "ru": "Копится сама со временем, даже вне боя",
+                    "en": "It refills on its own over time, even out of combat"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-450-nioh-ki-pulse",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Зачем в Nioh ловят Ki Pulse, когда после серии ударов Ки почти на нуле?",
+            "matchRu": [
+                "Вернуть часть Ки (выносливости) и быстрее восстановиться",
+                "Заполнить стойкость врага для добивания, как Posture в Sekiro",
+                "Пополнить все фляги эстуса",
+                "Сохранить игру на чекпоинте"
+            ],
+            "options": [
+                {
+                    "fromRu": "Заполнить стойкость врага для добивания, как Posture в Sekiro",
+                    "ru": "Мгновенно убить врага, если у него мало здоровья",
+                    "en": "Instantly kill an enemy who is low on health"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-452-monster-hunter-sharpness",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Как в Monster Hunter бьют атаки, когда цвет остроты оружия сильно сполз вниз?",
+            "matchRu": [
+                "Удары чаще отскакивают и бьют слабее — оружие нужно точить",
+                "Монстр сам становится питомцем, как в Pokémon",
+                "Оружие навсегда ломается и пропадает из инвентаря",
+                "Выносливость перестаёт тратиться"
+            ],
+            "options": [
+                {
+                    "fromRu": "Монстр сам становится питомцем, как в Pokémon",
+                    "ru": "Монстр начинает чаще убегать в другую зону",
+                    "en": "The monster starts fleeing to another area more often"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-453-bayonetta-witch-time",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Bayonetta включает уклон в самый последний кадр перед ударом?",
+            "matchRu": [
+                "Время вокруг замедляется (Witch Time)",
+                "Заполняется стойкость врага для добивания, как в Sekiro",
+                "Включается bullet time до конца уровня, как в Max Payne",
+                "Байонетта теряет все магические очки"
+            ],
+            "options": [
+                {
+                    "fromRu": "Заполняется стойкость врага для добивания, как в Sekiro",
+                    "ru": "Следующий удар наносит двойной урон",
+                    "en": "Your next hit deals double damage"
+                },
+                {
+                    "fromRu": "Включается bullet time до конца уровня, как в Max Payne",
+                    "ru": "Байонетта получает щит на один удар",
+                    "en": "Bayonetta gains a one-hit shield"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-457-superhot-time",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в SUPERHOT происходит со временем, пока ты стоишь на месте?",
+            "matchRu": [
+                "Время почти останавливается",
+                "Враги ускоряются, пока ты не двигаешься",
+                "Время замедляется только после выстрела, как в Max Payne",
+                "Нужно нажать перезарядку, чтобы время снова пошло"
+            ],
+            "options": [
+                {
+                    "fromRu": "Время замедляется только после выстрела, как в Max Payne",
+                    "ru": "Время замедляется, только когда стреляешь",
+                    "en": "Time slows only while you shoot"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-458-subnautica-oxygen",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Subnautica делает шкала кислорода, пока плывёшь под водой без техники?",
+            "matchRu": [
+                "Она падает; если кончится — начинаешь тонуть",
+                "Кислород бесконечен, пока видно солнце",
+                "Нужно постоянно есть, как при голоде в Minecraft",
+                "Пустая шкала телепортирует на поверхность"
+            ],
+            "options": [
+                {
+                    "fromRu": "Нужно постоянно есть, как при голоде в Minecraft",
+                    "ru": "Шкалу пополняет еда, а не воздух",
+                    "en": "Food refills the bar, not air"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-459-smash-percent",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Super Smash Bros. значит высокий процент на портрете для следующего сильного удара?",
+            "matchRu": [
+                "Его легче выбить за край арены",
+                "У него больше очков здоровья, как в Street Fighter",
+                "Автоматически включается финальный смэш",
+                "Процент сбрасывается после каждого удара"
+            ],
+            "options": [
+                {
+                    "fromRu": "У него больше очков здоровья, как в Street Fighter",
+                    "ru": "У него больше запаса здоровья",
+                    "en": "They have more health left"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-460-stardew-energy",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Stardew Valley происходит с энергией, пока копаешь, рубишь и поливаешь?",
+            "matchRu": [
+                "Она тратится; при нуле работать инструментами почти нельзя — можно упасть без сил",
+                "Она растёт от работы, как опыт",
+                "Энергия нужна только ночью",
+                "Пустая шкала даёт суперскорость по ферме"
+            ],
+            "options": [
+                {
+                    "fromRu": "Она тратится; при нуле работать инструментами почти нельзя — можно упасть без сил",
+                    "ru": "Тратится; на нуле работать почти нельзя, можно упасть без сил",
+                    "en": "It drains; at zero you can barely work and may collapse"
+                },
+                {
+                    "fromRu": "Энергия нужна только ночью",
+                    "ru": "Её тратит только оружие, а лейка и мотыга — бесплатно",
+                    "en": "Only weapons spend it; the watering can and hoe are free"
+                },
+                {
+                    "fromRu": "Пустая шкала даёт суперскорость по ферме",
+                    "ru": "На нуле она сама восполняется к полудню",
+                    "en": "At zero it refills by itself around noon"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-461-gta-wanted-stars",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Как в Grand Theft Auto меняется погоня, когда звёзд розыска становится больше?",
+            "matchRu": [
+                "Полиция преследует агрессивнее и появляется больше единиц",
+                "Игра сохраняется, как у костра в Dark Souls",
+                "Карта сужается штормом, как в королевской битве",
+                "Звёзды сразу превращаются в наличные"
+            ],
+            "options": [
+                {
+                    "fromRu": "Игра сохраняется, как у костра в Dark Souls",
+                    "ru": "Игра сама сохраняется на месте",
+                    "en": "The game autosaves on the spot"
+                },
+                {
+                    "fromRu": "Карта сужается штормом, как в королевской битве",
+                    "ru": "Доступная часть карты сжимается",
+                    "en": "The playable part of the map shrinks"
+                },
+                {
+                    "fromRu": "Звёзды сразу превращаются в наличные",
+                    "ru": "Полиция перестаёт стрелять и только преследует",
+                    "en": "The police stop shooting and only follow you"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-462-mario-kart-drift",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в современных Mario Kart даёт долгий занос, если отпустить его на искрах?",
+            "matchRu": [
+                "Машина получает короткое ускорение",
+                "Искры значат перегрев, и скорость падает",
+                "Соперники замирают до конца круга",
+                "Занос тратит выносливость, как лазание в Breath of the Wild"
+            ],
+            "options": [
+                {
+                    "fromRu": "Соперники замирают до конца круга",
+                    "ru": "Соперники сзади теряют скорость",
+                    "en": "Racers behind you lose speed"
+                },
+                {
+                    "fromRu": "Занос тратит выносливость, как лазание в Breath of the Wild",
+                    "ru": "Занос тратит шкалу выносливости машины",
+                    "en": "Drifting drains the kart’s stamina bar"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-463-rocket-league-boost",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Зачем в Rocket League подбирать светящиеся подушки и шары на арене?",
+            "matchRu": [
+                "Чтобы пополнить ускорение и быстрее ехать или взлетать",
+                "Чтобы щит сам восстановился, как в Halo",
+                "Чтобы мяч приклеился к машине до гола",
+                "Чтобы получить дополнительную жизнь"
+            ],
+            "options": [
+                {
+                    "fromRu": "Чтобы щит сам восстановился, как в Halo",
+                    "ru": "Чтобы восстановить прочность машины",
+                    "en": "To repair your car’s durability"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-464-bioshock-eve",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в BioShock тратится, когда запускаешь плазмид в бою?",
+            "matchRu": [
+                "Запас Евы; его пополняют синими шприцами",
+                "АДАМ, которым покупают новые плазмиды",
+                "Кислород, как под водой в Subnautica",
+                "Только обычные патроны"
+            ],
+            "options": [
+                {
+                    "fromRu": "Кислород, как под водой в Subnautica",
+                    "ru": "Запас воздуха, ведь город под водой",
+                    "en": "Your air supply, since the city is underwater"
+                },
+                {
+                    "fromRu": "Только обычные патроны",
+                    "ru": "Обычные патроны из магазина",
+                    "en": "Regular ammo from your magazine"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-465-dishonored-mana",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в Dishonored ограничивает, как часто можно использовать сверхъестественные силы?",
+            "matchRu": [
+                "Мана: она медленно копится и пополняется эликсирами",
+                "Только патроны пистолета",
+                "Щит, который сам регенерирует в укрытии, как в Halo",
+                "Число жизней, как в классическом Mario"
+            ],
+            "options": [
+                {
+                    "fromRu": "Только патроны пистолета",
+                    "ru": "Патроны пистолета",
+                    "en": "Pistol ammo"
+                },
+                {
+                    "fromRu": "Щит, который сам регенерирует в укрытии, как в Halo",
+                    "ru": "Щит, который восстанавливается в укрытии",
+                    "en": "A shield that recharges in cover"
+                },
+                {
+                    "fromRu": "Число жизней, как в классическом Mario",
+                    "ru": "Число оставшихся жизней",
+                    "en": "Your remaining lives"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-466-dead-space-stasis",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в Dead Space делает луч stasis с некроморфом?",
+            "matchRu": [
+                "Он на короткое время становится очень медленным",
+                "Он сразу расчленяется без выстрелов",
+                "Он замирает до конца уровня",
+                "Время замедляется для всего корабля, как в Max Payne"
+            ],
+            "options": [
+                {
+                    "fromRu": "Время замедляется для всего корабля, как в Max Payne",
+                    "ru": "Время замедляется для всех, кроме Айзека",
+                    "en": "Time slows for everyone except Isaac"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-467-cuphead-parry",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в Cuphead даёт прыжок в такт по розовому снаряду?",
+            "matchRu": [
+                "Супер-шкала растёт, и этот снаряд тебя не ранит",
+                "Время замедляется, как при уклонении в Bayonetta",
+                "Босс сразу проигрывает раунд",
+                "Ты получаешь дополнительную жизнь"
+            ],
+            "options": [
+                {
+                    "fromRu": "Время замедляется, как при уклонении в Bayonetta",
+                    "ru": "Время вокруг ненадолго замедляется",
+                    "en": "Time briefly slows down"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-469-fallout-vats",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в Fallout 3 / New Vegas / 4 тратится на выстрелы по частям тела в режиме V.A.T.S., где время почти замирает?",
+            "matchRu": [
+                "Тратятся очки действия, затем выстрелы идут по очереди",
+                "Время замедляется только после выстрела, как в Max Payne",
+                "Патроны становятся бесконечными до конца локации",
+                "Враги сами подставляют слабые места"
+            ],
+            "options": [
+                {
+                    "fromRu": "Время замедляется только после выстрела, как в Max Payne",
+                    "ru": "Тратятся патроны из отдельного запаса V.A.T.S.",
+                    "en": "Ammo from a separate V.A.T.S. reserve is spent"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-470-sifu-aging",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Sifu происходит с героем, если после смерти принять воскрешение и продолжить бой?",
+            "matchRu": [
+                "Он становится старше: бьёт сильнее, но выживаемость обычно хуже",
+                "Тратится заряд «Непокорности смерти», как в Hades",
+                "День отматывается на 22 минуты, как в Outer Wilds",
+                "Игра сохраняется у костра, как в Dark Souls"
+            ],
+            "options": [
+                {
+                    "fromRu": "Тратится заряд «Непокорности смерти», как в Hades",
+                    "ru": "Он возрождается у последнего алтаря, бой начинается заново",
+                    "en": "He respawns at the last shrine and the fight restarts"
+                },
+                {
+                    "fromRu": "День отматывается на 22 минуты, как в Outer Wilds",
+                    "ru": "Враги вокруг тоже воскрешаются с полным здоровьем",
+                    "en": "Nearby enemies also come back at full health"
+                },
+                {
+                    "fromRu": "Игра сохраняется у костра, как в Dark Souls",
+                    "ru": "Ничего не меняется: смерть без штрафа",
+                    "en": "Nothing changes: death has no penalty"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-471-returnal-malfunction",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Какой риск в Returnal несёт расходник или перегруз станка за лишнюю награду?",
+            "matchRu": [
+                "Может появиться сбой с условием, как его снять",
+                "Сразу теряется весь забег без возврата к циклу",
+                "Оружие сразу становится максимально острым, как после точки в Monster Hunter",
+                "Щит сам регенерирует в укрытии, как в Halo"
+            ],
+            "options": [
+                {
+                    "fromRu": "Может появиться сбой с условием, как его снять",
+                    "ru": "Может появиться сбой — его снимают, выполнив условие",
+                    "en": "You may get a malfunction that you clear by meeting a condition"
+                },
+                {
+                    "fromRu": "Оружие сразу становится максимально острым, как после точки в Monster Hunter",
+                    "ru": "Оружие сразу получает максимальный уровень",
+                    "en": "Your weapon instantly hits max level"
+                },
+                {
+                    "fromRu": "Щит сам регенерирует в укрытии, как в Halo",
+                    "ru": "Ничего: награда даётся без риска",
+                    "en": "Nothing: the reward comes with no risk"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-473-into-the-breach-telegraph",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Into the Breach заранее видно на клетках — ещё до хода твоих мехов?",
+            "matchRu": [
+                "Куда враги ударят — можно закрыть клетку, толкнуть цель или увести союзника",
+                "Только туман войны, как в классической XCOM",
+                "Бой идёт в реальном времени, как в StarCraft",
+                "Цикл на 22 минуты, как в Outer Wilds"
+            ],
+            "options": [
+                {
+                    "fromRu": "Только туман войны, как в классической XCOM",
+                    "ru": "Ничего: клетки скрыты туманом войны, пока мехи не подойдут",
+                    "en": "Nothing: tiles stay under fog of war until your mechs get close"
+                },
+                {
+                    "fromRu": "Бой идёт в реальном времени, как в StarCraft",
+                    "ru": "Только запас здоровья врагов, а их ходы остаются сюрпризом",
+                    "en": "Only the enemies’ health; their moves stay a surprise"
+                },
+                {
+                    "fromRu": "Цикл на 22 минуты, как в Outer Wilds",
+                    "ru": "Какой мех получит больше опыта, если первым пойдёт в атаку",
+                    "en": "Which mech will earn the most XP if it attacks first"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-474-darkest-dungeon-stress",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Darkest Dungeon случается с героем, когда шкала стресса забита до упора?",
+            "matchRu": [
+                "Срыв: вредный аффект, а при полном зашкале — риск сердечного приступа",
+                "Тратится «Непокорность смерти», как в Hades",
+                "Здоровье само растёт от сытости, как в Minecraft",
+                "Герой становится неуязвимым до конца экспедиции"
+            ],
+            "options": [
+                {
+                    "fromRu": "Тратится «Непокорность смерти», как в Hades",
+                    "ru": "Герой тратит одну из жизней и встаёт",
+                    "en": "The hero spends a life and gets back up"
+                },
+                {
+                    "fromRu": "Здоровье само растёт от сытости, как в Minecraft",
+                    "ru": "Здоровье полностью восстанавливается",
+                    "en": "Health fully restores"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-475-mordor-nemesis",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Middle-earth: Shadow of Mordor происходит с урком, который сумел тебя убить?",
+            "matchRu": [
+                "Он может вырасти в ранге, запомнить победу и позже хвастаться ею",
+                "Он становится твоим питомцем, как в Pokémon",
+                "Его лицо меняется от морали, как в Fable",
+                "Ты автоматически надеваешь его одежду, как маскировка в Hitman"
+            ],
+            "options": [
+                {
+                    "fromRu": "Он становится твоим питомцем, как в Pokémon",
+                    "ru": "Он исчезает из игры навсегда",
+                    "en": "He vanishes from the game for good"
+                },
+                {
+                    "fromRu": "Его лицо меняется от морали, как в Fable",
+                    "ru": "Он сразу становится вождём всей армии Саурона",
+                    "en": "He instantly becomes warchief of Sauron’s whole army"
+                },
+                {
+                    "fromRu": "Ты автоматически надеваешь его одежду, как маскировка в Hitman",
+                    "ru": "Его отряд распадается, а сам он уходит из региона",
+                    "en": "His squad disbands and he leaves the region"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-476-necrodancer-beat",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Crypt of the NecroDancer будет за шаг мимо доли музыки?",
+            "matchRu": [
+                "Ход срывается: действие не проходит, и ты уязвимее",
+                "Время замедляется, как уклонение в Bayonetta",
+                "Время почти останавливается, как в SUPERHOT",
+                "Автоматически включается неуязвимость до конца этажа"
+            ],
+            "options": [
+                {
+                    "fromRu": "Время замедляется, как уклонение в Bayonetta",
+                    "ru": "Музыка замедляется, давая шанс исправиться",
+                    "en": "The music slows to give you a chance to recover"
+                },
+                {
+                    "fromRu": "Время почти останавливается, как в SUPERHOT",
+                    "ru": "Враги пропускают свой ход",
+                    "en": "The enemies skip their turn"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-477-baba-is-you-rules",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что Baba Is You делает с правилами уровня, если сложить на поле новую фразу вроде «флаг есть победа»?",
+            "matchRu": [
+                "Правило уровня меняется — так открывают победу или ломают старое правило",
+                "Сохраняется импульс через портал, как в Portal",
+                "Запускается 22-минутный космический цикл",
+                "Слова дают только очки, правила поля не меняются"
+            ],
+            "options": [
+                {
+                    "fromRu": "Сохраняется импульс через портал, как в Portal",
+                    "ru": "Слова просто исчезают с поля",
+                    "en": "The words simply vanish from the field"
+                },
+                {
+                    "fromRu": "Запускается 22-минутный космический цикл",
+                    "ru": "Уровень перезапускается с начала",
+                    "en": "The level restarts from the beginning"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-479-fortnite-storm",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в Fortnite Battle Royale делает шторм со здоровьем, если остаться вне круга?",
+            "matchRu": [
+                "Здоровье постепенно тает, пока не вернёшься в круг",
+                "Кислород падает, как под водой, но HP не трогает",
+                "Появляется щит, который сам регенерирует без урона",
+                "Карта заливается чернилами, и это даёт очки территории"
+            ],
+            "options": [
+                {
+                    "fromRu": "Кислород падает, как под водой, но HP не трогает",
+                    "ru": "Падает только щит, а здоровье не трогается",
+                    "en": "Only your shield drops; health is untouched"
+                },
+                {
+                    "fromRu": "Карта заливается чернилами, и это даёт очки территории",
+                    "ru": "Тебя сразу выбивает из матча",
+                    "en": "You are instantly knocked out of the match"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-480-sims-needs",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Что в The Sims будет с симом, если долго не закрывать голод, гигиену и туалет?",
+            "matchRu": [
+                "Настроение падает, сим хуже себя чувствует, пока нужды не закроют",
+                "Сим получает запас энергии только от работы в поле, как на ферме",
+                "Все навыки сбрасываются до нуля после одной пропущенной нужды",
+                "Внешность сима навсегда меняется по шкале морали"
+            ],
+            "options": [
+                {
+                    "fromRu": "Сим получает запас энергии только от работы в поле, как на ферме",
+                    "ru": "Сим теряет работу на следующий день",
+                    "en": "The Sim loses their job the next day"
+                },
+                {
+                    "fromRu": "Внешность сима навсегда меняется по шкале морали",
+                    "ru": "Ничего: нужды влияют только на внешний вид",
+                    "en": "Nothing: needs only affect looks"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-486-persona5-weakness",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в Persona 5 даёт удар по слабости врага — в том же ходе?",
+            "matchRu": [
+                "Враг падает, и ты получаешь ещё одно действие",
+                "Тратится энергия хода, как в картах Slay the Spire",
+                "Срабатывает активная перезарядка магазина",
+                "Время вокруг замедляется, как Witch Time"
+            ],
+            "options": [
+                {
+                    "fromRu": "Тратится энергия хода, как в картах Slay the Spire",
+                    "ru": "Тратится больше SP, чем обычно",
+                    "en": "It costs more SP than usual"
+                },
+                {
+                    "fromRu": "Время вокруг замедляется, как Witch Time",
+                    "ru": "Атака бьёт по всем врагам сразу",
+                    "en": "The attack hits every enemy at once"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-487-xcom-cover",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Что в XCOM даёт солдату высокое укрытие, пока его не обошли с фланга?",
+            "matchRu": [
+                "По нему заметно сложнее попасть",
+                "Щит сам регенерирует, если постоять без урона",
+                "Ход врага показывают заранее, как телеграф удара",
+                "Туман войны снимается со всей карты сразу"
+            ],
+            "options": [
+                {
+                    "fromRu": "Ход врага показывают заранее, как телеграф удара",
+                    "ru": "Ход врага показывают заранее",
+                    "en": "The enemy’s next move is shown in advance"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-488-resident-evil-item-box",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Зачем в классическом Resident Evil лишнее кладут в сундук, а не несут всё с собой?",
+            "matchRu": [
+                "Слотов в инвентаре мало, крупные предметы занимают несколько клеток",
+                "Вещи в руках гниют от дождя, как груз под timefall",
+                "Полный инвентарь тратит ману сил на каждый шаг",
+                "Сундук — единственный чекпоинт, как костёр"
+            ],
+            "options": [
+                {
+                    "fromRu": "Вещи в руках гниют от дождя, как груз под timefall",
+                    "ru": "Вещи в инвентаре портятся, если слишком долго их носить",
+                    "en": "Items in your inventory spoil if you carry them too long"
+                },
+                {
+                    "fromRu": "Полный инвентарь тратит ману сил на каждый шаг",
+                    "ru": "Полный инвентарь замедляет героя и не даёт бегать",
+                    "en": "A full inventory slows your character and stops you from running"
+                },
+                {
+                    "fromRu": "Сундук — единственный чекпоинт, как костёр",
+                    "ru": "Сундук работает как точка сохранения, если положить в него вещь",
+                    "en": "The box acts as a save point once you put an item in it"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-490-gungeon-blank",
+            "difficulty": "MEDIUM",
+            "matchQuestionRu": "Зачем в Enter the Gungeon тратят редкий холостой патрон в комнате, полной пуль?",
+            "matchRu": [
+                "Он стирает снаряды на экране и часто отбрасывает врагов",
+                "Он лечит, если успеть ударить врага сразу после урона",
+                "Он заряжает SOUL для заклинания",
+                "Он даёт мини-ускорение, как искры после заноса"
+            ],
+            "options": [
+                {
+                    "fromRu": "Он даёт мини-ускорение, как искры после заноса",
+                    "ru": "Он даёт короткое ускорение для рывка",
+                    "en": "It gives a short dash speed boost"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-499-dont-starve-darkness",
+            "difficulty": "HARD",
+            "matchQuestionRu": "Что в Don't Starve будет, если ночью остаться совсем без света?",
+            "matchRu": [
+                "Из темноты бьёт невидимый урон, пока не зажжёшь источник света",
+                "Нужно выжечь тьму с врага фонариком, иначе пули не вредят",
+                "Кончается кислород, как под водой",
+                "Отряд ломается от стресса и получает срыв"
+            ],
+            "options": [
+                {
+                    "fromRu": "Кончается кислород, как под водой",
+                    "ru": "Персонаж засыпает до утра",
+                    "en": "Your character falls asleep until morning"
+                }
+            ]
+        },
+        {
+            "key": "audit-p3-505-street-fighter-super",
+            "difficulty": "EASY",
+            "matchQuestionRu": "Внизу экрана Street Fighter ползёт шкала — и после неё можно выпустить супер. Как её обычно наполняют?",
+            "matchRu": [
+                "Попаданиями и полученным уроном в этом раунде",
+                "Только предметом, который выбивается с арены",
+                "Она сама тикает раз в десять секунд, как ульта в MOBA",
+                "Её выдаёт судья между раундами, независимо от боя"
+            ],
+            "options": [
+                {
+                    "fromRu": "Она сама тикает раз в десять секунд, как ульта в MOBA",
+                    "ru": "Она сама растёт со временем раунда",
+                    "en": "It fills on its own as the round clock runs"
+                }
+            ]
+        }
+    ]
+}
