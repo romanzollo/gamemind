@@ -2063,6 +2063,45 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
 - **Known log noise:** `[Sentry] Failed to register diagnostics-channel injection
   hooks` on `next start` — affects spans only (tracing is off).
 
+### Prod smoke after deploy
+
+- **Decision:** Playwright (`e2e/`, `playwright.config.ts`) plays Classic EASY 3
+  and Blitz MIX (all answered → result **without** `clock=1`) on
+  `www.game-mind.ru` after every Vercel **Production** deployment.
+  Workflow `.github/workflows/prod-smoke.yml`, trigger `deployment_status`
+  (state `success`, environment `Production`) + manual `workflow_dispatch`.
+- **Why `deployment_status`:** Vercel already creates GitHub Deployments
+  (vercel[bot]) — no Vercel token or deploy hook needed in GitHub.
+- **Why www, not the deployment URL:** per-deployment `*.vercel.app` URLs sit
+  behind Deployment Protection, and auth cookies are host-bound. Cost: www may
+  still serve the previous build for a moment after "Ready" → the workflow polls
+  `GET /api/version` (`VERCEL_GIT_COMMIT_SHA`, no DB, no auth) until it returns
+  the deployment sha (≤ 3 min), then plays.
+- **Service player:** a regular USER registered on www, flagged
+  `User.isTestAccount = true` (migration `20261029120000_user_is_test_account`,
+  `scripts/mark-test-account.cjs`). No UI toggle on purpose.
+- **Leaderboards hide** `isTestAccount = true` **and** `isActive = false`
+  (`LEADERBOARD_VISIBLE_USER_SQL`, `src/entities/user/leaderboard-visibility.ts`)
+  in all three board queries (best scores, Survival runs, Daily). The filter sits
+  on the `User` join after `DISTINCT ON (userId)`, so hiding one user never
+  shifts anyone else's best result.
+- **Future question stats** (difficulty from answers) must also exclude
+  `isTestAccount`: smoke always picks the first option.
+- **Selectors:** `data-testid` (`login-form`, `classic-setup`, `blitz-setup`,
+  `quiz-submit`, `quiz-result-score`) + ARIA roles (`radiogroup`), never UI copy —
+  the copy audit must not turn smoke red. Tests wait for React hydration
+  (`__reactProps$` on the node, `e2e/hydration.ts`) instead of sleeping.
+- **Public repo → public artifacts:** CI has trace/video off (a trace carries the
+  session cookie and the login POST body); the login project writes to
+  `test-results-private/`, which is never uploaded. Only quiz-page screenshots
+  are uploaded on failure (7 days). `e2e/.auth/` (storage state) is gitignored.
+- **Limits:** GitHub runners are outside RU — the RU network path (DNS, IP
+  throttling) is not covered. Survival and Daily stay manual (bank timeout, one
+  attempt per day). Local runs target `npm run dev` with a separate dev-DB smoke
+  player (`.env` `SMOKE_EMAIL` / `SMOKE_PASSWORD`).
+- **Deploy order:** apply the migration on prod **before** pushing code that
+  filters by the column, otherwise the leaderboard fails with `42703`.
+
 ### Russia-first infrastructure
 
 - Prod domain points at Vercel's legacy anycast `76.76.21.21`: RU networks cut

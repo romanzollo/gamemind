@@ -13,6 +13,12 @@
 
 # testing
 /coverage
+# Playwright: reports, screenshots and the saved smoke-player session (auth cookie)
+/test-results/
+/test-results-private/
+/playwright-report/
+/blob-report/
+/e2e/.auth/
 
 # next.js
 /.next/

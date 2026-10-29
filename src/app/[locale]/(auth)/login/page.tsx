@@ -26,7 +26,11 @@ export default function LoginPage() {
                 {dictionary.auth.loginTitle}
             </h1>
 
-            <form action={formAction} className="mt-4 flex flex-col gap-3">
+            <form
+                action={formAction}
+                className="mt-4 flex flex-col gap-3"
+                data-testid="login-form"
+            >
                 <input type="hidden" name="locale" value={locale} />
                 <input
                     name="email"

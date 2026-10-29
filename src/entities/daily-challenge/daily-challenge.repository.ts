@@ -19,6 +19,7 @@ import { randomUUID } from 'node:crypto';
 
 import type { Client } from 'pg';
 
+import { LEADERBOARD_VISIBLE_USER_SQL } from '@/entities/user/leaderboard-visibility';
 import {
     withDirectPgClient,
     withDirectPgWriteClient,
@@ -363,6 +364,7 @@ async function queryScoresByChallengeId(
                 ON s."id" = r."sessionId"
             INNER JOIN "User" AS u
                 ON u."id" = r."userId"
+                AND ${LEADERBOARD_VISIBLE_USER_SQL}
             WHERE s."dailyChallengeId" = $1
             ORDER BY
                 r."score" DESC,

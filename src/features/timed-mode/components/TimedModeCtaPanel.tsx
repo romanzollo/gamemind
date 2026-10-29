@@ -73,6 +73,7 @@ export function TimedModeCtaPanel({
         <section
             aria-labelledby="timed-mode-heading"
             className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
+            data-testid="blitz-setup"
         >
             <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
                 {labels.eyebrow}

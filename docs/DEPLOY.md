@@ -78,6 +78,15 @@ npm run build
 - [ ] Login / logout
 - [ ] Admin (только твой аккаунт): `/ru/admin/questions` открывается
 
+### Каждый следующий прод-деплой
+
+- Миграция схемы — на prod **до** пуша кода, который её читает
+  (`node scripts/apply-named-migration.cjs <name> PROD_DATABASE_URL_UNPOOLED`).
+- После пуша: GitHub → Actions → **Prod smoke** сам играет Классику 3 и Блиц
+  MIX на www (служебный игрок, секреты `SMOKE_EMAIL` / `SMOKE_PASSWORD`).
+  Красный — скриншоты в артефакте прогона, ошибка — в Sentry.
+- Руками — только Выживание и Челлендж дня, если их трогали.
+
 ## Свой домен
 
 **Статус (июль 2026):** `game-mind.ru` / `www.game-mind.ru` привязаны к Vercel (Valid). Production primary — **www**. Друзьям: `https://www.game-mind.ru`.

@@ -1,0 +1,94 @@
+# Прод-smoke после деплоя.
+#
+# Зачем: Vercel сообщает GitHub «деплой Production готов» (deployment_status) —
+# сразу после этого Playwright играет Классику (3) и Блиц MIX на
+# www.game-mind.ru под служебным игроком (User.isTestAccount, скрыт из
+# рейтингов). Красный прогон = письмо от GitHub; Sentry покажет, что упало.
+#
+# Границы:
+# - раннеры GitHub не в РФ: путь «из России» (DNS, троттлинг IP) не проверяет;
+# - Выживание и Челлендж дня не покрыты (см. e2e/quiz-smoke.spec.ts);
+# - preview-деплои не трогаем — только environment Production.
+#
+# Секреты: SMOKE_EMAIL / SMOKE_PASSWORD (Settings → Secrets → Actions).
+# Репозиторий публичный → артефакты видны всем: выгружаем только скриншоты
+# страниц квиза, без trace и без сессии входа (playwright.config.ts).
+#
+# См. docs/DECISIONS.md → Prod smoke after deploy.
+
+name: Prod smoke
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Новый деплой отменяет smoke предыдущего: проверять имеет смысл последний.
+concurrency:
+  group: prod-smoke
+  cancel-in-progress: true
+
+env:
+  SMOKE_BASE_URL: https://www.game-mind.ru
+
+jobs:
+  smoke:
+    name: Classic 3 + Blitz MIX on www
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps --only-shell chromium
+
+      - name: Wait until www serves this deployment
+        # «Ready» в Vercel и переключение домена — не один момент: ждём, пока
+        # /api/version не отдаст sha этого деплоя, иначе проверим прошлую сборку.
+        if: github.event_name == 'deployment_status'
+        env:
+          EXPECTED_SHA: ${{ github.event.deployment.sha }}
+        run: |
+          for attempt in $(seq 1 36); do
+            served=$(curl -fsS "$SMOKE_BASE_URL/api/version" | jq -r '.commit // empty' || true)
+            if [ "$served" = "$EXPECTED_SHA" ]; then
+              echo "www serves $EXPECTED_SHA (attempt $attempt)"
+              exit 0
+            fi
+            echo "attempt $attempt: www serves '${served:-unknown}', waiting…"
+            sleep 5
+          done
+          echo "::error::www did not switch to $EXPECTED_SHA within 3 minutes"
+          exit 1
+
+      - name: Run smoke
+        env:
+          SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
+          SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
+        run: npx playwright test
+
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prod-smoke-screenshots
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore

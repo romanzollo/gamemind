@@ -64,6 +64,7 @@ export function QuizSetupForm({ locale, dictionary }: QuizSetupFormProps) {
         <section
             aria-labelledby="classic-mode-heading"
             className="mt-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:mt-5 sm:p-5"
+            data-testid="classic-setup"
         >
             <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
                 {labels.classicEyebrow}

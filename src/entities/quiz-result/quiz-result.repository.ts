@@ -1,6 +1,7 @@
 // Работа с результатами викторин
 import { withDirectPgClient, withPooledPgClient } from '@/lib/db/direct-pg';
 import { parseSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
+import { LEADERBOARD_VISIBLE_USER_SQL } from '@/entities/user/leaderboard-visibility';
 import {
     parseCompactReviewPayload,
     type CompactReviewPayloadV1,
@@ -278,7 +279,9 @@ async function findBestSurvivalRunScores(
                         sr."totalScore" DESC,
                         COALESCE(sr."completedAt", agg."last_completed", sr."startedAt") ASC
                 ) AS best
-                INNER JOIN "User" AS u ON u."id" = best."userId"
+                INNER JOIN "User" AS u
+                    ON u."id" = best."userId"
+                    AND ${LEADERBOARD_VISIBLE_USER_SQL}
                 ORDER BY
                     best."score" DESC,
                     best."completedAt" ASC
@@ -616,7 +619,9 @@ export const quizResultRepository = {
                         ORDER BY
                             ${orderSql.innerOrderBy}
                     ) AS best
-                    INNER JOIN "User" AS u ON u."id" = best."userId"
+                    INNER JOIN "User" AS u
+                        ON u."id" = best."userId"
+                        AND ${LEADERBOARD_VISIBLE_USER_SQL}
                     ORDER BY
                         ${orderSql.outerOrderBy}
                     LIMIT $1

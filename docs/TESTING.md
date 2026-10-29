@@ -81,16 +81,25 @@ Candidates (pick one at a time):
 - [x] Do not rewrite them into Vitest unless there is a clear win.
 - [x] Never put admin-list hang reproduction only in CI without a known-good env.
 
-### Phase D — Optional E2E (Playwright)
+### Phase D — E2E (Playwright) ✅ prod smoke (Oct 29, 2026)
 
-**Goal:** 1–2 critical flows after unit comfort exists.
+**What runs:** `e2e/quiz-smoke.spec.ts` — Classic EASY 3 and Blitz MIX
+(all answered → result without `clock=1`) under a service player
+(`User.isTestAccount`, hidden from leaderboards). Login once in
+`e2e/auth.setup.ts`, session reused via storage state.
 
-Suggested first E2E (later):
+- **CI:** `.github/workflows/prod-smoke.yml` after every Vercel Production
+  deployment (waits for `/api/version` = deployment sha, then plays on www).
+  Secrets `SMOKE_EMAIL` / `SMOKE_PASSWORD`. Manual run: Actions → Prod smoke →
+  Run workflow.
+- **Local:** `npm run dev`, then `npm run test:e2e` (default base URL
+  `http://localhost:3000`; dev smoke player in `.env`). Against prod from your
+  machine: `SMOKE_BASE_URL=https://www.game-mind.ru` + the prod smoke account.
+- **Selectors:** `data-testid` + roles, never UI text. Renaming a `data-testid`
+  = update `e2e/` in the same commit.
+- **Not covered:** Survival, Daily, admin flows; RU network path.
 
-- admin: draft with duplicate options → Publish → stays DRAFT + quality blocked;
-- or public: login → start quiz → submit (heavier fixtures).
-
-Needs: test user, stable test DB or careful local Neon branch, longer setup.
+Canon: `DECISIONS.md` → Prod smoke after deploy.
 
 ### Phase E — Optional CI ✅
 

@@ -255,6 +255,7 @@ export function QuizSessionForm({
                     }
                     pendingLabel={dictionary.common.submitting}
                     className="w-full"
+                    data-testid="quiz-submit"
                     aria-describedby={
                         !allAnswered && !timedExpired
                             ? submitHintId

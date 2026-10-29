@@ -82,7 +82,10 @@ export function QuizResultSummary({
                 <p className="text-xs font-medium tracking-wide text-muted uppercase sm:text-sm">
                     {labels.scoreLabel}
                 </p>
-                <p className="font-display mt-1.5 text-4xl font-semibold tabular-nums tracking-tight text-foreground sm:mt-2 sm:text-6xl">
+                <p
+                    className="font-display mt-1.5 text-4xl font-semibold tabular-nums tracking-tight text-foreground sm:mt-2 sm:text-6xl"
+                    data-testid="quiz-result-score"
+                >
                     {scoreText}
                 </p>
             </div>
