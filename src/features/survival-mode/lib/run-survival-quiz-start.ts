@@ -6,7 +6,8 @@
  * Контракт (не смешивать с Timed / не звать runTimedQuizStart):
  * - new: pooled abandon + INSERT SurvivalRun; exclude=[]
  * - continue: pooled continue (не kill runId); exclude=seen(run); T0'=bank
- * - pick: pickSurvivalSnapshotBundle (не Classic cycle)
+ * - pick: pickSurvivalSnapshotBundle — общий с Classic/Blitz цикл сложности
+ *   минус seen(run): без повторов ни внутри забега, ни между забегами
  * - createWithJsonSnapshot: survivalRunId + waveIndex, timedEndsAt omit;
  *   JSONB create pooled. Classic/Blitz create остаются Direct.
  *
@@ -71,6 +72,7 @@ export async function runSurvivalQuizStart(
             }
 
             const pickedQuestions = await pickSurvivalSnapshotBundle({
+                userId: input.userId,
                 difficulty: continued.difficulty,
                 questionCount: continued.questionCount,
                 locale: input.locale,
@@ -106,6 +108,7 @@ export async function runSurvivalQuizStart(
 
         const fullWaveSize = SURVIVAL_MODE_MVP_RULES.questionCount;
         const pickedQuestions = await pickSurvivalSnapshotBundle({
+            userId: input.userId,
             difficulty: input.difficulty,
             questionCount: fullWaveSize,
             locale: input.locale,

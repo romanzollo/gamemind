@@ -1963,7 +1963,7 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 | Late / paused client | Still `completeWithResult`. Wave score enters run total only if `survivalClockOk = true` |
 | Answers | Partial OK; unanswered do not apply −6 |
 | Daily | `dailyChallengeId` NULL. Daily does **not** use the cycle |
-| Pick | **Survival exclusion pool** always (wave 1 exclude=`[]`). Not Classic cycle for continue. Classic/Timed cycle unchanged |
+| Pick | **Shared `UserQuestionCycle` of the difficulty minus `SurvivalRunSeenQuestion`** (Oct 30, 2026 — see «Survival question source» below). Wave 1 exclude=`[]` |
 | Pool end | `SurvivalRunSeenQuestion`; remaining=0 → run COMPLETED; CTA none |
 | Continue CTA | `clockOk && bank>0 && unseen>0`; else plaque + rematch = **new** run (T0=20) |
 | Attempts | Unlimited |
@@ -1979,7 +1979,7 @@ Constants: `src/features/survival-mode/types.ts` (`SURVIVAL_MODE_MVP_RULES`).
 
 ```txt
 New run:  pooled Survival abandon → INSERT SurvivalRun (totalScore=0)
-          pickSurvivalSnapshotBundle(exclude=[]) → settle 300ms → resolve chunk-5
+          pickSurvivalSnapshotBundle = pooled cycle draw(exclude=[]) → settle 300ms → resolve chunk-5
           create JSONB on withPooledPgClient; startedAt after connect; timedEndsAt NULL
 Continue: pooled continue (keep runId) → pick(exclude=seen) → same create shape; T0'=bank
 Page:     handoff (initialBankSeconds) OR pooled SELECT snapshotData
@@ -1998,7 +1998,7 @@ Submit:   score + survivalClockOk (T0 from play/run)
 
 - Per-question Direct pick; freeze 40+ in snapshotData; trust client remaining
 - JSONB bank/seen/duration on `completeWithResult`; bump timeouts / keep-warm
-- Fold Survival into `runTimedQuizStart`; Mix; Classic cycle for Survival continue
+- Fold Survival into `runTimedQuizStart`; Mix; a cycle draw **without** the run's seen ids
 - Put Survival points into Classic/Blitz/Daily best
 - **Paint-arm / play-ready re-arm `startedAt` on quiz page or client mount** to “fix” create+load eating T0' — rejected Aug 21 (local freeze / infinite load / Strict Mode). Clock stays create hop 3; prod Neon is usually fast enough. Revisit only with measured prod evidence + ADR.
 
@@ -2007,6 +2007,22 @@ Submit:   score + survivalClockOk (T0 from play/run)
 0–6. ~~wave 1~~ shipped Aug 19–20.
 7. ~~Wave 2+ carry~~ — Aug 20: exclusion + totalScore + continue CTA + board run total.
 8. Taste lobby / compact leaderboard — presentation (Aug 20).
+
+### Survival question source — shared cycle (October 30, 2026)
+
+**Problem (owner report):** questions kept repeating. Data on dev (3 days): Classic / Blitz / Daily — 0 repeats in 140 questions; Survival — every run re-shuffled the whole published pool, so earlier runs' questions came back within a wave or two. The Aug pick only excluded the **current** run's seen ids.
+
+**Decision:** a Survival wave draws from the same `UserQuestionCycle` (per user × difficulty) as Classic and Blitz, with the run's `SurvivalRunSeenQuestion` ids excluded (`drawFromSeededCycle` → `excludeIds`, `allowPartial` for the short last wave).
+
+| Rule | Choice |
+|------|--------|
+| One cycle for all modes | A question is not repeated in **any** mode until the difficulty pool is exhausted |
+| Excluded ids | The cursor walks past them (counted as shown in this cycle — the player just saw them) |
+| Cycle boundary | Reshuffle-first as in Classic; "is the tail enough" counts only non-excluded ids → no repeat inside a run even across the boundary |
+| Short last wave | `allowPartial`: min(12, pool − seen); zero → NOT_ENOUGH as before |
+| Cost | Same pooled cycle hop as Classic (state + pool ids + optimistic UPDATE), outside the Direct queue |
+
+**Not chosen:** a separate Survival cycle — a Classic question would still pop up in Survival right away.
 
 **References:** Timed Mode MVP; Quiz Start / Session Load Playbook; User Question Cycle (Survival continue **supersedes** “same bag for all waves”); Weighted scoring; Leaderboard Layer 1; `docs/QUIZ_NEON_HOT_PATH.md`; `src/features/survival-mode/types.ts`.
 

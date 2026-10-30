@@ -256,3 +256,155 @@ describe('drawFromSeededCycle', () => {
         expect(a.drawnIds).toEqual(b.drawnIds);
     });
 });
+
+describe('drawFromSeededCycle with exclusions (Survival run)', () => {
+    it('skips excluded ids and moves the cursor past them', () => {
+        const opened = drawFromSeededCycle({
+            state: EMPTY_STATE,
+            poolIds: POOL_20,
+            needed: 4,
+            createSeed: () => 7,
+        });
+        expect(opened.ok).toBe(true);
+        if (!opened.ok) {
+            return;
+        }
+
+        const plain = drawFromSeededCycle({
+            state: opened.nextState,
+            poolIds: POOL_20,
+            needed: 4,
+        });
+        expect(plain.ok).toBe(true);
+        if (!plain.ok) {
+            return;
+        }
+
+        // Первые два id следующей порции «уже сыграны в забеге».
+        const excludeIds = plain.drawnIds.slice(0, 2);
+        const result = drawFromSeededCycle({
+            state: opened.nextState,
+            poolIds: POOL_20,
+            needed: 4,
+            excludeIds,
+        });
+
+        expect(result.ok).toBe(true);
+        if (!result.ok) {
+            return;
+        }
+
+        expect(result.didReshuffle).toBe(false);
+        expect(result.drawnIds).toHaveLength(4);
+        for (const id of excludeIds) {
+            expect(result.drawnIds).not.toContain(id);
+        }
+        expect(result.drawnIds.slice(0, 2)).toEqual(plain.drawnIds.slice(2));
+        expect(result.nextState.cursor).toBe(opened.nextState.cursor + 6);
+    });
+
+    it('reshuffles when the tail without excluded ids is too short', () => {
+        const state = { cycleNumber: 1, cycleSeed: 5, cursor: 14, poolSize: 20 };
+        const tail = drawFromSeededCycle({
+            state,
+            poolIds: POOL_20,
+            needed: 6,
+        });
+        expect(tail.ok).toBe(true);
+        if (!tail.ok) {
+            return;
+        }
+
+        // В хвосте 6 id, но один уже сыгран в забеге → на волну 6 не хватает.
+        const excludeIds = [tail.drawnIds[0]!, 'q01', 'q02'];
+        const result = drawFromSeededCycle({
+            state,
+            poolIds: POOL_20,
+            needed: 6,
+            excludeIds,
+            createSeed: () => 77,
+        });
+
+        expect(result.ok).toBe(true);
+        if (!result.ok) {
+            return;
+        }
+
+        expect(result.didReshuffle).toBe(true);
+        expect(result.nextState.cycleNumber).toBe(2);
+        expect(result.drawnIds).toHaveLength(6);
+        for (const id of excludeIds) {
+            expect(result.drawnIds).not.toContain(id);
+        }
+    });
+
+    it('never repeats inside a run that crosses the cycle boundary', () => {
+        // Цикл начат Классикой: курсор посередине пула.
+        let state = { cycleNumber: 1, cycleSeed: 11, cursor: 9, poolSize: 20 };
+        const runSeen: string[] = [];
+        let seed = 100;
+
+        for (let wave = 0; wave < 10; wave += 1) {
+            const result = drawFromSeededCycle({
+                state,
+                poolIds: POOL_20,
+                needed: 6,
+                excludeIds: runSeen,
+                allowPartial: true,
+                createSeed: () => seed++,
+            });
+
+            if (!result.ok) {
+                break;
+            }
+
+            for (const id of result.drawnIds) {
+                expect(runSeen).not.toContain(id);
+            }
+            runSeen.push(...result.drawnIds);
+            state = result.nextState;
+        }
+
+        expect(new Set(runSeen).size).toBe(20);
+        expect(runSeen).toHaveLength(20);
+    });
+
+    it('returns a short last wave with allowPartial and fails on zero', () => {
+        const excludeIds = POOL_20.slice(0, 17);
+        const short = drawFromSeededCycle({
+            state: EMPTY_STATE,
+            poolIds: POOL_20,
+            needed: 6,
+            excludeIds,
+            allowPartial: true,
+            createSeed: () => 3,
+        });
+
+        expect(short.ok).toBe(true);
+        if (!short.ok) {
+            return;
+        }
+        expect([...short.drawnIds].sort()).toEqual(['q18', 'q19', 'q20']);
+
+        expect(
+            drawFromSeededCycle({
+                state: EMPTY_STATE,
+                poolIds: POOL_20,
+                needed: 6,
+                excludeIds: POOL_20,
+                allowPartial: true,
+                createSeed: () => 3,
+            }),
+        ).toEqual({ ok: false, reason: 'NOT_ENOUGH_QUESTIONS' });
+
+        expect(
+            drawFromSeededCycle({
+                state: EMPTY_STATE,
+                poolIds: POOL_20,
+                needed: 6,
+                excludeIds,
+                createSeed: () => 3,
+            }),
+        ).toEqual({ ok: false, reason: 'NOT_ENOUGH_QUESTIONS' });
+    });
+});

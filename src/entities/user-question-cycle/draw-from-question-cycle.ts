@@ -15,6 +15,12 @@
  *
  * Почему не drain-then-top-up: хвост + новый shuffle давал повтор drain-id
  * позже в том же цикле (Classic 3 при pool % 3 ≠ 0). Scalar state это не лечит.
+ *
+ * Исключения (Survival): id, уже сыгранные в забеге, не выдаются. Курсор
+ * проходит их насквозь — в этом цикле они считаются показанными (игрок
+ * только что их видел). «Хватит ли хвоста» считается без исключённых, так
+ * что и на границе цикла забег не получает повторов. Без исключений
+ * поведение Classic/Blitz не меняется.
  */
 
 import {
@@ -49,6 +55,13 @@ export type DrawFromSeededCycleInput = {
     state: QuestionCycleState;
     poolIds: readonly string[];
     needed: number;
+    /** Id, которые нельзя выдать (сыгранные в текущем забеге Survival). */
+    excludeIds?: readonly string[];
+    /**
+     * Можно выдать меньше `needed`, если без исключённых пул меньше
+     * (последняя короткая волна Survival). Ноль доступных — NOT_ENOUGH.
+     */
+    allowPartial?: boolean;
     /** Для тестов — фиксированный seed нового цикла. */
     createSeed?: () => number;
 };
@@ -69,6 +82,22 @@ function uniqueSortedIds(poolIds: readonly string[]): string[] {
 
 function buildShuffledPool(poolIds: readonly string[], seed: number): string[] {
     return shuffleWithSeed(poolIds, seed);
+}
+
+function countAvailableFrom(
+    shuffled: readonly string[],
+    cursor: number,
+    exclude: ReadonlySet<string>,
+): number {
+    let count = 0;
+
+    for (let index = cursor; index < shuffled.length; index += 1) {
+        if (!exclude.has(shuffled[index]!)) {
+            count += 1;
+        }
+    }
+
+    return count;
 }
 
 function openNewCycle(
@@ -116,9 +145,13 @@ export function drawFromSeededCycle(
 ): DrawFromSeededCycleResult {
     const createSeed = input.createSeed ?? randomCycleSeed;
     const pool = uniqueSortedIds(input.poolIds);
-    const needed = input.needed;
+    const exclude = new Set(input.excludeIds ?? []);
+    const availableInPool = pool.filter((id) => !exclude.has(id)).length;
+    const needed = input.allowPartial
+        ? Math.min(input.needed, availableInPool)
+        : input.needed;
 
-    if (needed <= 0) {
+    if (input.needed <= 0) {
         return {
             ok: true,
             drawnIds: [],
@@ -127,7 +160,7 @@ export function drawFromSeededCycle(
         };
     }
 
-    if (pool.length < needed) {
+    if (needed <= 0 || availableInPool < needed) {
         return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
     }
 
@@ -137,7 +170,13 @@ export function drawFromSeededCycle(
     if (shouldOpenNewCycle(state, pool.length)) {
         state = openNewCycle(state.cycleNumber, pool.length, createSeed);
         didReshuffle = true;
-    } else if (state.poolSize - state.cursor < needed) {
+    } else if (
+        countAvailableFrom(
+            buildShuffledPool(pool, state.cycleSeed),
+            state.cursor,
+            exclude,
+        ) < needed
+    ) {
         // Хвоста мало на целый квиз: не добираем из двух циклов (анти-повтор).
         // Неиспользованный хвост вернётся через новый seed.
         state = openNewCycle(state.cycleNumber, pool.length, createSeed);
@@ -149,8 +188,12 @@ export function drawFromSeededCycle(
     let cursor = state.cursor;
 
     while (drawnIds.length < needed && cursor < shuffled.length) {
-        drawnIds.push(shuffled[cursor]!);
+        const id = shuffled[cursor]!;
         cursor += 1;
+
+        if (!exclude.has(id)) {
+            drawnIds.push(id);
+        }
     }
 
     if (drawnIds.length < needed) {

@@ -118,13 +118,13 @@ export const SURVIVAL_MODE_MVP_RULES = {
      */
     leaderboardPolicy: 'run_total_score_scalar' as const satisfies SurvivalWaveCarryBoardPolicy,
     /**
-     * Pick Survival: один path всегда — id-pool difficulty минус seen(run),
-     * shuffle, limit N (12 или remainder 1..11). Wave 1: seen=[].
-     * НЕ голый Classic cycle для continue (дайёт повторы внутри run).
-     * Classic/Timed cycle не ломаем; Daily cycle не использует.
-     * ADR: run-scoped exclusion supersedes «same bag for all waves».
+     * Pick Survival: общий с Classic/Timed UserQuestionCycle сложности минус
+     * seen(run), N = 12 или remainder 1..11. Wave 1: seen=[]. Без повторов
+     * между режимами до конца цикла и внутри забега на границе цикла.
+     * Daily cycle не использует.
+     * ADR: Survival question source — shared cycle (окт 2026).
      */
-    pickPolicy: 'survival_exclusion_pool' as const,
+    pickPolicy: 'shared_cycle_minus_run_seen' as const,
     /**
      * Конец пула (выбор B): таблица `SurvivalRunSeenQuestion`.
      * Live pool = isActive+PUBLISHED+difficulty − seen(run).

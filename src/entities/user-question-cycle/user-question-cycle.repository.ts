@@ -43,6 +43,16 @@ export type DrawUserQuestionCycleIdsResult =
       }
     | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' };
 
+export type DrawQuestionIdsInput = {
+    userId: string;
+    difficulty: Difficulty;
+    needed: number;
+    /** Survival: сыгранные в забеге id не выдаются (без повторов в забеге). */
+    excludeQuestionIds?: readonly string[];
+    /** Survival: последняя волна может быть короче `needed`. */
+    allowPartial?: boolean;
+};
+
 export type DrawMixedUserQuestionCycleIdsInput = {
     userId: string;
     /** Последовательные куски сплита (EASY → MEDIUM → HARD). Не MIXED-мешок. */
@@ -258,11 +268,7 @@ type PreparedBagDraw = {
  */
 async function computeBagDrawOnClient(
     client: Client,
-    input: {
-        userId: string;
-        difficulty: Difficulty;
-        needed: number;
-    },
+    input: DrawQuestionIdsInput,
 ): Promise<
     | { ok: true; bag: Omit<PreparedBagDraw, 'difficulty'> }
     | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' }
@@ -278,6 +284,8 @@ async function computeBagDrawOnClient(
         state,
         poolIds,
         needed: input.needed,
+        excludeIds: input.excludeQuestionIds,
+        allowPartial: input.allowPartial,
     });
 
     if (!drawn.ok) {
@@ -295,11 +303,9 @@ async function computeBagDrawOnClient(
     };
 }
 
-async function drawQuestionIdsOnce(input: {
-    userId: string;
-    difficulty: Difficulty;
-    needed: number;
-}): Promise<DrawUserQuestionCycleIdsResult> {
+async function drawQuestionIdsOnce(
+    input: DrawQuestionIdsInput,
+): Promise<DrawUserQuestionCycleIdsResult> {
     for (let attempt = 1; attempt <= 3; attempt += 1) {
         let pendingDraw:
             | {
@@ -472,13 +478,13 @@ async function drawMixedQuestionIdsOnce(input: {
 export const userQuestionCycleRepository = {
     /**
      * Забирает N question id из seeded-цикла пользователя.
-     * Только Classic/Timed start. Без budget-race и без JSONB мешка.
+     * Classic/Timed start и волны Survival — один цикл на сложность, поэтому
+     * вопрос не повторяется ни в одном режиме до конца цикла.
+     * Без budget-race и без JSONB мешка.
      */
-    async drawQuestionIds(input: {
-        userId: string;
-        difficulty: Difficulty;
-        needed: number;
-    }): Promise<DrawUserQuestionCycleIdsResult> {
+    async drawQuestionIds(
+        input: DrawQuestionIdsInput,
+    ): Promise<DrawUserQuestionCycleIdsResult> {
         return drawQuestionIdsOnce(input);
     },
 
