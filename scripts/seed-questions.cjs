@@ -7,6 +7,8 @@
  * Canon: docs/QUESTION_I18N.md.
  */
 
+const { resolveQuizImageUrl } = require('./quiz-image-manifest.cjs');
+
 function opt(isCorrect, ru, en) {
     return { isCorrect, ru, en };
 }
@@ -44,7 +46,8 @@ function QI(num, difficulty, metadata, ru, en, imageUrl, options) {
         metadata: { ...metadata, mediaSource: 'screenshot' },
         translations: { ru: { text: ru }, en: { text: en } },
         promptImage: {
-            url: imageUrl,
+            // Slug-путь → хеш-имя: slug в URL выдал бы ответ (quiz-image-manifest.cjs).
+            url: resolveQuizImageUrl(imageUrl),
             mimeType: 'image/webp',
             width: 1280,
             height: 720,

@@ -9,7 +9,7 @@
 |------|--------|
 | Приложение | Vercel Hobby |
 | БД | Neon (лучше отдельный production project/branch) |
-| Картинки (seed + batches) | `public/quiz-images/**/*.webp` в git (тот же origin) |
+| Картинки (seed + batches) | `public/quiz-images/**/{hash}.webp` в git (тот же origin); slug → хеш — `content/quiz-images.manifest.json` (`docs/QUIZ_IMAGES.md` §7) |
 | Домен | Свой домен → Vercel (DNS у REG.RU; CF proxy не обязателен) |
 | Upload (quiz + avatars) | **Vercel Blob** + same-origin `/media/...` (см. Media Storage ADR). Yandex S3 — fallback. **R2 не default**. |
 
@@ -17,7 +17,7 @@
 
 - [ ] Есть `.env.example`; реальные секреты только в локальном `.env` / env на Vercel
 - [ ] Локально проходит `npm run build`
-- [ ] WebP в `public/quiz-images/` закоммичены (seed **и** новые batches; не только SVG)
+- [ ] WebP в `public/quiz-images/` закоммичены вместе с манифестом (seed **и** новые batches; имена — хеши, не slug)
 - [ ] Production Neon: миграции применены; seed (+ URL картинок) выполнен; IMAGE_GUESS batch Publish если импортировали DRAFT
 - [ ] На Vercel заданы env (см. ниже)
 - [ ] Сильный личный ADMIN; пароль админа друзьям не раздавать

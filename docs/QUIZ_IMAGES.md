@@ -13,7 +13,8 @@ How to collect screenshots for `IMAGE_GUESS`, optimize them, and put them into t
 | File size | ideally **&lt; 150–200 KB** |
 | Quiz UI | `object-contain` in muted frame — **full image visible** |
 | DB storage | **URL only** in `QuestionAsset` (never image bytes) |
-| App path (MVP) | `/quiz-images/{easy\|medium\|hard}/{slug}.webp` |
+| Authoring path | `/quiz-images/{easy\|medium\|hard}/{slug}.webp` — in batches, seed, `content/fixes` |
+| Served path (public/ + DB) | `/quiz-images/{easy\|medium\|hard}/{hash}.webp` — 16 hex of SHA-256 of the file, see §7 |
 
 UI note: the quiz card uses `object-contain` so the **entire** screenshot is visible (letterboxing on non-matching ratios). Do not use `object-cover` for IMAGE_GUESS prompts.
 
@@ -89,14 +90,15 @@ Filename **stem** (without extension) must match the seed slug.
 2. Resize with **trim** (remove black borders) then **inside** max box — **no crop**
 3. Pixel art (≤360px sources): upscale with **nearest** kernel to ~960px wide for readability
 4. Encode **WebP** quality **80**
-4. Write `public/quiz-images/{difficulty}/{stem}.webp`
-5. Print output path + approximate byte size; warn if &gt; 200 KB
+5. Write `public/quiz-images/{difficulty}/{hash}.webp` and the manifest entry `/quiz-images/{difficulty}/{stem}.webp → …/{hash}.webp` (§7). A stem already in the manifest is kept as is unless `--force`
+6. Print output path + approximate byte size; warn if &gt; 200 KB
 
 ### CLI flags
 
 | Flag | Default | Meaning |
 |------|---------|---------|
 | `--dry-run` | off | List what would be written, do not write |
+| `--force` | off | Re-encode stems already in the manifest (new bytes → new hash → new file; the old file stays until nothing references it) |
 | `--width` | `1280` | Output width |
 | `--height` | `720` | Output height |
 | `--quality` | `80` | WebP quality 1–100 |
@@ -160,9 +162,9 @@ Play / capture → put file in raw-quiz-images/{difficulty}/{slug}.png
        ↓
 npm run images:optimize
        ↓
-public/quiz-images/{difficulty}/{slug}.webp
+public/quiz-images/{difficulty}/{hash}.webp + content/quiz-images.manifest.json
        ↓
-Update seed / admin URL → /quiz-images/.../slug.webp
+Batch / seed keep /quiz-images/{difficulty}/{slug}.webp → import resolves it to the hash path
        ↓
 Quiz session loads URL from snapshot (next/image)
 ```
@@ -189,7 +191,7 @@ raw-quiz-images/
 
 ### After you finish collecting
 
-1. `npm run images:optimize` → writes `public/quiz-images/{easy|medium|hard}/{slug}.webp`
+1. `npm run images:optimize` → writes `public/quiz-images/{easy|medium|hard}/{hash}.webp` + manifest entries (§7)
 2. Import DRAFT rows + `QuestionAsset` (seed-style Neon client; never auto-PUBLISH):
 
 ```bash
@@ -201,7 +203,7 @@ npm run content:import-image-guess -- --target=prod
 ```
 
 3. Admin: filter **DRAFT** → review → **Publish** (quality gate).
-4. Commit/deploy WebP under `public/quiz-images/` so prod can serve them (`docs/DEPLOY.md`).
+4. Commit/deploy WebP under `public/quiz-images/` **and** `content/quiz-images.manifest.json` so prod can serve them (`docs/DEPLOY.md`).
    - **Aug 6 lesson:** DB rows alone are not enough. Until WebP are on Vercel, admin thumbs and quiz images 404.
 
 ### Import / publish status
@@ -389,3 +391,26 @@ Pass = images load + lightbox open/close in light and dark. Fail = 404 WebP, mil
 **Status (Aug 13):** friends signed off on prod (user report) — IMAGE_GUESS + lightbox in real play, records on leaderboard. Re-run this checklist after lightbox/CSS/asset changes.
 
 **Do not:** change `SNAPSHOT_RESOLVE_CHUNK_SIZE`, submit hot path, or cycle for this smoke.
+
+---
+
+## 7. Opaque file names (Oct 2026)
+
+**Why:** the image URL is visible in DevTools during play. `/quiz-images/medium/baldurs-gate-3.webp` was the answer itself. ADR: `docs/DECISIONS.md` → Quiz answer leak — opaque play ids (part 2).
+
+**Rules:**
+- Served name = first 16 hex of SHA-256 of the WebP bytes. Same picture → same name; a new version → a new name (no stale CDN cache).
+- Folder `easy|medium|hard` stays: `QuestionImage` turns on pixel-art rendering by `/quiz-images/easy/`.
+- People keep writing slug paths (batches, seed, `content/fixes`). `content/quiz-images.manifest.json` maps slug path → served path; `scripts/quiz-image-manifest.cjs` resolves it in import / seed / `apply-question-fixes`. An unknown slug fails the script instead of writing a broken URL.
+- Never write a slug path into the DB and never put a slug-named file into `public/quiz-images/`.
+- Replacing an image of a published question: admin upload (lands in `/media/quiz/{opaque owner}-{uuid}.webp`). `images:optimize -- --force` only mints a new file + manifest entry; no script repoints an existing question to it.
+
+**Commands:**
+
+| Command | What it does |
+|---------|--------------|
+| `npm run images:hash -- --dry-run` / `npm run images:hash` | Copy slug-named WebP already in `public/` to hashed names + manifest |
+| `npm run images:migrate-urls -- --dry-run` / `npm run images:migrate-urls` | Rewrite slug paths in `QuestionAsset.url`, `QuizSession.snapshotData`, `QuizResult.reviewPayload` / `reviewSnapshot`. Add `--target=prod` for prod (owner's command only); prod refuses unless every hashed URL already returns 200 on www |
+| `npm run images:hash -- --prune-legacy --dry-run` / `… --prune-legacy` | Delete slug-named files that have an identical hashed copy |
+
+**Rollout order (prod):** deploy hashed copies next to slug files → `images:migrate-urls -- --target=prod` → dry-run shows 0 on dev and prod → `--prune-legacy` → second deploy. Deleting slug files earlier breaks running quizzes and old reviews; keeping them forever keeps the leak (byte comparison maps them back).

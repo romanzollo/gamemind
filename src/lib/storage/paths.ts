@@ -1,8 +1,13 @@
+import { createHmac } from 'node:crypto';
+
 import {
     MEDIA_PUBLIC_MOUNT,
     STORAGE_PREFIX,
     type StoragePrefix,
 } from '@/lib/storage/types';
+
+const QUIZ_MEDIA_OWNER_DOMAIN = 'gamemind:quiz-media-owner:v1';
+const QUIZ_MEDIA_OWNER_LENGTH = 16;
 
 /**
  * Нормализация и валидация object key.
@@ -88,13 +93,40 @@ export function isStorageKeyOwnedBy(
     return pattern.test(key);
 }
 
+/**
+ * Владелец PROMPT-картинки вопроса в ключе storage — непрозрачный.
+ *
+ * id импортированных IMAGE_GUESS читаемые (`img-med-bg3`): в URL
+ * `/media/quiz/{id}-…` игрок увидел бы ответ. HMAC на AUTH_SECRET стабилен
+ * для вопроса (по нему isStorageKeyOwnedBy узнаёт свою старую картинку при
+ * замене), но обратно в id не переводится. Смена AUTH_SECRET → старые
+ * объекты больше не «свои» и при замене остаются сиротами (безопасная сторона).
+ * ADR: docs/DECISIONS.md → Quiz answer leak — opaque play ids.
+ */
+export function quizMediaOwner(
+    questionId: string,
+    secret?: string,
+): { prefix: StoragePrefix; idPart: string } {
+    const key = secret ?? process.env.AUTH_SECRET;
+    if (!key) {
+        throw new Error('AUTH_SECRET is required for quiz media keys');
+    }
+
+    const idPart = createHmac('sha256', key)
+        .update(`${QUIZ_MEDIA_OWNER_DOMAIN}:${questionId}`)
+        .digest('hex')
+        .slice(0, QUIZ_MEDIA_OWNER_LENGTH);
+
+    return { prefix: STORAGE_PREFIX.quiz, idPart };
+}
+
 /** Ключ для PROMPT-картинки вопроса (IMAGE_GUESS). */
-export function buildQuizStorageKey(questionIdOrSlug: string, uuid: string): string {
-    return buildStorageKey({
-        prefix: STORAGE_PREFIX.quiz,
-        idPart: questionIdOrSlug,
-        uuid,
-    });
+export function buildQuizStorageKey(
+    questionId: string,
+    uuid: string,
+    secret?: string,
+): string {
+    return buildStorageKey({ ...quizMediaOwner(questionId, secret), uuid });
 }
 
 /** Ключ аватара пользователя. */

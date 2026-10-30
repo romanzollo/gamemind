@@ -2199,7 +2199,19 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
 
 **Not chosen:** re-keying `AnswerOption.id` to random UUIDs in dev/prod — FK + history migration for the same outcome.
 
+**Decision (part 2 — image names):** files served to players are named by content, not by the game.
+
+| Rule | Choice |
+|------|--------|
+| Name | `/quiz-images/{easy\|medium\|hard}/{first 16 hex of SHA-256(WebP bytes)}.webp`. The difficulty folder stays: UI picks pixel-art rendering by `/quiz-images/easy/`, and difficulty is visible anyway |
+| Authoring | Batches, seed and `content/fixes` keep slug paths (`/quiz-images/medium/baldurs-gate-3.webp`). `content/quiz-images.manifest.json` maps slug path → hashed path; `scripts/quiz-image-manifest.cjs` resolves it in import/seed/fixes. The app never reads the manifest |
+| New images | `images:optimize` writes the hashed name and the manifest entry; already published slugs are kept unless `--force` (a new sharp version would otherwise mint 171 new files) |
+| Stored URLs | `images:migrate-urls` rewrites `QuestionAsset.url`, `QuizSession.snapshotData` (incl. running quizzes) and `QuizResult.reviewPayload`/`reviewSnapshot` in place — old reviews keep their pictures. Only path text changes; a JSONB row is written only if unchanged since read; idempotent |
+| Rollout | Deploy hashed copies next to slug files → migrate prod (script refuses unless every hashed URL already returns 200 on www) → re-run dry-run = 0 → `images:hash --prune-legacy` removes slug files in a second deploy. Old files cannot stay: byte comparison would map them back |
+| Admin uploads | `/media/quiz/{owner}-{uuid}.webp`: owner = `HMAC(AUTH_SECRET, question id)` instead of the readable id (`quizMediaOwner`). Rotating AUTH_SECRET only orphans old objects on replace (safe side) |
+
+**Scope:** this closes the leak *in the page* (DevTools, view-source, image URLs). The GitHub repo is public and already contains the question bank with answers (`content/drafts`, `seed-questions.cjs`), and git history keeps the slug → hash rename. Making the repo private is a separate owner decision.
+
 **Still open:**
-- **Part 2 — image file names** reveal the answer: rename to content-hash names + in-place `QuestionAsset.url` update (dev/prod) + decide on old `reviewPayload` URLs.
 - **Survival keeps `isCorrect` in the play DTO** (instant bank UX without a per-answer request, see Survival Mode MVP). Removing it needs server-side lock-in per answer — a latency trade-off from RU, separate decision.
 - Reverse image search can identify a screenshot — inherent to the question type, not a code leak.

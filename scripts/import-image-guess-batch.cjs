@@ -10,7 +10,9 @@
  *
  * Contract (docs/QUIZ_IMAGES.md §5, CONTENT_PIPELINE.md):
  * - Always DRAFT on first insert (never auto-PUBLISH)
- * - PROMPT QuestionAsset pointing at /quiz-images/...webp
+ * - PROMPT QuestionAsset pointing at /quiz-images/...webp — slug-путь партии
+ *   переводится в хеш-имя через content/quiz-images.manifest.json
+ *   (scripts/quiz-image-manifest.cjs): slug в URL выдал бы ответ игроку
  * - Stable ids from draftKey → re-run upserts content, keeps publicationStatus
  *
  * Usage:
@@ -25,6 +27,12 @@
 const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');
+
+const {
+    filePathForUrl,
+    readManifest,
+    resolveQuizImageUrl,
+} = require('./quiz-image-manifest.cjs');
 
 const ROOT = path.join(__dirname, '..');
 const DEFAULT_BATCH_REL =
@@ -344,7 +352,7 @@ async function upsertImageGuess(client, question) {
     return { questionId, wasExisting };
 }
 
-async function upsertAssetOnly(client, question) {
+async function upsertAssetOnly(client, question, imageUrl) {
     const questionId = question.draftKey;
     const assetId = `qa-${questionId}-prompt`;
     await client.query(
@@ -361,7 +369,7 @@ async function upsertAssetOnly(client, question) {
         [
             assetId,
             questionId,
-            question.promptImageUrl,
+            imageUrl,
             'image/webp',
             1280,
             720,
@@ -383,20 +391,22 @@ async function main() {
         throw new Error('Unexpected batch kind');
     }
 
+    const manifest = readManifest();
+    const imageUrlByKey = new Map();
     const missingWebp = [];
     for (const question of batch.questions) {
-        const webpPath = path.join(
-            ROOT,
-            'public',
-            'quiz-images',
-            question.imageFolder,
-            `${question.imageStem}.webp`,
-        );
-        if (!fs.existsSync(webpPath)) {
-            missingWebp.push(
-                path.relative(ROOT, webpPath).replace(/\\/g, '/'),
-            );
+        let imageUrl;
+        try {
+            imageUrl = resolveQuizImageUrl(question.promptImageUrl, manifest);
+        } catch {
+            missingWebp.push(`${question.promptImageUrl} (not in manifest)`);
+            continue;
         }
+        if (!fs.existsSync(filePathForUrl(imageUrl))) {
+            missingWebp.push(`${question.promptImageUrl} → ${imageUrl}`);
+            continue;
+        }
+        imageUrlByKey.set(question.draftKey, imageUrl);
     }
     if (missingWebp.length > 0) {
         console.error(
@@ -455,7 +465,7 @@ async function main() {
         );
         // Отдельный fresh client на asset — как update-quiz-image-assets.cjs.
         await withRetry(connectionString, (client) =>
-            upsertAssetOnly(client, question),
+            upsertAssetOnly(client, question, imageUrlByKey.get(questionId)),
         );
 
         if (result.wasExisting) {

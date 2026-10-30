@@ -29,7 +29,7 @@ import { requireAdmin } from '@/lib/auth/guards';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
-import { deleteReplacedMediaObject, STORAGE_PREFIX } from '@/lib/storage';
+import { deleteReplacedMediaObject, quizMediaOwner } from '@/lib/storage';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -898,7 +898,7 @@ export async function updateQuestionAction(
             parsed.data.type === 'IMAGE_GUESS'
                 ? parsed.data.promptImageUrl
                 : null,
-        owner: { prefix: STORAGE_PREFIX.quiz, idPart: questionId },
+        owner: quizMediaOwner(questionId),
     });
 
     revalidatePath(`/${locale}/admin/questions`);

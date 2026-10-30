@@ -32,6 +32,7 @@ export {
     isStorageKeyOwnedBy,
     normalizeStorageKey,
     publicUrlFromKey,
+    quizMediaOwner,
     storageKeyFromPublicUrl,
 } from '@/lib/storage/paths';
 

@@ -26,6 +26,8 @@
         "content:publish-text-drafts": "npx tsx scripts/publish-text-drafts.ts",
         "content:import-image-guess": "node scripts/import-image-guess-batch.cjs",
         "images:optimize": "node scripts/optimize-quiz-images.cjs",
+        "images:hash": "node scripts/hash-quiz-images.cjs",
+        "images:migrate-urls": "node scripts/migrate-quiz-image-urls.cjs",
         "images:update-db": "node scripts/update-quiz-image-assets.cjs"
     },
     "dependencies": {

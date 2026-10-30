@@ -42,6 +42,8 @@ const fs = require('fs');
 const path = require('path');
 const { Client } = require('pg');
 
+const { resolveQuizImageUrl } = require('./quiz-image-manifest.cjs');
+
 const ROOT = path.join(__dirname, '..');
 
 /** Те же границы, что у админки и валидатора черновиков. */
@@ -270,15 +272,18 @@ async function findQuestionIds(client, optionRu, difficulty, type) {
 
 /** IMAGE_GUESS: сужает совпадения до вопроса с этой картинкой-подсказкой. */
 async function narrowByAsset(client, ids, url) {
+    // В файле правок — slug-путь, в БД — хеш-имя (scripts/quiz-image-manifest.cjs);
+    // slug оставляем в поиске для базы, где миграция URL ещё не прошла.
+    const urls = [url, resolveQuizImageUrl(url)];
     const result = await client.query(
         `
         SELECT DISTINCT "questionId" AS id
         FROM "QuestionAsset"
         WHERE "questionId" = ANY($1::text[])
           AND role = 'PROMPT'::"QuestionAssetRole"
-          AND url = $2
+          AND url = ANY($2::text[])
         `,
-        [ids, url],
+        [ids, urls],
     );
     return result.rows.map((row) => row.id);
 }

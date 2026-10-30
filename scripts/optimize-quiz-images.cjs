@@ -1,6 +1,10 @@
 /**
  * Optimize raw quiz screenshots into public/quiz-images WebP assets.
  *
+ * Выход называется хешем содержимого (`{difficulty}/{hash}.webp`), а пара
+ * «slug → хеш-путь» пишется в content/quiz-images.manifest.json: slug в URL
+ * выдавал бы ответ игроку (scripts/quiz-image-manifest.cjs).
+ *
  * Usage:
  *   npm run images:optimize
  *   npm run images:optimize -- --dry-run
@@ -11,6 +15,13 @@
 
 const fs = require('fs');
 const path = require('path');
+
+const {
+    hashedUrlFor,
+    filePathForUrl,
+    readManifest,
+    writeManifest,
+} = require('./quiz-image-manifest.cjs');
 
 const ROOT = path.join(__dirname, '..');
 const INPUT_DIR = path.join(ROOT, 'raw-quiz-images');
@@ -31,6 +42,7 @@ const WARN_BYTES = 200 * 1024;
 function parseArgs(argv) {
     const options = {
         dryRun: false,
+        force: false,
         width: 1280,
         height: 720,
         quality: 80,
@@ -42,6 +54,10 @@ function parseArgs(argv) {
         const arg = argv[i];
         if (arg === '--dry-run') {
             options.dryRun = true;
+            continue;
+        }
+        if (arg === '--force') {
+            options.force = true;
             continue;
         }
         if (arg === '--width' && argv[i + 1]) {
@@ -125,13 +141,15 @@ Usage:
 
 Options:
   --dry-run          Do not write files
+  --force            Re-encode slugs already in the manifest (new hash = new file)
   --width <n>        Output width (default 1280)
   --height <n>       Output height (default 720)
   --quality <1-100>  WebP quality (default 80)
   --fit cover|inside Resize mode (default inside — no crop)
 
-Input:  raw-quiz-images/{easy|medium|hard}/{slug}.png|jpg|...
-Output: public/quiz-images/{difficulty}/{slug}.webp
+Input:    raw-quiz-images/{easy|medium|hard}/{slug}.png|jpg|...
+Output:   public/quiz-images/{difficulty}/{hash}.webp
+Manifest: content/quiz-images.manifest.json (/quiz-images/{difficulty}/{slug}.webp → hash path)
 
 See docs/QUIZ_IMAGES.md for the full checklist.`);
 }
@@ -200,14 +218,20 @@ async function resizeForQuiz(sharp, pipeline, meta, isPixelArt, options) {
     });
 }
 
-async function optimizeOne(sharp, difficulty, stem, options) {
+async function optimizeOne(sharp, difficulty, stem, options, manifest) {
     const source = findSourceFile(difficulty, stem);
     if (!source) {
         return { status: 'missing', difficulty, stem };
     }
 
-    const outDir = path.join(OUTPUT_DIR, difficulty);
-    const outPath = path.join(outDir, `${stem}.webp`);
+    const logicalUrl = `/quiz-images/${difficulty}/${stem}.webp`;
+
+    // Повторное сжатие другой версией sharp даст другие байты → новое имя
+    // и лишний файл в git. Уже опубликованное не трогаем без --force.
+    const existingUrl = manifest.images[logicalUrl];
+    if (!options.force && existingUrl && fs.existsSync(filePathForUrl(existingUrl))) {
+        return { status: 'kept', difficulty, stem, logicalUrl };
+    }
 
     if (options.dryRun) {
         return {
@@ -215,26 +239,37 @@ async function optimizeOne(sharp, difficulty, stem, options) {
             difficulty,
             stem,
             source,
-            outPath,
+            logicalUrl,
         };
     }
 
-    fs.mkdirSync(outDir, { recursive: true });
+    fs.mkdirSync(path.join(OUTPUT_DIR, difficulty), { recursive: true });
 
     const { pipeline, meta, isPixelArt } = await preparePipeline(sharp, source);
     const resized = await resizeForQuiz(sharp, pipeline, meta, isPixelArt, options);
-    const output = await resized.webp({ quality: options.quality, effort: 4 }).toFile(outPath);
+    const { data, info } = await resized
+        .webp({ quality: options.quality, effort: 4 })
+        .toBuffer({ resolveWithObject: true });
 
-    const { size } = fs.statSync(outPath);
+    const hashedUrl = hashedUrlFor(difficulty, data);
+    const outPath = filePathForUrl(hashedUrl);
+    fs.writeFileSync(outPath, data);
+
+    // Прежний файл не удаляем: на него ещё ссылаются БД и начатые партии.
+    const previousUrl = manifest.images[logicalUrl];
+    manifest.images[logicalUrl] = hashedUrl;
+
     return {
         status: 'written',
         difficulty,
         stem,
         source,
         outPath,
-        bytes: size,
-        outputWidth: output.width,
-        outputHeight: output.height,
+        logicalUrl,
+        replacedUrl: previousUrl && previousUrl !== hashedUrl ? previousUrl : null,
+        bytes: data.length,
+        outputWidth: info.width,
+        outputHeight: info.height,
         pixelArt: isPixelArt,
     };
 }
@@ -267,11 +302,12 @@ async function main() {
     console.log('');
 
     const results = [];
+    const manifest = readManifest();
 
     for (const difficulty of DIFFICULTIES) {
         for (const stem of EXPECTED[difficulty]) {
             // eslint-disable-next-line no-await-in-loop -- sequential keeps logs readable
-            const result = await optimizeOne(sharp, difficulty, stem, options);
+            const result = await optimizeOne(sharp, difficulty, stem, options, manifest);
             results.push(result);
         }
     }
@@ -292,7 +328,7 @@ async function main() {
                 continue;
             }
             // eslint-disable-next-line no-await-in-loop
-            const result = await optimizeOne(sharp, difficulty, parsed.name, options);
+            const result = await optimizeOne(sharp, difficulty, parsed.name, options, manifest);
             results.push(result);
         }
     }
@@ -300,8 +336,13 @@ async function main() {
     let written = 0;
     let missing = 0;
     let dry = 0;
+    let kept = 0;
 
     for (const result of results) {
+        if (result.status === 'kept') {
+            kept += 1;
+            continue;
+        }
         if (result.status === 'missing') {
             missing += 1;
             console.log(`  skip  [${result.difficulty}] ${result.stem} — no source in raw-quiz-images/`);
@@ -309,7 +350,7 @@ async function main() {
         }
         if (result.status === 'dry-run') {
             dry += 1;
-            console.log(`  plan  ${result.source} → ${result.outPath}`);
+            console.log(`  plan  ${result.source} → ${result.logicalUrl}`);
             continue;
         }
         written += 1;
@@ -320,18 +361,25 @@ async function main() {
                 : '';
         const mode = result.pixelArt ? ' pixel-art' : '';
         console.log(
-            `  ok    ${path.relative(ROOT, result.outPath)} (${formatKb(result.bytes)}${dims}${mode})${warn}`,
+            `  ok    ${result.logicalUrl} → ${path.relative(ROOT, result.outPath)} (${formatKb(result.bytes)}${dims}${mode})${warn}`,
         );
+        if (result.replacedUrl) {
+            console.log(`        replaces ${result.replacedUrl} (old file kept: DB and running quizzes may still use it)`);
+        }
+    }
+
+    if (written > 0) {
+        writeManifest(manifest);
     }
 
     console.log('');
     console.log(
-        `Done. written=${written} dry-run=${dry} missing=${missing} (expected checklist: 9)`,
+        `Done. written=${written} kept=${kept} dry-run=${dry} missing=${missing} (expected checklist: 9)`,
     );
 
     if (written > 0) {
         console.log(
-            'Next: switch seed/admin URLs from .svg → .webp, then npm run db:seed (or update admin).',
+            'Next: commit public/quiz-images + content/quiz-images.manifest.json; import scripts resolve slug paths through the manifest.',
         );
     }
     if (missing > 0) {
