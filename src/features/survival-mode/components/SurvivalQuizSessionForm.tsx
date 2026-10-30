@@ -5,7 +5,8 @@
  *
  * Последовательный lock-in: один вопрос, ответ сразу фиксируется,
  * верный → +4с к remaining, неверный → −6с, unanswered не штрафуем.
- * Банк = UX от startedAt; сервер remaining не читает.
+ * Банк = UX от startedAt; сервер remaining не читает. До startedAt
+ * (пауза после создания волны) — заставка 3‑2‑1 вместо вопроса.
  * На 0: всегда Survival submit (partial OK) → /result — без мёртвого freeze.
  * Все 12 lock-in при банке > 0: тот же auto-submit (`waveEnd` null), без CTA
  * «Узнать результат» — иначе игрок смотрит на уже закрытую волну.
@@ -32,6 +33,10 @@ import { QuestionCard } from '@/features/quiz/components/QuestionCard';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import { SurvivalQuizBankCountdown } from '@/features/survival-mode/components/SurvivalQuizBankCountdown';
+import {
+    SurvivalWaveStartCountdown,
+    useSurvivalWaveStart,
+} from '@/features/survival-mode/components/SurvivalWaveStartCountdown';
 import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-survival-bank-remaining-ms';
 import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
@@ -78,6 +83,8 @@ export function SurvivalQuizSessionForm({
     const [wrongCount, setWrongCount] = useState(0);
     const [bankExpired, setBankExpired] = useState(false);
     const [waveSubmitting, setWaveSubmitting] = useState(false);
+    // До startedAt — заставка 3‑2‑1 вместо вопроса; банк ещё не тикает.
+    const waveStart = useSurvivalWaveStart(survival.startedAt);
 
     // Ошибка hop снимает «идёт отправка»: выводим, а не сбрасываем в effect.
     // Guard авто-submit снимает явный retry в handleSubmit.
@@ -331,19 +338,29 @@ export function SurvivalQuizSessionForm({
             </div>
 
             <div className="pb-40 sm:pb-40">
-                <QuestionCard
-                    index={currentIndex + 1}
-                    question={currentQuestion}
-                    selectedOptionId={selectedAnswers[currentQuestion.id]}
-                    imageUrl={currentQuestion.imageUrl}
-                    imageUnavailableLabel={dictionary.quiz.imageUnavailable}
-                    imageExpandHint={dictionary.quiz.imageExpandHint}
-                    imageExpandLabel={dictionary.quiz.imageExpandLabel}
-                    imageCloseLabel={dictionary.quiz.imageCloseLabel}
-                    imagePriority={Boolean(currentQuestion.imageUrl)}
-                    disabled={answersLocked || currentLocked}
-                    onSelectOption={handleSelectOption}
-                />
+                {waveStart.started ? (
+                    <QuestionCard
+                        index={currentIndex + 1}
+                        question={currentQuestion}
+                        selectedOptionId={selectedAnswers[currentQuestion.id]}
+                        imageUrl={currentQuestion.imageUrl}
+                        imageUnavailableLabel={dictionary.quiz.imageUnavailable}
+                        imageExpandHint={dictionary.quiz.imageExpandHint}
+                        imageExpandLabel={dictionary.quiz.imageExpandLabel}
+                        imageCloseLabel={dictionary.quiz.imageCloseLabel}
+                        imagePriority={Boolean(currentQuestion.imageUrl)}
+                        disabled={answersLocked || currentLocked}
+                        onSelectOption={handleSelectOption}
+                    />
+                ) : (
+                    <SurvivalWaveStartCountdown
+                        waveLabel={labels.waveLineLabel.replace(
+                            '{n}',
+                            String(survival.waveIndex),
+                        )}
+                        secondsLeft={waveStart.secondsLeft}
+                    />
+                )}
             </div>
 
             <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pb-[max(1rem,env(safe-area-inset-bottom))]">
@@ -362,7 +379,10 @@ export function SurvivalQuizSessionForm({
                     </p>
                 ) : null}
 
-                {!allAnswered && !bankExpired && !waveSaving ? (
+                {waveStart.started &&
+                !allAnswered &&
+                !bankExpired &&
+                !waveSaving ? (
                     <p
                         id={submitHintId}
                         className="mb-2 text-sm leading-snug text-muted sm:mb-3"

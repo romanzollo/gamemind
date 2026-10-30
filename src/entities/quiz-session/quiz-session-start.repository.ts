@@ -48,6 +48,7 @@ import {
     buildSnapshotData,
     mapSnapshotDataToPublicQuestions,
 } from '@/entities/quiz-session/quiz-session-snapshot';
+import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
 
 type SessionSnapshotCreateResult = {
     id: string;
@@ -448,13 +449,17 @@ async function updateSurvivalSessionSnapshotOnClient(
 /**
  * Hop 3: startedAt ПОСЛЕ JSONB — банк T0=20 не съедается пока UPDATE висит.
  * JS Date, не SQL NOW() в naive TIMESTAMP (урок Timed timedEndsAt).
+ * + startDelaySeconds: банк стартует после заставки 3‑2‑1, а не в момент
+ * записи — редирект и загрузка страницы попадают в паузу.
  */
 async function armSurvivalSessionStartedAtOnClient(
     client: Client,
     sessionId: string,
     userId: string,
 ): Promise<Date> {
-    const startedAt = new Date();
+    const startedAt = new Date(
+        Date.now() + SURVIVAL_MODE_MVP_RULES.startDelaySeconds * 1000,
+    );
     const result = await client.query(
         `
             UPDATE "QuizSession"

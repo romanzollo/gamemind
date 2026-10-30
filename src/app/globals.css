@@ -308,6 +308,21 @@ html {
     }
 }
 
+/*
+ * Отсчёт «3‑2‑1» перед волной Выживания: цифра «падает» на место.
+ * Не с opacity 0: в фоне вкладки кадры стоят, и цифра не должна пропасть.
+ */
+@keyframes gm-countdown-tick {
+    0% {
+        opacity: 0.4;
+        transform: scale(1.35);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 @keyframes gm-achievement-glow {
     0% {
         box-shadow: 0 0 0 0 color-mix(in srgb, var(--gm-glow) 55%, transparent);

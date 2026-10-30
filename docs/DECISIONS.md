@@ -1955,11 +1955,11 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 | Correct / wrong | +4s / −6s (bank only, not score) |
 | End of wave | Bank reaches 0 **or** all wave questions answered with bank > 0. Client **auto-submits**. |
 | Mix | **No.** SINGLE `EASY\|MEDIUM\|HARD` only |
-| Clock UX | Client remaining from `startedAt` + local lock-ins + `initialBankSeconds` on play DTO. Not authority |
-| Clock authority | `elapsed = completedAt − startedAt`; `budget = max(0, T0 + 4×correct − 6×wrong)`; `clockOk ⇔ elapsed ≤ budget + grace` |
+| Clock UX | Client remaining from `startedAt` + local lock-ins + `initialBankSeconds` on play DTO. Not authority. Before `startedAt` — «Wave N · 3‑2‑1» instead of the question (Oct 30, 2026) |
+| Clock authority | `elapsed = completedAt − startedAt`; `budget = max(0, T0 + 4×correct − 6×max(0, wrong − 1))` — the last penalty may only drain the bank (Oct 30, 2026); `clockOk ⇔ elapsed ≤ budget + grace` |
 | Grace | 3s for clockOk only. **T0' reconstruct has no grace** |
 | `timedEndsAt` | **NULL**. Never SET. Never UPDATE |
-| `startedAt` | JS `Date` **after connect** on Survival INSERT (create hop 3 after JSONB). Not SQL `NOW()` into naive `TIMESTAMP` |
+| `startedAt` | JS `Date` **after connect** on Survival INSERT (create hop 3 after JSONB) **+ `startDelaySeconds` (3 s)**. Not SQL `NOW()` into naive `TIMESTAMP` |
 | Late / paused client | Still `completeWithResult`. Wave score enters run total only if `survivalClockOk = true` |
 | Answers | Partial OK; unanswered do not apply −6 |
 | Daily | `dailyChallengeId` NULL. Daily does **not** use the cycle |
@@ -2000,7 +2000,7 @@ Submit:   score + survivalClockOk (T0 from play/run)
 - JSONB bank/seen/duration on `completeWithResult`; bump timeouts / keep-warm
 - Fold Survival into `runTimedQuizStart`; Mix; a cycle draw **without** the run's seen ids
 - Put Survival points into Classic/Blitz/Daily best
-- **Paint-arm / play-ready re-arm `startedAt` on quiz page or client mount** to “fix” create+load eating T0' — rejected Aug 21 (local freeze / infinite load / Strict Mode). Clock stays create hop 3; prod Neon is usually fast enough. Revisit only with measured prod evidence + ADR.
+- **Paint-arm / play-ready re-arm `startedAt` on quiz page or client mount** to “fix” create+load eating T0' — rejected Aug 21 (local freeze / infinite load / Strict Mode). Still rejected; the Oct 30 fix is a fixed **server-side** start delay at create hop 3 (see «Survival clock — start delay…» below), no client write.
 
 ### Implementation order
 
@@ -2023,6 +2023,23 @@ Submit:   score + survivalClockOk (T0 from play/run)
 | Cost | Same pooled cycle hop as Classic (state + pool ids + optimistic UPDATE), outside the Direct queue |
 
 **Not chosen:** a separate Survival cycle — a Classic question would still pop up in Survival right away.
+
+### Survival clock — start delay and partial last penalty (October 30, 2026)
+
+**Problem (owner report + prod read):** (1) after «Ещё забег» the bank often started below 20 s — page load after create was eating T0; (2) honest bank-out waves scored 0 with a struck-through attempt. Prod wave-1 data: 11 bank-outs of the owner, 6 zeroed; overshoot 0.4–6.1 s (not constant → not PC clock skew). All 8 zeroed wave-1s on prod had a wrong answer and overshoot ≤ 6 + grace: a wrong answer with < 6 s left drives the bank below zero, the client submits at once, but the server subtracted the full −6 s, so «bank end» landed **before** the answer.
+
+**Decision:**
+
+| Rule | Choice |
+|------|--------|
+| Start delay | `startedAt` = create hop 3 + `startDelaySeconds` (3 s). Client shows «Wave N» + 3‑2‑1 until `startedAt`, then the question with the full bank. Redirect + play-load fall into the delay; server formulas unchanged |
+| Partial last penalty | `budget = max(0, T0 + 4×correct − 6×max(0, wrong − 1))` for `clockOk`. Answers arrive as one batch, so the server cannot know which wrong was last — it assumes one penalty only drained the remainder |
+| T0' reconstruct | Unchanged (full −6×wrong, no grace): a wave ended by a penalty leaves bank 0 → run ends |
+| Cost | A forged client could gain ≤ 6 s per wave if it has at least one wrong answer. Per-answer server lock-in would close it but costs a request per answer from RU (same trade-off as Survival `isCorrect`) |
+
+**Not chosen:**
+- Re-syncing the client timer to server time from the page render — the offset would include page delivery time and make auto-submit late again; prod data shows clocks are fine (min overshoot 0.4 s).
+- Bigger grace for everyone — would also hide pause-cheats without a wrong answer.
 
 **References:** Timed Mode MVP; Quiz Start / Session Load Playbook; User Question Cycle (Survival continue **supersedes** “same bag for all waves”); Weighted scoring; Leaderboard Layer 1; `docs/QUIZ_NEON_HOT_PATH.md`; `src/features/survival-mode/types.ts`.
 

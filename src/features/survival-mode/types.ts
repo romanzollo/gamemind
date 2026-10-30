@@ -72,6 +72,14 @@ export const SURVIVAL_MODE_MVP_RULES = {
      * `SurvivalRun.bankRemainingSeconds` (после complete предыдущей волны).
      */
     initialBankSeconds: 20,
+    /**
+     * Пауза «Волна N · 3‑2‑1» между созданием волны и стартом банка (сек).
+     * `startedAt` = момент записи + пауза: загрузка страницы (rematch,
+     * холодная функция, картинки) не ест T0, вопросы показываются ровно
+     * на старте банка. Все серверные формулы считают от `startedAt` как
+     * раньше. ADR: Survival clock — start delay and partial last penalty.
+     */
+    startDelaySeconds: 3,
     /** Начисление к банку за верный ответ. Не меняет `scoring.ts`. */
     correctDeltaSeconds: 4,
     /**
@@ -263,7 +271,8 @@ export type SurvivalModeErrorCode =
 /**
  * Вход чистой сверки банка (Vitest; не hot path).
  *
- * `budget = max(0, T0 + plus×correct − minus×wrong)`
+ * `budget = max(0, T0 + plus×correct − minus×max(0, wrong − 1))` —
+ * последний штраф мог списать только остаток банка (isSurvivalClockOk).
  * `clockOk ⇔ elapsedMs <= budgetMs + graceMs`
  *
  * Волна 2+: `initialBankSeconds` = T0' с `SurvivalRun.bankRemainingSeconds`.

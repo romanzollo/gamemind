@@ -57,8 +57,8 @@ describe('isSurvivalClockOk', () => {
 
     it('returns true on the grace boundary and false 1ms after', () => {
         const correctCount = 5;
-        const wrongCount = 1;
-        const budgetMs = (T0 + PLUS * correctCount - MINUS * wrongCount) * 1000;
+        const wrongCount = 0;
+        const budgetMs = (T0 + PLUS * correctCount) * 1000;
         const allowedMs = budgetMs + GRACE * 1000;
 
         expect(
@@ -87,7 +87,8 @@ describe('isSurvivalClockOk', () => {
         ).toBe(false);
     });
 
-    it('floors budget at 0 so four quick wrongs still pass within grace', () => {
+    it('floors budget at 0 so five quick wrongs still pass within grace', () => {
+        // Даже без последнего штрафа банк ушёл в минус: 20 − 6×4 < 0.
         const rawBudgetSeconds = T0 + PLUS * 0 - MINUS * 4;
         expect(rawBudgetSeconds).toBeLessThan(0);
 
@@ -95,23 +96,53 @@ describe('isSurvivalClockOk', () => {
             check({
                 elapsedMs: 1_000,
                 correctCount: 0,
-                wrongCount: 4,
+                wrongCount: 5,
             }),
         ).toBe(true);
         expect(
             check({
                 elapsedMs: GRACE * 1000,
                 correctCount: 0,
-                wrongCount: 4,
+                wrongCount: 5,
             }),
         ).toBe(true);
         expect(
             check({
                 elapsedMs: GRACE * 1000 + 1,
                 correctCount: 0,
-                wrongCount: 4,
+                wrongCount: 5,
             }),
         ).toBe(false);
+    });
+
+    it('accepts a wave ended by a last wrong answer that only drained the bank', () => {
+        // Прод, окт 2026: 2 неверных, банк 20 − 12 = 8 с, а сдача пришла на
+        // 14-й секунде: второй неверный дан при остатке ~2 с и увёл банк в минус.
+        expect(
+            check({
+                elapsedMs: 14_000,
+                correctCount: 0,
+                wrongCount: 2,
+            }),
+        ).toBe(true);
+        // Тот же ответ, но сдача позже допуска: банк без последнего штрафа
+        // 14 с + grace — дальше волна уже не засчитывается.
+        expect(
+            check({
+                elapsedMs: (T0 - MINUS + GRACE) * 1000 + 1,
+                correctCount: 0,
+                wrongCount: 2,
+            }),
+        ).toBe(false);
+    });
+
+    it('gives no penalty allowance when every answer was right', () => {
+        const correctCount = 3;
+        const allowedMs = (T0 + PLUS * correctCount + GRACE) * 1000;
+
+        expect(check({ elapsedMs: allowedMs + 1, correctCount, wrongCount: 0 })).toBe(
+            false,
+        );
     });
 
     it('does not apply −6s for unanswered (wrongCount stays 0)', () => {
