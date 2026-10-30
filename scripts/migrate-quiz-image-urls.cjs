@@ -59,6 +59,8 @@ const TRANSIENT_PG_ERROR_MESSAGES = [
     'ECONNRESET',
     'ETIMEDOUT',
     'timeout exceeded when trying to connect',
+    // pg при connectionTimeoutMillis (обрыв TLS к Neon с Windows).
+    'timeout expired',
 ];
 
 function parseArgs(argv) {
