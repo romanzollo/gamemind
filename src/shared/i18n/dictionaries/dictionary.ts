@@ -705,6 +705,12 @@ export type Dictionary = {
          * `{count}` = сколько ещё (не показаны по одному).
          */
         toastMoreSummary: string;
+        /** Названия уровней редкости: метка на плитке и в тосте. */
+        tiers: { bronze: string; silver: string; gold: string; legend: string };
+        /**
+         * Для экранных читалок: цвет рамки не озвучивается. `{tier}` = имя уровня.
+         */
+        tierLabel: string;
         items: {
             FIRST_QUIZ: { title: string; description: string };
             QUIZZES_5: { title: string; description: string };

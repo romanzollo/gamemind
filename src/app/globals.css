@@ -39,6 +39,13 @@
     --color-podium-silver-fg: var(--podium-silver-fg);
     --color-podium-bronze: var(--podium-bronze);
     --color-podium-bronze-fg: var(--podium-bronze-fg);
+    --color-podium-legend: var(--podium-legend);
+    --color-podium-legend-fg: var(--podium-legend-fg);
+    /* Редкость достижений: «чернила» металла — рамка, значок, прогресс */
+    --color-tier-bronze: var(--tier-bronze);
+    --color-tier-silver: var(--tier-silver);
+    --color-tier-gold: var(--tier-gold);
+    --color-tier-legend: var(--tier-legend);
     --color-ring: var(--ring);
     --shadow-sm: var(--shadow-sm);
     --shadow-md: var(--shadow-md);
@@ -86,6 +93,18 @@
     --podium-silver-fg: #1e2430;
     --podium-bronze: #c9894a;
     --podium-bronze-fg: #2a1808;
+    /* Легенда — «оникс с золотом», а не пятый цвет акцента (не purple SaaS) */
+    --podium-legend: #14181f;
+    --podium-legend-fg: #f0d56a;
+
+    /*
+     * Чернила уровней: темнее подиума, чтобы тонкий штрих значка
+     * держал контраст ≥ 3:1 на белой плитке.
+     */
+    --tier-bronze: #9a5a24;
+    --tier-silver: #66717f;
+    --tier-gold: #9a7410;
+    --tier-legend: #14181f;
 
     --ring: #0b6e4f;
     --shadow-sm: 0 1px 2px rgb(20 24 31 / 0.06);
@@ -130,6 +149,14 @@
     --podium-silver-fg: #c8d0db;
     --podium-bronze: #3a2a1c;
     --podium-bronze-fg: #e0b080;
+    /* Легенда в тёмной теме — «платина»: светлая плашка, тёмное золото */
+    --podium-legend: #e8ecf1;
+    --podium-legend-fg: #3d3418;
+
+    --tier-bronze: #e0b080;
+    --tier-silver: #c8d0db;
+    --tier-gold: #f0d56a;
+    --tier-legend: #f7f9fb;
 
     --ring: #3ecf8e;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.45);

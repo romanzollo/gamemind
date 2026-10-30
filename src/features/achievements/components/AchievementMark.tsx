@@ -1,35 +1,43 @@
 import { ACHIEVEMENT_ILLUSTRATIONS } from '@/features/achievements/illustrations';
-import type { AchievementCode } from '@/features/achievements/types';
+import {
+    ACHIEVEMENT_TIER,
+    type AchievementCode,
+    type AchievementTier,
+} from '@/features/achievements/types';
 
 /**
  * Визуальный mark бейджа из illustration pack.
  *
- * unlocked → primary; locked → muted + легкая desaturation через opacity.
- * Размер md — для tile-сетки; sm — запасной компактный ряд.
+ * unlocked → цвет уровня редкости (токены `--tier-*`, светлая/тёмная тема);
+ * locked → силуэт: muted + opacity, уровень читается по рамке плитки.
+ * lg — плитка профиля; sm — тост (Sonner).
  */
 
 type AchievementMarkProps = {
     code: AchievementCode;
     unlocked: boolean;
-    size?: 'sm' | 'md';
+    size?: 'sm' | 'lg';
     className?: string;
 };
 
-const sizeShellClassName = {
+const sizeClassName = {
     sm: 'h-9 w-9',
-    /** Mobile плотнее; sm+ чуть крупнее для tile-сетки. */
-    md: 'h-10 w-10 sm:h-12 sm:w-12',
+    /** Профиль: крупнее прежних 40px, чтобы силуэт читался на телефоне. */
+    lg: 'h-12 w-12 sm:h-14 sm:w-14',
 } as const;
 
-const sizeSvgClassName = {
-    sm: 'h-9 w-9',
-    md: 'h-10 w-10 sm:h-12 sm:w-12',
-} as const;
+/** Полные строки классов — Tailwind не видит собранные на лету имена. */
+export const TIER_TEXT_CLASS_NAME: Record<AchievementTier, string> = {
+    bronze: 'text-tier-bronze',
+    silver: 'text-tier-silver',
+    gold: 'text-tier-gold',
+    legend: 'text-tier-legend',
+};
 
 export function AchievementMark({
     code,
     unlocked,
-    size = 'md',
+    size = 'lg',
     className = '',
 }: AchievementMarkProps) {
     const Illustration = ACHIEVEMENT_ILLUSTRATIONS[code];
@@ -38,15 +46,17 @@ export function AchievementMark({
         <span
             className={[
                 'flex shrink-0 items-center justify-center',
-                sizeShellClassName[size],
-                unlocked ? 'text-primary' : 'text-muted opacity-55',
+                sizeClassName[size],
+                unlocked
+                    ? TIER_TEXT_CLASS_NAME[ACHIEVEMENT_TIER[code]]
+                    : 'text-muted opacity-55',
                 className,
             ]
                 .filter(Boolean)
                 .join(' ')}
             aria-hidden
         >
-            <Illustration className={sizeSvgClassName[size]} />
+            <Illustration className={sizeClassName[size]} />
         </span>
     );
 }

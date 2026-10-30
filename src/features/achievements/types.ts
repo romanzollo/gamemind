@@ -59,6 +59,14 @@ export type AchievementCriteriaKind =
     | 'total_score_at_least';
 
 /**
+ * Уровень редкости бейджа — только вид (цвет рамки, метка, тост).
+ * Очков, экономики и влияния на unlock нет; в БД не хранится.
+ * «Легенда» — только для самых трудных целей, иначе обесценится.
+ * Canon: docs/DECISIONS.md → Achievements (tiers).
+ */
+export type AchievementTier = 'bronze' | 'silver' | 'gold' | 'legend';
+
+/**
  * Описание одного бейджа в каталоге (код + критерий).
  * Заголовок/описание — в словарях `dictionary.achievements.items[code]`, не здесь.
  */
@@ -232,3 +240,27 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
         threshold: 3,
     },
 ] as const;
+
+/**
+ * Редкость каждого кода. Record, а не поле в массиве каталога: новый код
+ * в `AchievementCode` без уровня — ошибка компиляции, а не серая плитка.
+ */
+export const ACHIEVEMENT_TIER: Record<AchievementCode, AchievementTier> = {
+    FIRST_QUIZ: 'bronze',
+    QUIZZES_5: 'bronze',
+    QUIZZES_10: 'silver',
+    QUIZZES_25: 'gold',
+    QUIZZES_50: 'gold',
+    PERFECT_QUIZ: 'bronze',
+    PERFECT_3: 'silver',
+    DAILY_COMPLETE: 'bronze',
+    DAILY_3: 'silver',
+    TIMED_COMPLETE: 'bronze',
+    CLASSIC_AND_TIMED: 'bronze',
+    HIGH_ACCURACY_90: 'bronze',
+    POINTS_250: 'gold',
+    MEDIUM_QUIZ: 'bronze',
+    MEDIUM_5: 'silver',
+    HARD_QUIZ: 'silver',
+    HARD_3: 'gold',
+};

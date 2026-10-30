@@ -544,17 +544,24 @@ export const enDictionary = {
         collapseSection: 'Collapse',
         toastUnlocked: 'Achievement unlocked',
         toastMoreSummary: '{count} more — see your profile',
+        tiers: {
+            bronze: 'Bronze',
+            silver: 'Silver',
+            gold: 'Gold',
+            legend: 'Legend',
+        },
+        tierLabel: 'Rarity: {tier}',
         items: {
             FIRST_QUIZ: {
                 title: 'The start',
                 description: 'Finish any game.',
             },
             QUIZZES_5: {
-                title: 'Found the rhythm',
+                title: 'In the groove',
                 description: 'Play 5 games.',
             },
             QUIZZES_10: {
-                title: 'Ten-run streak',
+                title: 'Ten down',
                 description: 'Play 10 games.',
             },
             QUIZZES_25: {
@@ -586,7 +593,7 @@ export const enDictionary = {
                 description: 'Play a Blitz game.',
             },
             CLASSIC_AND_TIMED: {
-                title: 'Both modes',
+                title: 'Classic and Blitz',
                 description: 'Play both Classic and Blitz.',
             },
             HIGH_ACCURACY_90: {
@@ -610,7 +617,7 @@ export const enDictionary = {
                 description: 'Play a game on Hard.',
             },
             HARD_3: {
-                title: 'Three hards',
+                title: 'Hard hat-trick',
                 description: 'Play 3 games on Hard.',
             },
         },

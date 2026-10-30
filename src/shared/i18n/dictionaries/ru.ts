@@ -561,17 +561,24 @@ export const ruDictionary: Dictionary = {
         collapseSection: 'Свернуть',
         toastUnlocked: 'Достижение открыто',
         toastMoreSummary: 'Ещё {count} — смотри в профиле',
+        tiers: {
+            bronze: 'Бронза',
+            silver: 'Серебро',
+            gold: 'Золото',
+            legend: 'Легенда',
+        },
+        tierLabel: 'Редкость: {tier}',
         items: {
             FIRST_QUIZ: {
                 title: 'Начало',
                 description: 'Заверши любую игру.',
             },
             QUIZZES_5: {
-                title: 'Вошёл в ритм',
+                title: 'В ритме',
                 description: 'Сыграй 5 игр.',
             },
             QUIZZES_10: {
-                title: 'Серия из десяти',
+                title: 'Десятка',
                 description: 'Сыграй 10 игр.',
             },
             QUIZZES_25: {
@@ -595,7 +602,7 @@ export const ruDictionary: Dictionary = {
                 description: 'Сыграй челлендж дня.',
             },
             DAILY_3: {
-                title: 'Три дня в деле',
+                title: 'Три челленджа',
                 description: 'Сыграй челлендж дня три раза.',
             },
             TIMED_COMPLETE: {
@@ -603,7 +610,7 @@ export const ruDictionary: Dictionary = {
                 description: 'Сыграй в Блиц.',
             },
             CLASSIC_AND_TIMED: {
-                title: 'Оба режима',
+                title: 'Классика и Блиц',
                 description: 'Сыграй и в Классику, и в Блиц.',
             },
             HIGH_ACCURACY_90: {

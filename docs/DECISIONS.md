@@ -1688,7 +1688,19 @@ Allowed vocabulary: round card / sheet of question lines, combo ticks or tally, 
 
 Forbidden: `?` as “quiz” (reads as help at 40px), gamepad, cartridge, pixel-art, other-franchise mushrooms/coins, skulls, XP bars, neon, Lucide, PNG/emoji, hourglass (use the dial), growing barcharts for volume, hills for difficulty, overflow-hidden to hide a path that hits x=48.
 
-**Explicitly NOT (still):** rarity/points economy, public LB showcase, admin CRUD, streak achievements, category unlocks, notification inbox, scoring math changes, unlock SQL inside Neon snapshot write path. Do not rename shipped codes without data migration.
+**Explicitly NOT (still):** points economy for badges, public LB showcase, admin CRUD, category unlocks, notification inbox, scoring math changes, unlock SQL inside Neon snapshot write path. Do not rename shipped codes without data migration (titles in i18n may change — codes may not).
+
+**Tiers (Oct 30, 2026 — ROADMAP 2.2, part B):** rarity is **presentation only**: `ACHIEVEMENT_TIER: Record<AchievementCode, AchievementTier>` in `types.ts` (`bronze | silver | gold | legend`). Not in DB, no points, does not affect unlock. `Record` (not a catalog field) so a new code without a tier fails `tsc`. Legend is reserved for the hardest goals only.
+
+| Rule | Choice |
+|------|--------|
+| Colors | Tokens `--tier-*` (stroke/stripe/progress, ≥ 3:1 on surface) + chips reuse leaderboard `--podium-*` bg/fg; legend = `--podium-legend*` |
+| Legend color | Light: onyx + gold; dark: platinum + dark gold. Not a fifth accent hue (design lock: no purple SaaS) |
+| Tile | Left stripe in tier color (locked: same tier at 45%); tier chip above title; mark `lg` 48/56px; locked mark = muted silhouette; progress bar in tier color |
+| A11y | Chip is `aria-hidden`; `sr-only` «Редкость: {tier}» / «Rarity: {tier}» (color is not announced) |
+| Mark | `AchievementMark` colors unlocked marks by tier — toast inherits it |
+
+**Title copy (Oct 30):** «Вошёл в ритм» → «В ритме» (gender-neutral), «Серия из десяти» → «Десятка» (10 games total, not a streak), «Три дня в деле» → «Три челленджа» (days need not be consecutive), «Оба режима» → «Классика и Блиц»; EN `HARD_3` → «Hard hat-trick». Codes unchanged.
 
 **Why not taxonomy still:** no product pressure. **Timed mode:** preferred next *mode* epic after achievements progress; higher cost than another badge.
 

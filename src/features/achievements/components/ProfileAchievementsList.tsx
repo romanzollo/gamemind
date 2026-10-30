@@ -3,6 +3,8 @@
  *
  * Client: тап раскрывает description (паритет desktop title-hover).
  * Mobile: плотнее плитки, locked-first, превью N + «Показать все».
+ * Редкость: полоса слева + метка уровня; закрытая плитка — силуэт значка
+ * и тот же уровень приглушённо, прогресс — цветом уровня.
  * Canon: Scoreboard Editorial.
  */
 'use client';
@@ -10,10 +12,12 @@
 import { useState } from 'react';
 
 import { AchievementMark } from '@/features/achievements/components/AchievementMark';
-import type {
-    AchievementCode,
-    AchievementProgress,
-    AchievementProgressItem,
+import {
+    ACHIEVEMENT_TIER,
+    type AchievementCode,
+    type AchievementProgress,
+    type AchievementProgressItem,
+    type AchievementTier,
 } from '@/features/achievements/types';
 import { ProfileListDisclosureControl } from '@/features/profile/components/ProfileListDisclosureControl';
 import type { Dictionary } from '@/shared/i18n';
@@ -21,6 +25,40 @@ import { InlineAlert } from '@/shared/ui';
 
 /** Сколько бейджей видно на mobile до «Показать все». */
 const MOBILE_PREVIEW_COUNT = 6;
+
+/**
+ * Классы уровня редкости — полными строками (Tailwind не видит собранные).
+ * Закрытая плитка показывает тот же уровень приглушённо: видно, что на кону.
+ */
+const TIER_TILE_CLASS_NAME: Record<
+    AchievementTier,
+    { stripe: string; stripeLocked: string; chip: string; bar: string }
+> = {
+    bronze: {
+        stripe: 'border-l-tier-bronze',
+        stripeLocked: 'border-l-tier-bronze/45',
+        chip: 'bg-podium-bronze text-podium-bronze-fg',
+        bar: 'bg-tier-bronze',
+    },
+    silver: {
+        stripe: 'border-l-tier-silver',
+        stripeLocked: 'border-l-tier-silver/45',
+        chip: 'bg-podium-silver text-podium-silver-fg',
+        bar: 'bg-tier-silver',
+    },
+    gold: {
+        stripe: 'border-l-tier-gold',
+        stripeLocked: 'border-l-tier-gold/45',
+        chip: 'bg-podium-gold text-podium-gold-fg',
+        bar: 'bg-tier-gold',
+    },
+    legend: {
+        stripe: 'border-l-tier-legend',
+        stripeLocked: 'border-l-tier-legend/45',
+        chip: 'bg-podium-legend text-podium-legend-fg',
+        bar: 'bg-tier-legend',
+    },
+};
 
 type ProfileAchievementsListProps = {
     /** null = Neon/read failed после catch-up. */
@@ -142,6 +180,10 @@ export function ProfileAchievementsList({
                               )
                             : null;
 
+                    const tier = ACHIEVEMENT_TIER[item.code];
+                    const tierClassName = TIER_TILE_CLASS_NAME[tier];
+                    const tierName = labels.tiers[tier];
+
                     const isExpanded = expandedCode === item.code;
                     const hideOnMobilePreview =
                         needsMobileFold &&
@@ -166,20 +208,36 @@ export function ProfileAchievementsList({
                                             : item.code,
                                     )
                                 }
-                                className={
+                                className={[
+                                    'flex w-full gap-2.5 border border-border border-l-4 p-2 text-left sm:gap-3 sm:p-2.5',
                                     unlocked
-                                        ? 'flex w-full gap-2 border border-border border-l-4 border-l-primary bg-surface p-2 text-left sm:gap-2.5 sm:p-2.5'
-                                        : 'flex w-full gap-2 border border-border border-l-4 border-l-border bg-surface/70 p-2 text-left opacity-80 sm:gap-2.5 sm:p-2.5'
-                                }
+                                        ? `${tierClassName.stripe} bg-surface`
+                                        : `${tierClassName.stripeLocked} bg-surface/70 opacity-80`,
+                                ].join(' ')}
                             >
                                 <AchievementMark
                                     code={item.code}
                                     unlocked={unlocked}
-                                    size="md"
+                                    size="lg"
                                 />
 
                                 <div className="min-w-0 flex-1 self-center">
-                                    <p className="font-display text-sm font-semibold leading-tight tracking-tight text-foreground">
+                                    {/* Цвет плашки не озвучивается — полное «Редкость: …» для читалок. */}
+                                    <p className="leading-none">
+                                        <span className="sr-only">
+                                            {labels.tierLabel.replace(
+                                                '{tier}',
+                                                tierName,
+                                            )}
+                                        </span>
+                                        <span
+                                            aria-hidden
+                                            className={`inline-flex rounded-sm px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-wide ${tierClassName.chip}`}
+                                        >
+                                            {tierName}
+                                        </span>
+                                    </p>
+                                    <p className="mt-1 font-display text-sm font-semibold leading-tight tracking-tight text-foreground">
                                         {copy.title}
                                     </p>
                                     <p className="mt-0.5 font-mono text-xs leading-tight tabular-nums tracking-tight text-muted">
@@ -202,7 +260,7 @@ export function ProfileAchievementsList({
                                     </p>
                                     {progressPercent !== null ? (
                                         <div
-                                            className="mt-1 h-0.5 w-full bg-border"
+                                            className="mt-1.5 h-1 w-full rounded-full bg-border"
                                             role="progressbar"
                                             aria-valuemin={0}
                                             aria-valuemax={
@@ -214,7 +272,7 @@ export function ProfileAchievementsList({
                                             aria-label={copy.title}
                                         >
                                             <div
-                                                className="h-full bg-foreground"
+                                                className={`h-full rounded-full ${tierClassName.bar}`}
                                                 style={{
                                                     width: `${progressPercent}%`,
                                                 }}
