@@ -59,9 +59,9 @@ export default async function LeaderboardPage({
     const periodHint =
         filters.period === 'week'
             ? dictionary.leaderboard.weekWindowHint
-            : filters.period === 'all'
-              ? dictionary.leaderboard.allTimeHint
-              : null;
+            : filters.period === 'month'
+              ? dictionary.leaderboard.monthWindowHint
+              : dictionary.leaderboard.allTimeHint;
     const showBlitzHint = filters.mode === 'blitz';
 
     return (

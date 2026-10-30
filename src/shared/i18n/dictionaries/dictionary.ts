@@ -212,10 +212,6 @@ export type Dictionary = {
     profile: {
         title: string;
         sectionAccount: string;
-        sectionSecurity: string;
-        username: string;
-        email: string;
-        role: string;
         logout: string;
         historyTitle: string;
         historyEmpty: string;
@@ -259,7 +255,6 @@ export type Dictionary = {
         avatarFileHint: string;
         avatarUrl: string;
         avatarUrlHint: string;
-        avatarPreviewFailed: string;
         changeAvatarSubmit: string;
         clearAvatar: string;
         changeAvatarSuccess: string;
@@ -608,6 +603,8 @@ export type Dictionary = {
          * Не писать «сойдёт с доски». Не обещать сброс в понедельник.
          */
         weekWindowHint: string;
+        /** Когда открыт «Месяц»: скользящее окно 30 дней, как у недели. */
+        monthWindowHint: string;
         /**
          * Когда открыто «Всё время».
          * Смысл: это рекорды без окна в 7 дней; живая гонка — вкладка «Неделя».
