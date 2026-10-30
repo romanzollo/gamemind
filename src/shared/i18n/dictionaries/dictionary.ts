@@ -191,13 +191,15 @@ export type Dictionary = {
         password: string;
         confirmPassword: string;
         username: string;
+        /** Правило имени из registerSchema — показывать до ошибки, а не после. */
+        usernameHint: string;
+        passwordHint: string;
         loginButton: string;
         registerButton: string;
         noAccount: string;
         haveAccount: string;
         registerLink: string;
         loginLink: string;
-        accountCreated: string;
         errors: {
             invalidInput: string;
             emailTaken: string;
@@ -656,7 +658,6 @@ export type Dictionary = {
      * Canon: DECISIONS → Toast Notifications MVP.
      */
     notifications: {
-        successSaved: string;
         errorGeneric: string;
         /** aria-label кнопки закрытия toast. */
         closeToast: string;

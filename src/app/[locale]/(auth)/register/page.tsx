@@ -27,12 +27,22 @@ export default function RegisterPage() {
             </h1>
             <form action={formAction} className="mt-4 flex flex-col gap-3">
                 <input type="hidden" name="locale" value={locale} />
-                <input
-                    name="username"
-                    placeholder={dictionary.auth.username}
-                    autoComplete="username"
-                    required
-                />
+                {/* Правила полей — из registerSchema: показываем заранее, ошибка формы общая. */}
+                <div className="flex flex-col gap-1">
+                    <input
+                        name="username"
+                        placeholder={dictionary.auth.username}
+                        autoComplete="username"
+                        aria-describedby="register-username-hint"
+                        required
+                    />
+                    <p
+                        id="register-username-hint"
+                        className="text-xs text-muted"
+                    >
+                        {dictionary.auth.usernameHint}
+                    </p>
+                </div>
                 <input
                     name="email"
                     type="email"
@@ -40,14 +50,23 @@ export default function RegisterPage() {
                     autoComplete="email"
                     required
                 />
-                <input
-                    name="password"
-                    type="password"
-                    placeholder={dictionary.auth.password}
-                    autoComplete="new-password"
-                    required
-                    minLength={8}
-                />
+                <div className="flex flex-col gap-1">
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder={dictionary.auth.password}
+                        autoComplete="new-password"
+                        aria-describedby="register-password-hint"
+                        required
+                        minLength={8}
+                    />
+                    <p
+                        id="register-password-hint"
+                        className="text-xs text-muted"
+                    >
+                        {dictionary.auth.passwordHint}
+                    </p>
+                </div>
                 <input
                     name="confirmPassword"
                     type="password"
