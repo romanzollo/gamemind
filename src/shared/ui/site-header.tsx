@@ -10,6 +10,7 @@ import { LanguageSwitcher } from './language-switcher';
 import { isNavActive, navActiveClassName } from './nav-active';
 import { PendingLink } from './pending-link';
 import { SiteMobileMenu } from './site-mobile-menu';
+import type { ClientTheme } from './theme-client';
 import { ThemeToggle } from './theme-toggle';
 
 type NavUser = {
@@ -23,6 +24,8 @@ type SiteHeaderProps = {
     user: NavUser | null;
     authControls: ReactNode;
     mobileAuthControls: ReactNode;
+    /** Тема из cookie (layout) — серверный снимок для ThemeToggle. */
+    theme: ClientTheme;
 };
 
 type NavLinkItem = {
@@ -63,6 +66,7 @@ export function SiteHeader({
     user,
     authControls,
     mobileAuthControls,
+    theme,
 }: SiteHeaderProps) {
     const pathname = usePathname();
     const mainLinks = getMainLinks(user);
@@ -76,13 +80,13 @@ export function SiteHeader({
     const desktopUtilities = (
         <div className="hidden items-center gap-1 sm:gap-2 lg:flex">
             <LanguageSwitcher locale={locale} labels={dictionary.language} />
-            <ThemeToggle labels={dictionary.theme} />
+            <ThemeToggle labels={dictionary.theme} initialTheme={theme} />
         </div>
     );
     const menuUtilities = (
         <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSwitcher locale={locale} labels={dictionary.language} />
-            <ThemeToggle labels={dictionary.theme} />
+            <ThemeToggle labels={dictionary.theme} initialTheme={theme} />
         </div>
     );
 

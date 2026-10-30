@@ -86,6 +86,7 @@ export default async function LocaleLayout({
                     locale={locale}
                     dictionary={dictionary}
                     user={navUser}
+                    theme={theme}
                 />
                 {/*
                   Цель skip-ссылки. Страницы сами держат свой <main> —

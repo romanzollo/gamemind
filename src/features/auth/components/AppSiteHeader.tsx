@@ -4,6 +4,7 @@ import type { Role } from '@prisma/client';
 
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { SiteHeader } from '@/shared/ui';
+import type { ClientTheme } from '@/shared/ui/theme-client';
 
 import { HeaderAuthControls } from './HeaderAuthControls';
 
@@ -17,6 +18,8 @@ type AppSiteHeaderProps = {
     locale: Locale;
     dictionary: Dictionary;
     user: AppSiteHeaderUser | null;
+    /** Тема из cookie — чтобы кнопка темы совпала с SSR. */
+    theme: ClientTheme;
 };
 
 /**
@@ -28,6 +31,7 @@ export function AppSiteHeader({
     locale,
     dictionary,
     user,
+    theme,
 }: AppSiteHeaderProps) {
     const navUser = user
         ? { username: user.username, role: user.role }
@@ -38,6 +42,7 @@ export function AppSiteHeader({
             locale={locale}
             dictionary={dictionary}
             user={navUser}
+            theme={theme}
             authControls={
                 <HeaderAuthControls
                     locale={locale}

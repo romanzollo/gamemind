@@ -19,7 +19,7 @@ import { Toaster } from 'sonner';
 
 import {
     getDocumentTheme,
-    THEME_CHANGE_EVENT,
+    subscribeDocumentTheme,
     type ClientTheme,
 } from '@/shared/ui/theme-client';
 import { useHydrated } from '@/shared/ui/use-hydrated';
@@ -50,22 +50,6 @@ const sonnerTokenStyle = {
 
 /** Совпадает с Tailwind `lg`: до desktop toast снизу, не под sticky chrome. */
 const COMPACT_VIEWPORT_MQ = '(max-width: 1023px)';
-
-/** `data-theme` на <html>: ThemeToggle шлёт event, observer ловит прочие правки. */
-function subscribeDocumentTheme(onChange: () => void): () => void {
-    window.addEventListener(THEME_CHANGE_EVENT, onChange);
-
-    const observer = new MutationObserver(onChange);
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme'],
-    });
-
-    return () => {
-        window.removeEventListener(THEME_CHANGE_EVENT, onChange);
-        observer.disconnect();
-    };
-}
 
 function subscribeCompactViewport(onChange: () => void): () => void {
     const media = window.matchMedia(COMPACT_VIEWPORT_MQ);

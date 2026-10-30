@@ -19,6 +19,27 @@ export function getDocumentTheme(): ClientTheme {
     return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
 }
 
+/**
+ * Подписка для useSyncExternalStore: `data-theme` на <html>.
+ * ThemeToggle шлёт event, MutationObserver ловит прочие правки.
+ * Серверный снимок у потребителя — тема из cookie (prop из layout):
+ * тогда первый клиентский render совпадает с SSR, без hydration mismatch.
+ */
+export function subscribeDocumentTheme(onChange: () => void): () => void {
+    window.addEventListener(THEME_CHANGE_EVENT, onChange);
+
+    const observer = new MutationObserver(onChange);
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+    });
+
+    return () => {
+        window.removeEventListener(THEME_CHANGE_EVENT, onChange);
+        observer.disconnect();
+    };
+}
+
 export function applyDocumentTheme(theme: ClientTheme): void {
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem('theme', theme);

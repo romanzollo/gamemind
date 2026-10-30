@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import {
     applyDocumentTheme,
     getDocumentTheme,
+    subscribeDocumentTheme,
     type ClientTheme,
 } from '@/shared/ui/theme-client';
 
@@ -16,21 +17,28 @@ type ThemeToggleProps = {
         switchToLight: string;
         switchToDark: string;
     };
+    /**
+     * Тема из cookie (layout). Серверный снимок для useSyncExternalStore:
+     * SSR и первый клиентский render пишут одну подпись — без mismatch
+     * «Light» на сервере / «Dark» в браузере при тёмной теме.
+     */
+    initialTheme: ClientTheme;
 };
 
-export function ThemeToggle({ labels }: ThemeToggleProps) {
-    const [theme, setTheme] = useState<ClientTheme>(getDocumentTheme);
+export function ThemeToggle({ labels, initialTheme }: ThemeToggleProps) {
+    const theme = useSyncExternalStore<ClientTheme>(
+        subscribeDocumentTheme,
+        getDocumentTheme,
+        () => initialTheme,
+    );
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     const shortLabel = theme === 'dark' ? labels.dark : labels.light;
 
     return (
         <button
             type="button"
-            suppressHydrationWarning
-            onClick={() => {
-                applyDocumentTheme(nextTheme);
-                setTheme(nextTheme);
-            }}
+            // applyDocumentTheme шлёт event → store перечитает data-theme.
+            onClick={() => applyDocumentTheme(nextTheme)}
             className="rounded-md border border-border px-2 py-1 text-sm text-foreground transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:px-3"
             aria-label={
                 nextTheme === 'dark' ? labels.switchToDark : labels.switchToLight
