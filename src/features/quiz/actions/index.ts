@@ -2,6 +2,10 @@
 
 import { redirect } from 'next/navigation';
 
+import {
+    createQuizPublicIdCodec,
+    readSubmittedAnswers,
+} from '@/entities/quiz-session/quiz-public-ids';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
 import { requireUser } from '@/lib/auth/guards';
@@ -159,16 +163,12 @@ export async function submitQuizAction(
     );
     const finishedByTimer = formData.get('finishedByTimer') === '1';
 
-    // собираем ответы пользователя из формы
-    const answers = questions.map((question) => {
-        const selectedOptionId = formData.get(question.id);
-
-        return {
-            questionId: question.id,
-            selectedOptionId:
-                typeof selectedOptionId === 'string' ? selectedOptionId : '',
-        };
-    });
+    // Форма шлёт токены сессии (не id из БД — те выдавали ответ); переводим обратно.
+    const answers = readSubmittedAnswers(
+        formData,
+        questions,
+        createQuizPublicIdCodec(quizSessionId),
+    );
 
     // Classic/daily: все ответы обязательны.
     // Timed manual finish: тоже все ответы.

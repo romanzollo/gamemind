@@ -18,6 +18,10 @@ import {
     withPooledPgClient,
 } from '@/lib/db/direct-pg';
 import { peekSurvivalSubmitSnapshot, resolveQuizPlayLoadHandoff } from '@/entities/quiz-session/play-load-handoff';
+import {
+    createQuizPublicIdCodec,
+    encodePublicQuestionIds,
+} from '@/entities/quiz-session/quiz-public-ids';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
@@ -723,12 +727,29 @@ export const quizSessionReadsMethods = {
         );
     },
 
-    findSnapshotPublicQuestionsForUser(
+    /**
+     * Единственный выход данных игры в браузер (handoff и pooled snapshot).
+     * id вопросов/вариантов здесь заменяются токенами сессии — submit
+     * переводит их обратно (`readSubmittedAnswers`). Внутри view до этой
+     * точки (overlay переводов и т.п.) живут id из БД.
+     */
+    async findSnapshotPublicQuestionsForUser(
         sessionId: string,
         userId: string,
         locale: Locale,
-    ) {
-        return loadSnapshotPublicQuestions(sessionId, userId, locale);
+    ): Promise<QuizSessionPublicView | null> {
+        const view = await loadSnapshotPublicQuestions(sessionId, userId, locale);
+        if (!view) {
+            return null;
+        }
+
+        return {
+            ...view,
+            questions: encodePublicQuestionIds(
+                view.questions,
+                createQuizPublicIdCodec(sessionId),
+            ),
+        };
     },
 
     findSnapshotForScoring(sessionId: string, userId: string) {

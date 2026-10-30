@@ -2181,3 +2181,25 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
   responses from the newer Vercel ranges at ~14 KB (pages without CSS).
 - Any new external service (monitoring, analytics, auth) must be reachable from
   RU without VPN before adoption.
+
+## Quiz answer leak — opaque play ids (October 30, 2026)
+
+**Problem (found while smoke-testing the daily challenge on dev):** the play DTO exposed database ids. Import puts the correct option first, so its id always ends with `-opt-0` (or `-opt-1`) — 549/549 published questions on dev. IMAGE_GUESS question ids carry the game slug (`img-med-bg3`), and prompt image files are named after the answer (`/quiz-images/medium/baldurs-gate-3.webp`). Shuffled display order did not help: DevTools showed the ids. Scoring was server-side, but the client already knew the answer → the leaderboard could be farmed.
+
+**Decision (part 1 — ids):** the browser never sees question/option ids from the DB.
+
+| Rule | Choice |
+|------|--------|
+| Token | `HMAC-SHA256(AUTH_SECRET, "gamemind:quiz-play-ids:v1:{sessionId}:{q|o}:{id}")`, base64url, 16 chars — `src/entities/quiz-session/quiz-public-ids.ts` |
+| Encode | Only at the single exit `findSnapshotPublicQuestionsForUser` (handoff + pooled snapshot). Inside the view (locale overlay etc.) DB ids stay |
+| Decode | `submitQuizAction` → `readSubmittedAnswers`: recompute tokens for the snapshot's own options; unknown token stays as-is → `INVALID_ANSWER`. Scoring, `QuizAnswer` rows, Survival clock use DB ids as before |
+| Cost | Computed, not stored: no migration, no extra Neon hop, a few HMACs per submit |
+| Stability | Same token for the whole session (reload of the play page is safe); another session → different token (no cross-session mapping) |
+| Legacy pages | A page opened before tokens posts DB ids: if the form has **no** question token at all, read DB-id field names. Not weaker than before; new pages never show DB ids |
+
+**Not chosen:** re-keying `AnswerOption.id` to random UUIDs in dev/prod — FK + history migration for the same outcome.
+
+**Still open:**
+- **Part 2 — image file names** reveal the answer: rename to content-hash names + in-place `QuestionAsset.url` update (dev/prod) + decide on old `reviewPayload` URLs.
+- **Survival keeps `isCorrect` in the play DTO** (instant bank UX without a per-answer request, see Survival Mode MVP). Removing it needs server-side lock-in per answer — a latency trade-off from RU, separate decision.
+- Reverse image search can identify a screenshot — inherent to the question type, not a code leak.
