@@ -5,19 +5,21 @@
  * Mobile: плотнее плитки, locked-first, превью N + «Показать все».
  * Редкость: полоса слева + метка уровня; закрытая плитка — силуэт значка
  * и тот же уровень приглушённо, прогресс — цветом уровня.
- * Canon: Scoreboard Editorial.
+ * Только что открытые (`highlightCodes` из `?unlocked=` по ссылке тоста):
+ * первыми, метка «Новое», рамка уровня и одна вспышка (motion-safe).
+ * Canon: Scoreboard Editorial; DECISIONS → Achievements (unlock flash).
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 
 import { AchievementMark } from '@/features/achievements/components/AchievementMark';
+import { ACHIEVEMENT_TIER_CLASS_NAMES } from '@/features/achievements/components/achievement-tier-styles';
+import { sortAchievementItemsForProfile } from '@/features/achievements/lib/sort-achievement-items';
 import {
     ACHIEVEMENT_TIER,
     type AchievementCode,
     type AchievementProgress,
-    type AchievementProgressItem,
-    type AchievementTier,
 } from '@/features/achievements/types';
 import { ProfileListDisclosureControl } from '@/features/profile/components/ProfileListDisclosureControl';
 import type { Dictionary } from '@/shared/i18n';
@@ -26,45 +28,16 @@ import { InlineAlert } from '@/shared/ui';
 /** Сколько бейджей видно на mobile до «Показать все». */
 const MOBILE_PREVIEW_COUNT = 6;
 
-/**
- * Классы уровня редкости — полными строками (Tailwind не видит собранные).
- * Закрытая плитка показывает тот же уровень приглушённо: видно, что на кону.
- */
-const TIER_TILE_CLASS_NAME: Record<
-    AchievementTier,
-    { stripe: string; stripeLocked: string; chip: string; bar: string }
-> = {
-    bronze: {
-        stripe: 'border-l-tier-bronze',
-        stripeLocked: 'border-l-tier-bronze/45',
-        chip: 'bg-podium-bronze text-podium-bronze-fg',
-        bar: 'bg-tier-bronze',
-    },
-    silver: {
-        stripe: 'border-l-tier-silver',
-        stripeLocked: 'border-l-tier-silver/45',
-        chip: 'bg-podium-silver text-podium-silver-fg',
-        bar: 'bg-tier-silver',
-    },
-    gold: {
-        stripe: 'border-l-tier-gold',
-        stripeLocked: 'border-l-tier-gold/45',
-        chip: 'bg-podium-gold text-podium-gold-fg',
-        bar: 'bg-tier-gold',
-    },
-    legend: {
-        stripe: 'border-l-tier-legend',
-        stripeLocked: 'border-l-tier-legend/45',
-        chip: 'bg-podium-legend text-podium-legend-fg',
-        bar: 'bg-tier-legend',
-    },
-};
-
 type ProfileAchievementsListProps = {
     /** null = Neon/read failed после catch-up. */
     progress: AchievementProgress | null;
     locale: string;
     labels: Dictionary['achievements'];
+    /**
+     * Коды из `?unlocked=` (уже провалидированы сервером) — подсветить
+     * как только что открытые. Только вид: источник правды unlock = БД.
+     */
+    highlightCodes?: readonly AchievementCode[];
 };
 
 function asDate(value: Date | string | null): Date | null {
@@ -75,27 +48,11 @@ function asDate(value: Date | string | null): Date | null {
     return value instanceof Date ? value : new Date(value);
 }
 
-function isUnlocked(item: AchievementProgressItem): boolean {
-    return asDate(item.unlockedAt) !== null;
-}
-
-/**
- * Locked сначала (мотивация), внутри группы — порядок каталога.
- */
-function sortLockedFirst(
-    items: AchievementProgressItem[],
-): AchievementProgressItem[] {
-    return [...items].sort((a, b) => {
-        const aOpen = isUnlocked(a) ? 1 : 0;
-        const bOpen = isUnlocked(b) ? 1 : 0;
-        return aOpen - bOpen;
-    });
-}
-
 export function ProfileAchievementsList({
     progress,
     locale,
     labels,
+    highlightCodes = [],
 }: ProfileAchievementsListProps) {
     const [expandedCode, setExpandedCode] = useState<AchievementCode | null>(
         null,
@@ -110,7 +67,10 @@ export function ProfileAchievementsList({
         );
     }
 
-    const sortedItems = sortLockedFirst(progress.items);
+    const sortedItems = sortAchievementItemsForProfile(
+        progress.items,
+        highlightCodes,
+    );
     const needsMobileFold = sortedItems.length > MOBILE_PREVIEW_COUNT;
 
     return (
@@ -181,8 +141,11 @@ export function ProfileAchievementsList({
                             : null;
 
                     const tier = ACHIEVEMENT_TIER[item.code];
-                    const tierClassName = TIER_TILE_CLASS_NAME[tier];
+                    const tierClassName = ACHIEVEMENT_TIER_CLASS_NAMES[tier];
                     const tierName = labels.tiers[tier];
+                    // Ссылку можно подделать: «Новое» только если бейдж реально открыт.
+                    const isNew =
+                        unlocked && highlightCodes.includes(item.code);
 
                     const isExpanded = expandedCode === item.code;
                     const hideOnMobilePreview =
@@ -213,7 +176,19 @@ export function ProfileAchievementsList({
                                     unlocked
                                         ? `${tierClassName.stripe} bg-surface`
                                         : `${tierClassName.stripeLocked} bg-surface/70 opacity-80`,
-                                ].join(' ')}
+                                    isNew
+                                        ? `${tierClassName.ring} motion-safe:animate-[gm-achievement-glow_1.6s_ease-out_300ms_both]`
+                                        : '',
+                                ]
+                                    .filter(Boolean)
+                                    .join(' ')}
+                                style={
+                                    isNew
+                                        ? ({
+                                              '--gm-glow': tierClassName.glow,
+                                          } as CSSProperties)
+                                        : undefined
+                                }
                             >
                                 <AchievementMark
                                     code={item.code}
@@ -236,6 +211,11 @@ export function ProfileAchievementsList({
                                         >
                                             {tierName}
                                         </span>
+                                        {isNew ? (
+                                            <span className="ml-1.5 inline-flex rounded-sm bg-primary px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-wide text-primary-foreground">
+                                                {labels.newBadge}
+                                            </span>
+                                        ) : null}
                                     </p>
                                     <p className="mt-1 font-display text-sm font-semibold leading-tight tracking-tight text-foreground">
                                         {copy.title}

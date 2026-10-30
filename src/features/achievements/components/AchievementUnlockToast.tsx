@@ -6,15 +6,24 @@
  * - строки не «запекаем» при показе — читаем dictionary по locale из URL,
  *   поэтому RU↔EN обновляет уже открытый toast.
  *
- * Canon: DECISIONS → Toast Notifications MVP.
+ * Празднование: полоса и подпись цветом уровня редкости, «прыжок» значка
+ * (motion-safe), ссылка в профиль с `?unlocked=` — там новые плитки вспыхнут.
+ *
+ * Canon: DECISIONS → Toast Notifications MVP; Achievements (tiers, unlock flash).
  */
 'use client';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { AchievementMark } from '@/features/achievements/components/AchievementMark';
-import type { AchievementCode } from '@/features/achievements/types';
+import { ACHIEVEMENT_TIER_CLASS_NAMES } from '@/features/achievements/components/achievement-tier-styles';
+import { buildUnlockedQuerySuffix } from '@/features/achievements/lib/parse-unlocked-query';
+import {
+    ACHIEVEMENT_TIER,
+    type AchievementCode,
+} from '@/features/achievements/types';
 import {
     defaultLocale,
     getDictionary,
@@ -24,45 +33,72 @@ import { MAX_INDIVIDUAL_ACHIEVEMENT_TOASTS } from '@/shared/ui/toast';
 
 const STAGGER_MS = 140;
 
-function useToastDictionary() {
+function useToastLocale() {
     const pathname = usePathname();
     const locale = getLocaleFromPathname(pathname) ?? defaultLocale;
-    return getDictionary(locale);
+    return { locale, dictionary: getDictionary(locale) };
 }
+
+/** Профиль с кодами этого показа — вспышка новых плиток (display-only). */
+function profileHref(locale: string, codes: readonly AchievementCode[]) {
+    return `/${locale}/profile${buildUnlockedQuerySuffix(codes)}`;
+}
+
+const closeButtonClassName =
+    'absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-md border border-border bg-surface text-muted transition hover:bg-surface-hover hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+
+const profileLinkClassName =
+    'mt-1.5 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
 type AchievementUnlockToastCardProps = {
     code: AchievementCode;
+    /** Все коды показа — ссылка в профиль подсветит их вместе. */
+    allCodes: readonly AchievementCode[];
     toastId: string | number;
 };
 
 function AchievementUnlockToastCard({
     code,
+    allCodes,
     toastId,
 }: AchievementUnlockToastCardProps) {
-    const dictionary = useToastDictionary();
+    const { locale, dictionary } = useToastLocale();
     const labels = dictionary.achievements;
     const copy = labels.items[code];
+    const tier = ACHIEVEMENT_TIER[code];
 
     return (
         <div
-            className="relative flex w-[min(100vw-2rem,20rem)] items-start gap-3 rounded-md border border-border border-l-4 border-l-primary bg-surface p-3 pr-9 text-foreground shadow-md"
+            className={`relative flex w-[min(100vw-2rem,20rem)] items-start gap-3 rounded-md border border-border border-l-4 ${ACHIEVEMENT_TIER_CLASS_NAMES[tier].stripe} bg-surface p-3 pr-9 text-foreground shadow-md`}
             role="status"
         >
-            <AchievementMark code={code} unlocked size="sm" />
+            <AchievementMark
+                code={code}
+                unlocked
+                size="sm"
+                className="motion-safe:animate-[gm-achievement-pop_420ms_cubic-bezier(0.22,1,0.36,1)_both]"
+            />
 
             <div className="min-w-0 flex-1 pt-0.5">
                 <p className="font-display text-sm font-semibold leading-snug tracking-tight text-foreground">
                     {copy.title}
                 </p>
                 <p className="mt-0.5 text-xs leading-snug text-muted">
-                    {labels.toastUnlocked}
+                    {labels.tiers[tier]} · {labels.toastUnlocked}
                 </p>
+                <Link
+                    href={profileHref(locale, allCodes)}
+                    onClick={() => toast.dismiss(toastId)}
+                    className={profileLinkClassName}
+                >
+                    {labels.toastViewProfile}
+                </Link>
             </div>
 
             <button
                 type="button"
                 onClick={() => toast.dismiss(toastId)}
-                className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-md border border-border bg-surface text-muted transition hover:bg-surface-hover hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className={closeButtonClassName}
                 aria-label={dictionary.notifications.closeToast}
             >
                 <span aria-hidden className="text-sm leading-none">
@@ -75,14 +111,16 @@ function AchievementUnlockToastCard({
 
 type AchievementMoreToastCardProps = {
     remaining: number;
+    allCodes: readonly AchievementCode[];
     toastId: string | number;
 };
 
 function AchievementMoreToastCard({
     remaining,
+    allCodes,
     toastId,
 }: AchievementMoreToastCardProps) {
-    const dictionary = useToastDictionary();
+    const { locale, dictionary } = useToastLocale();
     const labels = dictionary.achievements;
 
     return (
@@ -90,13 +128,17 @@ function AchievementMoreToastCard({
             className="relative flex w-[min(100vw-2rem,20rem)] items-start rounded-md border border-border border-l-4 border-l-info bg-surface p-3 pr-9 text-foreground shadow-md"
             role="status"
         >
-            <p className="min-w-0 flex-1 text-sm leading-snug text-foreground">
+            <Link
+                href={profileHref(locale, allCodes)}
+                onClick={() => toast.dismiss(toastId)}
+                className="min-w-0 flex-1 text-sm leading-snug text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
                 {labels.toastMoreSummary.replace('{count}', String(remaining))}
-            </p>
+            </Link>
             <button
                 type="button"
                 onClick={() => toast.dismiss(toastId)}
-                className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-md border border-border bg-surface text-muted transition hover:bg-surface-hover hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className={closeButtonClassName}
                 aria-label={dictionary.notifications.closeToast}
             >
                 <span aria-hidden className="text-sm leading-none">
@@ -125,6 +167,7 @@ export function showAchievementUnlockToasts(codes: AchievementCode[]): void {
                 (toastId) => (
                     <AchievementUnlockToastCard
                         code={code}
+                        allCodes={codes}
                         toastId={toastId}
                     />
                 ),
@@ -143,6 +186,7 @@ export function showAchievementUnlockToasts(codes: AchievementCode[]): void {
                 (toastId) => (
                     <AchievementMoreToastCard
                         remaining={remaining}
+                        allCodes={codes}
                         toastId={toastId}
                     />
                 ),

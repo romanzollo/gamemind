@@ -551,6 +551,8 @@ export const enDictionary = {
             legend: 'Legend',
         },
         tierLabel: 'Rarity: {tier}',
+        toastViewProfile: 'See in profile',
+        newBadge: 'New',
         items: {
             FIRST_QUIZ: {
                 title: 'The start',

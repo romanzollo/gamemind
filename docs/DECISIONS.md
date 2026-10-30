@@ -1714,6 +1714,16 @@ Forbidden: `?` as “quiz” (reads as help at 40px), gamepad, cartridge, pixel-
 - **Existing players:** profile shows newly-met codes optimistically (date = now) until the next result writes `UserAchievement` — same as v2/v3 catalog additions.
 - **Marks:** new primitives `SegmentNumber` (7-segment scoreboard digits), `WaveCrest` (Survival family), `DailyStamp`. Streak = stamp + number + solid «in a row» bar (vs three separate cells of `DAILY_3`). Lightning = bold closed ring (`fillDisc={false}` — with fill, `opacity-10` also fades the stroke) + bolt, no dial ticks (vs `TIMED_COMPLETE`).
 
+**Unlock celebration (Oct 30, 2026 — ROADMAP 2.2, part D):** display-only, no DB/hot-path change.
+
+| Surface | Choice |
+|---------|--------|
+| Toast | Stripe in tier color; subtitle «{tier} · Достижение открыто»; mark pops in (`gm-achievement-pop`, motion-safe); link «Смотреть в профиле» → `/{locale}/profile?unlocked=<all codes of this flash>` (also on the «Ещё N» card) |
+| Profile | Server parses `?unlocked=` with `parseUnlockedQuery` (unknown codes dropped). Highlight only if the code is **actually unlocked** (URL can be forged): sorted first (`sortAchievementItemsForProfile`), «Новое» chip, tier `ring-2` + one `gm-achievement-glow` pulse (`--gm-glow` = tier token). Mobile fold opens (`ProfileFoldSection defaultOpen`) |
+| Strip | `StripUnlockedQuery` uses `history.replaceState`, **not** `router.replace` — a router replace refetches the RSC without the query and the highlight disappears right after paint. Refresh / shared link do not replay |
+| Reduced motion | `motion-safe:` + global reduced-motion block: no pop/pulse; static ring + chip remain |
+| Not chosen | localStorage «seen» set (per-device, needs silent seeding on first visit, optimistic unlocks would re-flash until written). Can be layered later on the same highlight path |
+
 **Title copy (Oct 30):** «Вошёл в ритм» → «В ритме» (gender-neutral), «Серия из десяти» → «Десятка» (10 games total, not a streak), «Три дня в деле» → «Три челленджа» (days need not be consecutive), «Оба режима» → «Классика и Блиц»; EN `HARD_3` → «Hard hat-trick». Codes unchanged.
 
 **Why not taxonomy still:** no product pressure. **Timed mode:** preferred next *mode* epic after achievements progress; higher cost than another badge.

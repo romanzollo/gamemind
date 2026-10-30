@@ -711,6 +711,10 @@ export type Dictionary = {
          * Для экранных читалок: цвет рамки не озвучивается. `{tier}` = имя уровня.
          */
         tierLabel: string;
+        /** Ссылка в unlock-тосте → профиль с `?unlocked=` (вспышка плиток). */
+        toastViewProfile: string;
+        /** Метка только что открытой плитки (пришли по ссылке из тоста). */
+        newBadge: string;
         items: {
             FIRST_QUIZ: { title: string; description: string };
             QUIZZES_5: { title: string; description: string };

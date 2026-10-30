@@ -25,6 +25,11 @@ type ProfileFoldSectionProps = {
     trailing?: ReactNode;
     children: ReactNode;
     className?: string;
+    /**
+     * Mobile: открыть складку сразу — например, пришли по ссылке из
+     * unlock-тоста и новые ачивки не должны прятаться за summary.
+     */
+    defaultOpen?: boolean;
 };
 
 export function ProfileFoldSection({
@@ -33,6 +38,7 @@ export function ProfileFoldSection({
     trailing,
     children,
     className = '',
+    defaultOpen = false,
 }: ProfileFoldSectionProps) {
     const rowClass = [profileFoldRowClassName, className]
         .filter(Boolean)
@@ -41,7 +47,10 @@ export function ProfileFoldSection({
     return (
         <>
             {/* Mobile: складка в общей меню-ленте */}
-            <details className={['group lg:hidden', rowClass].join(' ')}>
+            <details
+                className={['group lg:hidden', rowClass].join(' ')}
+                open={defaultOpen || undefined}
+            >
                 <summary className={profileFoldSummaryClassName}>
                     <span className="flex min-h-11 w-full flex-wrap items-center justify-between gap-x-3 gap-y-1">
                         <span className="inline-flex items-center gap-2">

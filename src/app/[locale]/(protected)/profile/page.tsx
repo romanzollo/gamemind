@@ -1,6 +1,8 @@
 import { logoutAction } from '@/features/auth/actions';
 import { ProfileAchievementsList } from '@/features/achievements/components/ProfileAchievementsList';
+import { StripUnlockedQuery } from '@/features/achievements/components/StripUnlockedQuery';
 import { getAchievementProgressForUser } from '@/features/achievements/lib/get-achievement-progress';
+import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
 import type { AchievementProgress } from '@/features/achievements/types';
 import { ChangeAvatarForm } from '@/features/profile/components/ChangeAvatarForm';
 import { ChangePasswordForm } from '@/features/profile/components/ChangePasswordForm';
@@ -22,6 +24,8 @@ import { InlineAlert, SubmitButton, UserAvatar } from '@/shared/ui';
 
 type ProfilePageProps = {
     params: Promise<{ locale: string }>;
+    /** `unlocked` — коды из ссылки unlock-тоста (только подсветка, не unlock). */
+    searchParams: Promise<{ unlocked?: string | string[] }>;
 };
 
 const sectionHeadingClassName =
@@ -34,11 +38,16 @@ const sectionHeadingClassName =
  * Mobile: ачивки и история — складки как настройки (не раздувают экран).
  * Settings в Client `<details>`, чтобы soft refresh не схлопывал блок.
  */
-export default async function ProfilePage({ params }: ProfilePageProps) {
+export default async function ProfilePage({
+    params,
+    searchParams,
+}: ProfilePageProps) {
     const { locale } = await params;
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
     const session = await requireUser(safeLocale);
+    // Неизвестные коды отброшены; «Новое» список ставит только реально открытым.
+    const highlightCodes = parseUnlockedQuery((await searchParams).unlocked);
 
     let historyEntries: ProfileResultHistoryEntry[] = [];
     let historyLoadError: string | undefined;
@@ -165,11 +174,13 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                             title={dictionary.achievements.sectionTitle}
                             titleId="profile-achievements-title"
                             trailing={achievementsCountLabel}
+                            defaultOpen={highlightCodes.length > 0}
                         >
                             <ProfileAchievementsList
                                 progress={achievementProgress}
                                 locale={safeLocale}
                                 labels={dictionary.achievements}
+                                highlightCodes={highlightCodes}
                             />
                         </ProfileFoldSection>
                     </div>
@@ -224,6 +235,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                     />
                 </ProfileSettingsSection>
             </div>
+
+            {highlightCodes.length > 0 ? <StripUnlockedQuery /> : null}
         </main>
     );
 }

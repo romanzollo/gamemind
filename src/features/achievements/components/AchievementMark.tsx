@@ -1,8 +1,8 @@
+import { ACHIEVEMENT_TIER_CLASS_NAMES } from '@/features/achievements/components/achievement-tier-styles';
 import { ACHIEVEMENT_ILLUSTRATIONS } from '@/features/achievements/illustrations';
 import {
     ACHIEVEMENT_TIER,
     type AchievementCode,
-    type AchievementTier,
 } from '@/features/achievements/types';
 
 /**
@@ -26,14 +26,6 @@ const sizeClassName = {
     lg: 'h-12 w-12 sm:h-14 sm:w-14',
 } as const;
 
-/** Полные строки классов — Tailwind не видит собранные на лету имена. */
-export const TIER_TEXT_CLASS_NAME: Record<AchievementTier, string> = {
-    bronze: 'text-tier-bronze',
-    silver: 'text-tier-silver',
-    gold: 'text-tier-gold',
-    legend: 'text-tier-legend',
-};
-
 export function AchievementMark({
     code,
     unlocked,
@@ -48,7 +40,7 @@ export function AchievementMark({
                 'flex shrink-0 items-center justify-center',
                 sizeClassName[size],
                 unlocked
-                    ? TIER_TEXT_CLASS_NAME[ACHIEVEMENT_TIER[code]]
+                    ? ACHIEVEMENT_TIER_CLASS_NAMES[ACHIEVEMENT_TIER[code]].text
                     : 'text-muted opacity-55',
                 className,
             ]

@@ -568,6 +568,8 @@ export const ruDictionary: Dictionary = {
             legend: 'Легенда',
         },
         tierLabel: 'Редкость: {tier}',
+        toastViewProfile: 'Смотреть в профиле',
+        newBadge: 'Новое',
         items: {
             FIRST_QUIZ: {
                 title: 'Начало',

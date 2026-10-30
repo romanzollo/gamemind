@@ -289,6 +289,35 @@ html {
 }
 
 /*
+ * Достижения: «прыжок» значка в unlock-тосте и одна вспышка новой плитки
+ * в профиле. Цвет вспышки — `--gm-glow` (токен уровня редкости на плитке).
+ * При reduced-motion блок ниже гасит длительность: остаётся статичная рамка.
+ */
+@keyframes gm-achievement-pop {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.12);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes gm-achievement-glow {
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--gm-glow) 55%, transparent);
+    }
+    100% {
+        box-shadow: 0 0 0 12px color-mix(in srgb, var(--gm-glow) 0%, transparent);
+    }
+}
+
+/*
  * Уважаем prefers-reduced-motion:
  * — без плавного скролла;
  * — без бесконечного pulse (skeleton / pending cue);
