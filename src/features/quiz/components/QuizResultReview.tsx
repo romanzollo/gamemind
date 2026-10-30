@@ -33,6 +33,25 @@ function matchesFilter(
     return true;
 }
 
+/**
+ * Текст пустого фильтра. По умолчанию открыт «Ошибки», поэтому после игры
+ * без ошибок игрок первым делом видит именно эту строку — не «нет данных».
+ */
+function getEmptyFilterTitle(
+    filter: QuizResultReviewFilter,
+    labels: Dictionary['quiz'],
+) {
+    if (filter === 'wrong') {
+        return labels.reviewNoMistakes;
+    }
+
+    if (filter === 'correct') {
+        return labels.reviewNoCorrect;
+    }
+
+    return labels.reviewEmpty;
+}
+
 // компонент для отображения результатов обзора сессии
 export function QuizResultReview({
     items,
@@ -96,7 +115,10 @@ export function QuizResultReview({
             </div>
 
             {visibleItems.length === 0 ? (
-                <EmptyState className="mt-4" title={labels.reviewEmpty} />
+                <EmptyState
+                    className="mt-4"
+                    title={getEmptyFilterTitle(filter, labels)}
+                />
             ) : (
                 <ul className="mt-4 space-y-3">
                     {visibleItems.map((item, index) => {

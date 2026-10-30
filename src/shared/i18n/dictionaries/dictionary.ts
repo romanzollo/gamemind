@@ -128,11 +128,9 @@ export type Dictionary = {
         remainingLabel: string;
         expiredLabel: string;
         /** Legacy hint; mid-wave теперь auto-submit, не freeze. */
-        timeUpHint: string;
         savingAnswers: string;
         chooseAnswerHint: string;
         finishWaveButton: string;
-        restartButton: string;
         /** Result primary CTA: новая волна с той же difficulty (новый run). */
         tryAgainWave: string;
         /** Result CTA: continue того же SurvivalRun. */
@@ -156,7 +154,6 @@ export type Dictionary = {
         /** `{n}` = номер волны. */
         waveLineLabel: string;
         /** Legacy / короткий статус cut: «не в зачёт». */
-        waveNotCounted: string;
         thisWaveLabel: string;
         /**
          * Box score: статусы волны (текст + a11y; не только цвет).
@@ -517,7 +514,6 @@ export type Dictionary = {
         /** Timed: подпись на 00:00. */
         timedExpiredLabel: string;
         /** Текст подсказки при auto-save; roast plaque — на result (?clock=1). */
-        timedExpiredBody: string;
         /** Timed: CTA «ещё раз» после просрочки grace. */
         timedTryAgain: string;
         /** Timed: статус пока идёт auto-submit на 00:00. */
@@ -532,7 +528,6 @@ export type Dictionary = {
         /** Timed roast plaque: display title. */
         timedClockRoastTitle: string;
         /** В разборе: вопрос без ответа (timed partial). */
-        unansweredLabel: string;
         easy: string;
         medium: string;
         hard: string;
@@ -547,7 +542,6 @@ export type Dictionary = {
         startButton: string;
         sessionTitle: string;
         resultTitle: string;
-        session: string;
         submitButton: string;
         /** Подпись для взвешенных очков (не число верных ответов) */
         scoreLabel: string;
@@ -571,6 +565,8 @@ export type Dictionary = {
         toLeaderboard: string;
         backHome: string;
         reviewEmpty: string;
+        reviewNoMistakes: string;
+        reviewNoCorrect: string;
         errors: {
             invalidSetup: string;
             notEnoughQuestions: string;

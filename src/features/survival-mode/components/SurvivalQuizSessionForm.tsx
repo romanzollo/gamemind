@@ -8,7 +8,7 @@
  * Банк = UX от startedAt; сервер remaining не читает.
  * На 0: всегда Survival submit (partial OK) → /result — без мёртвого freeze.
  * Все 12 lock-in при банке > 0: тот же auto-submit (`waveEnd` null), без CTA
- * «Завершить квиз» — иначе игрок смотрит на уже закрытую волну.
+ * «Узнать результат» — иначе игрок смотрит на уже закрытую волну.
  * `survivalWaveEnd=cut|bank` → honest plaque на result. Не фейковый score.
  * Во время save: spinner + savingAnswers. Retry CTA только после ошибки hop.
  * Не звать isSurvivalClockOk на клиенте. Не TimedQuizCountdown.
@@ -212,7 +212,7 @@ export function SurvivalQuizSessionForm({
             }
 
             // Последний вопрос закрыт, банк ещё жив — волна кончилась.
-            // Редирект на result без отдельной «Завершить квиз».
+            // Редирект на result без отдельной кнопки сдачи.
             submitWave(null);
         },
         [
