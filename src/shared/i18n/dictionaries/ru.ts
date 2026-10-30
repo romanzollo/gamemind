@@ -637,6 +637,43 @@ export const ruDictionary: Dictionary = {
                 title: 'Три тяжёлых',
                 description: 'Сыграй 3 игры на высшей сложности.',
             },
+            DAILY_STREAK_3: {
+                title: 'Три дня подряд',
+                description: 'Сыграй челлендж дня три дня подряд.',
+            },
+            DAILY_STREAK_7: {
+                title: 'Неделя подряд',
+                description: 'Сыграй челлендж дня 7 дней подряд.',
+            },
+            DAILY_STREAK_30: {
+                title: 'Месяц без пропусков',
+                description: 'Сыграй челлендж дня 30 дней подряд.',
+            },
+            BLITZ_PERFECT_FAST: {
+                title: 'Молния',
+                description:
+                    'Ответь верно на все 10 вопросов Блица быстрее чем за 30 секунд.',
+            },
+            SURVIVAL_WAVE_3: {
+                title: 'Третья волна',
+                description: 'Доберись до третьей волны в Выживании.',
+            },
+            SURVIVAL_WAVE_5: {
+                title: 'Пятая волна',
+                description: 'Доберись до пятой волны в Выживании.',
+            },
+            SURVIVAL_WAVE_10: {
+                title: 'Десятый вал',
+                description: 'Доберись до десятой волны в Выживании.',
+            },
+            SURVIVAL_RUN_50: {
+                title: 'Забег на 50',
+                description: 'Набери 50 очков за один забег в Выживании.',
+            },
+            SURVIVAL_RUN_100: {
+                title: 'Сотня за забег',
+                description: 'Набери 100 очков за один забег в Выживании.',
+            },
         },
     },
 };

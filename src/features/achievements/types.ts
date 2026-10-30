@@ -37,7 +37,16 @@ export type AchievementCode =
     | 'TIMED_COMPLETE'
     | 'CLASSIC_AND_TIMED'
     | 'HIGH_ACCURACY_90'
-    | 'POINTS_250';
+    | 'POINTS_250'
+    | 'DAILY_STREAK_3'
+    | 'DAILY_STREAK_7'
+    | 'DAILY_STREAK_30'
+    | 'BLITZ_PERFECT_FAST'
+    | 'SURVIVAL_WAVE_3'
+    | 'SURVIVAL_WAVE_5'
+    | 'SURVIVAL_WAVE_10'
+    | 'SURVIVAL_RUN_50'
+    | 'SURVIVAL_RUN_100';
 
 /**
  * Как проверяем критерий по уже сохранённым фактам (QuizResult / QuizSession).
@@ -56,7 +65,11 @@ export type AchievementCriteriaKind =
     | 'timed_quiz_completed_once'
     | 'classic_and_timed_completed'
     | 'high_accuracy_quiz_once'
-    | 'total_score_at_least';
+    | 'total_score_at_least'
+    | 'daily_streak_at_least'
+    | 'blitz_perfect_fast_once'
+    | 'survival_wave_reached_at_least'
+    | 'survival_run_score_at_least';
 
 /**
  * Уровень редкости бейджа — только вид (цвет рамки, метка, тост).
@@ -113,8 +126,9 @@ export type AchievementProgress = {
  *   Canon: DECISIONS → Survival Mode MVP.
  * - Daily: dailyChallengeId IS NOT NULL
  * - Timed (Blitz UI): timedEndsAt IS NOT NULL
- * - Survival: survivalRunId IS NOT NULL; timedEndsAt остаётся NULL
- *   (исключён из существующих facts целиком, не отдельным кодом MVP).
+ * - Survival: survivalRunId IS NOT NULL; timedEndsAt остаётся NULL.
+ *   Из count-фактов (игры, perfect, очки, сложность) исключён целиком —
+ *   волна HARD до 36 очков раздула бы их; у Выживания свои факты ниже.
  */
 export type AchievementEvalFacts = {
     quizzesCompleted: number;
@@ -130,7 +144,24 @@ export type AchievementEvalFacts = {
     hasClassicCompleted: boolean;
     hasHighAccuracy90: boolean;
     totalScore: number;
+    /**
+     * Лучшая серия дат Челленджа подряд (дни по challengeDate, МСК).
+     * Лучшая, а не текущая: открытый бейдж не «закрывается» после пропуска.
+     */
+    dailyBestStreak: number;
+    /** Блиц 10 из 10 быстрее BLITZ_FAST_PERFECT_MAX_SECONDS. */
+    hasBlitzPerfectFast: boolean;
+    /** Максимальный номер волны Выживания с честными часами (survivalClockOk). */
+    survivalBestWave: number;
+    /** Лучшие очки одного забега (SurvivalRun.totalScore — только честные волны). */
+    survivalBestRunScore: number;
 };
+
+/**
+ * Порог «Молнии»: от старта Блица до прихода запроса на сдачу.
+ * Передаётся в SQL параметром — одна точка правды для правила и текста.
+ */
+export const BLITZ_FAST_PERFECT_MAX_SECONDS = 30;
 
 /** Правила — одна точка правды для тестов и комментариев. */
 export const ACHIEVEMENTS_MVP_RULES = {
@@ -152,6 +183,7 @@ export const ACHIEVEMENTS_MVP_RULES = {
  * Порядок массива = порядок отображения.
  *
  * v3: лестница 25/50, Timed/Classic+Timed, Daily×3, quality, points, глубина сложности.
+ * v4 (ROADMAP 2.2): серии Челленджа 3/7/30, «Молния», Выживание — волна 3/5/10, забег 50/100.
  */
 export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
     {
@@ -200,6 +232,21 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
         threshold: 3,
     },
     {
+        code: 'DAILY_STREAK_3',
+        criteria: 'daily_streak_at_least',
+        threshold: 3,
+    },
+    {
+        code: 'DAILY_STREAK_7',
+        criteria: 'daily_streak_at_least',
+        threshold: 7,
+    },
+    {
+        code: 'DAILY_STREAK_30',
+        criteria: 'daily_streak_at_least',
+        threshold: 30,
+    },
+    {
         code: 'TIMED_COMPLETE',
         criteria: 'timed_quiz_completed_once',
         threshold: null,
@@ -207,6 +254,11 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
     {
         code: 'CLASSIC_AND_TIMED',
         criteria: 'classic_and_timed_completed',
+        threshold: null,
+    },
+    {
+        code: 'BLITZ_PERFECT_FAST',
+        criteria: 'blitz_perfect_fast_once',
         threshold: null,
     },
     {
@@ -239,6 +291,31 @@ export const ACHIEVEMENT_CATALOG: readonly AchievementDefinition[] = [
         criteria: 'hard_quiz_completed_at_least',
         threshold: 3,
     },
+    {
+        code: 'SURVIVAL_WAVE_3',
+        criteria: 'survival_wave_reached_at_least',
+        threshold: 3,
+    },
+    {
+        code: 'SURVIVAL_WAVE_5',
+        criteria: 'survival_wave_reached_at_least',
+        threshold: 5,
+    },
+    {
+        code: 'SURVIVAL_WAVE_10',
+        criteria: 'survival_wave_reached_at_least',
+        threshold: 10,
+    },
+    {
+        code: 'SURVIVAL_RUN_50',
+        criteria: 'survival_run_score_at_least',
+        threshold: 50,
+    },
+    {
+        code: 'SURVIVAL_RUN_100',
+        criteria: 'survival_run_score_at_least',
+        threshold: 100,
+    },
 ] as const;
 
 /**
@@ -263,4 +340,13 @@ export const ACHIEVEMENT_TIER: Record<AchievementCode, AchievementTier> = {
     MEDIUM_5: 'silver',
     HARD_QUIZ: 'silver',
     HARD_3: 'gold',
+    DAILY_STREAK_3: 'bronze',
+    DAILY_STREAK_7: 'gold',
+    DAILY_STREAK_30: 'legend',
+    BLITZ_PERFECT_FAST: 'gold',
+    SURVIVAL_WAVE_3: 'bronze',
+    SURVIVAL_WAVE_5: 'silver',
+    SURVIVAL_WAVE_10: 'legend',
+    SURVIVAL_RUN_50: 'silver',
+    SURVIVAL_RUN_100: 'gold',
 };

@@ -620,6 +620,43 @@ export const enDictionary = {
                 title: 'Hard hat-trick',
                 description: 'Play 3 games on Hard.',
             },
+            DAILY_STREAK_3: {
+                title: 'Three in a row',
+                description: 'Play the daily challenge three days in a row.',
+            },
+            DAILY_STREAK_7: {
+                title: 'Week streak',
+                description: 'Play the daily challenge 7 days in a row.',
+            },
+            DAILY_STREAK_30: {
+                title: 'Month streak',
+                description: 'Play the daily challenge 30 days in a row.',
+            },
+            BLITZ_PERFECT_FAST: {
+                title: 'Lightning',
+                description:
+                    'Get all 10 Blitz questions right in under 30 seconds.',
+            },
+            SURVIVAL_WAVE_3: {
+                title: 'Third wave',
+                description: 'Reach wave 3 in Survival.',
+            },
+            SURVIVAL_WAVE_5: {
+                title: 'Fifth wave',
+                description: 'Reach wave 5 in Survival.',
+            },
+            SURVIVAL_WAVE_10: {
+                title: 'Tenth wave',
+                description: 'Reach wave 10 in Survival.',
+            },
+            SURVIVAL_RUN_50: {
+                title: 'Fifty-point run',
+                description: 'Score 50 points in one Survival run.',
+            },
+            SURVIVAL_RUN_100: {
+                title: 'Century run',
+                description: 'Score 100 points in one Survival run.',
+            },
         },
     },
 } satisfies Dictionary;

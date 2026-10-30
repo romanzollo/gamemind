@@ -27,6 +27,10 @@ function facts(
         hasClassicCompleted: false,
         hasHighAccuracy90: false,
         totalScore: 0,
+        dailyBestStreak: 0,
+        hasBlitzPerfectFast: false,
+        survivalBestWave: 0,
+        survivalBestRunScore: 0,
         ...partial,
     };
 }
@@ -142,5 +146,53 @@ describe('getAchievementCriteriaProgress', () => {
                 facts({ totalScore: 400 }),
             ),
         ).toEqual({ current: 250, target: 250 });
+    });
+
+    it('shows best streak, best wave and best run as X / target', () => {
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'DAILY_STREAK_7',
+                    criteria: 'daily_streak_at_least',
+                    threshold: 7,
+                },
+                facts({ dailyBestStreak: 2 }),
+            ),
+        ).toEqual({ current: 2, target: 7 });
+
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'SURVIVAL_WAVE_5',
+                    criteria: 'survival_wave_reached_at_least',
+                    threshold: 5,
+                },
+                facts({ survivalBestWave: 12 }),
+            ),
+        ).toEqual({ current: 5, target: 5 });
+
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'SURVIVAL_RUN_100',
+                    criteria: 'survival_run_score_at_least',
+                    threshold: 100,
+                },
+                facts({ survivalBestRunScore: 17 }),
+            ),
+        ).toEqual({ current: 17, target: 100 });
+    });
+
+    it('maps BLITZ_PERFECT_FAST as once 0|1', () => {
+        expect(
+            getAchievementCriteriaProgress(
+                {
+                    code: 'BLITZ_PERFECT_FAST',
+                    criteria: 'blitz_perfect_fast_once',
+                    threshold: null,
+                },
+                facts({ hasBlitzPerfectFast: true }),
+            ),
+        ).toEqual({ current: 1, target: 1 });
     });
 });

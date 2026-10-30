@@ -12,7 +12,8 @@
  * - light/dark без отдельных ассетов; новый бейдж = SVG + запись в ACHIEVEMENT_ILLUSTRATIONS.
  *
  * Словарь Quiz Arcade: карта раунда, combo-засечки, S-rank / combo-круг, штамп daily,
- * секундомер блица, табло очков, ранг/босс-ступень.
+ * секундомер блица, табло очков (7 сегментов), ранг/босс-ступень,
+ * гребень волны (семья Выживания).
  * Запрещено: геймпад, картридж, пиксель-арт, чужие франшизы, черепа, XP-бар, неон, растр.
  *
  * UI тянет знаки только через AchievementMark.
@@ -221,6 +222,132 @@ function ScoreCell({
             stroke="currentColor"
             strokeWidth="1.5"
         />
+    );
+}
+
+/** Сегменты табло: a верх, b/c правые, d низ, e/f левые, g середина. */
+const SEGMENTS_BY_DIGIT: Record<string, string> = {
+    '0': 'abcdef',
+    '1': 'bc',
+    '3': 'abgcd',
+    '5': 'afgcd',
+    '7': 'abc',
+};
+
+/**
+ * Число на arcade-табло (7 сегментов, одна обводка) — как цифры POINTS_250.
+ * Только цифры из SEGMENTS_BY_DIGIT; неизвестная цифра не рисуется.
+ */
+function SegmentNumber({
+    value,
+    x,
+    y,
+    digitWidth,
+    height,
+    gap,
+    strokeWidth = 1.9,
+}: {
+    value: string;
+    x: number;
+    y: number;
+    digitWidth: number;
+    height: number;
+    gap: number;
+    strokeWidth?: number;
+}) {
+    const half = height / 2;
+    const d = Array.from(value)
+        .map((digit, index) => {
+            const left = x + index * (digitWidth + gap);
+            const right = left + digitWidth;
+            const segments = SEGMENTS_BY_DIGIT[digit] ?? '';
+            const paths: Record<string, string> = {
+                a: `M${left} ${y}H${right}`,
+                b: `M${right} ${y}V${y + half}`,
+                c: `M${right} ${y + half}V${y + height}`,
+                d: `M${left} ${y + height}H${right}`,
+                e: `M${left} ${y + half}V${y + height}`,
+                f: `M${left} ${y}V${y + half}`,
+                g: `M${left} ${y + half}H${right}`,
+            };
+            return Array.from(segments)
+                .map((segment) => paths[segment])
+                .join('');
+        })
+        .join('');
+
+    return (
+        <path
+            d={d}
+            stroke="currentColor"
+            strokeWidth={strokeWidth}
+            strokeLinecap="square"
+        />
+    );
+}
+
+/**
+ * Гребень волны Выживания: чередующиеся дуги через quadratic `t`.
+ * Знак семьи Survival (волна / забег), не «график роста».
+ */
+function WaveCrest({
+    y,
+    x1 = 11,
+    x2 = 37,
+    amplitude = 2.4,
+    halfWaves = 6,
+    strokeWidth = 1.9,
+    className,
+}: {
+    y: number;
+    x1?: number;
+    x2?: number;
+    amplitude?: number;
+    halfWaves?: number;
+    strokeWidth?: number;
+    className?: string;
+}) {
+    const step = (x2 - x1) / halfWaves;
+    const rest = Array.from({ length: halfWaves - 1 }, () => `t${step} 0`).join('');
+
+    return (
+        <path
+            d={`M${x1} ${y}q${step / 2} ${-amplitude * 2} ${step} 0${rest}`}
+            stroke="currentColor"
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            className={className}
+        />
+    );
+}
+
+/** Штамп-календарь квеста (семья Daily): рамка, шапка, кольца переплёта. */
+function DailyStamp() {
+    return (
+        <>
+            <rect
+                x="12"
+                y="13"
+                width="24"
+                height="23"
+                className="fill-current opacity-[0.12]"
+                stroke="currentColor"
+                strokeWidth="1.5"
+            />
+            <rect
+                x="12"
+                y="13"
+                width="24"
+                height="7"
+                className="fill-current opacity-25"
+            />
+            <path
+                d="M17 11v5M31 11v5"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="square"
+            />
+        </>
     );
 }
 
@@ -600,6 +727,151 @@ export function Hard3Illustration({ className }: IllustrationProps) {
     );
 }
 
+/**
+ * Серия дней: штамп Челленджа + число дней + сплошная черта «подряд».
+ * Отличие от «Три челленджа» (три отдельные клетки) — именно непрерывная черта.
+ */
+function DailyStreakMark({
+    className,
+    days,
+}: IllustrationProps & { days: '3' | '7' | '30' }) {
+    const twoDigits = days.length === 2;
+    return (
+        <Plaque className={className}>
+            <DailyStamp />
+            <SegmentNumber
+                value={days}
+                x={twoDigits ? 16.75 : 20.5}
+                y={21.8}
+                digitWidth={twoDigits ? 6 : 7}
+                height={9.4}
+                gap={2.5}
+                strokeWidth={2}
+            />
+            <rect x="15" y="33" width="18" height="1.9" className="fill-current" />
+        </Plaque>
+    );
+}
+
+export function DailyStreak3Illustration({ className }: IllustrationProps) {
+    return <DailyStreakMark className={className} days="3" />;
+}
+
+export function DailyStreak7Illustration({ className }: IllustrationProps) {
+    return <DailyStreakMark className={className} days="7" />;
+}
+
+export function DailyStreak30Illustration({ className }: IllustrationProps) {
+    return <DailyStreakMark className={className} days="30" />;
+}
+
+/**
+ * Молния: крупный болт внутри замкнутого combo-кольца.
+ * Кольцо = «всё верно» (как PERFECT_QUIZ), болт = Блиц; без засечек и
+ * кнопки секундомера — иначе сливается с «Блиц принят».
+ */
+export function BlitzPerfectFastIllustration({ className }: IllustrationProps) {
+    return (
+        <Plaque className={className}>
+            {/* fillDisc=false: с заливкой opacity-10 гасит и обводку — кольцо пропадает */}
+            <ComboRing cx={24} cy={24} r={12} strokeWidth={2.6} fillDisc={false} />
+            {/* Центр болта в local ≈ (6.4, 11), как у TIMED_COMPLETE → центр (24, 24) */}
+            <LightningBolt x={24 - 6.4 * 0.85} y={24 - 11 * 0.85} scale={0.85} />
+        </Plaque>
+    );
+}
+
+/** Волна Выживания: номер волны на табло над гребнем + тихая вторая волна. */
+function SurvivalWaveMark({
+    className,
+    wave,
+}: IllustrationProps & { wave: '3' | '5' }) {
+    return (
+        <Plaque className={className}>
+            <SegmentNumber
+                value={wave}
+                x={20}
+                y={11.5}
+                digitWidth={8}
+                height={13}
+                gap={0}
+                strokeWidth={2.3}
+            />
+            <WaveCrest y={31} amplitude={2.2} />
+            <WaveCrest y={36} amplitude={1.6} strokeWidth={1.5} className="opacity-40" />
+        </Plaque>
+    );
+}
+
+export function SurvivalWave3Illustration({ className }: IllustrationProps) {
+    return <SurvivalWaveMark className={className} wave="3" />;
+}
+
+export function SurvivalWave5Illustration({ className }: IllustrationProps) {
+    return <SurvivalWaveMark className={className} wave="5" />;
+}
+
+/** Десятый вал: «10» и два полных гребня — вал выше обычной волны. */
+export function SurvivalWave10Illustration({ className }: IllustrationProps) {
+    return (
+        <Plaque className={className}>
+            <SegmentNumber
+                value="10"
+                x={16.5}
+                y={12}
+                digitWidth={6}
+                height={11.5}
+                gap={3}
+                strokeWidth={2.2}
+            />
+            <WaveCrest y={30.5} amplitude={3} halfWaves={4} strokeWidth={2.2} />
+            <WaveCrest y={36} amplitude={2} halfWaves={6} strokeWidth={1.9} />
+        </Plaque>
+    );
+}
+
+/**
+ * Очки забега: табло очков (как POINTS_250) + гребень волны под ним —
+ * отличает «один забег Выживания» от суммы по всем играм.
+ */
+function SurvivalRunMark({
+    className,
+    points,
+}: IllustrationProps & { points: '50' | '100' }) {
+    const three = points.length === 3;
+    return (
+        <Plaque className={className}>
+            <rect
+                x="10.5"
+                y="12.5"
+                width="27"
+                height="17"
+                className="fill-current opacity-[0.12]"
+                stroke="currentColor"
+                strokeWidth="1.5"
+            />
+            <SegmentNumber
+                value={points}
+                x={three ? 13.4 : 15.5}
+                y={15.6}
+                digitWidth={three ? 5.6 : 7}
+                height={10.8}
+                gap={three ? 2.2 : 3}
+                strokeWidth={1.7}
+            />
+            <WaveCrest y={35} amplitude={1.8} />
+        </Plaque>
+    );
+}
+
+export function SurvivalRun50Illustration({ className }: IllustrationProps) {
+    return <SurvivalRunMark className={className} points="50" />;
+}
+
+export function SurvivalRun100Illustration({ className }: IllustrationProps) {
+    return <SurvivalRunMark className={className} points="100" />;
+}
+
 export const ACHIEVEMENT_ILLUSTRATIONS: Record<
     AchievementCode,
     (props: IllustrationProps) => ReactNode
@@ -621,4 +893,13 @@ export const ACHIEVEMENT_ILLUSTRATIONS: Record<
     MEDIUM_5: Medium5Illustration,
     HARD_QUIZ: HardQuizIllustration,
     HARD_3: Hard3Illustration,
+    DAILY_STREAK_3: DailyStreak3Illustration,
+    DAILY_STREAK_7: DailyStreak7Illustration,
+    DAILY_STREAK_30: DailyStreak30Illustration,
+    BLITZ_PERFECT_FAST: BlitzPerfectFastIllustration,
+    SURVIVAL_WAVE_3: SurvivalWave3Illustration,
+    SURVIVAL_WAVE_5: SurvivalWave5Illustration,
+    SURVIVAL_WAVE_10: SurvivalWave10Illustration,
+    SURVIVAL_RUN_50: SurvivalRun50Illustration,
+    SURVIVAL_RUN_100: SurvivalRun100Illustration,
 };

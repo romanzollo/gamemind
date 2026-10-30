@@ -54,7 +54,7 @@ function onceProgress(met: boolean): AchievementCriteriaProgress {
 /**
  * Прогресс к критерию одного бейджа.
  *
- * Count-критерии: факт / threshold.
+ * Count-критерии: факт / threshold (в т.ч. лучшая серия, волна, очки забега).
  * Once-критерии: 0|1 / 1.
  * Classic+Timed: сколько режимов из двух уже есть (0..2 / 2).
  *
@@ -104,6 +104,17 @@ export function getAchievementCriteriaProgress(
             return onceProgress(facts.hasHighAccuracy90);
         case 'total_score_at_least':
             return countProgress(facts.totalScore, definition.threshold);
+        case 'daily_streak_at_least':
+            return countProgress(facts.dailyBestStreak, definition.threshold);
+        case 'blitz_perfect_fast_once':
+            return onceProgress(facts.hasBlitzPerfectFast);
+        case 'survival_wave_reached_at_least':
+            return countProgress(facts.survivalBestWave, definition.threshold);
+        case 'survival_run_score_at_least':
+            return countProgress(
+                facts.survivalBestRunScore,
+                definition.threshold,
+            );
         default: {
             const _exhaustive: never = definition.criteria;
             return _exhaustive;

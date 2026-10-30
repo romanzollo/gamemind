@@ -16,9 +16,10 @@ import {
     withDirectPgClient,
     withDirectPgWriteClient,
 } from '@/lib/db/direct-pg';
-import type {
-    AchievementCode,
-    AchievementEvalFacts,
+import {
+    BLITZ_FAST_PERFECT_MAX_SECONDS,
+    type AchievementCode,
+    type AchievementEvalFacts,
 } from '@/features/achievements/types';
 
 type EvalFactsRow = {
@@ -31,6 +32,10 @@ type EvalFactsRow = {
     classic_count: number;
     high_accuracy_90_count: number;
     total_score: number;
+    daily_best_streak: number;
+    blitz_perfect_fast_count: number;
+    survival_best_wave: number;
+    survival_best_run_score: number;
 };
 
 type UnlockRow = {
@@ -65,6 +70,10 @@ function mapEvalFactsRow(row: EvalFactsRow | undefined): AchievementEvalFacts {
         hasClassicCompleted: classicCount > 0,
         hasHighAccuracy90: highAccuracy90Count > 0,
         totalScore: Number(row?.total_score ?? 0),
+        dailyBestStreak: Number(row?.daily_best_streak ?? 0),
+        hasBlitzPerfectFast: Number(row?.blitz_perfect_fast_count ?? 0) > 0,
+        survivalBestWave: Number(row?.survival_best_wave ?? 0),
+        survivalBestRunScore: Number(row?.survival_best_run_score ?? 0),
     };
 }
 
@@ -72,8 +81,17 @@ function mapEvalFactsRow(row: EvalFactsRow | undefined): AchievementEvalFacts {
  * Один SELECT: count-агрегаты для evaluate + progress UI.
  * Не на submit/complete hop — только award/profile (см. QUIZ_NEON_HOT_PATH).
  * medium/hard: только poolKind SINGLE — mix не копит «прошёл Medium».
- * Survival исключён целиком (`survivalRunId IS NULL`): иначе HARD 36
+ * Survival исключён из агрегатов (`survivalRunId IS NULL`): иначе HARD 36
  * раздует classic_count / total_score / HARD / perfect (DECISIONS → Survival Mode MVP).
+ *
+ * Факты v4 — скалярные подзапросы в том же SELECT (тот же круг до Neon,
+ * без второго запроса и без параллельных client):
+ * - daily_best_streak: «острова» дат подряд — у дней одной серии
+ *   `challengeDate - ROW_NUMBER()` одинаковый; берём самый длинный остров;
+ * - blitz_perfect_fast_count: 10/10 и сдача (session.completedAt = приход
+ *   запроса) раньше `$2` секунд от старта;
+ * - survival_best_wave: только волны с survivalClockOk = true;
+ * - survival_best_run_score: SurvivalRun.totalScore (копит только честные волны).
  */
 const EVAL_FACTS_SQL = `
     SELECT
@@ -127,12 +145,64 @@ const EVAL_FACTS_SQL = `
             ),
             0
         )::int AS high_accuracy_90_count,
-        COALESCE(SUM(r.score), 0)::int AS total_score
+        COALESCE(SUM(r.score), 0)::int AS total_score,
+        (
+            SELECT COALESCE(MAX(islands.len), 0)::int
+            FROM (
+                SELECT COUNT(*) AS len
+                FROM (
+                    SELECT
+                        days.day
+                            - (ROW_NUMBER() OVER (ORDER BY days.day))::int
+                            AS grp
+                    FROM (
+                        SELECT DISTINCT dc."challengeDate" AS day
+                        FROM "QuizResult" AS dr
+                        INNER JOIN "QuizSession" AS ds ON ds.id = dr."sessionId"
+                        INNER JOIN "DailyChallenge" AS dc
+                            ON dc.id = ds."dailyChallengeId"
+                        WHERE dr."userId" = $1
+                    ) AS days
+                ) AS numbered
+                GROUP BY numbered.grp
+            ) AS islands
+        ) AS daily_best_streak,
+        (
+            SELECT COUNT(*)::int
+            FROM "QuizResult" AS br
+            INNER JOIN "QuizSession" AS bs ON bs.id = br."sessionId"
+            WHERE
+                br."userId" = $1
+                AND bs."timedEndsAt" IS NOT NULL
+                AND br."totalQuestions" > 0
+                AND br."correctCount" = br."totalQuestions"
+                AND COALESCE(bs."completedAt", br."completedAt") - bs."startedAt"
+                    < make_interval(secs => $2)
+        ) AS blitz_perfect_fast_count,
+        (
+            SELECT COALESCE(MAX(ws."survivalWaveIndex"), 0)::int
+            FROM "QuizSession" AS ws
+            INNER JOIN "QuizResult" AS wr ON wr."sessionId" = ws.id
+            WHERE
+                ws."userId" = $1
+                AND ws."survivalRunId" IS NOT NULL
+                AND ws."survivalClockOk" IS TRUE
+        ) AS survival_best_wave,
+        (
+            SELECT COALESCE(MAX(sr."totalScore"), 0)::int
+            FROM "SurvivalRun" AS sr
+            WHERE sr."userId" = $1
+        ) AS survival_best_run_score
     FROM "QuizResult" AS r
     INNER JOIN "QuizSession" AS s ON s.id = r."sessionId"
     WHERE r."userId" = $1
       AND s."survivalRunId" IS NULL
 `;
+
+/** Параметры EVAL_FACTS_SQL: $1 userId, $2 порог «Молнии» в секундах. */
+function evalFactsParams(userId: string): [string, number] {
+    return [userId, BLITZ_FAST_PERFECT_MAX_SECONDS];
+}
 
 /** Profile progress — короткий budget: лучше soft-miss, чем клинить quiz start. */
 const PROGRESS_READ_TIMEOUT_MS = 8_000;
@@ -144,7 +214,7 @@ export const userAchievementRepository = {
      */
     async findEvalFactsByUserId(userId: string): Promise<AchievementEvalFacts> {
         const result = await withDirectPgClient((client) =>
-            client.query<EvalFactsRow>(EVAL_FACTS_SQL, [userId]),
+            client.query<EvalFactsRow>(EVAL_FACTS_SQL, evalFactsParams(userId)),
         );
 
         return mapEvalFactsRow(result.rows[0]);
@@ -164,7 +234,7 @@ export const userAchievementRepository = {
         return withDirectPgClient(async (client) => {
             const factsResult = await client.query<EvalFactsRow>(
                 EVAL_FACTS_SQL,
-                [userId],
+                evalFactsParams(userId),
             );
             const unlockResult = await client.query<{ code: string }>(
                 `
@@ -218,7 +288,7 @@ export const userAchievementRepository = {
             async (client) => {
                 const factsResult = await client.query<EvalFactsRow>(
                     EVAL_FACTS_SQL,
-                    [userId],
+                    evalFactsParams(userId),
                 );
                 const unlockResult = await client.query<UnlockRow>(
                     `

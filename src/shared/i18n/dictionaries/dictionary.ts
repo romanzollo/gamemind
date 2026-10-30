@@ -729,6 +729,15 @@ export type Dictionary = {
             MEDIUM_5: { title: string; description: string };
             HARD_QUIZ: { title: string; description: string };
             HARD_3: { title: string; description: string };
+            DAILY_STREAK_3: { title: string; description: string };
+            DAILY_STREAK_7: { title: string; description: string };
+            DAILY_STREAK_30: { title: string; description: string };
+            BLITZ_PERFECT_FAST: { title: string; description: string };
+            SURVIVAL_WAVE_3: { title: string; description: string };
+            SURVIVAL_WAVE_5: { title: string; description: string };
+            SURVIVAL_WAVE_10: { title: string; description: string };
+            SURVIVAL_RUN_50: { title: string; description: string };
+            SURVIVAL_RUN_100: { title: string; description: string };
         };
     };
 };

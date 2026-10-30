@@ -1700,6 +1700,20 @@ Forbidden: `?` as “quiz” (reads as help at 40px), gamepad, cartridge, pixel-
 | A11y | Chip is `aria-hidden`; `sr-only` «Редкость: {tier}» / «Rarity: {tier}» (color is not announced) |
 | Mark | `AchievementMark` colors unlocked marks by tier — toast inherits it |
 
+**Catalog v4 (Oct 30, 2026 — ROADMAP 2.2, part C): streaks, Lightning, Survival.** 9 additive codes, no migration (string `code`). Streak achievements and Survival-based badges are now **in scope** (they were «Explicitly NOT» before).
+
+| Code | Criteria kind | Fact | Tier |
+|------|---------------|------|------|
+| `DAILY_STREAK_3/7/30` | `daily_streak_at_least` | `dailyBestStreak` — **best** run of consecutive `challengeDate` with a result (gaps-and-islands: `day - ROW_NUMBER()`), not the current streak | bronze / gold / legend |
+| `BLITZ_PERFECT_FAST` | `blitz_perfect_fast_once` | timed result 10/10 and `session.completedAt − startedAt < BLITZ_FAST_PERFECT_MAX_SECONDS` (30; request-arrival time per hot-path canon; passed to SQL as `$2`) | gold |
+| `SURVIVAL_WAVE_3/5/10` | `survival_wave_reached_at_least` | `survivalBestWave` — max `survivalWaveIndex` of a completed wave with `survivalClockOk = true` | bronze / silver / legend |
+| `SURVIVAL_RUN_50/100` | `survival_run_score_at_least` | `survivalBestRunScore` — max `SurvivalRun.totalScore` (only clock-ok waves add to it) | silver / gold |
+
+- **One query, same hop:** four scalar subqueries inside `EVAL_FACTS_SQL` (award, profile progress, result Suspense all read the same SQL). No second query, no parallel Direct clients. Dev: 0.6 ms execution.
+- **Survival stays out of the old count facts** (`survivalRunId IS NULL` in the main aggregate) — a HARD wave (up to 36) must not open `POINTS_250` / game-count ladders. Survival has its own badges instead.
+- **Existing players:** profile shows newly-met codes optimistically (date = now) until the next result writes `UserAchievement` — same as v2/v3 catalog additions.
+- **Marks:** new primitives `SegmentNumber` (7-segment scoreboard digits), `WaveCrest` (Survival family), `DailyStamp`. Streak = stamp + number + solid «in a row» bar (vs three separate cells of `DAILY_3`). Lightning = bold closed ring (`fillDisc={false}` — with fill, `opacity-10` also fades the stroke) + bolt, no dial ticks (vs `TIMED_COMPLETE`).
+
 **Title copy (Oct 30):** «Вошёл в ритм» → «В ритме» (gender-neutral), «Серия из десяти» → «Десятка» (10 games total, not a streak), «Три дня в деле» → «Три челленджа» (days need not be consecutive), «Оба режима» → «Классика и Блиц»; EN `HARD_3` → «Hard hat-trick». Codes unchanged.
 
 **Why not taxonomy still:** no product pressure. **Timed mode:** preferred next *mode* epic after achievements progress; higher cost than another badge.

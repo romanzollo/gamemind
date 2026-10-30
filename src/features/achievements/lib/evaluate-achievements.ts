@@ -63,6 +63,20 @@ export function isAchievementCriteriaMet(
             const threshold = definition.threshold ?? 0;
             return facts.totalScore >= threshold;
         }
+        case 'daily_streak_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.dailyBestStreak >= threshold;
+        }
+        case 'blitz_perfect_fast_once':
+            return facts.hasBlitzPerfectFast;
+        case 'survival_wave_reached_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.survivalBestWave >= threshold;
+        }
+        case 'survival_run_score_at_least': {
+            const threshold = definition.threshold ?? 0;
+            return facts.survivalBestRunScore >= threshold;
+        }
         default: {
             // Исчерпывающий switch: новый kind в типах без ветки = ошибка компиляции.
             const _exhaustive: never = definition.criteria;

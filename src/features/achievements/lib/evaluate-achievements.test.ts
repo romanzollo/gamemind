@@ -32,6 +32,10 @@ function facts(
         hasClassicCompleted: false,
         hasHighAccuracy90: false,
         totalScore: 0,
+        dailyBestStreak: 0,
+        hasBlitzPerfectFast: false,
+        survivalBestWave: 0,
+        survivalBestRunScore: 0,
         ...partial,
     };
 }
@@ -156,6 +160,75 @@ describe('isAchievementCriteriaMet', () => {
                 facts({ totalScore: 250 }),
             ),
         ).toBe(true);
+    });
+});
+
+describe('v4: серии, «Молния», Выживание', () => {
+    it('unlocks daily streaks by the best streak, not the total count', () => {
+        // Три челленджа всего, но не подряд: DAILY_3 да, DAILY_STREAK_3 нет.
+        expect(
+            evaluateAchievements(
+                facts({
+                    hasDailyCompleted: true,
+                    dailyCompletedCount: 3,
+                    dailyBestStreak: 2,
+                }),
+            ),
+        ).toEqual(['DAILY_COMPLETE', 'DAILY_3']);
+
+        expect(
+            evaluateAchievements(facts({ dailyBestStreak: 7 })),
+        ).toEqual(['DAILY_STREAK_3', 'DAILY_STREAK_7']);
+
+        expect(
+            evaluateAchievements(facts({ dailyBestStreak: 29 })),
+        ).not.toContain('DAILY_STREAK_30');
+        expect(
+            evaluateAchievements(facts({ dailyBestStreak: 30 })),
+        ).toContain('DAILY_STREAK_30');
+    });
+
+    it('maps BLITZ_PERFECT_FAST to its flag only', () => {
+        expect(
+            evaluateAchievements(facts({ hasBlitzPerfectFast: true })),
+        ).toEqual(['BLITZ_PERFECT_FAST']);
+    });
+
+    it('unlocks survival waves on the 3 / 5 / 10 ladder', () => {
+        expect(evaluateAchievements(facts({ survivalBestWave: 2 }))).toEqual(
+            [],
+        );
+        expect(evaluateAchievements(facts({ survivalBestWave: 3 }))).toEqual([
+            'SURVIVAL_WAVE_3',
+        ]);
+        expect(evaluateAchievements(facts({ survivalBestWave: 9 }))).toEqual([
+            'SURVIVAL_WAVE_3',
+            'SURVIVAL_WAVE_5',
+        ]);
+        expect(
+            evaluateAchievements(facts({ survivalBestWave: 10 })),
+        ).toContain('SURVIVAL_WAVE_10');
+    });
+
+    it('unlocks survival runs at 50 and 100 points of one run', () => {
+        expect(
+            evaluateAchievements(facts({ survivalBestRunScore: 49 })),
+        ).toEqual([]);
+        expect(
+            evaluateAchievements(facts({ survivalBestRunScore: 50 })),
+        ).toEqual(['SURVIVAL_RUN_50']);
+        expect(
+            evaluateAchievements(facts({ survivalBestRunScore: 100 })),
+        ).toEqual(['SURVIVAL_RUN_50', 'SURVIVAL_RUN_100']);
+    });
+
+    it('keeps survival out of the old count ladders', () => {
+        // Забег на 100 очков не открывает «Счётчик на 250» и счётчик игр.
+        const codes = evaluateAchievements(
+            facts({ survivalBestWave: 10, survivalBestRunScore: 250 }),
+        );
+        expect(codes).not.toContain('POINTS_250');
+        expect(codes).not.toContain('FIRST_QUIZ');
     });
 });
 
