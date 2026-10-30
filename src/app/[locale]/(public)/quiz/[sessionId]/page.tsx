@@ -82,11 +82,20 @@ export default async function QuizSessionPage({
         );
     }
 
+    // Заголовок = режим: игрок видит, во что играет (Survival/Blitz по view, Daily — флаг).
+    const modeTitle = sessionView.survival
+        ? dictionary.survivalMode.title
+        : sessionView.timedEndsAt
+          ? dictionary.timedMode.title
+          : sessionView.isDaily
+            ? dictionary.dailyChallenge.title
+            : dictionary.quiz.classicTitle;
+
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
             <header className="border-b border-border pb-3 sm:pb-5">
                 <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                    {dictionary.quiz.sessionTitle}
+                    {modeTitle}
                 </h1>
             </header>
 

@@ -59,6 +59,8 @@ type SessionSnapshotJsonRow = {
     survival_run_id?: string | null;
     survival_wave_index?: number | null;
     difficulty: Difficulty | null;
+    /** Скаляр того же SELECT (без лишнего hop) — заголовок «Челлендж дня». */
+    is_daily?: boolean | null;
 };
 
 type ReviewAnswerRow = {
@@ -142,7 +144,8 @@ async function loadQuizSessionSnapshotData(
                     "startedAt" AS "started_at",
                     "survivalRunId" AS "survival_run_id",
                     "survivalWaveIndex" AS "survival_wave_index",
-                    "difficulty"::text AS "difficulty"
+                    "difficulty"::text AS "difficulty",
+                    ("dailyChallengeId" IS NOT NULL) AS "is_daily"
                 FROM "QuizSession"
                 WHERE
                     "id" = $1
@@ -696,6 +699,7 @@ async function loadSnapshotPublicQuestions(
                 timedEndsAt: survival ? null : timedEndsAt,
                 difficulty: jsonSnapshot.difficulty,
                 survival,
+                isDaily: jsonSnapshot.is_daily === true,
             };
         }
     }

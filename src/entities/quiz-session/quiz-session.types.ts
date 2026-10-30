@@ -120,6 +120,11 @@ export type QuizSessionPublicView = {
     /** Сложность сессии; null = mix (poolKind MIXED). */
     difficulty: Difficulty | null;
     survival: QuizSessionSurvivalPlayView | null;
+    /**
+     * Попытка Челленджа дня (dailyChallengeId IS NOT NULL) — только для
+     * заголовка режима: Daily и Classic иначе не различить по view.
+     */
+    isDaily: boolean;
 };
 
 /** Вопрос из snapshot для server-side scoring (с isCorrect, без текста). */

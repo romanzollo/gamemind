@@ -459,7 +459,6 @@ export const ruDictionary: Dictionary = {
         mixedSplitMeta10:
             '4 лёгких · 3 средних · 3 сложных — 1, 2 и 3 очка',
         startButton: 'Начать классику',
-        sessionTitle: 'Поехали',
         resultTitle: 'Твой результат',
         submitButton: 'Узнать результат',
         scoreLabel: 'Очки',
@@ -477,6 +476,7 @@ export const ruDictionary: Dictionary = {
         filterWrong: 'Ошибки',
         filterCorrect: 'Верные',
         playAgain: 'Сыграть ещё',
+        playClassic: 'Сыграть в Классику',
         toLeaderboard: 'К рейтингу',
         backHome: 'На главную',
         reviewEmpty: 'Разбора для этой игры нет.',

@@ -444,7 +444,6 @@ export const enDictionary = {
         mixedSplitMeta10:
             '4 easy · 3 medium · 3 hard — worth 1, 2 and 3 points',
         startButton: 'Start classic',
-        sessionTitle: 'Here we go',
         resultTitle: 'Your result',
         submitButton: 'See my score',
         scoreLabel: 'Points',
@@ -462,6 +461,7 @@ export const enDictionary = {
         filterWrong: 'Wrong only',
         filterCorrect: 'Correct only',
         playAgain: 'Play again',
+        playClassic: 'Play Classic',
         toLeaderboard: 'Leaderboard',
         backHome: 'Home',
         reviewEmpty: 'No review for this game.',

@@ -194,6 +194,7 @@ function stashPlayLoadHandoff(
             timedEndsAt: timedEndsAt?.toISOString() ?? null,
             difficulty: resolveSessionPoolInsert(input).difficulty,
             survival,
+            isDaily: input.dailyChallengeId != null,
         },
         isSurvival ? snapshotData : undefined,
     );

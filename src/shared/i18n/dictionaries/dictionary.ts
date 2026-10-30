@@ -534,7 +534,6 @@ export type Dictionary = {
         /** Classic 10 и Blitz 10. */
         mixedSplitMeta10: string;
         startButton: string;
-        sessionTitle: string;
         resultTitle: string;
         submitButton: string;
         /** Подпись для взвешенных очков (не число верных ответов) */
@@ -556,6 +555,8 @@ export type Dictionary = {
         filterWrong: string;
         filterCorrect: string;
         playAgain: string;
+        /** Rematch после Челленджа дня: второй попытки нет — ведём в Классику. */
+        playClassic: string;
         toLeaderboard: string;
         backHome: string;
         reviewEmpty: string;

@@ -205,7 +205,12 @@ export default async function QuizResultPage({
             locale={safeLocale}
             difficulty={summary.setupDifficulty}
             questionCount={summary.totalQuestions}
-            label={dictionary.quiz.playAgain}
+            // Челлендж второй раз не сыграть — кнопка честно ведёт в Классику.
+            label={
+                summary.isDaily
+                    ? dictionary.quiz.playClassic
+                    : dictionary.quiz.playAgain
+            }
             dictionary={dictionary}
         />
     ) : null;

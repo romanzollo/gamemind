@@ -22,6 +22,7 @@ type QuizResultSummaryRow = {
     survival_clock_ok: boolean | null;
     difficulty: Difficulty | null;
     pool_kind: string | null;
+    is_daily: boolean;
 };
 
 type ReviewAnswerRow = {
@@ -46,6 +47,11 @@ export type QuizResultSummary = {
     isTimed: boolean;
     /** Survival ⇔ survivalRunId IS NOT NULL (не timedEndsAt). */
     isSurvival: boolean;
+    /**
+     * Челлендж дня ⇔ dailyChallengeId IS NOT NULL. Rematch после Daily —
+     * обычная Классика (челлендж один раз), поэтому другая подпись кнопки.
+     */
+    isDaily: boolean;
     /** Null если не Survival. Нужен для continue CTA / eligibility. */
     survivalRunId: string | null;
     /** Null до complete / если не Survival. */
@@ -350,7 +356,8 @@ async function loadResultSummaryBySessionIdForUser(
                     s."survivalRunId" AS "survival_run_id",
                     s."survivalClockOk" AS "survival_clock_ok",
                     s."difficulty"::text AS "difficulty",
-                    s."poolKind"::text AS "pool_kind"
+                    s."poolKind"::text AS "pool_kind",
+                    (s."dailyChallengeId" IS NOT NULL) AS "is_daily"
                 FROM "QuizResult" r
                 INNER JOIN "QuizSession" s
                     ON s."id" = r."sessionId"
@@ -394,6 +401,7 @@ async function loadResultSummaryBySessionIdForUser(
         difficulties,
         isTimed: row.timed_ends_at != null,
         isSurvival: row.survival_run_id != null,
+        isDaily: row.is_daily === true,
         survivalRunId: row.survival_run_id,
         survivalClockOk: row.survival_clock_ok,
         difficulty: row.difficulty,
