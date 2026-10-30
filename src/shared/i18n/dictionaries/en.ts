@@ -221,7 +221,7 @@ export const enDictionary = {
     admin: {
         homeTitle: 'Admin panel',
         homeDescription:
-            'Choose a section: quiz questions or user management.',
+            'Pick a section: questions or users.',
         questionsCardDescription:
             'List, create, edit, and activate quiz questions.',
         usersCardDescription: 'Roles, deactivation, and account deletion.',
@@ -251,9 +251,9 @@ export const enDictionary = {
         backToUsers: 'Back to users',
         viewUserLink: 'View',
         userHistoryTitle: 'Recent results',
-        userHistoryEmpty: 'This user has no completed quizzes yet.',
+        userHistoryEmpty: 'This player hasn’t finished any games yet.',
         userHistoryLoadFailed:
-            'Could not load result history. Try refreshing the page.',
+            'History didn’t load. Refresh the page.',
         userHistoryDate: 'Date',
         userHistoryDifficulty: 'Difficulty',
         userHistoryScore: 'Points',
@@ -267,8 +267,6 @@ export const enDictionary = {
         usersLink: 'Users',
         tableQuestion: 'Question',
         tableDifficulty: 'Difficulty',
-        tableCategory: 'Category',
-        tableOptions: 'Options',
         tableStatus: 'Status',
         tableCreated: 'Created',
         tableUsername: 'Username',
@@ -293,7 +291,6 @@ export const enDictionary = {
         filterTypeAll: 'Any type',
         filterSearch: 'Search',
         filterSearchPlaceholder: 'Question text…',
-        filterApply: 'Apply',
         filterReset: 'Reset',
         paginationNavLabel: 'Question list pages',
         paginationSummary: 'Showing {from}–{to} of {total}',
@@ -347,7 +344,7 @@ export const enDictionary = {
         roleUser: 'USER',
         roleAdmin: 'ADMIN',
         confirmDeleteUser:
-            'Delete this user permanently? Related quizzes and results will also be deleted.',
+            'Delete this user permanently? Their games and results will be deleted too.',
         confirmChangeRole: 'Change this user’s role?',
         tableActions: 'Actions',
         rowMoreActions: 'More',
@@ -393,7 +390,7 @@ export const enDictionary = {
             uploadFailed:
                 'Failed to upload the image. Check storage settings and try again.',
             invalidImage:
-                'Invalid image. Use JPEG/PNG/WebP (no SVG), max 2 MB.',
+                'This file won’t work. Use JPEG, PNG or WebP up to 2 MB.',
             deleteFailed: 'Failed to delete. Try again.',
             deactivateFailed: 'Failed to deactivate the question. Try again.',
             activateFailed: 'Failed to activate the question. Try again.',
@@ -413,7 +410,7 @@ export const enDictionary = {
             userRoleUpdateFailed: 'Failed to change the role. Try again.',
             userDeactivateFailed: 'Failed to deactivate the user. Try again.',
             userActivateFailed: 'Failed to activate the user. Try again.',
-            rateLimited: 'Too many attempts. Please wait a bit and try again.',
+            rateLimited: 'Too many tries. Wait a moment and try again.',
         },
     },
     quiz: {

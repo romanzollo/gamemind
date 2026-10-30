@@ -226,7 +226,7 @@ export const ruDictionary: Dictionary = {
     admin: {
         homeTitle: 'Админ-панель',
         homeDescription:
-            'Выберите раздел: вопросы для квиза или управление пользователями.',
+            'Выбери раздел: вопросы или пользователи.',
         questionsCardDescription:
             'Список, создание, редактирование и активация вопросов.',
         usersCardDescription:
@@ -258,15 +258,15 @@ export const ruDictionary: Dictionary = {
         viewUserLink: 'Карточка',
         userHistoryTitle: 'Недавние результаты',
         userHistoryEmpty:
-            'У этого пользователя ещё нет завершённых квизов.',
+            'У этого игрока пока нет сыгранных игр.',
         userHistoryLoadFailed:
-            'Не удалось загрузить историю результатов. Попробуйте обновить страницу.',
+            'История не загрузилась. Обнови страницу.',
         userHistoryDate: 'Дата',
         userHistoryDifficulty: 'Сложность',
         userHistoryScore: 'Очки',
         userHistoryCorrect: 'Верно',
         userHistoryOf: 'из',
-        signedInAs: 'Админ-зона. Вы вошли как',
+        signedInAs: 'Админ-зона. Аккаунт:',
         listDescription:
             'Просмотр, фильтры и управление вопросами по страницам.',
         usersListDescription: 'Список пользователей: роли, статус, результаты.',
@@ -274,8 +274,6 @@ export const ruDictionary: Dictionary = {
         usersLink: 'Пользователи',
         tableQuestion: 'Вопрос',
         tableDifficulty: 'Сложность',
-        tableCategory: 'Категория',
-        tableOptions: 'Варианты',
         tableStatus: 'Статус',
         tableCreated: 'Создан',
         tableUsername: 'Имя',
@@ -300,7 +298,6 @@ export const ruDictionary: Dictionary = {
         filterTypeAll: 'Любой тип',
         filterSearch: 'Поиск',
         filterSearchPlaceholder: 'Текст вопроса…',
-        filterApply: 'Применить',
         filterReset: 'Сбросить',
         paginationNavLabel: 'Страницы списка вопросов',
         paginationSummary: 'Показаны {from}–{to} из {total}',
@@ -316,7 +313,7 @@ export const ruDictionary: Dictionary = {
         formPromptImage: 'Изображение (prompt)',
         formPromptImageFile: 'Загрузить файл',
         formPromptImageFileHint:
-            'JPEG, PNG или WebP, до 2 MB. На сервере будет WebP без обрезки кадра.',
+            'JPEG, PNG или WebP, до 2 МБ. На сервере будет WebP без обрезки кадра.',
         formPromptImageCurrent: 'Текущий URL',
         formPromptImageNewFile:
             'Новый файл — заменит текущую картинку после сохранения',
@@ -356,7 +353,7 @@ export const ruDictionary: Dictionary = {
         roleUser: 'USER',
         roleAdmin: 'ADMIN',
         confirmDeleteUser:
-            'Удалить пользователя навсегда? Связанные квизы и результаты тоже удалятся.',
+            'Удалить пользователя навсегда? Его игры и результаты тоже удалятся.',
         confirmChangeRole: 'Изменить роль этого пользователя?',
         tableActions: 'Действия',
         rowMoreActions: 'Ещё',
@@ -402,7 +399,7 @@ export const ruDictionary: Dictionary = {
             uploadFailed:
                 'Не удалось загрузить изображение. Проверь storage и попробуй ещё раз.',
             invalidImage:
-                'Недопустимое изображение. Нужны JPEG/PNG/WebP без SVG, до 2 MB.',
+                'Этот файл не подойдёт. Нужен JPEG, PNG или WebP до 2 МБ.',
             deleteFailed: 'Не удалось удалить. Попробуй ещё раз.',
             deactivateFailed:
                 'Не удалось деактивировать вопрос. Попробуй ещё раз.',
@@ -428,7 +425,7 @@ export const ruDictionary: Dictionary = {
             userActivateFailed:
                 'Не удалось активировать пользователя. Попробуй ещё раз.',
             rateLimited:
-                'Слишком много попыток. Подождите немного и попробуйте снова.',
+                'Слишком много попыток. Подожди немного и попробуй снова.',
         },
     },
     quiz: {

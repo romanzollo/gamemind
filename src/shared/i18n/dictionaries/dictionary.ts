@@ -328,8 +328,6 @@ export type Dictionary = {
         usersLink: string;
         tableQuestion: string;
         tableDifficulty: string;
-        tableCategory: string;
-        tableOptions: string;
         tableStatus: string;
         tableCreated: string;
         tableUsername: string;
@@ -362,7 +360,6 @@ export type Dictionary = {
         filterTypeAll: string;
         filterSearch: string;
         filterSearchPlaceholder: string;
-        filterApply: string;
         filterReset: string;
         /** Пагинация списка вопросов (offset, URL ?page=). */
         paginationNavLabel: string;
