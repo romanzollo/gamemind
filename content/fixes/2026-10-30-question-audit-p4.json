@@ -1,0 +1,204 @@
+{
+    "version": 1,
+    "note": "Аудит банка 30 окт 2026, часть 4: IMAGE_GUESS, где скриншот нельзя надёжно отличить от соседней части той же серии — такой неверный вариант заменён похожей игрой другой серии. Применять scripts/apply-question-fixes.cjs; реимпорт запрещён.",
+    "fixes": [
+        {
+            "key": "audit-p4-easy-zelda-breath-of-the-wild",
+            "difficulty": "EASY",
+            "matchAssetUrl": "/quiz-images/easy/zelda-breath-of-the-wild.webp",
+            "matchRu": [
+                "The Legend of Zelda: Breath of the Wild",
+                "The Legend of Zelda: Tears of the Kingdom",
+                "Horizon Zero Dawn",
+                "Genshin Impact"
+            ],
+            "options": [
+                {
+                    "fromRu": "The Legend of Zelda: Tears of the Kingdom",
+                    "ru": "Immortals Fenyx Rising",
+                    "en": "Immortals Fenyx Rising"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-easy-cs-go",
+            "difficulty": "EASY",
+            "matchAssetUrl": "/quiz-images/easy/cs-go.webp",
+            "matchRu": [
+                "Counter-Strike: Global Offensive",
+                "Counter-Strike 2",
+                "Valorant",
+                "Team Fortress 2"
+            ],
+            "options": [
+                {
+                    "fromRu": "Counter-Strike 2",
+                    "ru": "Warface",
+                    "en": "Warface"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-easy-portal",
+            "difficulty": "EASY",
+            "matchAssetUrl": "/quiz-images/easy/portal.webp",
+            "matchRu": [
+                "Portal",
+                "Portal 2",
+                "The Talos Principle",
+                "Q.U.B.E."
+            ],
+            "options": [
+                {
+                    "fromRu": "Portal 2",
+                    "ru": "Mirror’s Edge",
+                    "en": "Mirror’s Edge"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-easy-tomb-raider-2013",
+            "difficulty": "EASY",
+            "matchAssetUrl": "/quiz-images/easy/tomb-raider-2013.webp",
+            "matchRu": [
+                "Tomb Raider (2013)",
+                "Uncharted 4",
+                "Rise of the Tomb Raider",
+                "Horizon Zero Dawn"
+            ],
+            "options": [
+                {
+                    "fromRu": "Rise of the Tomb Raider",
+                    "ru": "Far Cry 3",
+                    "en": "Far Cry 3"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-medium-death-stranding",
+            "difficulty": "MEDIUM",
+            "matchAssetUrl": "/quiz-images/medium/death-stranding.webp",
+            "matchRu": [
+                "Death Stranding",
+                "Death Stranding 2",
+                "Metal Gear Solid V",
+                "Firewatch"
+            ],
+            "options": [
+                {
+                    "fromRu": "Death Stranding 2",
+                    "ru": "Days Gone",
+                    "en": "Days Gone"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-medium-horizon-zero-dawn",
+            "difficulty": "MEDIUM",
+            "matchAssetUrl": "/quiz-images/medium/horizon-zero-dawn.webp",
+            "matchRu": [
+                "Horizon Zero Dawn",
+                "Horizon Forbidden West",
+                "The Legend of Zelda: Breath of the Wild",
+                "Immortals Fenyx Rising"
+            ],
+            "options": [
+                {
+                    "fromRu": "Horizon Forbidden West",
+                    "ru": "Far Cry Primal",
+                    "en": "Far Cry Primal"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-medium-stalker-call-of-pripyat",
+            "difficulty": "MEDIUM",
+            "matchAssetUrl": "/quiz-images/medium/stalker-call-of-pripyat.webp",
+            "matchRu": [
+                "S.T.A.L.K.E.R.: Call of Pripyat",
+                "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+                "Metro: Last Light",
+                "Chernobylite"
+            ],
+            "options": [
+                {
+                    "fromRu": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+                    "ru": "Escape from Tarkov",
+                    "en": "Escape from Tarkov"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-medium-mass-effect-2",
+            "difficulty": "MEDIUM",
+            "matchAssetUrl": "/quiz-images/medium/mass-effect-2.webp",
+            "matchRu": [
+                "Mass Effect 2",
+                "Mass Effect",
+                "Mass Effect 3",
+                "Dragon Age II"
+            ],
+            "options": [
+                {
+                    "fromRu": "Mass Effect 3",
+                    "ru": "Star Wars: Knights of the Old Republic",
+                    "en": "Star Wars: Knights of the Old Republic"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-hard-thief-the-dark-project",
+            "difficulty": "HARD",
+            "matchAssetUrl": "/quiz-images/hard/thief-the-dark-project.webp",
+            "matchRu": [
+                "Thief: The Dark Project",
+                "Thief II",
+                "Thief (2014)",
+                "Dishonored"
+            ],
+            "options": [
+                {
+                    "fromRu": "Thief II",
+                    "ru": "Arx Fatalis",
+                    "en": "Arx Fatalis"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-hard-spelunky",
+            "difficulty": "HARD",
+            "matchAssetUrl": "/quiz-images/hard/spelunky.webp",
+            "matchRu": [
+                "Spelunky",
+                "Spelunky 2",
+                "Dead Cells",
+                "Enter the Gungeon"
+            ],
+            "options": [
+                {
+                    "fromRu": "Spelunky 2",
+                    "ru": "Rogue Legacy",
+                    "en": "Rogue Legacy"
+                }
+            ]
+        },
+        {
+            "key": "audit-p4-hard-hotline-miami",
+            "difficulty": "HARD",
+            "matchAssetUrl": "/quiz-images/hard/hotline-miami.webp",
+            "matchRu": [
+                "Hotline Miami",
+                "Hotline Miami 2",
+                "Gungrave",
+                "My Friend Pedro"
+            ],
+            "options": [
+                {
+                    "fromRu": "Hotline Miami 2",
+                    "ru": "Katana ZERO",
+                    "en": "Katana ZERO"
+                }
+            ]
+        }
+    ]
+}

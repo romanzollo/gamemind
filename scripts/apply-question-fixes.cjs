@@ -1,5 +1,6 @@
 /**
- * Точечные правки уже опубликованных TEXT-вопросов из файла content/fixes/*.json.
+ * Точечные правки уже опубликованных вопросов (TEXT и IMAGE_GUESS) из файла
+ * content/fixes/*.json.
  *
  * Зачем: аудит банка (формулировки, варианты, имена RU/EN) нужно применить
  * одинаково к dev и прод Neon. Реимпорт запрещён — он вставляет новые UUID
@@ -8,12 +9,16 @@
  * Инварианты:
  * - id вопроса и вариантов, isCorrect, порядок, publicationStatus, isActive
  *   не меняются — старые QuizAnswer остаются верными/неверными как были;
- * - вопрос ищется по сложности + четырём текущим RU-вариантам (id в dev и
- *   прод разные, draftKey в БД не хранится); если не нашёлся — по вариантам
+ * - вопрос ищется по типу + сложности + четырём текущим RU-вариантам (id в dev
+ *   и прод разные, draftKey в БД не хранится); если не нашёлся — по вариантам
  *   «после правки», это значит, что файл уже применён. Одинаковые наборы
  *   встречаются (две «консольные» HARD с Saturn/PS/N64/Dreamcast), поэтому
- *   совпадение всегда сужаем по RU-тексту вопроса (matchQuestionRu или уже
- *   новый question.ru) — иначе можно записать правку в чужой вопрос;
+ *   совпадение всегда сужаем: TEXT — по RU-тексту вопроса (matchQuestionRu
+ *   или уже новый question.ru), IMAGE_GUESS — по URL картинки-подсказки
+ *   (matchAssetUrl: текст у всех один, а файл в public/ одинаков в dev и
+ *   прод) — иначе можно записать правку в чужой вопрос;
+ * - у IMAGE_GUESS правим только варианты: общий текст «Угадай игру по
+ *   изображению» точечно не меняется;
  * - найден по вариантам «до» → варианты сопоставляются по fromRu; найден по
  *   вариантам «после» → по новым ru и только сверяются. Без этого повторный
  *   запуск цепочки «Скайрим → Сиродил, Сиродил → Хай Рок» переименовал бы
@@ -170,8 +175,17 @@ function loadFixes(file) {
             continue;
         }
 
-        if (!isFilledString(fix.matchQuestionRu)) {
-            fail('matchQuestionRu is required');
+        // Ровно один «якорь» сужения: текст вопроса (TEXT) или URL картинки (IMAGE_GUESS).
+        const byStem = isFilledString(fix.matchQuestionRu);
+        const byAsset = isFilledString(fix.matchAssetUrl);
+        if (byStem === byAsset) {
+            fail('exactly one of matchQuestionRu / matchAssetUrl is required');
+        }
+        if (byAsset && !fix.matchAssetUrl.startsWith('/')) {
+            fail('matchAssetUrl must be a site path like /quiz-images/...');
+        }
+        if (byAsset && fix.question) {
+            fail('question edits are not supported for image fixes');
         }
 
         if (!fix.question && !fix.options) fail('nothing to change');
@@ -232,12 +246,12 @@ function loadFixes(file) {
     return fixes;
 }
 
-async function findQuestionIds(client, optionRu, difficulty) {
+async function findQuestionIds(client, optionRu, difficulty, type) {
     const result = await client.query(
         `
         SELECT q.id
         FROM "Question" q
-        WHERE q."type" = 'TEXT'::"QuestionType"
+        WHERE q."type" = $3::"QuestionType"
           AND q.difficulty = $2::"Difficulty"
           AND (
             SELECT COUNT(*)
@@ -249,7 +263,22 @@ async function findQuestionIds(client, optionRu, difficulty) {
               AND aot.text = ANY($1::text[])
           ) = 4
         `,
-        [optionRu, difficulty],
+        [optionRu, difficulty, type],
+    );
+    return result.rows.map((row) => row.id);
+}
+
+/** IMAGE_GUESS: сужает совпадения до вопроса с этой картинкой-подсказкой. */
+async function narrowByAsset(client, ids, url) {
+    const result = await client.query(
+        `
+        SELECT DISTINCT "questionId" AS id
+        FROM "QuestionAsset"
+        WHERE "questionId" = ANY($1::text[])
+          AND role = 'PROMPT'::"QuestionAssetRole"
+          AND url = $2
+        `,
+        [ids, url],
     );
     return result.rows.map((row) => row.id);
 }
@@ -435,8 +464,10 @@ function printPlan(plan) {
 }
 
 async function findForPhase(client, fix, optionRu) {
-    const ids = await findQuestionIds(client, optionRu, fix.difficulty);
+    const type = fix.matchAssetUrl ? 'IMAGE_GUESS' : 'TEXT';
+    const ids = await findQuestionIds(client, optionRu, fix.difficulty, type);
     if (ids.length === 0) return ids;
+    if (fix.matchAssetUrl) return narrowByAsset(client, ids, fix.matchAssetUrl);
     const stems = [fix.matchQuestionRu, fix.question?.ru].filter(Boolean);
     return narrowByStem(client, ids, stems);
 }
