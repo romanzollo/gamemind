@@ -1,3 +1,5 @@
+import type { PluralForms } from '../format-plural';
+
 export type Dictionary = {
     metadata: {
         title: string;
@@ -91,6 +93,20 @@ export type Dictionary = {
         boardTitle: string;
         /** Пустой рейтинг (день есть, ещё никто не финишировал) */
         boardEmpty: string;
+        /** Серия дней: `{n}` — длина серии, формы по Intl.PluralRules. */
+        streakDays: PluralForms;
+        /** `{n}` — лучшая серия. */
+        streakBest: string;
+        /** Серии нет — повод начать. */
+        streakStart: string;
+        /** Серия есть, сегодня ещё не сыграно. */
+        streakAtRisk: string;
+        /** `{time}` — до следующего челленджа (чч:мм:сс). */
+        nextChallengeIn: string;
+        /** Результат: серия длиннее любой прежней. */
+        streakNewBest: string;
+        /** a11y полоски 7 дней: `{played}` из 7. */
+        streakLastDaysLabel: string;
     };
     /**
      * Timed Mode CTA — только mode lobby `/quiz`.

@@ -77,6 +77,18 @@ export const ruDictionary: Dictionary = {
         completedScore: 'Очки: {score} · {correct}/{total}',
         boardTitle: 'Рейтинг дня',
         boardEmpty: 'Арена пуста. Самое время занять первое место.',
+        streakDays: {
+            one: '{n} день подряд',
+            few: '{n} дня подряд',
+            many: '{n} дней подряд',
+            other: '{n} дня подряд',
+        },
+        streakBest: 'Рекорд: {n}',
+        streakStart: 'Сыграй сегодня — начнёшь серию',
+        streakAtRisk: 'Сыграй сегодня, чтобы не прервать серию',
+        nextChallengeIn: 'Новый челлендж через {time}',
+        streakNewBest: 'Новый рекорд серии',
+        streakLastDaysLabel: 'Последние 7 дней: сыграно {played} из 7',
     },
     timedMode: {
         eyebrow: 'На время',

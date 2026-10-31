@@ -23,7 +23,7 @@ export async function DailyChallengeCta({
     className = '',
 }: DailyChallengeCtaProps) {
     const session = await auth();
-    const { status, boardEntries, showBoard } = await getDailyLobbyView(
+    const { status, boardEntries, showBoard, streak } = await getDailyLobbyView(
         session?.user?.id ?? null,
     );
 
@@ -33,6 +33,7 @@ export async function DailyChallengeCta({
                 <DailyChallengeCtaPanel
                     locale={locale}
                     status={status}
+                    streak={streak}
                     dictionary={dictionary}
                     embedded
                 />

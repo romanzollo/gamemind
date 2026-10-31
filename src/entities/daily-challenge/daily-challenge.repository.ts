@@ -23,6 +23,7 @@ import { LEADERBOARD_VISIBLE_USER_SQL } from '@/entities/user/leaderboard-visibi
 import {
     withDirectPgClient,
     withDirectPgWriteClient,
+    withPooledPgClient,
 } from '@/lib/db/direct-pg';
 import type { Difficulty } from '@/types';
 import type { DailyChallengeDefinition } from '@/features/daily-challenge/types';
@@ -390,14 +391,52 @@ async function findScoresByChallengeId(
     );
 }
 
+/**
+ * Московские даты (`YYYY-MM-DD`) дней, где у игрока есть результат
+ * Челленджа, — вход для серии (computeDailyStreak). Брошенные попытки без
+ * QuizResult не считаются. Строк — не больше числа сыгранных дней.
+ */
+async function queryPlayedDateKeys(
+    client: Client,
+    userId: string,
+): Promise<string[]> {
+    const result = await client.query<{ challenge_date: Date | string }>(
+        `
+            SELECT DISTINCT dc."challengeDate" AS challenge_date
+            FROM "QuizResult" r
+            INNER JOIN "QuizSession" s ON s.id = r."sessionId"
+            INNER JOIN "DailyChallenge" dc ON dc.id = s."dailyChallengeId"
+            WHERE r."userId" = $1
+            ORDER BY 1
+        `,
+        [userId],
+    );
+
+    return result.rows.map((row) => toDateKey(row.challenge_date));
+}
+
+/**
+ * Даты сыгранных Челленджей для страницы результата. Pooled, не Direct:
+ * блок серии грузится отдельно и не должен вставать в очередь submit/result.
+ */
+async function findPlayedDateKeys(userId: string): Promise<string[]> {
+    return withPooledPgClient((client) => queryPlayedDateKeys(client, userId), {
+        debugLabel: 'daily.streak.played-dates',
+        attemptTimeoutMs: 8_000,
+    });
+}
+
 export type DailyLobbyPanelState = {
     challenge: DailyChallengeDefinition | null;
     attempt: DailyChallengeAttempt | null;
     boardEntries: DailyScoreEntry[];
+    /** Для серии; пусто у гостя. */
+    playedDateKeys: string[];
 };
 
 /**
- * Mode lobby `/quiz`: challenge + attempt + board на одном Direct client.
+ * Mode lobby `/quiz`: challenge + attempt + board + даты серии на одном
+ * Direct client (короткие запросы на уже открытом соединении).
  * Не вызывает ensure/INSERT — только чтение. Write остаётся в ensureDailyChallenge.
  */
 async function findLobbyPanelState(input: {
@@ -410,12 +449,17 @@ async function findLobbyPanelState(input: {
             client,
             input.challengeDate,
         );
+        const playedDateKeys =
+            input.userId != null
+                ? await queryPlayedDateKeys(client, input.userId)
+                : [];
 
         if (!challenge) {
             return {
                 challenge: null,
                 attempt: null,
                 boardEntries: [],
+                playedDateKeys,
             };
         }
 
@@ -434,7 +478,7 @@ async function findLobbyPanelState(input: {
             input.boardLimit,
         );
 
-        return { challenge, attempt, boardEntries };
+        return { challenge, attempt, boardEntries, playedDateKeys };
     });
 }
 
@@ -445,4 +489,5 @@ export const dailyChallengeRepository = {
     findAttemptByUserAndChallenge,
     findScoresByChallengeId,
     findLobbyPanelState,
+    findPlayedDateKeys,
 };

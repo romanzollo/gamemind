@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
+import { DailyStreakResult } from '@/features/daily-challenge/components/daily-streak-result';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
 import { ResultSecondaryPanel } from '@/features/quiz/components/ResultSecondaryPanel';
 import { ClassicRematchButton } from '@/features/quiz/components/ClassicRematchButton';
@@ -313,6 +314,17 @@ export default async function QuizResultPage({
                             leaderboardHref={leaderboardHref}
                         />
                     )}
+
+                    {summary.isDaily ? (
+                        // Серия — своим запросом: результат её не ждёт.
+                        <Suspense fallback={null}>
+                            <DailyStreakResult
+                                userId={authSession.user.id}
+                                locale={safeLocale}
+                                labels={dictionary.dailyChallenge}
+                            />
+                        </Suspense>
+                    ) : null}
 
                     <Suspense
                         fallback={

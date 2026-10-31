@@ -11,6 +11,8 @@
 import { useActionState } from 'react';
 
 import { startDailyChallengeAction } from '@/features/daily-challenge/actions';
+import { DailyStreakSummary } from '@/features/daily-challenge/components/daily-streak';
+import type { DailyStreak } from '@/features/daily-challenge/lib/compute-daily-streak';
 import type { DailyChallengePlayerStatus } from '@/features/daily-challenge/types';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
@@ -24,6 +26,8 @@ import {
 type DailyChallengeCtaPanelProps = {
     locale: Locale;
     status: DailyChallengePlayerStatus;
+    /** Серия дней; null у гостя — блок не показываем. */
+    streak?: DailyStreak | null;
     dictionary: Dictionary;
     /**
      * true = без своей рамки (родитель `DailyChallengeCta` уже surface),
@@ -35,6 +39,7 @@ type DailyChallengeCtaPanelProps = {
 export function DailyChallengeCtaPanel({
     locale,
     status,
+    streak = null,
     dictionary,
     embedded = false,
 }: DailyChallengeCtaPanelProps) {
@@ -64,6 +69,20 @@ export function DailyChallengeCtaPanel({
                     {labels.meta}
                 </span>
             </p>
+
+            {streak ? (
+                <DailyStreakSummary
+                    className="mt-4"
+                    streak={streak}
+                    locale={locale}
+                    labels={labels}
+                    showCountdown={
+                        status.kind === 'completed' ||
+                        (status.kind === 'unavailable' &&
+                            status.reason === 'attempt_abandoned')
+                    }
+                />
+            ) : null}
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                 {status.kind === 'unavailable' &&

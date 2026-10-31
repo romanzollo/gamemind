@@ -7,6 +7,10 @@
  */
 
 import { dailyChallengeRepository } from '@/entities/daily-challenge/daily-challenge.repository';
+import {
+    computeDailyStreak,
+    type DailyStreak,
+} from '@/features/daily-challenge/lib/compute-daily-streak';
 import { ensureDailyChallenge } from '@/features/daily-challenge/lib/ensure-daily-challenge';
 import { getMoscowDateKey } from '@/features/daily-challenge/lib/get-moscow-date-key';
 import type { DailyChallengePlayerStatus } from '@/features/daily-challenge/types';
@@ -18,6 +22,8 @@ export type DailyLobbyView = {
     status: DailyChallengePlayerStatus;
     boardEntries: ReturnType<typeof mapLeaderboardEntries>;
     showBoard: boolean;
+    /** Серия дней; null у гостя. */
+    streak: DailyStreak | null;
 };
 
 function statusFromAttempt(
@@ -78,6 +84,7 @@ export async function getDailyLobbyView(
             },
             boardEntries: mapLeaderboardEntries(panel.boardEntries),
             showBoard: panel.challenge !== null,
+            streak: null,
         };
     }
 
@@ -98,6 +105,7 @@ export async function getDailyLobbyView(
                 },
                 boardEntries: [],
                 showBoard: false,
+                streak: computeDailyStreak(panel.playedDateKeys, challengeDate),
             };
         }
 
@@ -116,6 +124,7 @@ export async function getDailyLobbyView(
             },
             boardEntries: [],
             showBoard: false,
+            streak: computeDailyStreak(panel.playedDateKeys, challengeDate),
         };
     }
 
@@ -123,5 +132,6 @@ export async function getDailyLobbyView(
         status: statusFromAttempt(panel.challenge.challengeDate, panel.attempt),
         boardEntries: mapLeaderboardEntries(panel.boardEntries),
         showBoard: true,
+        streak: computeDailyStreak(panel.playedDateKeys, challengeDate),
     };
 }

@@ -1623,6 +1623,22 @@ Important decision: generated questions should not go directly into live quizzes
 - Nesting `withDatabaseRetry` around direct `pg` snapshot writes.
 - Treating node-pg DATE as UTC-only without `toDateKey` local-midnight handling (Windows).
 
+
+### Daily streak (October 31, 2026)
+
+**Decision:** the streak is derived, not stored: distinct Moscow `challengeDate` of the player's Daily **results** (abandoned attempts do not count) → `computeDailyStreak` (pure, tested).
+
+| Rule | Choice |
+|------|--------|
+| Current | Consecutive days ending today; if today is not played yet — ending yesterday (alive until Moscow midnight, shown as «play today to keep your streak») |
+| Best | Longest run ever — same meaning as `daily_best_streak` in achievement facts |
+| New best | Today played, current ≥ 2 and longer than every earlier run |
+| Reads | Lobby: one extra short query on the already open Direct client of `findLobbyPanelState`. Daily result: pooled query in its own Suspense — the result never waits for it |
+| Countdown | To 00:00 Moscow (UTC+3, no DST) by `serverNow()`; at midnight the page refreshes |
+| Look | SVG flame mark, not emoji (TASTE_SKILL); 7-day strip with an aria-label |
+
+**Not chosen:** a stored `currentStreak` column — needs a write on every Daily submit (hot path) and a repair job for missed days; deriving from ≤ 365 dates per year is cheap.
+
 ## Achievements MVP (July 30, 2026) + catalog v2 + criteria progress (July 31, 2026)
 
 **Date:** 2026-07-30 (MVP kickoff ? shipped on prod). **Catalog v2:** 2026-07-31 (`06aeae2`). **Criteria progress UI:** 2026-07-31 (`8f600fb`).

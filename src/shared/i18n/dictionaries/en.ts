@@ -77,6 +77,18 @@ export const enDictionary = {
         completedScore: 'Points: {score} · {correct}/{total}',
         boardTitle: 'Today’s leaderboard',
         boardEmpty: 'The arena is empty. Time to claim first place.',
+        streakDays: {
+            one: '{n} day in a row',
+            few: '{n} days in a row',
+            many: '{n} days in a row',
+            other: '{n} days in a row',
+        },
+        streakBest: 'Best: {n}',
+        streakStart: 'Play today to start a streak',
+        streakAtRisk: 'Play today to keep your streak',
+        nextChallengeIn: 'Next challenge in {time}',
+        streakNewBest: 'New best streak',
+        streakLastDaysLabel: 'Last 7 days: played {played} of 7',
     },
     timedMode: {
         eyebrow: 'Timed',
