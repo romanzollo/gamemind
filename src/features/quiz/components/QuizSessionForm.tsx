@@ -30,6 +30,7 @@ import type { QuizPublicQuestion } from '@/features/quiz/types';
 import { TimedQuizCountdown } from '@/features/timed-mode/components/TimedQuizCountdown';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
+import { serverNow } from '@/shared/ui/server-clock';
 import type { Difficulty } from '@/types';
 
 type QuizSessionFormProps = {
@@ -64,7 +65,7 @@ export function QuizSessionForm({
             return false;
         }
 
-        return new Date(timedEndsAt).getTime() <= Date.now();
+        return new Date(timedEndsAt).getTime() <= serverNow();
     });
 
     const answeredCount = useMemo(

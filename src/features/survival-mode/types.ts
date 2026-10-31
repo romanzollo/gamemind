@@ -73,13 +73,23 @@ export const SURVIVAL_MODE_MVP_RULES = {
      */
     initialBankSeconds: 20,
     /**
+     * Минимальный банк на старте волны 2+ (сек): остаток 1–4 с поднимаем
+     * до 5, иначе новую волну не успеть прочитать. Больший остаток не
+     * трогаем. Пишется в `bankRemainingSeconds` — все формулы волны берут
+     * уже поднятое T0'. ADR: Survival clock — server time sync and wave start.
+     */
+    minWaveStartBankSeconds: 5,
+    /**
      * Пауза «Волна N · 3‑2‑1» между созданием волны и стартом банка (сек).
      * `startedAt` = момент записи + пауза: загрузка страницы (rematch,
      * холодная функция, картинки) не ест T0, вопросы показываются ровно
-     * на старте банка. Все серверные формулы считают от `startedAt` как
-     * раньше. ADR: Survival clock — start delay and partial last penalty.
+     * на старте банка. Цифры 3‑2‑1 — только последние 3 с паузы; до того
+     * «Волна N»: так отсчёт целый, даже если страница грузилась 1–2 с.
+     * ADR: Survival clock — server time sync and wave start.
      */
-    startDelaySeconds: 3,
+    startDelaySeconds: 5,
+    /** Сколько последних секунд паузы показываются цифрами (3‑2‑1). */
+    startCountdownSeconds: 3,
     /** Начисление к банку за верный ответ. Не меняет `scoring.ts`. */
     correctDeltaSeconds: 4,
     /**

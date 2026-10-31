@@ -42,6 +42,7 @@ import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-sur
 import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, PendingSpinner, SubmitButton } from '@/shared/ui';
+import { serverNow } from '@/shared/ui/server-clock';
 
 type SurvivalWaveEnd = 'cut' | 'bank';
 
@@ -190,7 +191,7 @@ export function SurvivalQuizSessionForm({
                 ? 0
                 : getSurvivalBankRemainingMs({
                       startedAtMs,
-                      nowMs: Date.now(),
+                      nowMs: serverNow(),
                       correctCount: nextCorrect,
                       wrongCount: nextWrong,
                       initialBankSeconds,

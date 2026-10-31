@@ -1959,13 +1959,13 @@ Same toast bus serves future movies/football modes and admin feedback without ne
 | Clock authority | `elapsed = completedAt − startedAt`; `budget = max(0, T0 + 4×correct − 6×max(0, wrong − 1))` — the last penalty may only drain the bank (Oct 30, 2026); `clockOk ⇔ elapsed ≤ budget + grace` |
 | Grace | 3s for clockOk only. **T0' reconstruct has no grace** |
 | `timedEndsAt` | **NULL**. Never SET. Never UPDATE |
-| `startedAt` | JS `Date` **after connect** on Survival INSERT (create hop 3 after JSONB) **+ `startDelaySeconds` (3 s)**. Not SQL `NOW()` into naive `TIMESTAMP` |
+| `startedAt` | JS `Date` **after connect** on Survival INSERT (create hop 3 after JSONB) **+ `startDelaySeconds` (5 s)**. Not SQL `NOW()` into naive `TIMESTAMP` |
 | Late / paused client | Still `completeWithResult`. Wave score enters run total only if `survivalClockOk = true` |
 | Answers | Partial OK; unanswered do not apply −6 |
 | Daily | `dailyChallengeId` NULL. Daily does **not** use the cycle |
 | Pick | **Shared `UserQuestionCycle` of the difficulty minus `SurvivalRunSeenQuestion`** (Oct 30, 2026 — see «Survival question source» below). Wave 1 exclude=`[]` |
-| Pool end | `SurvivalRunSeenQuestion`; remaining=0 → run COMPLETED; CTA none |
-| Continue CTA | `clockOk && bank>0 && unseen>0`; else plaque + rematch = **new** run (T0=20) |
+| Pool end | `SurvivalRunSeenQuestion`; remaining=0 → **new lap** on continue (seen cleared), run goes on (Oct 31, 2026). Only the bank ends a run |
+| Continue CTA | `clockOk && bank>0` (pool end = new lap); else plaque + rematch = **new** run (T0=20). Wave ended on an empty bank (`survivalWaveEnd=cut|bank`) → bank 0 (Oct 31, 2026) |
 | Attempts | Unlimited |
 | Stuck | New run / rematch: abandon Survival IN_PROGRESS. Continue: **do not** abandon this `runId` |
 | Play-load | Create handoff (incl. `initialBankSeconds`), else pooled `snapshotData`. Soft-miss |
@@ -2040,6 +2040,25 @@ Submit:   score + survivalClockOk (T0 from play/run)
 **Not chosen:**
 - Re-syncing the client timer to server time from the page render — the offset would include page delivery time and make auto-submit late again; prod data shows clocks are fine (min overshoot 0.4 s).
 - Bigger grace for everyone — would also hide pause-cheats without a wrong answer.
+
+### Survival clock — server time sync and wave start (October 31, 2026)
+
+**Problem (owner on prod, phone):** the 3‑2‑1 showed only «1»; after the bank ran out the result offered «Next wave», which ended at once, three times — 3 waves counted and `SURVIVAL_WAVE_3` unlocked. Prod data: wave 1 submitted 1.9 s **before** the server bank end (T0' = 1), waves 2–3 submitted ~0.9 s before their server `startedAt`. The device clock ran ~2 s ahead; the client compared server `startedAt` with `Date.now()`.
+
+**Decision:**
+
+| Rule | Choice |
+|------|--------|
+| Server time on the client | `src/shared/ui/server-clock.ts`: 3 requests to `/api/time` (no DB), offset = server − midpoint of the fastest round trip (error ≤ RTT/2). Survival bank, lock-in, wave start and the Blitz countdown use `serverNow()`. Failed/timeout → device clock |
+| Bank-out ends the run | Client sends `survivalWaveEnd=cut|bank` → next bank 0, whatever the clock arithmetic says (`resolveSurvivalNextWaveBankSeconds`). Lying (omitting it) gains nothing: the leftover is still server time |
+| Minimum start bank, wave 2+ | Leftover 1–4 s → 5 s (`minWaveStartBankSeconds`), stored in `bankRemainingSeconds` so every formula of the next wave uses it. Bigger leftovers unchanged |
+| Pre-roll | `startDelaySeconds` 3 → 5; digits only for the last 3 s («Wave N» before that), and only after the clock sync — the countdown is always a whole 3‑2‑1 |
+| New lap | All difficulty questions seen in a run → continue clears `SurvivalRunSeenQuestion` and goes on with the shared cycle (no extra hop, order is already seeded). Only the bank ends a run |
+| Run completion | `COMPLETED` is set in the same UPDATE as the bank: a second UPDATE of the same row in a CTE is not applied by Postgres, and bank‑0 runs stayed IN_PROGRESS |
+
+**Not chosen:**
+- Offset from page render time — includes page delivery time, makes auto-submit late.
+- A flat +3 s for every wave 2+ — inflates every long run; the floor only helps when the leftover is too small to read a question.
 
 **References:** Timed Mode MVP; Quiz Start / Session Load Playbook; User Question Cycle (Survival continue **supersedes** “same bag for all waves”); Weighted scoring; Leaderboard Layer 1; `docs/QUIZ_NEON_HOT_PATH.md`; `src/features/survival-mode/types.ts`.
 

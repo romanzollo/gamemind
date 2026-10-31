@@ -13,6 +13,7 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
 import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-survival-bank-remaining-ms';
+import { serverNow } from '@/shared/ui/server-clock';
 import { useHydrated } from '@/shared/ui/use-hydrated';
 
 type SurvivalQuizBankCountdownProps = {
@@ -80,7 +81,7 @@ export function SurvivalQuizBankCountdown({
     onExpired,
 }: SurvivalQuizBankCountdownProps) {
     const hydrated = useHydrated();
-    const [nowMs, setNowMs] = useState(() => Date.now());
+    const [nowMs, setNowMs] = useState(() => serverNow());
     const expiredNotifiedRef = useRef(false);
     // Свежий onExpired без перезапуска interval при каждом render родителя.
     const notifyExpired = useEffectEvent(() => {
@@ -96,7 +97,7 @@ export function SurvivalQuizBankCountdown({
         }
 
         const tick = () => {
-            const now = Date.now();
+            const now = serverNow();
             setNowMs(now);
 
             const next = getRemainingMs({

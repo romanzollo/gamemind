@@ -2,9 +2,10 @@
  * SurvivalRun: scalar start-prep + wave 2+ after-complete (pooled, без JSONB).
  *
  * - begin: abandon чужие Survival → INSERT run (волна 1, totalScore=0)
- * - continue: abandon чужие runs/sessions, НЕ этот runId
+ * - continue: abandon чужие runs/sessions, НЕ этот runId; пул сложности
+ *   сыгран целиком → новый круг (seen run очищается)
  * - recordWaveAfterComplete: bank T0' + seen ids + waveIndex + totalScore
- *   → COMPLETED если bank=0 или unseen=0
+ *   → COMPLETED только если bank=0
  *
  * Не звать с того же клиента, что snapshot INSERT.
  * Не трогать Classic / Blitz / Daily.
@@ -216,6 +217,48 @@ async function countUnseenPublishedOnClient(
     return result.rows[0]?.remaining ?? 0;
 }
 
+async function countPublishedPoolOnClient(
+    client: Client,
+    difficulty: Difficulty,
+): Promise<number> {
+    const result = await client.query<{ total: number }>(
+        `
+            SELECT COUNT(*)::int AS total
+            FROM "Question" q
+            WHERE
+                q."difficulty" = $1::"Difficulty"
+                AND q."isActive" = true
+                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
+        `,
+        [difficulty],
+    );
+
+    return result.rows[0]?.total ?? 0;
+}
+
+/**
+ * Сколько вопросов доступно следующей волне. Все вопросы сложности уже
+ * сыграны в забеге → новый круг: забег не обрывается из-за вопросов,
+ * а начинает пул заново (порядок даёт общий seeded-цикл, без задержки).
+ * Только банк времени заканчивает забег.
+ */
+async function countNextWavePoolOnClient(
+    client: Client,
+    runId: string,
+    difficulty: Difficulty,
+): Promise<{ remaining: number; newLap: boolean }> {
+    const unseen = await countUnseenPublishedOnClient(client, runId, difficulty);
+
+    if (unseen > 0) {
+        return { remaining: unseen, newLap: false };
+    }
+
+    return {
+        remaining: await countPublishedPoolOnClient(client, difficulty),
+        newLap: true,
+    };
+}
+
 function parseSurvivalDifficulty(
     value: string,
 ): SurvivalDifficulty | null {
@@ -366,15 +409,24 @@ export async function continueSurvivalRunForUser(
                 return { ok: false, reason: 'SURVIVAL_CANNOT_CONTINUE' };
             }
 
-            const seenQuestionIds = await listSeenQuestionIdsOnClient(
-                client,
-                run.id,
-            );
-            const remainingUnseen = await countUnseenPublishedOnClient(
+            const nextPool = await countNextWavePoolOnClient(
                 client,
                 run.id,
                 difficulty,
             );
+
+            // Новый круг: сыгранное в забеге больше не исключаем.
+            if (nextPool.newLap) {
+                await client.query(
+                    `DELETE FROM "SurvivalRunSeenQuestion" WHERE "runId" = $1`,
+                    [run.id],
+                );
+            }
+
+            const seenQuestionIds = nextPool.newLap
+                ? []
+                : await listSeenQuestionIdsOnClient(client, run.id);
+            const remainingUnseen = nextPool.remaining;
             const questionCount =
                 resolveSurvivalWaveQuestionCount(remainingUnseen);
 
@@ -508,12 +560,24 @@ export async function recordSurvivalWaveAfterComplete(
                 run_completed: boolean;
             }>(
                 `
+                    -- Завершение забега — в том же UPDATE: второй UPDATE той же
+                    -- строки в CTE одного запроса Postgres не применяет, и забег
+                    -- с банком 0 оставался IN_PROGRESS. Только банк заканчивает
+                    -- забег; конец пула = новый круг на continue.
                     WITH bumped AS (
                         UPDATE "SurvivalRun" AS sr
                         SET
                             "bankRemainingSeconds" = $2,
                             "currentWaveIndex" = sr."currentWaveIndex" + 1,
-                            "totalScore" = sr."totalScore" + $3
+                            "totalScore" = sr."totalScore" + $3,
+                            "status" = CASE
+                                WHEN $2 <= 0 THEN 'COMPLETED'::"QuizSessionStatus"
+                                ELSE sr."status"
+                            END,
+                            "completedAt" = CASE
+                                WHEN $2 <= 0 THEN $5
+                                ELSE sr."completedAt"
+                            END
                         WHERE
                             sr."id" = $1
                             AND sr."userId" = $4
@@ -522,7 +586,8 @@ export async function recordSurvivalWaveAfterComplete(
                             sr."id",
                             sr."difficulty",
                             sr."totalScore",
-                            sr."bankRemainingSeconds"
+                            sr."bankRemainingSeconds",
+                            sr."status"
                     ),
                     remaining AS (
                         SELECT COUNT(*)::int AS n
@@ -539,27 +604,12 @@ export async function recordSurvivalWaveAfterComplete(
                                     seen."runId" = b."id"
                                     AND seen."questionId" = q."id"
                             )
-                    ),
-                    finished AS (
-                        UPDATE "SurvivalRun" AS sr
-                        SET
-                            "status" = 'COMPLETED'::"QuizSessionStatus",
-                            "completedAt" = $5
-                        FROM bumped b, remaining rem
-                        WHERE
-                            sr."id" = b."id"
-                            AND sr."status" = 'IN_PROGRESS'::"QuizSessionStatus"
-                            AND (
-                                b."bankRemainingSeconds" <= 0
-                                OR rem.n <= 0
-                            )
-                        RETURNING sr."id"
                     )
                     SELECT
                         b."totalScore" AS total_score,
                         b."bankRemainingSeconds" AS bank_remaining_seconds,
                         rem.n AS remaining_unseen,
-                        EXISTS (SELECT 1 FROM finished) AS run_completed
+                        (b."status" = 'COMPLETED'::"QuizSessionStatus") AS run_completed
                     FROM bumped b
                     CROSS JOIN remaining rem
                 `,
@@ -617,13 +667,16 @@ export async function findSurvivalNextWaveEligibilityForUser(
             }
 
             const bankRemainingSeconds = run.bank_remaining_seconds ?? 0;
+            // Пул кончился в забеге → следующая волна начнёт новый круг.
             const remainingUnseen =
                 run.status === 'IN_PROGRESS'
-                    ? await countUnseenPublishedOnClient(
-                          client,
-                          run.id,
-                          difficulty,
-                      )
+                    ? (
+                          await countNextWavePoolOnClient(
+                              client,
+                              run.id,
+                              difficulty,
+                          )
+                      ).remaining
                     : 0;
             const blockReason = resolveContinueBlockReason({
                 clockOk,

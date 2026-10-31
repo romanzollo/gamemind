@@ -19,6 +19,7 @@ import { calculateQuizScore } from '@/features/quiz/lib/scoring';
 import { buildCompactReviewPayload } from '@/features/quiz/lib/build-compact-review-payload';
 import { isSurvivalClockOk } from '@/features/survival-mode/lib/is-survival-clock-ok';
 import { reconstructSurvivalBankRemainingSeconds } from '@/features/survival-mode/lib/reconstruct-survival-bank-remaining-seconds';
+import { resolveSurvivalNextWaveBankSeconds } from '@/features/survival-mode/lib/resolve-survival-next-wave-bank';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import type { QuizFormState } from '@/features/quiz/types';
 
@@ -238,15 +239,22 @@ export async function submitQuizAction(
           })
         : null;
 
+    // Банк следующей волны: обрыв по нулю банка = конец забега (часы
+    // устройства могут спешить); маленький остаток — до минимума старта.
+    const survivalWaveEnd = formData.get('survivalWaveEnd');
     const survivalBankRemainingSeconds = survivalSubmitMeta
-        ? reconstructSurvivalBankRemainingSeconds({
-              startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
-              completedAtMs: completedAt.getTime(),
-              correctCount: answerRows.filter((answer) => answer.isCorrect)
-                  .length,
-              wrongCount: answerRows.filter((answer) => !answer.isCorrect)
-                  .length,
-              initialBankSeconds: survivalSubmitMeta.initialBankSeconds,
+        ? resolveSurvivalNextWaveBankSeconds({
+              reconstructedSeconds: reconstructSurvivalBankRemainingSeconds({
+                  startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
+                  completedAtMs: completedAt.getTime(),
+                  correctCount: answerRows.filter((answer) => answer.isCorrect)
+                      .length,
+                  wrongCount: answerRows.filter((answer) => !answer.isCorrect)
+                      .length,
+                  initialBankSeconds: survivalSubmitMeta.initialBankSeconds,
+              }),
+              endedOnBank:
+                  survivalWaveEnd === 'cut' || survivalWaveEnd === 'bank',
           })
         : null;
 
@@ -354,7 +362,6 @@ export async function submitQuizAction(
     }
 
     // Survival bank=0: honest plaque (cut = mid-wave, bank = all locked at 0).
-    const survivalWaveEnd = formData.get('survivalWaveEnd');
     if (
         isSurvivalSession &&
         (survivalWaveEnd === 'cut' || survivalWaveEnd === 'bank')

@@ -7,12 +7,15 @@
  * `onExpired` (родитель делает auto-submit — как Kahoot/LMS).
  * Цифры только после гидрации — иначе hydration mismatch (SSR vs Date.now()).
  * Remaining выводится из `nowMs` в render; interval только двигает часы.
- * Авторитет дедлайна всё равно сервер (`timedEndsAt` + grace).
+ * «Сейчас» — по часам сервера (server-clock): спешащие часы устройства
+ * обрывали партию раньше дедлайна. Пока идёт замер (доли секунды) —
+ * часы устройства. Авторитет дедлайна всё равно сервер (`timedEndsAt` + grace).
  * Canon: docs/DECISIONS.md → Timed Mode MVP.
  */
 
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
+import { serverNow, useServerClockReady } from '@/shared/ui/server-clock';
 import { useHydrated } from '@/shared/ui/use-hydrated';
 
 type TimedQuizCountdownProps = {
@@ -49,7 +52,9 @@ export function TimedQuizCountdown({
     onExpired,
 }: TimedQuizCountdownProps) {
     const hydrated = useHydrated();
-    const [nowMs, setNowMs] = useState(() => Date.now());
+    // Запускает замер поправки часов; тики ниже читают serverNow().
+    useServerClockReady();
+    const [nowMs, setNowMs] = useState(() => serverNow());
     const expiredNotifiedRef = useRef(false);
     // Свежий onExpired без перезапуска interval при каждом render родителя.
     const notifyExpired = useEffectEvent(() => {
@@ -60,7 +65,7 @@ export function TimedQuizCountdown({
         // Первый tick через 250 мс: initial nowMs уже взят в render,
         // уже истёкшая сессия получит onExpired на первом tick.
         const tick = () => {
-            const now = Date.now();
+            const now = serverNow();
             setNowMs(now);
 
             if (

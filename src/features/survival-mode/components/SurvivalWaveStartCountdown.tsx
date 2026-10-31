@@ -5,40 +5,48 @@
  *
  * Сервер ставит `startedAt` = запись волны + `startDelaySeconds`, поэтому
  * загрузка страницы попадает в паузу, а вопрос появляется ровно на старте
- * банка. Хук только показывает, сколько осталось до `startedAt`: авторитет
- * часов — сервер (isSurvivalClockOk), клиент ничего не «вооружает».
- * До гидрации — заставка без цифры: SSR не знает, сколько паузы осталось,
- * и вопрос не попадает в HTML раньше старта.
+ * банка. Хук только показывает, сколько осталось до `startedAt` по часам
+ * сервера (server-clock): авторитет — сервер (isSurvivalClockOk), клиент
+ * ничего не «вооружает». Цифры — только последние `startCountdownSeconds`
+ * паузы, до того «Волна N»: отсчёт всегда целый 3‑2‑1.
+ * До гидрации и до замера часов — заставка без цифры: вопрос не попадает в
+ * HTML раньше старта, а спешащие часы устройства не «съедают» отсчёт.
  * Canon: docs/DECISIONS.md → Survival Mode MVP (start delay).
  */
 
 import { useEffect, useMemo, useState } from 'react';
 
+import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
+import { serverNow, useServerClockReady } from '@/shared/ui/server-clock';
 import { useHydrated } from '@/shared/ui/use-hydrated';
 
 const TICK_MS = 100;
 
 export type SurvivalWaveStartState = {
     started: boolean;
-    /** Целые секунды до старта (3, 2, 1); null — до гидрации. */
+    /** Цифра отсчёта (3, 2, 1); null — ещё рано для цифр или нет замера. */
     secondsLeft: number | null;
 };
 
+const PENDING: SurvivalWaveStartState = { started: false, secondsLeft: null };
+
 export function useSurvivalWaveStart(startedAt: string): SurvivalWaveStartState {
     const hydrated = useHydrated();
+    const clockReady = useServerClockReady();
     const startedAtMs = useMemo(
         () => new Date(startedAt).getTime(),
         [startedAt],
     );
-    const [nowMs, setNowMs] = useState(() => Date.now());
+    // null — ещё не было тика после замера часов: не решаем «рано/пора».
+    const [nowMs, setNowMs] = useState<number | null>(null);
 
     useEffect(() => {
-        if (Number.isNaN(startedAtMs) || Date.now() >= startedAtMs) {
+        if (!clockReady || Number.isNaN(startedAtMs)) {
             return;
         }
 
         const intervalId = window.setInterval(() => {
-            const now = Date.now();
+            const now = serverNow();
             setNowMs(now);
 
             if (now >= startedAtMs) {
@@ -47,10 +55,10 @@ export function useSurvivalWaveStart(startedAt: string): SurvivalWaveStartState 
         }, TICK_MS);
 
         return () => window.clearInterval(intervalId);
-    }, [startedAtMs]);
+    }, [clockReady, startedAtMs]);
 
     if (!hydrated) {
-        return { started: false, secondsLeft: null };
+        return PENDING;
     }
 
     // Битая дата — не держим игрока на заставке.
@@ -58,11 +66,25 @@ export function useSurvivalWaveStart(startedAt: string): SurvivalWaveStartState 
         return { started: true, secondsLeft: 0 };
     }
 
+    if (nowMs == null) {
+        return PENDING;
+    }
+
     const leftMs = startedAtMs - nowMs;
 
-    return leftMs <= 0
-        ? { started: true, secondsLeft: 0 }
-        : { started: false, secondsLeft: Math.ceil(leftMs / 1000) };
+    if (leftMs <= 0) {
+        return { started: true, secondsLeft: 0 };
+    }
+
+    const secondsLeft = Math.ceil(leftMs / 1000);
+
+    return {
+        started: false,
+        secondsLeft:
+            secondsLeft <= SURVIVAL_MODE_MVP_RULES.startCountdownSeconds
+                ? secondsLeft
+                : null,
+    };
 }
 
 type SurvivalWaveStartCountdownProps = {
