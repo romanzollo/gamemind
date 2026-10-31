@@ -160,6 +160,7 @@ export function QuizResultReview({
                                 {item.imageUrl ? (
                                     <div className="mt-3 w-full">
                                         <QuestionImage
+                                            lazy
                                             src={item.imageUrl}
                                             alt={item.text}
                                             unavailableLabel={

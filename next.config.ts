@@ -74,6 +74,26 @@ const nextConfig: NextConfig = {
             },
         ],
     },
+    /**
+     * Картинки IMAGE_GUESS названы хешем содержимого (docs/QUIZ_IMAGES.md §7):
+     * новая версия = новое имя, поэтому файл можно кешировать навсегда.
+     * Без этого Vercel отдаёт `max-age=0, must-revalidate` — каждый показ
+     * ходил на сервер за 304, из РФ это заметная задержка в Блице/Выживании.
+     * Шаблон — только 16 hex: случайный slug-файл вечный кеш не получит.
+     */
+    async headers() {
+        return [
+            {
+                source: '/quiz-images/:folder/:file([0-9a-f]{16}\\.webp)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable',
+                    },
+                ],
+            },
+        ];
+    },
     async rewrites() {
         if (!blobPublicBase) {
             return [];

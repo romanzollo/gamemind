@@ -30,6 +30,7 @@ import {
 import type { QuizSessionSurvivalPlayView } from '@/entities/quiz-session/quiz-session.types';
 import { submitQuizAction } from '@/features/quiz/actions';
 import { QuestionCard } from '@/features/quiz/components/QuestionCard';
+import { usePreloadQuizImages } from '@/features/quiz/components/use-preload-quiz-images';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import { SurvivalQuizBankCountdown } from '@/features/survival-mode/components/SurvivalQuizBankCountdown';
@@ -85,6 +86,8 @@ export function SurvivalQuizSessionForm({
     const [waveSubmitting, setWaveSubmitting] = useState(false);
     // До startedAt — заставка 3‑2‑1 вместо вопроса; банк ещё не тикает.
     const waveStart = useSurvivalWaveStart(survival.startedAt);
+    // Вопросы идут по одному: картинки всей волны грузим заранее (в паузу).
+    usePreloadQuizImages(questions.map((question) => question.imageUrl));
 
     // Ошибка hop снимает «идёт отправка»: выводим, а не сбрасываем в effect.
     // Guard авто-submit снимает явный retry в handleSubmit.
