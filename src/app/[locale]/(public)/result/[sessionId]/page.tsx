@@ -293,7 +293,6 @@ export default async function QuizResultPage({
                             board={survivalRunBoard}
                             currentSessionId={sessionId}
                             waveScore={summary.score}
-                            waveMaxPossibleScore={maxPossibleScore}
                             waveCorrectCount={summary.correctCount}
                             waveTotalQuestions={summary.totalQuestions}
                             labels={survivalLabels}

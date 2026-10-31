@@ -3,11 +3,14 @@
  *
  * Pattern (roguelike / sports box score):
  * 1) hero = run total (то, что на leaderboard);
- * 2) волны = строки матча: статус текстом, попытка ≠ вклад в забег;
- * 3) «эта волна» — компактный context для разбора (верных N/M), не второй hero.
+ * 2) волны = строки матча: справа вклад волны в забег («+14» или «0»),
+ *    слева статус текстом с причиной — без зачёркивания: одна цифра на
+ *    волну, и это ровно то, что вошло в забег;
+ * 3) «эта волна» — две плитки (верных, очки волны) для разбора ниже.
  *
- * Cut / clockOk=false: очки волны не входят в totalScore — UI это объясняет,
- * математику не «чинит». Canon: docs/DECISIONS.md → Survival Mode MVP.
+ * clockOk=false: очки волны не входят в totalScore — статус объясняет
+ * почему, математику UI не «чинит». Canon: docs/DECISIONS.md → Survival
+ * Mode MVP.
  */
 
 import Link from 'next/link';
@@ -22,7 +25,6 @@ type SurvivalRunResultBoardViewProps = {
     board: SurvivalRunResultBoard;
     currentSessionId: string;
     waveScore: number;
-    waveMaxPossibleScore: number | null;
     waveCorrectCount: number;
     waveTotalQuestions: number;
     labels: Dictionary['survivalMode'];
@@ -31,12 +33,38 @@ type SurvivalRunResultBoardViewProps = {
     leaderboardHref: string;
 };
 
+type WaveStatus = 'counted' | 'counted-zero' | 'not-counted';
+
+function getWaveStatus(wave: { clockOk: boolean; score: number }): WaveStatus {
+    if (!wave.clockOk) {
+        return 'not-counted';
+    }
+
+    return wave.score > 0 ? 'counted' : 'counted-zero';
+}
+
+const STATUS_TONE_CLASS: Record<WaveStatus, string> = {
+    counted: 'text-success',
+    'counted-zero': 'text-muted',
+    'not-counted': 'text-warning',
+};
+
+function ThisWaveTile({ label, value }: { label: string; value: string }) {
+    return (
+        <div className="rounded-md border border-border bg-surface-muted/60 px-3 py-2.5 sm:px-4 sm:py-3">
+            <dt className="text-xs font-medium text-muted">{label}</dt>
+            <dd className="mt-1 font-display text-2xl font-semibold tabular-nums tracking-tight text-foreground sm:text-3xl">
+                {value}
+            </dd>
+        </div>
+    );
+}
+
 export function SurvivalRunResultBoardView({
     locale,
     board,
     currentSessionId,
     waveScore,
-    waveMaxPossibleScore,
     waveCorrectCount,
     waveTotalQuestions,
     labels,
@@ -44,14 +72,14 @@ export function SurvivalRunResultBoardView({
     playAgainAction,
     leaderboardHref,
 }: SurvivalRunResultBoardViewProps) {
-    const waveScoreText =
-        waveMaxPossibleScore != null && waveMaxPossibleScore > 0
-            ? `${waveScore} / ${waveMaxPossibleScore}`
-            : String(waveScore);
-    const thisWaveContext = labels.thisWaveContext
-        .replace('{score}', waveScoreText)
+    const correctValue = labels.thisWaveContext
         .replace('{correct}', String(waveCorrectCount))
         .replace('{total}', String(waveTotalQuestions));
+    const statusLabels: Record<WaveStatus, string> = {
+        counted: labels.waveCountedStatus,
+        'counted-zero': labels.waveCountedZeroStatus,
+        'not-counted': labels.waveNotCountedStatus,
+    };
 
     return (
         <section
@@ -72,7 +100,7 @@ export function SurvivalRunResultBoardView({
                 <p className="text-xs font-medium tracking-wide text-muted uppercase sm:text-sm">
                     {labels.runTotalLabel}
                 </p>
-                <p className="font-display mt-1.5 text-4xl font-semibold tabular-nums tracking-tight text-foreground motion-safe:transition-opacity sm:mt-2 sm:text-6xl">
+                <p className="mt-1.5 font-display text-5xl font-semibold tabular-nums tracking-tight text-foreground sm:mt-2 sm:text-7xl">
                     {board.totalScore}
                 </p>
             </div>
@@ -81,95 +109,76 @@ export function SurvivalRunResultBoardView({
                 <ol className="mt-5 border-t border-border sm:mt-6">
                     {board.waves.map((wave) => {
                         const isCurrent = wave.sessionId === currentSessionId;
-                        const contribution = wave.clockOk ? wave.score : 0;
-                        const waveTitle = labels.waveLineLabel.replace(
-                            '{n}',
-                            String(wave.waveIndex),
-                        );
-                        const statusLabel = !wave.clockOk
-                            ? labels.waveNotCountedStatus
-                            : wave.score === 0
-                              ? labels.waveCountedZeroStatus
-                              : labels.waveCountedStatus;
-                        const contributionLabel =
-                            labels.waveRunContributionLabel.replace(
-                                '{n}',
-                                String(contribution),
-                            );
-                        const statusToneClass = !wave.clockOk
-                            ? 'text-muted'
-                            : wave.score === 0
-                              ? 'text-muted'
-                              : 'text-success';
+                        const status = getWaveStatus(wave);
+                        const contribution = status === 'counted' ? wave.score : 0;
 
                         return (
                             <li
                                 key={wave.sessionId}
                                 className={[
-                                    'border-b border-border py-3 last:border-b-0 sm:py-3.5',
+                                    'flex items-center justify-between gap-4 border-b border-border py-3 last:border-b-0 sm:py-3.5',
                                     isCurrent
                                         ? '-mx-4 border-l-2 border-l-primary bg-surface-muted/50 px-4 sm:-mx-7 sm:px-7'
                                         : '',
                                 ].join(' ')}
                                 aria-current={isCurrent ? 'true' : undefined}
                             >
-                                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                                    <div className="min-w-0">
-                                        <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm font-medium text-foreground">
-                                            <span>{waveTitle}</span>
-                                            {isCurrent ? (
-                                                <span className="font-mono text-[0.7rem] font-medium tracking-wide text-primary">
-                                                    {labels.waveCurrentMarker}
-                                                </span>
-                                            ) : null}
-                                        </p>
-                                        <p
-                                            className={[
-                                                'mt-0.5 text-xs font-medium',
-                                                statusToneClass,
-                                            ].join(' ')}
-                                        >
-                                            {statusLabel}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex min-w-30 flex-col gap-0.5 sm:items-end">
-                                        <p className="flex w-full items-baseline justify-between gap-3 text-sm sm:justify-end sm:gap-4">
-                                            <span className="text-muted">
-                                                {labels.waveAttemptLabel}
+                                <div className="min-w-0">
+                                    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-foreground">
+                                        <span>
+                                            {labels.waveLineLabel.replace(
+                                                '{n}',
+                                                String(wave.waveIndex),
+                                            )}
+                                        </span>
+                                        {isCurrent ? (
+                                            <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[0.65rem] font-medium tracking-wide text-primary">
+                                                {labels.waveCurrentMarker}
                                             </span>
-                                            <span
-                                                className={[
-                                                    'font-mono tabular-nums',
-                                                    wave.clockOk
-                                                        ? 'text-foreground'
-                                                        : 'text-muted line-through',
-                                                ].join(' ')}
-                                            >
-                                                {wave.score}
-                                            </span>
-                                        </p>
-                                        {/* Дубль «к забегу N» только если вклад ≠ попытка (cut / 0). */}
-                                        {contribution !== wave.score ? (
-                                            <p className="font-mono text-xs tabular-nums text-muted sm:text-right">
-                                                {contributionLabel}
-                                            </p>
                                         ) : null}
-                                    </div>
+                                    </p>
+                                    <p
+                                        className={[
+                                            'mt-0.5 text-xs leading-snug font-medium',
+                                            STATUS_TONE_CLASS[status],
+                                        ].join(' ')}
+                                    >
+                                        {statusLabels[status]}
+                                    </p>
                                 </div>
+
+                                <p
+                                    className={[
+                                        'shrink-0 font-display text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl',
+                                        contribution > 0
+                                            ? 'text-foreground'
+                                            : 'text-muted',
+                                    ].join(' ')}
+                                >
+                                    {contribution > 0
+                                        ? `+${contribution}`
+                                        : '0'}
+                                </p>
                             </li>
                         );
                     })}
                 </ol>
             ) : null}
 
-            <div className="mt-4 border-t border-border pt-3 sm:mt-5 sm:pt-4">
+            <div className="mt-5 border-t border-border pt-4 sm:mt-6 sm:pt-5">
                 <p className="text-xs font-medium tracking-wide text-muted uppercase">
                     {labels.thisWaveLabel}
                 </p>
-                <p className="mt-1 text-sm tabular-nums text-foreground">
-                    {thisWaveContext}
-                </p>
+                <dl className="mt-2 grid grid-cols-2 gap-2 sm:gap-3">
+                    <ThisWaveTile
+                        label={labels.thisWaveCorrectLabel}
+                        value={correctValue}
+                    />
+                    <ThisWaveTile
+                        label={labels.thisWaveScoreLabel}
+                        value={String(waveScore)}
+                    />
+                </dl>
             </div>
 
             <nav

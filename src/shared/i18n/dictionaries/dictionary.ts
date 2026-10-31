@@ -153,29 +153,24 @@ export type Dictionary = {
         runTotalLabel: string;
         /** `{n}` = номер волны. */
         waveLineLabel: string;
-        /** Legacy / короткий статус cut: «не в зачёт». */
+        /** Заголовок блока с итогом текущей волны. */
         thisWaveLabel: string;
         /**
          * Box score: статусы волны (текст + a11y; не только цвет).
-         * counted = clockOk; notCounted = cut / clockOk false → 0 к totalScore.
+         * counted = clockOk; рядом крупно «+N» очков волны.
          */
         waveCountedStatus: string;
-        /**
-         * clockOk, но вклад 0 (cut с нулём / пустая волна) —
-         * не путать с «0 к забегу» (not counted).
-         */
+        /** clockOk, но очков 0 (все ответы неверные / пустая волна). */
         waveCountedZeroStatus: string;
+        /** clockOk = false: причина, почему очки волны не вошли в забег. */
         waveNotCountedStatus: string;
-        /** Marker текущей волны в box score (коротко). */
+        /** Чип текущей волны в box score. */
         waveCurrentMarker: string;
-        /** Колонка: очки попытки волны (могут не войти в run). */
-        waveAttemptLabel: string;
-        /** Колонка: вклад в забег. `{n}` = очки (0 если not counted). */
-        waveRunContributionLabel: string;
-        /**
-         * Компактный context под box score (без дубля очков волны).
-         * `{correct}` / `{total}` — эта сессия; `{score}` опционально legacy.
-         */
+        /** Плитка «эта волна»: подпись верных ответов. */
+        thisWaveCorrectLabel: string;
+        /** Плитка «эта волна»: подпись очков волны. */
+        thisWaveScoreLabel: string;
+        /** Значение плитки верных: `{correct}` из `{total}`. */
         thisWaveContext: string;
         /** Review: eyebrow над сегментом волн. */
         reviewWavesEyebrow: string;
