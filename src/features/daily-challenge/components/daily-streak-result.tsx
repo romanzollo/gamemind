@@ -10,18 +10,19 @@ import { dailyChallengeRepository } from '@/entities/daily-challenge/daily-chall
 import { DailyStreakSummary } from '@/features/daily-challenge/components/daily-streak';
 import { computeDailyStreak } from '@/features/daily-challenge/lib/compute-daily-streak';
 import { getMoscowDateKey } from '@/features/daily-challenge/lib/get-moscow-date-key';
+import { resolveStreakGoal } from '@/features/daily-challenge/lib/resolve-streak-goal';
 import type { Dictionary, Locale } from '@/shared/i18n';
 
 type DailyStreakResultProps = {
     userId: string;
     locale: Locale;
-    labels: Dictionary['dailyChallenge'];
+    dictionary: Dictionary;
 };
 
 export async function DailyStreakResult({
     userId,
     locale,
-    labels,
+    dictionary,
 }: DailyStreakResultProps) {
     let playedDateKeys: string[];
 
@@ -40,7 +41,8 @@ export async function DailyStreakResult({
             className="mt-4"
             streak={streak}
             locale={locale}
-            labels={labels}
+            labels={dictionary.dailyChallenge}
+            nextGoal={resolveStreakGoal(streak, dictionary)}
             showNewBest
             showCountdown={streak.playedToday}
         />

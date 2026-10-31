@@ -88,7 +88,15 @@ export const ruDictionary: Dictionary = {
         streakAtRisk: 'Сыграй сегодня, чтобы не прервать серию',
         nextChallengeIn: 'Новый челлендж через {time}',
         streakNewBest: 'Новый рекорд серии',
-        streakLastDaysLabel: 'Последние 7 дней: сыграно {played} из 7',
+        streakWeekLabel: 'Эта неделя: сыграно {played} из {elapsed}',
+        streakPerfectWeek: 'Идеальная неделя',
+        dayCount: {
+            one: '{n} день',
+            few: '{n} дня',
+            many: '{n} дней',
+            other: '{n} дня',
+        },
+        streakNextGoal: 'До ачивки «{title}» — {days}',
     },
     timedMode: {
         eyebrow: 'На время',

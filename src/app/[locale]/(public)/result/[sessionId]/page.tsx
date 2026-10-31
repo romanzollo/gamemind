@@ -321,7 +321,7 @@ export default async function QuizResultPage({
                             <DailyStreakResult
                                 userId={authSession.user.id}
                                 locale={safeLocale}
-                                labels={dictionary.dailyChallenge}
+                                dictionary={dictionary}
                             />
                         </Suspense>
                     ) : null}

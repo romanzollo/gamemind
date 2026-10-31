@@ -1635,7 +1635,8 @@ Important decision: generated questions should not go directly into live quizzes
 | New best | Today played, current ≥ 2 and longer than every earlier run |
 | Reads | Lobby: one extra short query on the already open Direct client of `findLobbyPanelState`. Daily result: pooled query in its own Suspense — the result never waits for it |
 | Countdown | To 00:00 Moscow (UTC+3, no DST) by `serverNow()`; at midnight the page refreshes |
-| Look | SVG flame mark, not emoji (TASTE_SKILL); 7-day strip with an aria-label |
+| Look | SVG flame mark, not emoji (TASTE_SKILL). Calendar week **Monday–Sunday** (Russian standard, ISO 8601; same grid for EN — Daily days are Moscow days) with `Intl` weekday labels; cells: played (check), missed, today (ring), future (dashed). The week is only a window — the streak counter keeps growing across Mondays |
+| After milestones | Block stays (daily reason to return). Next goal = smallest `daily_streak_at_least` threshold above the best streak (earned ones are skipped), days left from the current streak. All 7 days played → «Perfect week» |
 
 **Not chosen:** a stored `currentStreak` column — needs a write on every Daily submit (hot path) and a repair job for missed days; deriving from ≤ 365 dates per year is cheap.
 

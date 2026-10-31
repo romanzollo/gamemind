@@ -9,7 +9,10 @@
  *   сыграно — заканчивающиеся вчера (серия «жива» до полуночи по Москве);
  * - best: самая длинная серия за всё время (тот же смысл, что
  *   daily_best_streak в фактах достижений);
- * - lastDays: последние 7 дней по порядку, сегодня — последний;
+ * - week: календарная неделя ПН–ВС (по Москве; в РФ неделя с понедельника,
+ *   EN — та же сетка: дни челленджа московские), сегодня отмечен, будущие
+ *   дни отдельно — так полоска читается как календарь, а не как «7 полосок»;
+ * - perfectWeek: сыграны все 7 дней этой недели;
  * - isNewBest: сегодня сыграно и серия длиннее любой прежней (от 2 дней).
  *
  * ADR: docs/DECISIONS.md → Daily streak.
@@ -18,12 +21,14 @@
 import type { DailyChallengeDateKey } from '@/features/daily-challenge/types';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const LAST_DAYS = 7;
+const WEEK_DAYS = 7;
 
 export type DailyStreakDay = {
     dateKey: DailyChallengeDateKey;
     played: boolean;
     isToday: boolean;
+    /** Ещё не наступил (клетка-пунктир). */
+    isFuture: boolean;
 };
 
 export type DailyStreak = {
@@ -33,7 +38,11 @@ export type DailyStreak = {
     /** Серия есть, но сегодня ещё не сыграно — прервётся в полночь. */
     atRisk: boolean;
     isNewBest: boolean;
-    lastDays: DailyStreakDay[];
+    /** ПН…ВС текущей недели. */
+    week: DailyStreakDay[];
+    /** Сколько дней недели уже наступило (включая сегодня). */
+    weekElapsedDays: number;
+    perfectWeek: boolean;
 };
 
 function toDayNumber(dateKey: string): number | null {
@@ -48,6 +57,11 @@ function toDayNumber(dateKey: string): number | null {
 
 function toDateKey(dayNumber: number): DailyChallengeDateKey {
     return new Date(dayNumber * DAY_MS).toISOString().slice(0, 10);
+}
+
+/** 0 = понедельник … 6 = воскресенье (1970-01-01 — четверг). */
+function weekdayIndex(dayNumber: number): number {
+    return (((dayNumber + 3) % WEEK_DAYS) + WEEK_DAYS) % WEEK_DAYS;
 }
 
 function longestRun(days: readonly number[]): number {
@@ -99,13 +113,25 @@ export function computeDailyStreak(
             playedToday: false,
             atRisk: false,
             isNewBest: false,
-            lastDays: [],
+            week: [],
+            weekElapsedDays: 0,
+            perfectWeek: false,
         };
     }
 
     const playedToday = played.has(today);
     const current = runEndingAt(played, playedToday ? today : today - 1);
     const bestBeforeToday = longestRun(sorted.filter((day) => day !== today));
+    const monday = today - weekdayIndex(today);
+    const week = Array.from({ length: WEEK_DAYS }, (_, index) => {
+        const day = monday + index;
+        return {
+            dateKey: toDateKey(day),
+            played: played.has(day),
+            isToday: day === today,
+            isFuture: day > today,
+        };
+    });
 
     return {
         current,
@@ -113,15 +139,28 @@ export function computeDailyStreak(
         playedToday,
         atRisk: current > 0 && !playedToday,
         isNewBest: playedToday && current >= 2 && current > bestBeforeToday,
-        lastDays: Array.from({ length: LAST_DAYS }, (_, index) => {
-            const day = today - (LAST_DAYS - 1 - index);
-            return {
-                dateKey: toDateKey(day),
-                played: played.has(day),
-                isToday: day === today,
-            };
-        }),
+        week,
+        weekElapsedDays: weekdayIndex(today) + 1,
+        perfectWeek: week.every((day) => day.played),
     };
+}
+
+/**
+ * Ближайшая цель-ачивка за серию: порог больше лучшей серии (ачивки
+ * выдаются по рекорду — уже открытые не показываем), дней до неё — от
+ * текущей серии. null — все пороги взяты.
+ */
+export function findNextStreakMilestone<Code extends string>(
+    streak: Pick<DailyStreak, 'current' | 'best'>,
+    milestones: ReadonlyArray<{ code: Code; threshold: number }>,
+): { code: Code; threshold: number; daysLeft: number } | null {
+    const next = [...milestones]
+        .sort((left, right) => left.threshold - right.threshold)
+        .find((milestone) => milestone.threshold > streak.best);
+
+    return next
+        ? { ...next, daysLeft: next.threshold - streak.current }
+        : null;
 }
 
 /** Миллисекунды до следующей полуночи по Москве (UTC+3, без перехода на летнее время). */

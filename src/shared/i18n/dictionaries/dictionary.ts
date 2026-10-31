@@ -105,8 +105,14 @@ export type Dictionary = {
         nextChallengeIn: string;
         /** Результат: серия длиннее любой прежней. */
         streakNewBest: string;
-        /** a11y полоски 7 дней: `{played}` из 7. */
-        streakLastDaysLabel: string;
+        /** a11y недели ПН–ВС: `{played}` из `{elapsed}` наступивших дней. */
+        streakWeekLabel: string;
+        /** Все 7 дней недели сыграны. */
+        streakPerfectWeek: string;
+        /** Счётное «N дней» для цели (без «подряд»). */
+        dayCount: PluralForms;
+        /** Цель: `{title}` — название ачивки, `{days}` — dayCount. */
+        streakNextGoal: string;
     };
     /**
      * Timed Mode CTA — только mode lobby `/quiz`.

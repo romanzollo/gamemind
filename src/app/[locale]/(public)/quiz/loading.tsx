@@ -19,7 +19,7 @@ export default function QuizSetupLoading() {
                 <Skeleton className="mt-2 h-5 w-full max-w-md sm:h-[1.625rem]" />
             </header>
             {/* Челлендж дня (с блоком серии: между «до игры» и «сыграно»), Блиц, Выживание, Классика. */}
-            <Skeleton className="mt-5 h-[415px] rounded-lg sm:mt-6 sm:h-[386px]" />
+            <Skeleton className="mt-5 h-[480px] rounded-lg sm:mt-6 sm:h-[450px]" />
             <Skeleton className="mt-4 h-[281px] rounded-lg sm:mt-5 sm:h-[334px]" />
             <Skeleton className="mt-4 h-[300px] rounded-lg sm:mt-5 sm:h-[293px]" />
             <Skeleton className="mt-4 h-[392px] rounded-lg sm:mt-5 sm:h-[429px]" />

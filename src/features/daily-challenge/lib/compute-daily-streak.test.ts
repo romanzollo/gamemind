@@ -4,7 +4,11 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { computeDailyStreak, msUntilNextMoscowDay } from './compute-daily-streak';
+import {
+    computeDailyStreak,
+    findNextStreakMilestone,
+    msUntilNextMoscowDay,
+} from './compute-daily-streak';
 
 describe('computeDailyStreak', () => {
     it('counts consecutive days ending today', () => {
@@ -70,26 +74,84 @@ describe('computeDailyStreak', () => {
         expect(computeDailyStreak(['2026-10-31'], '2026-10-31').isNewBest).toBe(false);
     });
 
-    it('returns the last 7 days with today last', () => {
-        const { lastDays } = computeDailyStreak(['2026-10-25', '2026-10-31'], '2026-10-31');
+    it('returns the Monday–Sunday week with today and future days marked', () => {
+        // 31.10.2026 — суббота: неделя 26.10 (пн) … 01.11 (вс).
+        const streak = computeDailyStreak(['2026-10-25', '2026-10-29', '2026-10-30'], '2026-10-31');
 
-        expect(lastDays.map((day) => day.dateKey)).toEqual([
-            '2026-10-25',
+        expect(streak.week.map((day) => day.dateKey)).toEqual([
             '2026-10-26',
             '2026-10-27',
             '2026-10-28',
             '2026-10-29',
             '2026-10-30',
             '2026-10-31',
+            '2026-11-01',
         ]);
-        expect(lastDays.map((day) => day.played)).toEqual([
-            true, false, false, false, false, false, true,
+        // Воскресенье 25.10 — прошлая неделя, в сетку не попадает.
+        expect(streak.week.map((day) => day.played)).toEqual([
+            false, false, false, true, true, false, false,
         ]);
-        expect(lastDays.at(-1)?.isToday).toBe(true);
+        expect(streak.week[5]?.isToday).toBe(true);
+        expect(streak.week.map((day) => day.isFuture)).toEqual([
+            false, false, false, false, false, false, true,
+        ]);
+        expect(streak.weekElapsedDays).toBe(6);
+        // Серия идёт с прошлой недели: счётчик не сбрасывается с понедельником.
+        expect(streak.current).toBe(2);
+        expect(streak.perfectWeek).toBe(false);
+    });
+
+    it('starts the week on Monday when today is Monday', () => {
+        const streak = computeDailyStreak(['2026-11-01', '2026-11-02'], '2026-11-02');
+
+        expect(streak.week[0]).toEqual({
+            dateKey: '2026-11-02',
+            played: true,
+            isToday: true,
+            isFuture: false,
+        });
+        expect(streak.weekElapsedDays).toBe(1);
+        expect(streak.current).toBe(2);
+    });
+
+    it('marks a perfect week when all seven days are played', () => {
+        const days = ['2026-10-26', '2026-10-27', '2026-10-28', '2026-10-29', '2026-10-30', '2026-10-31', '2026-11-01'];
+
+        expect(computeDailyStreak(days, '2026-11-01').perfectWeek).toBe(true);
+        expect(computeDailyStreak(days.slice(0, 6), '2026-11-01').perfectWeek).toBe(false);
     });
 
     it('ignores future dates', () => {
         expect(computeDailyStreak(['2026-11-01'], '2026-10-31').best).toBe(0);
+    });
+});
+
+describe('findNextStreakMilestone', () => {
+    const milestones = [
+        { code: 'DAILY_STREAK_7', threshold: 7 },
+        { code: 'DAILY_STREAK_3', threshold: 3 },
+        { code: 'DAILY_STREAK_30', threshold: 30 },
+    ];
+
+    it('points to the smallest threshold above the best streak', () => {
+        expect(findNextStreakMilestone({ current: 2, best: 2 }, milestones)).toEqual({
+            code: 'DAILY_STREAK_3',
+            threshold: 3,
+            daysLeft: 1,
+        });
+    });
+
+    it('skips milestones already earned by the best streak', () => {
+        // Рекорд 7 (ачивки 3 и 7 уже есть), сейчас серия 2 → цель 30, ещё 28 дней.
+        expect(findNextStreakMilestone({ current: 2, best: 7 }, milestones)).toEqual({
+            code: 'DAILY_STREAK_30',
+            threshold: 30,
+            daysLeft: 28,
+        });
+    });
+
+    it('returns null when every milestone is earned', () => {
+        expect(findNextStreakMilestone({ current: 31, best: 31 }, milestones)).toBeNull();
     });
 });
 

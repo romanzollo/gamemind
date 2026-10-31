@@ -13,6 +13,7 @@ import { useActionState } from 'react';
 import { startDailyChallengeAction } from '@/features/daily-challenge/actions';
 import { DailyStreakSummary } from '@/features/daily-challenge/components/daily-streak';
 import type { DailyStreak } from '@/features/daily-challenge/lib/compute-daily-streak';
+import type { DailyStreakGoal } from '@/features/daily-challenge/lib/resolve-streak-goal';
 import type { DailyChallengePlayerStatus } from '@/features/daily-challenge/types';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type { Dictionary, Locale } from '@/shared/i18n';
@@ -28,6 +29,8 @@ type DailyChallengeCtaPanelProps = {
     status: DailyChallengePlayerStatus;
     /** Серия дней; null у гостя — блок не показываем. */
     streak?: DailyStreak | null;
+    /** Ближайшая ачивка за серию (считает сервер). */
+    streakGoal?: DailyStreakGoal | null;
     dictionary: Dictionary;
     /**
      * true = без своей рамки (родитель `DailyChallengeCta` уже surface),
@@ -40,6 +43,7 @@ export function DailyChallengeCtaPanel({
     locale,
     status,
     streak = null,
+    streakGoal = null,
     dictionary,
     embedded = false,
 }: DailyChallengeCtaPanelProps) {
@@ -76,6 +80,7 @@ export function DailyChallengeCtaPanel({
                     streak={streak}
                     locale={locale}
                     labels={labels}
+                    nextGoal={streakGoal}
                     showCountdown={
                         status.kind === 'completed' ||
                         (status.kind === 'unavailable' &&

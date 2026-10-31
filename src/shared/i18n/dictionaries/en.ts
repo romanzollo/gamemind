@@ -88,7 +88,15 @@ export const enDictionary = {
         streakAtRisk: 'Play today to keep your streak',
         nextChallengeIn: 'Next challenge in {time}',
         streakNewBest: 'New best streak',
-        streakLastDaysLabel: 'Last 7 days: played {played} of 7',
+        streakWeekLabel: 'This week: played {played} of {elapsed}',
+        streakPerfectWeek: 'Perfect week',
+        dayCount: {
+            one: '{n} day',
+            few: '{n} days',
+            many: '{n} days',
+            other: '{n} days',
+        },
+        streakNextGoal: '{days} to «{title}»',
     },
     timedMode: {
         eyebrow: 'Timed',

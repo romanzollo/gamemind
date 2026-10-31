@@ -8,6 +8,7 @@
 import { DailyChallengeBoard } from '@/features/daily-challenge/components/daily-challenge-board';
 import { DailyChallengeCtaPanel } from '@/features/daily-challenge/components/daily-challenge-cta-panel';
 import { getDailyLobbyView } from '@/features/daily-challenge/lib/get-daily-lobby-view';
+import { resolveStreakGoal } from '@/features/daily-challenge/lib/resolve-streak-goal';
 import { auth } from '@/lib/auth';
 import type { Dictionary, Locale } from '@/shared/i18n';
 
@@ -34,6 +35,9 @@ export async function DailyChallengeCta({
                     locale={locale}
                     status={status}
                     streak={streak}
+                    streakGoal={
+                        streak ? resolveStreakGoal(streak, dictionary) : null
+                    }
                     dictionary={dictionary}
                     embedded
                 />
