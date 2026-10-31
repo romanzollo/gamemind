@@ -1,5 +1,5 @@
-import { PageSkeleton } from '@/shared/ui';
+import { FormPageSkeleton } from '@/shared/ui';
 
 export default function RegisterLoading() {
-    return <PageSkeleton variant="form" />;
+    return <FormPageSkeleton />;
 }
