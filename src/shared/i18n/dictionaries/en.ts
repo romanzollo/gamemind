@@ -221,6 +221,16 @@ export const enDictionary = {
         confirmNewPassword: 'Repeat new password',
         changePasswordSubmit: 'Change password',
         changePasswordSuccess: 'Password changed.',
+        setPasswordHint:
+            'No password yet: you sign in with Yandex or VK. Set one to sign in with email too.',
+        email: 'Email',
+        setPasswordSubmit: 'Set password',
+        setPasswordSuccess: 'Password set. You can sign in with email now too.',
+        signInMethodsTitle: 'Sign-in methods',
+        signInMethodPassword: 'Email and password',
+        signInMethodConnected: 'Connected',
+        signInMethodNotSet: 'Not set',
+        signInMethodConnect: 'Connect',
         changeAvatarTitle: 'Avatar',
         avatarFile: 'Upload file',
         avatarFileHint:
@@ -236,6 +246,7 @@ export const enDictionary = {
             wrongCurrentPassword: 'Current password is incorrect.',
             samePassword: 'New password must be different from the current one.',
             usernameTaken: 'That username is taken. Try another one.',
+            emailTaken: 'That email is already taken by another account.',
             sameUsername: 'New username must be different from the current one.',
             sameAvatar: 'New avatar is the same as the current one.',
             uploadFailed:

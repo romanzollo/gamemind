@@ -224,6 +224,16 @@ export const ruDictionary: Dictionary = {
         confirmNewPassword: 'Повтори новый пароль',
         changePasswordSubmit: 'Сменить пароль',
         changePasswordSuccess: 'Пароль изменён.',
+        setPasswordHint:
+            'Пароля пока нет: ты входишь через Яндекс или VK. Задай его, чтобы входить и по почте.',
+        email: 'Почта',
+        setPasswordSubmit: 'Задать пароль',
+        setPasswordSuccess: 'Пароль задан. Теперь можно входить и по почте.',
+        signInMethodsTitle: 'Способы входа',
+        signInMethodPassword: 'Почта и пароль',
+        signInMethodConnected: 'Подключён',
+        signInMethodNotSet: 'Не задан',
+        signInMethodConnect: 'Подключить',
         changeAvatarTitle: 'Аватар',
         avatarFile: 'Загрузить файл',
         avatarFileHint:
@@ -239,6 +249,7 @@ export const ruDictionary: Dictionary = {
             wrongCurrentPassword: 'Неверный текущий пароль.',
             samePassword: 'Новый пароль должен отличаться от текущего.',
             usernameTaken: 'Это имя уже занято. Попробуй другое.',
+            emailTaken: 'Эта почта уже занята другим аккаунтом.',
             sameUsername: 'Новое имя должно отличаться от текущего.',
             sameAvatar: 'Новый аватар совпадает с текущим.',
             uploadFailed:

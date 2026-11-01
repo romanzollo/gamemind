@@ -279,6 +279,16 @@ export type Dictionary = {
         confirmNewPassword: string;
         changePasswordSubmit: string;
         changePasswordSuccess: string;
+        /** «Задать пароль» для аккаунта без пароля (Яндекс / VK ID). */
+        setPasswordHint: string;
+        email: string;
+        setPasswordSubmit: string;
+        setPasswordSuccess: string;
+        signInMethodsTitle: string;
+        signInMethodPassword: string;
+        signInMethodConnected: string;
+        signInMethodNotSet: string;
+        signInMethodConnect: string;
         changeAvatarTitle: string;
         avatarFile: string;
         avatarFileHint: string;
@@ -292,6 +302,7 @@ export type Dictionary = {
             wrongCurrentPassword: string;
             samePassword: string;
             usernameTaken: string;
+            emailTaken: string;
             sameUsername: string;
             sameAvatar: string;
             uploadFailed: string;

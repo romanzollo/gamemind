@@ -1,4 +1,9 @@
+import {
+    userRepository,
+    type SignInMethods,
+} from '@/entities/user/user.repository';
 import { logoutAction } from '@/features/auth/actions';
+import { getOAuthErrorMessage } from '@/features/auth/lib/get-oauth-error-message';
 import { ProfileAchievementsList } from '@/features/achievements/components/ProfileAchievementsList';
 import { StripUnlockedQuery } from '@/features/achievements/components/StripUnlockedQuery';
 import { getAchievementProgressForUser } from '@/features/achievements/lib/get-achievement-progress';
@@ -11,6 +16,8 @@ import { ProfileFoldSection } from '@/features/profile/components/ProfileFoldSec
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
 import { ProfileSettingsSection } from '@/features/profile/components/ProfileSettingsSection';
 import { ProfileStatsSummary } from '@/features/profile/components/ProfileStatsSummary';
+import { SetPasswordForm } from '@/features/profile/components/SetPasswordForm';
+import { SignInMethodsList } from '@/features/profile/components/SignInMethodsList';
 import {
     PROFILE_RESULT_HISTORY_LIMIT,
     mapResultHistory,
@@ -24,8 +31,14 @@ import { InlineAlert, SubmitButton, UserAvatar } from '@/shared/ui';
 
 type ProfilePageProps = {
     params: Promise<{ locale: string }>;
-    /** `unlocked` — коды из ссылки unlock-тоста (только подсветка, не unlock). */
-    searchParams: Promise<{ unlocked?: string | string[] }>;
+    /**
+     * `unlocked` — коды из ссылки unlock-тоста (только подсветка, не unlock).
+     * `signInError` — ошибка привязки входа, пересланная страницей входа.
+     */
+    searchParams: Promise<{
+        unlocked?: string | string[];
+        signInError?: string | string[];
+    }>;
 };
 
 const sectionHeadingClassName =
@@ -47,7 +60,12 @@ export default async function ProfilePage({
     const dictionary = getDictionary(safeLocale);
     const session = await requireUser(safeLocale);
     // Неизвестные коды отброшены; «Новое» список ставит только реально открытым.
-    const highlightCodes = parseUnlockedQuery((await searchParams).unlocked);
+    const query = await searchParams;
+    const highlightCodes = parseUnlockedQuery(query.unlocked);
+    const signInErrorMessage = getOAuthErrorMessage(
+        dictionary,
+        query.signInError,
+    );
 
     let historyEntries: ProfileResultHistoryEntry[] = [];
     let historyLoadError: string | undefined;
@@ -88,6 +106,16 @@ export default async function ProfilePage({
     } catch (error) {
         console.error('Profile achievements load failed:', error);
         achievementProgress = null;
+    }
+
+    /** null = чтение не удалось: блок способов входа скрыт, пароль — как раньше. */
+    let signInMethods: SignInMethods | null = null;
+    try {
+        signInMethods = await userRepository.findSignInMethods(
+            session.user.id,
+        );
+    } catch (error) {
+        console.error('Profile sign-in methods load failed:', error);
     }
 
     const unlockedCount =
@@ -219,6 +247,7 @@ export default async function ProfilePage({
                 {/* Client details: open state переживает revalidate/refresh */}
                 <ProfileSettingsSection
                     title={dictionary.profile.sectionSettings}
+                    defaultOpen={Boolean(signInErrorMessage)}
                 >
                     <ChangeUsernameForm
                         locale={safeLocale}
@@ -232,10 +261,27 @@ export default async function ProfilePage({
                         currentImageUrl={session.user.image ?? null}
                     />
 
-                    <ChangePasswordForm
-                        locale={safeLocale}
-                        dictionary={dictionary}
-                    />
+                    {signInMethods && !signInMethods.hasPassword ? (
+                        <SetPasswordForm
+                            locale={safeLocale}
+                            dictionary={dictionary}
+                            emailRequired={signInMethods.email === null}
+                        />
+                    ) : (
+                        <ChangePasswordForm
+                            locale={safeLocale}
+                            dictionary={dictionary}
+                        />
+                    )}
+
+                    {signInMethods ? (
+                        <SignInMethodsList
+                            locale={safeLocale}
+                            dictionary={dictionary}
+                            methods={signInMethods}
+                            errorMessage={signInErrorMessage}
+                        />
+                    ) : null}
                 </ProfileSettingsSection>
             </div>
 

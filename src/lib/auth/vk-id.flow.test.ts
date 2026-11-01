@@ -355,6 +355,30 @@ describe('VK ID sign-in through Auth.js', () => {
         expect(repository.updateImage).toHaveBeenCalled();
     });
 
+    it('links VK ID to the signed-in player («Подключить» in the profile)', async () => {
+        // Первый вход: VK-аккаунт 777 уже привязан к existingUser — сессия.
+        repository.findAuthUserByAccount.mockResolvedValue(existingUser);
+        repository.findAuthUserById.mockResolvedValue(existingUser);
+        const jar = new CookieJar();
+        await startSignIn(jar);
+        await finishSignIn(jar, SUCCESS_QUERY);
+        expect(jar.has('authjs.session-token')).toBe(true);
+
+        // «Подключить» с той же сессией: этот VK-аккаунт ещё ничей.
+        repository.findAuthUserByAccount.mockResolvedValue(null);
+        await startSignIn(jar);
+        const response = await finishSignIn(jar, SUCCESS_QUERY);
+
+        expect(response.headers.get('location')).toBe(`${ORIGIN}/ru/profile`);
+        expect(repository.createOAuthUser).not.toHaveBeenCalled();
+        expect(repository.linkOAuthAccount).toHaveBeenCalledWith({
+            userId: existingUser.id,
+            type: 'oauth',
+            provider: 'vk',
+            providerAccountId: '777',
+        });
+    });
+
     it('signs in a player who already linked VK ID', async () => {
         repository.findAuthUserByAccount.mockResolvedValue(existingUser);
 

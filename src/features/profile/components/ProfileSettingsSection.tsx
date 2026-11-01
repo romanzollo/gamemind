@@ -20,14 +20,18 @@ import {
 type ProfileSettingsSectionProps = {
     title: string;
     children: ReactNode;
+    /** Открыть сразу — например, чтобы была видна ошибка привязки входа. */
+    defaultOpen?: boolean;
 };
 
 export function ProfileSettingsSection({
     title,
     children,
+    defaultOpen = false,
 }: ProfileSettingsSectionProps) {
     return (
         <details
+            open={defaultOpen}
             className={[
                 'group',
                 profileFoldRowClassName,

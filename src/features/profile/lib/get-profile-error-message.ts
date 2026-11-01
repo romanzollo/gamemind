@@ -12,6 +12,7 @@ const ERROR_MAP: Record<
     WRONG_CURRENT_PASSWORD: 'wrongCurrentPassword',
     SAME_PASSWORD: 'samePassword',
     USERNAME_TAKEN: 'usernameTaken',
+    EMAIL_TAKEN: 'emailTaken',
     SAME_USERNAME: 'sameUsername',
     SAME_AVATAR: 'sameAvatar',
     UPLOAD_FAILED: 'uploadFailed',

@@ -35,6 +35,14 @@ export type SessionUserRow = {
 };
 
 /** Пользователь для адаптера Auth.js (внешний вход). Без passwordHash. */
+/** Способы входа игрока — для блока в профиле. */
+export type SignInMethods = {
+    email: string | null;
+    hasPassword: boolean;
+    /** id провайдеров Auth.js из `Account`: 'yandex', 'vk'. */
+    providers: string[];
+};
+
 export type AuthUserRow = {
     id: string;
     username: string;
@@ -542,6 +550,80 @@ export const userRepository = {
         providerAccountId: string;
     }): Promise<void> {
         await prisma.account.create({ data });
+    },
+
+    /**
+     * Способы входа для профиля: есть ли пароль и какие внешние входы
+     * привязаны. Наружу — только флаг, сам хэш из репозитория не уходит.
+     */
+    async findSignInMethods(id: string): Promise<SignInMethods | null> {
+        const row = await withDatabaseRetry(() =>
+            prisma.user.findUnique({
+                where: { id },
+                select: {
+                    email: true,
+                    passwordHash: true,
+                    accounts: { select: { provider: true } },
+                },
+            }),
+        );
+
+        if (!row) return null;
+
+        return {
+            email: row.email,
+            hasPassword: row.passwordHash !== null,
+            providers: row.accounts.map((account) => account.provider),
+        };
+    },
+
+    /**
+     * Первый пароль для аккаунта без пароля (вход через Яндекс / VK ID).
+     * Почту пишем, только если её ещё нет; UPDATE идёт с условием
+     * `passwordHash IS NULL`, так что существующий пароль не перезаписать
+     * даже двумя запросами подряд. Занятая почта (23505) → 'email_taken'.
+     */
+    async setInitialPassword(
+        id: string,
+        data: { email: string | null; passwordHash: string },
+    ): Promise<'updated' | 'already_set' | 'email_taken' | 'email_required'> {
+        return withDirectPgWriteRetry(async (client) => {
+            try {
+                const result = await client.query<{ email: string | null }>(
+                    `
+                        UPDATE "User"
+                        SET "passwordHash" = $1,
+                            "email" = COALESCE("email", $2),
+                            "updatedAt" = NOW()
+                        WHERE "id" = $3
+                          AND "passwordHash" IS NULL
+                          AND COALESCE("email", $2) IS NOT NULL
+                        RETURNING "email"
+                    `,
+                    [data.passwordHash, data.email, id],
+                );
+
+                if (result.rows[0]) return 'updated';
+            } catch (error) {
+                if (isPgUniqueViolation(error)) return 'email_taken';
+                throw error;
+            }
+
+            // Ничего не обновили: пароль уже есть или почты нет нигде.
+            const current = await client.query<{ hasPassword: boolean }>(
+                `
+                    SELECT "passwordHash" IS NOT NULL AS "hasPassword"
+                    FROM "User"
+                    WHERE "id" = $1
+                    LIMIT 1
+                `,
+                [id],
+            );
+
+            return current.rows[0]?.hasPassword
+                ? 'already_set'
+                : 'email_required';
+        });
     },
 
     /**

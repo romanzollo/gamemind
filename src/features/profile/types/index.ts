@@ -3,6 +3,8 @@ export type ProfileErrorCode =
     | 'WRONG_CURRENT_PASSWORD'
     | 'SAME_PASSWORD'
     | 'USERNAME_TAKEN'
+    /** «Задать пароль»: почта уже у другого аккаунта. */
+    | 'EMAIL_TAKEN'
     | 'SAME_USERNAME'
     | 'SAME_AVATAR'
     | 'UPLOAD_FAILED'

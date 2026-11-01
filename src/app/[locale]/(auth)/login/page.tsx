@@ -1,6 +1,9 @@
+import { redirect } from 'next/navigation';
+
 import { LoginForm } from '@/features/auth/components/LoginForm';
 import { OAuthSignIn } from '@/features/auth/components/OAuthSignIn';
 import { getOAuthErrorMessage } from '@/features/auth/lib/get-oauth-error-message';
+import { auth } from '@/lib/auth';
 import { getDictionary, isLocale } from '@/shared/i18n';
 import { InlineAlert } from '@/shared/ui';
 
@@ -17,6 +20,16 @@ export default async function LoginPage({
     const { locale: rawLocale } = await params;
     const { error } = await searchParams;
     const locale = isLocale(rawLocale) ? rawLocale : 'ru';
+
+    // Ошибка у вошедшего игрока — это неудачная привязка входа из профиля
+    // («Подключить»): Auth.js знает одну страницу ошибок, а показать её
+    // надо там, где нажали кнопку.
+    if (typeof error === 'string' && error !== '' && (await auth())?.user) {
+        redirect(
+            `/${locale}/profile?signInError=${encodeURIComponent(error)}`,
+        );
+    }
+
     const dictionary = getDictionary(locale);
     const oauthErrorMessage = getOAuthErrorMessage(dictionary, error);
 

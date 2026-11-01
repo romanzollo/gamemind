@@ -44,6 +44,29 @@ export const changePasswordSchema = z
     });
 
 /**
+ * Первый пароль для аккаунта без пароля. Почта нужна, только если её ещё
+ * нет у аккаунта (`emailRequired` знает сервер, не форма): вход по паролю
+ * идёт по почте. Правила почты — как в registerSchema.
+ */
+export function createSetPasswordSchema(emailRequired: boolean) {
+    return z
+        .object({
+            email: emailRequired
+                ? z.string().trim().toLowerCase().email('Invalid email address')
+                : z.undefined(),
+            newPassword: passwordField,
+            confirmNewPassword: z
+                .string()
+                .min(1, 'Please confirm your new password')
+                .max(72, 'Password is too long'),
+        })
+        .refine((data) => data.newPassword === data.confirmNewPassword, {
+            message: 'Passwords do not match',
+            path: ['confirmNewPassword'],
+        });
+}
+
+/**
  * Interim URL-схема (advanced). Основной путь — file upload в changeAvatarAction.
  * Пустая строка = сброс аватара (репозиторий запишет NULL).
  */
