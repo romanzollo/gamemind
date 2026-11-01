@@ -220,6 +220,7 @@ export type Dictionary = {
         /** Разделитель «форма пароля / внешний вход». */
         oauthDivider: string;
         yandexButton: string;
+        vkButton: string;
         errors: {
             invalidInput: string;
             emailTaken: string;

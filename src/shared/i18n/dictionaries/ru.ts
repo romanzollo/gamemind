@@ -170,6 +170,7 @@ export const ruDictionary: Dictionary = {
         loginLink: 'Войти',
         oauthDivider: 'или',
         yandexButton: 'Войти с Яндекс ID',
+        vkButton: 'Войти с VK ID',
         errors: {
             invalidInput: 'Проверь поля и попробуй ещё раз.',
             emailTaken: 'С этой почтой уже есть аккаунт — войди в него.',

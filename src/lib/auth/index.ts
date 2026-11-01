@@ -6,6 +6,7 @@ import {
     isYandexSignInEnabled,
     yandexProvider,
 } from './providers';
+import { isVkIdSignInEnabled, vkIdProvider } from './vk-id';
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     ...authConfig,
@@ -14,6 +15,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     providers: [
         credentialsProvider,
         ...(isYandexSignInEnabled ? [yandexProvider] : []),
+        ...(isVkIdSignInEnabled ? [vkIdProvider] : []),
     ],
     callbacks: {
         ...authConfig.callbacks,

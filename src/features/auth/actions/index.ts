@@ -4,6 +4,11 @@ import bcrypt from 'bcryptjs'; // Библиотека для хеширован
 import { AuthError } from 'next-auth'; // Типы ошибок NextAuth
 import { signIn, signOut } from '@/lib/auth'; // Функции входа и выхода из системы
 import { isYandexSignInEnabled } from '@/lib/auth/providers';
+import {
+    createVkIdState,
+    isVkIdSignInEnabled,
+    VK_ID_PROVIDER_ID,
+} from '@/lib/auth/vk-id';
 
 import { registerSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
@@ -167,18 +172,20 @@ export async function logoutAction(formData: FormData) {
 }
 
 /**
- * Внешний вход (Яндекс ID). Провайдер сверяем с включёнными, а не берём
- * из формы как есть. Ошибки Auth.js сам отправит на страницу входа
+ * Внешний вход (Яндекс ID, VK ID). Провайдер сверяем с включёнными, а не
+ * берём из формы как есть. Ошибки Auth.js сам отправит на страницу входа
  * (`pages.error`), успех — в профиль, как и вход по паролю.
  */
 export async function oauthSignInAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     const provider = formData.get('provider');
+    const redirectTo = `/${locale}/profile`;
 
-    if (provider !== 'yandex' || !isYandexSignInEnabled) {
-        return;
+    // signIn бросает NEXT_REDIRECT на страницу провайдера — так и задумано.
+    if (provider === 'yandex' && isYandexSignInEnabled) {
+        await signIn(provider, { redirectTo });
+    } else if (provider === VK_ID_PROVIDER_ID && isVkIdSignInEnabled) {
+        // state по правилам VK ID ставим сами (см. lib/auth/vk-id.ts).
+        await signIn(provider, { redirectTo }, { state: createVkIdState() });
     }
-
-    // signIn бросает NEXT_REDIRECT на страницу Яндекса — так и задумано.
-    await signIn(provider, { redirectTo: `/${locale}/profile` });
 }

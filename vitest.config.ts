@@ -19,6 +19,14 @@ export default defineConfig({
         environment: 'node',
         // Пока тестов нет — не падать с code 1 (удобно на шаге установки)
         passWithNoTests: true,
+        server: {
+            deps: {
+                // next-auth импортирует `next/server` без расширения: Node ESM
+                // такой путь не находит, а через Vite он резолвится
+                // (тесты входа через VK ID).
+                inline: ['next-auth'],
+            },
+        },
     },
     resolve: {
         alias: {

@@ -170,6 +170,7 @@ export const enDictionary = {
         loginLink: 'Sign in',
         oauthDivider: 'or',
         yandexButton: 'Sign in with Yandex ID',
+        vkButton: 'Sign in with VK ID',
         errors: {
             invalidInput: 'Check the fields and try again.',
             emailTaken: 'There’s already an account with this email — sign in instead.',

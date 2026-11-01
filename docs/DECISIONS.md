@@ -2325,14 +2325,26 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
 |------|--------|
 | Sessions | JWT stays. Users and accounts are persisted through a thin adapter over Prisma: `createUser` maps the provider profile onto our `User` (the stock `@auth/prisma-adapter` writes `name`, which our model does not have) |
 | Yandex | Built-in provider (`oauth.yandex.ru`, scopes `login:info login:email login:avatar`) |
-| VK | Own provider for **VK ID** (`id.vk.com`, OAuth 2.1 + PKCE). The built-in `vk` provider targets the legacy `oauth.vk.com`; confirm against the VK ID docs when the app is registered |
+| VK | Own provider for **VK ID** (`id.vk.ru`, OAuth 2.1 + PKCE, `src/lib/auth/vk-id.ts`). The built-in `vk` provider targets the legacy `oauth.vk.com`. Public web client: no secret (`token_endpoint_auth_method: none`). Quirks — below |
 | Username | From the provider login / name → `[a-zA-Z0-9_]`, 3–20 chars (Cyrillic transliterated); too short → `player`; taken → numeric suffix. The player can rename in the profile |
-| Email already used by a password account | Yandex: link automatically (Yandex returns a confirmed email). VK: never auto-link (confirmation is not guaranteed) — a new account; linking happens from the profile while signed in |
+| Email already used by a password account | Yandex: link automatically (Yandex returns a confirmed email). VK: never auto-link (confirmation is not guaranteed) — sign-in stops with `OAuthAccountNotLinked` (a second account cannot take the same email anyway); linking happens from the profile while signed in |
 | Password later | An account without `passwordHash` sees «Set password» instead of «Change password» (there is no current password to check) |
 | Provider tokens | Not stored: `Account` keeps only `provider` + `providerAccountId`. We never call the provider API after sign-in, and a stored token is a liability in a leak |
-| Switch | A provider is on only when its keys are in env (`AUTH_YANDEX_ID` / `AUTH_YANDEX_SECRET`); without them the button is not rendered and the code is inert |
+| Switch | A provider is on only when its keys are in env (`AUTH_YANDEX_ID` / `AUTH_YANDEX_SECRET`; VK ID — `AUTH_VK_ID` alone); without them the button is not rendered and the code is inert |
 | Disabled players | `signIn` callback refuses (`AccessDenied`) when the account the sign-in leads to — by linked account, else by email — has `isActive = false`, same as password login |
 | Errors | `pages.error` = `/ru/login`: `?error=OAuthAccountNotLinked` / `AccessDenied` / anything else → own RU/EN text. The locale of that page is fixed (Auth.js has one error URL) — acceptable while EN traffic is small |
+
+**VK ID quirks** (November 1, 2026; all in `vk-id.ts`). VK ID departs from plain OAuth in three places, and Auth.js has an extension point for each:
+
+| Quirk | Solution |
+|-------|----------|
+| `state` must be `[a-zA-Z0-9_-]`, 32+ chars; the Auth.js state is an encrypted JWT with dots | Auth.js state check is off (`checks: ['pkce']`); `oauthSignInAction` puts a random 43-char base64url state into the link. CSRF and code injection are covered by PKCE, which VK ID requires: the verifier sits in a cookie of the browser that started the sign-in, so a code injected into another browser is never exchanged (RFC 9700 §2.1.1) |
+| The code exchange needs `device_id` and `state` from the callback URL; Auth.js does not pass them | The `/api/auth` route runs the VK ID callback inside `AsyncLocalStorage` with both values; the provider `customFetch` appends them to the token request body. No globals, so parallel sign-ins never mix |
+| The token response carries an `id_token`; for an `oauth` provider Auth.js still validates it and fails | `token.conform` keeps only `access_token` / `token_type` / `expires_in`. The profile comes from `user_info` (POST with `client_id` + `access_token` in the body, via `userinfo.request`) |
+
+Username comes from first + last name (VK ID has no login); email may be absent. These extension points are what an Auth.js beta upgrade could break, so `vk-id.flow.test.ts` runs the real Auth.js and our route against a fake `id.vk.ru` (fetch stub) and a stubbed repository: authorize link, code exchange body, PKCE match, user creation, no email linking, no exchange without the PKCE cookie, cancel. A live sign-in needs the app registered on id.vk.ru (`localhost` may be refused as a redirect URL — then the first live check is on prod).
+
+Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the page and a new dependency; the code exchange still has to be server-side) and a hand-written callback route outside Auth.js (would re-implement the JWT session, PKCE and account linking).
 
 **Guests (3.4):**
 
