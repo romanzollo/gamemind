@@ -57,6 +57,8 @@ const CLIENT_ID = '54321';
 const STATE = 'vkid_state_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const TOKEN_URL = 'https://id.vk.ru/oauth2/auth';
 const USER_INFO_URL = 'https://id.vk.ru/oauth2/user_info';
+const USERS_GET_URL = 'https://api.vk.com/method/users.get';
+const VK_API_PHOTO = 'https://sun9-2.userapi.com/photo_200.jpg';
 
 type RouteHandler = (request: NextRequest) => Promise<Response>;
 
@@ -88,7 +90,10 @@ function jsonResponse(body: unknown, status = 200) {
     });
 }
 
-/** Фальшивый id.vk.ru: token и user_info. */
+/** VK API отказывает в users.get (например, токен VK ID ему не подошёл). */
+let vkApiRefuses = false;
+
+/** Фальшивый VK: id.vk.ru (token, user_info), VK API и картинки фото. */
 const vkFetch = vi.fn(
     async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
         void init;
@@ -111,7 +116,15 @@ const vkFetch = vi.fn(
             return jsonResponse({ user: vkUser });
         }
 
-        if (url === vkUser.avatar) {
+        if (url === USERS_GET_URL) {
+            return jsonResponse(
+                vkApiRefuses
+                    ? { error: { error_code: 5 } }
+                    : { response: [{ id: 777, photo_200: VK_API_PHOTO }] },
+            );
+        }
+
+        if (url === VK_API_PHOTO || url === vkUser.avatar) {
             return new Response(new Uint8Array([1, 2, 3]), {
                 headers: { 'content-type': 'image/jpeg' },
             });
@@ -216,6 +229,7 @@ beforeAll(async () => {
 });
 
 beforeEach(() => {
+    vkApiRefuses = false;
     vi.stubGlobal('fetch', vkFetch);
     // Auth.js пишет ожидаемые ошибки входа в console.error.
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -299,6 +313,15 @@ describe('VK ID sign-in through Auth.js', () => {
             client_id: CLIENT_ID,
             access_token: 'vk-access-token',
         });
+        expect(Object.fromEntries(requestBody(USERS_GET_URL))).toMatchObject({
+            access_token: 'vk-access-token',
+            fields: 'photo_200',
+        });
+
+        // Фото берётся из VK API, а не из ссылки user_info (та отвечала 404).
+        const fetchedUrls = vkFetch.mock.calls.map(([input]) => String(input));
+        expect(fetchedUrls).toContain(VK_API_PHOTO);
+        expect(fetchedUrls).not.toContain(vkUser.avatar);
 
         // Ссылка VK протухает: строка создаётся без неё, потом — наша копия.
         expect(repository.createOAuthUser).toHaveBeenCalledWith({
@@ -317,6 +340,19 @@ describe('VK ID sign-in through Auth.js', () => {
             provider: 'vk',
             providerAccountId: '777',
         });
+    });
+
+    it('falls back to the user_info photo when VK API refuses', async () => {
+        vkApiRefuses = true;
+
+        const jar = new CookieJar();
+        await startSignIn(jar);
+        const response = await finishSignIn(jar, SUCCESS_QUERY);
+
+        expect(response.headers.get('location')).toBe(`${ORIGIN}/ru/profile`);
+        const fetchedUrls = vkFetch.mock.calls.map(([input]) => String(input));
+        expect(fetchedUrls).toContain(vkUser.avatar);
+        expect(repository.updateImage).toHaveBeenCalled();
     });
 
     it('signs in a player who already linked VK ID', async () => {

@@ -33,6 +33,8 @@ export const VK_ID_PROVIDER_ID = 'vk';
 const VK_ID_AUTHORIZATION_URL = 'https://id.vk.ru/authorize';
 const VK_ID_TOKEN_URL = 'https://id.vk.ru/oauth2/auth';
 const VK_ID_USER_INFO_URL = 'https://id.vk.ru/oauth2/user_info';
+const VK_API_USERS_GET_URL = 'https://api.vk.com/method/users.get';
+const VK_API_VERSION = '5.199';
 
 /** Имя, фамилия, аватар и почта (без `email` VK ID почту не отдаёт). */
 const VK_ID_SCOPE = 'vkid.personal_info email';
@@ -172,7 +174,60 @@ export function parseVkIdUserInfo(body: unknown): VkIdProfile {
     return parsed.data.user;
 }
 
-/** user_info ждёт client_id и access_token в теле POST, а не в заголовке. */
+const vkApiUsersGetSchema = z.object({
+    response: z.array(z.object({ photo_200: z.string().optional() })).min(1),
+});
+
+/**
+ * photo_200 из ответа VK API users.get. Заглушки VK (`vk.com/images/…`:
+ * камера, удалённый профиль) — не фото. Ошибка VK API → исключение с её кодом.
+ */
+export function parseVkApiPhoto(body: unknown): string | null {
+    const parsed = vkApiUsersGetSchema.safeParse(body);
+
+    if (!parsed.success) {
+        const error = isRecord(body) ? body.error : null;
+        const code =
+            isRecord(error) && typeof error.error_code === 'number'
+                ? error.error_code
+                : 'invalid_response';
+        throw new Error(`VK_API_USERS_GET_FAILED: ${code}`);
+    }
+
+    const photo = parsed.data.response[0].photo_200?.trim();
+    return photo && !photo.startsWith('https://vk.com/images/') ? photo : null;
+}
+
+/**
+ * Фото через VK API: ссылка `avatar` из user_info на проде сразу отвечала
+ * 404 (ADR → VK ID quirks). Ошибка здесь не ломает вход — остаётся `avatar`.
+ */
+async function requestVkApiPhoto(accessToken: string): Promise<string | null> {
+    try {
+        const response = await fetch(VK_API_USERS_GET_URL, {
+            method: 'POST',
+            body: new URLSearchParams({
+                access_token: accessToken,
+                fields: 'photo_200',
+                v: VK_API_VERSION,
+            }),
+            signal: AbortSignal.timeout(USER_INFO_TIMEOUT_MS),
+        });
+
+        return parseVkApiPhoto(await response.json().catch(() => null));
+    } catch (error) {
+        console.error(
+            'VK API photo lookup failed:',
+            error instanceof Error ? error.message : error,
+        );
+        return null;
+    }
+}
+
+/**
+ * user_info ждёт client_id и access_token в теле POST, а не в заголовке.
+ * Параллельно — фото из VK API, чтобы вход не ждал два запроса подряд.
+ */
 async function requestVkIdUserInfo({
     tokens,
     provider,
@@ -184,16 +239,20 @@ async function requestVkIdUserInfo({
         throw new Error('VK_ID_USER_INFO_FAILED: missing_token');
     }
 
-    const response = await fetch(VK_ID_USER_INFO_URL, {
-        method: 'POST',
-        body: new URLSearchParams({
-            client_id: provider.clientId,
-            access_token: tokens.access_token,
+    const [response, photo] = await Promise.all([
+        fetch(VK_ID_USER_INFO_URL, {
+            method: 'POST',
+            body: new URLSearchParams({
+                client_id: provider.clientId,
+                access_token: tokens.access_token,
+            }),
+            signal: AbortSignal.timeout(USER_INFO_TIMEOUT_MS),
         }),
-        signal: AbortSignal.timeout(USER_INFO_TIMEOUT_MS),
-    });
+        requestVkApiPhoto(tokens.access_token),
+    ]);
 
-    return parseVkIdUserInfo(await response.json().catch(() => null));
+    const profile = parseVkIdUserInfo(await response.json().catch(() => null));
+    return photo ? { ...profile, avatar: photo } : profile;
 }
 
 /** Ссылка на фото из профиля этого входа (callback signIn: тип Profile). */

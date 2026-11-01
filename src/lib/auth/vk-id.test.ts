@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 import {
     conformVkIdTokenResponse,
     createVkIdState,
+    parseVkApiPhoto,
     parseVkIdUserInfo,
     readVkIdAvatar,
     readVkIdCallbackParams,
@@ -128,6 +129,36 @@ describe('parseVkIdUserInfo', () => {
         expect(() => parseVkIdUserInfo(null)).toThrow(
             'VK_ID_USER_INFO_FAILED: invalid_response',
         );
+    });
+});
+
+describe('parseVkApiPhoto', () => {
+    it('reads photo_200 from users.get', () => {
+        expect(
+            parseVkApiPhoto({
+                response: [
+                    { id: 777, photo_200: 'https://sun9-1.userapi.com/p.jpg' },
+                ],
+            }),
+        ).toBe('https://sun9-1.userapi.com/p.jpg');
+    });
+
+    it('treats VK placeholders as no photo', () => {
+        expect(
+            parseVkApiPhoto({
+                response: [
+                    { id: 777, photo_200: 'https://vk.com/images/camera_200.png' },
+                ],
+            }),
+        ).toBeNull();
+    });
+
+    it('throws with the VK API error code only', () => {
+        expect(() =>
+            parseVkApiPhoto({
+                error: { error_code: 5, error_msg: 'User authorization failed' },
+            }),
+        ).toThrow(/^VK_API_USERS_GET_FAILED: 5$/);
     });
 });
 
