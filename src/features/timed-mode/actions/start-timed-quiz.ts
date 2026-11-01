@@ -14,6 +14,7 @@ import { redirect } from 'next/navigation';
 import type { QuizFormState } from '@/features/quiz/types';
 import { timedQuizSetupSchema } from '@/features/quiz/lib/validation';
 import { runTimedQuizStart } from '@/features/timed-mode/lib/run-timed-quiz-start';
+import { guestModesLockedHref } from '@/features/auth/lib/guest';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -37,6 +38,12 @@ export async function startTimedQuizAction(
 ): Promise<QuizFormState> {
     const locale = getLocaleFromFormData(formData);
     const session = await requireUser(locale);
+
+    // Режим с рейтингом — только для аккаунта (3.4). Флаг из того же
+    // чтения игрока в requireUser: лишнего запроса на старте нет.
+    if (session.user.isGuest) {
+        redirect(guestModesLockedHref(locale));
+    }
 
     const rate = checkPresetRateLimit(
         'quiz',

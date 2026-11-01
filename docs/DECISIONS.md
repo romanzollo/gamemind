@@ -2352,10 +2352,10 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 
 | Rule | Choice |
 |------|--------|
-| Entry | «Play without sign-up» → `signIn('guest')` creates the row; JWT as for any user, plus `isGuest` |
-| Abuse | Shared rate-limit preset `guest` per IP |
-| Modes | Classic and Daily. Blitz / Survival → sign-up prompt |
-| Ratings | Guests are hidden from every leaderboard — same filter as `isTestAccount` |
+| Entry | «Play without sign-up» (login and register pages, hidden for a signed-in player) → `signIn('guest')`: a Credentials provider creates the row (`guest_` + 6 random [a-z0-9], retried if taken) and returns it; JWT as for any user, plus `isGuest`. `requireUser` reads `isGuest` from the DB row it already loads, so the flag is fresh after a claim |
+| Abuse | Shared rate-limit preset `guest`: 5 per hour per IP, checked **inside** `authorize` (a direct POST to `/api/auth/callback/guest` cannot skip it). Over the limit → `GuestRateLimited` (`CredentialsSignin` with its own `code`) → the form shows the usual «too many attempts» text |
+| Modes | Classic and Daily. Blitz / Survival: `startTimedQuizAction` / `startSurvivalQuizAction` redirect a guest to `/register?reason=guest-modes` with an explanation — no extra query on the start path |
+| Ratings | Guests are hidden from every leaderboard — `LEADERBOARD_VISIBLE_USER_SQL` adds `isGuest = false` next to `isTestAccount` |
 | Achievements | Computed as usual (same outbox), shown with a «save your progress» nudge |
 | Reserved names | The `guest_` prefix is not allowed for chosen usernames |
 | Claim by password | Registering while signed in as a guest updates **the same row** (email, username, password, `isGuest = false`). Nothing moves |

@@ -6,7 +6,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { registerSchema } from '@/features/auth/lib/validation';
-import { toUsernameBase, withUsernameSuffix } from './oauth-username';
+import {
+    createGuestUsername,
+    isReservedUsername,
+    toUsernameBase,
+    withUsernameSuffix,
+} from './oauth-username';
 
 function passesRegisterRules(username: string): boolean {
     return registerSchema.safeParse({
@@ -84,5 +89,25 @@ describe('withUsernameSuffix', () => {
         expect(withUsernameSuffix('abcdefghijklmn_opqrs', '4821')).toBe(
             'abcdefghijklmn_4821',
         );
+    });
+});
+
+describe('guest usernames', () => {
+    it('creates guest_ + 6 random [a-z0-9]', () => {
+        const name = createGuestUsername();
+
+        expect(name).toMatch(/^guest_[a-z0-9]{6}$/);
+        expect(createGuestUsername()).not.toBe(name);
+    });
+
+    it('reserves the guest_ prefix in any case', () => {
+        expect(isReservedUsername('guest_abc')).toBe(true);
+        expect(isReservedUsername('Guest_Roman')).toBe(true);
+        expect(isReservedUsername('guestroman')).toBe(false);
+    });
+
+    it('rejects guest_ in sign-up', () => {
+        expect(passesRegisterRules('guest_roman')).toBe(false);
+        expect(passesRegisterRules('roman_guest')).toBe(true);
     });
 });

@@ -27,6 +27,9 @@ export async function requireUser(locale: Locale = defaultLocale) {
             email: user.email,
             role: user.role,
             image: user.image,
+            // Из БД, а не из JWT: после сохранения прогресса (3.4)
+            // гость перестаёт быть гостем без перевыпуска токена.
+            isGuest: user.isGuest,
         },
     };
 }

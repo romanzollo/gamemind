@@ -171,6 +171,10 @@ export const enDictionary = {
         oauthDivider: 'or',
         yandexButton: 'Sign in with Yandex ID',
         vkButton: 'Sign in with VK ID',
+        guestButton: 'Play without signing up',
+        guestHint: 'Classic and the Daily Challenge. You can save your progress later.',
+        guestModesLocked:
+            'Blitz and Survival count for the leaderboard, so they need an account. Sign up and keep your games.',
         errors: {
             invalidInput: 'Check the fields and try again.',
             emailTaken: 'There’s already an account with this email — sign in instead.',

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { isReservedUsername } from '@/lib/auth/oauth-username';
+
 // Валидация регистрации
 export const registerSchema = z
     .object({
@@ -11,6 +13,10 @@ export const registerSchema = z
             .regex(
                 /^[a-zA-Z0-9_]+$/,
                 'Username can only contain letters, numbers, and underscore',
+            )
+            .refine(
+                (value) => !isReservedUsername(value),
+                'The guest_ prefix is reserved',
             ),
         email: z.string().trim().toLowerCase().email('Invalid email address'),
         password: z

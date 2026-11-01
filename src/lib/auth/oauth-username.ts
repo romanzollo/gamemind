@@ -101,6 +101,31 @@ export function toUsernameBase(raw: string | null | undefined): string {
     return base;
 }
 
+/** Ник с префиксом гостя игрок выбрать не может — ни при регистрации, ни в профиле. */
+export function isReservedUsername(username: string): boolean {
+    return username.trim().toLowerCase().startsWith(GUEST_USERNAME_PREFIX);
+}
+
+const GUEST_SUFFIX_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
+const GUEST_SUFFIX_LENGTH = 6;
+
+/**
+ * Ник гостя: `guest_` + 6 случайных символов [a-z0-9] — 36⁶ ≈ 2 млрд
+ * вариантов. Web Crypto, без `node:crypto`: модуль остаётся чистым.
+ */
+export function createGuestUsername(): string {
+    const values = crypto.getRandomValues(
+        new Uint32Array(GUEST_SUFFIX_LENGTH),
+    );
+    let suffix = '';
+
+    for (const value of values) {
+        suffix += GUEST_SUFFIX_ALPHABET[value % GUEST_SUFFIX_ALPHABET.length];
+    }
+
+    return `${GUEST_USERNAME_PREFIX}${suffix}`;
+}
+
 /** `base_1234` в пределах 20 символов (основа укорачивается, суффикс — нет). */
 export function withUsernameSuffix(base: string, suffix: string): string {
     const room = USERNAME_MAX_LENGTH - suffix.length - 1;

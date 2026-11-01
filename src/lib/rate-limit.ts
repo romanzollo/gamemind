@@ -85,6 +85,11 @@ export const RATE_LIMIT_PRESETS = {
      * всё ещё упирается в потолок (урок бага с auth 60с).
      */
     quiz: { limit: 30, windowMs: 15 * 60_000 },
+    /**
+     * Гостевой вход (3.4) по IP: каждый — новая строка `User`. Пять в час
+     * хватит семье за одним роутером, а ботам не даст засорить базу.
+     */
+    guest: { limit: 5, windowMs: 60 * 60_000 },
 } as const;
 
 export type RateLimitPresetName = keyof typeof RATE_LIMIT_PRESETS;

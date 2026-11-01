@@ -3,6 +3,7 @@ import { authConfig } from './auth.config';
 import { createGameMindAdapter, isOAuthSignInAllowed } from './adapter';
 import {
     credentialsProvider,
+    guestProvider,
     isYandexSignInEnabled,
     yandexProvider,
 } from './providers';
@@ -20,6 +21,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     adapter: createGameMindAdapter(),
     providers: [
         credentialsProvider,
+        guestProvider,
         ...(isYandexSignInEnabled ? [yandexProvider] : []),
         ...(isVkIdSignInEnabled ? [vkIdProvider] : []),
     ],

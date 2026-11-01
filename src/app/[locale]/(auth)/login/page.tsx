@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { GuestSignIn } from '@/features/auth/components/GuestSignIn';
 import { LoginForm } from '@/features/auth/components/LoginForm';
 import { OAuthSignIn } from '@/features/auth/components/OAuthSignIn';
 import { getOAuthErrorMessage } from '@/features/auth/lib/get-oauth-error-message';
@@ -24,7 +25,8 @@ export default async function LoginPage({
     // Ошибка у вошедшего игрока — это неудачная привязка входа из профиля
     // («Подключить»): Auth.js знает одну страницу ошибок, а показать её
     // надо там, где нажали кнопку.
-    if (typeof error === 'string' && error !== '' && (await auth())?.user) {
+    const session = await auth();
+    if (typeof error === 'string' && error !== '' && session?.user) {
         redirect(
             `/${locale}/profile?signInError=${encodeURIComponent(error)}`,
         );
@@ -45,6 +47,7 @@ export default async function LoginPage({
 
             <LoginForm locale={locale} />
             <OAuthSignIn locale={locale} />
+            {session?.user ? null : <GuestSignIn locale={locale} />}
         </main>
     );
 }

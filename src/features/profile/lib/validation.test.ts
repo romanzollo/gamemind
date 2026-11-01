@@ -1,11 +1,11 @@
 /**
- * Unit-тесты «Задать пароль»: почта нужна только аккаунту без почты,
- * и её нельзя подсунуть аккаунту, у которого почта уже есть.
+ * Unit-тесты форм профиля: «Задать пароль» (почта нужна только аккаунту
+ * без почты и не подсовывается тому, у кого она есть) и ник без `guest_`.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { createSetPasswordSchema } from './validation';
+import { changeUsernameSchema, createSetPasswordSchema } from './validation';
 
 const passwords = {
     newPassword: 'secret-123',
@@ -42,5 +42,16 @@ describe('createSetPasswordSchema', () => {
             schema.safeParse({ ...passwords, confirmNewPassword: 'secret-124' })
                 .success,
         ).toBe(false);
+    });
+});
+
+describe('changeUsernameSchema', () => {
+    it('does not let a player take a guest_ name', () => {
+        expect(changeUsernameSchema.safeParse({ username: 'guest_x1' }).success).toBe(
+            false,
+        );
+        expect(changeUsernameSchema.safeParse({ username: 'Roman_Zollo' }).success).toBe(
+            true,
+        );
     });
 });

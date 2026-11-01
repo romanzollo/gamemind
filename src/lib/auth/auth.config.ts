@@ -25,6 +25,7 @@ export const authConfig = {
                 token.id = user.id!;
                 token.role = user.role as Role;
                 token.username = user.name ?? '';
+                token.isGuest = user.isGuest ?? false;
                 // Auth.js хранит аватар в JWT как picture
                 token.picture = user.image ?? undefined;
             }
@@ -50,6 +51,7 @@ export const authConfig = {
                 session.user.id = token.id as string;
                 session.user.role = token.role as Role;
                 session.user.username = token.username as string;
+                session.user.isGuest = token.isGuest === true;
                 session.user.image =
                     (token.picture as string | undefined) ?? null;
             }

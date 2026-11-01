@@ -171,6 +171,10 @@ export const ruDictionary: Dictionary = {
         oauthDivider: 'или',
         yandexButton: 'Войти с Яндекс ID',
         vkButton: 'Войти с VK ID',
+        guestButton: 'Играть без регистрации',
+        guestHint: 'Классика и Челлендж дня. Сохранить прогресс можно потом.',
+        guestModesLocked:
+            'Блиц и Выживание идут в рейтинг, для них нужен аккаунт. Зарегистрируйся — твои игры сохранятся.',
         errors: {
             invalidInput: 'Проверь поля и попробуй ещё раз.',
             emailTaken: 'С этой почтой уже есть аккаунт — войди в него.',

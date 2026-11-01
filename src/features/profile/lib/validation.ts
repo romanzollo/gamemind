@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { isReservedUsername } from '@/lib/auth/oauth-username';
+
 // те же правила, что в registerSchema (auth/lib/validation.ts)
 const usernameField = z
     .string()
@@ -9,6 +11,10 @@ const usernameField = z
     .regex(
         /^[a-zA-Z0-9_]+$/,
         'Username can only contain letters, numbers, and underscore',
+    )
+    .refine(
+        (value) => !isReservedUsername(value),
+        'The guest_ prefix is reserved',
     );
 
 // поле для валидации пароля

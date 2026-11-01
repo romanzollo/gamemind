@@ -221,6 +221,11 @@ export type Dictionary = {
         oauthDivider: string;
         yandexButton: string;
         vkButton: string;
+        /** «Играть без регистрации» (3.4). */
+        guestButton: string;
+        guestHint: string;
+        /** Регистрация после попытки гостя войти в Блиц / Выживание. */
+        guestModesLocked: string;
         errors: {
             invalidInput: string;
             emailTaken: string;

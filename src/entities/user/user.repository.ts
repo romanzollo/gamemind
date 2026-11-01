@@ -2,7 +2,7 @@
 import type { Client } from 'pg';
 import { withDirectPgClient, withDirectPgWriteRetry } from '@/lib/db/direct-pg';
 import { prisma, withDatabaseRetry } from '@/lib/prisma';
-import type { Role } from '@prisma/client';
+import { Prisma, type Role } from '@prisma/client';
 
 // Тип безопасного пользователя
 export type SafeUser = {
@@ -32,9 +32,10 @@ export type SessionUserRow = {
     role: Role;
     image: string | null;
     isActive: boolean;
+    /** Гость (3.4): Классика и Челлендж, без рейтингов. */
+    isGuest: boolean;
 };
 
-/** Пользователь для адаптера Auth.js (внешний вход). Без passwordHash. */
 /** Способы входа игрока — для блока в профиле. */
 export type SignInMethods = {
     email: string | null;
@@ -43,6 +44,7 @@ export type SignInMethods = {
     providers: string[];
 };
 
+/** Пользователь для адаптера Auth.js (внешний вход). Без passwordHash. */
 export type AuthUserRow = {
     id: string;
     username: string;
@@ -135,7 +137,8 @@ export const userRepository = {
                         "email",
                         "role"::text AS "role",
                         "image",
-                        "isActive"
+                        "isActive",
+                        "isGuest"
                     FROM "User"
                     WHERE "id" = $1
                     LIMIT 1
@@ -157,6 +160,7 @@ export const userRepository = {
             role: row.role,
             image: row.image,
             isActive: row.isActive === true,
+            isGuest: row.isGuest === true,
         };
     },
 
@@ -536,6 +540,30 @@ export const userRepository = {
         image: string | null;
     }): Promise<AuthUserRow> {
         return prisma.user.create({ data, select: AUTH_USER_SELECT });
+    },
+
+    /**
+     * Гость (3.4): строка без почты и пароля, `isGuest = true`. Ник
+     * занят → 'taken' (вызывающий пробует другой). Canon: DECISIONS →
+     * Accounts without a password.
+     */
+    async createGuestUser(
+        username: string,
+    ): Promise<AuthUserRow | 'taken'> {
+        try {
+            return await prisma.user.create({
+                data: { username, isGuest: true },
+                select: AUTH_USER_SELECT,
+            });
+        } catch (error) {
+            if (
+                error instanceof Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2002'
+            ) {
+                return 'taken';
+            }
+            throw error;
+        }
     },
 
     /**

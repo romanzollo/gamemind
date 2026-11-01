@@ -8,11 +8,15 @@ declare module 'next-auth' {
             id: string;
             username: string;
             role: Role;
+            /** Гость (3.4): Классика и Челлендж, без рейтингов. */
+            isGuest: boolean;
         } & DefaultSession['user'];
     }
 
     interface User {
         role: Role;
+        /** Только у гостевого провайдера; остальные — undefined (= не гость). */
+        isGuest?: boolean;
     }
 }
 
@@ -22,5 +26,7 @@ declare module 'next-auth/jwt' {
         id: string;
         username: string;
         role: Role;
+        /** Нет в токенах, выданных до 3.4 — читать как false. */
+        isGuest?: boolean;
     }
 }

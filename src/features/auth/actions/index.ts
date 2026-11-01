@@ -3,7 +3,10 @@
 import bcrypt from 'bcryptjs'; // Библиотека для хеширования паролей
 import { AuthError } from 'next-auth'; // Типы ошибок NextAuth
 import { signIn, signOut } from '@/lib/auth'; // Функции входа и выхода из системы
-import { isYandexSignInEnabled } from '@/lib/auth/providers';
+import {
+    GuestRateLimited,
+    isYandexSignInEnabled,
+} from '@/lib/auth/providers';
 import {
     createVkIdState,
     isVkIdSignInEnabled,
@@ -169,6 +172,37 @@ export async function logoutAction(formData: FormData) {
 
     // Выходим из системы и перенаправляем на главную страницу
     await signOut({ redirectTo: `/${locale}` });
+}
+
+/**
+ * «Играть без регистрации» (3.4): провайдер `guest` создаёт игрока и
+ * открывает сессию, дальше — выбор режима. Лимит по IP проверяет сам
+ * провайдер; здесь только переводим его отказ в текст формы.
+ */
+export async function guestSignInAction(
+    _prevState: AuthFormState,
+    formData: FormData,
+): Promise<AuthFormState> {
+    const locale = getLocaleFromFormData(formData);
+
+    try {
+        await signIn('guest', { redirectTo: `/${locale}/quiz` });
+    } catch (error) {
+        if (error instanceof AuthError) {
+            if (error instanceof GuestRateLimited) {
+                return { errorCode: 'RATE_LIMITED' };
+            }
+            captureAppError(error, {
+                area: 'auth',
+                extra: { action: 'guest' },
+            });
+            return { errorCode: 'CREATE_FAILED' };
+        }
+        // NEXT_REDIRECT — нормальный переход в выбор режима.
+        throw error;
+    }
+
+    return {};
 }
 
 /**

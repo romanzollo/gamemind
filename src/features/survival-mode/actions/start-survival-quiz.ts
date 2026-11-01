@@ -15,6 +15,7 @@ import { redirect } from 'next/navigation';
 import type { QuizFormState } from '@/features/quiz/types';
 import { runSurvivalQuizStart } from '@/features/survival-mode/lib/run-survival-quiz-start';
 import { survivalQuizSetupSchema } from '@/features/survival-mode/lib/survival-quiz-setup-schema';
+import { guestModesLockedHref } from '@/features/auth/lib/guest';
 import { requireUser } from '@/lib/auth/guards';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -38,6 +39,12 @@ export async function startSurvivalQuizAction(
 ): Promise<QuizFormState> {
     const locale = getLocaleFromFormData(formData);
     const session = await requireUser(locale);
+
+    // Режим с рейтингом — только для аккаунта (3.4). Флаг из того же
+    // чтения игрока в requireUser: лишнего запроса на старте нет.
+    if (session.user.isGuest) {
+        redirect(guestModesLockedHref(locale));
+    }
 
     const rate = checkPresetRateLimit(
         'quiz',

@@ -1,8 +1,12 @@
 import bcrypt from 'bcryptjs';
+import { CredentialsSignin } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import Yandex, { type YandexProfile } from 'next-auth/providers/yandex';
 import { loginSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
+import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
+import { getIpRateLimitIdentity } from '@/lib/rate-limit-key';
+import { createGuestUsername } from './oauth-username';
 
 export const credentialsProvider = Credentials({
     id: 'credentials',
@@ -53,6 +57,51 @@ export const credentialsProvider = Credentials({
             image: user.image,
             role: user.role,
         };
+    },
+});
+
+/** Лимит гостей с IP исчерпан — отдельный код, чтобы форма сказала «подожди». */
+export class GuestRateLimited extends CredentialsSignin {
+    code = 'guest_rate_limited';
+}
+
+/**
+ * Гость (3.4): новая строка `User` с `isGuest = true`, без почты и пароля,
+ * и обычная JWT-сессия. Лимит по IP — здесь, а не в action: иначе его обошёл
+ * бы прямой POST на /api/auth/callback/guest. Ник занят (1 к 2 млрд) —
+ * пробуем ещё раз. Canon: DECISIONS → Accounts without a password.
+ */
+export const guestProvider = Credentials({
+    id: 'guest',
+    name: 'guest',
+    credentials: {},
+    async authorize() {
+        const rate = await checkSharedPresetRateLimit(
+            'guest',
+            await getIpRateLimitIdentity(),
+        );
+        if (!rate.ok) {
+            throw new GuestRateLimited();
+        }
+
+        for (let attempt = 0; attempt < 3; attempt += 1) {
+            const row = await userRepository.createGuestUser(
+                createGuestUsername(),
+            );
+
+            if (row !== 'taken') {
+                return {
+                    id: row.id,
+                    name: row.username,
+                    email: null,
+                    image: null,
+                    role: row.role,
+                    isGuest: true,
+                };
+            }
+        }
+
+        throw new Error('GUEST_USERNAME_EXHAUSTED');
     },
 });
 
