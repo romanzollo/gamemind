@@ -1,24 +1,24 @@
-'use client';
+import { LoginForm } from '@/features/auth/components/LoginForm';
+import { OAuthSignIn } from '@/features/auth/components/OAuthSignIn';
+import { getOAuthErrorMessage } from '@/features/auth/lib/get-oauth-error-message';
+import { getDictionary, isLocale } from '@/shared/i18n';
+import { InlineAlert } from '@/shared/ui';
 
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useActionState } from 'react';
+type LoginPageProps = {
+    params: Promise<{ locale: string }>;
+    /** `?error=` — ошибка внешнего входа от Auth.js (pages.error). */
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-import { loginAction } from '@/features/auth/actions';
-import { getAuthErrorMessage } from '@/features/auth/lib/get-auth-error-message';
-import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton } from '@/shared/ui';
-
-function getLocale(value: string | string[] | undefined): Locale {
-    return typeof value === 'string' && isLocale(value) ? value : 'ru';
-}
-
-export default function LoginPage() {
-    const params = useParams<{ locale: string }>();
-    const locale = getLocale(params.locale);
+export default async function LoginPage({
+    params,
+    searchParams,
+}: LoginPageProps) {
+    const { locale: rawLocale } = await params;
+    const { error } = await searchParams;
+    const locale = isLocale(rawLocale) ? rawLocale : 'ru';
     const dictionary = getDictionary(locale);
-    const [state, formAction] = useActionState(loginAction, {});
-    const errorMessage = getAuthErrorMessage(dictionary, state.errorCode);
+    const oauthErrorMessage = getOAuthErrorMessage(dictionary, error);
 
     return (
         <main className="mx-auto max-w-md p-8">
@@ -26,39 +26,12 @@ export default function LoginPage() {
                 {dictionary.auth.loginTitle}
             </h1>
 
-            <form
-                action={formAction}
-                className="mt-4 flex flex-col gap-3"
-                data-testid="login-form"
-            >
-                <input type="hidden" name="locale" value={locale} />
-                <input
-                    name="email"
-                    type="email"
-                    placeholder={dictionary.auth.email}
-                    required
-                />
-                <input
-                    name="password"
-                    type="password"
-                    placeholder={dictionary.auth.password}
-                    required
-                />
-                <SubmitButton pendingLabel={dictionary.common.submitting}>
-                    {dictionary.auth.loginButton}
-                </SubmitButton>
-            </form>
-
-            {errorMessage ? (
-                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
+            {oauthErrorMessage ? (
+                <InlineAlert className="mt-4">{oauthErrorMessage}</InlineAlert>
             ) : null}
 
-            <p className="mt-4 text-sm text-muted">
-                {dictionary.auth.noAccount}{' '}
-                <Link href={`/${locale}/register`} className="underline">
-                    {dictionary.auth.registerLink}
-                </Link>
-            </p>
+            <LoginForm locale={locale} />
+            <OAuthSignIn locale={locale} />
         </main>
     );
 }

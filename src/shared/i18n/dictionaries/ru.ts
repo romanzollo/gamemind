@@ -168,6 +168,8 @@ export const ruDictionary: Dictionary = {
         haveAccount: 'Уже есть аккаунт?',
         registerLink: 'Зарегистрироваться',
         loginLink: 'Войти',
+        oauthDivider: 'или',
+        yandexButton: 'Войти с Яндекс ID',
         errors: {
             invalidInput: 'Проверь поля и попробуй ещё раз.',
             emailTaken: 'С этой почтой уже есть аккаунт — войди в него.',
@@ -179,6 +181,11 @@ export const ruDictionary: Dictionary = {
             loginFailed: 'Войти не получилось. Попробуй ещё раз.',
             rateLimited:
                 'Слишком много попыток. Подожди немного и попробуй снова.',
+            oauthAccountNotLinked:
+                'Этот вход уже привязан к другому аккаунту. Войди через него или по паролю.',
+            oauthAccessDenied: 'Войти не получилось: аккаунт отключён.',
+            oauthFailed:
+                'Не получилось войти. Попробуй ещё раз или войди по паролю.',
         },
     },
     profile: {

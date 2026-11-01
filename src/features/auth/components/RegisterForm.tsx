@@ -1,0 +1,84 @@
+'use client';
+
+import Link from 'next/link';
+import { useActionState } from 'react';
+
+import { registerAction } from '@/features/auth/actions';
+import { getAuthErrorMessage } from '@/features/auth/lib/get-auth-error-message';
+import { getDictionary, type Locale } from '@/shared/i18n';
+import { InlineAlert, SubmitButton } from '@/shared/ui';
+
+/** Регистрация по почте и паролю. Внешний вход — отдельный серверный блок рядом. */
+export function RegisterForm({ locale }: { locale: Locale }) {
+    const dictionary = getDictionary(locale);
+    const [state, formAction] = useActionState(registerAction, {});
+    const errorMessage = getAuthErrorMessage(dictionary, state.errorCode);
+
+    return (
+        <>
+            <form action={formAction} className="mt-4 flex flex-col gap-3">
+                <input type="hidden" name="locale" value={locale} />
+                {/* Правила полей — из registerSchema: показываем заранее, ошибка формы общая. */}
+                <div className="flex flex-col gap-1">
+                    <input
+                        name="username"
+                        placeholder={dictionary.auth.username}
+                        autoComplete="username"
+                        aria-describedby="register-username-hint"
+                        required
+                    />
+                    <p
+                        id="register-username-hint"
+                        className="text-xs text-muted"
+                    >
+                        {dictionary.auth.usernameHint}
+                    </p>
+                </div>
+                <input
+                    name="email"
+                    type="email"
+                    placeholder={dictionary.auth.email}
+                    autoComplete="email"
+                    required
+                />
+                <div className="flex flex-col gap-1">
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder={dictionary.auth.password}
+                        autoComplete="new-password"
+                        aria-describedby="register-password-hint"
+                        required
+                        minLength={8}
+                    />
+                    <p
+                        id="register-password-hint"
+                        className="text-xs text-muted"
+                    >
+                        {dictionary.auth.passwordHint}
+                    </p>
+                </div>
+                <input
+                    name="confirmPassword"
+                    type="password"
+                    placeholder={dictionary.auth.confirmPassword}
+                    autoComplete="new-password"
+                    required
+                    minLength={8}
+                />
+                <SubmitButton pendingLabel={dictionary.common.submitting}>
+                    {dictionary.auth.registerButton}
+                </SubmitButton>
+            </form>
+            {errorMessage ? (
+                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
+            ) : null}
+            <p className="mt-4 text-sm text-muted">
+                {dictionary.auth.haveAccount}{' '}
+                <Link href={`/${locale}/login`} className="underline">
+                    {dictionary.auth.loginLink}
+                </Link>
+            </p>
+        </>
+    );
+}

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import Credentials from 'next-auth/providers/credentials';
+import Yandex, { type YandexProfile } from 'next-auth/providers/yandex';
 import { loginSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
 
@@ -51,6 +52,37 @@ export const credentialsProvider = Credentials({
             name: user.username,
             image: user.image,
             role: user.role,
+        };
+    },
+});
+
+/**
+ * Вход через Яндекс ID. Включается, только когда заданы `AUTH_YANDEX_ID`
+ * и `AUTH_YANDEX_SECRET` (Auth.js читает их сам) — без ключей кнопки нет.
+ *
+ * Почту Яндекс отдаёт подтверждённой, поэтому вход привязывается
+ * к существующему аккаунту с той же почтой (allowDangerousEmailAccountLinking).
+ * Ник берём из логина Яндекса (латиница), а не из имени — меньше
+ * транслитерации. Canon: DECISIONS → Accounts without a password.
+ */
+export const isYandexSignInEnabled = Boolean(
+    process.env.AUTH_YANDEX_ID && process.env.AUTH_YANDEX_SECRET,
+);
+
+export const yandexProvider = Yandex({
+    allowDangerousEmailAccountLinking: true,
+    profile(profile: YandexProfile) {
+        return {
+            id: profile.id,
+            name: profile.login || profile.display_name,
+            email: profile.default_email ?? profile.emails?.[0] ?? null,
+            image:
+                !profile.is_avatar_empty && profile.default_avatar_id
+                    ? `https://avatars.yandex.net/get-yapic/${profile.default_avatar_id}/islands-200`
+                    : null,
+            // Роль провайдер не задаёт: адаптер её не пишет, в JWT попадает
+            // роль из БД. Поле нужно только для типа User.
+            role: 'USER',
         };
     },
 });

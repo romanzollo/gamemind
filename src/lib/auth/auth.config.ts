@@ -6,6 +6,9 @@ export const authConfig = {
     providers: [],
     pages: {
         signIn: '/ru/login',
+        // Ошибки внешнего входа (?error=…) показываем на странице входа,
+        // а не на встроенной английской странице Auth.js.
+        error: '/ru/login',
     },
     session: {
         strategy: 'jwt',

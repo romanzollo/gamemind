@@ -1,93 +1,24 @@
-'use client';
+import { OAuthSignIn } from '@/features/auth/components/OAuthSignIn';
+import { RegisterForm } from '@/features/auth/components/RegisterForm';
+import { getDictionary, isLocale } from '@/shared/i18n';
 
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useActionState } from 'react';
+type RegisterPageProps = {
+    params: Promise<{ locale: string }>;
+};
 
-import { registerAction } from '@/features/auth/actions';
-import { getAuthErrorMessage } from '@/features/auth/lib/get-auth-error-message';
-import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton } from '@/shared/ui';
-
-function getLocale(value: string | string[] | undefined): Locale {
-    return typeof value === 'string' && isLocale(value) ? value : 'ru';
-}
-
-export default function RegisterPage() {
-    const params = useParams<{ locale: string }>();
-    const locale = getLocale(params.locale);
+export default async function RegisterPage({ params }: RegisterPageProps) {
+    const { locale: rawLocale } = await params;
+    const locale = isLocale(rawLocale) ? rawLocale : 'ru';
     const dictionary = getDictionary(locale);
-    const [state, formAction] = useActionState(registerAction, {});
-    const errorMessage = getAuthErrorMessage(dictionary, state.errorCode);
 
     return (
         <main className="mx-auto max-w-md p-8">
             <h1 className="text-2xl font-semibold">
                 {dictionary.auth.registerTitle}
             </h1>
-            <form action={formAction} className="mt-4 flex flex-col gap-3">
-                <input type="hidden" name="locale" value={locale} />
-                {/* Правила полей — из registerSchema: показываем заранее, ошибка формы общая. */}
-                <div className="flex flex-col gap-1">
-                    <input
-                        name="username"
-                        placeholder={dictionary.auth.username}
-                        autoComplete="username"
-                        aria-describedby="register-username-hint"
-                        required
-                    />
-                    <p
-                        id="register-username-hint"
-                        className="text-xs text-muted"
-                    >
-                        {dictionary.auth.usernameHint}
-                    </p>
-                </div>
-                <input
-                    name="email"
-                    type="email"
-                    placeholder={dictionary.auth.email}
-                    autoComplete="email"
-                    required
-                />
-                <div className="flex flex-col gap-1">
-                    <input
-                        name="password"
-                        type="password"
-                        placeholder={dictionary.auth.password}
-                        autoComplete="new-password"
-                        aria-describedby="register-password-hint"
-                        required
-                        minLength={8}
-                    />
-                    <p
-                        id="register-password-hint"
-                        className="text-xs text-muted"
-                    >
-                        {dictionary.auth.passwordHint}
-                    </p>
-                </div>
-                <input
-                    name="confirmPassword"
-                    type="password"
-                    placeholder={dictionary.auth.confirmPassword}
-                    autoComplete="new-password"
-                    required
-                    minLength={8}
-                />
-                <SubmitButton pendingLabel={dictionary.common.submitting}>
-                    {dictionary.auth.registerButton}
-                </SubmitButton>
-            </form>
-            {errorMessage ? (
-                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
-            ) : null}
-            <p className="mt-4 text-sm text-muted">
-                {dictionary.auth.haveAccount}{' '}
-                <Link href={`/${locale}/login`} className="underline">
-                    {dictionary.auth.loginLink}
-                </Link>
-            </p>
+
+            <RegisterForm locale={locale} />
+            <OAuthSignIn locale={locale} />
         </main>
     );
 }

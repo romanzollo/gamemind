@@ -2329,6 +2329,10 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
 | Username | From the provider login / name → `[a-zA-Z0-9_]`, 3–20 chars (Cyrillic transliterated); too short → `player`; taken → numeric suffix. The player can rename in the profile |
 | Email already used by a password account | Yandex: link automatically (Yandex returns a confirmed email). VK: never auto-link (confirmation is not guaranteed) — a new account; linking happens from the profile while signed in |
 | Password later | An account without `passwordHash` sees «Set password» instead of «Change password» (there is no current password to check) |
+| Provider tokens | Not stored: `Account` keeps only `provider` + `providerAccountId`. We never call the provider API after sign-in, and a stored token is a liability in a leak |
+| Switch | A provider is on only when its keys are in env (`AUTH_YANDEX_ID` / `AUTH_YANDEX_SECRET`); without them the button is not rendered and the code is inert |
+| Disabled players | `signIn` callback refuses (`AccessDenied`) when the account the sign-in leads to — by linked account, else by email — has `isActive = false`, same as password login |
+| Errors | `pages.error` = `/ru/login`: `?error=OAuthAccountNotLinked` / `AccessDenied` / anything else → own RU/EN text. The locale of that page is fixed (Auth.js has one error URL) — acceptable while EN traffic is small |
 
 **Guests (3.4):**
 

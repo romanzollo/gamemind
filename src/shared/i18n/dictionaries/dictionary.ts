@@ -217,6 +217,9 @@ export type Dictionary = {
         haveAccount: string;
         registerLink: string;
         loginLink: string;
+        /** Разделитель «форма пароля / внешний вход». */
+        oauthDivider: string;
+        yandexButton: string;
         errors: {
             invalidInput: string;
             emailTaken: string;
@@ -226,6 +229,12 @@ export type Dictionary = {
             invalidCredentials: string;
             loginFailed: string;
             rateLimited: string;
+            /** ?error=OAuthAccountNotLinked — внешний аккаунт уже у другого игрока. */
+            oauthAccountNotLinked: string;
+            /** ?error=AccessDenied — аккаунт отключён админом. */
+            oauthAccessDenied: string;
+            /** Любая другая ошибка внешнего входа (отмена, сбой). */
+            oauthFailed: string;
         };
     };
     profile: {

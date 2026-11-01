@@ -168,6 +168,8 @@ export const enDictionary = {
         haveAccount: 'Already have an account?',
         registerLink: 'Sign up',
         loginLink: 'Sign in',
+        oauthDivider: 'or',
+        yandexButton: 'Sign in with Yandex ID',
         errors: {
             invalidInput: 'Check the fields and try again.',
             emailTaken: 'There’s already an account with this email — sign in instead.',
@@ -178,6 +180,11 @@ export const enDictionary = {
             invalidCredentials: 'Invalid email or password.',
             loginFailed: 'Couldn’t sign in. Try again.',
             rateLimited: 'Too many tries. Wait a moment and try again.',
+            oauthAccountNotLinked:
+                'That sign-in is already linked to another account. Use it or sign in with your password.',
+            oauthAccessDenied: 'Can’t sign in: this account is disabled.',
+            oauthFailed:
+                'Sign-in didn’t go through. Try again or use your password.',
         },
     },
     profile: {

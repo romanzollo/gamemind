@@ -3,6 +3,7 @@
 import bcrypt from 'bcryptjs'; // Библиотека для хеширования паролей
 import { AuthError } from 'next-auth'; // Типы ошибок NextAuth
 import { signIn, signOut } from '@/lib/auth'; // Функции входа и выхода из системы
+import { isYandexSignInEnabled } from '@/lib/auth/providers';
 
 import { registerSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
@@ -163,4 +164,21 @@ export async function logoutAction(formData: FormData) {
 
     // Выходим из системы и перенаправляем на главную страницу
     await signOut({ redirectTo: `/${locale}` });
+}
+
+/**
+ * Внешний вход (Яндекс ID). Провайдер сверяем с включёнными, а не берём
+ * из формы как есть. Ошибки Auth.js сам отправит на страницу входа
+ * (`pages.error`), успех — в профиль, как и вход по паролю.
+ */
+export async function oauthSignInAction(formData: FormData) {
+    const locale = getLocaleFromFormData(formData);
+    const provider = formData.get('provider');
+
+    if (provider !== 'yandex' || !isYandexSignInEnabled) {
+        return;
+    }
+
+    // signIn бросает NEXT_REDIRECT на страницу Яндекса — так и задумано.
+    await signIn(provider, { redirectTo: `/${locale}/profile` });
 }

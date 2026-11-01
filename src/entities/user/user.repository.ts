@@ -34,6 +34,27 @@ export type SessionUserRow = {
     isActive: boolean;
 };
 
+/** Пользователь для адаптера Auth.js (внешний вход). Без passwordHash. */
+export type AuthUserRow = {
+    id: string;
+    username: string;
+    email: string | null;
+    emailVerified: Date | null;
+    image: string | null;
+    role: Role;
+    isActive: boolean;
+};
+
+const AUTH_USER_SELECT = {
+    id: true,
+    username: true,
+    email: true,
+    emailVerified: true,
+    image: true,
+    role: true,
+    isActive: true,
+} as const;
+
 export type AdminUserMutationResult =
     | 'updated'
     | 'deleted'
@@ -449,6 +470,78 @@ export const userRepository = {
                 createdAt: true,
             },
         });
+    },
+
+    /*
+     * Внешний вход (Яндекс ID, VK ID) — методы для адаптера Auth.js
+     * (src/lib/auth/adapter.ts). Только на входе, не на горячем пути квиза.
+     * Canon: DECISIONS → Accounts without a password.
+     */
+
+    findAuthUserById(id: string): Promise<AuthUserRow | null> {
+        return withDatabaseRetry(() =>
+            prisma.user.findUnique({ where: { id }, select: AUTH_USER_SELECT }),
+        );
+    },
+
+    findAuthUserByEmail(email: string): Promise<AuthUserRow | null> {
+        return withDatabaseRetry(() =>
+            prisma.user.findUnique({
+                where: { email },
+                select: AUTH_USER_SELECT,
+            }),
+        );
+    },
+
+    async findAuthUserByAccount(
+        provider: string,
+        providerAccountId: string,
+    ): Promise<AuthUserRow | null> {
+        const account = await withDatabaseRetry(() =>
+            prisma.account.findUnique({
+                where: {
+                    provider_providerAccountId: { provider, providerAccountId },
+                },
+                select: { user: { select: AUTH_USER_SELECT } },
+            }),
+        );
+
+        return account?.user ?? null;
+    },
+
+    /** Какие из ников-кандидатов уже заняты — одним запросом. */
+    async findTakenUsernames(candidates: string[]): Promise<Set<string>> {
+        const rows = await withDatabaseRetry(() =>
+            prisma.user.findMany({
+                where: { username: { in: candidates } },
+                select: { username: true },
+            }),
+        );
+
+        return new Set(rows.map((row) => row.username));
+    },
+
+    createOAuthUser(data: {
+        username: string;
+        email: string | null;
+        emailVerified: Date | null;
+        image: string | null;
+    }): Promise<AuthUserRow> {
+        return prisma.user.create({ data, select: AUTH_USER_SELECT });
+    },
+
+    /**
+     * Привязка внешнего аккаунта. Токены провайдера не храним: нам нужен
+     * только факт «этот Яндекс-аккаунт = этот игрок», а лишний токен в БД —
+     * лишний риск при утечке.
+     */
+    async linkOAuthAccount(data: {
+        userId: string;
+        type: string;
+        provider: string;
+        providerAccountId: string;
+    }): Promise<void> {
+        await prisma.account.create({ data });
     },
 
     /**
