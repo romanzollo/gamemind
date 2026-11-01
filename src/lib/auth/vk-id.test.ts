@@ -9,6 +9,7 @@ import {
     conformVkIdTokenResponse,
     createVkIdState,
     parseVkIdUserInfo,
+    readVkIdAvatar,
     readVkIdCallbackParams,
     toVkIdUser,
 } from './vk-id';
@@ -127,6 +128,19 @@ describe('parseVkIdUserInfo', () => {
         expect(() => parseVkIdUserInfo(null)).toThrow(
             'VK_ID_USER_INFO_FAILED: invalid_response',
         );
+    });
+});
+
+describe('readVkIdAvatar', () => {
+    it('reads the photo link from the sign-in profile', () => {
+        expect(
+            readVkIdAvatar({ user_id: '777', avatar: ' https://x/a.jpg ' }),
+        ).toBe('https://x/a.jpg');
+    });
+
+    it('returns null for a profile without a photo or of another shape', () => {
+        expect(readVkIdAvatar({ user_id: '777' })).toBeNull();
+        expect(readVkIdAvatar(undefined)).toBeNull();
     });
 });
 

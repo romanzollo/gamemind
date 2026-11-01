@@ -18,6 +18,7 @@ import {
     userRepository,
     type AuthUserRow,
 } from '@/entities/user/user.repository';
+import { importOAuthAvatar, isImportedAvatarUrl } from './oauth-avatar';
 import { toUsernameBase, withUsernameSuffix } from './oauth-username';
 
 /** Сколько случайных суффиксов пробуем, если основа ника занята. */
@@ -68,12 +69,28 @@ export function createGameMindAdapter(): Adapter {
         async createUser(user) {
             // user.id здесь — id у провайдера, а не наш: не используем.
             // Провайдер может не дать почту, хотя тип говорит string.
+            // Протухающую ссылку на фото (VK ID) в БД не пишем: сначала
+            // строка, потом копия фото под наш id (oauth-avatar.ts).
+            const avatarToImport = isImportedAvatarUrl(user.image)
+                ? user.image
+                : null;
             const row = await userRepository.createOAuthUser({
                 username: await pickFreeUsername(user.name ?? user.email),
                 email: normalizeEmail(user.email),
                 emailVerified: user.emailVerified ?? null,
-                image: user.image ?? null,
+                image: avatarToImport ? null : (user.image ?? null),
             });
+
+            if (avatarToImport) {
+                const image = await importOAuthAvatar(row.id, avatarToImport);
+                const status = image
+                    ? await userRepository.updateImage(row.id, image)
+                    : null;
+
+                if (image && status === 'updated') {
+                    return toAdapterUser({ ...row, image });
+                }
+            }
 
             return toAdapterUser(row);
         },

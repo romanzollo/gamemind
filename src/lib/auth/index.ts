@@ -6,7 +6,13 @@ import {
     isYandexSignInEnabled,
     yandexProvider,
 } from './providers';
-import { isVkIdSignInEnabled, vkIdProvider } from './vk-id';
+import { refreshImportedAvatar } from './oauth-avatar';
+import {
+    isVkIdSignInEnabled,
+    readVkIdAvatar,
+    VK_ID_PROVIDER_ID,
+    vkIdProvider,
+} from './vk-id';
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     ...authConfig,
@@ -19,12 +25,22 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     ],
     callbacks: {
         ...authConfig.callbacks,
-        async signIn({ user, account }) {
+        async signIn({ user, account, profile }) {
             if (account?.type !== 'oauth' && account?.type !== 'oidc') {
                 return true;
             }
 
-            return isOAuthSignInAllowed(account, user.email);
+            if (!(await isOAuthSignInAllowed(account, user.email))) {
+                return false;
+            }
+
+            // Старая ссылка VK на фото протухла — берём свежую из этого входа.
+            // До создания сессии: JWT прочитает аватар уже из БД.
+            if (account.provider === VK_ID_PROVIDER_ID) {
+                await refreshImportedAvatar(account, readVkIdAvatar(profile));
+            }
+
+            return true;
         },
     },
 });

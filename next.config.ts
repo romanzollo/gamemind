@@ -30,13 +30,15 @@ const SHARP_LINUX_NATIVE_FILES = [
 const nextConfig: NextConfig = {
     /**
      * Только маршруты, чьи Server Actions делают upload (admin questions,
-     * avatar в profile): +~15 МБ libvips не нужны функциям quiz hot path.
+     * avatar в profile) и вход (/api/auth копирует фото VK ID в аватар):
+     * +~15 МБ libvips не нужны функциям quiz hot path.
      * Ключ — picomatch по route без групп: `/[locale]/admin/questions/[id]/edit`.
      * Превью сайта (opengraph-image) читает woff-шрифты @fontsource с диска.
      */
     outputFileTracingIncludes: {
         '/*/admin/questions/**': SHARP_LINUX_NATIVE_FILES,
         '/*/profile': SHARP_LINUX_NATIVE_FILES,
+        '/api/auth/**': SHARP_LINUX_NATIVE_FILES,
         '/*/opengraph-image': [
             './node_modules/@fontsource/oswald/files/oswald-latin-600-normal.woff',
             './node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff',

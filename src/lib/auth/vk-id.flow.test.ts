@@ -29,11 +29,27 @@ const repository = vi.hoisted(() => ({
     findTakenUsernames: vi.fn(),
     createOAuthUser: vi.fn(),
     linkOAuthAccount: vi.fn(),
+    updateImage: vi.fn(),
     findByEmailForLogin: vi.fn(),
 }));
 
+const storagePut = vi.hoisted(() => vi.fn());
+
 vi.mock('@/entities/user/user.repository', () => ({
     userRepository: repository,
+}));
+
+// Фото VK копируется в наш storage; sharp и Blob в тесте не нужны.
+vi.mock('@/lib/storage', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('@/lib/storage')>()),
+    processAvatarToWebp: vi.fn(async () => ({
+        buffer: Buffer.from('webp'),
+        width: 512,
+        height: 512,
+        byteSize: 4,
+        mimeType: 'image/webp',
+    })),
+    getMediaStorage: () => ({ put: storagePut }),
 }));
 
 const ORIGIN = 'http://localhost:3000';
@@ -93,6 +109,12 @@ const vkFetch = vi.fn(
 
         if (url === USER_INFO_URL) {
             return jsonResponse({ user: vkUser });
+        }
+
+        if (url === vkUser.avatar) {
+            return new Response(new Uint8Array([1, 2, 3]), {
+                headers: { 'content-type': 'image/jpeg' },
+            });
         }
 
         return new Response('unexpected request', { status: 500 });
@@ -217,6 +239,11 @@ beforeEach(() => {
         }),
     );
     repository.linkOAuthAccount.mockResolvedValue(undefined);
+    repository.updateImage.mockResolvedValue('updated');
+    storagePut.mockImplementation(async ({ key }: { key: string }) => ({
+        key,
+        publicUrl: `/media/${key}`,
+    }));
 });
 
 afterEach(() => {
@@ -273,12 +300,17 @@ describe('VK ID sign-in through Auth.js', () => {
             access_token: 'vk-access-token',
         });
 
+        // Ссылка VK протухает: строка создаётся без неё, потом — наша копия.
         expect(repository.createOAuthUser).toHaveBeenCalledWith({
             username: 'Roman_Shchukin',
             email: 'roman@vk.com',
             emailVerified: null,
-            image: 'https://sun9-1.userapi.com/a.jpg',
+            image: null,
         });
+        expect(repository.updateImage).toHaveBeenCalledWith(
+            'user-new',
+            expect.stringMatching(/^\/media\/avatars\/user-new-.+\.webp$/),
+        );
         expect(repository.linkOAuthAccount).toHaveBeenCalledWith({
             userId: 'user-new',
             type: 'oauth',
@@ -297,6 +329,25 @@ describe('VK ID sign-in through Auth.js', () => {
         expect(response.headers.get('location')).toBe(`${ORIGIN}/ru/profile`);
         expect(repository.createOAuthUser).not.toHaveBeenCalled();
         expect(repository.linkOAuthAccount).not.toHaveBeenCalled();
+        // Аватар у игрока не из VK — повторный вход его не трогает.
+        expect(repository.updateImage).not.toHaveBeenCalled();
+    });
+
+    it('replaces a stale VK photo link on the next sign-in', async () => {
+        repository.findAuthUserByAccount.mockResolvedValue({
+            ...existingUser,
+            image: 'https://sun9-80.userapi.com/s/v1/ig1/old.jpg',
+        });
+
+        const jar = new CookieJar();
+        await startSignIn(jar);
+        const response = await finishSignIn(jar, SUCCESS_QUERY);
+
+        expect(response.headers.get('location')).toBe(`${ORIGIN}/ru/profile`);
+        expect(repository.updateImage).toHaveBeenCalledWith(
+            'user-existing',
+            expect.stringMatching(/^\/media\/avatars\/user-existing-/),
+        );
     });
 
     it('never links by email: another account with this email → OAuthAccountNotLinked', async () => {

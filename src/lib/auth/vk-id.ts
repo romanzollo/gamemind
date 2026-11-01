@@ -196,6 +196,12 @@ async function requestVkIdUserInfo({
     return parseVkIdUserInfo(await response.json().catch(() => null));
 }
 
+/** Ссылка на фото из профиля этого входа (callback signIn: тип Profile). */
+export function readVkIdAvatar(profile: unknown): string | null {
+    const parsed = vkIdUserInfoSchema.shape.user.safeParse(profile);
+    return parsed.success ? parsed.data.avatar?.trim() || null : null;
+}
+
 /** Логина у VK ID нет: ник адаптер соберёт из имени и фамилии. */
 export function toVkIdUser(profile: VkIdProfile): User {
     const name = [profile.first_name, profile.last_name]
