@@ -10,6 +10,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { QuizResultReview } from '@/features/quiz/components/QuizResultReview';
+import { publishResultReview } from '@/features/quiz/lib/result-share-store';
 import type { QuizResultReviewItem } from '@/features/quiz/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert } from '@/shared/ui';
@@ -83,6 +84,8 @@ export function QuizResultReviewClientLoader({
 
                         if (!cancelled && Array.isArray(data.items)) {
                             setItems(data.items);
+                            // Квадратики для «Поделиться» — из того же ответа.
+                            publishResultReview(sessionId, data.items);
                             setLoading(false);
                             setFailed(false);
                             return;

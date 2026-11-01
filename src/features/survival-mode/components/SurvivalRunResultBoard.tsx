@@ -30,6 +30,8 @@ type SurvivalRunResultBoardViewProps = {
     labels: Dictionary['survivalMode'];
     quizLabels: Dictionary['quiz'];
     playAgainAction: ReactNode;
+    /** «Поделиться» под действиями (ShareResult). */
+    shareAction?: ReactNode;
     leaderboardHref: string;
 };
 
@@ -70,6 +72,7 @@ export function SurvivalRunResultBoardView({
     labels,
     quizLabels,
     playAgainAction,
+    shareAction,
     leaderboardHref,
 }: SurvivalRunResultBoardViewProps) {
     const correctValue = labels.thisWaveContext
@@ -206,6 +209,8 @@ export function SurvivalRunResultBoardView({
                     {quizLabels.backHome}
                 </Link>
             </nav>
+
+            {shareAction}
         </section>
     );
 }

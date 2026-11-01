@@ -698,4 +698,23 @@ export const ruDictionary: Dictionary = {
             },
         },
     },
+    share: {
+        button: 'Поделиться',
+        copied: 'Результат скопирован — вставь его другу',
+        copyFailed: 'Не получилось скопировать. Попробуй ещё раз',
+        titleDaily: 'GameMind — Челлендж дня {date}',
+        titleClassic: 'GameMind — Классика · {difficulty}',
+        titleBlitz: 'GameMind — Блиц · {difficulty}',
+        titleSurvival: 'GameMind — Выживание · {difficulty}',
+        scoreLine: '{correct}/{total} · {points}',
+        points: {
+            one: '{n} очко',
+            few: '{n} очка',
+            many: '{n} очков',
+            other: '{n} очка',
+        },
+        survivalLine: '{points} за забег · волна {wave}',
+        streakLine: 'Серия: {days}',
+        invite: 'Сыграешь лучше?',
+    },
 };

@@ -762,4 +762,25 @@ export type Dictionary = {
             SURVIVAL_RUN_100: { title: string; description: string };
         };
     };
+    /** «Поделиться результатом» на странице результата. */
+    share: {
+        button: string;
+        /** Тост после копирования в буфер (компьютер). */
+        copied: string;
+        copyFailed: string;
+        /** `{date}` — дд.мм по Москве. */
+        titleDaily: string;
+        /** `{difficulty}` — подпись сложности. */
+        titleClassic: string;
+        titleBlitz: string;
+        titleSurvival: string;
+        /** `{correct}/{total} · {points}` */
+        scoreLine: string;
+        points: PluralForms;
+        /** `{points}`, `{wave}` */
+        survivalLine: string;
+        /** `{days}` — формы dailyChallenge.streakDays. */
+        streakLine: string;
+        invite: string;
+    };
 };

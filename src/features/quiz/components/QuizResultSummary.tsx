@@ -22,6 +22,8 @@ type QuizResultSummaryProps = {
      * Rematch = сразу новая партия с теми же правилами сессии.
      */
     playAgainAction: ReactNode;
+    /** «Поделиться» под действиями (ShareResult). */
+    shareAction?: ReactNode;
     /**
      * Secondary leaderboard href. Survival → `?mode=survival`.
      * Default: classic board.
@@ -42,6 +44,7 @@ export function QuizResultSummary({
     setupDifficulty,
     labels,
     playAgainAction,
+    shareAction,
     leaderboardHref,
 }: QuizResultSummaryProps) {
     const scoreText =
@@ -124,6 +127,8 @@ export function QuizResultSummary({
                     {labels.backHome}
                 </Link>
             </nav>
+
+            {shareAction}
         </section>
     );
 }

@@ -1640,6 +1640,21 @@ Important decision: generated questions should not go directly into live quizzes
 
 **Not chosen:** a stored `currentStreak` column — needs a write on every Daily submit (hot path) and a repair job for missed days; deriving from ≤ 365 dates per year is cheap.
 
+
+### Share result (October 31, 2026)
+
+**Decision:** a «Share» row under the result actions in every mode; text is built on the client from data the page already has.
+
+| Rule | Choice |
+|------|--------|
+| Text | Wordle-style: title (mode · difficulty, Daily — Moscow dd.mm), `correct/total · N points`, squares by review position (🟩 / 🟥 / ⬜ unanswered), Daily streak, invite + `https://www.game-mind.ru/{locale}?ref=share`. Survival: run score · wave, no squares. Emoji only in the shared text (a known share format); UI stays emoji-free |
+| Data | Score/title from server scalars; squares from the review the page already loads, streak from the streak block — both via `result-share-store` (no extra DB read). Review positions are **zero-based** |
+| Button | Touch (`pointer: coarse`) + Web Share API → system sheet (Telegram, VK, MAX, WhatsApp…); otherwise clipboard + toast |
+| Direct links | Telegram `t.me/share/url`, VK `vk.com/share.php` (title + OG preview), MAX `max.ru/:share?text=` (chat picker; iOS / Android / web, not the desktop app; documented by third parties, not by dev.max.ru) |
+| Preview | `[locale]/opengraph-image.tsx` (next/og, built at build time per locale) + `metadataBase`, openGraph, twitter card in the locale layout |
+
+**Not chosen (yet):** a public per-result page with a dynamic «8/10» OG image — results are private today; needs its own privacy decision.
+
 ## Achievements MVP (July 30, 2026) + catalog v2 + criteria progress (July 31, 2026)
 
 **Date:** 2026-07-30 (MVP kickoff ? shipped on prod). **Catalog v2:** 2026-07-31 (`06aeae2`). **Criteria progress UI:** 2026-07-31 (`8f600fb`).

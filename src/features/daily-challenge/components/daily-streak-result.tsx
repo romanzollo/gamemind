@@ -11,6 +11,7 @@ import { DailyStreakSummary } from '@/features/daily-challenge/components/daily-
 import { computeDailyStreak } from '@/features/daily-challenge/lib/compute-daily-streak';
 import { getMoscowDateKey } from '@/features/daily-challenge/lib/get-moscow-date-key';
 import { resolveStreakGoal } from '@/features/daily-challenge/lib/resolve-streak-goal';
+import { PublishDailyStreakForShare } from '@/features/quiz/components/ShareResult';
 import type { Dictionary, Locale } from '@/shared/i18n';
 
 type DailyStreakResultProps = {
@@ -37,7 +38,10 @@ export async function DailyStreakResult({
     const streak = computeDailyStreak(playedDateKeys, getMoscowDateKey());
 
     return (
-        <DailyStreakSummary
+        <>
+            {/* Серия — и в текст «Поделиться». */}
+            <PublishDailyStreakForShare days={streak.current} />
+            <DailyStreakSummary
             className="mt-4"
             streak={streak}
             locale={locale}
@@ -45,6 +49,7 @@ export async function DailyStreakResult({
             nextGoal={resolveStreakGoal(streak, dictionary)}
             showNewBest
             showCountdown={streak.playedToday}
-        />
+            />
+        </>
     );
 }

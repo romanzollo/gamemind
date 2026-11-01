@@ -681,4 +681,23 @@ export const enDictionary = {
             },
         },
     },
+    share: {
+        button: 'Share',
+        copied: 'Result copied — paste it to a friend',
+        copyFailed: "Couldn't copy. Try again",
+        titleDaily: 'GameMind — Daily challenge {date}',
+        titleClassic: 'GameMind — Classic · {difficulty}',
+        titleBlitz: 'GameMind — Blitz · {difficulty}',
+        titleSurvival: 'GameMind — Survival · {difficulty}',
+        scoreLine: '{correct}/{total} · {points}',
+        points: {
+            one: '{n} point',
+            few: '{n} points',
+            many: '{n} points',
+            other: '{n} points',
+        },
+        survivalLine: '{points} in a run · wave {wave}',
+        streakLine: 'Streak: {days}',
+        invite: 'Can you beat it?',
+    },
 } satisfies Dictionary;

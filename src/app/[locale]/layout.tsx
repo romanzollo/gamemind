@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { AppSiteHeader } from '@/features/auth/components/AppSiteHeader';
 import { auth } from '@/lib/auth';
+import { SITE_ORIGIN } from '@/shared/config/site';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
 import { AppToaster } from '@/shared/ui/app-toaster';
 
@@ -35,8 +36,22 @@ export async function generateMetadata({
     const dictionary = getDictionary(locale);
 
     return {
+        // Абсолютные адреса для og:image и ссылок превью в мессенджерах.
+        metadataBase: new URL(SITE_ORIGIN),
         title: dictionary.metadata.title,
         description: dictionary.metadata.description,
+        openGraph: {
+            type: 'website',
+            siteName: 'GameMind',
+            title: dictionary.metadata.title,
+            description: dictionary.metadata.description,
+            locale: locale === 'ru' ? 'ru_RU' : 'en_US',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: dictionary.metadata.title,
+            description: dictionary.metadata.description,
+        },
     };
 }
 

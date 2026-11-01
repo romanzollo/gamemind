@@ -8,6 +8,9 @@ import { survivalRunRepository } from '@/entities/survival-run/survival-run.repo
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
 import { DailyStreakResult } from '@/features/daily-challenge/components/daily-streak-result';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
+import { ShareResult } from '@/features/quiz/components/ShareResult';
+import { buildShareTitle } from '@/features/quiz/lib/build-result-share';
+import { getSessionDifficultyLabel } from '@/features/quiz/lib/session-difficulty-label';
 import { ResultSecondaryPanel } from '@/features/quiz/components/ResultSecondaryPanel';
 import { ClassicRematchButton } from '@/features/quiz/components/ClassicRematchButton';
 import { getMaxPossibleScore } from '@/features/quiz/lib/scoring';
@@ -19,6 +22,7 @@ import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematc
 import { requireUser } from '@/lib/auth/guards';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { getDictionary, isLocale } from '@/shared/i18n';
+import { SITE_ORIGIN } from '@/shared/config/site';
 import { InlineAlert } from '@/shared/ui';
 
 // Result создаётся сразу после submit и принадлежит конкретному пользователю.
@@ -264,6 +268,55 @@ export default async function QuizResultPage({
                       }
                     : null;
 
+    // «Поделиться»: заголовок и счёт — со скаляров summary; квадратики и
+    // серия подтянутся на клиенте из разбора и блока серии.
+    const currentSurvivalWave = survivalRunBoard?.waves.find(
+        (wave) => wave.sessionId === sessionId,
+    );
+    const shareAction = summary ? (
+        <ShareResult
+            locale={safeLocale}
+            sessionId={sessionId}
+            url={`${SITE_ORIGIN}/${safeLocale}?ref=share`}
+            labels={dictionary.share}
+            streakDaysForms={dictionary.dailyChallenge.streakDays}
+            title={buildShareTitle(
+                {
+                    mode: summary.isDaily
+                        ? 'daily'
+                        : summary.isSurvival
+                          ? 'survival'
+                          : summary.isTimed
+                            ? 'blitz'
+                            : 'classic',
+                    difficultyLabel: getSessionDifficultyLabel(
+                        summary.setupDifficulty,
+                        dictionary.quiz,
+                    ),
+                    completedAt: summary.completedAt,
+                },
+                dictionary.share,
+            )}
+            result={
+                summary.isSurvival && survivalRunBoard
+                    ? {
+                          kind: 'survival',
+                          runScore: survivalRunBoard.totalScore,
+                          waveIndex:
+                              currentSurvivalWave?.waveIndex ??
+                              survivalRunBoard.waves.length,
+                      }
+                    : {
+                          kind: 'quiz',
+                          correct: summary.correctCount,
+                          total: summary.totalQuestions,
+                          score: summary.score,
+                          isDaily: summary.isDaily,
+                      }
+            }
+        />
+    ) : null;
+
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
             {summaryLoadFailed || !summary ? (
@@ -299,6 +352,7 @@ export default async function QuizResultPage({
                             labels={survivalLabels}
                             quizLabels={dictionary.quiz}
                             playAgainAction={playAgainAction}
+                            shareAction={shareAction}
                             leaderboardHref={leaderboardHref}
                         />
                     ) : (
@@ -311,6 +365,7 @@ export default async function QuizResultPage({
                             setupDifficulty={summary.setupDifficulty}
                             labels={dictionary.quiz}
                             playAgainAction={playAgainAction}
+                            shareAction={shareAction}
                             leaderboardHref={leaderboardHref}
                         />
                     )}
