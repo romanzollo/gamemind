@@ -39,7 +39,7 @@ const linkClassName =
     'rounded-md px-2 py-1 text-sm text-muted transition hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
 const profileLinkClassName =
-    'inline-flex items-center gap-2 rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+    'inline-flex items-center rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
 export function HeaderAuthControls({
     locale,
@@ -113,13 +113,17 @@ export function HeaderAuthControls({
                     aria-current={profileActive ? 'page' : undefined}
                     title={user.username}
                 >
-                    <UserAvatar
-                        src={user.image}
-                        size="sm"
-                        alt={user.username}
-                    />
-                    <span className="hidden max-w-28 truncate text-sm text-muted xl:inline">
-                        {user.username}
+                    {/* PendingLink оборачивает детей в строчный span: без своей
+                        flex-строки аватар (блок) выталкивал ник на новую строку. */}
+                    <span className="flex items-center gap-2">
+                        <UserAvatar
+                            src={user.image}
+                            size="sm"
+                            alt={user.username}
+                        />
+                        <span className="hidden max-w-28 truncate text-sm text-muted xl:inline">
+                            {user.username}
+                        </span>
                     </span>
                 </PendingLink>
                 <form action={logoutAction} className="hidden lg:block">
