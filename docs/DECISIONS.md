@@ -22,7 +22,7 @@ For a stable overview of layers, Neon access, quiz invariants, auth, and media, 
 
 - Use Auth.js / NextAuth v5.
 - Use credentials auth for MVP.
-- OAuth is postponed until after core MVP flow is stable.
+- OAuth is postponed until after core MVP flow is stable. *(November 2026: Yandex ID / VK ID and guests — see «Accounts without a password».)*
 - Store passwords as bcryptjs hashes.
 - Use JWT sessions for MVP.
 - Store `id`, `username`, and `role` in JWT/session.
@@ -2299,3 +2299,58 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
 **Still open:**
 - **Survival keeps `isCorrect` in the play DTO** (instant bank UX without a per-answer request, see Survival Mode MVP). Removing it needs server-side lock-in per answer — a latency trade-off from RU, separate decision.
 - Reverse image search can identify a screenshot — inherent to the question type, not a code leak.
+
+## Accounts without a password: OAuth and guests (November 1, 2026)
+
+**Context:** ROADMAP 3.3 (sign in with Yandex ID / VK ID) and 3.4 (play without sign-up). Until now every `User` had an email and a bcrypt password, and the whole game (`QuizSession`, `QuizResult`, `SurvivalRun`, question cycles, achievements) hangs on a required `userId`.
+
+**Decision:** one `User` table for three kinds of accounts. The game code does not know which kind it serves.
+
+| Kind | Row | Sign-in |
+|------|-----|---------|
+| Password | email + `passwordHash` (as before) | `credentials` provider |
+| OAuth | `Account` row (`provider`, `providerAccountId`); `passwordHash` null; email only if the provider shared one | Auth.js Yandex / VK ID provider |
+| Guest | `isGuest = true`, no email, no password, username `guest_xxxxxx` | `guest` credentials provider that creates the row |
+
+**Schema (migration `20261101120000_user_optional_email_guest`):**
+
+- `User.email` becomes nullable: VK ID may not share an email, a guest has none. Postgres `UNIQUE` allows many `NULL`s; password login looks up by equality, so a missing email never matches.
+- `User.isGuest BOOLEAN NOT NULL DEFAULT false` — same pattern as `isTestAccount` (constant default: metadata-only on Postgres 11+).
+- No new index: `User` is small; the guest filter rides along the leaderboard queries the way `isTestAccount` does, and cleanup is a rare batch. Revisit if the table grows.
+- `Account` already exists in the schema (unused until now) — no new table.
+
+**OAuth (3.3):**
+
+| Rule | Choice |
+|------|--------|
+| Sessions | JWT stays. Users and accounts are persisted through a thin adapter over Prisma: `createUser` maps the provider profile onto our `User` (the stock `@auth/prisma-adapter` writes `name`, which our model does not have) |
+| Yandex | Built-in provider (`oauth.yandex.ru`, scopes `login:info login:email login:avatar`) |
+| VK | Own provider for **VK ID** (`id.vk.com`, OAuth 2.1 + PKCE). The built-in `vk` provider targets the legacy `oauth.vk.com`; confirm against the VK ID docs when the app is registered |
+| Username | From the provider login / name → `[a-zA-Z0-9_]`, 3–20 chars (Cyrillic transliterated); too short → `player`; taken → numeric suffix. The player can rename in the profile |
+| Email already used by a password account | Yandex: link automatically (Yandex returns a confirmed email). VK: never auto-link (confirmation is not guaranteed) — a new account; linking happens from the profile while signed in |
+| Password later | An account without `passwordHash` sees «Set password» instead of «Change password» (there is no current password to check) |
+
+**Guests (3.4):**
+
+| Rule | Choice |
+|------|--------|
+| Entry | «Play without sign-up» → `signIn('guest')` creates the row; JWT as for any user, plus `isGuest` |
+| Abuse | Shared rate-limit preset `guest` per IP |
+| Modes | Classic and Daily. Blitz / Survival → sign-up prompt |
+| Ratings | Guests are hidden from every leaderboard — same filter as `isTestAccount` |
+| Achievements | Computed as usual (same outbox), shown with a «save your progress» nudge |
+| Reserved names | The `guest_` prefix is not allowed for chosen usernames |
+| Claim by password | Registering while signed in as a guest updates **the same row** (email, username, password, `isGuest = false`). Nothing moves |
+| Claim by OAuth | The guest id travels in a signed short-lived cookie; after the OAuth sign-in (new or existing account) the guest's games are merged into that user in one transaction and the guest row is deleted. One path for both cases: Auth.js's own «link to the signed-in user» refuses an OAuth account that already belongs to someone else (`AccountNotLinked`) |
+| Merge conflicts | Daily: if both played the same day, the existing user's attempt stays (`UNIQUE (userId, dailyChallengeId)`), the guest's is dropped. The guest's question cycle is dropped. Achievements are re-evaluated for the target through the outbox |
+| Cleanup | Guests with no game and no sign-in for 30 days are deleted (cascade). A script first; cron only if needed |
+
+**Hot path:** untouched. Start / submit / result keep reading `userId`; a guest is a user. New checks live only at mode entry (guest + Blitz/Survival) and in leaderboards.
+
+**Not chosen:**
+
+- Nullable `QuizSession.userId` + a guest-key cookie: every query on the submit/result path would branch on two identities (hot-path risk), and claiming would rewrite rows.
+- A browser-only guest (localStorage) replayed on sign-up: the server would have to trust client results — forbidden, scoring is server-side.
+- `allowDangerousEmailAccountLinking` on every provider: an unconfirmed email would open someone else's account.
+
+**Deploy order:** apply the migration on prod **before** pushing code that reads `isGuest` (otherwise `42703`). Making `email` nullable alone is backward compatible with the running code.

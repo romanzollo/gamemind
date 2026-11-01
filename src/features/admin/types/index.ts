@@ -92,7 +92,7 @@ export type AdminBulkActionResult =
 export type AdminUserListItem = {
     id: string;
     username: string;
-    email: string;
+    email: string | null;
     role: 'USER' | 'ADMIN';
     isActive: boolean;
     /** ISO string — безопасно для Client Components */

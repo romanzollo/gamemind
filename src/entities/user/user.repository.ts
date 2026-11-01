@@ -8,7 +8,7 @@ import type { Role } from '@prisma/client';
 export type SafeUser = {
     id: string;
     username: string;
-    email: string;
+    email: string | null;
     role: Role;
     createdAt: Date;
 };
@@ -17,7 +17,7 @@ export type SafeUser = {
 export type AdminUserRow = {
     id: string;
     username: string;
-    email: string;
+    email: string | null;
     role: Role;
     isActive: boolean;
     createdAt: Date;
@@ -28,7 +28,7 @@ export type AdminUserRow = {
 export type SessionUserRow = {
     id: string;
     username: string;
-    email: string;
+    email: string | null;
     role: Role;
     image: string | null;
     isActive: boolean;
@@ -140,7 +140,7 @@ export const userRepository = {
             client.query<{
                 id: string;
                 username: string;
-                email: string;
+                email: string | null;
                 role: Role;
                 isActive: boolean;
                 createdAt: Date;
@@ -187,7 +187,7 @@ export const userRepository = {
             client.query<{
                 id: string;
                 username: string;
-                email: string;
+                email: string | null;
                 role: Role;
                 isActive: boolean;
                 createdAt: Date;

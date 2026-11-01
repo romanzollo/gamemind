@@ -142,7 +142,9 @@ export default async function AdminUserDetailPage({
                     <dt className="text-sm font-medium text-muted sm:w-40 sm:shrink-0">
                         {dictionary.admin.tableEmail}
                     </dt>
-                    <dd className="break-all text-foreground">{user.email}</dd>
+                    <dd className="break-all text-foreground">
+                        {user.email ?? '—'}
+                    </dd>
                 </div>
                 <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
                     <dt className="text-sm font-medium text-muted sm:w-40 sm:shrink-0">

@@ -60,7 +60,10 @@ enum QuestionPublicationStatus {
 model User {
   id            String    @id @default(cuid())
   username      String    @unique
-  email         String    @unique
+  /// NULL — вход без почты: VK ID не поделился email, у гостя почты нет.
+  /// Вход по паролю ищет по равенству, поэтому NULL никогда не совпадёт.
+  /// Canon: DECISIONS → Accounts without a password.
+  email         String?   @unique
   emailVerified DateTime?
   passwordHash  String?
   role          Role      @default(USER)
@@ -69,6 +72,9 @@ model User {
   /// Служебный аккаунт (прод-smoke после деплоя): играет как обычный игрок,
   /// но не попадает в рейтинги. Ставится скриптом mark-test-account.cjs.
   isTestAccount Boolean   @default(false)
+  /// Гость: играет без регистрации, скрыт из рейтингов. При регистрации
+  /// та же строка становится обычным аккаунтом (isGuest = false).
+  isGuest       Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

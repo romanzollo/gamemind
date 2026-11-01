@@ -259,7 +259,7 @@ function UserListCard({
                     <StatusBadge isActive={entry.isActive} labels={labels} />
                 </div>
                 <p className="mt-1 break-all text-sm text-muted">
-                    {entry.email}
+                    {entry.email ?? '—'}
                 </p>
                 <p className="mt-1 text-xs text-muted">
                     <span>
@@ -368,7 +368,7 @@ export function AdminUsersTable({
                                         </Link>
                                     </td>
                                     <td className="max-w-[12rem] truncate px-3 py-2.5 text-muted xl:max-w-[16rem]">
-                                        {entry.email}
+                                        {entry.email ?? '—'}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-2.5">
                                         <RoleBadge

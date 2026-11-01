@@ -128,9 +128,12 @@ export default async function ProfilePage({
                         <p className="truncate font-display text-lg font-semibold tracking-tight text-foreground sm:text-xl">
                             {session.user.username}
                         </p>
-                        <p className="truncate text-sm text-muted">
-                            {session.user.email}
-                        </p>
+                        {/* Почты нет у гостя и у входа через VK ID без email */}
+                        {session.user.email ? (
+                            <p className="truncate text-sm text-muted">
+                                {session.user.email}
+                            </p>
+                        ) : null}
                         <p className="mt-0.5 font-mono text-xs tabular-nums text-muted">
                             {session.user.role}
                         </p>
