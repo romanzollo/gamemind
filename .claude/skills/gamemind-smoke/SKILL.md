@@ -29,8 +29,10 @@ description: Проверка горячего пути квиза GameMind (Cla
 Проверка Выживания по БД (только чтение): у последней волны
 `survivalClockOk = true`, `SurvivalRun.totalScore` вырос.
 
-Полезно: `document.querySelector('[aria-live=polite]')` — текст таймера;
-правильный вариант Выживания есть в props React (DTO отдаёт `isCorrect`).
+Полезно: `document.querySelector('[aria-live=polite]')` — текст таймера.
+Правильного варианта в браузере нет ни в одном режиме (Answer lock-in, 4.4b):
+исход каждого ответа — в ответе `POST /api/quiz/<id>/answer` (вкладка
+Network), итог — в разборе на результате.
 
 ## Что смотреть в логе dev
 
