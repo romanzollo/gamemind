@@ -54,8 +54,16 @@ vi.mock('@/features/achievements/lib/award-achievements-for-user', () => ({
 }));
 
 // Вне Next запроса нет: next/headers отдаёт cookie того GET, что идёт сейчас.
+// host и протокол — как у настоящего запроса: без них auth() строит https-URL
+// и ищет cookie __Secure-. Локально это маскирует AUTH_URL из .env (его
+// подгружает Prisma Client), в CI .env нет.
 vi.mock('next/headers', () => ({
-    headers: async () => new Headers({ cookie: requestCookies.header }),
+    headers: async () =>
+        new Headers({
+            cookie: requestCookies.header,
+            host: 'localhost:3000',
+            'x-forwarded-proto': 'http',
+        }),
     cookies: async () => ({ get: () => undefined, set: () => {} }),
 }));
 
