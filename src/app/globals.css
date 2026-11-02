@@ -211,6 +211,15 @@ html {
     scrollbar-gutter: stable;
 }
 
+/*
+ * Шторка (BottomSheet): страница под открытым <dialog> не прокручивается.
+ * Без `:modal` — Lightning CSS его не знает и выбрасывает правило целиком;
+ * немодальных <dialog> в приложении нет.
+ */
+html:has(dialog[open]) {
+    overflow: hidden;
+}
+
 @media (min-width: 640px) {
     body {
         /* py-3 (24) + control (~40) + border ≈ 65px */

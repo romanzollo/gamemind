@@ -31,6 +31,7 @@ export const enDictionary = {
         loading: 'Loading…',
         submitting: 'Submitting…',
         working: 'One sec…',
+        close: 'Close',
         skipToContent: 'Skip to content',
         mainNav: 'Main navigation',
     },

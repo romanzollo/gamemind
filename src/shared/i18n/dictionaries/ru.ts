@@ -31,6 +31,7 @@ export const ruDictionary: Dictionary = {
         loading: 'Загрузка…',
         submitting: 'Отправка…',
         working: 'Секунду…',
+        close: 'Закрыть',
         skipToContent: 'Перейти к содержимому',
         mainNav: 'Основная навигация',
     },

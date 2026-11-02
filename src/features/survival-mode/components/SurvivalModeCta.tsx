@@ -1,29 +1,29 @@
 /**
- * Server CTA Survival Mode: optional auth → панель старта.
+ * Server CTA Survival Mode: optional auth → компактная карточка лобби.
  *
- * Живёт на mode lobby `/quiz` (не на Home — anti-duplication IA).
- * Presentation only. Snapshot / SurvivalRun пишет `startSurvivalQuizAction`.
- * Start CTA = primary (равная арена с Blitz/Classic).
+ * Живёт на mode lobby `/quiz`. Presentation only.
+ * Snapshot / SurvivalRun пишет `startSurvivalQuizAction`.
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  */
 
 import { SurvivalModeCtaPanel } from '@/features/survival-mode/components/SurvivalModeCtaPanel';
+import type { SurvivalDifficulty } from '@/features/survival-mode/types';
 import { auth } from '@/lib/auth';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import type { ButtonVariant } from '@/shared/ui';
 
 type SurvivalModeCtaProps = {
     locale: Locale;
     dictionary: Dictionary;
     className?: string;
-    startVariant?: ButtonVariant;
+    /** Последний выбор сложности (cookie лобби). */
+    initialDifficulty: SurvivalDifficulty;
 };
 
 export async function SurvivalModeCta({
     locale,
     dictionary,
     className = '',
-    startVariant = 'primary',
+    initialDifficulty,
 }: SurvivalModeCtaProps) {
     const session = await auth();
 
@@ -33,7 +33,7 @@ export async function SurvivalModeCta({
                 locale={locale}
                 dictionary={dictionary}
                 isAuthenticated={Boolean(session?.user?.id)}
-                startVariant={startVariant}
+                initialDifficulty={initialDifficulty}
             />
         </div>
     );

@@ -1,9 +1,9 @@
 /**
- * Клиентская панель Timed Mode (Scoreboard Editorial).
+ * Клиентская панель Timed Mode: компактная карточка лобби → шторка.
  *
- * Зачем Client: форма start (useActionState) + difficulty select + pending.
- * Auth решает Server parent; гость видит login, не «битую» кнопку.
- * Mix = 4-й option в том же select, не 4-я карточка lobby.
+ * Зачем Client: форма start (useActionState), чипы сложности, pending.
+ * Auth решает Server parent; без сессии в шторке приглашение войти, не
+ * «битая» кнопка. Mix = 4-й чип, не 4-я карточка лобби.
  * Presentation only — scoring / snapshot / submit gate не трогаем.
  */
 
@@ -11,17 +11,20 @@
 
 import { useActionState, useId, useState } from 'react';
 
-import { startTimedQuizAction } from '@/features/timed-mode/actions';
+import { ModeSheetCard } from '@/features/quiz/components/ModeSheetCard';
+import { setupDifficultyChipOptions } from '@/features/quiz/lib/difficulty-chip-options';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import { getMixedSplitMetaKey } from '@/features/quiz/lib/mixed-difficulty-split';
+import { rememberModeSetup } from '@/features/quiz/lib/mode-setup-memory';
+import { startTimedQuizAction } from '@/features/timed-mode/actions';
 import { TIMED_MODE_MVP_RULES } from '@/features/timed-mode/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import {
+    ChipRadioGroup,
     InlineAlert,
     PendingLink,
     SubmitButton,
     buttonClassName,
-    type ButtonVariant,
 } from '@/shared/ui';
 import type { QuizSetupDifficulty } from '@/types';
 
@@ -29,38 +32,21 @@ type TimedModeCtaPanelProps = {
     locale: Locale;
     dictionary: Dictionary;
     isAuthenticated: boolean;
-    startVariant?: ButtonVariant;
+    /** Последний выбор из cookie (или значение по умолчанию). */
+    initialDifficulty: QuizSetupDifficulty;
 };
-
-const fieldClassName =
-    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:max-w-xs';
-
-const labelClassName = 'text-sm font-medium text-foreground';
-
-function asSetupDifficulty(value: string): QuizSetupDifficulty {
-    if (
-        value === 'EASY' ||
-        value === 'MEDIUM' ||
-        value === 'HARD' ||
-        value === 'MIXED'
-    ) {
-        return value;
-    }
-
-    return 'MEDIUM';
-}
 
 export function TimedModeCtaPanel({
     locale,
     dictionary,
     isAuthenticated,
-    startVariant = 'primary',
+    initialDifficulty,
 }: TimedModeCtaPanelProps) {
     const labels = dictionary.timedMode;
     const quizLabels = dictionary.quiz;
     const [state, formAction] = useActionState(startTimedQuizAction, {});
     const [difficulty, setDifficulty] =
-        useState<QuizSetupDifficulty>('MEDIUM');
+        useState<QuizSetupDifficulty>(initialDifficulty);
     const mixedMetaId = useId();
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
     const mixedMetaKey =
@@ -70,106 +56,64 @@ export function TimedModeCtaPanel({
     const mixedMetaText = mixedMetaKey ? quizLabels[mixedMetaKey] : null;
 
     return (
-        <section
-            aria-labelledby="timed-mode-heading"
-            className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
-            data-testid="blitz-setup"
+        <ModeSheetCard
+            title={labels.title}
+            summary={`${labels.eyebrow} · ${labels.meta}`}
+            description={labels.description}
+            hint={labels.leaderboardHint}
+            closeLabel={dictionary.common.close}
+            testId="blitz-setup"
         >
-            <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
-                {labels.eyebrow}
-            </p>
+            {!isAuthenticated ? (
+                <div className="flex flex-col gap-3">
+                    <p className="text-sm text-muted">{labels.loginPrompt}</p>
+                    <PendingLink
+                        href={`/${locale}/login`}
+                        className={buttonClassName({ className: 'w-full' })}
+                    >
+                        {labels.loginLink}
+                    </PendingLink>
+                </div>
+            ) : (
+                <form
+                    action={formAction}
+                    onSubmit={() => rememberModeSetup('blitz', difficulty)}
+                    className="space-y-5"
+                >
+                    <input type="hidden" name="locale" value={locale} />
 
-            <h2
-                id="timed-mode-heading"
-                className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground sm:text-2xl"
-            >
-                {labels.title}
-            </h2>
+                    <ChipRadioGroup
+                        name="difficulty"
+                        legend={quizLabels.difficultyLabel}
+                        options={setupDifficultyChipOptions(quizLabels)}
+                        value={difficulty}
+                        onChange={setDifficulty}
+                        describedBy={mixedMetaText ? mixedMetaId : undefined}
+                    />
 
-            <p className="mt-2 max-w-prose text-sm leading-snug text-muted">
-                {labels.description}
-            </p>
-
-            <p className="mt-3 font-mono text-xs tabular-nums text-muted">
-                <span className="inline border-l-2 border-primary pl-2">
-                    {labels.meta}
-                </span>
-            </p>
-
-            <p className="mt-2 hidden max-w-prose text-xs leading-snug text-muted sm:block">
-                {labels.leaderboardHint}
-            </p>
-
-            <div className="mt-4">
-                {!isAuthenticated ? (
-                    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
-                        <p className="text-sm text-muted">{labels.loginPrompt}</p>
-                        <PendingLink
-                            href={`/${locale}/login`}
-                            className={buttonClassName({
-                                variant: 'secondary',
-                                className: 'sm:w-auto',
-                            })}
+                    {mixedMetaText ? (
+                        <p
+                            id={mixedMetaId}
+                            className="font-mono text-xs tabular-nums text-muted"
                         >
-                            {labels.loginLink}
-                        </PendingLink>
-                    </div>
-                ) : (
-                    <form action={formAction} className="space-y-3">
-                        <input type="hidden" name="locale" value={locale} />
-
-                        <label className="flex flex-col gap-2">
-                            <span className={labelClassName}>
-                                {quizLabels.difficultyLabel}
+                            <span className="border-l-2 border-primary pl-2">
+                                {mixedMetaText}
                             </span>
-                            <select
-                                name="difficulty"
-                                value={difficulty}
-                                required
-                                aria-describedby={
-                                    mixedMetaText ? mixedMetaId : undefined
-                                }
-                                className={fieldClassName}
-                                onChange={(event) => {
-                                    setDifficulty(
-                                        asSetupDifficulty(event.target.value),
-                                    );
-                                }}
-                            >
-                                <option value="EASY">{quizLabels.easy}</option>
-                                <option value="MEDIUM">
-                                    {quizLabels.medium}
-                                </option>
-                                <option value="HARD">{quizLabels.hard}</option>
-                                <option value="MIXED">{quizLabels.mixed}</option>
-                            </select>
-                        </label>
+                        </p>
+                    ) : null}
 
-                        {mixedMetaText ? (
-                            <p
-                                id={mixedMetaId}
-                                className="font-mono text-xs tabular-nums text-muted"
-                            >
-                                <span className="border-l-2 border-primary pl-2">
-                                    {mixedMetaText}
-                                </span>
-                            </p>
-                        ) : null}
-
-                        <SubmitButton
-                            variant={startVariant}
-                            pendingLabel={dictionary.common.working}
-                            className="w-full sm:w-auto"
-                        >
-                            {labels.startButton}
-                        </SubmitButton>
-                    </form>
-                )}
-            </div>
+                    <SubmitButton
+                        pendingLabel={dictionary.common.working}
+                        className="w-full"
+                    >
+                        {labels.startButton}
+                    </SubmitButton>
+                </form>
+            )}
 
             {errorMessage ? (
                 <InlineAlert className="mt-3">{errorMessage}</InlineAlert>
             ) : null}
-        </section>
+        </ModeSheetCard>
     );
 }

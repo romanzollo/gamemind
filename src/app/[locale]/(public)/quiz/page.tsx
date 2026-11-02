@@ -1,5 +1,8 @@
+import { cookies } from 'next/headers';
+
 import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
 import { QuizSetupForm } from '@/features/quiz/components/QuizSetupForm';
+import { readModeSetupMemory } from '@/features/quiz/lib/mode-setup-memory';
 import { SurvivalModeCta } from '@/features/survival-mode/components/SurvivalModeCta';
 import { TimedModeCta } from '@/features/timed-mode/components/TimedModeCta';
 import { getDictionary, isLocale } from '@/shared/i18n';
@@ -14,15 +17,19 @@ type QuizSetupPageProps = {
 };
 
 /**
- * Mode lobby: единственное место полных Daily / Timed / Survival / Classic.
- * Home только приглашает сюда — без дубля mode cards (IA Model 1).
- * Classic chrome живёт внутри QuizSetupForm (не отдельный eyebrow над карточкой).
- * Start CTA у Blitz / Survival / Classic — primary: равные арены, не «серый гость».
+ * Mode lobby: Челлендж дня целиком (серия, рейтинг дня), ниже — компактные
+ * карточки Классики, Блица и Выживания; настройки — в шторке (П2).
+ * Классика первой из трёх: самый частый режим.
+ * Чипы шторок открываются на прошлом выборе — cookie `mode-setup-memory`.
  */
 export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
     const { locale } = await params;
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
+    const cookieStore = await cookies();
+    const setupMemory = readModeSetupMemory(
+        (name) => cookieStore.get(name)?.value,
+    );
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
@@ -44,23 +51,27 @@ export default async function QuizSetupPage({ params }: QuizSetupPageProps) {
                 />
             </div>
 
-            <TimedModeCta
-                locale={safeLocale}
-                dictionary={dictionary}
-                className="mt-4 sm:mt-5"
-                startVariant="primary"
-            />
-
-            <div id="mode-survival" className="scroll-mt-24">
-                <SurvivalModeCta
+            <div className="mt-4 flex flex-col gap-3 sm:mt-5">
+                <QuizSetupForm
                     locale={safeLocale}
                     dictionary={dictionary}
-                    className="mt-4 sm:mt-5"
-                    startVariant="primary"
+                    initialSetup={setupMemory.classic}
                 />
-            </div>
 
-            <QuizSetupForm locale={safeLocale} dictionary={dictionary} />
+                <TimedModeCta
+                    locale={safeLocale}
+                    dictionary={dictionary}
+                    initialDifficulty={setupMemory.blitz.difficulty}
+                />
+
+                <div id="mode-survival" className="scroll-mt-24">
+                    <SurvivalModeCta
+                        locale={safeLocale}
+                        dictionary={dictionary}
+                        initialDifficulty={setupMemory.survival.difficulty}
+                    />
+                </div>
+            </div>
         </main>
     );
 }

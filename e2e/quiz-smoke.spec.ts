@@ -33,20 +33,23 @@ async function startFromLobby(
     await page.goto('/ru/quiz');
 
     const setup = page.getByTestId(setupTestId);
-    const start = setup.locator('button[type="submit"]');
+    const open = setup.getByTestId('mode-open');
+    // Чип = <label> вокруг скрытого радио: жмём подпись, как палец.
+    const chip = (name: string, value: string) =>
+        setup.locator('label', {
+            has: page.locator(`input[name="${name}"][value="${value}"]`),
+        });
 
-    await waitForHydration(start);
-    await setup
-        .locator('select[name="difficulty"]')
-        .selectOption(options.difficulty);
+    // Карточка лобби → шторка с чипами (4.2b).
+    await waitForHydration(open);
+    await open.click();
+    await chip('difficulty', options.difficulty).click();
 
     if (options.questionCount) {
-        await setup
-            .locator('select[name="questionCount"]')
-            .selectOption(options.questionCount);
+        await chip('questionCount', options.questionCount).click();
     }
 
-    await start.click();
+    await setup.locator('button[type="submit"]').click();
     await page.waitForURL(SESSION_URL);
 }
 

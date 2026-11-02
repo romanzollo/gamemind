@@ -1,29 +1,29 @@
 /**
- * Server CTA Timed Mode: optional auth → панель старта.
+ * Server CTA Timed Mode: optional auth → компактная карточка лобби.
  *
- * Живёт на mode lobby `/quiz` (не на Home — anti-duplication IA).
- * Presentation only. Дедлайн / snapshot пишет `startTimedQuizAction`.
+ * Живёт на mode lobby `/quiz`. Presentation only.
+ * Дедлайн / snapshot пишет `startTimedQuizAction`.
  * Canon: docs/DECISIONS.md → Timed Mode MVP.
  */
 
 import { TimedModeCtaPanel } from '@/features/timed-mode/components/TimedModeCtaPanel';
 import { auth } from '@/lib/auth';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import type { ButtonVariant } from '@/shared/ui';
+import type { QuizSetupDifficulty } from '@/types';
 
 type TimedModeCtaProps = {
     locale: Locale;
     dictionary: Dictionary;
     className?: string;
-    /** Когда Daily in progress — secondary, чтобы не спорить с «продолжить». */
-    startVariant?: ButtonVariant;
+    /** Последний выбор сложности (cookie лобби). */
+    initialDifficulty: QuizSetupDifficulty;
 };
 
 export async function TimedModeCta({
     locale,
     dictionary,
     className = '',
-    startVariant = 'primary',
+    initialDifficulty,
 }: TimedModeCtaProps) {
     const session = await auth();
 
@@ -33,7 +33,7 @@ export async function TimedModeCta({
                 locale={locale}
                 dictionary={dictionary}
                 isAuthenticated={Boolean(session?.user?.id)}
-                startVariant={startVariant}
+                initialDifficulty={initialDifficulty}
             />
         </div>
     );

@@ -30,6 +30,8 @@ export type Dictionary = {
         loading: string;
         submitting: string;
         working: string;
+        /** Кнопка ✕ шторки и диалогов (подпись для скринридера). */
+        close: string;
         /** Skip-ссылка → контент после sticky-хедера (a11y). */
         skipToContent: string;
         /** Подпись landmark основной навигации (шапка / нижняя панель). */

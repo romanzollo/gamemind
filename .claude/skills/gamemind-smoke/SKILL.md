@@ -44,8 +44,11 @@ description: Проверка горячего пути квиза GameMind (Cla
   под dev smoke-игроком (`gm_smoke`, данные в `.env`, скрыт из рейтингов).
   Это быстрый первый прогон перед ручной матрицей, а не её замена.
 - Селекторы — `data-testid` (`login-form`, `classic-setup`, `blitz-setup`,
-  `quiz-submit`, `quiz-result-score`) и роль `radiogroup`. Переименовал
-  testid или переделал форму — поправь `e2e/` в том же коммите.
+  `survival-setup`, `mode-open`, `quiz-play`, `quiz-option`, `quiz-submit`,
+  `quiz-result-score`). Старт из лобби: карточка режима (`mode-open`) →
+  шторка → чип = `<label>` вокруг радио `difficulty` / `questionCount` →
+  submit. Переименовал testid или переделал форму — поправь `e2e/` в том же
+  коммите.
 
 ## Прод после деплоя (www.game-mind.ru)
 

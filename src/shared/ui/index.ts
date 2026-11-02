@@ -1,6 +1,8 @@
 // Shared UI components (Button, Input, Card) will live here.
+export { BottomSheet } from './bottom-sheet';
 export { Button, buttonClassName } from './button';
 export type { ButtonVariant } from './button';
+export { ChipRadioGroup } from './chip-radio-group';
 export { EmptyState } from './empty-state';
 export { GameMindMark } from './game-mind-mark';
 export { InlineAlert } from './inline-alert';

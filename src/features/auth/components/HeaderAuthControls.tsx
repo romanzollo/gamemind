@@ -38,7 +38,7 @@ const profileLinkClassName =
  *
  * Игрок: аватар и «Выйти» — только с `lg`. На телефоне профиль — вкладка
  * нижней панели, а «Выйти» есть на странице профиля.
- * Посетитель: «Войти» на любой ширине, «Регистрация» — с `lg`
+ * Посетитель: «Войти» с 360 px, «Регистрация» — с `lg`
  * (на телефоне она и «Играть без регистрации» — на странице входа).
  */
 export function HeaderAuthControls({
@@ -92,13 +92,17 @@ export function HeaderAuthControls({
 
     return (
         <div className="flex items-center gap-2">
-            <PendingLink
-                href={localizedHref(locale, '/login')}
-                className={navActiveClassName(loginActive, linkClassName)}
-                aria-current={loginActive ? 'page' : undefined}
-            >
-                {dictionary.nav.login}
-            </PendingLink>
+            {/* Уже 360 px «Войти» не влезает рядом с языком и темой;
+                вход там — вкладка «Профиль» нижней панели. */}
+            <div className="max-[359px]:hidden">
+                <PendingLink
+                    href={localizedHref(locale, '/login')}
+                    className={navActiveClassName(loginActive, linkClassName)}
+                    aria-current={loginActive ? 'page' : undefined}
+                >
+                    {dictionary.nav.login}
+                </PendingLink>
+            </div>
             <div className="hidden lg:block">
                 <PendingLink
                     href={localizedHref(locale, '/register')}
