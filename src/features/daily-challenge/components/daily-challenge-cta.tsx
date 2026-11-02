@@ -1,7 +1,7 @@
 /**
  * Server CTA Daily Challenge: auth (optional) → статус → панель + рейтинг дня.
  *
- * Живёт на mode lobby `/quiz` (не на Home — anti-duplication IA).
+ * Живёт на главной — месте игры (ADR «Home is the play hub»).
  * Чтение через `getDailyLobbyView` (один Direct TLS на happy path).
  */
 

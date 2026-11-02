@@ -30,7 +30,8 @@ async function startFromLobby(
     setupTestId: 'classic-setup' | 'blitz-setup',
     options: { difficulty: string; questionCount?: string },
 ): Promise<void> {
-    await page.goto('/ru/quiz');
+    // Режимы — на главной (бывшее лобби /quiz ведёт туда же).
+    await page.goto('/ru');
 
     const setup = page.getByTestId(setupTestId);
     const open = setup.getByTestId('mode-open');

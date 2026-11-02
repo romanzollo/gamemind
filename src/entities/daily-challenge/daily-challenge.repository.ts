@@ -6,7 +6,7 @@
  * - classic quiz pick (`ORDER BY RANDOM`) сюда не тащим — только id pool + upsert дня;
  * - scoring / snapshot write не меняем.
  *
- * Lobby `/quiz`: `findLobbyPanelState` — challenge + attempt + board на **одном**
+ * Главная: `findLobbyPanelState` — challenge + attempt + board на **одном**
  * Direct TLS (раньше 3–4 подряд клинили Classic/Blitz start).
  *
  * Гонка двух первых игроков: INSERT … ON CONFLICT DO NOTHING → SELECT.
@@ -435,7 +435,7 @@ export type DailyLobbyPanelState = {
 };
 
 /**
- * Mode lobby `/quiz`: challenge + attempt + board + даты серии на одном
+ * Главная (место игры): challenge + attempt + board + даты серии на одном
  * Direct client (короткие запросы на уже открытом соединении).
  * Не вызывает ensure/INSERT — только чтение. Write остаётся в ensureDailyChallenge.
  */

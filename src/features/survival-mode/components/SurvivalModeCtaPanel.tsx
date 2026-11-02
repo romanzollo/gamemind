@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Клиентская панель Survival Mode: компактная карточка лобби → шторка.
+ * Клиентская панель Survival Mode: компактная карточка → шторка.
  *
  * Зачем Client: форма start (useActionState), чипы сложности, pending.
  * Auth решает Server parent; без сессии в шторке приглашение войти, не

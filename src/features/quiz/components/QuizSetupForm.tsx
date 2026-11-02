@@ -2,6 +2,7 @@
 
 import { useActionState, useId, useState } from 'react';
 
+import { GuestPlayPrompt } from '@/features/auth/components/GuestPlayPrompt';
 import { startQuizAction } from '@/features/quiz/actions';
 import { ModeSheetCard } from '@/features/quiz/components/ModeSheetCard';
 import { setupDifficultyChipOptions } from '@/features/quiz/lib/difficulty-chip-options';
@@ -24,6 +25,8 @@ import type { QuizSetupDifficulty } from '@/types';
 type QuizSetupFormProps = {
     locale: Locale;
     dictionary: Dictionary;
+    /** Есть сессия (игрок или гость). Без неё — гостевой вход вместо формы. */
+    isAuthenticated: boolean;
     /** Последний выбор из cookie (или значения по умолчанию). */
     initialSetup: ClassicSetup;
 };
@@ -34,13 +37,15 @@ const QUESTION_COUNT_OPTIONS = MIXED_QUESTION_COUNTS.map((count) => ({
 }));
 
 /**
- * Классика в лобби: компактная карточка → шторка (сложность и число вопросов
- * чипами). Поля формы те же, что раньше у селектов, — `startQuizAction` и
- * его Zod не меняются. Mix = 4-й чип, сплит — строка под чипами.
+ * Классика на главной: компактная карточка → шторка (сложность и число
+ * вопросов чипами). Поля формы те же, что раньше у селектов, —
+ * `startQuizAction` и его Zod не меняются. Mix = 4-й чип, сплит — строка
+ * под чипами. Классика открыта гостям, поэтому посетителю — гостевой вход.
  */
 export function QuizSetupForm({
     locale,
     dictionary,
+    isAuthenticated,
     initialSetup,
 }: QuizSetupFormProps) {
     const [state, formAction] = useActionState(startQuizAction, {});
@@ -66,57 +71,61 @@ export function QuizSetupForm({
             closeLabel={dictionary.common.close}
             testId="classic-setup"
         >
-            <form
-                action={formAction}
-                onSubmit={() =>
-                    rememberModeSetup(
-                        'classic',
-                        formatClassicSetup({ difficulty, questionCount }),
-                    )
-                }
-                className="space-y-5"
-            >
-                <input type="hidden" name="locale" value={locale} />
-
-                <ChipRadioGroup
-                    name="difficulty"
-                    legend={labels.difficultyLabel}
-                    options={setupDifficultyChipOptions(labels)}
-                    value={difficulty}
-                    onChange={setDifficulty}
-                    describedBy={mixedMetaText ? mixedMetaId : undefined}
-                />
-
-                <ChipRadioGroup
-                    name="questionCount"
-                    legend={labels.questionCountLabel}
-                    options={QUESTION_COUNT_OPTIONS}
-                    value={String(questionCount)}
-                    onChange={(value) =>
-                        setQuestionCount(
-                            parseClassicQuestionCount(value) ?? questionCount,
+            {!isAuthenticated ? (
+                <GuestPlayPrompt locale={locale} dictionary={dictionary} />
+            ) : (
+                <form
+                    action={formAction}
+                    onSubmit={() =>
+                        rememberModeSetup(
+                            'classic',
+                            formatClassicSetup({ difficulty, questionCount }),
                         )
                     }
-                />
-
-                {mixedMetaText ? (
-                    <p
-                        id={mixedMetaId}
-                        className="font-mono text-xs tabular-nums text-muted"
-                    >
-                        <span className="border-l-2 border-primary pl-2">
-                            {mixedMetaText}
-                        </span>
-                    </p>
-                ) : null}
-
-                <SubmitButton
-                    pendingLabel={dictionary.common.working}
-                    className="w-full"
+                    className="space-y-5"
                 >
-                    {labels.startButton}
-                </SubmitButton>
-            </form>
+                    <input type="hidden" name="locale" value={locale} />
+    
+                    <ChipRadioGroup
+                        name="difficulty"
+                        legend={labels.difficultyLabel}
+                        options={setupDifficultyChipOptions(labels)}
+                        value={difficulty}
+                        onChange={setDifficulty}
+                        describedBy={mixedMetaText ? mixedMetaId : undefined}
+                    />
+    
+                    <ChipRadioGroup
+                        name="questionCount"
+                        legend={labels.questionCountLabel}
+                        options={QUESTION_COUNT_OPTIONS}
+                        value={String(questionCount)}
+                        onChange={(value) =>
+                            setQuestionCount(
+                                parseClassicQuestionCount(value) ?? questionCount,
+                            )
+                        }
+                    />
+    
+                    {mixedMetaText ? (
+                        <p
+                            id={mixedMetaId}
+                            className="font-mono text-xs tabular-nums text-muted"
+                        >
+                            <span className="border-l-2 border-primary pl-2">
+                                {mixedMetaText}
+                            </span>
+                        </p>
+                    ) : null}
+    
+                    <SubmitButton
+                        pendingLabel={dictionary.common.working}
+                        className="w-full"
+                    >
+                        {labels.startButton}
+                    </SubmitButton>
+                </form>
+            )}
 
             {errorMessage ? (
                 <InlineAlert className="mt-3">{errorMessage}</InlineAlert>

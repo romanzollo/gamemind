@@ -193,8 +193,8 @@ export async function logoutAction(formData: FormData) {
 
 /**
  * «Играть без регистрации» (3.4): провайдер `guest` создаёт игрока и
- * открывает сессию, дальше — выбор режима. Лимит по IP проверяет сам
- * провайдер; здесь только переводим его отказ в текст формы.
+ * открывает сессию, дальше — главная (Челлендж дня и режимы). Лимит по IP
+ * проверяет сам провайдер; здесь только переводим его отказ в текст формы.
  */
 export async function guestSignInAction(
     _prevState: AuthFormState,
@@ -203,7 +203,7 @@ export async function guestSignInAction(
     const locale = getLocaleFromFormData(formData);
 
     try {
-        await signIn('guest', { redirectTo: `/${locale}/quiz` });
+        await signIn('guest', { redirectTo: `/${locale}` });
     } catch (error) {
         if (error instanceof AuthError) {
             if (error instanceof GuestRateLimited) {

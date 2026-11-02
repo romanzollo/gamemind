@@ -10,6 +10,7 @@
 
 import { useActionState } from 'react';
 
+import { GuestPlayPrompt } from '@/features/auth/components/GuestPlayPrompt';
 import { startDailyChallengeAction } from '@/features/daily-challenge/actions';
 import { DailyStreakSummary } from '@/features/daily-challenge/components/daily-streak';
 import type { DailyStreak } from '@/features/daily-challenge/lib/compute-daily-streak';
@@ -90,20 +91,15 @@ export function DailyChallengeCtaPanel({
             ) : null}
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+                {/* Челлендж открыт гостям (3.4): сразу гостевой вход, не «Войди». */}
                 {status.kind === 'unavailable' &&
                 status.reason === 'not_authenticated' ? (
-                    <>
-                        <p className="text-sm text-muted">{labels.loginPrompt}</p>
-                        <PendingLink
-                            href={`/${locale}/login`}
-                            className={buttonClassName({
-                                variant: 'secondary',
-                                className: 'sm:w-auto',
-                            })}
-                        >
-                            {labels.loginLink}
-                        </PendingLink>
-                    </>
+                    <div className="w-full sm:max-w-sm">
+                        <GuestPlayPrompt
+                            locale={locale}
+                            dictionary={dictionary}
+                        />
+                    </div>
                 ) : null}
 
                 {status.kind === 'unavailable' &&

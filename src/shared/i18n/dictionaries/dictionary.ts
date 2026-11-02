@@ -50,24 +50,15 @@ export type Dictionary = {
         toModes: string;
     };
     home: {
-        title: string;
+        /** Вступление для посетителя без сессии; ещё и текст превью (OG). */
         headline: string;
         description: string;
-        /** Primary: вход в mode lobby `/quiz` (когда нет незавершённого Daily). */
-        cta: string;
-        /** Secondary при in_progress Daily: уйти в lobby, не бросая сессию. */
-        ctaAllModes: string;
-        /**
-         * Secondary Daily tease — start (available / guest→login).
-         * Не полный mode CTA; anti-duplication с lobby.
-         */
-        dailyTease: string;
-        /** Primary при in_progress: продолжить сессию Daily. */
-        dailyContinue: string;
-        /** Secondary при completed: результат сегодняшнего Daily. */
-        dailyResult: string;
+        /** Блок «Продолжить»: последний режим из шторки в одно касание. */
+        continueEyebrow: string;
+        continueHint: string;
+        continueButton: string;
     };
-    /** Ежедневный челлендж — CTA только на mode lobby `/quiz` (Scoreboard Editorial). */
+    /** Ежедневный челлендж — карточка на главной (место игры). */
     dailyChallenge: {
         /** Caps eyebrow над заголовком */
         eyebrow: string;
@@ -78,8 +69,6 @@ export type Dictionary = {
         startButton: string;
         continueButton: string;
         viewResultButton: string;
-        loginPrompt: string;
-        loginLink: string;
         unavailablePool: string;
         /** Слот Daily занят ABANDONED-сессией: попытка дня уже потрачена. */
         attemptAbandoned: string;
@@ -114,7 +103,7 @@ export type Dictionary = {
         streakNextGoal: string;
     };
     /**
-     * Timed Mode CTA — только mode lobby `/quiz`.
+     * Timed Mode CTA — карточка режима на главной.
      * Правила count/duration — TIMED_MODE_MVP_RULES; meta в словаре держим в синхроне.
      */
     timedMode: {
@@ -133,7 +122,7 @@ export type Dictionary = {
         loginLink: string;
     };
     /**
-     * Survival Mode CTA — только mode lobby `/quiz`.
+     * Survival Mode CTA — карточка режима на главной.
      * Правила count/bank — SURVIVAL_MODE_MVP_RULES; meta в словаре держим в синхроне.
      * Result end-of-wave: rematch + honest plaque (`?wave=cut|bank` / pool).
      */

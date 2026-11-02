@@ -2460,3 +2460,25 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 **Cost:** a forged client could still lock answers after the wave's bank ended: they do not count, and the right options it sees are the ones the wave review shows anyway. The «≤ 6 s per wave» gap of the Oct 30 rule is closed.
 
 **Not chosen:** a bank check on every lock (an extra read per answer; the replay on submit gives the same result); waiting for the server before the next question (changes the game's balance).
+
+## Home is the play hub (November 3, 2026)
+
+**Context:** ROADMAP 4.2. After 4.2a the «Play» tab leads to `/`, but the home page was a brand poster («GameMind», «Choose a mode», a Daily link) and the modes lived on `/quiz`. Making home «play now» (П1) and keeping the lobby gave two near-identical pages: Daily card + mode cards in both places.
+
+**Decision:** one place to play — the home page.
+
+| Piece | Choice |
+|------|--------|
+| Home (`/:locale`) | Daily Challenge card (streak, day board) → «Continue» the last mode → «Modes»: Classic, Blitz, Survival as compact cards with the settings sheet (4.2b). A visitor without a session also sees a short intro (headline + one line) on top |
+| `/quiz` | GET → 307 home in the proxy (with legacy `/quiz/setup`). The page is kept too and only `redirect()`s: the proxy lets Server Action POSTs through, and one from an old open tab needs a live route (the `POST /quiz` → GET 404 symptom). The page alone is not enough — it streams (`loading.tsx`), so its redirect arrives as 200 + a client-side jump. `/quiz/:sessionId` and `/result/:id` are unchanged |
+| «Continue» | The last mode and its settings from the 4.2b cookies, one tap: the same start form with hidden fields, the same Server Action and Zod. No DB read. Not shown without a session; for a guest only Classic (Blitz / Survival are closed to guests) |
+| Visitor | Where a mode is open to guests (Daily, Classic) the call to action is «Play without signing up» (guest sign-in, 3.4) + «Sign in», not «Sign in to play». Guest sign-in now lands on home, where the visitor pressed it, not on `/quiz` |
+| Links | Soft-miss links on the session / result pages, 404 «To modes», legacy `/quiz/setup` and the e2e smoke go to `/` directly. The submit action's fallback `redirect('/quiz')` is left as is (hot-path file; the redirect page covers it) |
+
+**Hot path:** untouched — the start actions, their fields and validation are the same; home reads Daily through the lobby view it already used (`getDailyLobbyView`, one Direct hop on the happy path).
+
+**Not chosen:**
+
+- Home and lobby side by side — the same content twice, and the «Play» tab would point at one of them arbitrarily.
+- Lobby as the «Play» tab, home as a landing page — a returning player would start every visit one tap further from the game.
+- Starting a game right from guest sign-in — the guest session is set by a redirect, a start in the same request has no session yet.

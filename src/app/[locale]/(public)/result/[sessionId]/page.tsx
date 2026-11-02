@@ -130,7 +130,7 @@ export default async function QuizResultPage({
                 </InlineAlert>
                 <p className="mt-4 flex flex-wrap gap-4">
                     <Link
-                        href={`/${safeLocale}/quiz`}
+                        href={`/${safeLocale}`}
                         className="font-medium text-primary underline-offset-4 hover:underline"
                     >
                         {dictionary.nav.quiz}

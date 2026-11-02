@@ -48,15 +48,12 @@ export const enDictionary = {
         toModes: 'Play modes',
     },
     home: {
-        title: 'GameMind',
         headline: 'Remember the games you played',
         description:
             'Guess games from screenshots, recall the details, rack up points. Harder questions pay more.',
-        cta: 'Choose a mode',
-        ctaAllModes: 'All modes',
-        dailyTease: "Today's challenge →",
-        dailyContinue: 'Continue challenge',
-        dailyResult: "Today's result",
+        continueEyebrow: 'Continue',
+        continueHint: 'same as last time',
+        continueButton: 'Play',
     },
     dailyChallenge: {
         eyebrow: 'Today',
@@ -66,8 +63,6 @@ export const enDictionary = {
         startButton: 'Accept the challenge',
         continueButton: 'Continue challenge',
         viewResultButton: 'View result',
-        loginPrompt: 'Sign in to play today’s challenge.',
-        loginLink: 'Sign in',
         unavailablePool:
             'Today’s challenge didn’t come together: not enough questions. Try another mode for now.',
         attemptAbandoned:

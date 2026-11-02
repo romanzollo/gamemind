@@ -38,10 +38,16 @@ export const proxy = auth((request) => {
 
     const pathnameWithoutLocale = removeLocaleFromPathname(nextUrl.pathname);
 
-    // Legacy URL: /:locale/quiz/setup → /:locale/quiz
-    if (pathnameWithoutLocale === '/quiz/setup') {
+    // Бывшее лобби (/quiz и legacy /quiz/setup) → главная, ADR «Home is the
+    // play hub». Здесь, а не только в page: страница стримится (loading.tsx),
+    // и её redirect() приходит 200 + клиентским переходом, а не 307.
+    // POST Server Action сюда не доходит (выше) — его ловит сама страница.
+    if (
+        pathnameWithoutLocale === '/quiz' ||
+        pathnameWithoutLocale === '/quiz/setup'
+    ) {
         const redirectUrl = nextUrl.clone();
-        redirectUrl.pathname = `/${locale}/quiz`;
+        redirectUrl.pathname = `/${locale}`;
         return NextResponse.redirect(redirectUrl);
     }
 

@@ -1,7 +1,7 @@
 /**
- * Server CTA Survival Mode: optional auth → компактная карточка лобби.
+ * Server CTA Survival Mode: optional auth → компактная карточка режима.
  *
- * Живёт на mode lobby `/quiz`. Presentation only.
+ * Карточка режима на главной (место игры). Presentation only.
  * Snapshot / SurvivalRun пишет `startSurvivalQuizAction`.
  * Canon: docs/DECISIONS.md → Survival Mode MVP.
  */

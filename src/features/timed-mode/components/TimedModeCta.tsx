@@ -1,7 +1,7 @@
 /**
- * Server CTA Timed Mode: optional auth → компактная карточка лобби.
+ * Server CTA Timed Mode: optional auth → компактная карточка режима.
  *
- * Живёт на mode lobby `/quiz`. Presentation only.
+ * Карточка режима на главной (место игры). Presentation only.
  * Дедлайн / snapshot пишет `startTimedQuizAction`.
  * Canon: docs/DECISIONS.md → Timed Mode MVP.
  */

@@ -26,8 +26,10 @@ import { buttonClassName, StatusPage } from '@/shared/ui';
 export default function LocaleNotFound() {
     const pathname = usePathname();
     const locale = getLocaleFromPathname(pathname) ?? defaultLocale;
-    const labels = getDictionary(locale).errorPage;
+    const dictionary = getDictionary(locale);
+    const labels = dictionary.errorPage;
 
+    // Режимы живут на главной; второй путь — рейтинг (так и обещает описание).
     return (
         <StatusPage
             eyebrow="404"
@@ -35,17 +37,14 @@ export default function LocaleNotFound() {
             description={labels.notFoundDescription}
             actions={
                 <>
-                    <Link
-                        href={`/${locale}/quiz`}
-                        className={buttonClassName()}
-                    >
+                    <Link href={`/${locale}`} className={buttonClassName()}>
                         {labels.toModes}
                     </Link>
                     <Link
-                        href={`/${locale}`}
+                        href={`/${locale}/leaderboard`}
                         className={buttonClassName({ variant: 'secondary' })}
                     >
-                        {labels.backHome}
+                        {dictionary.nav.leaderboard}
                     </Link>
                 </>
             }

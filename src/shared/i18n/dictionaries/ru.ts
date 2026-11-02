@@ -48,15 +48,12 @@ export const ruDictionary: Dictionary = {
         toModes: 'К режимам',
     },
     home: {
-        title: 'GameMind',
         headline: 'Вспомни игры, которые прошёл',
         description:
             'Угадывай игры по скриншотам, вспоминай детали и набирай очки. Сложнее вопрос — больше очков.',
-        cta: 'Выбрать режим',
-        ctaAllModes: 'Все режимы',
-        dailyTease: 'Челлендж дня →',
-        dailyContinue: 'Продолжить челлендж',
-        dailyResult: 'Результат дня',
+        continueEyebrow: 'Продолжить',
+        continueHint: 'как в прошлый раз',
+        continueButton: 'Играть',
     },
     dailyChallenge: {
         eyebrow: 'Сегодня',
@@ -66,8 +63,6 @@ export const ruDictionary: Dictionary = {
         startButton: 'Принять вызов',
         continueButton: 'Продолжить челлендж',
         viewResultButton: 'Смотреть результат',
-        loginPrompt: 'Войди, чтобы сыграть челлендж дня.',
-        loginLink: 'Войти',
         unavailablePool:
             'Сегодня челлендж не собрался: не хватило вопросов. Пока можно сыграть в другой режим.',
         attemptAbandoned:

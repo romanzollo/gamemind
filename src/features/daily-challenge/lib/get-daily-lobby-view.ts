@@ -1,5 +1,5 @@
 /**
- * Mode lobby `/quiz`: статус Daily + board за минимум Direct TLS.
+ * Главная (место игры): статус Daily + board + серия за минимум Direct TLS.
  *
  * Happy path (день уже есть): один `findLobbyPanelState`.
  * Первый игрок дня: ensure (write) → повторный panel read.
