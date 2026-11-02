@@ -290,11 +290,15 @@ async function finishSignIn(jar: CookieJar, query: string) {
 
 const SUCCESS_QUERY = `code=vk-code&state=${STATE}&device_id=vk-device&expires_in=600&type=code_v2`;
 
+// Импорт маршрута тянет весь Auth.js (inline в Vitest): на холодном прогоне
+// после правок исходников 10 с по умолчанию не всегда хватает.
+const ROUTE_IMPORT_TIMEOUT_MS = 30_000;
+
 beforeAll(async () => {
     vi.stubEnv('AUTH_VK_ID', CLIENT_ID);
     vi.stubEnv('AUTH_SECRET', AUTH_SECRET);
     ({ GET, POST } = await import('@/app/api/auth/[...nextauth]/route'));
-});
+}, ROUTE_IMPORT_TIMEOUT_MS);
 
 beforeEach(() => {
     vkApiRefuses = false;

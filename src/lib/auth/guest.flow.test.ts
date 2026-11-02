@@ -83,10 +83,14 @@ async function signInAsGuest() {
     return { response, cookie: cookieHeader([csrf, response]) };
 }
 
+// Импорт маршрута тянет весь Auth.js (inline в Vitest): на холодном прогоне
+// после правок исходников 10 с по умолчанию не всегда хватает.
+const ROUTE_IMPORT_TIMEOUT_MS = 30_000;
+
 beforeAll(async () => {
     vi.stubEnv('AUTH_SECRET', 'guest-flow-test-secret-0123456789abcdef');
     ({ GET, POST } = await import('@/app/api/auth/[...nextauth]/route'));
-});
+}, ROUTE_IMPORT_TIMEOUT_MS);
 
 beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
