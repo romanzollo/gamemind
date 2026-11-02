@@ -30,6 +30,11 @@ type PlayLoadHandoffEntry = {
     /** true → peek (не delete); длиннее TTL. */
     isSurvival: boolean;
     /**
+     * Survival: view уже отдавали (peek). Повторная отдача — это F5 посреди
+     * волны: вызывающий дочитывает зафиксированные ответы (Answer lock-in).
+     */
+    served: boolean;
+    /**
      * Frozen snapshot для Survival submit scoring / slim reviewPayload.
      * Без повторного SELECT TOAST после JSONB write (Aug 14).
      */
@@ -81,6 +86,7 @@ export function rememberQuizPlayLoad(
         view,
         expiresAt: Date.now() + ttlMs,
         isSurvival,
+        served: false,
         snapshotData: isSurvival ? snapshotData : undefined,
     });
 }
@@ -106,11 +112,13 @@ export function takeQuizPlayLoad(
 /**
  * Play-load: Survival peek (не delete), Classic/Blitz/Daily take (delete).
  * Один вызов на странице — не дублировать take+peek.
+ * `repeat` — Survival view отдаётся не впервые (F5 посреди волны): в нём
+ * нет ответов, зафиксированных после старта, — их дочитывает вызывающий.
  */
 export function resolveQuizPlayLoadHandoff(
     sessionId: string,
     userId: string,
-): QuizSessionPublicView | null {
+): { view: QuizSessionPublicView; repeat: boolean } | null {
     const entry = resolveHandoffEntry(sessionId, userId);
 
     if (!entry) {
@@ -118,11 +126,13 @@ export function resolveQuizPlayLoadHandoff(
     }
 
     if (entry.isSurvival) {
-        return entry.view;
+        const repeat = entry.served;
+        entry.served = true;
+        return { view: entry.view, repeat };
     }
 
     getHandoffMap().delete(sessionId);
-    return entry.view;
+    return { view: entry.view, repeat: false };
 }
 
 /**

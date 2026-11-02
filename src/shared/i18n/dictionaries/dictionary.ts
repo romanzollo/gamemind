@@ -152,6 +152,9 @@ export type Dictionary = {
         /** Legacy hint; mid-wave теперь auto-submit, не freeze. */
         savingAnswers: string;
         chooseAnswerHint: string;
+        /** Метка у банка после подтверждения ответа сервером. */
+        bankGain: string;
+        bankLoss: string;
         finishWaveButton: string;
         /** Result primary CTA: новая волна с той же difficulty (новый run). */
         tryAgainWave: string;

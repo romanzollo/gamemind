@@ -105,6 +105,7 @@ export default async function QuizSessionPage({
                     sessionId={sessionId}
                     questions={sessionView.questions}
                     survival={sessionView.survival}
+                    lockedAnswers={sessionView.lockedAnswers}
                     dictionary={dictionary}
                 />
             ) : (

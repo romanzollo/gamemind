@@ -21,6 +21,7 @@ import { buildCompactReviewPayload } from '@/features/quiz/lib/build-compact-rev
 import { isSurvivalClockOk } from '@/features/survival-mode/lib/is-survival-clock-ok';
 import { reconstructSurvivalBankRemainingSeconds } from '@/features/survival-mode/lib/reconstruct-survival-bank-remaining-seconds';
 import { resolveSurvivalNextWaveBankSeconds } from '@/features/survival-mode/lib/resolve-survival-next-wave-bank';
+import { replaySurvivalWave } from '@/features/survival-mode/lib/replay-survival-wave';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import type { QuizFormState } from '@/features/quiz/types';
 
@@ -168,33 +169,58 @@ export async function submitQuizAction(
     // Ответы, зафиксированные по одному (Answer lock-in): если они есть,
     // считаем только их — форма после показа правильных ответов не в счёт.
     // Скалярный pooled-запрос до хопа complete (не TOAST). Сбой — retry.
-    let lockedAnswers: Array<{ questionId: string; selectedOptionId: string }> =
-        [];
-    if (!isSurvivalSession) {
-        try {
-            lockedAnswers = await quizSessionRepository.findLockedAnswers(
-                quizSessionId,
-                authSession.user.id,
-                'quiz.submit.load-locked-answers',
-            );
-        } catch (error) {
-            console.error('Quiz submit locked answers load failed:', error);
-            captureAppError(error, {
-                area: 'quiz-submit',
-                level: 'warning',
-                extra: { stage: 'locked-answers', sessionId },
-            });
-            return { errorCode: 'SUBMIT_FAILED' };
-        }
+    let lockedAnswers: Awaited<
+        ReturnType<typeof quizSessionRepository.findLockedAnswers>
+    > = [];
+    try {
+        lockedAnswers = await quizSessionRepository.findLockedAnswers(
+            quizSessionId,
+            authSession.user.id,
+            'quiz.submit.load-locked-answers',
+        );
+    } catch (error) {
+        console.error('Quiz submit locked answers load failed:', error);
+        captureAppError(error, {
+            area: 'quiz-submit',
+            level: 'warning',
+            extra: { stage: 'locked-answers', sessionId },
+        });
+        return { errorCode: 'SUBMIT_FAILED' };
     }
 
+    // Survival: точный пересчёт банка по времени фиксации — засчитаны только
+    // ответы до конца банка. Правильность — из snapshot сессии.
+    const survivalReplay =
+        survivalSubmitMeta && lockedAnswers.length > 0
+            ? replaySurvivalWave({
+                  startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
+                  completedAtMs: receivedAt.getTime(),
+                  initialBankSeconds: survivalSubmitMeta.initialBankSeconds,
+                  answers: lockedAnswers.map((answer) => ({
+                      questionId: answer.questionId,
+                      selectedOptionId: answer.selectedOptionId,
+                      isCorrect:
+                          questions
+                              .find((item) => item.id === answer.questionId)
+                              ?.options.find(
+                                  (option) =>
+                                      option.id === answer.selectedOptionId,
+                              )?.isCorrect === true,
+                      answeredAtMs: new Date(answer.answeredAt).getTime(),
+                  })),
+              })
+            : null;
+
     // Форма шлёт токены сессии (не id из БД — те выдавали ответ); переводим обратно.
-    const { answers } = chooseScoredAnswers(questions, lockedAnswers, () =>
-        readSubmittedAnswers(
-            formData,
-            questions,
-            createQuizPublicIdCodec(quizSessionId),
-        ),
+    const { answers } = chooseScoredAnswers(
+        questions,
+        { locked: lockedAnswers, counted: survivalReplay?.counted },
+        () =>
+            readSubmittedAnswers(
+                formData,
+                questions,
+                createQuizPublicIdCodec(quizSessionId),
+            ),
     );
 
     // Classic/daily: все ответы обязательны.
@@ -253,7 +279,11 @@ export async function submitQuizAction(
         };
     });
     const completedAt = receivedAt;
-    const survivalClockOk = survivalSubmitMeta
+    // С фиксацией опоздавшие ответы уже не засчитаны — волна в зачёте.
+    // Старая страница без фиксации — прежняя сверка по сумме ответов.
+    const survivalClockOk = survivalReplay
+        ? true
+        : survivalSubmitMeta
         ? isSurvivalClockOk({
               startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
               completedAtMs: completedAt.getTime(),
@@ -268,7 +298,14 @@ export async function submitQuizAction(
     // Банк следующей волны: обрыв по нулю банка = конец забега (часы
     // устройства могут спешить); маленький остаток — до минимума старта.
     const survivalWaveEnd = formData.get('survivalWaveEnd');
-    const survivalBankRemainingSeconds = survivalSubmitMeta
+    const survivalEndedOnBank =
+        survivalWaveEnd === 'cut' || survivalWaveEnd === 'bank';
+    const survivalBankRemainingSeconds = survivalReplay
+        ? resolveSurvivalNextWaveBankSeconds({
+              reconstructedSeconds: survivalReplay.bankRemainingSeconds,
+              endedOnBank: survivalEndedOnBank || survivalReplay.bankEmptied,
+          })
+        : survivalSubmitMeta
         ? resolveSurvivalNextWaveBankSeconds({
               reconstructedSeconds: reconstructSurvivalBankRemainingSeconds({
                   startedAtMs: new Date(survivalSubmitMeta.startedAt).getTime(),
@@ -279,8 +316,7 @@ export async function submitQuizAction(
                       .length,
                   initialBankSeconds: survivalSubmitMeta.initialBankSeconds,
               }),
-              endedOnBank:
-                  survivalWaveEnd === 'cut' || survivalWaveEnd === 'bank',
+              endedOnBank: survivalEndedOnBank,
           })
         : null;
 

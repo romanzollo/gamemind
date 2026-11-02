@@ -1,6 +1,7 @@
 /**
- * Фиксация ответов по одному (Classic / Blitz / Daily) и их чтение для
- * продолжения партии и сдачи.
+ * Фиксация ответов по одному (все режимы) и их чтение для продолжения
+ * партии и сдачи. Банк Survival здесь не проверяется: сдача волны
+ * пересчитывает его по `answeredAt` (`replaySurvivalWave`).
  *
  * Только скаляры и pooled-клиент, вне Direct-очереди: ни одного SELECT
  * `snapshotData` (TOAST) — правильность ответа даёт ключ ответа
@@ -25,6 +26,11 @@ export type LockedAnswerRow = {
     isCorrect: boolean;
 };
 
+/** Зафиксированный ответ со временем прихода — для пересчёта банка Survival. */
+export type TimedLockedAnswerRow = LockedAnswerRow & {
+    answeredAt: Date;
+};
+
 export type InsertLockedAnswerInput = {
     sessionId: string;
     userId: string;
@@ -45,8 +51,8 @@ export type AnswerSessionState = {
 export const quizSessionAnswerMethods = {
     /**
      * true — ответ записан этим запросом. false — уже был ответ на этот
-     * вопрос, или сессия не принимает ответы (чужая, закрыта, Выживание,
-     * время Блица вышло): причину уточняет вызывающий.
+     * вопрос, или сессия не принимает ответы (чужая, закрыта, время Блица
+     * вышло): причину уточняет вызывающий.
      */
     async insertLockedAnswer(input: InsertLockedAnswerInput): Promise<boolean> {
         const result = await withPooledPgClient(
@@ -63,7 +69,6 @@ export const quizSessionAnswerMethods = {
                             s."id" = $2
                             AND s."userId" = $7
                             AND s."status" = 'IN_PROGRESS'::"QuizSessionStatus"
-                            AND s."survivalRunId" IS NULL
                             AND (s."timedEndsAt" IS NULL OR s."timedEndsAt" > $8)
                         ON CONFLICT ("sessionId", "questionId") DO NOTHING
                         RETURNING "id"
@@ -152,25 +157,27 @@ export const quizSessionAnswerMethods = {
     },
 
     /**
-     * Все записанные ответы сессии игрока: продолжение партии после
-     * обновления страницы и сдача (очки — только по ним).
+     * Все записанные ответы сессии игрока в порядке фиксации: продолжение
+     * партии после обновления страницы и сдача (очки — только по ним).
      */
     async findLockedAnswers(
         sessionId: string,
         userId: string,
         debugLabel = 'quiz.answer.list',
-    ): Promise<LockedAnswerRow[]> {
+    ): Promise<TimedLockedAnswerRow[]> {
         const result = await withPooledPgClient(
             (client) =>
-                client.query<LockedAnswerRow>(
+                client.query<TimedLockedAnswerRow>(
                     `
                         SELECT
                             a."questionId",
                             a."selectedOptionId",
-                            a."isCorrect"
+                            a."isCorrect",
+                            a."answeredAt"
                         FROM "QuizAnswer" a
                         JOIN "QuizSession" s ON s."id" = a."sessionId"
                         WHERE a."sessionId" = $1 AND s."userId" = $2
+                        ORDER BY a."answeredAt", a."questionId"
                     `,
                     [sessionId, userId],
                 ),

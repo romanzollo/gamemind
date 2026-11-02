@@ -673,7 +673,19 @@ async function loadSnapshotPublicQuestions(
     const handedOff = resolveQuizPlayLoadHandoff(sessionId, userId);
 
     if (handedOff) {
-        return handedOff;
+        // Первая отрисовка после create — ответов ещё нет, лишний хоп не нужен.
+        // Повтор (Survival peek, F5 посреди волны) — дочитываем фиксации.
+        if (!handedOff.repeat) {
+            return handedOff.view;
+        }
+        return {
+            ...handedOff.view,
+            lockedAnswers: await loadLockedAnswerViews(
+                sessionId,
+                userId,
+                handedOff.view.questions,
+            ),
+        };
     }
 
     // Dev-only: Survival handoff miss → scalar check → fast soft-miss без 5s TOAST loop.
@@ -727,7 +739,7 @@ async function loadSnapshotPublicQuestions(
             }
 
             // Правильность нужна ключу ответа; срезается на выходе
-            // (findSnapshotPublicQuestionsForUser), кроме Survival.
+            // (findSnapshotPublicQuestionsForUser) у всех режимов.
             const mapped = mapSnapshotDataToPublicQuestions(
                 snapshotData,
                 jsonSnapshot.question_count,
@@ -750,9 +762,11 @@ async function loadSnapshotPublicQuestions(
                 difficulty: jsonSnapshot.difficulty,
                 survival,
                 isDaily: jsonSnapshot.is_daily === true,
-                lockedAnswers: survival
-                    ? []
-                    : await loadLockedAnswerViews(sessionId, userId, mapped),
+                lockedAnswers: await loadLockedAnswerViews(
+                    sessionId,
+                    userId,
+                    mapped,
+                ),
             };
         }
     }

@@ -15,10 +15,12 @@ describe('chooseScoredAnswers', () => {
         expect(
             chooseScoredAnswers(
                 questions,
-                [
-                    { questionId: 'q-1', selectedOptionId: 'wrong-locked' },
-                    { questionId: 'q-3', selectedOptionId: 'o-3' },
-                ],
+                {
+                    locked: [
+                        { questionId: 'q-1', selectedOptionId: 'wrong-locked' },
+                        { questionId: 'q-3', selectedOptionId: 'o-3' },
+                    ],
+                },
                 readForm,
             ),
         ).toEqual({
@@ -32,10 +34,36 @@ describe('chooseScoredAnswers', () => {
         expect(readForm).not.toHaveBeenCalled();
     });
 
+    it('scores only counted locks, and never falls back to the form when every lock came too late', () => {
+        const readForm = vi.fn(() => [
+            { questionId: 'q-1', selectedOptionId: 'from-form' },
+        ]);
+
+        expect(
+            chooseScoredAnswers(
+                questions,
+                {
+                    locked: [{ questionId: 'q-1', selectedOptionId: 'late' }],
+                    counted: [],
+                },
+                readForm,
+            ),
+        ).toEqual({
+            source: 'locked',
+            answers: questions.map((question) => ({
+                questionId: question.id,
+                selectedOptionId: '',
+            })),
+        });
+        expect(readForm).not.toHaveBeenCalled();
+    });
+
     it('reads the form when nothing was locked (a page opened before lock-in)', () => {
         const formAnswers = [{ questionId: 'q-1', selectedOptionId: 'o-1' }];
 
-        expect(chooseScoredAnswers(questions, [], () => formAnswers)).toEqual({
+        expect(
+            chooseScoredAnswers(questions, { locked: [] }, () => formAnswers),
+        ).toEqual({
             source: 'form',
             answers: formAnswers,
         });

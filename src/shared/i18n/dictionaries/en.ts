@@ -122,6 +122,8 @@ export const enDictionary = {
         expiredLabel: 'Time is up',
         savingAnswers: 'Saving the wave…',
         chooseAnswerHint: 'Choose an answer to continue the wave.',
+        bankGain: '+{n} s',
+        bankLoss: '−{n} s',
         finishWaveButton: 'Finish wave',
         tryAgainWave: 'New run',
         nextWaveButton: 'Next wave',

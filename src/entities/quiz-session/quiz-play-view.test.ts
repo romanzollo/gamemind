@@ -90,7 +90,7 @@ describe('toBrowserPlayView', () => {
         ]);
     });
 
-    it('keeps isCorrect and gives no answer key to Survival (until its own lock-in step)', () => {
+    it('gives Survival an answer key and no isCorrect either', () => {
         const browser = toBrowserPlayView(
             'session-1',
             view({
@@ -103,7 +103,11 @@ describe('toBrowserPlayView', () => {
             }),
         );
 
-        expect(browser.questions[0].answerKey).toBeUndefined();
-        expect(browser.questions[0].options[0].isCorrect).toBe(true);
+        expect(
+            openQuizAnswerKey(browser.questions[0].answerKey ?? '', 'session-1')
+                ?.correctOptionId,
+        ).toBe('q-vg-easy-004-opt-0');
+        expect(JSON.stringify(browser)).not.toContain('isCorrect":true');
+        expect(browser.questions[0].options[0]).not.toHaveProperty('isCorrect');
     });
 });

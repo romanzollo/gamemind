@@ -2297,7 +2297,7 @@ Context: first pass after moving from Cursor (learning mode) to Claude Code
 **Scope:** this closes the leak *in the page* (DevTools, view-source, image URLs). The GitHub repo is public and already contains the question bank with answers (`content/drafts`, `seed-questions.cjs`), and git history keeps the slug → hash rename. Making the repo private is a separate owner decision.
 
 **Still open:**
-- **Survival keeps `isCorrect` in the play DTO** (instant bank UX without a per-answer request, see Survival Mode MVP). Removing it needs server-side lock-in per answer — a latency trade-off from RU, separate decision.
+- ~~**Survival keeps `isCorrect` in the play DTO**~~ — closed Nov 2: Survival on answer lock-in (see «Survival on answer lock-in»).
 - Reverse image search can identify a screenshot — inherent to the question type, not a code leak.
 
 ## Accounts without a password: OAuth and guests (November 1, 2026)
@@ -2441,3 +2441,22 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - A Server Action for the lock — a JSON route is simpler and does not re-render the page.
 
 **Deploy:** no migration. The e2e smoke (`e2e/quiz-smoke.spec.ts`) changes in the same commit — Prod smoke runs it right after the deploy.
+
+### Survival on answer lock-in (November 2, 2026)
+
+**Context:** the Answer lock-in step left Survival on the old shape: `isCorrect` in the browser (instant bank +4 / −6), answers sent as one batch at the end, and the «partial last penalty» guess because the server could not know the order (Survival clock, Oct 30). Waiting for the server before the next question, as Classic does, is not an option: the bank ticks, 0.2–0.4 s × 12 answers would eat 3–5 s per wave and change the game.
+
+**Decision:**
+
+| Rule | Choice |
+|------|--------|
+| Play DTO | Survival questions get the same `answerKey`; `isCorrect` no longer leaves the server for any mode |
+| Lock | The same `/api/quiz/:id/answer` accepts Survival sessions (still one pooled INSERT, no bank check there — that would be one more read per answer). `answeredAt` = server receive time (JS Date) |
+| Pace | The client does **not** wait: tap → tile highlight → next question at once; locks go in a sequential background queue (order kept), 2 automatic retries, then «Couldn't send your answer» + «Try again». The bank moves (+4 / −6) when the server answers, with a short «+4 s / −6 s» mark |
+| Bank at zero with answers in flight | The client waits for unconfirmed locks (≤ 3 s) before ending the wave — a correct answer in flight can add +4 |
+| Submit | Locks exist → `replaySurvivalWave`: locked answers in `answeredAt` order; an answer counts if the bank at that moment was > 0 (grace 3 s for the network); then ±delta; once a wrong answer empties the bank, later answers do not count. Score = counted answers (correctness from the snapshot). `survivalClockOk = true` — late answers are already excluded. T0' = bank at submit time from the replay, then `resolveSurvivalNextWaveBankSeconds` (bank-out still ends the run). Replaces the «partial last penalty» guess: the order is known now. No locks (a page opened before the deploy) → the old form path |
+| Resume | F5 mid-wave continues at the first unanswered question with the bank counted from the locks (before: answers lived only in the browser) |
+
+**Cost:** a forged client could still lock answers after the wave's bank ended: they do not count, and the right options it sees are the ones the wave review shows anyway. The «≤ 6 s per wave» gap of the Oct 30 rule is closed.
+
+**Not chosen:** a bank check on every lock (an extra read per answer; the replay on submit gives the same result); waiting for the server before the next question (changes the game's balance).

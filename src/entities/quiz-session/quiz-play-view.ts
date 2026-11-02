@@ -14,37 +14,34 @@ import {
 import type { QuizSessionPublicView } from '@/entities/quiz-session/quiz-session.types';
 
 /**
- * Данные игры для браузера: ключ ответа в каждом вопросе Classic / Blitz /
- * Daily, `isCorrect` срезан (у Survival остаётся — принятый leak до его
- * перехода на lock-in), id → токены сессии, зафиксированные ответы — тоже
- * токенами. Вызывается только из findSnapshotPublicQuestionsForUser.
- * Canon: DECISIONS → Answer lock-in; Quiz answer leak.
+ * Данные игры для браузера: ключ ответа в каждом вопросе (все режимы,
+ * Survival — с ноя 2026), `isCorrect` срезан, id → токены сессии,
+ * зафиксированные ответы — тоже токенами. Вызывается только из
+ * findSnapshotPublicQuestionsForUser.
+ * Canon: DECISIONS → Answer lock-in; Survival on answer lock-in.
  */
 export function toBrowserPlayView(
     sessionId: string,
     view: QuizSessionPublicView,
 ): QuizSessionPublicView {
     const codec = createQuizPublicIdCodec(sessionId);
-    const keepCorrectness = view.survival != null;
 
     const questions = view.questions.map((question) => {
         const correct = question.options.find((option) => option.isCorrect);
-        const answerKey =
-            !keepCorrectness && correct
-                ? sealQuizAnswerKey({
-                      sessionId,
-                      questionId: question.id,
-                      optionIds: question.options.map((option) => option.id),
-                      correctOptionId: correct.id,
-                  })
-                : undefined;
+        const answerKey = correct
+            ? sealQuizAnswerKey({
+                  sessionId,
+                  questionId: question.id,
+                  optionIds: question.options.map((option) => option.id),
+                  correctOptionId: correct.id,
+              })
+            : undefined;
 
         return {
             ...question,
             ...(answerKey ? { answerKey } : {}),
-            options: question.options.map(({ isCorrect, ...option }) =>
-                keepCorrectness ? { ...option, isCorrect } : option,
-            ),
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars -- срезаем поле
+            options: question.options.map(({ isCorrect, ...option }) => option),
         };
     });
 

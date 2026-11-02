@@ -5,7 +5,7 @@
 **Companion:** Cursor rule `.cursor/rules/quiz-neon-hot-path.mdc` (`alwaysApply`).  
 **Playbook detail:** `docs/DECISIONS.md` → Quiz Start / Session Load Playbook.  
 **Overview:** `docs/ARCHITECTURE.md`.  
-**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. **Wave 1 + wave 2+ on prod (Aug 21):** schema A + clock B + start C (pooled JSONB) + play D + submit E + end-of-wave F + carry (seen table, `totalScore`, continue CTA, board = best run total). Prod schema catch-up Aug 21 after `42703` `survivalRunId`. `timedEndsAt` NULL. Survival play DTO may include `isCorrect` + `initialBankSeconds`. After successful complete: **pooled** `recordSurvivalWaveAfterComplete` (bank/seen/total) — not in `completeWithResult`.
+**Survival contract:** `docs/DECISIONS.md` → Survival Mode MVP; `src/features/survival-mode/types.ts`. **Wave 1 + wave 2+ on prod (Aug 21):** schema A + clock B + start C (pooled JSONB) + play D + submit E + end-of-wave F + carry (seen table, `totalScore`, continue CTA, board = best run total). Prod schema catch-up Aug 21 after `42703` `survivalRunId`. `timedEndsAt` NULL. Survival play DTO carries `answerKey` + `initialBankSeconds` (no `isCorrect` since Nov 2, answer lock-in). After successful complete: **pooled** `recordSurvivalWaveAfterComplete` (bank/seen/total) — not in `completeWithResult`.
 
 `docs/DECISIONS.md` / `AGENTS.md` / `CLAUDE.md` are **tracked**. Chat diary `docs/PROJECT_CONTEXT.md` is gitignored — do not treat it as canon.
 
@@ -60,7 +60,7 @@ Survival:  pooled abandon + SurvivalRun (before pick, scalars);
 All:       cycle pooled (outside Direct queue) → 300ms settle
            → resolve chunk 5 Direct → create INSERT-only JSONB
            → remember play-load DTO in process memory
-           → Survival DTO may include isCorrect (accepted leak); Classic/Blitz/Daily do not
+           → no mode ships isCorrect; every question carries answerKey (Nov 2)
 Page:      resolve handoff (Survival peek 120s / Classic take 45s) OR pooled SELECT snapshotData
            Classic/Blitz/Daily: dev 5s / prod 18s
            Survival dev miss: scalar meta only → fast soft-miss (no 5s TOAST loop)
@@ -109,14 +109,14 @@ BAD:  notFound() on miss/timeout
 - Boundary: **reshuffle-first** when remaining &lt; needed. No silent random fallback if cycle fails.
 - Create: Classic / Timed / Daily = **`withDirectPgWriteClient`**, INSERT `snapshotData` only. Survival (`survivalRunId`) = **`withPooledPgClient`** — 12Q after 3 Direct resolve is the 4th unpooled hop and abort@18s (payload ~13KB; not size). Do **not** return any create to `withDirectPgQuizStartClient`. Do **not** put `SurvivalRun` and JSONB on one client.
 - Timed abandon: **pooled scalar UPDATE before pick**. Never UPDATE orphans on the same Direct client as JSONB INSERT. Never a second **unpooled** hop solely for abandon.
-- Survival (chat C+D): same abandon shape **for Survival rows only**; pooled `SurvivalRun` INSERT before pick; **split pooled create** (scalar → JSONB 45s → startedAt); **`timedEndsAt` NULL**; `startedAt` = JS Date **after** JSONB hop3. Play-load: Survival handoff **peek** 120s + optional `isCorrect`; dev miss без TOAST SELECT. Not `runTimedQuizStart`. Submit clock still Chat E.
+- Survival (chat C+D): same abandon shape **for Survival rows only**; pooled `SurvivalRun` INSERT before pick; **split pooled create** (scalar → JSONB 45s → startedAt); **`timedEndsAt` NULL**; `startedAt` = JS Date **after** JSONB hop3. Play-load: Survival handoff **peek** 120s (answerKey, no `isCorrect`); dev miss без TOAST SELECT. Not `runTimedQuizStart`. Submit clock still Chat E.
 - Keep-warm on quiz Direct queue **OFF**.
 
 ### D. Play-load (quiz session page)
 
 ```txt
 OK:   resolve in-memory handoff from create (Survival peek 120s; Classic take 45s) → paint questions
-OK:   Survival handoff/view: startedAt + runId + waveIndex scalars; isCorrect leak OK
+OK:   Survival handoff/view: startedAt + runId + waveIndex scalars; no isCorrect (answerKey)
 OK:   Classic/Blitz/Daily handoff miss → pooled SELECT snapshotData (prod 18s; next-dev 5s)
 OK:   Survival prod handoff miss → pooled SELECT snapshotData (18s)
 OK:   Survival dev handoff miss → scalar meta check → fast soft-miss (no 5s TOAST loop)
@@ -145,23 +145,27 @@ BAD:  arming NOW()+duration on play-load together with TOAST SELECT
 
 Refresh must **not** reset the deadline (play-load does not UPDATE `timedEndsAt`).
 
-### E2. Answer lock-in (Classic / Blitz / Daily, Nov 2)
+### E2. Answer lock-in (all modes, Nov 2)
 
 ```txt
 OK:   POST /api/quiz/:id/answer → open answerKey (AES-GCM, no DB) → ONE pooled
-      INSERT QuizAnswer … SELECT … WHERE session owned + IN_PROGRESS + not Survival
+      INSERT QuizAnswer … SELECT … WHERE session owned + IN_PROGRESS
       + timedEndsAt > JS Date(now − grace) ON CONFLICT DO NOTHING RETURNING
+      (answeredAt = JS Date of the request)
 OK:   nothing inserted → scalar SELECT of the existing answer (replay) / session state
 OK:   submit: pooled scalar SELECT locked answers BEFORE the complete hop;
       locks exist → score only locks; complete hop unchanged (scalars)
+OK:   Survival submit: replaySurvivalWave over locks (answeredAt order) → counted
+      answers, clockOk, T0'; scoring snapshot still the create handoff (no TOAST)
 OK:   play-load (pooled path): separate scalar SELECT of locked answers, soft-fail
 BAD:  SELECT snapshotData (TOAST) on the answer hop «to check the answer»
 BAD:  answer hop on the Direct queue / withDirectPg*
 BAD:  scoring from form answers when the session has locks
 BAD:  SQL NOW() for the Blitz deadline check (naive TIMESTAMP, see E)
+BAD:  Survival client waiting for the lock before the next question (bank ticks)
 ```
 
-Code: `src/entities/quiz-session/quiz-answer-key.ts`, `quiz-session-answer.repository.ts`, `src/app/api/quiz/[sessionId]/answer/route.ts`. ADR: DECISIONS → Answer lock-in.
+Code: `src/entities/quiz-session/quiz-answer-key.ts`, `quiz-session-answer.repository.ts`, `src/app/api/quiz/[sessionId]/answer/route.ts`, `src/features/survival-mode/lib/replay-survival-wave.ts`. ADR: DECISIONS → Answer lock-in; Survival on answer lock-in.
 
 ### F. Direct queue
 

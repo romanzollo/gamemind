@@ -122,6 +122,8 @@ export const ruDictionary: Dictionary = {
         expiredLabel: 'Время вышло',
         savingAnswers: 'Сохраняем волну…',
         chooseAnswerHint: 'Выбери ответ, чтобы продолжить волну.',
+        bankGain: '+{n} с',
+        bankLoss: '−{n} с',
         finishWaveButton: 'Завершить волну',
         tryAgainWave: 'Ещё забег',
         nextWaveButton: 'Следующая волна',
