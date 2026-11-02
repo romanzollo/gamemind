@@ -164,7 +164,8 @@ export default async function ProfilePage({
                         className="!h-12 !w-12"
                     />
 
-                    <div className="min-w-0 flex-1">
+                    {/* min-w: на узком экране кнопки уходят строкой ниже, а не сжимают ник до «a…» */}
+                    <div className="min-w-[9rem] flex-1">
                         <p className="truncate font-display text-lg font-semibold tracking-tight text-foreground sm:text-xl">
                             {session.user.username}
                         </p>
