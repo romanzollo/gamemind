@@ -2372,3 +2372,42 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - `allowDangerousEmailAccountLinking` on every provider: an unconfirmed email would open someone else's account.
 
 **Deploy order:** apply the migration on prod **before** pushing code that reads `isGuest` (otherwise `42703`). Making `email` nullable alone is backward compatible with the running code.
+
+## Content taxonomy: domains, facets, tags (November 2, 2026)
+
+**Context:** ROADMAP 4.0. `Question.category` is the same string (`video-games`) on all 549 published questions and nothing reads it. What a question is about (game, series, topic) lives in `metadata` JSONB — filled for IMAGE_GUESS, empty for most TEXT rows: the TEXT import never copied draft `metadata`. The redesign (phase 4) needs filters, and new sections (movies, football, music) must arrive as data, not `if` branches.
+
+**Decision:** a relational taxonomy, filled from a catalog in git by one script.
+
+| Piece | Choice |
+|------|--------|
+| `Domain` | id = stable slug (`games`), names RU/EN. `Question.domainId` (default `games`, FK). Created by the migration: the FK needs the row |
+| `Facet` | A dimension inside a domain. id `games.platform`. Games: platform, era, genre, franchise (series), game. Movies later: genre, decade, director… — rows, not code |
+| `Tag` | A value: id `games.platform.ps2` — the same on dev and prod, readable in SQL and future URLs. Names RU/EN as columns (`nameRu` / `nameEn`): hundreds of rows, two fixed locales, simpler than a translation table. `parentId` = family inside the same facet (PS2 → PlayStation), so a family filter covers every generation without tagging both levels |
+| `QuestionTag` | `(questionId, tagId)` PK + index `(tagId, questionId)` for «questions with this tag». Cascades with the question and the tag |
+| `Question.contentKey` | Stable content key, unique: draft `draftKey`, or the deterministic id of seed / image rows (`q-vg-easy-004`, `img2-…` — already equal to draftKey). TEXT imports got random UUIDs that differ between dev and prod (the same problem `apply-question-fixes.cjs` works around by matching options). Resolved once per DB: id → `metadata.draftKey` → RU text of a draft → RU text through `content/fixes` chains. On Nov 2 all 549 rows resolved on both DBs (222 id, 286 text, 41 fix chain) |
+| `category` | Stays while code writes it; dropped by a later migration (expand → contract) |
+
+**Catalog (`content/taxonomy/`):**
+
+- `games.json` — facets, tags (platforms with families, decades, genres), franchises, and **games**: slug, title, year, platforms, genres, franchise, aliases (spellings used in drafts: `Baldur’s Gate 3`, `NieR:Automata`). A question's platform / era / genre / franchise come **from its game**: they are facts about the game, so ~250 games are curated instead of 549 questions × 5 dimensions.
+- Rules: platforms = where the game came out in its first year (no late ports or remasters — those are separate games); era = decade of that release; up to three genres.
+- `question-overrides.json` — `contentKey → ["game:…", "franchise:…", "platform:…"]`, replaces the derived list: series-level questions («the protagonist of Halo»), hardware and industry history, questions without a game.
+- Source of a question's game, first match wins: override → draft `tags` → draft `metadata.game` → DB `metadata.game` (seed / image rows).
+
+**Sync (`npm run taxonomy:sync`):** fills `contentKey` where null, upserts domain / facets / tags, adds missing `QuestionTag` links. Dry run by default, `--apply` writes, `--prune` also removes links the catalog no longer gives (otherwise manual admin tags would be lost). Ordered autocommit statements, idempotent (Neon write path, no `BEGIN`). Prod — on the owner's go-ahead, after the migration. `taxonomy:coverage` prints questions per tag × difficulty: which filters have enough questions to offer.
+
+**Pipeline:** a draft may carry `tags: ["platform:ps2", …]` (validated against the catalog); `metadata.game` keeps working through aliases. Import is unchanged — tags are applied by the sync after import, so there is one writer besides the admin.
+
+**Admin:** the question edit page has a «Tags» block (`AdminQuestionTags`, `mutateQuestionTagAction`, `question-tags.repository.ts`): chips with remove and a search over the catalog (`datalist` of «name · facet»; the server checks the tag id again). It edits `QuestionTag` links only — dictionaries come from the catalog. Removing a tag the catalog gives lasts until the next sync (the block says so); permanent changes go into `content/taxonomy`. The question list filters by tag (`?tag=games.platform.playstation`, a family includes its children) and by «untagged». The tag id goes into the list SQL as a literal (the list avoids parameters — hang playbook), so the URL parser accepts only `[a-z0-9]` segments. The free-text «Category» field is gone from the form; the value is sent unchanged until the column is dropped.
+
+**Hot path:** untouched. Pick, start, submit and result read none of the new columns. Filter-aware pick is **4.0b**, together with the screens that choose a filter: the anti-repeat bag is one per (user, difficulty) over the whole pool; a filter needs its own bag per (user, difficulty, filter) and the smoke matrix. And volume is not there yet: the largest series (Resident Evil) has 2–5 questions per difficulty.
+
+**Not chosen:**
+
+- Tags in `metadata` JSONB with a GIN index — no dictionary (`PS2` / `PlayStation 2` / `ps2` drift), nowhere to keep RU/EN names or families.
+- One column per dimension — several platforms and genres per question; other domains have other dimensions.
+- A typed `Game` table — fits games only (movies would need `Movie`, football `Club`, each with code). Game facts live in the catalog; the game itself is a tag.
+- Tagging every question by hand — platform and genre are facts about the game; repeating them per question invites contradictions.
+
+**Deploy order:** migration on prod first (additive; running code ignores the new columns), then code, then the sync dry run → `--apply` on the owner's go-ahead.

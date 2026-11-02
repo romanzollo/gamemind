@@ -33,6 +33,13 @@ const fieldClassName =
 
 const SEARCH_DEBOUNCE_MS = 400;
 
+/** Метка для фильтра: подпись уже на языке страницы, group — измерение. */
+export type AdminTagFilterOption = {
+    id: string;
+    label: string;
+    group: string;
+};
+
 type AdminQuestionsFiltersProps = {
     locale: Locale;
     labels: Dictionary['admin'];
@@ -42,6 +49,8 @@ type AdminQuestionsFiltersProps = {
         hard: string;
     };
     filters: AdminQuestionListFilters;
+    /** Пусто, если каталог меток не загрузился: фильтр тогда скрыт. */
+    tagOptions: AdminTagFilterOption[];
 };
 
 export function AdminQuestionsFilters({
@@ -49,7 +58,9 @@ export function AdminQuestionsFilters({
     labels,
     difficultyLabels,
     filters,
+    tagOptions,
 }: AdminQuestionsFiltersProps) {
+    const tagGroups = [...new Set(tagOptions.map((option) => option.group))];
     const [searchText, setSearchText] = useState(filters.q);
     const showReset = hasActiveAdminQuestionListFilters(filters);
 
@@ -65,6 +76,7 @@ export function AdminQuestionsFilters({
                 publication: 'all',
                 difficulty: 'all',
                 type: 'all',
+                tag: 'all',
                 q: '',
                 page: 1,
             }),
@@ -216,6 +228,46 @@ export function AdminQuestionsFilters({
                     </select>
                 </label>
             </div>
+
+            {tagOptions.length > 0 ? (
+                <label className="mt-3 block min-w-0">
+                    <span className="mb-1 block text-xs font-medium text-muted">
+                        {labels.tags.filterLabel}
+                    </span>
+                    <select
+                        name="tag"
+                        value={filters.tag}
+                        className={fieldClassName}
+                        onChange={(event) => {
+                            navigate({
+                                ...filters,
+                                tag: event.target.value,
+                                q: searchText.trim(),
+                                page: 1,
+                            });
+                        }}
+                    >
+                        <option value="all">{labels.tags.filterAll}</option>
+                        <option value="untagged">
+                            {labels.tags.filterUntagged}
+                        </option>
+                        {tagGroups.map((group) => (
+                            <optgroup key={group} label={group}>
+                                {tagOptions
+                                    .filter((option) => option.group === group)
+                                    .map((option) => (
+                                        <option
+                                            key={option.id}
+                                            value={option.id}
+                                        >
+                                            {option.label}
+                                        </option>
+                                    ))}
+                            </optgroup>
+                        ))}
+                    </select>
+                </label>
+            ) : null}
 
             <label className="mt-3 block min-w-0">
                 <span className="mb-1 block text-xs font-medium text-muted">

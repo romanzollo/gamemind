@@ -21,6 +21,7 @@ const DEFAULTS: AdminQuestionListFilters = {
     publication: 'all',
     difficulty: 'all',
     type: 'all',
+    tag: 'all',
     q: '',
     page: 1,
 };
@@ -38,6 +39,7 @@ describe('parseAdminQuestionListFilters', () => {
             publication: 'DRAFT',
             difficulty: 'HARD',
             type: 'IMAGE_GUESS',
+            tag: 'games.genre.rpg',
             q: '  mario  ',
             page: '3',
         });
@@ -47,6 +49,7 @@ describe('parseAdminQuestionListFilters', () => {
             publication: 'DRAFT',
             difficulty: 'HARD',
             type: 'IMAGE_GUESS',
+            tag: 'games.genre.rpg',
             q: 'mario',
             page: 3,
         });
@@ -73,6 +76,19 @@ describe('parseAdminQuestionListFilters', () => {
             parseAdminQuestionListFilters({
                 page: 'abc',
             }),
+        ).toEqual(DEFAULTS);
+    });
+
+    it('accepts a catalog tag id or untagged, and drops anything else', () => {
+        expect(
+            parseAdminQuestionListFilters({ tag: 'games.platform.ps2' }).tag,
+        ).toBe('games.platform.ps2');
+        expect(parseAdminQuestionListFilters({ tag: 'untagged' }).tag).toBe(
+            'untagged',
+        );
+        // id идёт в SQL литералом: кавычка не должна пройти парсер.
+        expect(
+            parseAdminQuestionListFilters({ tag: "games.platform.ps2'--" }),
         ).toEqual(DEFAULTS);
     });
 
@@ -140,6 +156,7 @@ describe('buildAdminQuestionListHref', () => {
             publication: 'all',
             difficulty: 'EASY',
             type: 'all',
+            tag: 'all',
             q: 'sonic',
             page: 1,
         });
@@ -147,6 +164,15 @@ describe('buildAdminQuestionListHref', () => {
         expect(href).toBe(
             '/en/admin/questions?status=inactive&difficulty=EASY&q=sonic',
         );
+    });
+
+    it('keeps a tag filter in the URL', () => {
+        expect(
+            buildAdminQuestionListHref('ru', {
+                ...DEFAULTS,
+                tag: 'games.platform.ps2',
+            }),
+        ).toBe('/ru/admin/questions?tag=games.platform.ps2');
     });
 
     it('includes page only when greater than 1', () => {

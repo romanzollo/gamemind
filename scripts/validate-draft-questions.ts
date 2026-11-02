@@ -8,7 +8,8 @@
  *
  * Exit codes:
  *   0 — контракт ок (warnings/blockers только печатаются)
- *   1 — нет файла / битый JSON / контракт fail / (опционально) publish blockers
+ *   1 — нет файла / битый JSON / контракт fail / метки не из каталога /
+ *       (опционально) publish blockers
  *
  * Canon: docs/CONTENT_PIPELINE.md; логика — validateDraftQuestionsBatch.
  */
@@ -16,7 +17,50 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+import type { DraftQuestionsBatch } from '../src/features/content/lib/draft-questions.schema';
 import { validateDraftQuestionsBatch } from '../src/features/content/lib/validate-draft-questions';
+import {
+    buildTaxonomyIndex,
+    expandTagRefs,
+    refForGameName,
+} from '../src/features/content/taxonomy';
+import { loadTaxonomyCatalog } from '../src/features/content/taxonomy/load-taxonomy-files';
+
+/**
+ * Метки черновика сверяются с каталогом: неизвестная метка — ошибка
+ * (taxonomy:sync её не запишет), неизвестная игра в `metadata.game` —
+ * предупреждение (вопрос останется без меток, пока игру не внесут).
+ */
+function checkTaxonomy(batch: DraftQuestionsBatch): { errors: number } {
+    const index = buildTaxonomyIndex(loadTaxonomyCatalog(process.cwd()));
+    let errors = 0;
+    let warnings = 0;
+
+    batch.questions.forEach((question, position) => {
+        const label = question.draftKey ?? `#${position}`;
+        if (question.tags) {
+            for (const ref of expandTagRefs(index, question.tags).unknownRefs) {
+                errors += 1;
+                console.error(`  - [${label}] unknown tag "${ref}"`);
+            }
+            return;
+        }
+        const game = question.metadata?.game;
+        if (typeof game === 'string' && !refForGameName(index, game)) {
+            warnings += 1;
+            console.log(
+                `  - [${label}] game "${game}" is not in content/taxonomy/games.json`,
+            );
+        }
+    });
+
+    console.log(
+        errors === 0 && warnings === 0
+            ? 'Taxonomy: OK'
+            : `Taxonomy: ${errors} error(s), ${warnings} warning(s)`,
+    );
+    return { errors };
+}
 
 const DEFAULT_PATH = 'content/drafts/examples/sample-text-v1.json';
 
@@ -69,6 +113,10 @@ async function main(): Promise<void> {
     }
 
     console.log(`Contract: OK (${result.batch.questions.length} questions)`);
+
+    if (checkTaxonomy(result.batch).errors > 0) {
+        process.exit(1);
+    }
 
     let warningCount = 0;
     let blockerCount = 0;

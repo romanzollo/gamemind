@@ -27,6 +27,7 @@ export async function GET(request: Request) {
                   publication: 'all',
                   difficulty: difficultyParam as Difficulty,
                   type: 'all',
+                  tag: 'all',
                   q: '',
                   page: 1,
               }

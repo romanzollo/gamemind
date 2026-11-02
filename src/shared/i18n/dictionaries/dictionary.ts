@@ -410,6 +410,21 @@ export type Dictionary = {
         filterSearch: string;
         filterSearchPlaceholder: string;
         filterReset: string;
+        /** Метки таксономии: блок на странице вопроса и фильтр списка. */
+        tags: {
+            title: string;
+            hint: string;
+            empty: string;
+            addLabel: string;
+            addPlaceholder: string;
+            addButton: string;
+            removeLabel: string;
+            unknownTag: string;
+            saveFailed: string;
+            filterLabel: string;
+            filterAll: string;
+            filterUntagged: string;
+        };
         /** Пагинация списка вопросов (offset, URL ?page=). */
         paginationNavLabel: string;
         /** «Показаны {from}–{to} из {total}». */
@@ -434,7 +449,6 @@ export type Dictionary = {
         formPromptImageUrlHint: string;
         formOptionTextRu: string;
         formOptionTextEn: string;
-        formCategory: string;
         formOptions: string;
         formCorrectOptionHint: string;
         formOption: string;

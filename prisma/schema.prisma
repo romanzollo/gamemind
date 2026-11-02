@@ -143,18 +143,25 @@ model RateLimitBucket {
 }
 
 model Question {
-  id                 String                     @id @default(cuid())
-  text               String
-  type               QuestionType               @default(TEXT)
-  difficulty         Difficulty
-  category           String                     @default("video-games")
-  metadata           Json?
+  id                String                    @id @default(cuid())
+  text              String
+  type              QuestionType              @default(TEXT)
+  difficulty        Difficulty
+  /// Устаревшее: всегда "video-games". Домен — `domainId`; колонку удалит
+  /// отдельная миграция, когда код перестанет её писать (ADR Content taxonomy).
+  category          String                    @default("video-games")
+  /// Домен контента (игры, позже фильмы, футбол…). Домен — данные, не ветки кода.
+  domainId          String                    @default("games")
+  /// Стабильный ключ контента, одинаковый на dev и prod: draftKey партии или
+  /// детерминированный id сида. id вопросов из импорта в базах разные.
+  contentKey        String?                   @unique
+  metadata          Json?
   /// Soft-hide / архив: false → никогда не в quiz pool (даже если PUBLISHED).
-  isActive           Boolean                    @default(true)
+  isActive          Boolean                   @default(true)
   /// Черновик → ревью → публикация. Новые вопросы = DRAFT; в pool только PUBLISHED.
-  publicationStatus  QuestionPublicationStatus  @default(DRAFT)
-  createdAt          DateTime                   @default(now())
-  updatedAt          DateTime                   @updatedAt
+  publicationStatus QuestionPublicationStatus @default(DRAFT)
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
 
   options          AnswerOption[]
   assets           QuestionAsset[]
@@ -163,8 +170,80 @@ model Question {
   translations     QuestionTranslation[]
   /// Exclusion ids Survival-забега (wave 2+). Не JSONB на run.
   survivalRunSeen  SurvivalRunSeenQuestion[]
+  tags             QuestionTag[]
+
+  domain Domain @relation(fields: [domainId], references: [id])
 
   @@index([difficulty, isActive, publicationStatus])
+}
+
+/// Таксономия контента: домен → измерение (Facet) → метка (Tag) ↔ вопрос.
+/// Справочники заполняет `scripts/taxonomy-sync.cjs` из content/taxonomy;
+/// частые фильтры — здесь, а не в `Question.metadata` (JSONB).
+/// Canon: docs/DECISIONS.md → Content taxonomy.
+
+/// Домен контента. id — стабильный slug (`games`): его видят URL и каталог.
+model Domain {
+  id        String   @id
+  nameRu    String
+  nameEn    String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  questions Question[]
+  facets    Facet[]
+}
+
+/// Измерение меток внутри домена: платформа, эпоха, жанр, франшиза, игра.
+/// id = `{domainId}.{slug}` (`games.platform`).
+model Facet {
+  id        String @id
+  domainId  String
+  slug      String
+  nameRu    String
+  nameEn    String
+  sortOrder Int    @default(0)
+
+  domain Domain @relation(fields: [domainId], references: [id], onDelete: Cascade)
+  tags   Tag[]
+
+  @@unique([domainId, slug])
+}
+
+/// Значение измерения: `PS2`, `90-е`, `Шутер`, `Resident Evil`.
+/// id = `{facetId}.{slug}` (`games.platform.ps2`) — одинаков на dev и prod.
+/// parentId — семейство внутри того же измерения (PS2 → PlayStation).
+model Tag {
+  id        String   @id
+  facetId   String
+  slug      String
+  nameRu    String
+  nameEn    String
+  parentId  String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  facet     Facet         @relation(fields: [facetId], references: [id], onDelete: Cascade)
+  parent    Tag?          @relation("TagFamily", fields: [parentId], references: [id], onDelete: SetNull)
+  children  Tag[]         @relation("TagFamily")
+  questions QuestionTag[]
+
+  @@unique([facetId, slug])
+  @@index([parentId])
+}
+
+/// Метка вопроса. Индекс (tagId, questionId) — под выборку «вопросы с меткой».
+model QuestionTag {
+  questionId String
+  tagId      String
+  createdAt  DateTime @default(now())
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, tagId])
+  @@index([tagId, questionId])
 }
 
 model AnswerOption {
@@ -204,23 +283,23 @@ model DailyChallenge {
 /// Дискриминатор сессии: `survivalRunId IS NOT NULL`. `timedEndsAt` и `dailyChallengeId` запрещены CHECK.
 /// Canon: docs/DECISIONS.md → Survival Mode MVP. Не мержить с Timed (`timedEndsAt`).
 model SurvivalRun {
-  id       String @id @default(cuid())
-  userId   String
+  id                   String            @id @default(cuid())
+  userId               String
   /// Только EASY|MEDIUM|HARD. Mix в MVP нет.
-  difficulty Difficulty
+  difficulty           Difficulty
   /// Тот же enum, что у сессии (IN_PROGRESS / COMPLETED / ABANDONED) — без второго типа.
-  status   QuizSessionStatus @default(IN_PROGRESS)
-  currentWaveIndex Int @default(1)
-  startedAt        DateTime @default(now())
-  completedAt      DateTime?
+  status               QuizSessionStatus @default(IN_PROGRESS)
+  currentWaveIndex     Int               @default(1)
+  startedAt            DateTime          @default(now())
+  completedAt          DateTime?
   /// Остаток банка после успешного complete волны. Скаляр на run, не JSONB и не per-answer UPDATE.
   bankRemainingSeconds Int?
   /// Сумма score волн с survivalClockOk=true. Доска = best run per user по этому скаляру.
   /// Пишется pooled AFTER complete (не в completeWithResult). Wave clockOk=false не добавляет.
-  totalScore Int @default(0)
+  totalScore           Int               @default(0)
 
-  user         User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sessions     QuizSession[]
+  user          User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions      QuizSession[]
   seenQuestions SurvivalRunSeenQuestion[]
 
   @@index([userId, status])
@@ -244,21 +323,21 @@ model SurvivalRunSeenQuestion {
 }
 
 model QuizSession {
-  id               String            @id @default(cuid())
-  userId           String
-  status           QuizSessionStatus @default(IN_PROGRESS)
+  id                String              @id @default(cuid())
+  userId            String
+  status            QuizSessionStatus   @default(IN_PROGRESS)
   /// SINGLE: EASY|MEDIUM|HARD. MIXED: NULL (не маскировать mix под MEDIUM).
-  difficulty       Difficulty?
+  difficulty        Difficulty?
   /// SINGLE = один мешок; MIXED = сплит трёх мешков. Default покрывает legacy INSERT.
-  poolKind         QuizSessionPoolKind @default(SINGLE)
-  questionCount    Int
-  sessionLocale    ContentLocale     @default(ru)
-  snapshotData     Json?
+  poolKind          QuizSessionPoolKind @default(SINGLE)
+  questionCount     Int
+  sessionLocale     ContentLocale       @default(ru)
+  snapshotData      Json?
   /// NULL = classic quiz; non-null = попытка Daily Challenge.
-  dailyChallengeId String?
+  dailyChallengeId  String?
   /// NULL = classic/daily; non-null = Timed mode (серверный дедлайн submit).
   /// Canon: docs/DECISIONS.md → Timed Mode MVP.
-  timedEndsAt      DateTime?
+  timedEndsAt       DateTime?
   /// NULL = не Survival; non-null = волна SurvivalRun.
   /// Classic = dailyChallengeId, timedEndsAt и survivalRunId все NULL.
   /// CHECK в миграции: Survival ⇏ timedEndsAt / dailyChallengeId (не Blitz, не Daily).
@@ -268,24 +347,24 @@ model QuizSession {
   survivalWaveIndex Int?
   /// Реконструкция банка на submit. NULL до complete / если не Survival.
   survivalClockOk   Boolean?
-  startedAt        DateTime          @default(now())
-  completedAt      DateTime?
+  startedAt         DateTime            @default(now())
+  completedAt       DateTime?
 
-  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dailyChallenge DailyChallenge? @relation(fields: [dailyChallengeId], references: [id], onDelete: Restrict)
-  survivalRun    SurvivalRun?    @relation(fields: [survivalRunId], references: [id], onDelete: Restrict)
-  answers        QuizAnswer[]
-  result         QuizResult?
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyChallenge   DailyChallenge?       @relation(fields: [dailyChallengeId], references: [id], onDelete: Restrict)
+  survivalRun      SurvivalRun?          @relation(fields: [survivalRunId], references: [id], onDelete: Restrict)
+  answers          QuizAnswer[]
+  result           QuizResult?
   sessionQuestions QuizSessionQuestion[]
 
+  /// Одна сессия на пользователя на день челленджа.
+  /// Postgres: несколько строк с dailyChallengeId NULL допустимы (classic).
+  @@unique([userId, dailyChallengeId])
   @@index([userId, status])
   @@index([dailyChallengeId])
   @@index([survivalRunId])
   /// Leaderboard: MIXED vs SINGLE+difficulty, без UNION.
   @@index([poolKind, difficulty])
-  /// Одна сессия на пользователя на день челленджа.
-  /// Postgres: несколько строк с dailyChallengeId NULL допустимы (classic).
-  @@unique([userId, dailyChallengeId])
 }
 
 model QuizAnswer {
@@ -317,7 +396,7 @@ model QuizResult {
   reviewSnapshot Json?
   /// Slim bilingual review DTO (option B): пишется на submit из уже загруженного
   /// snapshot; hot-path разбора читает его вместо большого reviewSnapshot/TOAST.
-  reviewPayload Json?
+  reviewPayload  Json?
 
   session QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -366,19 +445,19 @@ model UserAchievement {
 /// Daily Challenge эту таблицу не трогает. Пишем только на quiz start, не на submit.
 /// Canon: User Question Cycle MVP (seeded cursor).
 model UserQuestionCycle {
-  id           String     @id @default(cuid())
-  userId       String
-  difficulty   Difficulty
+  id          String     @id @default(cuid())
+  userId      String
+  difficulty  Difficulty
   /// Номер цикла (увеличивается при reshuffle).
-  cycleNumber  Int        @default(0)
+  cycleNumber Int        @default(0)
   /// Seed детерминированного shuffle отсортированного pool.
-  cycleSeed    Int        @default(0)
+  cycleSeed   Int        @default(0)
   /// Следующий индекс в shuffled pool.
-  cursor       Int        @default(0)
+  cursor      Int        @default(0)
   /// Размер pool на старте цикла; смена размера → новый цикл.
-  poolSize     Int        @default(0)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  poolSize    Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -394,8 +473,8 @@ model QuizSessionQuestion {
   displayText     String?
   displayImageUrl String?
 
-  session  QuizSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  question Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  session  QuizSession                 @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question Question                    @relation(fields: [questionId], references: [id], onDelete: Cascade)
   options  QuizSessionQuestionOption[]
 
   @@unique([sessionId, questionId])

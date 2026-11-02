@@ -11,6 +11,8 @@
 
 import { z } from 'zod';
 
+import { tagRefSchema } from '../taxonomy/taxonomy-catalog.schema';
+
 const localizedQuestionTextSchema = z
     .string()
     .trim()
@@ -44,6 +46,12 @@ const draftQuestionSchema = z.object({
     difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
     category: z.string().trim().min(1).max(100).optional(),
     metadata: z.record(z.unknown()).optional(),
+    /**
+     * Метки таксономии (`platform:ps2`, `game:portal`) — вместо вывода из
+     * `metadata.game`. Существование меток проверяет CLI validate по каталогу;
+     * в БД их пишет `taxonomy:sync`, не import.
+     */
+    tags: z.array(tagRefSchema).min(1).max(12).optional(),
     translations: bilingualTextsSchema,
     options: z.array(draftOptionSchema).length(4, 'Exactly 4 options are required'),
 });

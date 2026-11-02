@@ -116,7 +116,8 @@ Each question object:
 | `type` | yes | v1: only `"TEXT"` |
 | `difficulty` | yes | `"EASY"` \| `"MEDIUM"` \| `"HARD"` |
 | `category` | no | Default on import: `"video-games"` |
-| `metadata` | no | Free object (franchise, topic, game, …) — not used by quiz hot path |
+| `metadata` | no | Free object (franchise, topic, game, …) — not used by quiz hot path. `metadata.game` gives the question its taxonomy tags through `content/taxonomy/games.json` (title or alias) |
+| `tags` | no | Taxonomy tags instead of `metadata.game`: `["game:portal"]`, `["franchise:hitman", "genre:stealth"]`. Validate fails on a tag missing from the catalog |
 | `draftKey` | no | Stable string for humans / future idempotent re-import (not a DB id) |
 | `translations.ru.text` | yes | Non-empty after trim |
 | `translations.en.text` | yes | Non-empty after trim |
@@ -155,7 +156,10 @@ author JSON  →  validate (schema + domain)  →  import as DRAFT
       →  admin list ?publication=DRAFT  →  edit / quality panel
       →  submit for review / publish (existing gate)
       →  quiz pool only after PUBLISHED + isActive
+      →  npm run taxonomy:sync (dev; prod on the owner’s go-ahead)
 ```
+
+**Taxonomy (Nov 2):** import does not write tags. After import / publish run `npm run taxonomy:sync` (dry run), then `-- --apply`: it sets `Question.contentKey` (= `draftKey`) and adds the tags. A new game goes into `content/taxonomy/games.json` first (year, first-year platforms, up to 3 genres, series). A question about a whole series or about hardware gets `tags` in the draft or a line in `content/taxonomy/question-overrides.json`. Which filters have enough questions: `npm run taxonomy:coverage`. Canon: DECISIONS → Content taxonomy.
 
 Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans still review.
 

@@ -4,7 +4,11 @@ import { Suspense } from 'react';
 
 import { questionRepository } from '@/entities/question/question.repository';
 import { AdminNoticeFlash } from '@/features/admin/components/AdminNoticeFlash';
-import { AdminQuestionsFilters } from '@/features/admin/components/AdminQuestionsFilters';
+import { questionTagsRepository } from '@/entities/question/question-tags.repository';
+import {
+    AdminQuestionsFilters,
+    type AdminTagFilterOption,
+} from '@/features/admin/components/AdminQuestionsFilters';
 import { AdminQuestionsPagination } from '@/features/admin/components/AdminQuestionsPagination';
 import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
 import {
@@ -92,6 +96,24 @@ export default async function AdminQuestionsPage({
     }
 
     const pageMeta = getAdminQuestionListPageMeta(totalCount, listPage);
+
+    // Каталог меток для фильтра — после списка и soft-fail: без него фильтр
+    // скрыт, список работает. Не параллельно list-read (hang playbook).
+    let tagOptions: AdminTagFilterOption[] = [];
+    try {
+        tagOptions = (await questionTagsRepository.findAllTagOptions()).map(
+            (tag) => ({
+                id: tag.id,
+                label: safeLocale === 'en' ? tag.nameEn : tag.nameRu,
+                group: safeLocale === 'en' ? tag.facetNameEn : tag.facetNameRu,
+            }),
+        );
+    } catch (tagsError) {
+        console.warn(
+            '[admin/questions] tag options load failed:',
+            tagsError instanceof Error ? tagsError.message : tagsError,
+        );
+    }
 
     const actionErrorMessage =
         error === 'DELETE_FAILED'
@@ -188,6 +210,7 @@ export default async function AdminQuestionsPage({
                     hard: dictionary.quiz.hard,
                 }}
                 filters={filters}
+                tagOptions={tagOptions}
             />
 
             {!loadErrorMessage ? (

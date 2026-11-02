@@ -36,6 +36,16 @@ export type AdminQuestionListPublicationFilter =
     | QuestionPublicationStatus
     | 'all';
 
+/**
+ * Метка в URL: id метки (`games.platform.ps2`; семейство охватывает детей),
+ * `untagged` — вопросы без меток, `all` — без фильтра.
+ */
+export type AdminQuestionListTagFilter = 'all' | 'untagged' | string;
+
+/** id метки таксономии: `{domain}.{facet}.{slug}` (DECISIONS → Content taxonomy). */
+export const ADMIN_TAG_ID_PATTERN =
+    /^[a-z0-9]+\.[a-z0-9]+\.[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 /** Нормализованные фильтры списка вопросов (после parse). */
 export type AdminQuestionListFilters = {
     status: AdminQuestionListStatusFilter;
@@ -43,6 +53,8 @@ export type AdminQuestionListFilters = {
     publication: AdminQuestionListPublicationFilter;
     difficulty: Difficulty | 'all';
     type: QuestionType | 'all';
+    /** Только формат ADMIN_TAG_ID_PATTERN: id попадает в SQL литералом. */
+    tag: AdminQuestionListTagFilter;
     /** Подстрока поиска по тексту; пустая строка = без поиска. */
     q: string;
     /** 1-based номер страницы; битые значения → 1. */
@@ -54,6 +66,7 @@ const DEFAULT_FILTERS: AdminQuestionListFilters = {
     publication: 'all',
     difficulty: 'all',
     type: 'all',
+    tag: 'all',
     q: '',
     page: 1,
 };
@@ -71,6 +84,13 @@ const adminQuestionListFiltersSchema = z.object({
         .default('all'),
     difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'all']).default('all'),
     type: z.enum(['TEXT', 'IMAGE_GUESS', 'all']).default('all'),
+    tag: z
+        .union([
+            z.literal('all'),
+            z.literal('untagged'),
+            z.string().regex(ADMIN_TAG_ID_PATTERN),
+        ])
+        .default('all'),
     q: z.string().trim().max(SEARCH_MAX_LENGTH).default(''),
     page: z.coerce.number().int().min(1).max(PAGE_MAX).default(1),
 });
@@ -109,6 +129,7 @@ export function parseAdminQuestionListFilters(
         publication: emptyToUndefined(firstParam(searchParams.publication)),
         difficulty: emptyToUndefined(firstParam(searchParams.difficulty)),
         type: emptyToUndefined(firstParam(searchParams.type)),
+        tag: emptyToUndefined(firstParam(searchParams.tag)),
         q: emptyToUndefined(firstParam(searchParams.q)),
         page: emptyToUndefined(firstParam(searchParams.page)),
     };
@@ -124,6 +145,7 @@ export function parseAdminQuestionListFilters(
         publication: parsed.data.publication,
         difficulty: parsed.data.difficulty,
         type: parsed.data.type,
+        tag: parsed.data.tag,
         q: parsed.data.q,
         page: parsed.data.page,
     };
@@ -141,6 +163,7 @@ export function hasActiveAdminQuestionListFilters(
         filters.publication !== 'all' ||
         filters.difficulty !== 'all' ||
         filters.type !== 'all' ||
+        filters.tag !== 'all' ||
         filters.q.length > 0
     );
 }
@@ -169,6 +192,10 @@ export function buildAdminQuestionListHref(
 
     if (filters.type !== 'all') {
         params.set('type', filters.type);
+    }
+
+    if (filters.tag !== 'all') {
+        params.set('tag', filters.tag);
     }
 
     if (filters.q.length > 0) {

@@ -20,7 +20,10 @@ import type { Client } from 'pg';
 import { type Locale } from '@/shared/i18n';
 import { ADMIN_QUESTION_LIST_PAGE_SIZE } from '@/features/admin/lib/constants';
 import type { AdminQuestionListFilters } from '@/features/admin/lib/parse-admin-question-list-filters';
-import { getAdminQuestionListPageMeta } from '@/features/admin/lib/parse-admin-question-list-filters';
+import {
+    ADMIN_TAG_ID_PATTERN,
+    getAdminQuestionListPageMeta,
+} from '@/features/admin/lib/parse-admin-question-list-filters';
 import { normalizeBulkQuestionIds } from '@/features/admin/lib/parse-bulk-question-ids';
 import type {
     CreateQuestionInput,
@@ -161,6 +164,7 @@ function buildAdminListCacheKey(
         publication: filters?.publication ?? 'all',
         difficulty: filters?.difficulty ?? 'all',
         type: filters?.type ?? 'all',
+        tag: filters?.tag ?? 'all',
         q: filters?.q ?? '',
         page: filters?.page ?? 1,
     });
@@ -204,8 +208,11 @@ function setCachedAdminListResult(
     };
 }
 
-/** Сброс thumbs + list cache после create/update/delete (состав списка меняется). */
-function invalidateAdminListCaches() {
+/**
+ * Сброс thumbs + list cache после create/update/delete (состав списка меняется).
+ * Экспорт — для правки меток (question-tags.repository): фильтр по метке.
+ */
+export function invalidateAdminListCaches() {
     globalForAdminListPg.adminListCacheGeneration =
         getAdminListCacheGeneration() + 1;
     globalForAdminListPg.adminPromptCache = undefined;
@@ -1379,6 +1386,26 @@ export const questionAdminMethods = {
                 throw new Error(`Invalid type filter: ${type}`);
             }
             whereParts.push(`q."type" = '${type}'::"QuestionType"`);
+        }
+
+        // Метка: id только по ADMIN_TAG_ID_PATTERN ([a-z0-9.-]) — безопасен
+        // литералом. Семейство (PlayStation) охватывает детей через parentId.
+        if (filters?.tag === 'untagged') {
+            whereParts.push(`NOT EXISTS (
+                SELECT 1 FROM "QuestionTag" qtag
+                WHERE qtag."questionId" = q."id"
+            )`);
+        } else if (filters?.tag && filters.tag !== 'all') {
+            if (!ADMIN_TAG_ID_PATTERN.test(filters.tag)) {
+                throw new Error(`Invalid tag filter: ${filters.tag}`);
+            }
+            whereParts.push(`EXISTS (
+                SELECT 1
+                FROM "QuestionTag" qtag
+                JOIN "Tag" tag ON tag."id" = qtag."tagId"
+                WHERE qtag."questionId" = q."id"
+                  AND (tag."id" = '${filters.tag}' OR tag."parentId" = '${filters.tag}')
+            )`);
         }
 
         // Literal substring (position), не ILIKE. Escape ' for simple-query SQL.

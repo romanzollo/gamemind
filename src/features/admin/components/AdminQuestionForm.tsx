@@ -137,9 +137,9 @@ export function AdminQuestionForm({
     const [difficulty, setDifficulty] = useState<Difficulty>(
         isEdit ? initialValues!.difficulty : 'EASY',
     );
-    const [category, setCategory] = useState(
-        isEdit ? initialValues!.category : 'video-games',
-    );
+    // Устаревшая колонка: домен — Question.domainId (ADR Content taxonomy).
+    // Поле не показываем, значение уходит как было, пока колонку не удалят.
+    const category = isEdit ? initialValues!.category : 'video-games';
     const [options, setOptions] = useState<OptionDraft[]>(() =>
         buildInitialOptions(isEdit, initialValues),
     );
@@ -397,20 +397,7 @@ export function AdminQuestionForm({
                     </select>
                 </label>
 
-                <label className="flex flex-col gap-2 text-sm text-foreground">
-                    <span>{dictionary.admin.formCategory}</span>
-                    <input
-                        type="text"
-                        name="category"
-                        value={category}
-                        onChange={(event) => {
-                            setCategory(event.target.value);
-                        }}
-                        required
-                        maxLength={100}
-                        className={fieldClassName}
-                    />
-                </label>
+                <input type="hidden" name="category" value={category} />
 
                 <fieldset className="flex flex-col gap-3">
                     <legend className="font-medium text-foreground">

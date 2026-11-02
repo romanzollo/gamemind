@@ -2,9 +2,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { questionRepository } from '@/entities/question/question.repository';
+import {
+    questionTagsRepository,
+    type AdminTagOption,
+} from '@/entities/question/question-tags.repository';
 import { AdminQuestionForm } from '@/features/admin/components/AdminQuestionForm';
 import { AdminQuestionPublicationControls } from '@/features/admin/components/AdminQuestionPublicationControls';
 import { AdminQuestionPublishQualityPanel } from '@/features/admin/components/AdminQuestionPublishQualityPanel';
+import { AdminQuestionTags } from '@/features/admin/components/AdminQuestionTags';
 import {
     getAdminErrorMessage,
     getQuestionPublishQualityIssues,
@@ -126,6 +131,23 @@ export default async function AdminEditQuestionPage({
 
     const qualityIssues = getQuestionPublishQualityIssues(question);
 
+    // Метки — soft-fail: без них страница вопроса всё равно редактируется.
+    // Последовательно, не параллельно: общая очередь Direct (QUIZ_NEON_HOT_PATH).
+    let questionTags: AdminTagOption[] | null = null;
+    let tagOptions: AdminTagOption[] = [];
+    try {
+        questionTags = await questionTagsRepository.findTagsForQuestion(
+            question.id,
+        );
+        tagOptions = await questionTagsRepository.findAllTagOptions();
+    } catch (tagsError) {
+        console.warn(
+            '[admin/questions/edit] tags load failed:',
+            tagsError instanceof Error ? tagsError.message : tagsError,
+        );
+        questionTags = null;
+    }
+
     return (
         <main className="mx-auto max-w-4xl px-4 py-5 sm:px-8 sm:py-10">
             {header}
@@ -149,6 +171,17 @@ export default async function AdminEditQuestionPage({
                 labels={dictionary.admin}
                 workingLabel={dictionary.common.working}
             />
+
+            {questionTags ? (
+                <AdminQuestionTags
+                    locale={safeLocale}
+                    questionId={question.id}
+                    tags={questionTags}
+                    options={tagOptions}
+                    labels={dictionary.admin.tags}
+                    workingLabel={dictionary.common.working}
+                />
+            ) : null}
 
             <AdminQuestionForm
                 locale={safeLocale}

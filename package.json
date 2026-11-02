@@ -25,6 +25,8 @@
         "content:smoke-text": "node scripts/smoke-text-bank-status.cjs",
         "content:publish-text-drafts": "npx tsx scripts/publish-text-drafts.ts",
         "content:import-image-guess": "node scripts/import-image-guess-batch.cjs",
+        "taxonomy:sync": "npx tsx scripts/taxonomy-sync.ts",
+        "taxonomy:coverage": "npx tsx scripts/taxonomy-coverage.ts",
         "images:optimize": "node scripts/optimize-quiz-images.cjs",
         "images:hash": "node scripts/hash-quiz-images.cjs",
         "images:migrate-urls": "node scripts/migrate-quiz-image-urls.cjs",

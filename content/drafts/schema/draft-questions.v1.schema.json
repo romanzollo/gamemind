@@ -81,6 +81,16 @@
           "type": "object",
           "description": "Optional authoring hints; not required by quiz hot path."
         },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {
+            "type": "string",
+            "pattern": "^(platform|era|genre|franchise|game):[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "description": "Taxonomy tags from content/taxonomy/games.json, e.g. \"game:portal\" or \"franchise:hitman\". Overrides the tags derived from metadata.game; applied by npm run taxonomy:sync."
+        },
         "translations": { "$ref": "#/$defs/bilingualTexts" },
         "options": {
           "type": "array",
