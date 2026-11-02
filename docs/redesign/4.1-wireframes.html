@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GameMind — вайрфреймы 4.1</title>
+<!--
+  Вайрфреймы шага 4.1 (docs/redesign/4.1-references.md).
+  Низкая детализация: серые блоки, один акцент. Цвета, шрифты и тексты —
+  условные; стиль решает 4.3, тексты — таблица согласования gamemind-copy.
+  Бейджи «П1…П11» — номера принципов из 4.1-references.md.
+-->
+<style>
+  :root {
+    --bg: #eceef1;
+    --phone: #ffffff;
+    --ink: #15181d;
+    --muted: #6b7280;
+    --line: #d7dbe0;
+    --block: #eef0f3;
+    --accent: #0b6e4f;
+    --accent-soft: #e3f1ec;
+    --bad: #b42318;
+    --bad-soft: #fdecea;
+    --note: #7c3aed;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 16px 48px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  header.page { max-width: 1200px; margin: 0 auto 20px; }
+  header.page h1 { margin: 0 0 4px; font-size: 22px; }
+  header.page p { margin: 0; color: var(--muted); max-width: 70ch; }
+  .board {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    justify-content: center; max-width: 1200px; margin: 0 auto;
+  }
+  figure { margin: 0; width: 320px; max-width: 100%; }
+  figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
+  figcaption b { color: var(--ink); }
+  .phone {
+    position: relative; height: 640px; overflow: hidden;
+    background: var(--phone); border: 1px solid var(--line);
+    border-radius: 28px; padding: 14px 14px 0;
+    box-shadow: 0 1px 2px rgb(0 0 0 / .06);
+    display: flex; flex-direction: column;
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; height: 32px; }
+  .logo { font-weight: 700; letter-spacing: .02em; }
+  .dot { width: 26px; height: 26px; border-radius: 50%; background: var(--block); }
+  .note {
+    position: absolute; right: 8px; z-index: 2;
+    background: var(--note); color: #fff; font-size: 11px; font-weight: 700;
+    padding: 2px 6px; border-radius: 6px; white-space: nowrap;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .scroll { flex: 1; overflow: hidden; padding-top: 8px; }
+  .card {
+    border: 1px solid var(--line); border-radius: 14px; padding: 12px;
+    margin-bottom: 10px; position: relative;
+  }
+  .card.hero { background: var(--accent-soft); border-color: transparent; }
+  .eyebrow { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .title { font-size: 18px; font-weight: 700; margin: 2px 0 4px; }
+  .meta { font-size: 12px; color: var(--muted); }
+  .btn {
+    display: block; text-align: center; border-radius: 12px; padding: 12px;
+    font-weight: 600; margin-top: 10px;
+  }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.ghost { border: 1px solid var(--line); }
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
+  .week span {
+    height: 26px; border-radius: 6px; background: #fff; border: 1px dashed var(--line);
+    font-size: 10px; display: grid; place-items: center; color: var(--muted);
+  }
+  .week span.on { background: var(--accent); border: 0; color: #fff; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .mode { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+  .mode .ico { width: 36px; height: 36px; border-radius: 10px; background: var(--block); flex: none; }
+  .mode .go { margin-left: auto; color: var(--accent); font-weight: 700; }
+  .tabbar {
+    display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line);
+    margin: 0 -14px; height: 56px; text-align: center; font-size: 11px; color: var(--muted);
+  }
+  .tabbar div { display: grid; place-items: center; align-content: center; gap: 2px; }
+  .tabbar i { width: 20px; height: 20px; border-radius: 6px; background: var(--block); display: block; }
+  .tabbar .on { color: var(--accent); font-weight: 700; }
+  .tabbar .on i { background: var(--accent); }
+  .scrim { position: absolute; inset: 0; background: rgb(21 24 29 / .35); }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; background: #fff;
+    border-radius: 22px 22px 0 0; padding: 10px 16px 18px;
+  }
+  .grab { width: 40px; height: 4px; border-radius: 4px; background: var(--line); margin: 0 auto 10px; }
+  .label { font-size: 12px; color: var(--muted); margin: 12px 0 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+  .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .seg { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
+  .seg span { height: 6px; border-radius: 3px; background: var(--block); }
+  .seg span.ok { background: var(--accent); }
+  .seg span.bad { background: var(--bad); }
+  .seg span.now { background: var(--ink); }
+  .tags { display: flex; gap: 6px; margin: 14px 0 8px; }
+  .tag { font-size: 11px; background: var(--block); border-radius: 6px; padding: 3px 8px; color: var(--muted); }
+  .q { font-size: 18px; font-weight: 700; line-height: 1.3; }
+  .shot { height: 120px; border-radius: 12px; background: var(--block); margin: 10px 0; display: grid; place-items: center; color: var(--muted); font-size: 12px; }
+  .tile {
+    border: 2px solid var(--line); border-radius: 14px; padding: 14px 12px;
+    margin-top: 8px; font-weight: 600; min-height: 56px; display: flex; align-items: center;
+  }
+  .tile.picked { border-color: var(--bad); background: var(--bad-soft); }
+  .tile.right { border-color: var(--accent); background: var(--accent-soft); }
+  .feedback {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 16px 18px;
+    background: var(--bad-soft); border-top: 2px solid var(--bad);
+  }
+  .feedback .head { color: var(--bad); font-weight: 800; font-size: 16px; }
+  .feedback .btn.primary { background: var(--bad); }
+  .streak { font-size: 12px; font-weight: 700; color: var(--accent); }
+  .score { font-size: 44px; font-weight: 800; line-height: 1; margin-top: 6px; }
+  .bars { display: flex; align-items: flex-end; gap: 4px; height: 70px; margin-top: 10px; }
+  .bars span { flex: 1; background: var(--block); border-radius: 4px 4px 0 0; }
+  .bars span.me { background: var(--accent); }
+  .axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+  .squares { letter-spacing: 2px; font-size: 14px; margin-top: 6px; }
+  .review .row { padding: 8px 0; border-top: 1px solid var(--line); font-size: 13px; }
+  .pct { color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .legend { max-width: 1200px; margin: 28px auto 0; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<header class="page">
+  <h1>GameMind — вайрфреймы шага 4.1</h1>
+  <p>Пять экранов телефона по принципам из <code>4.1-references.md</code>. Низкая детализация: это расположение и порядок, а не стиль. Фиолетовые бейджи — номера принципов.</p>
+</header>
+
+<main class="board">
+
+  <!-- 1. Главная -->
+  <figure>
+    <div class="phone">
+      <div class="bar"><span class="logo">GameMind</span><span class="dot"></span></div>
+      <div class="scroll">
+        <div class="card hero">
+          <span class="note" style="top:6px">П1</span>
+          <div class="eyebrow">Сегодня · 2 ноя</div>
+          <div class="title">Челлендж дня</div>
+          <div class="meta">10 вопросов · средне · одна попытка</div>
+          <div class="row" style="margin-top:10px"><span class="streak">Серия: 4 дня</span><span class="meta">рекорд 9</span></div>
+          <div class="week"><span class="on">пн</span><span class="on">вт</span><span class="on">ср</span><span class="on">чт</span><span>пт</span><span>сб</span><span>вс</span></div>
+          <span class="btn primary">Принять вызов</span>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Продолжить</div>
+          <div class="row"><div><div class="title" style="font-size:16px">Классика · средне · 10</div><div class="meta">как в прошлый раз</div></div><span class="btn primary" style="margin:0;padding:10px 14px">Играть</span></div>
+        </div>
+        <div class="eyebrow" style="margin:14px 0 6px">Режимы</div>
+        <div class="card mode"><span class="ico"></span><div><b>Блиц</b><div class="meta">10 вопросов за минуту</div></div><span class="go">›</span></div>
+        <div class="card mode"><span class="ico"></span><div><b>Выживание</b><div class="meta">банк времени</div></div><span class="go">›</span></div>
+      </div>
+      <div class="tabbar" style="position:relative"><span class="note" style="top:-10px">П11</span>
+        <div class="on"><i></i>Играть</div><div><i></i>Рейтинг</div><div><i></i>Профиль</div>
+      </div>
+    </div>
+    <figcaption><b>1. Главная.</b> Первый экран — что сделать сегодня: Челлендж с серией и «продолжить» последний режим. Бренд — только в шапке.</figcaption>
+  </figure>
+
+  <!-- 2. Режимы -->
+  <figure>
+    <div class="phone">
+      <div class="bar"><span class="logo">Режимы</span><span class="dot"></span></div>
+      <div class="scroll">
+        <span class="note" style="top:52px">П2</span>
+        <div class="card mode"><span class="ico"></span><div><b>Челлендж дня</b><div class="meta">общий набор · 1 попытка</div></div><span class="go">›</span></div>
+        <div class="card mode"><span class="ico"></span><div><b>Классика</b><div class="meta">без таймера · 3, 5 или 10</div></div><span class="go">›</span></div>
+        <div class="card mode"><span class="ico"></span><div><b>Блиц</b><div class="meta">10 вопросов · 60 с</div></div><span class="go">›</span></div>
+        <div class="card mode"><span class="ico"></span><div><b>Выживание</b><div class="meta">верно — плюс секунды</div></div><span class="go">›</span></div>
+        <div class="card mode" style="opacity:.55"><span class="ico"></span><div><b>Вызов другу</b><div class="meta">тот же набор по ссылке · П10</div></div><span class="go">›</span></div>
+        <div class="card mode" style="opacity:.55"><span class="ico"></span><div><b>Табло</b><div class="meta">темы × сложность · фаза 5</div></div><span class="go">›</span></div>
+      </div>
+      <div class="tabbar"><div class="on"><i></i>Играть</div><div><i></i>Рейтинг</div><div><i></i>Профиль</div></div>
+    </div>
+    <figcaption><b>2. Режимы.</b> Карточка = название, одна строка правил, цифры. Без настроек — весь список на одном экране. Бледные — будущие режимы.</figcaption>
+  </figure>
+
+  <!-- 3. Шторка настроек -->
+  <figure>
+    <div class="phone">
+      <div class="bar"><span class="logo">Режимы</span><span class="dot"></span></div>
+      <div class="scroll">
+        <div class="card mode"><span class="ico"></span><div><b>Челлендж дня</b></div></div>
+        <div class="card mode"><span class="ico"></span><div><b>Классика</b></div></div>
+      </div>
+      <div class="scrim"></div>
+      <div class="sheet">
+        <span class="note" style="top:12px">П2</span>
+        <div class="grab"></div>
+        <div class="title">Классика</div>
+        <div class="meta">Ни таймера, ни спешки.</div>
+        <div class="label">Сложность</div>
+        <div class="chips"><span class="chip">Легко</span><span class="chip on">Средне</span><span class="chip">Сложно</span><span class="chip">Микс</span></div>
+        <div class="label">Вопросов</div>
+        <div class="chips"><span class="chip">3</span><span class="chip">5</span><span class="chip on">10</span></div>
+        <div class="label">Тема · 4.0b</div>
+        <div class="chips"><span class="chip on">Любая</span><span class="chip">PlayStation</span><span class="chip">90-е</span><span class="chip">Ролевые</span><span class="chip">+ ещё</span></div>
+        <span class="btn primary">Начать · 10 вопросов</span>
+      </div>
+    </div>
+    <figcaption><b>3. Шторка настроек.</b> Выбор в одно касание, последний выбор запоминается. Фильтры — только те, где хватает вопросов (отчёт <code>taxonomy:coverage</code>).</figcaption>
+  </figure>
+
+  <!-- 4. Вопрос + реакция -->
+  <figure>
+    <div class="phone">
+      <div class="bar"><span class="logo">Классика</span><span class="meta">4 / 10</span></div>
+      <div class="scroll">
+        <span class="note" style="top:44px">П5</span>
+        <div class="seg"><span class="ok"></span><span class="ok"></span><span class="bad"></span><span class="now"></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="tags"><span class="tag">Ролевые</span><span class="tag">90-е</span><span class="tag">средне</span><span class="note" style="top:76px">П8</span></div>
+        <div class="q">Как называется вымышленный континент, на котором разворачивается действие серии?</div>
+        <div class="shot">картинка вопроса (если есть)</div>
+        <span class="note" style="top:300px">П3</span>
+        <div class="tile">Вариант А</div>
+        <div class="tile picked">Вариант Б — выбран</div>
+        <div class="tile right">Вариант В — верный</div>
+      </div>
+      <div class="feedback">
+        <span class="note" style="top:12px">П4</span>
+        <div class="head">Мимо</div>
+        <div class="meta" style="color:var(--ink)">Правильно: Вариант В. Это знают 41% игроков.</div>
+        <span class="btn primary">Дальше</span>
+      </div>
+    </div>
+    <figcaption><b>4. Вопрос.</b> Один на экране, плитки в зоне большого пальца. После ответа — плашка с правильным вариантом. Нужен запрос на сервер за каждый ответ (ADR в 4.4).</figcaption>
+  </figure>
+
+  <!-- 5. Результат -->
+  <figure>
+    <div class="phone">
+      <div class="bar"><span class="logo">Результат</span><span class="dot"></span></div>
+      <div class="scroll">
+        <div class="card hero">
+          <span class="note" style="top:6px">П6</span>
+          <div class="eyebrow">Челлендж дня · 2 ноя</div>
+          <div class="score">8 / 10</div>
+          <div class="meta" style="color:var(--ink);margin-top:6px"><b>Лучше 72% игроков</b> сегодня · серия 5 дней</div>
+          <div class="bars"><span style="height:15%"></span><span style="height:30%"></span><span style="height:55%"></span><span style="height:80%"></span><span style="height:100%"></span><span style="height:70%"></span><span style="height:45%"></span><span class="me" style="height:30%"></span><span style="height:14%"></span><span style="height:6%"></span></div>
+          <div class="axis"><span>1</span><span>10 очков</span></div>
+          <div class="squares">🟩🟩🟥🟩🟩🟩🟩🟥🟩🟩</div>
+        </div>
+        <span class="btn primary">Поделиться</span>
+        <span class="btn ghost">Новый через 5 ч — а пока Блиц</span>
+        <div class="review" style="margin-top:12px">
+          <div class="eyebrow">Разбор</div>
+          <div class="row"><span>3. Континент серии…</span><span class="pct">верно у 41%</span></div>
+          <div class="row"><span>8. Год выхода…</span><span class="pct">верно у 18%</span></div>
+        </div>
+      </div>
+      <div class="tabbar"><div class="on"><i></i>Играть</div><div><i></i>Рейтинг</div><div><i></i>Профиль</div></div>
+    </div>
+    <figcaption><b>5. Результат.</b> Очки и место среди игроков дня, гистограмма, одна главная кнопка. В разборе — доля верных ответов по каждому вопросу.</figcaption>
+  </figure>
+
+</main>
+
+<p class="legend">П1 главная «играть сейчас» · П2 карточки и шторка · П3 один вопрос на экран · П4 реакция на ответ · П5 ритм раунда · П6 сравнение на результате · П8 метки вопроса · П10 вызов другу · П11 нижняя панель. Подробно — <code>docs/redesign/4.1-references.md</code>.</p>
+</body>
+</html>
