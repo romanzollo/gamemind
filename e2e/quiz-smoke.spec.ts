@@ -2,14 +2,16 @@
  * Smoke горячего пути квиза — то, что раньше проходили руками после каждого
  * деплоя (канон — docs/QUIZ_NEON_HOT_PATH.md, матрица — skill gamemind-smoke).
  *
- * - Классика, Легко, 3 вопроса: старт → ответы → «Завершить» → результат.
- * - Блиц MIX: все ответы до 00:00 → результат без `clock=1` (таймер не
- *   должен «съесть» честную сдачу).
+ * - Классика, Легко, 3 вопроса: старт → ответ → плашка → «Дальше» … →
+ *   «К результату» → результат.
+ * - Блиц MIX: все ответы до 00:00 (переход и сдача — сами) → результат без
+ *   `clock=1` (таймер не должен «съесть» честную сдачу).
  *
  * Не покрыто: Выживание (ждать обнуления банка) и Челлендж дня (одна попытка
  * в сутки) — их проверяют руками, если трогали.
  *
- * Селекторы — data-testid и роли (radiogroup), не тексты: тексты интерфейса
+ * Селекторы — data-testid (`quiz-play`, `quiz-question`, `quiz-option`,
+ * `quiz-feedback`, `quiz-next`, `quiz-submit`), не тексты: тексты интерфейса
  * переписываются, и smoke не должен из-за этого краснеть. Ответ — всегда
  * первый вариант: проверяем путь, а не счёт.
  */
@@ -48,18 +50,43 @@ async function startFromLobby(
     await page.waitForURL(SESSION_URL);
 }
 
-async function answerEveryQuestion(page: Page): Promise<number> {
-    const questions = page.getByRole('radiogroup');
+/**
+ * Один вопрос на экране (Answer lock-in): ответ → плашка исхода от сервера →
+ * «Дальше». Блиц переходит дальше сам и после последнего ответа сдаёт
+ * партию сам — тогда «Дальше» не жмём.
+ */
+async function answerEveryQuestion(
+    page: Page,
+    options: { autoAdvance: boolean },
+): Promise<number> {
+    const play = page.getByTestId('quiz-play');
+    const question = page.getByTestId('quiz-question');
+    const firstOption = page.getByTestId('quiz-option').first();
 
-    await waitForHydration(questions);
+    await waitForHydration(firstOption);
 
-    const count = await questions.count();
+    const count = Number(await play.getAttribute('data-total'));
 
     for (let index = 0; index < count; index += 1) {
-        await questions.nth(index).locator('label').first().click();
+        await expect(question).toHaveAttribute('data-index', String(index));
+        await expect(firstOption).toBeEnabled();
+        await firstOption.click();
+        // Исход пришёл с сервера — ответ зафиксирован.
+        await expect(page.getByTestId('quiz-feedback')).toBeVisible();
+
+        if (!options.autoAdvance && index < count - 1) {
+            await page.getByTestId('quiz-next').click();
+        }
     }
 
     return count;
+}
+
+async function openResult(page: Page): Promise<URL> {
+    await page.waitForURL(RESULT_URL);
+    await expect(page.getByTestId('quiz-result-score')).toBeVisible();
+
+    return new URL(page.url());
 }
 
 async function submitAndOpenResult(page: Page): Promise<URL> {
@@ -67,10 +94,8 @@ async function submitAndOpenResult(page: Page): Promise<URL> {
 
     await expect(submit).toBeEnabled();
     await submit.click();
-    await page.waitForURL(RESULT_URL);
-    await expect(page.getByTestId('quiz-result-score')).toBeVisible();
 
-    return new URL(page.url());
+    return openResult(page);
 }
 
 test('Классика: Легко, 3 вопроса — от старта до результата', async ({
@@ -81,7 +106,7 @@ test('Классика: Легко, 3 вопроса — от старта до 
         questionCount: '3',
     });
 
-    expect(await answerEveryQuestion(page)).toBe(3);
+    expect(await answerEveryQuestion(page, { autoAdvance: false })).toBe(3);
 
     await submitAndOpenResult(page);
 });
@@ -91,11 +116,12 @@ test('Блиц MIX: все ответы до 00:00 — результат без
 }) => {
     await startFromLobby(page, 'blitz-setup', { difficulty: 'MIXED' });
 
-    expect(await answerEveryQuestion(page)).toBe(
+    expect(await answerEveryQuestion(page, { autoAdvance: true })).toBe(
         TIMED_MODE_MVP_RULES.questionCount,
     );
 
-    const resultUrl = await submitAndOpenResult(page);
+    // Последний ответ Блица сдаёт партию сам.
+    const resultUrl = await openResult(page);
 
     expect(resultUrl.searchParams.get('clock')).toBeNull();
 });

@@ -16,6 +16,7 @@ import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
+import { chooseScoredAnswers } from '@/features/quiz/lib/choose-scored-answers';
 import { buildCompactReviewPayload } from '@/features/quiz/lib/build-compact-review-payload';
 import { isSurvivalClockOk } from '@/features/survival-mode/lib/is-survival-clock-ok';
 import { reconstructSurvivalBankRemainingSeconds } from '@/features/survival-mode/lib/reconstruct-survival-bank-remaining-seconds';
@@ -164,11 +165,36 @@ export async function submitQuizAction(
     );
     const finishedByTimer = formData.get('finishedByTimer') === '1';
 
+    // Ответы, зафиксированные по одному (Answer lock-in): если они есть,
+    // считаем только их — форма после показа правильных ответов не в счёт.
+    // Скалярный pooled-запрос до хопа complete (не TOAST). Сбой — retry.
+    let lockedAnswers: Array<{ questionId: string; selectedOptionId: string }> =
+        [];
+    if (!isSurvivalSession) {
+        try {
+            lockedAnswers = await quizSessionRepository.findLockedAnswers(
+                quizSessionId,
+                authSession.user.id,
+                'quiz.submit.load-locked-answers',
+            );
+        } catch (error) {
+            console.error('Quiz submit locked answers load failed:', error);
+            captureAppError(error, {
+                area: 'quiz-submit',
+                level: 'warning',
+                extra: { stage: 'locked-answers', sessionId },
+            });
+            return { errorCode: 'SUBMIT_FAILED' };
+        }
+    }
+
     // Форма шлёт токены сессии (не id из БД — те выдавали ответ); переводим обратно.
-    const answers = readSubmittedAnswers(
-        formData,
-        questions,
-        createQuizPublicIdCodec(quizSessionId),
+    const { answers } = chooseScoredAnswers(questions, lockedAnswers, () =>
+        readSubmittedAnswers(
+            formData,
+            questions,
+            createQuizPublicIdCodec(quizSessionId),
+        ),
     );
 
     // Classic/daily: все ответы обязательны.

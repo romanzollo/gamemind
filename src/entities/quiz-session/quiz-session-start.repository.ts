@@ -180,7 +180,9 @@ function stashPlayLoadHandoff(
         snapshotData,
         input.questionCount,
         input.sessionLocale,
-        { includeCorrectness: isSurvival },
+        // Правильность нужна ключу ответа; в браузер у Classic/Blitz/Daily
+        // её не пускает выход findSnapshotPublicQuestionsForUser.
+        { includeCorrectness: true },
     );
 
     if (!mapped) {

@@ -80,13 +80,20 @@ export type SessionSnapshotPublicQuestion = {
     difficulty: Difficulty;
     type?: QuestionType;
     imageUrl?: string | null;
+    /**
+     * Ключ ответа (AES-GCM) для `/api/quiz/:id/answer` — Classic / Blitz /
+     * Daily. Ставится только на выходе данных в браузер.
+     * Canon: docs/DECISIONS.md → Answer lock-in.
+     */
+    answerKey?: string;
     options: Array<{
         id: string;
         text: string;
         order: number;
         /**
-         * Только Survival play DTO (принятый leak для lock-in без per-question API).
-         * Classic / Blitz / Daily — поле отсутствует.
+         * Внутри сервера есть у всех режимов (ключ ответа строится из него).
+         * В браузер уходит только у Survival (принятый leak до перехода
+         * Survival на lock-in); Classic / Blitz / Daily — срезается на выходе.
          * Canon: docs/DECISIONS.md → Survival Mode MVP (Play DTO leak).
          */
         isCorrect?: boolean;
@@ -125,6 +132,21 @@ export type QuizSessionPublicView = {
      * заголовка режима: Daily и Classic иначе не различить по view.
      */
     isDaily: boolean;
+    /**
+     * Уже зафиксированные ответы (Classic / Blitz / Daily): после
+     * обновления страницы игра продолжается с первого неотвеченного.
+     * Пусто у новой партии и если чтение не удалось (soft-fail).
+     * Canon: DECISIONS → Answer lock-in.
+     */
+    lockedAnswers?: SessionLockedAnswerView[];
+};
+
+/** Зафиксированный ответ в данных игры: id из БД внутри сервера, токены — снаружи. */
+export type SessionLockedAnswerView = {
+    questionId: string;
+    selectedOptionId: string;
+    correctOptionId: string;
+    isCorrect: boolean;
 };
 
 /** Вопрос из snapshot для server-side scoring (с isCorrect, без текста). */

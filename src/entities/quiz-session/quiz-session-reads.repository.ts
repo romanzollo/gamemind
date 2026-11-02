@@ -18,10 +18,8 @@ import {
     withPooledPgClient,
 } from '@/lib/db/direct-pg';
 import { peekSurvivalSubmitSnapshot, resolveQuizPlayLoadHandoff } from '@/entities/quiz-session/play-load-handoff';
-import {
-    createQuizPublicIdCodec,
-    encodePublicQuestionIds,
-} from '@/entities/quiz-session/quiz-public-ids';
+import { toBrowserPlayView } from '@/entities/quiz-session/quiz-play-view';
+import { quizSessionAnswerMethods } from '@/entities/quiz-session/quiz-session-answer.repository';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
@@ -29,6 +27,7 @@ import type {
     QuizSessionPublicView,
     QuizSessionSurvivalPlayView,
     SessionForSubmitResult,
+    SessionLockedAnswerView,
     SessionReviewPayload,
     SessionSnapshotPublicQuestion,
     SessionSnapshotScoringQuestion,
@@ -621,6 +620,51 @@ async function loadSurvivalPlayLoadMeta(
     }
 }
 
+/**
+ * Зафиксированные ответы для продолжения партии после обновления страницы.
+ * Отдельный скалярный pooled-запрос после чтения snapshot (не на том же
+ * хопе и не TOAST). Сбой — пустой список: повторный ответ на уже
+ * зафиксированный вопрос всё равно вернёт его исход (первый побеждает).
+ */
+async function loadLockedAnswerViews(
+    sessionId: string,
+    userId: string,
+    questions: readonly SessionSnapshotPublicQuestion[],
+): Promise<SessionLockedAnswerView[]> {
+    let rows: Awaited<
+        ReturnType<typeof quizSessionAnswerMethods.findLockedAnswers>
+    >;
+    try {
+        rows = await quizSessionAnswerMethods.findLockedAnswers(
+            sessionId,
+            userId,
+            'quiz.session.load-locked-answers',
+        );
+    } catch (error) {
+        console.warn(
+            'Locked answers load failed (resume from the start):',
+            error instanceof Error ? error.message : error,
+        );
+        return [];
+    }
+
+    return rows.flatMap((row) => {
+        const question = questions.find((item) => item.id === row.questionId);
+        const correct = question?.options.find((option) => option.isCorrect);
+        if (!question || !correct) {
+            return [];
+        }
+        return [
+            {
+                questionId: row.questionId,
+                selectedOptionId: row.selectedOptionId,
+                correctOptionId: correct.id,
+                isCorrect: row.selectedOptionId === correct.id,
+            },
+        ];
+    });
+}
+
 async function loadSnapshotPublicQuestions(
     sessionId: string,
     userId: string,
@@ -682,11 +726,13 @@ async function loadSnapshotPublicQuestions(
                 };
             }
 
+            // Правильность нужна ключу ответа; срезается на выходе
+            // (findSnapshotPublicQuestionsForUser), кроме Survival.
             const mapped = mapSnapshotDataToPublicQuestions(
                 snapshotData,
                 jsonSnapshot.question_count,
                 locale,
-                { includeCorrectness: survival != null },
+                { includeCorrectness: true },
             );
 
             if (!mapped) {
@@ -704,6 +750,9 @@ async function loadSnapshotPublicQuestions(
                 difficulty: jsonSnapshot.difficulty,
                 survival,
                 isDaily: jsonSnapshot.is_daily === true,
+                lockedAnswers: survival
+                    ? []
+                    : await loadLockedAnswerViews(sessionId, userId, mapped),
             };
         }
     }
@@ -731,7 +780,7 @@ export const quizSessionReadsMethods = {
      * Единственный выход данных игры в браузер (handoff и pooled snapshot).
      * id вопросов/вариантов здесь заменяются токенами сессии — submit
      * переводит их обратно (`readSubmittedAnswers`). Внутри view до этой
-     * точки (overlay переводов и т.п.) живут id из БД.
+     * точки (overlay переводов и т.п.) живут id из БД и `isCorrect`.
      */
     async findSnapshotPublicQuestionsForUser(
         sessionId: string,
@@ -743,13 +792,7 @@ export const quizSessionReadsMethods = {
             return null;
         }
 
-        return {
-            ...view,
-            questions: encodePublicQuestionIds(
-                view.questions,
-                createQuizPublicIdCodec(sessionId),
-            ),
-        };
+        return toBrowserPlayView(sessionId, view);
     },
 
     findSnapshotForScoring(sessionId: string, userId: string) {

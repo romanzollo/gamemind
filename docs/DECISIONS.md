@@ -2411,3 +2411,33 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - Tagging every question by hand — platform and genre are facts about the game; repeating them per question invites contradictions.
 
 **Deploy order:** migration on prod first (additive; running code ignores the new columns), then code, then the sync dry run → `--apply` on the owner's go-ahead.
+
+## Answer lock-in: feedback after every answer (November 2, 2026)
+
+**Context:** ROADMAP 4.1, principles П3 + П4 (owner said yes on Nov 2). Classic / Blitz / Daily showed every question on one long form and revealed answers only on the result page. The player gets no reaction while playing. Only the server knows the right answer (Quiz answer leak ADR), so a reveal needs a server round trip per answer. Survival already reveals instantly by shipping `isCorrect` to the browser — the accepted weak spot this design will later remove.
+
+**Decision:** every answer is locked on the server the moment it is chosen; the server answers «right / wrong + the right option». The final score counts only locked answers.
+
+| Piece | Choice |
+|------|--------|
+| Answer key | Each question in the play DTO carries `answerKey`: AES-256-GCM over `{v, s: sessionId, q: questionId, o: optionIds, c: correctOptionId}`. Key = HKDF-SHA256(`AUTH_SECRET`, info `gamemind:quiz-answer-key:v1`). The browser cannot read or forge it; it is bound to the session. Built at the single exit `findSnapshotPublicQuestionsForUser`, next to the opaque ids — the view inside the server carries `isCorrect`, the exit strips it (Survival keeps it until its own step) |
+| Lock endpoint | `POST /api/quiz/[sessionId]/answer` `{question, option, key}` (tokens + key). Session user from the JWT (no user row read). Opens the key, maps the option token to the DB id over the key's option list, then **one pooled statement**: `INSERT INTO "QuizAnswer" … SELECT … WHERE` the session is the player's, `IN_PROGRESS`, not Survival, and (Blitz) `timedEndsAt` is later than now − grace (JS Date param, canon E) `ON CONFLICT ("sessionId","questionId") DO NOTHING RETURNING`. Nothing inserted → read the existing answer: found = replay (same outcome, safe retry after a dropped network), not found = `closed` / `time_up` |
+| Why no snapshot read | The answer key replaces `SELECT "snapshotData"` per answer — the TOAST read that hung 18–40 s (Aug 4 / Aug 14 lessons). The lock is a scalar insert on pooled, outside the Direct queue |
+| First answer wins | `UNIQUE (sessionId, questionId)` already exists — no migration. Two tabs or a retry cannot change a locked answer |
+| Submit | Reads the session's locked answers (scalar, pooled, before the complete hop). Locks exist → scoring uses **only** them, the form is ignored (otherwise: see the right answer, change the form). No locks → the old form path (pages opened before the deploy). Classic / Daily still need every question answered; Blitz may finish partial. The complete hop is unchanged (scalars only) |
+| Resume | Play-load on the pooled path also reads the locked answers (separate scalar query, soft-fail to «none»); the screen continues from the first unanswered question. A missed resume is harmless: re-answering a locked question returns the original outcome |
+| Rate limit | In-memory preset `quizAnswer` (per user), like `quiz` |
+| Screen | One question per screen, full-width tiles, segment progress, a sheet after each answer («Spot on!» / «Not quite — right answer: X», «Next», last one «See results»). Blitz moves on by itself after ~0.8 s. «Checking…» only if the server is slower than 300 ms |
+
+**Latency:** prod from RU (Nov 2): median 0.3 s on a new connection, ~0.1 s on a kept-alive one; Vercel `fra1` and Neon `eu-central-1` are in the same city. Expected 150–400 ms per answer; the choice highlights at once. Windows `next dev` is slower (pooled connect ~1.6 s) — the lab, not the target.
+
+**Survival:** unchanged in this step (no answer key, the endpoint refuses `survivalRunId`). Next step: the same lock-in, the bank from server lock times, `isCorrect` leaves the DTO.
+
+**Not chosen:**
+
+- Reading `snapshotData` on every answer — ten TOAST reads per game on the class of query that hung.
+- An answer-key table written at create — a heavier create hop (the most fragile one) and a migration for data the key carries for free.
+- `AnswerOption.isCorrect` (live rows) — scoring must follow the frozen snapshot; an admin edit mid-game must not flip answers.
+- A Server Action for the lock — a JSON route is simpler and does not re-render the page.
+
+**Deploy:** no migration. The e2e smoke (`e2e/quiz-smoke.spec.ts`) changes in the same commit — Prod smoke runs it right after the deploy.

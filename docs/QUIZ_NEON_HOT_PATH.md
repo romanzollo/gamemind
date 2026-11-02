@@ -145,6 +145,24 @@ BAD:  arming NOW()+duration on play-load together with TOAST SELECT
 
 Refresh must **not** reset the deadline (play-load does not UPDATE `timedEndsAt`).
 
+### E2. Answer lock-in (Classic / Blitz / Daily, Nov 2)
+
+```txt
+OK:   POST /api/quiz/:id/answer → open answerKey (AES-GCM, no DB) → ONE pooled
+      INSERT QuizAnswer … SELECT … WHERE session owned + IN_PROGRESS + not Survival
+      + timedEndsAt > JS Date(now − grace) ON CONFLICT DO NOTHING RETURNING
+OK:   nothing inserted → scalar SELECT of the existing answer (replay) / session state
+OK:   submit: pooled scalar SELECT locked answers BEFORE the complete hop;
+      locks exist → score only locks; complete hop unchanged (scalars)
+OK:   play-load (pooled path): separate scalar SELECT of locked answers, soft-fail
+BAD:  SELECT snapshotData (TOAST) on the answer hop «to check the answer»
+BAD:  answer hop on the Direct queue / withDirectPg*
+BAD:  scoring from form answers when the session has locks
+BAD:  SQL NOW() for the Blitz deadline check (naive TIMESTAMP, see E)
+```
+
+Code: `src/entities/quiz-session/quiz-answer-key.ts`, `quiz-session-answer.repository.ts`, `src/app/api/quiz/[sessionId]/answer/route.ts`. ADR: DECISIONS → Answer lock-in.
+
 ### F. Direct queue
 
 - One `withDirectPgQueue` for the **`next dev` process only** (`NODE_ENV=development`). Production skips the queue.
@@ -187,6 +205,8 @@ Before merge or “готово” — **prod is the gate**, local matrix is how
 - [ ] Blitz single difficulty 10 start + questions on screen
 - [ ] Blitz / Classic **submit → score** &lt; ~2–3s (`quiz.submit.complete` `phase=ok`)
 - [ ] Daily start + submit → score (if attempt available)
+- [ ] Answer lock-in: each answer shows right/wrong; refresh mid-game resumes at the first unanswered; result score = locked answers
+- [ ] Blitz: an answer after 00:00 + grace is refused («time's up»); auto-submit at 00:00 still lands on result
 - [ ] Home after start/result not stuck ~20s
 - [ ] If you touched pick/chunk/Direct/settle/play-load/clock: full matrix + update **this file** + playbook
 

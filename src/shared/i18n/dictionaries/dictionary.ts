@@ -566,6 +566,20 @@ export type Dictionary = {
         questionCountLabel: string;
         /** Прогресс сессии: отвечено / всего (не число вопросов в setup). */
         progressAnsweredLabel: string;
+        /** Ответ с реакцией: один вопрос на экране и плашка (Answer lock-in). */
+        answer: {
+            progress: string;
+            correct: string;
+            wrong: string;
+            rightAnswer: string;
+            next: string;
+            toResult: string;
+            checking: string;
+            sendFailed: string;
+            retry: string;
+            timeUp: string;
+            streak: string;
+        };
         /** Timed: подпись countdown, пока время не вышло. */
         timedRemainingLabel: string;
         /** Timed: подпись на 00:00. */

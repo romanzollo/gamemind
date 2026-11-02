@@ -30,12 +30,22 @@ export type QuizPublicQuestion = {
     difficulty: Difficulty;
     type?: QuestionType;
     imageUrl?: string | null;
+    /** Ключ ответа для `/api/quiz/:id/answer` (Classic / Blitz / Daily). */
+    answerKey?: string;
     options: {
         id: string;
         text: string;
         order: number;
         isCorrect?: boolean;
     }[];
+};
+
+/** Зафиксированный ответ в токенах сессии — продолжение партии после F5. */
+export type QuizLockedAnswer = {
+    questionId: string;
+    selectedOptionId: string;
+    correctOptionId: string;
+    isCorrect: boolean;
 };
 
 // тип для статуса сессии викторины
