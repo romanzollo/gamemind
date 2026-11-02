@@ -1,4 +1,6 @@
 import NextAuth from 'next-auth';
+import { userRepository } from '@/entities/user/user.repository';
+import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import { authConfig } from './auth.config';
 import { createGameMindAdapter, isOAuthSignInAllowed } from './adapter';
 import {
@@ -44,5 +46,45 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
 
             return true;
         },
+
+        /**
+         * Гость вошёл в свой аккаунт — Яндекс, VK или пароль, новый или
+         * существующий: забираем его игры (3.4). Здесь, а не в events:
+         * Auth.js глотает ошибки событий, а ошибка в jwt срывает вход —
+         * гость остаётся гостем, повторный вход доносит остальное.
+         *
+         * auth() ещё читает старую, гостевую сессию из cookie запроса —
+         * новая уйдёт только с ответом. Регистрация гостя по паролю
+         * сюда не попадает: там та же строка (id совпадает).
+         */
+        async jwt(params) {
+            const { user, trigger } = params;
+
+            if (
+                user?.id &&
+                !user.isGuest &&
+                (trigger === 'signIn' || trigger === 'signUp')
+            ) {
+                await claimPreviousGuest(user.id);
+            }
+
+            return authConfig.callbacks.jwt(params);
+        },
     },
 });
+
+/** Перенос игр гостя, из-под сессии которого вошли в аккаунт userId. */
+async function claimPreviousGuest(userId: string): Promise<void> {
+    const previous = await auth();
+    if (!previous?.user.isGuest || previous.user.id === userId) return;
+
+    const merged = await userRepository.mergeGuestInto(
+        previous.user.id,
+        userId,
+    );
+
+    // Партии гостя могли открыть новые достижения уже у аккаунта.
+    if (merged === 'merged') {
+        await awardAchievementsForUser(userId);
+    }
+}

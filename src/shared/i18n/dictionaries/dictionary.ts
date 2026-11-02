@@ -226,6 +226,12 @@ export type Dictionary = {
         guestHint: string;
         /** Регистрация после попытки гостя войти в Блиц / Выживание. */
         guestModesLocked: string;
+        /** Карточка «Сохрани прогресс» у гостя: результат и профиль. */
+        guestSaveTitle: string;
+        guestSaveText: string;
+        guestSaveSignIn: string;
+        /** Строка на регистрации, когда регистрируется гость. */
+        guestRegisterHint: string;
         errors: {
             invalidInput: string;
             emailTaken: string;

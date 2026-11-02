@@ -175,6 +175,11 @@ export const enDictionary = {
         guestHint: 'Classic and the Daily Challenge. You can save your progress later.',
         guestModesLocked:
             'Blitz and Survival count for the leaderboard, so they need an account. Sign up and keep your games.',
+        guestSaveTitle: 'Keep your progress',
+        guestSaveText:
+            "You're a guest: no leaderboard, and your games live in this browser only. Create an account and keep everything you've played.",
+        guestSaveSignIn: "Got an account? Sign in and we'll move these games over.",
+        guestRegisterHint: 'Games you played as a guest move to your new account.',
         errors: {
             invalidInput: 'Check the fields and try again.',
             emailTaken: 'There’s already an account with this email — sign in instead.',

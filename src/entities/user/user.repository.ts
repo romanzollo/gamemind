@@ -53,6 +53,7 @@ export type AuthUserRow = {
     image: string | null;
     role: Role;
     isActive: boolean;
+    isGuest: boolean;
 };
 
 const AUTH_USER_SELECT = {
@@ -63,6 +64,7 @@ const AUTH_USER_SELECT = {
     image: true,
     role: true,
     isActive: true,
+    isGuest: true,
 } as const;
 
 export type AdminUserMutationResult =
@@ -567,6 +569,132 @@ export const userRepository = {
     },
 
     /**
+     * Регистрация гостя (3.4): та же строка получает ник, почту и пароль
+     * и перестаёт быть гостем — игры никуда не переезжают. Условие
+     * `isGuest = true` не даст переписать обычный аккаунт. Занятые почта
+     * или ник (23505) → свой код, как в обычной регистрации.
+     */
+    async claimGuestWithPassword(
+        id: string,
+        data: { username: string; email: string; passwordHash: string },
+    ): Promise<'claimed' | 'not_guest' | 'email_taken' | 'username_taken'> {
+        return withDirectPgWriteRetry(async (client) => {
+            try {
+                const result = await client.query(
+                    `
+                        UPDATE "User"
+                        SET "username" = $1,
+                            "email" = $2,
+                            "passwordHash" = $3,
+                            "isGuest" = false,
+                            "updatedAt" = NOW()
+                        WHERE "id" = $4
+                          AND "isGuest" = true
+                    `,
+                    [data.username, data.email, data.passwordHash, id],
+                );
+
+                return result.rowCount ? 'claimed' : 'not_guest';
+            } catch (error) {
+                if (isPgUniqueViolation(error)) {
+                    return readPgConstraint(error) === 'User_email_key'
+                        ? 'email_taken'
+                        : 'username_taken';
+                }
+                throw error;
+            }
+        });
+    },
+
+    /**
+     * Перенос игр гостя в аккаунт, в который он вошёл (Яндекс, VK или
+     * пароль), и удаление гостя. Canon: DECISIONS → Accounts without a
+     * password → Claim by sign-in.
+     *
+     * Без BEGIN/COMMIT (Neon write path в DECISIONS): шаги идут по
+     * порядку, каждый идемпотентен, а гость удаляется последним. Упали
+     * посередине — часть игр уже у аккаунта, часть ещё у гостя, и
+     * повторный вход доносит остальное.
+     *
+     * - Челлендж дня, сыгранный обоими, остаётся за аккаунтом (UNIQUE
+     *   userId + dailyChallengeId), попытка гостя удаляется.
+     * - Достижения гостя переезжают, если у аккаунта таких нет; общий
+     *   пересчёт — на вызывающем (awardAchievementsForUser).
+     * - Мешок анти-повтора гостя уходит каскадом вместе со строкой.
+     *
+     * 'skipped' — переносить нечего: гостя уже нет, это не гость или
+     * цель сама гость.
+     */
+    async mergeGuestInto(
+        guestId: string,
+        targetId: string,
+    ): Promise<'merged' | 'skipped'> {
+        if (guestId === targetId) return 'skipped';
+
+        return withDirectPgWriteRetry(async (client) => {
+            const guard = await client.query(
+                `
+                    SELECT 1
+                    FROM "User" g, "User" t
+                    WHERE g."id" = $1 AND g."isGuest" = true
+                      AND t."id" = $2 AND t."isGuest" = false
+                `,
+                [guestId, targetId],
+            );
+
+            if (!guard.rowCount) return 'skipped';
+
+            const params = [guestId, targetId];
+
+            await client.query(
+                `
+                    DELETE FROM "QuizSession" g
+                    WHERE g."userId" = $1
+                      AND g."dailyChallengeId" IS NOT NULL
+                      AND EXISTS (
+                          SELECT 1 FROM "QuizSession" t
+                          WHERE t."userId" = $2
+                            AND t."dailyChallengeId" = g."dailyChallengeId"
+                      )
+                `,
+                params,
+            );
+
+            for (const table of [
+                'SurvivalRun',
+                'QuizSession',
+                'QuizResult',
+                'AchievementOutbox',
+            ]) {
+                await client.query(
+                    `UPDATE "${table}" SET "userId" = $2 WHERE "userId" = $1`,
+                    params,
+                );
+            }
+
+            await client.query(
+                `
+                    UPDATE "UserAchievement" g
+                    SET "userId" = $2
+                    WHERE g."userId" = $1
+                      AND NOT EXISTS (
+                          SELECT 1 FROM "UserAchievement" t
+                          WHERE t."userId" = $2 AND t."code" = g."code"
+                      )
+                `,
+                params,
+            );
+
+            await client.query(
+                `DELETE FROM "User" WHERE "id" = $1 AND "isGuest" = true`,
+                [guestId],
+            );
+
+            return 'merged';
+        });
+    },
+
+    /**
      * Привязка внешнего аккаунта. Токены провайдера не храним: нам нужен
      * только факт «этот Яндекс-аккаунт = этот игрок», а лишний токен в БД —
      * лишний риск при утечке.
@@ -813,6 +941,16 @@ export const userRepository = {
 };
 
 // Проверка на уникальность username
+/** Имя нарушенного ограничения из ошибки pg (например 'User_email_key'). */
+function readPgConstraint(error: unknown): string | null {
+    return typeof error === 'object' &&
+        error !== null &&
+        'constraint' in error &&
+        typeof (error as { constraint: unknown }).constraint === 'string'
+        ? (error as { constraint: string }).constraint
+        : null;
+}
+
 function isPgUniqueViolation(error: unknown): boolean {
     return (
         typeof error === 'object' &&

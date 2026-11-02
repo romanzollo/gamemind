@@ -32,6 +32,11 @@ export default async function RegisterPage({
                 <InlineAlert className="mt-4" tone="info" role="status">
                     {dictionary.auth.guestModesLocked}
                 </InlineAlert>
+            ) : session?.user.isGuest ? (
+                // Регистрация гостя оставляет ту же строку (registerAction).
+                <InlineAlert className="mt-4" tone="info" role="status">
+                    {dictionary.auth.guestRegisterHint}
+                </InlineAlert>
             ) : null}
 
             <RegisterForm locale={locale} />

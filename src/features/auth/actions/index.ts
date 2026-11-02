@@ -2,7 +2,7 @@
 
 import bcrypt from 'bcryptjs'; // Библиотека для хеширования паролей
 import { AuthError } from 'next-auth'; // Типы ошибок NextAuth
-import { signIn, signOut } from '@/lib/auth'; // Функции входа и выхода из системы
+import { auth, signIn, signOut } from '@/lib/auth'; // Сессия, вход и выход
 import {
     GuestRateLimited,
     isYandexSignInEnabled,
@@ -83,12 +83,29 @@ export async function registerAction(
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
     try {
-        // Создаем пользователя
-        await userRepository.create({
-            username,
-            email,
-            passwordHash,
-        });
+        // Гость регистрируется — та же строка становится аккаунтом, игры
+        // остаются на месте (3.4). Сессия гостя устарела → обычное создание.
+        const current = await auth();
+        const claim = current?.user.isGuest
+            ? await userRepository.claimGuestWithPassword(current.user.id, {
+                  username,
+                  email,
+                  passwordHash,
+              })
+            : 'not_guest';
+
+        if (claim === 'email_taken') return { errorCode: 'EMAIL_TAKEN' };
+        if (claim === 'username_taken') {
+            return { errorCode: 'USERNAME_TAKEN' };
+        }
+
+        if (claim === 'not_guest') {
+            await userRepository.create({
+                username,
+                email,
+                passwordHash,
+            });
+        }
     } catch (error) {
         console.error('Register failed:', error);
         // Без email/username в extra: это PII.

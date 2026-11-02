@@ -6,9 +6,13 @@
  * Зачем: VK ID держится на точках расширения Auth.js (state без проверки,
  * customFetch, token.conform, userinfo.request). Auth.js 5 в бете —
  * обновление может их тихо сломать, и этот тест это поймает.
+ *
+ * Здесь же — гость, который входит через VK (3.4): Auth.js не должен
+ * привязать VK к гостю, а игры гостя переносятся в аккаунт.
  */
 
 import { createHash } from 'node:crypto';
+import { encode } from 'next-auth/jwt';
 import { NextRequest } from 'next/server';
 import {
     afterEach,
@@ -31,12 +35,28 @@ const repository = vi.hoisted(() => ({
     linkOAuthAccount: vi.fn(),
     updateImage: vi.fn(),
     findByEmailForLogin: vi.fn(),
+    mergeGuestInto: vi.fn(),
 }));
+
+const awardAchievements = vi.hoisted(() => vi.fn());
+
+/** Cookie текущего запроса — их читает auth() в колбэке jwt при входе. */
+const requestCookies = vi.hoisted(() => ({ header: '' }));
 
 const storagePut = vi.hoisted(() => vi.fn());
 
 vi.mock('@/entities/user/user.repository', () => ({
     userRepository: repository,
+}));
+
+vi.mock('@/features/achievements/lib/award-achievements-for-user', () => ({
+    awardAchievementsForUser: awardAchievements,
+}));
+
+// Вне Next запроса нет: next/headers отдаёт cookie того GET, что идёт сейчас.
+vi.mock('next/headers', () => ({
+    headers: async () => new Headers({ cookie: requestCookies.header }),
+    cookies: async () => ({ get: () => undefined, set: () => {} }),
 }));
 
 // Фото VK копируется в наш storage; sharp и Blob в тесте не нужны.
@@ -53,6 +73,7 @@ vi.mock('@/lib/storage', async (importOriginal) => ({
 }));
 
 const ORIGIN = 'http://localhost:3000';
+const AUTH_SECRET = 'vk-id-flow-test-secret-0123456789abcdef';
 const CLIENT_ID = '54321';
 const STATE = 'vkid_state_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const TOKEN_URL = 'https://id.vk.ru/oauth2/auth';
@@ -81,7 +102,36 @@ const existingUser: AuthUserRow = {
     image: null,
     role: 'USER',
     isActive: true,
+    isGuest: false,
 };
+
+const guestUser: AuthUserRow = {
+    id: 'guest-1',
+    username: 'guest_abc123',
+    email: null,
+    emailVerified: null,
+    image: null,
+    role: 'USER',
+    isActive: true,
+    isGuest: true,
+};
+
+/** Сессия гостя в cookie — как после «Играть без регистрации». */
+async function guestSessionCookie(): Promise<string> {
+    const token = await encode({
+        token: {
+            sub: guestUser.id,
+            id: guestUser.id,
+            role: guestUser.role,
+            username: guestUser.username,
+            isGuest: true,
+        },
+        secret: AUTH_SECRET,
+        salt: 'authjs.session-token',
+    });
+
+    return `authjs.session-token=${token}`;
+}
 
 function jsonResponse(body: unknown, status = 200) {
     return new Response(JSON.stringify(body), {
@@ -164,6 +214,15 @@ class CookieJar {
         }
     }
 
+    /** Сессия, выданная не этим тестом (гость). */
+    add(cookie: string) {
+        const separator = cookie.indexOf('=');
+        this.cookies.set(
+            cookie.slice(0, separator),
+            cookie.slice(separator + 1),
+        );
+    }
+
     has(name: string) {
         return this.cookies.has(name);
     }
@@ -210,6 +269,7 @@ async function startSignIn(jar: CookieJar): Promise<URL> {
 
 /** Возврат с id.vk.ru на наш колбэк. */
 async function finishSignIn(jar: CookieJar, query: string) {
+    requestCookies.header = jar.header;
     const response = await GET(
         new NextRequest(`${ORIGIN}/api/auth/callback/vk?${query}`, {
             headers: { cookie: jar.header },
@@ -224,7 +284,7 @@ const SUCCESS_QUERY = `code=vk-code&state=${STATE}&device_id=vk-device&expires_i
 
 beforeAll(async () => {
     vi.stubEnv('AUTH_VK_ID', CLIENT_ID);
-    vi.stubEnv('AUTH_SECRET', 'vk-id-flow-test-secret-0123456789abcdef');
+    vi.stubEnv('AUTH_SECRET', AUTH_SECRET);
     ({ GET, POST } = await import('@/app/api/auth/[...nextauth]/route'));
 });
 
@@ -250,10 +310,13 @@ beforeEach(() => {
             image: input.image,
             role: 'USER',
             isActive: true,
+            isGuest: false,
         }),
     );
     repository.linkOAuthAccount.mockResolvedValue(undefined);
     repository.updateImage.mockResolvedValue('updated');
+    repository.mergeGuestInto.mockResolvedValue('merged');
+    awardAchievements.mockResolvedValue({ awardedCodes: [], ok: true });
     storagePut.mockImplementation(async ({ key }: { key: string }) => ({
         key,
         publicUrl: `/media/${key}`,
@@ -377,6 +440,8 @@ describe('VK ID sign-in through Auth.js', () => {
             provider: 'vk',
             providerAccountId: '777',
         });
+        // Обычный игрок — не гость: переносить нечего.
+        expect(repository.mergeGuestInto).not.toHaveBeenCalled();
     });
 
     it('signs in a player who already linked VK ID', async () => {
@@ -450,5 +515,57 @@ describe('VK ID sign-in through Auth.js', () => {
             `${ORIGIN}/ru/login?error=`,
         );
         expect(vkFetch).not.toHaveBeenCalled();
+    });
+});
+
+describe('a guest signs in with VK ID (3.4)', () => {
+    async function signInAsGuestWithVk() {
+        repository.findAuthUserById.mockResolvedValue(guestUser);
+        const jar = new CookieJar();
+        jar.add(await guestSessionCookie());
+        await startSignIn(jar);
+
+        return finishSignIn(jar, SUCCESS_QUERY);
+    }
+
+    it('creates the VK account instead of linking VK to the guest, then moves the games', async () => {
+        const response = await signInAsGuestWithVk();
+
+        expect(response.headers.get('location')).toBe(`${ORIGIN}/ru/profile`);
+        expect(repository.createOAuthUser).toHaveBeenCalled();
+        expect(repository.linkOAuthAccount).toHaveBeenCalledWith(
+            expect.objectContaining({ userId: 'user-new' }),
+        );
+        expect(repository.mergeGuestInto).toHaveBeenCalledWith(
+            guestUser.id,
+            'user-new',
+        );
+        expect(awardAchievements).toHaveBeenCalledWith('user-new');
+    });
+
+    it('moves the games into a player who already linked this VK ID', async () => {
+        repository.findAuthUserByAccount.mockResolvedValue(existingUser);
+
+        const response = await signInAsGuestWithVk();
+
+        // Без гостя в getUser Auth.js ответил бы OAuthAccountNotLinked.
+        expect(response.headers.get('location')).toBe(`${ORIGIN}/ru/profile`);
+        expect(repository.linkOAuthAccount).not.toHaveBeenCalled();
+        expect(repository.mergeGuestInto).toHaveBeenCalledWith(
+            guestUser.id,
+            existingUser.id,
+        );
+    });
+
+    it('fails the sign-in when the games could not be moved', async () => {
+        repository.mergeGuestInto.mockRejectedValue(new Error('db down'));
+
+        const response = await signInAsGuestWithVk();
+
+        // Гость остаётся гостем, повторный вход доносит игры.
+        expect(response.headers.get('location')).toMatch(
+            `${ORIGIN}/ru/login?error=`,
+        );
+        expect(awardAchievements).not.toHaveBeenCalled();
     });
 });

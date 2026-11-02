@@ -3,6 +3,7 @@ import {
     type SignInMethods,
 } from '@/entities/user/user.repository';
 import { logoutAction } from '@/features/auth/actions';
+import { SaveGuestProgress } from '@/features/auth/components/SaveGuestProgress';
 import { getOAuthErrorMessage } from '@/features/auth/lib/get-oauth-error-message';
 import { ProfileAchievementsList } from '@/features/achievements/components/ProfileAchievementsList';
 import { StripUnlockedQuery } from '@/features/achievements/components/StripUnlockedQuery';
@@ -108,14 +109,19 @@ export default async function ProfilePage({
         achievementProgress = null;
     }
 
+    // Гостю пароль и способы входа не показываем — у него «Сохрани прогресс».
+    const isGuest = session.user.isGuest;
+
     /** null = чтение не удалось: блок способов входа скрыт, пароль — как раньше. */
     let signInMethods: SignInMethods | null = null;
-    try {
-        signInMethods = await userRepository.findSignInMethods(
-            session.user.id,
-        );
-    } catch (error) {
-        console.error('Profile sign-in methods load failed:', error);
+    if (!isGuest) {
+        try {
+            signInMethods = await userRepository.findSignInMethods(
+                session.user.id,
+            );
+        } catch (error) {
+            console.error('Profile sign-in methods load failed:', error);
+        }
     }
 
     const unlockedCount =
@@ -178,6 +184,14 @@ export default async function ProfilePage({
                     </form>
                 </div>
             </section>
+
+            {isGuest ? (
+                <SaveGuestProgress
+                    locale={safeLocale}
+                    errorMessage={signInErrorMessage}
+                    className="mt-4"
+                />
+            ) : null}
 
             {/*
               Progress mid: stats всегда видны; ниже — меню-лента складок
@@ -247,7 +261,7 @@ export default async function ProfilePage({
                 {/* Client details: open state переживает revalidate/refresh */}
                 <ProfileSettingsSection
                     title={dictionary.profile.sectionSettings}
-                    defaultOpen={Boolean(signInErrorMessage)}
+                    defaultOpen={!isGuest && Boolean(signInErrorMessage)}
                 >
                     <ChangeUsernameForm
                         locale={safeLocale}
@@ -261,7 +275,8 @@ export default async function ProfilePage({
                         currentImageUrl={session.user.image ?? null}
                     />
 
-                    {signInMethods && !signInMethods.hasPassword ? (
+                    {isGuest ? null : signInMethods &&
+                      !signInMethods.hasPassword ? (
                         <SetPasswordForm
                             locale={safeLocale}
                             dictionary={dictionary}

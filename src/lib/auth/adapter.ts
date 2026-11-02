@@ -40,6 +40,7 @@ function toAdapterUser(row: AuthUserRow): AdapterUser {
         emailVerified: row.emailVerified,
         image: row.image,
         role: row.role,
+        isGuest: row.isGuest,
     };
 }
 
@@ -95,9 +96,14 @@ export function createGameMindAdapter(): Adapter {
             return toAdapterUser(row);
         },
 
+        // Auth.js зовёт getUser только чтобы привязать внешний аккаунт к
+        // тому, кто уже вошёл (session.sub). Гостя «вошедшим» не считаем:
+        // тогда Яндекс / VK ведут обычный вход в свой аккаунт, а игры гостя
+        // переносит колбэк jwt (lib/auth/index.ts). Проверено
+        // vk-id.flow.test.ts на настоящем Auth.js.
         async getUser(id) {
             const row = await userRepository.findAuthUserById(id);
-            return row ? toAdapterUser(row) : null;
+            return row && !row.isGuest ? toAdapterUser(row) : null;
         },
 
         async getUserByEmail(email) {

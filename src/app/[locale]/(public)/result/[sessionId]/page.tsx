@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
+import { SaveGuestProgress } from '@/features/auth/components/SaveGuestProgress';
 import { DailyStreakResult } from '@/features/daily-challenge/components/daily-streak-result';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
 import { ShareResult } from '@/features/quiz/components/ShareResult';
@@ -369,6 +370,14 @@ export default async function QuizResultPage({
                             leaderboardHref={leaderboardHref}
                         />
                     )}
+
+                    {/* isGuest — из requireUser выше, лишнего запроса нет. */}
+                    {authSession.user.isGuest ? (
+                        <SaveGuestProgress
+                            locale={safeLocale}
+                            className="mt-6"
+                        />
+                    ) : null}
 
                     {summary.isDaily ? (
                         // Серия — своим запросом: результат её не ждёт.
