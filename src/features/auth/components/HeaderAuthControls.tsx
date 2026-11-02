@@ -1,6 +1,5 @@
 'use client';
 
-import type { Role } from '@prisma/client';
 import { usePathname } from 'next/navigation';
 
 import { logoutAction } from '@/features/auth/actions';
@@ -15,7 +14,6 @@ import { isNavActive, navActiveClassName } from '@/shared/ui/nav-active';
 
 type NavUser = {
     username: string;
-    role: Role;
     image?: string | null;
 };
 
@@ -23,12 +21,6 @@ type HeaderAuthControlsProps = {
     locale: Locale;
     dictionary: Dictionary;
     user: NavUser | null;
-    /**
-     * `bar` — compact chrome (desktop full / mobile avatar-only).
-     * `menu` — stacked controls for the mobile slide-down panel (no avatar —
-     * avatar already sits in the header bar; Profile is in the nav list).
-     */
-    variant?: 'bar' | 'menu';
 };
 
 function localizedHref(locale: Locale, href: string) {
@@ -41,69 +33,27 @@ const linkClassName =
 const profileLinkClassName =
     'inline-flex items-center rounded-md px-1 py-0.5 transition hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
+/**
+ * Правый край шапки.
+ *
+ * Игрок: аватар и «Выйти» — только с `lg`. На телефоне профиль — вкладка
+ * нижней панели, а «Выйти» есть на странице профиля.
+ * Посетитель: «Войти» на любой ширине, «Регистрация» — с `lg`
+ * (на телефоне она и «Играть без регистрации» — на странице входа).
+ */
 export function HeaderAuthControls({
     locale,
     dictionary,
     user,
-    variant = 'bar',
 }: HeaderAuthControlsProps) {
     const pathname = usePathname();
     const loginActive = isNavActive(pathname, '/login');
     const registerActive = isNavActive(pathname, '/register');
     const profileActive = isNavActive(pathname, '/profile');
 
-    if (variant === 'menu') {
-        if (user) {
-            // Один корень — иначе RSC→Client slot даёт warning про key.
-            return (
-                <div className="flex flex-col gap-2">
-                    <p className="px-3 text-sm text-muted">
-                        <span className="font-medium text-foreground">
-                            {user.username}
-                        </span>
-                    </p>
-                    <form action={logoutAction}>
-                        <input type="hidden" name="locale" value={locale} />
-                        <SubmitButton
-                            variant="secondary"
-                            pendingLabel={dictionary.common.working}
-                            className="w-full"
-                        >
-                            {dictionary.nav.logout}
-                        </SubmitButton>
-                    </form>
-                </div>
-            );
-        }
-
-        return (
-            <div className="flex flex-col gap-2">
-                <PendingLink
-                    href={localizedHref(locale, '/login')}
-                    className={buttonClassName({
-                        variant: 'secondary',
-                        className: navActiveClassName(loginActive, 'w-full'),
-                    })}
-                    aria-current={loginActive ? 'page' : undefined}
-                >
-                    {dictionary.nav.login}
-                </PendingLink>
-                <PendingLink
-                    href={localizedHref(locale, '/register')}
-                    className={buttonClassName({
-                        className: navActiveClassName(registerActive, 'w-full'),
-                    })}
-                    aria-current={registerActive ? 'page' : undefined}
-                >
-                    {dictionary.nav.register}
-                </PendingLink>
-            </div>
-        );
-    }
-
     if (user) {
         return (
-            <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 lg:flex">
                 <PendingLink
                     href={localizedHref(locale, '/profile')}
                     className={navActiveClassName(
@@ -126,7 +76,7 @@ export function HeaderAuthControls({
                         </span>
                     </span>
                 </PendingLink>
-                <form action={logoutAction} className="hidden lg:block">
+                <form action={logoutAction}>
                     <input type="hidden" name="locale" value={locale} />
                     <SubmitButton
                         variant="secondary"
@@ -144,26 +94,25 @@ export function HeaderAuthControls({
         <div className="flex items-center gap-2">
             <PendingLink
                 href={localizedHref(locale, '/login')}
-                className={navActiveClassName(
-                    loginActive,
-                    `${linkClassName} hidden lg:inline-flex`,
-                )}
+                className={navActiveClassName(loginActive, linkClassName)}
                 aria-current={loginActive ? 'page' : undefined}
             >
                 {dictionary.nav.login}
             </PendingLink>
-            <PendingLink
-                href={localizedHref(locale, '/register')}
-                className={buttonClassName({
-                    className: navActiveClassName(
-                        registerActive,
-                        'hidden min-h-9 px-3 py-1.5 lg:inline-flex',
-                    ),
-                })}
-                aria-current={registerActive ? 'page' : undefined}
-            >
-                {dictionary.nav.register}
-            </PendingLink>
+            <div className="hidden lg:block">
+                <PendingLink
+                    href={localizedHref(locale, '/register')}
+                    className={buttonClassName({
+                        className: navActiveClassName(
+                            registerActive,
+                            'min-h-9 px-3 py-1.5',
+                        ),
+                    })}
+                    aria-current={registerActive ? 'page' : undefined}
+                >
+                    {dictionary.nav.register}
+                </PendingLink>
+            </div>
         </div>
     );
 }

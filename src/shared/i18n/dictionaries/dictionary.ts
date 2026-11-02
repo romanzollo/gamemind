@@ -6,7 +6,6 @@ export type Dictionary = {
         description: string;
     };
     nav: {
-        home: string;
         quiz: string;
         leaderboard: string;
         profile: string;
@@ -31,11 +30,9 @@ export type Dictionary = {
         loading: string;
         submitting: string;
         working: string;
-        openMenu: string;
-        closeMenu: string;
         /** Skip-ссылка → контент после sticky-хедера (a11y). */
         skipToContent: string;
-        /** Подпись landmark основной навигации (desktop / mobile). */
+        /** Подпись landmark основной навигации (шапка / нижняя панель). */
         mainNav: string;
     };
     /** 404 и error boundaries (`[locale]/not-found`, `[locale]/error`, `global-error`). */

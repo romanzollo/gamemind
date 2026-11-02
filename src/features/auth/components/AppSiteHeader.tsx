@@ -23,7 +23,7 @@ type AppSiteHeaderProps = {
 };
 
 /**
- * Client chrome wrapper: создаёт auth-слоты уже на клиенте.
+ * Client chrome wrapper: создаёт auth-слот уже на клиенте.
  * Нельзя передавать JSX-слоты из Server Layout в SiteHeader —
  * React тогда ругается на unique "key" (RSC→Client children list).
  */
@@ -48,15 +48,6 @@ export function AppSiteHeader({
                     locale={locale}
                     dictionary={dictionary}
                     user={user}
-                    variant="bar"
-                />
-            }
-            mobileAuthControls={
-                <HeaderAuthControls
-                    locale={locale}
-                    dictionary={dictionary}
-                    user={user}
-                    variant="menu"
                 />
             }
         />

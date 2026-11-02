@@ -175,9 +175,14 @@ body {
     min-height: 100vh;
     /*
      * Высота sticky-хедера: py-2.5 (20) + control min-h-10 (40) + border (1) ≈ 61px.
-     * Нужен зазор, чтобы открытая панель меню не обрезала hamburger.
+     * По ней липкие полосы партии и тосты встают под шапку.
      */
     --site-header-sticky-offset: 3.75rem;
+    /*
+     * Нижняя панель вкладок (SiteTabBar) без safe-area. С lg панели нет — 0,
+     * чтобы тосты снизу не поднимались зря.
+     */
+    --site-tab-bar-height: 3.5rem;
 }
 
 /*
@@ -199,8 +204,8 @@ body {
 }
 
 /*
- * Всегда резервируем место под scrollbar, чтобы overflow:hidden (мобильное меню)
- * не сжимал sticky-хедер и не открывал щель рядом с панелью.
+ * Всегда резервируем место под scrollbar, чтобы overflow:hidden (блокировка
+ * прокрутки под оверлеем) не сжимал sticky-хедер и не сдвигал страницу.
  */
 html {
     scrollbar-gutter: stable;
@@ -216,12 +221,13 @@ html {
 @media (min-width: 1024px) {
     body {
         --site-header-sticky-offset: 4rem;
+        --site-tab-bar-height: 0rem;
     }
 }
 
 /*
  * Sonner → Scoreboard Editorial.
- * z-index явно выше sticky header / mobile menu (z-50): на мобилке full-width
+ * z-index явно выше sticky header (z-50) и нижней панели вкладок (z-40): на мобилке full-width
  * top toast иначе легко оказывается «под» chrome (ощущение «не было уведомления»).
  * Close справа (дефолт Sonner — слева).
  * Description: Sonner хардкодит #3f3f3f / #e8e8e8 — перебиваем токеном muted.

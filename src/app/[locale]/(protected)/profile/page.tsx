@@ -28,7 +28,13 @@ import type { ProfileStats } from '@/features/profile/types/profile-stats';
 import type { ProfileResultHistoryEntry } from '@/features/profile/types/result-history-entry';
 import { requireUser } from '@/lib/auth/guards';
 import { getDictionary, isLocale } from '@/shared/i18n';
-import { InlineAlert, SubmitButton, UserAvatar } from '@/shared/ui';
+import {
+    buttonClassName,
+    InlineAlert,
+    PendingLink,
+    SubmitButton,
+    UserAvatar,
+} from '@/shared/ui';
 
 type ProfilePageProps = {
     params: Promise<{ locale: string }>;
@@ -173,15 +179,34 @@ export default async function ProfilePage({
                         </p>
                     </div>
 
-                    <form action={logoutAction} className="shrink-0">
-                        <input type="hidden" name="locale" value={safeLocale} />
-                        <SubmitButton
-                            variant="secondary"
-                            pendingLabel={dictionary.common.working}
-                        >
-                            {dictionary.profile.logout}
-                        </SubmitButton>
-                    </form>
+                    <div className="flex shrink-0 items-center gap-2">
+                        {/* На телефоне в шапке нет пункта «Админ» — вход в админку здесь */}
+                        {session.user.role === 'ADMIN' ? (
+                            <PendingLink
+                                href={`/${safeLocale}/admin`}
+                                className={buttonClassName({
+                                    variant: 'secondary',
+                                    className: 'lg:hidden',
+                                })}
+                            >
+                                {dictionary.nav.admin}
+                            </PendingLink>
+                        ) : null}
+
+                        <form action={logoutAction}>
+                            <input
+                                type="hidden"
+                                name="locale"
+                                value={safeLocale}
+                            />
+                            <SubmitButton
+                                variant="secondary"
+                                pendingLabel={dictionary.common.working}
+                            >
+                                {dictionary.profile.logout}
+                            </SubmitButton>
+                        </form>
+                    </div>
                 </div>
             </section>
 

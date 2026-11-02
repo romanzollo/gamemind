@@ -7,7 +7,6 @@ export const enDictionary = {
             'Video game quiz: guess the game from a screenshot, one-minute blitz, survival and a daily challenge.',
     },
     nav: {
-        home: 'Home',
         quiz: 'Play',
         leaderboard: 'Leaderboard',
         profile: 'Profile',
@@ -32,8 +31,6 @@ export const enDictionary = {
         loading: 'Loading…',
         submitting: 'Submitting…',
         working: 'One sec…',
-        openMenu: 'Open menu',
-        closeMenu: 'Close menu',
         skipToContent: 'Skip to content',
         mainNav: 'Main navigation',
     },

@@ -9,7 +9,7 @@ import { GameMindMark } from './game-mind-mark';
 import { LanguageSwitcher } from './language-switcher';
 import { isNavActive, navActiveClassName } from './nav-active';
 import { PendingLink } from './pending-link';
-import { SiteMobileMenu } from './site-mobile-menu';
+import { getSiteSection, getSiteTabs } from './site-nav';
 import type { ClientTheme } from './theme-client';
 import { ThemeToggle } from './theme-toggle';
 
@@ -23,72 +23,34 @@ type SiteHeaderProps = {
     dictionary: Dictionary;
     user: NavUser | null;
     authControls: ReactNode;
-    mobileAuthControls: ReactNode;
     /** Тема из cookie (layout) — серверный снимок для ThemeToggle. */
     theme: ClientTheme;
-};
-
-type NavLinkItem = {
-    href: string;
-    labelKey: keyof Dictionary['nav'];
 };
 
 function localizedHref(locale: Locale, href: string) {
     return href === '/' ? `/${locale}` : `/${locale}${href}`;
 }
 
-function getMainLinks(user: NavUser | null): ReadonlyArray<NavLinkItem> {
-    const links: NavLinkItem[] = [
-        { href: '/', labelKey: 'home' },
-        { href: '/quiz', labelKey: 'quiz' },
-    ];
-
-    if (user) {
-        links.push(
-            { href: '/leaderboard', labelKey: 'leaderboard' },
-            { href: '/profile', labelKey: 'profile' },
-        );
-
-        if (user.role === 'ADMIN') {
-            links.push({ href: '/admin', labelKey: 'admin' });
-        }
-    }
-
-    return links;
-}
-
 const navLinkClassName =
     'shrink-0 rounded-md px-2 py-1 text-sm text-muted transition hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
+/**
+ * Шапка: логотип, язык и тема — на любой ширине.
+ * С `lg` — ещё пункты разделов (те же, что в нижней панели SiteTabBar)
+ * и «Админ» для админа; на телефоне разделы живут в нижней панели,
+ * админка — ссылкой в профиле.
+ */
 export function SiteHeader({
     locale,
     dictionary,
     user,
     authControls,
-    mobileAuthControls,
     theme,
 }: SiteHeaderProps) {
     const pathname = usePathname();
-    const mainLinks = getMainLinks(user);
-    const mobileLinks = mainLinks.map((link) => ({
-        href: link.href,
-        label: dictionary.nav[link.labelKey],
-    }));
-
-    // Не переиспользовать один и тот же React element в двух местах —
-    // RSC→Client слот тогда даёт warning про unique "key".
-    const desktopUtilities = (
-        <div className="hidden items-center gap-1 sm:gap-2 lg:flex">
-            <LanguageSwitcher locale={locale} labels={dictionary.language} />
-            <ThemeToggle labels={dictionary.theme} initialTheme={theme} />
-        </div>
-    );
-    const menuUtilities = (
-        <div className="flex items-center gap-1 sm:gap-2">
-            <LanguageSwitcher locale={locale} labels={dictionary.language} />
-            <ThemeToggle labels={dictionary.theme} initialTheme={theme} />
-        </div>
-    );
+    const activeSection = getSiteSection(pathname);
+    const tabs = getSiteTabs(dictionary.nav, user !== null);
+    const adminActive = isNavActive(pathname, '/admin');
 
     return (
         <header className="sticky top-0 z-50 border-b border-border bg-surface">
@@ -107,46 +69,55 @@ export function SiteHeader({
                     className="hidden min-w-0 flex-1 items-center gap-1 lg:flex"
                     aria-label={dictionary.common.mainNav}
                 >
-                    {mainLinks.map((link) => {
-                        const active = isNavActive(pathname, link.href);
+                    {tabs.map((tab) => {
+                        const active = tab.section === activeSection;
 
                         return (
                             <PendingLink
-                                key={link.href}
-                                href={localizedHref(locale, link.href)}
+                                key={tab.section}
+                                href={localizedHref(locale, tab.href)}
                                 className={navActiveClassName(
                                     active,
                                     navLinkClassName,
                                 )}
                                 aria-current={active ? 'page' : undefined}
                             >
-                                {dictionary.nav[link.labelKey]}
+                                {tab.label}
                             </PendingLink>
                         );
                     })}
+
+                    {user?.role === 'ADMIN' ? (
+                        <PendingLink
+                            href={localizedHref(locale, '/admin')}
+                            className={navActiveClassName(
+                                adminActive,
+                                navLinkClassName,
+                            )}
+                            aria-current={adminActive ? 'page' : undefined}
+                        >
+                            {dictionary.nav.admin}
+                        </PendingLink>
+                    ) : null}
                 </nav>
 
                 <div className="flex-1 lg:hidden" aria-hidden />
 
-                <div className="flex shrink-0 items-center gap-2">
-                    {/*
-                      Один экземпляр authControls: на mobile bar — аватар,
-                      login/logout прячутся классами внутри HeaderAuthControls.
-                    */}
-                    <div className="flex items-center gap-2 lg:gap-3 lg:border-l lg:border-border lg:pl-3">
-                        {authControls}
-                        {desktopUtilities}
+                <div className="flex shrink-0 items-center gap-2 lg:gap-3">
+                    <div className="flex items-center gap-1 sm:gap-2">
+                        <LanguageSwitcher
+                            locale={locale}
+                            labels={dictionary.language}
+                        />
+                        <ThemeToggle
+                            labels={dictionary.theme}
+                            initialTheme={theme}
+                        />
                     </div>
 
-                    <SiteMobileMenu
-                        locale={locale}
-                        links={mobileLinks}
-                        openLabel={dictionary.common.openMenu}
-                        closeLabel={dictionary.common.closeMenu}
-                        mainNavLabel={dictionary.common.mainNav}
-                        menuAuth={mobileAuthControls}
-                        menuUtilities={menuUtilities}
-                    />
+                    <div className="flex items-center gap-2 lg:border-l lg:border-border lg:pl-3">
+                        {authControls}
+                    </div>
                 </div>
             </div>
         </header>

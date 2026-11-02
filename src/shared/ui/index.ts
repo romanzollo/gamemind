@@ -10,7 +10,7 @@ export { PendingLink } from './pending-link';
 export { PendingSpinner } from './pending-spinner';
 export { FormPageSkeleton, Skeleton } from './skeleton';
 export { SiteHeader } from './site-header';
-export { SiteMobileMenu } from './site-mobile-menu';
+export { SiteTabBar } from './site-tab-bar';
 export { StatusPage } from './status-page';
 export { SubmitButton } from './submit-button';
 export { ThemeToggle } from './theme-toggle';

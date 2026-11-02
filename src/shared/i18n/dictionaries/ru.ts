@@ -7,7 +7,6 @@ export const ruDictionary: Dictionary = {
             'Квиз по видеоиграм: угадай игру по скриншоту, блиц на минуту, выживание и челлендж дня.',
     },
     nav: {
-        home: 'Главная',
         quiz: 'Играть',
         leaderboard: 'Рейтинг',
         profile: 'Профиль',
@@ -32,8 +31,6 @@ export const ruDictionary: Dictionary = {
         loading: 'Загрузка…',
         submitting: 'Отправка…',
         working: 'Секунду…',
-        openMenu: 'Открыть меню',
-        closeMenu: 'Закрыть меню',
         skipToContent: 'Перейти к содержимому',
         mainNav: 'Основная навигация',
     },

@@ -2,7 +2,7 @@
  * Глобальный Toaster (Sonner) для ephemeral-уведомлений.
  *
  * Почему Client Component: Sonner нужен portal + живой DOM на клиенте.
- * Почему createPortal(document.body): sticky header / mobile menu (z-50) и
+ * Почему createPortal(document.body): sticky header (z-50) и
  * любые stacking-context предки не должны перекрывать toast — особенно на
  * узких экранах, где Sonner рисует full-width top strip под хедером.
  *
@@ -28,7 +28,7 @@ type AppToasterProps = {
     theme: ClientTheme;
 };
 
-/** Выше sticky header / mobile menu (z-50). */
+/** Выше sticky header (z-50) и нижней панели вкладок (z-40). */
 export const TOASTER_Z_INDEX = 200;
 
 /** Sonner internal tokens → Scoreboard Editorial (живут на data-theme). */
@@ -88,16 +88,17 @@ export function AppToaster({ theme: initialTheme }: AppToasterProps) {
             expand
             gap={12}
             visibleToasts={4}
+            // Снизу — над нижней панелью вкладок (с lg её высота 0).
             offset={{
                 top: 'var(--site-header-sticky-offset, 4.5rem)',
                 right: 16,
-                bottom: 16,
+                bottom: 'calc(var(--site-tab-bar-height, 0rem) + 1rem)',
             }}
             mobileOffset={{
                 top: 'var(--site-header-sticky-offset, 4.5rem)',
                 right: 12,
                 left: 12,
-                bottom: 'max(1rem, env(safe-area-inset-bottom))',
+                bottom: 'calc(var(--site-tab-bar-height, 0rem) + max(1rem, env(safe-area-inset-bottom)))',
             }}
             style={sonnerTokenStyle}
             className="gm-toaster"

@@ -6,7 +6,9 @@ import { AppSiteHeader } from '@/features/auth/components/AppSiteHeader';
 import { auth } from '@/lib/auth';
 import { SITE_ORIGIN } from '@/shared/config/site';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
+import { SiteTabBar } from '@/shared/ui';
 import { AppToaster } from '@/shared/ui/app-toaster';
+import { getSiteTabs } from '@/shared/ui/site-nav';
 
 import '../globals.css';
 
@@ -110,6 +112,11 @@ export default async function LocaleLayout({
                 <div id="main-content" tabIndex={-1}>
                     {children}
                 </div>
+                <SiteTabBar
+                    locale={locale}
+                    tabs={getSiteTabs(dictionary.nav, navUser !== null)}
+                    label={dictionary.common.mainNav}
+                />
                 {/* Ephemeral toasts (achievements / later form feedback). Client island. */}
                 <AppToaster theme={theme} />
             </body>
