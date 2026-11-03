@@ -2,7 +2,10 @@ import type { PluralForms } from '../format-plural';
 
 export type Dictionary = {
     metadata: {
+        /** Имя продукта: шапка, siteName. */
         title: string;
+        /** Заголовок вкладки и сниппета в поиске. */
+        pageTitle: string;
         description: string;
     };
     nav: {
@@ -57,6 +60,9 @@ export type Dictionary = {
         continueEyebrow: string;
         continueHint: string;
         continueButton: string;
+        /** Демо-вопрос первого экрана посетителя (4.3c). */
+        demoEyebrow: string;
+        demoNext: string;
     };
     /** Ежедневный челлендж — карточка на главной (место игры). */
     dailyChallenge: {

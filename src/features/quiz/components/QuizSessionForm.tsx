@@ -38,6 +38,11 @@ import type {
 import { TimedQuizCountdown } from '@/features/timed-mode/components/TimedQuizCountdown';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton, buttonClassName } from '@/shared/ui';
+import {
+    answerOptionClassName,
+    answerVerdictClassName,
+    type AnswerOptionTone,
+} from '@/shared/ui/answer-option';
 import { serverNow } from '@/shared/ui/server-clock';
 import type { Difficulty } from '@/types';
 
@@ -409,15 +414,15 @@ export function QuizSessionForm({
                             outcome != null &&
                             outcome.selectedOptionId === option.id &&
                             !outcome.isCorrect;
-                        const tone = isCorrectOption
-                            ? 'border-success bg-success-muted'
+                        const tone: AnswerOptionTone = isCorrectOption
+                            ? 'correct'
                             : isWrongChoice
-                              ? 'border-danger bg-danger-muted'
+                              ? 'wrong'
                               : isPendingChoice
-                                ? 'border-primary bg-primary/10'
+                                ? 'pending'
                                 : outcome
-                                  ? 'border-border bg-surface opacity-60'
-                                  : 'border-border bg-surface hover:bg-surface-hover';
+                                  ? 'dimmed'
+                                  : 'idle';
 
                         return (
                             <button
@@ -432,14 +437,10 @@ export function QuizSessionForm({
                                 onClick={() => {
                                     void sendAnswer(option.id);
                                 }}
-                                className={[
-                                    'flex min-h-14 w-full items-center rounded-lg border-2 px-4 py-3 text-left text-base font-medium text-foreground motion-safe:transition-colors',
-                                    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                                    optionsLocked
-                                        ? 'cursor-default'
-                                        : 'cursor-pointer',
+                                className={answerOptionClassName(
                                     tone,
-                                ].join(' ')}
+                                    optionsLocked,
+                                )}
                             >
                                 <span className="text-pretty">
                                     {option.text}
@@ -456,20 +457,12 @@ export function QuizSessionForm({
                         role="status"
                         data-testid="quiz-feedback"
                         data-correct={outcome.isCorrect}
-                        className={[
-                            'mb-3 rounded-lg border-l-4 px-3 py-2.5',
-                            outcome.isCorrect
-                                ? 'border-success bg-success-muted'
-                                : 'border-danger bg-danger-muted',
-                        ].join(' ')}
+                        className={`mb-3 ${answerVerdictClassName(outcome.isCorrect).plate}`}
                     >
                         <p
-                            className={[
-                                'font-display text-lg font-semibold',
-                                outcome.isCorrect
-                                    ? 'text-success'
-                                    : 'text-danger',
-                            ].join(' ')}
+                            className={
+                                answerVerdictClassName(outcome.isCorrect).title
+                            }
                         >
                             {outcome.isCorrect ? labels.correct : labels.wrong}
                             {streak >= 3 ? (

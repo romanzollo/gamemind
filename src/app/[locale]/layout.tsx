@@ -41,18 +41,19 @@ export async function generateMetadata({
     return {
         // Абсолютные адреса для og:image и ссылок превью в мессенджерах.
         metadataBase: new URL(SITE_ORIGIN),
-        title: dictionary.metadata.title,
+        // В шапке — просто «GameMind», во вкладке и поиске — что это.
+        title: dictionary.metadata.pageTitle,
         description: dictionary.metadata.description,
         openGraph: {
             type: 'website',
             siteName: 'GameMind',
-            title: dictionary.metadata.title,
+            title: dictionary.metadata.pageTitle,
             description: dictionary.metadata.description,
             locale: locale === 'ru' ? 'ru_RU' : 'en_US',
         },
         twitter: {
             card: 'summary_large_image',
-            title: dictionary.metadata.title,
+            title: dictionary.metadata.pageTitle,
             description: dictionary.metadata.description,
         },
     };

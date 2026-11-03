@@ -3,6 +3,7 @@ import type { Dictionary } from './dictionary';
 export const ruDictionary: Dictionary = {
     metadata: {
         title: 'GameMind',
+        pageTitle: 'GameMind — квиз по видеоиграм',
         description:
             'Квиз по видеоиграм: угадай игру по скриншоту, блиц на минуту, выживание и челлендж дня.',
     },
@@ -48,12 +49,14 @@ export const ruDictionary: Dictionary = {
         toModes: 'К режимам',
     },
     home: {
-        headline: 'Вспомни игры, которые прошёл',
+        headline: 'Проверим, насколько ты в теме',
         description:
-            'Угадывай игры по скриншотам, вспоминай детали и набирай очки. Сложнее вопрос — больше очков.',
+            'Квиз по видеоиграм: угадывай по скриншотам и деталям, соревнуйся в рейтинге.',
         continueEyebrow: 'Продолжить',
         continueHint: 'как в прошлый раз',
         continueButton: 'Играть',
+        demoEyebrow: 'Попробуй прямо тут',
+        demoNext: 'Ещё вопрос',
     },
     dailyChallenge: {
         eyebrow: 'Сегодня',

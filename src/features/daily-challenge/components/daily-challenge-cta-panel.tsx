@@ -10,7 +10,7 @@
 
 import { useActionState } from 'react';
 
-import { GuestPlayPrompt } from '@/features/auth/components/GuestPlayPrompt';
+import { GuestSignInForm } from '@/features/auth/components/GuestPlayPrompt';
 import { startDailyChallengeAction } from '@/features/daily-challenge/actions';
 import { DailyStreakSummary } from '@/features/daily-challenge/components/daily-streak';
 import type { DailyStreak } from '@/features/daily-challenge/lib/compute-daily-streak';
@@ -91,15 +91,19 @@ export function DailyChallengeCtaPanel({
             ) : null}
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
-                {/* Челлендж открыт гостям (3.4): сразу гостевой вход, не «Войди». */}
+                {/*
+                  Челлендж открыт гостям (3.4): посетитель принимает вызов
+                  гостевым входом. «Без регистрации» и «Войти» — во
+                  вступлении над карточкой (4.3c), здесь не дублируем.
+                */}
                 {status.kind === 'unavailable' &&
                 status.reason === 'not_authenticated' ? (
-                    <div className="w-full sm:max-w-sm">
-                        <GuestPlayPrompt
-                            locale={locale}
-                            dictionary={dictionary}
-                        />
-                    </div>
+                    <GuestSignInForm
+                        locale={locale}
+                        dictionary={dictionary}
+                        label={labels.startButton}
+                        className="sm:w-auto"
+                    />
                 ) : null}
 
                 {status.kind === 'unavailable' &&

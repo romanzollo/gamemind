@@ -2483,6 +2483,13 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - Lobby as the «Play» tab, home as a landing page — a returning player would start every visit one tap further from the game.
 - Starting a game right from guest sign-in — the guest session is set by a redirect, a start in the same request has no session yet.
 
+**Visitor first screen (4.3c):** the visitor intro became «show, don't tell» (`features/visitor-intro`): a server-rendered headline and one «what is this» line (indexed by Yandex), a live demo question, then «Play without signing up» + «Sign in». The Daily card shows a visitor one «Accept the challenge» button (guest sign-in); the rest of the guest prompt is in the intro, not repeated.
+
+- **Demo questions are not the bank.** Five hand-picked easy questions live in `demo-questions.ts`; their answers ship in the HTML and are checked in the browser. That is safe only because they are not in the bank and do not give away a bank answer — checked against the dev bank (Minecraft, GTA V and Tetris candidates were dropped for overlapping). A real bank question here would break «Answer lock-in».
+- **Same question for everyone that day** (Moscow date), so the crawler and the visitor see the same page; «Another one» cycles on the client.
+- **SEO basics:** `robots.txt` (closes `/api`, admin, profile and game screens; results stay open for share previews), `sitemap.xml` (home and leaderboard, RU ↔ EN), hreflang + canonical on home only (canonical in the layout would point every page at home), tab title «GameMind — a video game quiz» while the header keeps «GameMind».
+- Not chosen: a screenshot demo (does not fit the first screen with four options, and a bank screenshot would leak a real answer); a full-screen banner or carousel.
+
 ## Play topics (November 3, 2026)
 
 **Context:** ROADMAP 4.0b. The taxonomy (4.0a) tags every question; the mode sheet (4.2b) left room for filters. A filter has to change *which* questions a game draws, and that is the hot path: the anti-repeat bag (User Question Cycle) is one per (user, difficulty) over the whole bank. Measured on Nov 2–3: platform families cover half the bank each (PC 282 of 549, PlayStation 238 — multiplatform games carry all three), eras and genres are distinct, no series has 10 questions per difficulty.

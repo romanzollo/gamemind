@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
@@ -10,8 +11,9 @@ import {
 } from '@/features/quiz/lib/mode-setup-memory';
 import { SurvivalModeCta } from '@/features/survival-mode/components/SurvivalModeCta';
 import { TimedModeCta } from '@/features/timed-mode/components/TimedModeCta';
+import { VisitorIntro } from '@/features/visitor-intro/components/VisitorIntro';
 import { auth } from '@/lib/auth';
-import { getDictionary, isLocale } from '@/shared/i18n';
+import { getDictionary, isLocale, locales } from '@/shared/i18n';
 
 // Главная зависит от сессии, состояния Daily и cookie выбора режима.
 // Нельзя кэшировать: stale in_progress/completed ведёт на неверные ссылки.
@@ -21,6 +23,30 @@ export const revalidate = 0;
 type HomePageProps = {
     params: Promise<{ locale: string }>;
 };
+
+/**
+ * Связка RU ↔ EN для поисковиков (hreflang) и канонический адрес главной.
+ * Только здесь, не в layout: canonical в layout сделал бы «главной» каждую
+ * страницу. Без локали в адресе — русская версия (основной рынок).
+ */
+export async function generateMetadata({
+    params,
+}: HomePageProps): Promise<Metadata> {
+    const { locale } = await params;
+    const safeLocale = isLocale(locale) ? locale : 'ru';
+
+    return {
+        alternates: {
+            canonical: `/${safeLocale}`,
+            languages: {
+                ...Object.fromEntries(
+                    locales.map((other) => [other, `/${other}`]),
+                ),
+                'x-default': '/ru',
+            },
+        },
+    };
+}
 
 /**
  * Что предложить в «Продолжить». Только игроку с сессией; гостю — только
@@ -47,8 +73,8 @@ function resolveContinueMode(
  * серией и рейтингом дня → «Продолжить» последний режим → компактные
  * карточки режимов со шторкой настроек (П2). Бывшее лобби `/quiz` ведёт сюда.
  *
- * Посетителю без сессии — короткое вступление сверху; гостевой вход — в
- * карточке дня и в шторке Классики (режимы, открытые гостям).
+ * Посетителю без сессии — вступление сверху (4.3c): фраза «что это»,
+ * живой демо-вопрос и вход гостем; дальше — то же, что у игрока.
  */
 export default async function HomePage({ params }: HomePageProps) {
     const { locale } = await params;
@@ -69,14 +95,7 @@ export default async function HomePage({ params }: HomePageProps) {
             {sessionUser ? (
                 <h1 className="sr-only">{dictionary.home.headline}</h1>
             ) : (
-                <header className="mb-5 sm:mb-6">
-                    <h1 className="text-balance font-display text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                        {dictionary.home.headline}
-                    </h1>
-                    <p className="mt-2 max-w-prose text-pretty text-sm leading-snug text-muted sm:text-base sm:leading-relaxed">
-                        {dictionary.home.description}
-                    </p>
-                </header>
+                <VisitorIntro locale={safeLocale} dictionary={dictionary} />
             )}
 
             <div id="mode-daily" className="scroll-mt-24">

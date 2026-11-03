@@ -3,6 +3,7 @@ import type { Dictionary } from './dictionary';
 export const enDictionary = {
     metadata: {
         title: 'GameMind',
+        pageTitle: 'GameMind — a video game quiz',
         description:
             'Video game quiz: guess the game from a screenshot, one-minute blitz, survival and a daily challenge.',
     },
@@ -48,12 +49,14 @@ export const enDictionary = {
         toModes: 'Play modes',
     },
     home: {
-        headline: 'Remember the games you played',
+        headline: 'Let’s see how much you really know',
         description:
-            'Guess games from screenshots, recall the details, rack up points. Harder questions pay more.',
+            'A video game quiz: guess from screenshots and details, climb the leaderboard.',
         continueEyebrow: 'Continue',
         continueHint: 'same as last time',
         continueButton: 'Play',
+        demoEyebrow: 'Try one right here',
+        demoNext: 'Another one',
     },
     dailyChallenge: {
         eyebrow: 'Today',
