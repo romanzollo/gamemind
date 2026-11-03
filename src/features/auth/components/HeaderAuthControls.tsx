@@ -15,6 +15,8 @@ import { isNavActive, navActiveClassName } from '@/shared/ui/nav-active';
 type NavUser = {
     username: string;
     image?: string | null;
+    /** `getAvatarPattern(id)` с сервера — эмблема, если фото нет. */
+    avatarPattern: number;
 };
 
 type HeaderAuthControlsProps = {
@@ -68,6 +70,7 @@ export function HeaderAuthControls({
                     <span className="flex items-center gap-2">
                         <UserAvatar
                             src={user.image}
+                            pattern={user.avatarPattern}
                             size="sm"
                             alt={user.username}
                         />

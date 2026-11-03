@@ -49,6 +49,14 @@
     --color-tier-silver: var(--tier-silver);
     --color-tier-gold: var(--tier-gold);
     --color-tier-legend: var(--tier-legend);
+    /* Эмблема-аватар: тоны фона и цвет фигуры (UserAvatar без фото) */
+    --color-avatar-1: var(--avatar-1);
+    --color-avatar-2: var(--avatar-2);
+    --color-avatar-3: var(--avatar-3);
+    --color-avatar-4: var(--avatar-4);
+    --color-avatar-5: var(--avatar-5);
+    --color-avatar-6: var(--avatar-6);
+    --color-avatar-ink: var(--avatar-ink);
     --color-ring: var(--ring);
     --shadow-sm: var(--shadow-sm);
     --shadow-md: var(--shadow-md);
@@ -131,6 +139,19 @@
     --tier-gold: #9a7410;
     --tier-legend: #14181f;
 
+    /*
+     * Эмблема-аватар (UserAvatar без фото): шесть приглушённых тонов
+     * палитры — бирюза, синий, янтарь, медь, графит, олива. Фигура —
+     * `--avatar-ink` поверх тона.
+     */
+    --avatar-1: #0b6e4f;
+    --avatar-2: #1f5f8b;
+    --avatar-3: #a16207;
+    --avatar-4: #9a5a24;
+    --avatar-5: #4b5563;
+    --avatar-6: #5b6b2a;
+    --avatar-ink: #f3f7f6;
+
     --ring: #0b6e4f;
     --shadow-sm: 0 1px 2px rgb(20 24 31 / 0.06);
     --shadow-md:
@@ -183,6 +204,15 @@
     --tier-silver: #c8d0db;
     --tier-gold: #f0d56a;
     --tier-legend: #f7f9fb;
+
+    /* Тёмная эмблема: глубокий тон, светлая фигура — не светится на фоне */
+    --avatar-1: #1c5442;
+    --avatar-2: #1f4560;
+    --avatar-3: #5c4614;
+    --avatar-4: #5a3a22;
+    --avatar-5: #343c49;
+    --avatar-6: #444f22;
+    --avatar-ink: #dfe7e4;
 
     --ring: #3ecf8e;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.45);

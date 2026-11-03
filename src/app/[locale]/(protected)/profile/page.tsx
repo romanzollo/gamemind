@@ -35,6 +35,7 @@ import {
     SubmitButton,
     UserAvatar,
 } from '@/shared/ui';
+import { getAvatarPattern } from '@/shared/ui/avatar-pattern';
 
 type ProfilePageProps = {
     params: Promise<{ locale: string }>;
@@ -66,6 +67,7 @@ export default async function ProfilePage({
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
     const session = await requireUser(safeLocale);
+    const avatarPattern = getAvatarPattern(session.user.id);
     // Неизвестные коды отброшены; «Новое» список ставит только реально открытым.
     const query = await searchParams;
     const highlightCodes = parseUnlockedQuery(query.unlocked);
@@ -159,6 +161,7 @@ export default async function ProfilePage({
                 <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                     <UserAvatar
                         src={session.user.image}
+                        pattern={avatarPattern}
                         alt=""
                         size="sm"
                         className="!h-12 !w-12"
@@ -299,6 +302,7 @@ export default async function ProfilePage({
                         locale={safeLocale}
                         dictionary={dictionary}
                         currentImageUrl={session.user.image ?? null}
+                        avatarPattern={avatarPattern}
                     />
 
                     {isGuest ? null : signInMethods &&

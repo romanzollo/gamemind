@@ -8,6 +8,7 @@ import { SITE_ORIGIN } from '@/shared/config/site';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
 import { SiteTabBar } from '@/shared/ui';
 import { AppToaster } from '@/shared/ui/app-toaster';
+import { getAvatarPattern } from '@/shared/ui/avatar-pattern';
 import { getSiteTabs } from '@/shared/ui/site-nav';
 
 import '../globals.css';
@@ -87,6 +88,8 @@ export default async function LocaleLayout({
               username: session.user.username,
               role: session.user.role,
               image: session.user.image ?? null,
+              // Номер эмблемы, а не id: id игрока в HTML шапки не нужен.
+              avatarPattern: getAvatarPattern(session.user.id),
           }
         : null;
 

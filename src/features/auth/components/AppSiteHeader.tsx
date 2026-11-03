@@ -12,6 +12,7 @@ type AppSiteHeaderUser = {
     username: string;
     role: Role;
     image?: string | null;
+    avatarPattern: number;
 };
 
 type AppSiteHeaderProps = {

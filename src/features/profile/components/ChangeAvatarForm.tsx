@@ -14,6 +14,8 @@ type ChangeAvatarFormProps = {
     dictionary: Dictionary;
     /** Текущий URL из сессии/БД; null = аватара нет */
     currentImageUrl: string | null;
+    /** Эмблема по id игрока — пока фото нет. */
+    avatarPattern: number;
 };
 
 const fieldClassName =
@@ -25,6 +27,7 @@ export function ChangeAvatarForm({
     locale,
     dictionary,
     currentImageUrl,
+    avatarPattern,
 }: ChangeAvatarFormProps) {
     const router = useRouter();
     const [state, formAction, isPending] = useActionState(
@@ -53,6 +56,7 @@ export function ChangeAvatarForm({
                 <div className="mb-4">
                     <UserAvatar
                         src={currentImageUrl}
+                        pattern={avatarPattern}
                         size="md"
                         alt={dictionary.profile.changeAvatarTitle}
                     />
