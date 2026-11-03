@@ -34,6 +34,8 @@ export type TagRow = {
     nameEn: string;
     parentId: string | null;
     sortOrder: number;
+    /** Место в списке тем игры (`playTopics`); null — метка не тема. */
+    playOrder: number | null;
 };
 
 export type TaxonomyIndex = {
@@ -112,6 +114,7 @@ export function buildTaxonomyIndex(catalog: TaxonomyCatalog): TaxonomyIndex {
             nameEn,
             parentId: parentSlug ? tagIdOf(domainId, facet, parentSlug) : null,
             sortOrder,
+            playOrder: null,
         });
         tagIdsByRef.set(`${facet}:${slug}`, id);
     };
@@ -155,6 +158,14 @@ export function buildTaxonomyIndex(catalog: TaxonomyCatalog): TaxonomyIndex {
             index,
         ),
     );
+
+    // Ссылки тем проверила схема каталога — каждая находит свою метку.
+    catalog.playTopics.forEach((ref, playOrder) => {
+        const tag = tags.find((item) => item.id === tagIdsByRef.get(ref));
+        if (tag) {
+            tag.playOrder = playOrder;
+        }
+    });
 
     const gamesBySlug = new Map(catalog.games.map((game) => [game.slug, game]));
     const gameSlugByName = new Map<string, string>();

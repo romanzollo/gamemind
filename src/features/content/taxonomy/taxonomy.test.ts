@@ -63,6 +63,7 @@ const catalog: TaxonomyCatalog = {
         },
     ],
     seriesAliases: { Hitman: 'hitman' },
+    playTopics: ['era:2000s', 'platform:playstation'],
 };
 
 const index = buildTaxonomyIndex(catalog);
@@ -108,6 +109,28 @@ describe('taxonomy catalog', () => {
         };
 
         expect(taxonomyCatalogSchema.safeParse(broken).success).toBe(false);
+    });
+
+    it('rejects an unknown or repeated play topic', () => {
+        const broken = {
+            ...catalog,
+            playTopics: ['era:2000s', 'genre:racing', 'era:2000s'],
+        };
+        const result = taxonomyCatalogSchema.safeParse(broken);
+
+        expect(result.error?.issues.map((issue) => issue.message)).toEqual([
+            'Unknown play topic "genre:racing"',
+            'Duplicate play topic "era:2000s"',
+        ]);
+    });
+
+    it('numbers play topics in catalog order and leaves other tags out', () => {
+        const playOrder = (id: string) =>
+            index.tags.find((tag) => tag.id === id)?.playOrder;
+
+        expect(playOrder('games.era.2000s')).toBe(0);
+        expect(playOrder('games.platform.playstation')).toBe(1);
+        expect(playOrder('games.platform.ps2')).toBeNull();
     });
 
     it('puts platform families before their children and keeps ids stable', () => {

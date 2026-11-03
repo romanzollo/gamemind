@@ -3,6 +3,7 @@ import { connection } from 'next/server';
 import { unstable_noStore as noStore } from 'next/cache';
 import Link from 'next/link';
 
+import { getPlayTopicName } from '@/entities/play-topic/play-topic';
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
@@ -203,6 +204,7 @@ export default async function QuizResultPage({
         <TimedRematchButton
             locale={safeLocale}
             difficulty={summary.setupDifficulty}
+            topicTagId={summary.topic?.id ?? null}
             label={dictionary.quiz.timedTryAgain}
             dictionary={dictionary}
         />
@@ -211,6 +213,7 @@ export default async function QuizResultPage({
             locale={safeLocale}
             difficulty={summary.setupDifficulty}
             questionCount={summary.totalQuestions}
+            topicTagId={summary.topic?.id ?? null}
             // Челлендж второй раз не сыграть — кнопка честно ведёт в Классику.
             label={
                 summary.isDaily
@@ -220,6 +223,13 @@ export default async function QuizResultPage({
             dictionary={dictionary}
         />
     ) : null;
+
+    const topicName = summary?.topic
+        ? getPlayTopicName(summary.topic, safeLocale)
+        : null;
+    const sessionDifficultyLabel = summary
+        ? getSessionDifficultyLabel(summary.setupDifficulty, dictionary.quiz)
+        : '';
 
     const leaderboardHref = summary?.isSurvival
         ? `/${safeLocale}/leaderboard?mode=survival`
@@ -290,10 +300,9 @@ export default async function QuizResultPage({
                           : summary.isTimed
                             ? 'blitz'
                             : 'classic',
-                    difficultyLabel: getSessionDifficultyLabel(
-                        summary.setupDifficulty,
-                        dictionary.quiz,
-                    ),
+                    difficultyLabel: topicName
+                        ? `${sessionDifficultyLabel} · ${topicName}`
+                        : sessionDifficultyLabel,
                     completedAt: summary.completedAt,
                 },
                 dictionary.share,
@@ -364,6 +373,7 @@ export default async function QuizResultPage({
                             correctCount={summary.correctCount}
                             totalQuestions={summary.totalQuestions}
                             setupDifficulty={summary.setupDifficulty}
+                            topicName={topicName}
                             labels={dictionary.quiz}
                             playAgainAction={playAgainAction}
                             shareAction={shareAction}

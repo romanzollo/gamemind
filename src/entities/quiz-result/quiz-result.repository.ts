@@ -23,6 +23,9 @@ type QuizResultSummaryRow = {
     difficulty: Difficulty | null;
     pool_kind: string | null;
     is_daily: boolean;
+    topic_tag_id: string | null;
+    topic_name_ru: string | null;
+    topic_name_en: string | null;
 };
 
 type ReviewAnswerRow = {
@@ -60,6 +63,14 @@ export type QuizResultSummary = {
     poolKind: QuizSessionPoolKind;
     /** Hidden rematch: MIXED или EASY|MEDIUM|HARD. */
     setupDifficulty: QuizSetupDifficulty;
+    /** Тема игры (подпись + rematch с той же темой); null — весь банк. */
+    topic: QuizResultTopic | null;
+};
+
+export type QuizResultTopic = {
+    id: string;
+    nameRu: string;
+    nameEn: string;
 };
 
 export type QuizResultReviewBundle = {
@@ -138,7 +149,11 @@ function resolveLeaderboardMode(
     return 'classic';
 }
 
-/** WHERE по скалярам сессии — без snapshotData. */
+/**
+ * WHERE по скалярам сессии — без snapshotData.
+ * Classic / Blitz: только партии на всём банке (`topicTagId IS NULL`) —
+ * фанат шутеров не должен подниматься, выбирая свою тему (Play topics).
+ */
 function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
     if (mode === 'daily') {
         return ['s."dailyChallengeId" IS NOT NULL'];
@@ -148,6 +163,7 @@ function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
         return [
             's."dailyChallengeId" IS NULL',
             's."timedEndsAt" IS NOT NULL',
+            's."topicTagId" IS NULL',
         ];
     }
     if (mode === 'survival') {
@@ -161,6 +177,7 @@ function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
         's."dailyChallengeId" IS NULL',
         's."timedEndsAt" IS NULL',
         's."survivalRunId" IS NULL',
+        's."topicTagId" IS NULL',
     ];
 }
 
@@ -334,6 +351,7 @@ type ProfileStatsRow = {
 /**
  * Summary без JSONB: сразу после submit нельзя читать reviewSnapshot/TOAST
  * (connect OK → operation ~18s). Score/rematch живут на скалярах + Session.
+ * Название темы — LEFT JOIN Tag по PK (скаляры, не новый hop).
  */
 async function loadResultSummaryBySessionIdForUser(
     sessionId: string,
@@ -357,10 +375,15 @@ async function loadResultSummaryBySessionIdForUser(
                     s."survivalClockOk" AS "survival_clock_ok",
                     s."difficulty"::text AS "difficulty",
                     s."poolKind"::text AS "pool_kind",
-                    (s."dailyChallengeId" IS NOT NULL) AS "is_daily"
+                    (s."dailyChallengeId" IS NOT NULL) AS "is_daily",
+                    s."topicTagId" AS "topic_tag_id",
+                    topic."nameRu" AS "topic_name_ru",
+                    topic."nameEn" AS "topic_name_en"
                 FROM "QuizResult" r
                 INNER JOIN "QuizSession" s
                     ON s."id" = r."sessionId"
+                LEFT JOIN "Tag" topic
+                    ON topic."id" = s."topicTagId"
                 WHERE r."sessionId" = $1 AND r."userId" = $2
                 LIMIT 1
             `,
@@ -407,6 +430,14 @@ async function loadResultSummaryBySessionIdForUser(
         difficulty: row.difficulty,
         poolKind,
         setupDifficulty,
+        topic:
+            row.topic_tag_id && row.topic_name_ru && row.topic_name_en
+                ? {
+                      id: row.topic_tag_id,
+                      nameRu: row.topic_name_ru,
+                      nameEn: row.topic_name_en,
+                  }
+                : null,
     };
 }
 

@@ -96,6 +96,12 @@ export const taxonomyCatalogSchema = z
          * («Civilization», «Hitman»): вопрос получает только метку серии.
          */
         seriesAliases: z.record(nameSchema, slugSchema),
+        /**
+         * Темы игры в шторке режима, в порядке показа. Брать метку, у которой
+         * ≥20 вопросов хотя бы на одной сложности (`taxonomy:coverage`):
+         * доступность по сложностям сервер считает сам.
+         */
+        playTopics: z.array(tagRefSchema),
     })
     .superRefine((catalog, ctx) => {
         const facetSlugs = new Set(catalog.facets.map((facet) => facet.slug));
@@ -116,8 +122,35 @@ export const taxonomyCatalogSchema = z
             'franchises',
             ctx,
         );
-        uniqueSlugs(catalog.eras, 'eras', ctx);
-        uniqueSlugs(catalog.games, 'games', ctx);
+        const eraSlugs = uniqueSlugs(catalog.eras, 'eras', ctx);
+        const gameSlugs = uniqueSlugs(catalog.games, 'games', ctx);
+
+        const slugsByFacet: Record<GameFacetSlug, ReadonlySet<string>> = {
+            platform: platformSlugs,
+            era: eraSlugs,
+            genre: genreSlugs,
+            franchise: franchiseSlugs,
+            game: gameSlugs,
+        };
+        const seenTopics = new Set<string>();
+        catalog.playTopics.forEach((ref, index) => {
+            const [facet, slug] = ref.split(':') as [GameFacetSlug, string];
+            if (!slugsByFacet[facet].has(slug)) {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['playTopics', index],
+                    message: `Unknown play topic "${ref}"`,
+                });
+            }
+            if (seenTopics.has(ref)) {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['playTopics', index],
+                    message: `Duplicate play topic "${ref}"`,
+                });
+            }
+            seenTopics.add(ref);
+        });
 
         catalog.platforms.forEach((platform, index) => {
             if (platform.parent && !platformSlugs.has(platform.parent)) {

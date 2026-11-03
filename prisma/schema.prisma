@@ -78,16 +78,18 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts          Account[]
-  sessions          Session[]
-  quizSessions      QuizSession[]
-  quizResults       QuizResult[]
-  userAchievements  UserAchievement[]
-  achievementOutbox AchievementOutbox[]
+  accounts            Account[]
+  sessions            Session[]
+  quizSessions        QuizSession[]
+  quizResults         QuizResult[]
+  userAchievements    UserAchievement[]
+  achievementOutbox   AchievementOutbox[]
   /// Мешок анти-повтора вопросов (Classic/Timed) по сложности. Daily не использует.
-  questionCycles    UserQuestionCycle[]
+  questionCycles      UserQuestionCycle[]
+  /// Мешки анти-повтора тем игры (Classic/Timed с выбранной темой).
+  topicQuestionCycles UserTopicQuestionCycle[]
   /// Забеги Survival (волны = отдельные QuizSession). Classic/Blitz/Daily сюда не пишут.
-  survivalRuns      SurvivalRun[]
+  survivalRuns        SurvivalRun[]
 }
 
 model Account {
@@ -221,13 +223,19 @@ model Tag {
   nameEn    String
   parentId  String?
   sortOrder Int      @default(0)
+  /// Место в выборе темы игры (шторка режима); NULL — метка не тема.
+  /// Пишет taxonomy:sync из `playTopics` каталога.
+  playOrder Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  facet     Facet         @relation(fields: [facetId], references: [id], onDelete: Cascade)
-  parent    Tag?          @relation("TagFamily", fields: [parentId], references: [id], onDelete: SetNull)
-  children  Tag[]         @relation("TagFamily")
-  questions QuestionTag[]
+  facet        Facet                    @relation(fields: [facetId], references: [id], onDelete: Cascade)
+  parent       Tag?                     @relation("TagFamily", fields: [parentId], references: [id], onDelete: SetNull)
+  children     Tag[]                    @relation("TagFamily")
+  questions    QuestionTag[]
+  topicCycles  UserTopicQuestionCycle[]
+  /// Сессии, сыгранные с этой темой. Restrict: тему с историей не удалить.
+  quizSessions QuizSession[]
 
   @@unique([facetId, slug])
   @@index([parentId])
@@ -347,10 +355,15 @@ model QuizSession {
   survivalWaveIndex Int?
   /// Реконструкция банка на submit. NULL до complete / если не Survival.
   survivalClockOk   Boolean?
+  /// Тема игры (Tag с playOrder): вопросы только с этой меткой или её детьми.
+  /// NULL = весь банк. Сессии с темой не идут в общий рейтинг.
+  /// Canon: docs/DECISIONS.md → Play topics.
+  topicTagId        String?
   startedAt         DateTime            @default(now())
   completedAt       DateTime?
 
   user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicTag         Tag?                  @relation(fields: [topicTagId], references: [id], onDelete: Restrict)
   dailyChallenge   DailyChallenge?       @relation(fields: [dailyChallengeId], references: [id], onDelete: Restrict)
   survivalRun      SurvivalRun?          @relation(fields: [survivalRunId], references: [id], onDelete: Restrict)
   answers          QuizAnswer[]
@@ -463,6 +476,30 @@ model UserQuestionCycle {
 
   @@unique([userId, difficulty])
   @@index([userId])
+}
+
+/// Мешок анти-повтора темы игры: один на (user, тема, difficulty), та же
+/// seeded-cursor механика, что UserQuestionCycle. Отдельная таблица, а не
+/// колонка там: смена UNIQUE (userId, difficulty) сломала бы ON CONFLICT
+/// работающего кода между миграцией и деплоем.
+/// Canon: docs/DECISIONS.md → Play topics.
+model UserTopicQuestionCycle {
+  id          String     @id @default(cuid())
+  userId      String
+  tagId       String
+  difficulty  Difficulty
+  cycleNumber Int        @default(0)
+  cycleSeed   Int        @default(0)
+  cursor      Int        @default(0)
+  poolSize    Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tagId, difficulty])
+  @@index([tagId])
 }
 
 model QuizSessionQuestion {

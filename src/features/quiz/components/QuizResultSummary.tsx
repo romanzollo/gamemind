@@ -16,6 +16,8 @@ type QuizResultSummaryProps = {
     correctCount: number;
     totalQuestions: number;
     setupDifficulty: QuizSetupDifficulty;
+    /** Тема игры на языке интерфейса; null — весь банк (чипа нет). */
+    topicName?: string | null;
     labels: Dictionary['quiz'];
     /**
      * Primary CTA: ClassicRematchButton | TimedRematchButton | SurvivalRematchButton.
@@ -42,6 +44,7 @@ export function QuizResultSummary({
     correctCount,
     totalQuestions,
     setupDifficulty,
+    topicName,
     labels,
     playAgainAction,
     shareAction,
@@ -72,13 +75,21 @@ export function QuizResultSummary({
                 {labels.resultTitle}
             </h1>
 
-            {/* Чип сессии: MIXED = «Смешанная», не Medium. */}
-            <p className="mt-2">
+            {/* Чипы сессии: MIXED = «Смешанная», не Medium; тема — рядом. */}
+            <p className="mt-2 flex flex-wrap gap-1.5">
                 <span
                     className={`inline-flex items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${getSessionDifficultyChipToneClass(setupDifficulty)}`}
                 >
                     {difficultyLabel}
                 </span>
+                {topicName ? (
+                    <span
+                        className="inline-flex items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide text-foreground"
+                        data-testid="quiz-result-topic"
+                    >
+                        {topicName}
+                    </span>
+                ) : null}
             </p>
 
             <div className="mt-5 sm:mt-8">

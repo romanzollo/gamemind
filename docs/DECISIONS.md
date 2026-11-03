@@ -2482,3 +2482,31 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - Home and lobby side by side — the same content twice, and the «Play» tab would point at one of them arbitrarily.
 - Lobby as the «Play» tab, home as a landing page — a returning player would start every visit one tap further from the game.
 - Starting a game right from guest sign-in — the guest session is set by a redirect, a start in the same request has no session yet.
+
+## Play topics (November 3, 2026)
+
+**Context:** ROADMAP 4.0b. The taxonomy (4.0a) tags every question; the mode sheet (4.2b) left room for filters. A filter has to change *which* questions a game draws, and that is the hot path: the anti-repeat bag (User Question Cycle) is one per (user, difficulty) over the whole bank. Measured on Nov 2–3: platform families cover half the bank each (PC 282 of 549, PlayStation 238 — multiplatform games carry all three), eras and genres are distinct, no series has 10 questions per difficulty.
+
+**Decision:** a «Topic» choice in the Classic and Blitz sheets.
+
+| Piece | Choice |
+|------|--------|
+| Which topics | Data, not code: `playTopics` in `content/taxonomy/games.json` → `Tag.playOrder` (taxonomy:sync). First set: 90s, 2000s, 2010s, 2020s, shooters, RPGs, action-adventure, Nintendo. PC / PlayStation / Xbox left out: each is about half the bank, not a topic |
+| A topic's pool | Published active questions of the difficulty tagged with the topic **or its children** (Nintendo → Switch, NES…). The pool SQL also requires `playOrder IS NOT NULL` — the server does not trust a tag id from the form |
+| Threshold | `PLAY_TOPIC_MIN_QUESTIONS = 20` per difficulty: a game takes up to 10, so below 20 the second game is already made of repeats. Below it the draw returns `NOT_ENOUGH_QUESTIONS` before creating a bag row; the screen greys the difficulty out with the same constant. Mix with a topic needs all three difficulties |
+| Anti-repeat | Own bag per (user, topic, difficulty) in a **new** table `UserTopicQuestionCycle` — the same seeded cursor (`drawFromSeededCycle`), same pooled hop, same optimistic UPDATE / verify. Not a column in `UserQuestionCycle`: changing its UNIQUE (userId, difficulty) would break the running code's `ON CONFLICT` between migration and deploy, for every new player and guest |
+| Session | `QuizSession.topicTagId` (FK → Tag, Restrict), one more scalar in the create INSERT. Result summary shows the topic chip (LEFT JOIN Tag by PK), rematch keeps the topic |
+| Leaderboard | Classic / Blitz boards take `topicTagId IS NULL` only: a shooter fan would climb by picking shooters. Achievements and profile stats count topic games |
+| Not in | Survival (long runs, small topic pools — repeats in a few waves) and Daily (one set for everyone) |
+
+**Hot path:** no new hop. The topic bag lives in the same pooled cycle hop; without a topic the SQL text and query order are unchanged. Create gains one scalar; play-load, lock-in, submit, clock untouched. Matrix: Classic EASY 3, Classic MIXED, Blitz MIXED without a topic + Classic / Blitz with a topic.
+
+**Known gap:** bags do not see each other — after a «Shooters» game the whole-bank bag may deal a shooter question just played. Accepted; a per-user «seen» history would fix it, but it replaces the cycle (hot-path rewrite).
+
+**Not chosen:**
+
+- Filtering inside the whole-bank bag — the cursor would burn non-topic questions or deal repeats within the topic.
+- A «seen questions» history table now — the right long-term anti-repeat, but it replaces the cycle canon.
+- Counting topic availability on the home render — one more Neon read on every home GET; availability is served separately (4.0b-2).
+
+**Deploy order:** migration `20261103120000_play_topics` on prod (additive) → deploy → `taxonomy:sync --apply` (sets `playOrder`). Before the sync, no topic is playable — the pool is empty, the start answers «not enough questions».

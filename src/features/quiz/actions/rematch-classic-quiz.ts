@@ -47,6 +47,7 @@ export async function rematchClassicQuizAction(
     const parsed = quizSetupSchema.safeParse({
         difficulty: formData.get('difficulty'),
         questionCount: formData.get('questionCount'),
+        topic: formData.get('topic'),
     });
 
     if (!parsed.success) {
@@ -59,6 +60,7 @@ export async function rematchClassicQuizAction(
         userId: session.user.id,
         difficulty: parsed.data.difficulty,
         questionCount: parsed.data.questionCount,
+        topicTagId: parsed.data.topic,
         locale,
     });
 

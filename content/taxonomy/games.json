@@ -452,5 +452,15 @@
     "Street Fighter": "street-fighter",
     "Super Smash Bros.": "smash-bros",
     "The Sims": "the-sims"
-  }
+  },
+  "playTopics": [
+    "era:1990s",
+    "era:2000s",
+    "era:2010s",
+    "era:2020s",
+    "genre:shooter",
+    "genre:rpg",
+    "genre:action-adventure",
+    "platform:nintendo"
+  ]
 }

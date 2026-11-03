@@ -8,6 +8,9 @@
  * settle 300ms → один resolve-by-ids (chunk 5). Не MIXED в Difficulty.
  * SINGLE Classic/Blitz: тот же settle после cycle перед Direct resolve.
  *
+ * Тема игры (`topicTagId`): мешки темы в том же cycle hop; дальше всё как
+ * без темы (settle, resolve chunk 5). Survival и Daily тему не передают.
+ *
  * Анти-паттерн (снят): Prisma JSONB remaining + Promise.race budget +
  * fallback random — давал повторы IMAGE_GUESS при «успешном» старте.
  * Теперь cycle обязан отработать; ошибка → наверх (не тихий random).
@@ -44,11 +47,13 @@ async function pickUserCycleSnapshotBundle(
     difficulty: Difficulty,
     questionCount: number,
     locale: Locale,
+    topicTagId: string | null,
 ): Promise<QuestionSnapshotBundleItem[]> {
     const drawn = await userQuestionCycleRepository.drawQuestionIds({
         userId,
         difficulty,
         needed: questionCount,
+        topicTagId,
     });
 
     if (!drawn.ok || drawn.questionIds.length < questionCount) {
@@ -72,12 +77,14 @@ export function pickClassicSnapshotBundle(
     difficulty: Difficulty,
     questionCount: number,
     locale: Locale,
+    topicTagId: string | null,
 ): Promise<QuestionSnapshotBundleItem[]> {
     return pickUserCycleSnapshotBundle(
         userId,
         difficulty,
         questionCount,
         locale,
+        topicTagId,
     );
 }
 
@@ -89,12 +96,14 @@ export function pickTimedSnapshotBundle(
     difficulty: Difficulty,
     questionCount: number,
     locale: Locale,
+    topicTagId: string | null,
 ): Promise<QuestionSnapshotBundleItem[]> {
     return pickUserCycleSnapshotBundle(
         userId,
         difficulty,
         questionCount,
         locale,
+        topicTagId,
     );
 }
 
@@ -106,6 +115,7 @@ export async function pickMixedSnapshotBundle(
     userId: string,
     questionCount: number,
     locale: Locale,
+    topicTagId: string | null,
 ): Promise<QuestionSnapshotBundleItem[]> {
     const split = getMixedDifficultySplit(questionCount);
 
@@ -115,6 +125,7 @@ export async function pickMixedSnapshotBundle(
 
     const drawn = await userQuestionCycleRepository.drawMixedQuestionIds({
         userId,
+        topicTagId,
         draws: listMixedCycleDraws(split),
     });
 

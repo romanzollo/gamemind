@@ -7,6 +7,7 @@
  * - SINGLE: pickClassicSnapshotBundle (один мешок) → create;
  * - MIXED: pickMixedSnapshotBundle (3× cycle + shuffle + 1 resolve) →
  *   createWithJsonSnapshot (poolKind MIXED, difficulty NULL);
+ * - тема (`topicTagId`): мешки темы в том же cycle hop + скаляр в create;
  * - pick: cycle write TLS + resolve chunks; create — отдельный budget;
  * - 500ms settle перед pick (rematch / lobby Daily);
  * - матрица: Easy 3 / 5 / 10 и MIXED 3 / 5 / 10 → 303.
@@ -34,6 +35,8 @@ export type RunClassicQuizStartInput = {
     userId: string;
     difficulty: QuizSetupDifficulty;
     questionCount: number;
+    /** Тема игры; null — весь банк. */
+    topicTagId: string | null;
     locale: Locale;
 };
 
@@ -55,12 +58,14 @@ export async function runClassicQuizStart(
                       input.userId,
                       input.questionCount,
                       input.locale,
+                      input.topicTagId,
                   )
                 : await pickClassicSnapshotBundle(
                       input.userId,
                       input.difficulty,
                       input.questionCount,
                       input.locale,
+                      input.topicTagId,
                   );
 
         if (pickedQuestions.length < input.questionCount) {
@@ -75,6 +80,7 @@ export async function runClassicQuizStart(
             poolKind: pool.poolKind,
             questionCount: input.questionCount,
             sessionLocale: input.locale,
+            topicTagId: input.topicTagId,
             questions: buildQuizSnapshotQuestions(pickedQuestions),
             pickedQuestions,
         });

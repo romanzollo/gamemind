@@ -19,6 +19,8 @@ import type { QuizSetupDifficulty } from '@/types';
 type TimedRematchButtonProps = {
     locale: Locale;
     difficulty: QuizSetupDifficulty;
+    /** Тема прошлой партии: реванш с той же темой; null — весь банк. */
+    topicTagId: string | null;
     label: string;
     dictionary: Dictionary;
     className?: string;
@@ -27,6 +29,7 @@ type TimedRematchButtonProps = {
 export function TimedRematchButton({
     locale,
     difficulty,
+    topicTagId,
     label,
     dictionary,
     className,
@@ -39,6 +42,9 @@ export function TimedRematchButton({
             <form action={formAction}>
                 <input type="hidden" name="locale" value={locale} />
                 <input type="hidden" name="difficulty" value={difficulty} />
+                {topicTagId ? (
+                    <input type="hidden" name="topic" value={topicTagId} />
+                ) : null}
                 <SubmitButton
                     pendingLabel={dictionary.common.working}
                     className="w-full sm:w-auto"

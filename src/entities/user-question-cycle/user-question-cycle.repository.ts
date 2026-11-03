@@ -14,6 +14,12 @@
  *   false-fail после успешного COMMIT.
  * - Transient после UPDATE → verify nextState (как quiz write recovery).
  *
+ * Мешок темы (`topicTagId`): та же механика в `UserTopicQuestionCycle`, пул —
+ * вопросы с меткой темы или её детьми, на том же pooled hop (не новый hop).
+ * Без темы SQL и порядок запросов прежние. Пул темы меньше
+ * PLAY_TOPIC_MIN_QUESTIONS → NOT_ENOUGH до создания строки мешка.
+ * Canon: docs/DECISIONS.md → Play topics.
+ *
  * Mix (Classic/Blitz): compute на pooled, persist на свежем pooled (не тот же
  * сокет после fat SELECT). Не BEGIN. Не `withDirectPg*`.
  * После cycle — 300ms settle перед Direct resolve (очередь так же ждёт 300ms).
@@ -24,6 +30,7 @@ import { randomUUID } from 'node:crypto';
 
 import type { Client } from 'pg';
 
+import { PLAY_TOPIC_MIN_QUESTIONS } from '@/entities/play-topic/play-topic';
 import {
     drawFromSeededCycle,
     type QuestionCycleState,
@@ -47,6 +54,8 @@ export type DrawQuestionIdsInput = {
     userId: string;
     difficulty: Difficulty;
     needed: number;
+    /** Тема игры (id метки): свой мешок на (игрок, тема, сложность). */
+    topicTagId?: string | null;
     /** Survival: сыгранные в забеге id не выдаются (без повторов в забеге). */
     excludeQuestionIds?: readonly string[];
     /** Survival: последняя волна может быть короче `needed`. */
@@ -55,6 +64,8 @@ export type DrawQuestionIdsInput = {
 
 export type DrawMixedUserQuestionCycleIdsInput = {
     userId: string;
+    /** Тема игры: все три куска Микса берутся из мешков этой темы. */
+    topicTagId?: string | null;
     /** Последовательные куски сплита (EASY → MEDIUM → HARD). Не MIXED-мешок. */
     draws: Array<{ difficulty: Difficulty; needed: number }>;
 };
@@ -68,6 +79,25 @@ export type DrawMixedUserQuestionCycleIdsResult =
  * (phase=operation). Не глобальный Direct 18s. Abort → verify nextState.
  */
 const CYCLE_POOLED_ATTEMPT_MS = 12_000;
+
+/** Какой мешок: общий на сложность (topicTagId null) или мешок темы. */
+type CycleBagKey = {
+    userId: string;
+    difficulty: Difficulty;
+    topicTagId: string | null;
+};
+
+function toBagKey(input: {
+    userId: string;
+    difficulty: Difficulty;
+    topicTagId?: string | null;
+}): CycleBagKey {
+    return {
+        userId: input.userId,
+        difficulty: input.difficulty,
+        topicTagId: input.topicTagId ?? null,
+    };
+}
 
 type CycleStateRow = {
     cycle_number: number | string;
@@ -121,15 +151,74 @@ async function loadCycleState(
     return row ? rowToState(row) : null;
 }
 
-async function loadOrCreateCycleState(
+async function loadTopicCycleState(
     client: Client,
     userId: string,
+    topicTagId: string,
     difficulty: Difficulty,
-): Promise<QuestionCycleState> {
-    const existing = await loadCycleState(client, userId, difficulty);
+): Promise<QuestionCycleState | null> {
+    const result = await client.query<CycleStateRow>(
+        `
+            SELECT
+                "cycleNumber" AS cycle_number,
+                "cycleSeed" AS cycle_seed,
+                "cursor",
+                "poolSize" AS pool_size
+            FROM "UserTopicQuestionCycle"
+            WHERE "userId" = $1
+              AND "tagId" = $2
+              AND "difficulty" = $3::"Difficulty"
+            LIMIT 1
+        `,
+        [userId, topicTagId, difficulty],
+    );
 
-    if (existing) {
-        return existing;
+    const row = result.rows[0];
+    return row ? rowToState(row) : null;
+}
+
+function loadBagState(
+    client: Client,
+    bag: CycleBagKey,
+): Promise<QuestionCycleState | null> {
+    return bag.topicTagId
+        ? loadTopicCycleState(client, bag.userId, bag.topicTagId, bag.difficulty)
+        : loadCycleState(client, bag.userId, bag.difficulty);
+}
+
+async function insertBagState(client: Client, bag: CycleBagKey): Promise<void> {
+    if (bag.topicTagId) {
+        await client.query(
+            `
+                INSERT INTO "UserTopicQuestionCycle" (
+                    "id",
+                    "userId",
+                    "tagId",
+                    "difficulty",
+                    "cycleNumber",
+                    "cycleSeed",
+                    "cursor",
+                    "poolSize",
+                    "createdAt",
+                    "updatedAt"
+                )
+                VALUES (
+                    $1,
+                    $2,
+                    $3,
+                    $4::"Difficulty",
+                    0,
+                    0,
+                    0,
+                    0,
+                    NOW(),
+                    NOW()
+                )
+                ON CONFLICT ("userId", "tagId", "difficulty") DO NOTHING
+            `,
+            [randomUUID(), bag.userId, bag.topicTagId, bag.difficulty],
+        );
+        return;
     }
 
     await client.query(
@@ -158,10 +247,23 @@ async function loadOrCreateCycleState(
             )
             ON CONFLICT ("userId", "difficulty") DO NOTHING
         `,
-        [randomUUID(), userId, difficulty],
+        [randomUUID(), bag.userId, bag.difficulty],
     );
+}
 
-    const created = await loadCycleState(client, userId, difficulty);
+async function loadOrCreateCycleState(
+    client: Client,
+    bag: CycleBagKey,
+): Promise<QuestionCycleState> {
+    const existing = await loadBagState(client, bag);
+
+    if (existing) {
+        return existing;
+    }
+
+    await insertBagState(client, bag);
+
+    const created = await loadBagState(client, bag);
 
     if (!created) {
         throw new Error('UserQuestionCycle get-or-create failed');
@@ -190,15 +292,88 @@ async function loadActivePublishedPoolIds(
 }
 
 /**
+ * Пул темы: метка темы или её дети (семейство Nintendo → Switch, NES…).
+ * Метка без `playOrder` (не тема) даёт пустой пул — так сервер не доверяет
+ * присланному id. EXISTS идёт по PK QuestionTag (questionId, tagId).
+ */
+async function loadTopicPoolIds(
+    client: Client,
+    difficulty: Difficulty,
+    topicTagId: string,
+): Promise<string[]> {
+    const result = await client.query<{ id: string }>(
+        `
+            SELECT q."id"
+            FROM "Question" q
+            WHERE
+                q."difficulty" = $1::"Difficulty"
+                AND q."isActive" = true
+                AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
+                AND EXISTS (
+                    SELECT 1
+                    FROM "Tag" topic
+                    WHERE topic."id" = $2
+                      AND topic."playOrder" IS NOT NULL
+                )
+                AND EXISTS (
+                    SELECT 1
+                    FROM "QuestionTag" qt
+                    JOIN "Tag" t ON t."id" = qt."tagId"
+                    WHERE qt."questionId" = q."id"
+                      AND (t."id" = $2 OR t."parentId" = $2)
+                )
+        `,
+        [difficulty, topicTagId],
+    );
+
+    return result.rows.map((row) => row.id);
+}
+
+/**
  * Optimistic scalar UPDATE. true = наша версия; false = конфликт (retry draw).
  */
 async function persistCycleState(
     client: Client,
-    userId: string,
-    difficulty: Difficulty,
+    bag: CycleBagKey,
     expected: QuestionCycleState,
     next: QuestionCycleState,
 ): Promise<boolean> {
+    const stateParams = [
+        next.cycleNumber,
+        next.cycleSeed,
+        next.cursor,
+        next.poolSize,
+        expected.cycleNumber,
+        expected.cycleSeed,
+        expected.cursor,
+        expected.poolSize,
+    ];
+
+    if (bag.topicTagId) {
+        const result = await client.query(
+            `
+                UPDATE "UserTopicQuestionCycle"
+                SET
+                    "cycleNumber" = $4,
+                    "cycleSeed" = $5,
+                    "cursor" = $6,
+                    "poolSize" = $7,
+                    "updatedAt" = NOW()
+                WHERE
+                    "userId" = $1
+                    AND "tagId" = $2
+                    AND "difficulty" = $3::"Difficulty"
+                    AND "cycleNumber" = $8
+                    AND "cycleSeed" = $9
+                    AND "cursor" = $10
+                    AND "poolSize" = $11
+            `,
+            [bag.userId, bag.topicTagId, bag.difficulty, ...stateParams],
+        );
+
+        return (result.rowCount ?? 0) > 0;
+    }
+
     const result = await client.query(
         `
             UPDATE "UserQuestionCycle"
@@ -216,31 +391,19 @@ async function persistCycleState(
                 AND "cursor" = $9
                 AND "poolSize" = $10
         `,
-        [
-            userId,
-            difficulty,
-            next.cycleNumber,
-            next.cycleSeed,
-            next.cursor,
-            next.poolSize,
-            expected.cycleNumber,
-            expected.cycleSeed,
-            expected.cursor,
-            expected.poolSize,
-        ],
+        [bag.userId, bag.difficulty, ...stateParams],
     );
 
     return (result.rowCount ?? 0) > 0;
 }
 
 async function verifyCycleStateApplied(
-    userId: string,
-    difficulty: Difficulty,
+    bag: CycleBagKey,
     expectedNext: QuestionCycleState,
 ): Promise<boolean> {
     try {
         const current = await withPooledPgClient(
-            (client) => loadCycleState(client, userId, difficulty),
+            (client) => loadBagState(client, bag),
             { debugLabel: 'quiz.cycle.verify', attemptTimeoutMs: CYCLE_POOLED_ATTEMPT_MS },
         );
 
@@ -255,31 +418,22 @@ type DrawHopResult =
     | { ok: false; reason: 'CONFLICT' };
 
 type PreparedBagDraw = {
-    difficulty: Difficulty;
+    bag: CycleBagKey;
     questionIds: string[];
     expected: QuestionCycleState;
     nextState: QuestionCycleState;
     didReshuffle: boolean;
 };
 
-/**
- * Load + seeded draw, без UPDATE. Mix persist'ит на свежем pooled client:
- * fat SELECT id и UPDATE на одном сокете (mix 10) висели ~19s.
- */
-async function computeBagDrawOnClient(
-    client: Client,
-    input: DrawQuestionIdsInput,
-): Promise<
-    | { ok: true; bag: Omit<PreparedBagDraw, 'difficulty'> }
-    | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' }
-> {
-    const state = await loadOrCreateCycleState(
-        client,
-        input.userId,
-        input.difficulty,
-    );
-    const poolIds = await loadActivePublishedPoolIds(client, input.difficulty);
+type ComputedBagDraw =
+    | { ok: true; bag: Omit<PreparedBagDraw, 'bag'> }
+    | { ok: false; reason: 'NOT_ENOUGH_QUESTIONS' };
 
+function drawOnPool(
+    input: DrawQuestionIdsInput,
+    state: QuestionCycleState,
+    poolIds: readonly string[],
+): ComputedBagDraw {
     const drawn = drawFromSeededCycle({
         state,
         poolIds,
@@ -303,9 +457,43 @@ async function computeBagDrawOnClient(
     };
 }
 
+/**
+ * Load + seeded draw, без UPDATE. Mix persist'ит на свежем pooled client:
+ * fat SELECT id и UPDATE на одном сокете (mix 10) висели ~19s.
+ */
+async function computeBagDrawOnClient(
+    client: Client,
+    input: DrawQuestionIdsInput,
+): Promise<ComputedBagDraw> {
+    const bag = toBagKey(input);
+
+    if (bag.topicTagId) {
+        // Сначала пул: на неизвестной или узкой теме строку мешка не создаём.
+        const poolIds = await loadTopicPoolIds(
+            client,
+            input.difficulty,
+            bag.topicTagId,
+        );
+
+        if (poolIds.length < PLAY_TOPIC_MIN_QUESTIONS) {
+            return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
+        }
+
+        const state = await loadOrCreateCycleState(client, bag);
+        return drawOnPool(input, state, poolIds);
+    }
+
+    const state = await loadOrCreateCycleState(client, bag);
+    const poolIds = await loadActivePublishedPoolIds(client, input.difficulty);
+
+    return drawOnPool(input, state, poolIds);
+}
+
 async function drawQuestionIdsOnce(
     input: DrawQuestionIdsInput,
 ): Promise<DrawUserQuestionCycleIdsResult> {
+    const bag = toBagKey(input);
+
     for (let attempt = 1; attempt <= 3; attempt += 1) {
         let pendingDraw:
             | {
@@ -332,8 +520,7 @@ async function drawQuestionIdsOnce(
 
                     const persisted = await persistCycleState(
                         client,
-                        input.userId,
-                        input.difficulty,
+                        bag,
                         computed.bag.expected,
                         computed.bag.nextState,
                     );
@@ -361,8 +548,7 @@ async function drawQuestionIdsOnce(
             // UPDATE мог успеть на Neon, а сокет умер на teardown — не списываем впустую.
             if (isTransientDirectPgError(error) && pendingDraw) {
                 const applied = await verifyCycleStateApplied(
-                    input.userId,
-                    input.difficulty,
+                    bag,
                     pendingDraw.nextState,
                 );
 
@@ -388,10 +574,9 @@ async function drawQuestionIdsOnce(
  * Fat SELECT id + UPDATE на одном сокете на mix 10 рвал persist ~19s.
  * NOT_ENOUGH до любого UPDATE. Не Direct queue.
  */
-async function drawMixedQuestionIdsOnce(input: {
-    userId: string;
-    draws: Array<{ difficulty: Difficulty; needed: number }>;
-}): Promise<DrawMixedUserQuestionCycleIdsResult> {
+async function drawMixedQuestionIdsOnce(
+    input: DrawMixedUserQuestionCycleIdsInput,
+): Promise<DrawMixedUserQuestionCycleIdsResult> {
     const activeDraws = input.draws.filter((draw) => draw.needed > 0);
 
     if (activeDraws.length === 0) {
@@ -402,13 +587,14 @@ async function drawMixedQuestionIdsOnce(input: {
         const prepared: PreparedBagDraw[] = [];
 
         for (const draw of activeDraws) {
+            const drawInput: DrawQuestionIdsInput = {
+                userId: input.userId,
+                difficulty: draw.difficulty,
+                needed: draw.needed,
+                topicTagId: input.topicTagId,
+            };
             const computed = await withPooledPgClient(
-                (client) =>
-                    computeBagDrawOnClient(client, {
-                        userId: input.userId,
-                        difficulty: draw.difficulty,
-                        needed: draw.needed,
-                    }),
+                (client) => computeBagDrawOnClient(client, drawInput),
                 { debugLabel: 'quiz.cycle.draw', attemptTimeoutMs: CYCLE_POOLED_ATTEMPT_MS },
             );
 
@@ -417,7 +603,7 @@ async function drawMixedQuestionIdsOnce(input: {
             }
 
             prepared.push({
-                difficulty: draw.difficulty,
+                bag: toBagKey(drawInput),
                 ...computed.bag,
             });
         }
@@ -425,16 +611,15 @@ async function drawMixedQuestionIdsOnce(input: {
         const questionIds: string[] = [];
         let conflict = false;
 
-        for (const bag of prepared) {
+        for (const prepare of prepared) {
             try {
                 const persisted = await withPooledPgClient(
                     (client) =>
                         persistCycleState(
                             client,
-                            input.userId,
-                            bag.difficulty,
-                            bag.expected,
-                            bag.nextState,
+                            prepare.bag,
+                            prepare.expected,
+                            prepare.nextState,
                         ),
                     { debugLabel: 'quiz.cycle.persist', attemptTimeoutMs: CYCLE_POOLED_ATTEMPT_MS },
                 );
@@ -444,17 +629,16 @@ async function drawMixedQuestionIdsOnce(input: {
                     break;
                 }
 
-                questionIds.push(...bag.questionIds);
+                questionIds.push(...prepare.questionIds);
             } catch (error) {
                 if (isTransientDirectPgError(error)) {
                     const applied = await verifyCycleStateApplied(
-                        input.userId,
-                        bag.difficulty,
-                        bag.nextState,
+                        prepare.bag,
+                        prepare.nextState,
                     );
 
                     if (applied) {
-                        questionIds.push(...bag.questionIds);
+                        questionIds.push(...prepare.questionIds);
                         continue;
                     }
                 }
@@ -480,6 +664,7 @@ export const userQuestionCycleRepository = {
      * Забирает N question id из seeded-цикла пользователя.
      * Classic/Timed start и волны Survival — один цикл на сложность, поэтому
      * вопрос не повторяется ни в одном режиме до конца цикла.
+     * С темой — мешок темы (Survival тему не передаёт).
      * Без budget-race и без JSONB мешка.
      */
     async drawQuestionIds(

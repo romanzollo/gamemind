@@ -19,6 +19,8 @@ type ClassicRematchButtonProps = {
     locale: Locale;
     difficulty: QuizSetupDifficulty;
     questionCount: number;
+    /** Тема прошлой партии: реванш с той же темой; null — весь банк. */
+    topicTagId: string | null;
     label: string;
     dictionary: Dictionary;
     className?: string;
@@ -28,6 +30,7 @@ export function ClassicRematchButton({
     locale,
     difficulty,
     questionCount,
+    topicTagId,
     label,
     dictionary,
     className,
@@ -45,6 +48,9 @@ export function ClassicRematchButton({
                     name="questionCount"
                     value={String(questionCount)}
                 />
+                {topicTagId ? (
+                    <input type="hidden" name="topic" value={topicTagId} />
+                ) : null}
                 <SubmitButton
                     pendingLabel={dictionary.common.working}
                     className="w-full sm:w-auto"

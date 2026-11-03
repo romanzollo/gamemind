@@ -8,8 +8,9 @@
  *
  * Запись — упорядоченные autocommit-запросы без BEGIN (Neon write path,
  * DECISIONS); каждый идемпотентен, повторный запуск доводит начатое.
- * Прод — только по команде владельца и после миграции
- * 20261102120000_content_taxonomy.
+ * Прод — только по команде владельца и после миграций
+ * 20261102120000_content_taxonomy и 20261103120000_play_topics
+ * (`Tag.playOrder` — темы игры из `playTopics`).
  *
  * Usage:
  *   npm run taxonomy:sync                                   — dev, план
@@ -120,7 +121,7 @@ async function main(): Promise<void> {
         const existingTags = (
             await client.query(
                 `
-                SELECT t."id", t."nameRu", t."nameEn", t."parentId", t."sortOrder"
+                SELECT t."id", t."nameRu", t."nameEn", t."parentId", t."sortOrder", t."playOrder"
                 FROM "Tag" t
                 JOIN "Facet" f ON f."id" = t."facetId"
                 WHERE f."domainId" = $1
@@ -226,15 +227,16 @@ async function main(): Promise<void> {
         for (const part of chunks(plan.tagUpserts)) {
             await client.query(
                 `
-                    INSERT INTO "Tag" ("id", "facetId", "slug", "nameRu", "nameEn", "parentId", "sortOrder", "updatedAt")
-                    SELECT v.id, v.facet_id, v.slug, v.name_ru, v.name_en, v.parent_id, v.sort_order, NOW()
-                    FROM unnest($1::text[], $2::text[], $3::text[], $4::text[], $5::text[], $6::text[], $7::int[])
-                        AS v(id, facet_id, slug, name_ru, name_en, parent_id, sort_order)
+                    INSERT INTO "Tag" ("id", "facetId", "slug", "nameRu", "nameEn", "parentId", "sortOrder", "playOrder", "updatedAt")
+                    SELECT v.id, v.facet_id, v.slug, v.name_ru, v.name_en, v.parent_id, v.sort_order, v.play_order, NOW()
+                    FROM unnest($1::text[], $2::text[], $3::text[], $4::text[], $5::text[], $6::text[], $7::int[], $8::int[])
+                        AS v(id, facet_id, slug, name_ru, name_en, parent_id, sort_order, play_order)
                     ON CONFLICT ("id") DO UPDATE
                     SET "nameRu" = EXCLUDED."nameRu",
                         "nameEn" = EXCLUDED."nameEn",
                         "parentId" = EXCLUDED."parentId",
                         "sortOrder" = EXCLUDED."sortOrder",
+                        "playOrder" = EXCLUDED."playOrder",
                         "updatedAt" = NOW()
                 `,
                 [
@@ -245,6 +247,7 @@ async function main(): Promise<void> {
                     part.map((tag) => tag.nameEn),
                     part.map((tag) => tag.parentId),
                     part.map((tag) => tag.sortOrder),
+                    part.map((tag) => tag.playOrder),
                 ],
             );
         }

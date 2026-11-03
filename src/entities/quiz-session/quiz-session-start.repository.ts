@@ -693,10 +693,12 @@ async function insertQuizSessionWithSnapshotData(
         snapshotJson,
         input.dailyChallengeId ?? null,
         timedEndsAtValue,
+        input.topicTagId ?? null,
     ] as const;
 
     // Classic / Timed / Daily: survival-колонки не перечисляем → NULL
     // (CHECK: waveIndex/clockOk тоже NULL). startedAt = SQL NOW() as-is.
+    // topicTagId — скаляр в том же INSERT (Play topics), не отдельный hop.
     await client.query(
         `
             INSERT INTO "QuizSession" (
@@ -710,6 +712,7 @@ async function insertQuizSessionWithSnapshotData(
                 "snapshotData",
                 "dailyChallengeId",
                 "timedEndsAt",
+                "topicTagId",
                 "startedAt"
             )
             VALUES (
@@ -723,6 +726,7 @@ async function insertQuizSessionWithSnapshotData(
                 $8::jsonb,
                 $9,
                 $10,
+                $11,
                 NOW()
             )
         `,

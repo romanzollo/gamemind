@@ -25,7 +25,43 @@ describe('quizSetupSchema', () => {
             expect(parsed.data).toEqual({
                 difficulty: 'EASY',
                 questionCount: 3,
+                topic: null,
             });
+        }
+    });
+
+    it('reads the play topic: missing or empty is the whole bank', () => {
+        const withTopic = quizSetupSchema.safeParse({
+            difficulty: 'MIXED',
+            questionCount: '10',
+            topic: 'games.genre.action-adventure',
+        });
+        const empty = quizSetupSchema.safeParse({
+            difficulty: 'EASY',
+            questionCount: '3',
+            topic: '',
+        });
+        // FormData.get без поля даёт null.
+        const missing = quizSetupSchema.safeParse({
+            difficulty: 'EASY',
+            questionCount: '3',
+            topic: null,
+        });
+
+        expect(withTopic.data?.topic).toBe('games.genre.action-adventure');
+        expect(empty.data?.topic).toBeNull();
+        expect(missing.data?.topic).toBeNull();
+    });
+
+    it('rejects a topic that is not a tag id', () => {
+        for (const topic of ["games.era.2010s' OR 1=1", 'shooter', 'games..x']) {
+            const parsed = quizSetupSchema.safeParse({
+                difficulty: 'EASY',
+                questionCount: '3',
+                topic,
+            });
+
+            expect(parsed.success, topic).toBe(false);
         }
     });
 
@@ -81,5 +117,17 @@ describe('timedQuizSetupSchema', () => {
         });
 
         expect(parsed.success).toBe(false);
+    });
+
+    it('carries the play topic to the Blitz start', () => {
+        const parsed = timedQuizSetupSchema.safeParse({
+            difficulty: 'HARD',
+            topic: 'games.era.1990s',
+        });
+
+        expect(parsed.data).toEqual({
+            difficulty: 'HARD',
+            topic: 'games.era.1990s',
+        });
     });
 });

@@ -63,6 +63,7 @@ export async function startQuizAction(
     const parsed = quizSetupSchema.safeParse({
         difficulty: formData.get('difficulty'),
         questionCount: formData.get('questionCount'),
+        topic: formData.get('topic'),
     });
 
     // проверяем, являются ли данные валидными
@@ -74,6 +75,7 @@ export async function startQuizAction(
         userId: session.user.id,
         difficulty: parsed.data.difficulty,
         questionCount: parsed.data.questionCount,
+        topicTagId: parsed.data.topic,
         locale,
     });
 

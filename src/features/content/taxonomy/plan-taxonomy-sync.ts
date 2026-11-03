@@ -41,7 +41,7 @@ export type SyncDraftQuestion = {
 
 export type ExistingTagRow = Pick<
     TagRow,
-    'id' | 'nameRu' | 'nameEn' | 'parentId' | 'sortOrder'
+    'id' | 'nameRu' | 'nameEn' | 'parentId' | 'sortOrder' | 'playOrder'
 >;
 
 export type TaxonomySyncInput = {
@@ -56,7 +56,7 @@ export type TaxonomySyncInput = {
 };
 
 export type TaxonomySyncPlan = {
-    /** Новые и изменившиеся метки (по названию, семейству, порядку). */
+    /** Новые и изменившиеся метки (по названию, семейству, порядку, теме). */
     tagUpserts: TagRow[];
     contentKeys: Array<{
         questionId: string;
@@ -102,7 +102,8 @@ function tagChanged(
         current.nameRu !== next.nameRu ||
         current.nameEn !== next.nameEn ||
         current.parentId !== next.parentId ||
-        current.sortOrder !== next.sortOrder
+        current.sortOrder !== next.sortOrder ||
+        current.playOrder !== next.playOrder
     );
 }
 

@@ -29,7 +29,7 @@ function getLocaleFromFormData(formData: FormData): Locale {
 }
 
 /**
- * Старт timed. FormData: `locale` + `difficulty`.
+ * Старт timed. FormData: `locale` + `difficulty` + необязательная `topic`.
  * questionCount / durationSeconds клиент не задаёт — иначе обойдёт контракт.
  */
 export async function startTimedQuizAction(
@@ -55,6 +55,7 @@ export async function startTimedQuizAction(
 
     const parsed = timedQuizSetupSchema.safeParse({
         difficulty: formData.get('difficulty'),
+        topic: formData.get('topic'),
     });
 
     if (!parsed.success) {
@@ -64,6 +65,7 @@ export async function startTimedQuizAction(
     const started = await runTimedQuizStart({
         userId: session.user.id,
         difficulty: parsed.data.difficulty,
+        topicTagId: parsed.data.topic,
         locale,
     });
 

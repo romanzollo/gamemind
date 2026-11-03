@@ -1,7 +1,21 @@
 import { z } from 'zod';
 
+import { isPlayTopicId } from '@/entities/play-topic/play-topic';
 import { isMixedQuestionCount } from '@/features/quiz/lib/mixed-difficulty-split';
 import type { Difficulty, QuizSetupDifficulty } from '@/features/quiz/types';
+
+/**
+ * Тема игры из формы старта (поле `topic`): нет поля или пусто — весь банк.
+ * Здесь только форма id; что метка действительно тема, проверяет запрос
+ * пула. Canon: DECISIONS.md → Play topics.
+ */
+export const playTopicFieldSchema = z
+    .string()
+    .nullish()
+    .transform((value) => (value ? value : null))
+    .refine((value) => value === null || isPlayTopicId(value), {
+        message: 'Topic must be a tag id like games.era.2010s',
+    });
 
 /** Option формы старта: три сложности вопроса + MIXED (не Question.difficulty). */
 export const quizSetupDifficultySchema = z.enum([
@@ -23,6 +37,7 @@ export const quizSetupSchema = z
             .int('Question count must be an integer')
             .min(1, 'Question count must be at least 1')
             .max(10, 'Question count must be at most 10'),
+        topic: playTopicFieldSchema,
     })
     .superRefine((value, ctx) => {
         if (
@@ -45,6 +60,7 @@ export type QuizSetupFormInput = z.infer<typeof quizSetupSchema>;
  */
 export const timedQuizSetupSchema = z.object({
     difficulty: quizSetupDifficultySchema,
+    topic: playTopicFieldSchema,
 });
 
 export type TimedQuizSetupFormInput = z.infer<typeof timedQuizSetupSchema>;

@@ -56,6 +56,12 @@ export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
      */
     timedDurationSeconds?: number;
     /**
+     * NULL/omit = весь банк. Non-null = тема игры (Classic/Timed): вопросы уже
+     * выбраны из мешка темы, сессия не идёт в общий рейтинг.
+     * Canon: DECISIONS.md → Play topics.
+     */
+    topicTagId?: string | null;
+    /**
      * NULL/omit = не Survival. Non-null = волна SurvivalRun.
      * Не сочетать с timedEndsAt или dailyChallengeId (CHECK).
      * Canon: DECISIONS.md → Survival Mode MVP.

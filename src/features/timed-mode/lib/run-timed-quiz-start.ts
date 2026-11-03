@@ -6,6 +6,7 @@
  * Контракт Timed (не смешивать с Classic):
  * - SINGLE: pickTimedSnapshotBundle (тот же мешок, что Classic);
  * - MIXED: pickMixedSnapshotBundle (3× cycle + shuffle + 1 resolve);
+ * - тема (`topicTagId`): мешки темы в том же cycle hop + скаляр в create;
  * - createWithJsonSnapshot с timedEndsAt (флаг Timed);
  * - timedEndsAt: Date.now()+duration после connect на create hop
  *   (не SQL NOW() в TIMESTAMP without TZ — node-pg UTC+2 сразу «время вышло»;
@@ -39,6 +40,8 @@ const TIMED_START_SETTLE_MS = 500;
 export type RunTimedQuizStartInput = {
     userId: string;
     difficulty: QuizSetupDifficulty;
+    /** Тема игры; null — весь банк. */
+    topicTagId: string | null;
     locale: Locale;
 };
 
@@ -71,12 +74,14 @@ export async function runTimedQuizStart(
                       input.userId,
                       questionCount,
                       input.locale,
+                      input.topicTagId,
                   )
                 : await pickTimedSnapshotBundle(
                       input.userId,
                       input.difficulty,
                       questionCount,
                       input.locale,
+                      input.topicTagId,
                   );
 
         if (pickedQuestions.length < questionCount) {
@@ -95,6 +100,7 @@ export async function runTimedQuizStart(
             sessionLocale: input.locale,
             timedEndsAt,
             timedDurationSeconds: TIMED_MODE_MVP_RULES.durationSeconds,
+            topicTagId: input.topicTagId,
             questions: buildQuizSnapshotQuestions(pickedQuestions),
             pickedQuestions,
         });

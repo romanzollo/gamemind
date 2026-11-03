@@ -106,6 +106,7 @@ BAD:  notFound() on miss/timeout
 - Cycle hop: raw `pg` **`withPooledPgClient`** — **outside** shared Direct queue (never `withDirectPg*` for cycle).
 - After **any** cycle (SINGLE and Mix): **300ms settle** before Direct resolve (`pick-quiz-snapshot-bundle.ts`). Mix is not special here.
 - Mix: 3× existing difficulty bags + shuffle + one chunked resolve. Not `Difficulty = MIXED` in the cycle table. Daily does **not** use the cycle.
+- Play topic (Classic / Blitz, Nov 3): `topicTagId` → bag in `UserTopicQuestionCycle` (user, topic, difficulty) on the **same** pooled cycle hop; pool = tag or its children + `playOrder IS NOT NULL`; pool &lt; 20 → `NOT_ENOUGH_QUESTIONS` before any bag row. Without a topic the cycle SQL and order are unchanged. Create writes `topicTagId` as one more scalar in the same INSERT. Survival / Daily never pass a topic. ADR: DECISIONS → Play topics.
 - Boundary: **reshuffle-first** when remaining &lt; needed. No silent random fallback if cycle fails.
 - Create: Classic / Timed / Daily = **`withDirectPgWriteClient`**, INSERT `snapshotData` only. Survival (`survivalRunId`) = **`withPooledPgClient`** — 12Q after 3 Direct resolve is the 4th unpooled hop and abort@18s (payload ~13KB; not size). Do **not** return any create to `withDirectPgQuizStartClient`. Do **not** put `SurvivalRun` and JSONB on one client.
 - Timed abandon: **pooled scalar UPDATE before pick**. Never UPDATE orphans on the same Direct client as JSONB INSERT. Never a second **unpooled** hop solely for abandon.
@@ -209,6 +210,7 @@ Before merge or “готово” — **prod is the gate**, local matrix is how
 - [ ] Blitz single difficulty 10 start + questions on screen
 - [ ] Blitz / Classic **submit → score** &lt; ~2–3s (`quiz.submit.complete` `phase=ok`)
 - [ ] Daily start + submit → score (if attempt available)
+- [ ] Classic with a topic (single difficulty) + Blitz MIX with a topic: start + questions on screen; result shows the topic chip; rematch keeps it
 - [ ] Answer lock-in: each answer shows right/wrong; refresh mid-game resumes at the first unanswered; result score = locked answers
 - [ ] Blitz: an answer after 00:00 + grace is refused («time's up»); auto-submit at 00:00 still lands on result
 - [ ] Home after start/result not stuck ~20s
@@ -243,7 +245,8 @@ After deploy to www: repeat Classic EASY 3 + Blitz MIX start→score (cold Neon)
 | Area | Path |
 |------|------|
 | Direct queue / pooled cycle helper | `src/lib/db/direct-pg.ts` |
-| UserQuestionCycle | `src/entities/user-question-cycle/*` |
+| UserQuestionCycle (+ topic bags) | `src/entities/user-question-cycle/*` |
+| Play topic id / threshold | `src/entities/play-topic/play-topic.ts` |
 | Classic/Timed pick + 300ms settle | `src/features/quiz/lib/pick-quiz-snapshot-bundle.ts` |
 | Create + clock + handoff stash | `src/entities/quiz-session/quiz-session-start.repository.ts` |
 | Play-load Map | `src/entities/quiz-session/play-load-handoff.ts` |
