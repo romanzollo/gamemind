@@ -2,7 +2,7 @@
 
 Черновики и мудборды знака. **Не канон продукта** — shipped assets живут в `src/`.
 
-Canon / backlog: `docs/TASTE_SKILL.md` §4.7 + §14 «Brand mark v2».
+Canon: `docs/DESIGN.md`; history: `docs/archive/TASTE_SKILL-2026.md` §4.7 + §14 «Brand mark v2».
 
 | Concept | Idea | Shipped? |
 |---------|------|----------|

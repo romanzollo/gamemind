@@ -24,7 +24,7 @@ const cardChevronClassName =
     'text-base font-medium text-primary/70 transition group-hover:translate-x-0.5 group-hover:text-primary';
 
 const statLabelClassName =
-    'text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-muted';
+    'text-2xs font-medium uppercase tracking-[0.08em] text-muted';
 
 const statValueClassName =
     'font-mono text-2xl font-medium tabular-nums tracking-tight text-foreground sm:text-3xl';

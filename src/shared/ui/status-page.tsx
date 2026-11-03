@@ -48,7 +48,7 @@ export function StatusPage({
             <div className="mt-8 flex flex-wrap gap-2">{actions}</div>
 
             {footnote ? (
-                <p className="mt-6 font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
+                <p className="mt-6 font-mono text-2xs font-medium uppercase tracking-[0.14em] text-muted">
                     {footnote}
                 </p>
             ) : null}

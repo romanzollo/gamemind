@@ -144,7 +144,7 @@ Classic, Blitz, and Survival keep **separate start runners**. Shared pick resolv
 - Default locale `ru`; routes `/ru`, `/en`. No `next-intl` until plural/date tooling is actually needed.
 - Question/option display follows the **current URL locale** from bilingual snapshot `texts` (v2). Scoring is language-agnostic.
 - Theme: `data-theme="light" | "dark"` + CSS variables; Tailwind v4 `@theme inline`.
-- Visual identity: Scoreboard Editorial (`docs/TASTE_SKILL.md`). New UI extends the lock; it does not invent a second language.
+- Visual identity: Scoreboard Editorial (`docs/DESIGN.md`). New UI extends the lock; it does not invent a second language.
 
 ## Media
 

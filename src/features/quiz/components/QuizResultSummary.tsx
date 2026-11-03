@@ -78,13 +78,13 @@ export function QuizResultSummary({
             {/* Чипы сессии: MIXED = «Смешанная», не Medium; тема — рядом. */}
             <p className="mt-2 flex flex-wrap gap-1.5">
                 <span
-                    className={`inline-flex items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${getSessionDifficultyChipToneClass(setupDifficulty)}`}
+                    className={`inline-flex items-center rounded-sm bg-surface-muted px-2 py-0.5 text-2xs font-semibold tracking-wide ${getSessionDifficultyChipToneClass(setupDifficulty)}`}
                 >
                     {difficultyLabel}
                 </span>
                 {topicName ? (
                     <span
-                        className="inline-flex items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide text-foreground"
+                        className="inline-flex items-center rounded-sm bg-surface-muted px-2 py-0.5 text-2xs font-semibold tracking-wide text-foreground"
                         data-testid="quiz-result-topic"
                     >
                         {topicName}

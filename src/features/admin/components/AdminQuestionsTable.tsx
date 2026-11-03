@@ -55,7 +55,7 @@ const bulkToolbarLinkClassName =
     'inline-flex min-h-8 cursor-pointer items-center rounded-sm px-0.5 text-sm font-medium text-foreground underline-offset-2 motion-safe:transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50 disabled:no-underline';
 
 const bulkGroupLabelClassName =
-    'font-mono text-[11px] font-medium uppercase tracking-wide text-muted';
+    'font-mono text-2xs font-medium uppercase tracking-wide text-muted';
 
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
@@ -89,7 +89,7 @@ function QuestionActionFields({
 
 function DifficultyChip({ difficulty }: { difficulty: Difficulty }) {
     return (
-        <span className="inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-[11px] font-medium tabular-nums tracking-wide text-foreground">
+        <span className="inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-2xs font-medium tabular-nums tracking-wide text-foreground">
             {difficulty}
         </span>
     );
@@ -129,7 +129,7 @@ function PublicationBadge({
 
     return (
         <span
-            className={`inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium tracking-wide ${toneClassName}`}
+            className={`inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 text-2xs font-medium tracking-wide ${toneClassName}`}
         >
             {publicationStatusLabel(status, labels)}
         </span>
@@ -415,7 +415,7 @@ function PromptThumb({
 function MissingPromptThumb({ label }: { label: string }) {
     return (
         <div
-            className="flex h-11 w-16 shrink-0 items-center justify-center rounded-md border border-dashed border-border bg-surface-muted px-1 text-center text-[10px] leading-tight text-muted"
+            className="flex h-11 w-16 shrink-0 items-center justify-center rounded-md border border-dashed border-border bg-surface-muted px-1 text-center text-2xs leading-tight text-muted"
             title={label}
         >
             IMG
@@ -1108,7 +1108,7 @@ export function AdminQuestionsTable({
                                                 )
                                             ) : (
                                                 <span
-                                                    className="mt-0.5 shrink-0 rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-wide text-muted"
+                                                    className="mt-0.5 shrink-0 rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-2xs font-medium tracking-wide text-muted"
                                                     title={typeLabel}
                                                 >
                                                     TEXT

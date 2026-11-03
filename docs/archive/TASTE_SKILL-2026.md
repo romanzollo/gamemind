@@ -1,5 +1,8 @@
 # GameMind — Taste Skill Continuity
 
+> **Архив (3 ноя 2026).** Действующие правила вида — `docs/DESIGN.md`.
+> Файл хранится как история решений периода Cursor.
+
 Local working memory for **UI/UX identity** via [Taste Skill](https://www.tasteskill.dev/) ([GitHub](https://github.com/Leonxlnx/taste-skill)).
 Gitignored local continuity file. Update this file on every Taste / UI visual session.
 

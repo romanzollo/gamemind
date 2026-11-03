@@ -88,7 +88,7 @@
 | `docs/QUESTION_I18N.md`, `docs/QUIZ_IMAGES.md` | Контент: переводы, картинки. |
 | `docs/TESTING.md` | Vitest, планы на Playwright. |
 | `docs/DEPLOY.md` | Vercel, домен, DNS (важно для РФ). |
-| `docs/TASTE_SKILL.md` | Текущая визуальная система; заменится `docs/DESIGN.md` в фазе 4. |
+| `docs/DESIGN.md` | Дизайн-система: токены, шрифты, компоненты, состояния. |
 
 `docs/PROJECT_CONTEXT.md` — личный дневник сессий (gitignored), не коммитить.
 

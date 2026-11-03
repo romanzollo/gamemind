@@ -108,7 +108,7 @@ export function SurvivalWaveStartCountdown({
             <p
                 // key перезапускает анимацию на каждой новой цифре.
                 key={secondsLeft ?? 'pending'}
-                className="mt-3 font-display text-8xl leading-none font-semibold tabular-nums text-foreground motion-safe:animate-[gm-countdown-tick_360ms_cubic-bezier(0.2,0.8,0.2,1)_both] sm:text-9xl"
+                className="mt-3 font-display text-8xl leading-none font-semibold tabular-nums text-foreground motion-safe:animate-countdown-tick sm:text-9xl"
                 aria-hidden={secondsLeft == null}
             >
                 {secondsLeft ?? ' '}

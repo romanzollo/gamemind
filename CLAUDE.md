@@ -25,9 +25,10 @@
 - `gamemind-smoke` — локальная проверка горячего пути (Classic / Blitz /
   Survival / Daily) и прод-smoke после деплоя.
 
+Правила вида — `docs/DESIGN.md` (токены, шрифты, компоненты, состояния).
 Сторонние skills из Cursor-периода (`.agents/skills/*` — Taste Skill,
-`.cursor/skills/gamemind-taste-ui`) — справочно для текущего визуального
-стиля; в фазе 4 их заменит `docs/DESIGN.md`.
+`.cursor/skills/gamemind-taste-ui`) — только история; при расхождении
+прав `DESIGN.md`.
 
 ### Проверки, которые обычно гоняем
 - `npx tsc --noEmit -p tsconfig.json`

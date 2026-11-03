@@ -5,7 +5,7 @@
  * до следующего челленджа (лобби и результат Челленджа).
  *
  * Данные считает сервер (computeDailyStreak) — сюда приходит готовый
- * DailyStreak. Значок — SVG, не эмодзи (docs/TASTE_SKILL.md). Таймер идёт
+ * DailyStreak. Значок — SVG, не эмодзи (docs/DESIGN.md). Таймер идёт
  * по часам сервера (server-clock) до полуночи по Москве; в полночь
  * обновляет страницу — появляется новый челлендж.
  */
@@ -193,7 +193,7 @@ export function DailyStreakSummary({
                     >
                         <span
                             className={[
-                                'font-mono text-[0.65rem] uppercase tracking-[0.08em]',
+                                'font-mono text-2xs uppercase tracking-[0.08em]',
                                 day.isToday
                                     ? 'font-semibold text-foreground'
                                     : 'text-muted',

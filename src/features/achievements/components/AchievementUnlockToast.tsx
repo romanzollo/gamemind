@@ -76,7 +76,7 @@ function AchievementUnlockToastCard({
                 code={code}
                 unlocked
                 size="sm"
-                className="motion-safe:animate-[gm-achievement-pop_420ms_cubic-bezier(0.22,1,0.36,1)_both]"
+                className="motion-safe:animate-achievement-pop"
             />
 
             <div className="min-w-0 flex-1 pt-0.5">

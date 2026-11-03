@@ -97,7 +97,7 @@ export function SiteTabBar({ locale, tabs, label }: SiteTabBarProps) {
                                 <PendingLink
                                     href={localizedHref(locale, tab.href)}
                                     aria-current={active ? 'page' : undefined}
-                                    className={`w-full justify-center text-[0.6875rem] leading-none transition focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ring ${
+                                    className={`w-full justify-center text-2xs leading-none transition focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ring ${
                                         active
                                             ? 'font-semibold text-foreground'
                                             : 'text-muted hover:text-foreground'

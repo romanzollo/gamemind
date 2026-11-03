@@ -60,7 +60,7 @@ function DifficultyChip({
 }) {
     return (
         <span
-            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-semibold tracking-wide ${getSessionDifficultyChipToneClass(difficulty)}`}
+            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-2xs font-semibold tracking-wide ${getSessionDifficultyChipToneClass(difficulty)}`}
         >
             {label}
         </span>
@@ -160,7 +160,7 @@ export function ProfileResultHistory({
 
                                 <div className="mt-3 grid grid-cols-2 gap-4">
                                     <p>
-                                        <span className="block text-[11px] font-medium uppercase tracking-wide text-muted">
+                                        <span className="block text-2xs font-medium uppercase tracking-wide text-muted">
                                             {labels.historyScore}
                                         </span>
                                         <span className="mt-0.5 block font-display text-2xl font-semibold tabular-nums tracking-wide text-foreground">
@@ -168,7 +168,7 @@ export function ProfileResultHistory({
                                         </span>
                                     </p>
                                     <p>
-                                        <span className="block text-[11px] font-medium uppercase tracking-wide text-muted">
+                                        <span className="block text-2xs font-medium uppercase tracking-wide text-muted">
                                             {labels.historyCorrect}
                                         </span>
                                         <span className="mt-0.5 block font-display text-2xl font-semibold tabular-nums tracking-wide text-success">
@@ -206,7 +206,7 @@ export function ProfileResultHistory({
             <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full border-collapse text-left text-sm">
                     <thead>
-                        <tr className="border-b border-border bg-surface-muted/60 text-[11px] font-medium uppercase tracking-wide text-muted">
+                        <tr className="border-b border-border bg-surface-muted/60 text-2xs font-medium uppercase tracking-wide text-muted">
                             <th className="whitespace-nowrap py-2.5 pl-3 pr-3 sm:pr-4">
                                 {labels.historyDate}
                             </th>

@@ -30,7 +30,7 @@ const cellClassName = 'flex min-w-0 flex-col gap-0.5';
 
 /** Короткие labels (Рекорд / Record) — без min-h, иначе пустота над цифрой. */
 const labelClassName =
-    'text-[0.65rem] font-medium uppercase leading-none tracking-[0.04em] text-muted sm:text-[0.6875rem] lg:text-xs lg:leading-tight';
+    'text-2xs font-medium uppercase leading-none tracking-[0.04em] text-muted lg:text-xs lg:leading-tight';
 
 /** Единый value-ритм для чисел и даты — без отдельного mono для lastPlayed. */
 const valueClassName =

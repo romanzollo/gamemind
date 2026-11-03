@@ -177,7 +177,7 @@ export function ProfileAchievementsList({
                                         ? `${tierClassName.stripe} bg-surface`
                                         : `${tierClassName.stripeLocked} bg-surface/70 opacity-80`,
                                     isNew
-                                        ? `${tierClassName.ring} motion-safe:animate-[gm-achievement-glow_1.6s_ease-out_300ms_both]`
+                                        ? `${tierClassName.ring} motion-safe:animate-achievement-glow`
                                         : '',
                                 ]
                                     .filter(Boolean)
@@ -207,12 +207,12 @@ export function ProfileAchievementsList({
                                         </span>
                                         <span
                                             aria-hidden
-                                            className={`inline-flex rounded-sm px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-wide ${tierClassName.chip}`}
+                                            className={`inline-flex rounded-sm px-1.5 py-px font-mono text-2xs font-semibold uppercase tracking-wide ${tierClassName.chip}`}
                                         >
                                             {tierName}
                                         </span>
                                         {isNew ? (
-                                            <span className="ml-1.5 inline-flex rounded-sm bg-primary px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-wide text-primary-foreground">
+                                            <span className="ml-1.5 inline-flex rounded-sm bg-primary px-1.5 py-px font-mono text-2xs font-semibold uppercase tracking-wide text-primary-foreground">
                                                 {labels.newBadge}
                                             </span>
                                         ) : null}
@@ -231,7 +231,7 @@ export function ProfileAchievementsList({
                                             <>
                                                 <span>{statusText}</span>
                                                 {remainingText ? (
-                                                    <span className="mt-0.5 block font-sans text-[11px] normal-case tracking-normal text-muted sm:inline sm:mt-0 sm:before:content-['·_']">
+                                                    <span className="mt-0.5 block font-sans text-2xs normal-case tracking-normal text-muted sm:inline sm:mt-0 sm:before:content-['·_']">
                                                         {remainingText}
                                                     </span>
                                                 ) : null}
@@ -264,7 +264,7 @@ export function ProfileAchievementsList({
                                             {copy.description}
                                         </p>
                                     ) : (
-                                        <p className="mt-1 font-mono text-[10px] uppercase tracking-wide text-muted/80 sm:hidden">
+                                        <p className="mt-1 font-mono text-2xs uppercase tracking-wide text-muted/80 sm:hidden">
                                             {labels.tapHint} ›
                                         </p>
                                     )}

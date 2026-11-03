@@ -89,7 +89,7 @@ export function SurvivalRunResultBoardView({
             className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-7"
             aria-labelledby="survival-run-score-title"
         >
-            <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
+            <p className="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-muted">
                 {labels.runScoreEyebrow}
             </p>
             <h1
@@ -135,7 +135,7 @@ export function SurvivalRunResultBoardView({
                                             )}
                                         </span>
                                         {isCurrent ? (
-                                            <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[0.65rem] font-medium tracking-wide text-primary">
+                                            <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-2xs font-medium tracking-wide text-primary">
                                                 {labels.waveCurrentMarker}
                                             </span>
                                         ) : null}

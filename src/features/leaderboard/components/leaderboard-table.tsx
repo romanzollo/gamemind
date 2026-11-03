@@ -137,7 +137,7 @@ export function LeaderboardTable({
                                 <div className="truncate font-medium text-foreground">
                                     {entry.username}
                                 </div>
-                                <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted">
+                                <div className="mt-0.5 flex items-center gap-1.5 text-2xs text-muted">
                                     <span
                                         className="font-medium text-success"
                                         aria-label={`${labels.accuracy} ${accuracy}`}

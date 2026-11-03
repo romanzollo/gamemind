@@ -64,7 +64,7 @@ function RoleBadge({
     labels: Dictionary['admin'];
 }) {
     return (
-        <span className="inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-[11px] font-medium tracking-wide text-foreground">
+        <span className="inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-2xs font-medium tracking-wide text-foreground">
             {role === 'ADMIN' ? labels.roleAdmin : labels.roleUser}
         </span>
     );

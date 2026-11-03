@@ -204,7 +204,7 @@ export function ContinueLastMode({
                 ))}
 
                 <div className="min-w-0 flex-1">
-                    <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-muted">
+                    <p className="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-muted">
                         {labels.continueEyebrow}
                     </p>
                     <h2

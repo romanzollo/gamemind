@@ -22,7 +22,7 @@ export function TimedClockRoastBanner({
             role="status"
             aria-labelledby="timed-clock-roast-title"
         >
-            <p className="font-mono text-[0.65rem] font-medium uppercase tracking-[0.14em] text-warning">
+            <p className="font-mono text-2xs font-medium uppercase tracking-[0.14em] text-warning">
                 {eyebrow}
             </p>
             <h2

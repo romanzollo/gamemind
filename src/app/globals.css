@@ -4,7 +4,8 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /*
- * Scoreboard Editorial — design lock (Task 1).
+ * Стиль «табло» (Scoreboard Editorial). Правила и таблица токенов —
+ * docs/DESIGN.md; компоненты берут цвета только отсюда, своих палитр нет.
  * Семантические токены живут на :root / [data-theme].
  * @theme inline регистрирует их для Tailwind и не даёт Lightning CSS
  * выкинуть неиспользованные custom properties до появления в компонентах.
@@ -20,6 +21,8 @@
     --color-surface: var(--surface);
     --color-surface-muted: var(--surface-muted);
     --color-surface-hover: var(--surface-hover);
+    /* Поверх страницы: шторка, тост — уровень выше карточки */
+    --color-surface-raised: var(--surface-raised);
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
     --color-primary-hover: var(--primary-hover);
@@ -58,6 +61,27 @@
     --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 }
 
+/*
+ * Шкала и движение — не зависят от темы.
+ * text-2xs (11 px) — самый мелкий текст интерфейса: метки, чипы, подписи
+ * над цифрами. Мельче не делаем — на телефоне не читается.
+ * animate-* — именованные анимации вместо длинных `animate-[…]` в разметке;
+ * при reduced-motion их гасит блок в конце файла и `motion-safe:`.
+ */
+@theme {
+    --text-2xs: 0.6875rem;
+    --text-2xs--line-height: 1rem;
+
+    /* Быстрый старт, мягкая посадка: появление, «прыжок» значка */
+    --ease-gm-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --animate-countdown-tick: gm-countdown-tick 360ms
+        cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    --animate-achievement-pop: gm-achievement-pop 420ms
+        cubic-bezier(0.22, 1, 0.36, 1) both;
+    --animate-achievement-glow: gm-achievement-glow 1.6s ease-out 300ms both;
+}
+
 :root,
 [data-theme='light'] {
     color-scheme: light;
@@ -71,6 +95,7 @@
     --surface: #ffffff;
     --surface-muted: #e9eef3;
     --surface-hover: #e1e7ee;
+    --surface-raised: #ffffff;
 
     /* Competitive teal — одно семейство акцента, не purple SaaS */
     --primary: #0b6e4f;
@@ -128,6 +153,7 @@
     --surface: #141922;
     --surface-muted: #1a212c;
     --surface-hover: #222a36;
+    --surface-raised: #141922;
 
     --primary: #3ecf8e;
     --primary-foreground: #071510;
@@ -254,53 +280,6 @@ html:has(dialog[open]) {
 .gm-toaster [data-sonner-toast][data-styled='true'] [data-description],
 .gm-toast-description {
     color: var(--muted) !important;
-}
-
-/*
- * Мобильное меню (site-mobile-menu.tsx): панель выезжает из-под sticky
- * хедера, scrim проявляется. Только opacity/transform — без layout.
- * Выезд — ОТДЕЛЬНЫЕ keyframes, не `reverse` тех же: при смене только
- * duration/direction браузер не перезапускает анимацию и не шлёт
- * animationend → панель не размонтируется.
- */
-@keyframes gm-menu-panel-in {
-    from {
-        opacity: 0;
-        transform: translateY(-0.5rem);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes gm-menu-panel-out {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-0.5rem);
-    }
-}
-
-@keyframes gm-menu-scrim-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes gm-menu-scrim-out {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
 }
 
 /*

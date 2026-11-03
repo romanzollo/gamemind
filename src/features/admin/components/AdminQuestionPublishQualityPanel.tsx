@@ -41,7 +41,7 @@ export function AdminQuestionPublishQualityPanel({
 
             {blockers.length > 0 ? (
                 <div className="mt-3">
-                    <h3 className="text-[11px] font-medium tracking-wide text-danger uppercase">
+                    <h3 className="text-2xs font-medium tracking-wide text-danger uppercase">
                         {labels.blockersTitle}
                     </h3>
                     <ul className="mt-2 space-y-2">
@@ -61,7 +61,7 @@ export function AdminQuestionPublishQualityPanel({
 
             {warnings.length > 0 ? (
                 <div className={blockers.length > 0 ? 'mt-4' : 'mt-3'}>
-                    <h3 className="text-[11px] font-medium tracking-wide text-warning uppercase">
+                    <h3 className="text-2xs font-medium tracking-wide text-warning uppercase">
                         {labels.warningsTitle}
                     </h3>
                     <ul className="mt-2 space-y-2">

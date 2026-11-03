@@ -58,7 +58,7 @@ function PublicationBadge({
 
     return (
         <span
-            className={`inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium tracking-wide ${toneClassName}`}
+            className={`inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 text-2xs font-medium tracking-wide ${toneClassName}`}
         >
             {publicationStatusLabel(status, labels)}
         </span>
@@ -97,7 +97,7 @@ export function AdminQuestionPublicationControls({
                     status={publicationStatus}
                     labels={labels}
                 />
-                <span className="inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium tracking-wide text-muted">
+                <span className="inline-flex rounded-sm bg-surface-muted px-1.5 py-0.5 text-2xs font-medium tracking-wide text-muted">
                     {isActive ? labels.statusActive : labels.statusInactive}
                 </span>
             </div>

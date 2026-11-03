@@ -13,7 +13,7 @@ When this skill applies, UI work is **presentation under a locked design system*
 
 ## Mandatory reads
 
-1. `docs/TASTE_SKILL.md` — brief, lock, waves, **§6 audit**, **§13 strategy**, **§14 backlog**, prompts, **change log**
+1. `docs/archive/TASTE_SKILL-2026.md` — brief, lock, waves, **§6 audit**, **§13 strategy**, **§14 backlog**, prompts, **change log**
 2. If §4 unlocked in code (tokens/fonts not shipped): do not invent a second brand; follow **Scoreboard Editorial** direction in §4 / §13 or stay within existing `globals.css` tokens until Task 1
 3. `docs/DECISIONS.md` → Taste Skill Visual Identity (constraints)
 
@@ -39,7 +39,7 @@ Sources: https://www.tasteskill.dev/ · https://github.com/Leonxlnx/taste-skill
 
 ## Workflow
 
-1. Check `docs/TASTE_SKILL.md` §1 Status — foundation vs ongoing; next §14 task
+1. Check `docs/archive/TASTE_SKILL-2026.md` §1 Status — foundation vs ongoing; next §14 task
 2. If foundation incomplete and task is a big redesign: follow Wave plan §5; audit is in §6 (2026-07-21)
 3. If ongoing feature UI: extend §4 lock; reuse `src/shared/ui` primitives
 4. Prefer mentor mode (guide file-by-file) unless the user explicitly asks to implement

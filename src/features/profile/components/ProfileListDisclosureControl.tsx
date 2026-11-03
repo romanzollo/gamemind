@@ -22,7 +22,7 @@ type ProfileListDisclosureControlProps = {
 const baseClassName = [
     'mt-2 flex w-full min-h-11 items-center justify-center gap-2',
     'border border-border bg-surface-muted/50 px-3 py-2.5',
-    'font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-foreground',
+    'font-mono text-2xs font-medium uppercase tracking-[0.14em] text-foreground',
     'motion-safe:transition-colors',
     'hover:bg-surface-muted',
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',

@@ -38,7 +38,7 @@ export function BottomSheet({
             ref={ref}
             aria-labelledby={labelledBy}
             onClick={closeOnBackdrop}
-            className="mx-0 mt-auto mb-0 max-h-[85dvh] w-full max-w-none overflow-y-auto rounded-t-2xl border border-b-0 border-border bg-surface p-0 text-foreground shadow-lg backdrop:bg-black/50 sm:m-auto sm:max-w-md sm:rounded-2xl sm:border-b"
+            className="mx-0 mt-auto mb-0 max-h-[85dvh] w-full max-w-none overflow-y-auto rounded-t-2xl border border-b-0 border-border bg-surface-raised p-0 text-foreground shadow-lg backdrop:bg-black/50 sm:m-auto sm:max-w-md sm:rounded-2xl sm:border-b"
         >
             <div className="relative px-4 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:px-6 sm:pt-6 sm:pb-6">
                 {/* type="button", не <form method="dialog">: единственный

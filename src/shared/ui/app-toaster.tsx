@@ -33,12 +33,12 @@ export const TOASTER_Z_INDEX = 200;
 
 /** Sonner internal tokens → Scoreboard Editorial (живут на data-theme). */
 const sonnerTokenStyle = {
-    '--normal-bg': 'var(--surface)',
+    '--normal-bg': 'var(--surface-raised)',
     '--normal-bg-hover': 'var(--surface-hover)',
     '--normal-border': 'var(--border)',
     '--normal-border-hover': 'var(--border)',
     '--normal-text': 'var(--foreground)',
-    '--gray1': 'var(--surface)',
+    '--gray1': 'var(--surface-raised)',
     '--gray2': 'var(--surface-muted)',
     '--gray3': 'var(--surface-muted)',
     '--gray4': 'var(--border)',
@@ -104,7 +104,7 @@ export function AppToaster({ theme: initialTheme }: AppToasterProps) {
             className="gm-toaster"
             toastOptions={{
                 classNames: {
-                    toast: 'gm-toast border border-border bg-surface text-foreground shadow-md font-sans',
+                    toast: 'gm-toast border border-border bg-surface-raised text-foreground shadow-md font-sans',
                     title: 'font-display text-sm font-semibold tracking-tight text-foreground',
                     description: 'gm-toast-description text-xs text-muted',
                     actionButton:
@@ -112,7 +112,7 @@ export function AppToaster({ theme: initialTheme }: AppToasterProps) {
                     cancelButton:
                         'bg-surface-muted text-foreground border border-border',
                     closeButton:
-                        'gm-toast-close border-border bg-surface text-muted hover:bg-surface-hover hover:text-foreground',
+                        'gm-toast-close border-border bg-surface-raised text-muted hover:bg-surface-hover hover:text-foreground',
                     success: 'border-l-4 border-l-success',
                     error: 'border-l-4 border-l-danger',
                     info: 'border-l-4 border-l-info',
