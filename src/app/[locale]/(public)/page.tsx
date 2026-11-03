@@ -113,7 +113,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     <TimedModeCta
                         locale={safeLocale}
                         dictionary={dictionary}
-                        initialDifficulty={setupMemory.blitz.difficulty}
+                        initialSetup={setupMemory.blitz}
                     />
 
                     <div id="mode-survival" className="scroll-mt-24">

@@ -42,19 +42,20 @@ Network), итог — в разборе на результате.
 
 ## Автоматический smoke (Playwright)
 
-- Локально: `npm run dev`, затем `npm run test:e2e` — Классика 3 + Блиц MIX
-  под dev smoke-игроком (`gm_smoke`, данные в `.env`, скрыт из рейтингов).
+- Локально: `npm run dev`, затем `npm run test:e2e` — Классика 3 с темой
+  «2010-е» + Блиц MIX без темы под dev smoke-игроком (`gm_smoke`, данные в `.env`, скрыт из рейтингов).
   Это быстрый первый прогон перед ручной матрицей, а не её замена.
 - Селекторы — `data-testid` (`login-form`, `classic-setup`, `blitz-setup`,
   `survival-setup`, `mode-open`, `quiz-play`, `quiz-option`, `quiz-submit`,
-  `quiz-result-score`). Старт из лобби: карточка режима (`mode-open`) →
-  шторка → чип = `<label>` вокруг радио `difficulty` / `questionCount` →
-  submit. Переименовал testid или переделал форму — поправь `e2e/` в том же
+  `quiz-result-score`, `topic-chips`, `quiz-result-topic`). Старт из лобби:
+  карточка режима (`mode-open`) → шторка → чип = `<label>` вокруг радио
+  `difficulty` / `topic` / `questionCount` → submit. Чипы тем приходят из
+  `GET /api/quiz/topics` — ждать, пока радио темы станет `enabled`. Переименовал testid или переделал форму — поправь `e2e/` в том же
   коммите.
 
 ## Прод после деплоя (www.game-mind.ru)
 
-Классику 3 и Блиц MIX после каждого прод-деплоя играет workflow
+Классику 3 с темой и Блиц MIX после каждого прод-деплоя играет workflow
 **Prod smoke** (GitHub Actions, ждёт sha деплоя на `/api/version`). Красный
 прогон — смотреть шаг и скриншоты в артефакте, ошибку — в Sentry.
 Руками остаётся: Выживание (если трогали — одна волна до нуля в банке) и

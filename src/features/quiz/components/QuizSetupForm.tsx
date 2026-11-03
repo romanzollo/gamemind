@@ -5,6 +5,7 @@ import { useActionState, useId, useState } from 'react';
 import { GuestPlayPrompt } from '@/features/auth/components/GuestPlayPrompt';
 import { startQuizAction } from '@/features/quiz/actions';
 import { ModeSheetCard } from '@/features/quiz/components/ModeSheetCard';
+import { PlayTopicChips } from '@/features/quiz/components/PlayTopicChips';
 import { setupDifficultyChipOptions } from '@/features/quiz/lib/difficulty-chip-options';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import {
@@ -18,6 +19,10 @@ import {
     rememberModeSetup,
     type ClassicSetup,
 } from '@/features/quiz/lib/mode-setup-memory';
+import {
+    resolveSelectedTopic,
+    usePlayTopics,
+} from '@/features/quiz/lib/use-play-topics';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { ChipRadioGroup, InlineAlert, SubmitButton } from '@/shared/ui';
 import type { QuizSetupDifficulty } from '@/types';
@@ -37,10 +42,13 @@ const QUESTION_COUNT_OPTIONS = MIXED_QUESTION_COUNTS.map((count) => ({
 }));
 
 /**
- * Классика на главной: компактная карточка → шторка (сложность и число
- * вопросов чипами). Поля формы те же, что раньше у селектов, —
- * `startQuizAction` и его Zod не меняются. Mix = 4-й чип, сплит — строка
- * под чипами. Классика открыта гостям, поэтому посетителю — гостевой вход.
+ * Классика на главной: компактная карточка → шторка (сложность, тема и
+ * число вопросов чипами). Поля формы те же, что раньше у селектов, плюс
+ * необязательная `topic` — её проверяет Zod `startQuizAction` и pick.
+ * Mix = 4-й чип, сплит — строка под чипами. Тема, недоступная на новой
+ * сложности, не сбрасывается в state — просто не уходит в форму, пока
+ * сложность не вернут. Классика открыта гостям, поэтому посетителю —
+ * гостевой вход.
  */
 export function QuizSetupForm({
     locale,
@@ -55,6 +63,9 @@ export function QuizSetupForm({
     const [questionCount, setQuestionCount] = useState<MixedQuestionCount>(
         initialSetup.questionCount,
     );
+    const [topic, setTopic] = useState(initialSetup.topic ?? '');
+    const topics = usePlayTopics();
+    const selectedTopic = resolveSelectedTopic(topics, topic, difficulty);
     const mixedMetaId = useId();
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
     const labels = dictionary.quiz;
@@ -79,7 +90,11 @@ export function QuizSetupForm({
                     onSubmit={() =>
                         rememberModeSetup(
                             'classic',
-                            formatClassicSetup({ difficulty, questionCount }),
+                            formatClassicSetup({
+                                difficulty,
+                                questionCount,
+                                topic: selectedTopic || null,
+                            }),
                         )
                     }
                     className="space-y-5"
@@ -94,7 +109,16 @@ export function QuizSetupForm({
                         onChange={setDifficulty}
                         describedBy={mixedMetaText ? mixedMetaId : undefined}
                     />
-    
+
+                    <PlayTopicChips
+                        locale={locale}
+                        labels={labels}
+                        topics={topics}
+                        difficulty={difficulty}
+                        value={selectedTopic}
+                        onChange={setTopic}
+                    />
+
                     <ChipRadioGroup
                         name="questionCount"
                         legend={labels.questionCountLabel}

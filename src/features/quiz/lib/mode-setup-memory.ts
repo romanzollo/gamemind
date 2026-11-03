@@ -10,6 +10,7 @@
  * По cookie на режим — запись одного режима не трогает другие.
  */
 
+import { isPlayTopicId } from '@/entities/play-topic/play-topic';
 import {
     MIXED_QUESTION_COUNTS,
     type MixedQuestionCount,
@@ -22,13 +23,20 @@ export type SetupMode = 'classic' | 'blitz' | 'survival';
 export type ClassicSetup = {
     difficulty: QuizSetupDifficulty;
     questionCount: MixedQuestionCount;
+    /** Тема игры; null — все вопросы. */
+    topic: string | null;
+};
+
+export type BlitzSetup = {
+    difficulty: QuizSetupDifficulty;
+    topic: string | null;
 };
 
 export type ModeSetupMemory = {
     /** Режим последнего старта из шторки; null — ещё не запускали. */
     lastMode: SetupMode | null;
     classic: ClassicSetup;
-    blitz: { difficulty: QuizSetupDifficulty };
+    blitz: BlitzSetup;
     survival: { difficulty: SurvivalDifficulty };
 };
 
@@ -42,8 +50,8 @@ export const MODE_SETUP_COOKIES = {
 /** Значения до первого старта — те же, что стояли в селектах лобби. */
 export const DEFAULT_MODE_SETUP: ModeSetupMemory = {
     lastMode: null,
-    classic: { difficulty: 'EASY', questionCount: 3 },
-    blitz: { difficulty: 'MEDIUM' },
+    classic: { difficulty: 'EASY', questionCount: 3, topic: null },
+    blitz: { difficulty: 'MEDIUM', topic: null },
     survival: { difficulty: 'MEDIUM' },
 };
 
@@ -80,17 +88,60 @@ function parseSetupMode(value: string | undefined): SetupMode | null {
         : null;
 }
 
-/** Формат cookie Классики: `MEDIUM-10`. */
+/**
+ * Тема — после двоеточия: в id темы бывает дефис (`action-adventure`),
+ * а дефис уже разделяет сложность и число вопросов.
+ */
+function withTopic(base: string, topic: string | null): string {
+    return topic ? `${base}:${topic}` : base;
+}
+
+/** Тема из хвоста cookie; мусор — «все вопросы», а не ошибка. */
+function splitTopic(value: string | undefined): {
+    base: string;
+    topic: string | null;
+} {
+    const raw = value ?? '';
+    const colon = raw.indexOf(':');
+
+    if (colon === -1) {
+        return { base: raw, topic: null };
+    }
+
+    const topic = raw.slice(colon + 1);
+
+    return {
+        base: raw.slice(0, colon),
+        topic: isPlayTopicId(topic) ? topic : null,
+    };
+}
+
+/** Формат cookie Классики: `MEDIUM-10` или `MEDIUM-10:games.era.2010s`. */
 export function formatClassicSetup(setup: ClassicSetup): string {
-    return `${setup.difficulty}-${setup.questionCount}`;
+    return withTopic(`${setup.difficulty}-${setup.questionCount}`, setup.topic);
+}
+
+/** Формат cookie Блица: `MIXED` или `MIXED:games.genre.shooter`. */
+export function formatBlitzSetup(setup: BlitzSetup): string {
+    return withTopic(setup.difficulty, setup.topic);
 }
 
 function parseClassicSetup(value: string | undefined): ClassicSetup | null {
-    const [difficultyPart, countPart] = (value ?? '').split('-');
+    const { base, topic } = splitTopic(value);
+    const [difficultyPart, countPart] = base.split('-');
     const difficulty = parseSetupDifficulty(difficultyPart);
     const questionCount = parseClassicQuestionCount(countPart);
 
-    return difficulty && questionCount ? { difficulty, questionCount } : null;
+    return difficulty && questionCount
+        ? { difficulty, questionCount, topic }
+        : null;
+}
+
+function parseBlitzSetup(value: string | undefined): BlitzSetup | null {
+    const { base, topic } = splitTopic(value);
+    const difficulty = parseSetupDifficulty(base);
+
+    return difficulty ? { difficulty, topic } : null;
 }
 
 /**
@@ -100,7 +151,6 @@ function parseClassicSetup(value: string | undefined): ClassicSetup | null {
 export function readModeSetupMemory(
     read: (name: string) => string | undefined,
 ): ModeSetupMemory {
-    const blitz = parseSetupDifficulty(read(MODE_SETUP_COOKIES.blitz));
     const survival = parseSurvivalDifficulty(
         read(MODE_SETUP_COOKIES.survival),
     );
@@ -110,7 +160,9 @@ export function readModeSetupMemory(
         classic:
             parseClassicSetup(read(MODE_SETUP_COOKIES.classic)) ??
             DEFAULT_MODE_SETUP.classic,
-        blitz: blitz ? { difficulty: blitz } : DEFAULT_MODE_SETUP.blitz,
+        blitz:
+            parseBlitzSetup(read(MODE_SETUP_COOKIES.blitz)) ??
+            DEFAULT_MODE_SETUP.blitz,
         survival: survival
             ? { difficulty: survival }
             : DEFAULT_MODE_SETUP.survival,
@@ -119,8 +171,9 @@ export function readModeSetupMemory(
 
 /**
  * Только браузер: запомнить выбор перед отправкой формы старта.
- * `value` — уже отформатированное значение режима (`formatClassicSetup`
- * или сложность).
+ * `value` — уже отформатированное значение режима (`formatClassicSetup`,
+ * `formatBlitzSetup` или сложность Выживания). Значения — латиница, точки,
+ * дефисы и двоеточие: экранировать для cookie нечего.
  */
 export function rememberModeSetup(mode: SetupMode, value: string): void {
     const attributes = `path=/; max-age=${YEAR_SECONDS}; SameSite=Lax`;

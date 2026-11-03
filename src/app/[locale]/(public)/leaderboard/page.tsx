@@ -63,6 +63,9 @@ export default async function LeaderboardPage({
               ? dictionary.leaderboard.monthWindowHint
               : dictionary.leaderboard.allTimeHint;
     const showBlitzHint = filters.mode === 'blitz';
+    // Доски Классики и Блица считают только игры на всём банке (Play topics).
+    const showTopicHint =
+        filters.mode === 'classic' || filters.mode === 'blitz';
 
     return (
         <main className="mx-auto max-w-3xl px-4 py-8 sm:px-8 sm:py-12">
@@ -114,13 +117,19 @@ export default async function LeaderboardPage({
                 }}
             />
 
-            {periodHint || showBlitzHint ? (
+            {periodHint || showBlitzHint || showTopicHint ? (
                 <p className="mt-3 text-xs leading-snug text-muted">
-                    {periodHint}
-                    {periodHint && showBlitzHint ? ' · ' : null}
-                    {showBlitzHint
-                        ? dictionary.leaderboard.blitzSpeedHint
-                        : null}
+                    {[
+                        periodHint,
+                        showBlitzHint
+                            ? dictionary.leaderboard.blitzSpeedHint
+                            : null,
+                        showTopicHint
+                            ? dictionary.leaderboard.topicGamesHint
+                            : null,
+                    ]
+                        .filter(Boolean)
+                        .join(' · ')}
                 </p>
             ) : null}
 

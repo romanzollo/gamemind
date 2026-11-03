@@ -494,6 +494,9 @@ export const ruDictionary: Dictionary = {
         classicMeta: '3, 5 или 10 вопросов',
         classicLeaderboardHint: 'В рейтинге недели — игры за 7 дней.',
         difficultyLabel: 'Сложность',
+        topicLabel: 'Тема',
+        topicAll: 'Все вопросы',
+        topicUnavailableHint: 'Серые — пока мало вопросов на этой сложности',
         questionCountLabel: 'Сколько вопросов',
         progressAnsweredLabel: 'Отвечено',
         answer: {
@@ -554,7 +557,7 @@ export const ruDictionary: Dictionary = {
         errors: {
             invalidSetup: 'Проверь сложность и количество вопросов.',
             notEnoughQuestions:
-                'На этой сложности не хватает вопросов. Выбери другую сложность или меньше вопросов.',
+                'На этой сложности не хватает вопросов. Выбери другую сложность, тему или меньше вопросов.',
             answerAll: 'Сначала ответь на все вопросы.',
             invalidAnswer:
                 'Часть ответов не прошла проверку. Обнови страницу и попробуй снова.',
@@ -581,6 +584,7 @@ export const ruDictionary: Dictionary = {
         scoringDetails:
             'Лёгкий вопрос — 1 очко, средний — 2, сложный — 3. В Классике максимум 30 (10 сложных). В Выживании считается сумма очков за забег. У каждого режима своя таблица.',
         weekWindowHint: 'Считаются игры за последние 7 дней.',
+        topicGamesHint: 'Игры с выбранной темой в рейтинг не идут.',
         monthWindowHint: 'Считаются игры за последние 30 дней.',
         allTimeHint: 'Лучшие игры за всё время.',
         blitzSpeedHint: 'При равных очках выше тот, кто быстрее.',

@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import {
     DEFAULT_MODE_SETUP,
     MODE_SETUP_COOKIES,
+    formatBlitzSetup,
     formatClassicSetup,
     readModeSetupMemory,
 } from './mode-setup-memory';
@@ -27,6 +28,7 @@ describe('readModeSetupMemory', () => {
                 [MODE_SETUP_COOKIES.classic]: formatClassicSetup({
                     difficulty: 'MIXED',
                     questionCount: 10,
+                    topic: null,
                 }),
                 [MODE_SETUP_COOKIES.blitz]: 'HARD',
                 [MODE_SETUP_COOKIES.survival]: 'EASY',
@@ -35,8 +37,8 @@ describe('readModeSetupMemory', () => {
 
         expect(memory).toEqual({
             lastMode: 'blitz',
-            classic: { difficulty: 'MIXED', questionCount: 10 },
-            blitz: { difficulty: 'HARD' },
+            classic: { difficulty: 'MIXED', questionCount: 10, topic: null },
+            blitz: { difficulty: 'HARD', topic: null },
             survival: { difficulty: 'EASY' },
         });
     });
@@ -53,5 +55,47 @@ describe('readModeSetupMemory', () => {
         );
 
         expect(memory).toEqual(DEFAULT_MODE_SETUP);
+    });
+
+    it('хранит тему после двоеточия, даже с дефисом в id', () => {
+        const memory = readModeSetupMemory(
+            reader({
+                [MODE_SETUP_COOKIES.classic]: formatClassicSetup({
+                    difficulty: 'MEDIUM',
+                    questionCount: 10,
+                    topic: 'games.genre.action-adventure',
+                }),
+                [MODE_SETUP_COOKIES.blitz]: formatBlitzSetup({
+                    difficulty: 'MIXED',
+                    topic: 'games.era.2010s',
+                }),
+            }),
+        );
+
+        expect(memory.classic).toEqual({
+            difficulty: 'MEDIUM',
+            questionCount: 10,
+            topic: 'games.genre.action-adventure',
+        });
+        expect(memory.blitz).toEqual({
+            difficulty: 'MIXED',
+            topic: 'games.era.2010s',
+        });
+    });
+
+    it('мусор вместо темы — все вопросы, а настройки остаются', () => {
+        const memory = readModeSetupMemory(
+            reader({
+                [MODE_SETUP_COOKIES.classic]: 'HARD-5:<script>',
+                [MODE_SETUP_COOKIES.blitz]: 'EASY:',
+            }),
+        );
+
+        expect(memory.classic).toEqual({
+            difficulty: 'HARD',
+            questionCount: 5,
+            topic: null,
+        });
+        expect(memory.blitz).toEqual({ difficulty: 'EASY', topic: null });
     });
 });

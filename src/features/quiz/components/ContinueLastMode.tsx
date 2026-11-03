@@ -6,17 +6,28 @@
  * идёт через обычный Server Action режима с его Zod. Своих проверок прав
  * здесь нет — гостю Блиц / Выживание не показывает вызывающая страница,
  * а действие всё равно перенаправит гостя само.
+ *
+ * Тема (Классика, Блиц): название — из общего списка тем (`usePlayTopics`).
+ * Пока список грузится или не загрузился, тема уходит в форму как была —
+ * сервер проверит её сам; если она стала недоступна на этой сложности,
+ * «Продолжить» играет без темы.
  */
 'use client';
 
 import { useActionState } from 'react';
 
+import { getPlayTopicName } from '@/entities/play-topic/play-topic';
 import { startQuizAction } from '@/features/quiz/actions';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type {
     ModeSetupMemory,
     SetupMode,
 } from '@/features/quiz/lib/mode-setup-memory';
+import {
+    resolveSelectedTopic,
+    usePlayTopics,
+    type PlayTopicsState,
+} from '@/features/quiz/lib/use-play-topics';
 import type { QuizFormState } from '@/features/quiz/types';
 import { startSurvivalQuizAction } from '@/features/survival-mode/actions';
 import { startTimedQuizAction } from '@/features/timed-mode/actions';
@@ -58,35 +69,96 @@ function difficultyLabel(
     }
 }
 
-/** Строка «Классика · Сложно · 5» и поля формы для режима. */
+type ContinueTopic = { id: string; name: string | null } | null;
+
+/**
+ * Тема для «Продолжить»: из списка — только доступная на этой сложности;
+ * без списка (грузится / ошибка) — как в cookie, без названия.
+ */
+function resolveContinueTopic(
+    topics: PlayTopicsState,
+    locale: Locale,
+    topicId: string | null,
+    difficulty: QuizSetupDifficulty,
+): ContinueTopic {
+    if (!topicId) {
+        return null;
+    }
+
+    if (topics.status !== 'ready') {
+        return { id: topicId, name: null };
+    }
+
+    const resolved = resolveSelectedTopic(topics, topicId, difficulty);
+    const topic = topics.topics.find((item) => item.id === resolved);
+
+    return topic ? { id: topic.id, name: getPlayTopicName(topic, locale) } : null;
+}
+
+function topicParts(topic: ContinueTopic): {
+    names: string[];
+    fields: Record<string, string>;
+} {
+    return {
+        names: topic?.name ? [topic.name] : [],
+        fields: topic ? { topic: topic.id } : {},
+    };
+}
+
+/** Строка «Классика · Сложно · 5 · Шутеры» и поля формы для режима. */
 function describeLastMode(
     dictionary: Dictionary,
     mode: SetupMode,
     memory: ModeSetupMemory,
+    topics: PlayTopicsState,
+    locale: Locale,
 ): { summary: string; fields: Record<string, string> } {
     const quiz = dictionary.quiz;
 
     switch (mode) {
-        case 'classic':
+        case 'classic': {
+            const topic = topicParts(
+                resolveContinueTopic(
+                    topics,
+                    locale,
+                    memory.classic.topic,
+                    memory.classic.difficulty,
+                ),
+            );
+
             return {
                 summary: [
                     quiz.classicTitle,
                     difficultyLabel(quiz, memory.classic.difficulty),
                     String(memory.classic.questionCount),
+                    ...topic.names,
                 ].join(' · '),
                 fields: {
                     difficulty: memory.classic.difficulty,
                     questionCount: String(memory.classic.questionCount),
+                    ...topic.fields,
                 },
             };
-        case 'blitz':
+        }
+        case 'blitz': {
+            const topic = topicParts(
+                resolveContinueTopic(
+                    topics,
+                    locale,
+                    memory.blitz.topic,
+                    memory.blitz.difficulty,
+                ),
+            );
+
             return {
                 summary: [
                     dictionary.timedMode.title,
                     difficultyLabel(quiz, memory.blitz.difficulty),
+                    ...topic.names,
                 ].join(' · '),
-                fields: { difficulty: memory.blitz.difficulty },
+                fields: { difficulty: memory.blitz.difficulty, ...topic.fields },
             };
+        }
         case 'survival':
             return {
                 summary: [
@@ -106,7 +178,14 @@ export function ContinueLastMode({
 }: ContinueLastModeProps) {
     const [state, formAction] = useActionState(START_ACTIONS[mode], {});
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
-    const { summary, fields } = describeLastMode(dictionary, mode, memory);
+    const topics = usePlayTopics();
+    const { summary, fields } = describeLastMode(
+        dictionary,
+        mode,
+        memory,
+        topics,
+        locale,
+    );
     const labels = dictionary.home;
 
     return (

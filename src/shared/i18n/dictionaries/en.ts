@@ -479,6 +479,9 @@ export const enDictionary = {
         classicMeta: '3, 5 or 10 questions',
         classicLeaderboardHint: 'The weekly board counts the last 7 days.',
         difficultyLabel: 'Difficulty',
+        topicLabel: 'Topic',
+        topicAll: 'All questions',
+        topicUnavailableHint: 'Greyed out: not enough questions at this level yet',
         questionCountLabel: 'Questions',
         progressAnsweredLabel: 'Answered',
         answer: {
@@ -539,7 +542,7 @@ export const enDictionary = {
         errors: {
             invalidSetup: 'Check difficulty and question count.',
             notEnoughQuestions:
-                'Not enough questions at this difficulty. Pick another one or fewer questions.',
+                'Not enough questions at this difficulty. Pick another difficulty, topic or fewer questions.',
             answerAll: 'Answer every question to finish.',
             invalidAnswer:
                 'Some answers didn’t go through. Refresh the page and try again.',
@@ -565,6 +568,7 @@ export const enDictionary = {
         scoringDetails:
             'Easy questions are worth 1 point, medium 2, hard 3. Classic tops out at 30 (10 hard). Survival counts your total for a run. Each mode has its own board.',
         weekWindowHint: 'Counts games from the last 7 days.',
+        topicGamesHint: "Topic games don't count for the leaderboard.",
         monthWindowHint: 'Counts games from the last 30 days.',
         allTimeHint: 'Best games of all time.',
         blitzSpeedHint: 'Ties go to the faster finish.',

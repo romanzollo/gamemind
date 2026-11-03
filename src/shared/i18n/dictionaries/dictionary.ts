@@ -554,6 +554,12 @@ export type Dictionary = {
          */
         classicLeaderboardHint: string;
         difficultyLabel: string;
+        /** Ряд тем игры в шторке Классики и Блица (Play topics). */
+        topicLabel: string;
+        /** Чип по умолчанию: весь банк вопросов. */
+        topicAll: string;
+        /** Под рядом, если есть серые темы: на этой сложности мало вопросов. */
+        topicUnavailableHint: string;
         questionCountLabel: string;
         /** Прогресс сессии: отвечено / всего (не число вопросов в setup). */
         progressAnsweredLabel: string;
@@ -671,6 +677,8 @@ export type Dictionary = {
          * Не писать «сойдёт с доски». Не обещать сброс в понедельник.
          */
         weekWindowHint: string;
+        /** Доски Классики и Блица: игры с темой не считаются (Play topics). */
+        topicGamesHint: string;
         /** Когда открыт «Месяц»: скользящее окно 30 дней, как у недели. */
         monthWindowHint: string;
         /**

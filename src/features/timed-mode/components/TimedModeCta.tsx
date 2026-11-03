@@ -9,21 +9,21 @@
 import { TimedModeCtaPanel } from '@/features/timed-mode/components/TimedModeCtaPanel';
 import { auth } from '@/lib/auth';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import type { QuizSetupDifficulty } from '@/types';
+import type { BlitzSetup } from '@/features/quiz/lib/mode-setup-memory';
 
 type TimedModeCtaProps = {
     locale: Locale;
     dictionary: Dictionary;
     className?: string;
-    /** Последний выбор сложности (cookie лобби). */
-    initialDifficulty: QuizSetupDifficulty;
+    /** Последний выбор сложности и темы (cookie шторки). */
+    initialSetup: BlitzSetup;
 };
 
 export async function TimedModeCta({
     locale,
     dictionary,
     className = '',
-    initialDifficulty,
+    initialSetup,
 }: TimedModeCtaProps) {
     const session = await auth();
 
@@ -33,7 +33,7 @@ export async function TimedModeCta({
                 locale={locale}
                 dictionary={dictionary}
                 isAuthenticated={Boolean(session?.user?.id)}
-                initialDifficulty={initialDifficulty}
+                initialSetup={initialSetup}
             />
         </div>
     );

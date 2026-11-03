@@ -2510,3 +2510,5 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - Counting topic availability on the home render — one more Neon read on every home GET; availability is served separately (4.0b-2).
 
 **Deploy order:** migration `20261103120000_play_topics` on prod (additive) → deploy → `taxonomy:sync --apply` (sets `playOrder`). Before the sync, no topic is playable — the pool is empty, the start answers «not enough questions».
+
+**Screen (4.0b-2):** `GET /api/quiz/topics` returns topics with per-difficulty availability (same threshold) and `Cache-Control: public, s-maxage=600, stale-while-revalidate=3600`; one browser request per page shared by both sheets and «Continue» (`usePlayTopics`, external store). Failure → no topic row, the game starts as before. A topic greyed out at the chosen difficulty is not sent (the choice stays in state and comes back with the difficulty). The cookie keeps the topic after a colon (`MEDIUM-10:games.genre.action-adventure`: ids have dashes). Prod smoke plays Classic 3 with «2010s» and Blitz MIX without a topic — both cycle paths on every deploy.

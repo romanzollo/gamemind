@@ -4,12 +4,16 @@
  * Под капотом — обычные `<input type="radio" name=…>`: значение уходит в
  * форму как раньше из `<select>`, а стрелки клавиатуры и скринридер работают
  * по-родному. Радио скрыто визуально (`sr-only`), чип — подпись к нему.
+ * Неактивный вариант — `disabled` у радио: стрелки его пропускают, скринридер
+ * объявляет недоступным, чип серый с пунктиром.
  */
 'use client';
 
 type ChipOption<Value extends string> = {
     value: Value;
     label: string;
+    /** Виден, но не выбирается (тема без вопросов на этой сложности). */
+    disabled?: boolean;
 };
 
 type ChipRadioGroupProps<Value extends string> = {
@@ -43,10 +47,11 @@ export function ChipRadioGroup<Value extends string>({
                             name={name}
                             value={option.value}
                             checked={option.value === value}
+                            disabled={option.disabled}
                             onChange={() => onChange(option.value)}
                             className="peer sr-only"
                         />
-                        <span className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-border bg-surface px-4 text-sm text-foreground transition peer-checked:border-primary peer-checked:bg-primary peer-checked:font-medium peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring hover:bg-surface-hover peer-checked:hover:bg-primary-hover">
+                        <span className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-border bg-surface px-4 text-sm text-foreground transition peer-checked:border-primary peer-checked:bg-primary peer-checked:font-medium peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring hover:bg-surface-hover peer-checked:hover:bg-primary-hover peer-disabled:cursor-not-allowed peer-disabled:border-dashed peer-disabled:text-muted peer-disabled:opacity-60 peer-disabled:hover:bg-surface">
                             {option.label}
                         </span>
                     </label>

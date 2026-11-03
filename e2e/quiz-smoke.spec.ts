@@ -2,9 +2,10 @@
  * Smoke горячего пути квиза — то, что раньше проходили руками после каждого
  * деплоя (канон — docs/QUIZ_NEON_HOT_PATH.md, матрица — skill gamemind-smoke).
  *
- * - Классика, Легко, 3 вопроса: старт → ответ → плашка → «Дальше» … →
- *   «К результату» → результат.
- * - Блиц MIX: все ответы до 00:00 (переход и сдача — сами) → результат без
+ * - Классика, Легко, 3 вопроса, тема «2010-е»: старт → ответ → плашка →
+ *   «Дальше» … → «К результату» → результат с чипом темы. Тема — путь мешка
+ *   темы (Play topics); без темы pick проверяет Блиц.
+ * - Блиц MIX без темы: все ответы до 00:00 (переход и сдача — сами) → результат без
  *   `clock=1` (таймер не должен «съесть» честную сдачу).
  *
  * Не покрыто: Выживание (ждать обнуления банка) и Челлендж дня (одна попытка
@@ -28,7 +29,7 @@ const RESULT_URL = /\/ru\/result\/[^/?#]+/;
 async function startFromLobby(
     page: Page,
     setupTestId: 'classic-setup' | 'blitz-setup',
-    options: { difficulty: string; questionCount?: string },
+    options: { difficulty: string; questionCount?: string; topic?: string },
 ): Promise<void> {
     // Режимы — на главной (бывшее лобби /quiz ведёт туда же).
     await page.goto('/ru');
@@ -48,6 +49,16 @@ async function startFromLobby(
 
     if (options.questionCount) {
         await chip('questionCount', options.questionCount).click();
+    }
+
+    if (options.topic) {
+        // Темы приходят запросом из браузера — ждём, пока чип станет активным.
+        const topicRadio = setup.locator(
+            `input[name="topic"][value="${options.topic}"]`,
+        );
+        await expect(topicRadio).toBeEnabled();
+        await chip('topic', options.topic).click();
+        await expect(topicRadio).toBeChecked();
     }
 
     await setup.locator('button[type="submit"]').click();
@@ -102,17 +113,19 @@ async function submitAndOpenResult(page: Page): Promise<URL> {
     return openResult(page);
 }
 
-test('Классика: Легко, 3 вопроса — от старта до результата', async ({
+test('Классика: Легко, 3 вопроса, тема «2010-е» — от старта до результата', async ({
     page,
 }) => {
     await startFromLobby(page, 'classic-setup', {
         difficulty: 'EASY',
         questionCount: '3',
+        topic: 'games.era.2010s',
     });
 
     expect(await answerEveryQuestion(page, { autoAdvance: false })).toBe(3);
 
     await submitAndOpenResult(page);
+    await expect(page.getByTestId('quiz-result-topic')).toBeVisible();
 });
 
 test('Блиц MIX: все ответы до 00:00 — результат без clock=1', async ({

@@ -11,6 +11,50 @@
  */
 
 import type { Locale } from '@/shared/i18n';
+import type { Difficulty, QuizSetupDifficulty } from '@/types';
+
+/** Тема для экрана выбора: где на ней хватает вопросов. */
+export type PlayTopicOption = {
+    id: string;
+    nameRu: string;
+    nameEn: string;
+    available: Record<Difficulty, boolean>;
+};
+
+/** Строка запроса доступности: опубликованные вопросы темы по сложностям. */
+export type PlayTopicCountRow = {
+    id: string;
+    nameRu: string;
+    nameEn: string;
+    easy: number;
+    medium: number;
+    hard: number;
+};
+
+export function toPlayTopicOptions(
+    rows: readonly PlayTopicCountRow[],
+): PlayTopicOption[] {
+    return rows.map((row) => ({
+        id: row.id,
+        nameRu: row.nameRu,
+        nameEn: row.nameEn,
+        available: {
+            EASY: row.easy >= PLAY_TOPIC_MIN_QUESTIONS,
+            MEDIUM: row.medium >= PLAY_TOPIC_MIN_QUESTIONS,
+            HARD: row.hard >= PLAY_TOPIC_MIN_QUESTIONS,
+        },
+    }));
+}
+
+/** Микс берёт куски всех трёх сложностей — тема нужна на каждой. */
+export function isPlayTopicAvailable(
+    topic: PlayTopicOption,
+    difficulty: QuizSetupDifficulty,
+): boolean {
+    return difficulty === 'MIXED'
+        ? topic.available.EASY && topic.available.MEDIUM && topic.available.HARD
+        : topic.available[difficulty];
+}
 
 /** Название метки на языке интерфейса: колонки `nameRu` / `nameEn`. */
 export function getPlayTopicName(
