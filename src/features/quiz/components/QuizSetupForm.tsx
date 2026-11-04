@@ -75,6 +75,7 @@ export function QuizSetupForm({
 
     return (
         <ModeSheetCard
+            glyph="classic"
             title={labels.classicTitle}
             summary={`${labels.classicEyebrow} · ${labels.classicMeta}`}
             description={labels.classicDescription}

@@ -426,13 +426,65 @@ async function findPlayedDateKeys(userId: string): Promise<string[]> {
     });
 }
 
+/** Место игрока в рейтинге дня: тот же порядок, что у доски. */
+export type DailyStanding = {
+    place: number;
+    total: number;
+};
+
 export type DailyLobbyPanelState = {
     challenge: DailyChallengeDefinition | null;
     attempt: DailyChallengeAttempt | null;
     boardEntries: DailyScoreEntry[];
     /** Для серии; пусто у гостя. */
     playedDateKeys: string[];
+    /**
+     * Только после сыгранного челленджа и только у игрока, который виден
+     * в рейтинге (не гость и не тестовый аккаунт); иначе null.
+     */
+    standing: DailyStanding | null;
 };
+
+/**
+ * Место и число участников дня одним запросом на уже открытом соединении.
+ * Порядок как у `queryScoresByChallengeId`: очки ↓, затем кто раньше
+ * закончил. Игрок вне рейтинга (гость, тестовый) → строк нет → null.
+ */
+async function queryStanding(
+    client: Client,
+    userId: string,
+    dailyChallengeId: string,
+): Promise<DailyStanding | null> {
+    const result = await client.query<{ place: number; total: number }>(
+        `
+            WITH board AS (
+                SELECT r."userId" AS user_id, r."score", r."completedAt"
+                FROM "QuizResult" AS r
+                INNER JOIN "QuizSession" AS s
+                    ON s."id" = r."sessionId"
+                INNER JOIN "User" AS u
+                    ON u."id" = r."userId"
+                    AND ${LEADERBOARD_VISIBLE_USER_SQL}
+                WHERE s."dailyChallengeId" = $2
+            ),
+            me AS (
+                SELECT "score", "completedAt" FROM board WHERE user_id = $1
+            )
+            SELECT
+                (
+                    SELECT count(*) FROM board AS b
+                    WHERE b."score" > me."score"
+                       OR (b."score" = me."score"
+                           AND b."completedAt" < me."completedAt")
+                )::int + 1 AS place,
+                (SELECT count(*) FROM board)::int AS total
+            FROM me
+        `,
+        [userId, dailyChallengeId],
+    );
+
+    return result.rows[0] ?? null;
+}
 
 /**
  * Главная (место игры): challenge + attempt + board + даты серии на одном
@@ -460,6 +512,7 @@ async function findLobbyPanelState(input: {
                 attempt: null,
                 boardEntries: [],
                 playedDateKeys,
+                standing: null,
             };
         }
 
@@ -477,8 +530,13 @@ async function findLobbyPanelState(input: {
             challenge.id,
             input.boardLimit,
         );
+        // Лишний запрос — только тем, кто сегодня уже сыграл.
+        const standing =
+            input.userId != null && attempt?.kind === 'completed'
+                ? await queryStanding(client, input.userId, challenge.id)
+                : null;
 
-        return { challenge, attempt, boardEntries, playedDateKeys };
+        return { challenge, attempt, boardEntries, playedDateKeys, standing };
     });
 }
 

@@ -15,6 +15,8 @@ import type { Dictionary } from '@/shared/i18n';
 export type DailyStreakGoal = {
     title: string;
     daysLeft: number;
+    /** Все вехи серии по возрастанию — для дорожки 3 · 7 · 30. */
+    milestones: number[];
 };
 
 const STREAK_MILESTONES = ACHIEVEMENT_CATALOG.flatMap((definition) =>
@@ -37,5 +39,8 @@ export function resolveStreakGoal(
     return {
         title: dictionary.achievements.items[next.code].title,
         daysLeft: next.daysLeft,
+        milestones: STREAK_MILESTONES.map((milestone) => milestone.threshold).sort(
+            (a, b) => a - b,
+        ),
     };
 }

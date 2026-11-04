@@ -2519,3 +2519,26 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 **Deploy order:** migration `20261103120000_play_topics` on prod (additive) → deploy → `taxonomy:sync --apply` (sets `playOrder`). Before the sync, no topic is playable — the pool is empty, the start answers «not enough questions».
 
 **Screen (4.0b-2):** `GET /api/quiz/topics` returns topics with per-difficulty availability (same threshold) and `Cache-Control: public, s-maxage=600, stale-while-revalidate=3600`; one browser request per page shared by both sheets and «Continue» (`usePlayTopics`, external store). Failure → no topic row, the game starts as before. A topic greyed out at the chosen difficulty is not sent (the choice stays in state and comes back with the difficulty). The cookie keeps the topic after a colon (`MEDIUM-10:games.genre.action-adventure`: ids have dashes). Prod smoke plays Classic 3 with «2010s» and Blitz MIX without a topic — both cycle paths on every deploy.
+
+## Daily card as the hero of the player home (November 4, 2026)
+
+**Context:** ROADMAP 4.3d. The home page already opened with the Daily Challenge (ADR «Home is the play hub»), but the card looked like any other card, a played day showed only «Points: N · 7/10», and the day board took up to 10 rows before the modes.
+
+**Decision:**
+
+| Piece | Choice |
+|------|--------|
+| Card | Primary accent stripe, larger title. Once played, the day's result comes first (big score, then place), then the streak and the countdown |
+| Place | «You're #4 of 37 · ahead of 91% of players». One more query on the **same Direct connection** the lobby view already holds, and only when today's attempt is completed — no extra read for players who have not played. Same order as the board (score ↓, earlier finish first), same visibility filter (`LEADERBOARD_VISIBLE_USER_SQL`): guests and test accounts get no row → no place line |
+| Percent | Share of the other players you beat, floored; shown from 5 players and only between 1 and 99 % — «ahead of 100%» with two players and «ahead of 0%» say nothing (`daily-standing.ts`) |
+| Board | Top‑3 visible; your row pinned under it when you are lower; the rest of the top‑10 behind «Full daily board» (`<details>`, no JS, no new query; the pinned row hides while open). `/leaderboard?mode=daily` aggregates weeks, so it is not linked as «today's board» |
+| Streak | Milestone track 3 · 7 · 30 from the achievement catalog, milestones at equal steps (a day scale would squeeze 3 and 7 to the left edge) |
+| Mode tiles | One glyph per mode in the single accent: sheet (Classic), stopwatch (Blitz), hourglass (Survival). No per-mode stats on home |
+
+**Hot path:** untouched — start, answer and submit are the same; the place query is a read on home only.
+
+**Not chosen:**
+
+- Per-mode personal bests on the tiles — a read per mode on every home GET; belongs to profile statistics (4.4).
+- A weekly percentile across modes — heavy, and the shared daily set is the only fair comparison.
+- Animated tiles — motion answers events, it does not decorate (`docs/DESIGN.md`).

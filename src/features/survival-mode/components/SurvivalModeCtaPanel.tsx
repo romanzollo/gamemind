@@ -49,6 +49,7 @@ export function SurvivalModeCtaPanel({
 
     return (
         <ModeSheetCard
+            glyph="survival"
             title={labels.title}
             summary={`${labels.eyebrow} · ${labels.meta}`}
             description={labels.description}

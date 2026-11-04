@@ -70,6 +70,7 @@ export function TimedModeCtaPanel({
 
     return (
         <ModeSheetCard
+            glyph="blitz"
             title={labels.title}
             summary={`${labels.eyebrow} · ${labels.meta}`}
             description={labels.description}

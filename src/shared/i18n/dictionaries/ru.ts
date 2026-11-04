@@ -73,6 +73,9 @@ export const ruDictionary: Dictionary = {
         completedScore: 'Очки: {score} · {correct}/{total}',
         boardTitle: 'Рейтинг дня',
         boardEmpty: 'Арена пуста. Самое время занять первое место.',
+        boardFull: 'Весь рейтинг дня',
+        yourPlace: 'Ты #{place} из {total}',
+        betterThan: 'лучше {percent}% игроков',
         streakDays: {
             one: '{n} день подряд',
             few: '{n} дня подряд',

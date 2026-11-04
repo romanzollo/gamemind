@@ -14,6 +14,7 @@ import { GuestSignInForm } from '@/features/auth/components/GuestPlayPrompt';
 import { startDailyChallengeAction } from '@/features/daily-challenge/actions';
 import { DailyStreakSummary } from '@/features/daily-challenge/components/daily-streak';
 import type { DailyStreak } from '@/features/daily-challenge/lib/compute-daily-streak';
+import type { DailyStandingView } from '@/features/daily-challenge/lib/daily-standing';
 import type { DailyStreakGoal } from '@/features/daily-challenge/lib/resolve-streak-goal';
 import type { DailyChallengePlayerStatus } from '@/features/daily-challenge/types';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
@@ -32,6 +33,8 @@ type DailyChallengeCtaPanelProps = {
     streak?: DailyStreak | null;
     /** Ближайшая ачивка за серию (считает сервер). */
     streakGoal?: DailyStreakGoal | null;
+    /** Место в рейтинге дня после игры; null — не играл или вне рейтинга. */
+    standing?: DailyStandingView | null;
     dictionary: Dictionary;
     /**
      * true = без своей рамки (родитель `DailyChallengeCta` уже surface),
@@ -45,6 +48,7 @@ export function DailyChallengeCtaPanel({
     status,
     streak = null,
     streakGoal = null,
+    standing = null,
     dictionary,
     embedded = false,
 }: DailyChallengeCtaPanelProps) {
@@ -60,7 +64,7 @@ export function DailyChallengeCtaPanel({
 
             <h2
                 id="daily-challenge-heading"
-                className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground sm:text-2xl"
+                className="mt-1 font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
             >
                 {labels.title}
             </h2>
@@ -74,6 +78,44 @@ export function DailyChallengeCtaPanel({
                     {labels.meta}
                 </span>
             </p>
+
+            {/*
+              Сыграл — сначала итог дня (очки, место), потом серия и таймер
+              до завтра: главный вопрос «как я сегодня?» отвечен первым.
+            */}
+            {status.kind === 'completed' ? (
+                <div className="mt-4" data-testid="daily-completed">
+                    <p className="font-display text-2xl font-semibold tabular-nums tracking-tight text-foreground">
+                        {labels.completedScore
+                            .replace('{score}', String(status.score))
+                            .replace('{correct}', String(status.correctCount))
+                            .replace('{total}', String(status.totalQuestions))}
+                    </p>
+                    {standing ? (
+                        <p
+                            className="mt-1 text-sm text-foreground"
+                            data-testid="daily-standing"
+                        >
+                            <span className="font-semibold tabular-nums">
+                                {labels.yourPlace
+                                    .replace('{place}', String(standing.place))
+                                    .replace('{total}', String(standing.total))}
+                            </span>
+                            {standing.betterThanPercent !== null ? (
+                                <>
+                                    {' · '}
+                                    <span className="font-medium text-success">
+                                        {labels.betterThan.replace(
+                                            '{percent}',
+                                            String(standing.betterThanPercent),
+                                        )}
+                                    </span>
+                                </>
+                            ) : null}
+                        </p>
+                    ) : null}
+                </div>
+            ) : null}
 
             {streak ? (
                 <DailyStreakSummary
@@ -143,18 +185,6 @@ export function DailyChallengeCtaPanel({
 
                 {status.kind === 'completed' ? (
                     <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
-                        <p className="font-mono text-sm tabular-nums text-foreground">
-                            {labels.completedScore
-                                .replace('{score}', String(status.score))
-                                .replace(
-                                    '{correct}',
-                                    String(status.correctCount),
-                                )
-                                .replace(
-                                    '{total}',
-                                    String(status.totalQuestions),
-                                )}
-                        </p>
                         <PendingLink
                             href={`/${locale}/result/${status.sessionId}`}
                             prefetch={false}

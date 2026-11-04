@@ -73,6 +73,9 @@ export const enDictionary = {
         completedScore: 'Points: {score} · {correct}/{total}',
         boardTitle: 'Today’s leaderboard',
         boardEmpty: 'The arena is empty. Time to claim first place.',
+        boardFull: 'Full daily board',
+        yourPlace: 'You’re #{place} of {total}',
+        betterThan: 'ahead of {percent}% of players',
         streakDays: {
             one: '{n} day in a row',
             few: '{n} days in a row',

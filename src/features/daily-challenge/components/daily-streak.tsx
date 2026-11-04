@@ -19,6 +19,7 @@ import {
     type DailyStreakDay,
 } from '@/features/daily-challenge/lib/compute-daily-streak';
 import type { DailyStreakGoal } from '@/features/daily-challenge/lib/resolve-streak-goal';
+import { streakTrackFill } from '@/features/daily-challenge/lib/streak-track';
 import { formatPlural, type Dictionary, type Locale } from '@/shared/i18n';
 import { serverNow, useServerClockReady } from '@/shared/ui/server-clock';
 import { useHydrated } from '@/shared/ui/use-hydrated';
@@ -111,6 +112,68 @@ function CheckMark() {
                 strokeLinejoin="round"
             />
         </svg>
+    );
+}
+
+/**
+ * Дорожка вех серии: заливка до текущей серии, точки-вехи с числами дней.
+ * Декоративная (aria-hidden): тот же смысл словами — строка цели под ней.
+ */
+function StreakMilestoneTrack({
+    current,
+    milestones,
+}: {
+    current: number;
+    milestones: readonly number[];
+}) {
+    const fill = streakTrackFill(current, milestones);
+
+    return (
+        <div className="mt-3 px-1.5" aria-hidden data-testid="streak-track">
+            <div className="relative h-1.5 rounded-full bg-border">
+                <div
+                    className="absolute inset-y-0 left-0 rounded-full bg-warning"
+                    style={{ width: `${fill * 100}%` }}
+                />
+                {milestones.map((milestone, index) => (
+                    <span
+                        key={milestone}
+                        className={[
+                            'absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2',
+                            current >= milestone
+                                ? 'border-warning bg-warning'
+                                : 'border-border bg-surface',
+                        ].join(' ')}
+                        style={{
+                            left: `${((index + 1) / milestones.length) * 100}%`,
+                        }}
+                    />
+                ))}
+            </div>
+            <div className="relative mt-1.5 h-4">
+                {milestones.map((milestone, index) => {
+                    const isLast = index === milestones.length - 1;
+
+                    return (
+                        <span
+                            key={milestone}
+                            className={[
+                                'absolute font-mono text-2xs tabular-nums',
+                                isLast ? '-translate-x-full' : '-translate-x-1/2',
+                                current >= milestone
+                                    ? 'font-semibold text-foreground'
+                                    : 'text-muted',
+                            ].join(' ')}
+                            style={{
+                                left: `${((index + 1) / milestones.length) * 100}%`,
+                            }}
+                        >
+                            {milestone}
+                        </span>
+                    );
+                })}
+            </div>
+        </div>
     );
 }
 
@@ -229,6 +292,13 @@ export function DailyStreakSummary({
                 <p className="mt-2 text-xs font-medium text-success">
                     {labels.streakPerfectWeek}
                 </p>
+            ) : null}
+
+            {nextGoal && nextGoal.daysLeft > 0 ? (
+                <StreakMilestoneTrack
+                    current={streak.current}
+                    milestones={nextGoal.milestones}
+                />
             ) : null}
 
             {nextGoal && nextGoal.daysLeft > 0 ? (

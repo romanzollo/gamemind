@@ -87,6 +87,12 @@ export type Dictionary = {
         boardTitle: string;
         /** Пустой рейтинг (день есть, ещё никто не финишировал) */
         boardEmpty: string;
+        /** Раскрыть топ‑10 дня под топ‑3 на главной. */
+        boardFull: string;
+        /** Место после игры: `{place}`, `{total}`. */
+        yourPlace: string;
+        /** `{percent}` — доля обойдённых игроков дня. */
+        betterThan: string;
         /** Серия дней: `{n}` — длина серии, формы по Intl.PluralRules. */
         streakDays: PluralForms;
         /** `{n}` — лучшая серия. */

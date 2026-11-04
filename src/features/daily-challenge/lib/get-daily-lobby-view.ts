@@ -11,11 +11,16 @@ import {
     computeDailyStreak,
     type DailyStreak,
 } from '@/features/daily-challenge/lib/compute-daily-streak';
+import {
+    toDailyStandingView,
+    type DailyStandingView,
+} from '@/features/daily-challenge/lib/daily-standing';
 import { ensureDailyChallenge } from '@/features/daily-challenge/lib/ensure-daily-challenge';
 import { getMoscowDateKey } from '@/features/daily-challenge/lib/get-moscow-date-key';
 import type { DailyChallengePlayerStatus } from '@/features/daily-challenge/types';
 import { mapLeaderboardEntries } from '@/features/leaderboard/lib/map-leaderboard-entries';
 
+/** Топ‑10 дня: на главной видны три, остальные — по «Весь рейтинг дня». */
 const DAILY_BOARD_LIMIT = 10;
 
 export type DailyLobbyView = {
@@ -24,6 +29,8 @@ export type DailyLobbyView = {
     showBoard: boolean;
     /** Серия дней; null у гостя. */
     streak: DailyStreak | null;
+    /** Место после сыгранного челленджа; null — не играл или вне рейтинга. */
+    standing: DailyStandingView | null;
 };
 
 function statusFromAttempt(
@@ -85,6 +92,7 @@ export async function getDailyLobbyView(
             boardEntries: mapLeaderboardEntries(panel.boardEntries),
             showBoard: panel.challenge !== null,
             streak: null,
+            standing: null,
         };
     }
 
@@ -106,6 +114,7 @@ export async function getDailyLobbyView(
                 boardEntries: [],
                 showBoard: false,
                 streak: computeDailyStreak(panel.playedDateKeys, challengeDate),
+                standing: null,
             };
         }
 
@@ -125,6 +134,7 @@ export async function getDailyLobbyView(
             boardEntries: [],
             showBoard: false,
             streak: computeDailyStreak(panel.playedDateKeys, challengeDate),
+            standing: null,
         };
     }
 
@@ -133,5 +143,6 @@ export async function getDailyLobbyView(
         boardEntries: mapLeaderboardEntries(panel.boardEntries),
         showBoard: true,
         streak: computeDailyStreak(panel.playedDateKeys, challengeDate),
+        standing: panel.standing ? toDailyStandingView(panel.standing) : null,
     };
 }
