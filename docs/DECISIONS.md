@@ -2617,3 +2617,22 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - A `returnTo` URL validated by prefix — easy to get wrong (`//host`, `\`, encodings); rebuilding from parsed filters has nothing to bypass.
 - Soft navigation for filters and pagination — the dev-lab ADR still holds; measure first.
 - Keeping the place after bulk quality-block redirects — rare; bulk forms are client-built, left for later.
+
+## Admin users list: pages, search, guests hidden (November 4, 2026)
+
+**Context:** ROADMAP 4.5d. `/admin/users` loaded every user at once, guests mixed in, and counted results with a `GROUP BY` over the whole `QuizResult` table. Guests are created by every new visitor and results by every game — both grow without bound, while support work looks for a specific player.
+
+**Decision:**
+
+| Piece | Choice |
+|------|--------|
+| URL | `q` (name or email substring), `guests=1`, `page`; parsed with Zod like the questions list — junk gives the default list (`parse-admin-user-list-filters.ts`) |
+| Guests | Hidden by default; «Show guests» checkbox includes them |
+| Query | One query, one connection: page + total (`COUNT(*) OVER ()` before `LIMIT 25`); result count as a correlated subquery for the 25 page rows only (index `QuizResult.userId`). Empty page past the end → one extra `COUNT` on the same connection, the page redirects to the last page |
+| Search | `position(lower($1) in lower(username / email))` with the value as a bound parameter — no SQL literal, `%` and `_` match literally |
+| Pagination | `AdminQuestionsPagination` became `AdminListPagination` (list URL in, `page` set by the component) and serves both lists |
+| Navigation | Hard navigation for search and the checkbox, same as question filters (dev-lab ADR) |
+
+**No index on `User.createdAt` / `isGuest`:** with thousands of users a sort in memory costs less than an index paid on every sign-up and guest creation. Revisit when the users page gets slow on prod or the table passes ~50k rows; then `@@index([isGuest, createdAt])`.
+
+**Measured (dev, 12 users / 206 results):** old 0.21 ms, new 0.34 ms — on a tiny table a full scan beats per-row lookups; the gain is in growth (old cost ∝ all results, new ∝ 25 users' results).

@@ -8,3 +8,9 @@ export const ADMIN_USER_RESULT_HISTORY_LIMIT = 20;
  * 25 — плотный Scoreboard admin без тяжёлого RSC payload.
  */
 export const ADMIN_QUESTION_LIST_PAGE_SIZE = 25;
+
+/**
+ * Размер страницы `/admin/users` — как у вопросов: гости копятся с каждым
+ * новым посетителем, весь список одним куском рос бы без предела.
+ */
+export const ADMIN_USER_LIST_PAGE_SIZE = 25;

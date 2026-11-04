@@ -173,12 +173,39 @@ export const userRepository = {
     },
 
     /**
-     * Список пользователей для админки (unpooled direct pg).
-     * Без passwordHash; quizResultCount через LEFT JOIN агрегата.
+     * Страница списка пользователей для админки (unpooled direct pg).
+     *
+     * Одним запросом за одно соединение: страница + общее число
+     * (`COUNT(*) OVER ()` до LIMIT). Число результатов — подзапросом только
+     * для строк страницы (индекс QuizResult.userId), а не агрегатом по всей
+     * таблице результатов, которая растёт с каждой игрой.
+     * Поиск — параметром `$1` (подстрока имени или почты без учёта регистра);
+     * гости по умолчанию не попадают в выборку.
+     * Без passwordHash. Индекса под `ORDER BY createdAt` нет сознательно:
+     * при тысячах строк сортировка в памяти дешевле лишнего индекса на запись
+     * (ADR «Admin users list: pages, search, guests hidden»).
      */
-    async findAllForAdmin(): Promise<AdminUserRow[]> {
-        const result = await withDirectPgClient((client) =>
-            client.query<{
+    async findPageForAdmin(options: {
+        q: string;
+        includeGuests: boolean;
+        page: number;
+        pageSize: number;
+    }): Promise<{ rows: AdminUserRow[]; totalCount: number }> {
+        const offset = (Math.max(1, options.page) - 1) * options.pageSize;
+        const search = options.q.trim().toLowerCase();
+
+        // $1 — строка поиска ('' = без поиска), $2 — гости, $3/$4 — LIMIT/OFFSET.
+        const whereSql = `
+            WHERE ($2::boolean OR u."isGuest" = false)
+              AND (
+                $1::text = ''
+                OR position($1::text in lower(u."username")) > 0
+                OR position($1::text in lower(COALESCE(u."email", ''))) > 0
+              )
+        `;
+
+        return withDirectPgClient(async (client) => {
+            const result = await client.query<{
                 id: string;
                 username: string;
                 email: string | null;
@@ -188,46 +215,80 @@ export const userRepository = {
                 isTestAccount: boolean;
                 createdAt: Date;
                 quizResultCount: number;
+                totalCount: number;
             }>(
                 `
+                    WITH page AS (
+                        SELECT
+                            u."id",
+                            u."username",
+                            u."email",
+                            u."role",
+                            u."isActive",
+                            u."isGuest",
+                            u."isTestAccount",
+                            u."createdAt",
+                            COUNT(*) OVER () AS "totalCount"
+                        FROM "User" u
+                        ${whereSql}
+                        ORDER BY u."createdAt" DESC, u."id" DESC
+                        LIMIT $3 OFFSET $4
+                    )
                     SELECT
-                        u."id",
-                        u."username",
-                        u."email",
-                        u."role",
-                        u."isActive",
-                        u."isGuest",
-                        u."isTestAccount",
-                        u."createdAt",
-                        COALESCE(r."quizResultCount", 0)::int AS "quizResultCount"
-                    FROM "User" u
-                    LEFT JOIN (
-                        SELECT "userId", COUNT(*)::int AS "quizResultCount"
-                        FROM "QuizResult"
-                        GROUP BY "userId"
-                    ) r ON r."userId" = u."id"
-                    ORDER BY u."createdAt" DESC
+                        page."id",
+                        page."username",
+                        page."email",
+                        page."role",
+                        page."isActive",
+                        page."isGuest",
+                        page."isTestAccount",
+                        page."createdAt",
+                        page."totalCount"::int AS "totalCount",
+                        (
+                            SELECT COUNT(*)::int
+                            FROM "QuizResult" r
+                            WHERE r."userId" = page."id"
+                        ) AS "quizResultCount"
+                    FROM page
+                    ORDER BY page."createdAt" DESC, page."id" DESC
                 `,
-            ),
-        );
+                [search, options.includeGuests, options.pageSize, offset],
+            );
 
-        return result.rows.map((row) => ({
-            id: row.id,
-            username: row.username,
-            email: row.email,
-            role: row.role,
-            isActive: row.isActive === true,
-            isGuest: row.isGuest === true,
-            isTestAccount: row.isTestAccount === true,
-            createdAt: row.createdAt,
-            quizResultCount: Number(row.quizResultCount),
-        }));
+            let totalCount = Number(result.rows[0]?.totalCount ?? 0);
+
+            // Пустая страница при page > 1 (ссылка устарела): OVER() без строк
+            // не знает общего числа — отдельный COUNT на том же соединении,
+            // страница уведёт на последнюю существующую.
+            if (result.rows.length === 0 && options.page > 1) {
+                const countResult = await client.query<{ c: number }>(
+                    `SELECT COUNT(*)::int AS c FROM "User" u ${whereSql}`,
+                    [search, options.includeGuests],
+                );
+                totalCount = Number(countResult.rows[0]?.c ?? 0);
+            }
+
+            return {
+                rows: result.rows.map((row) => ({
+                    id: row.id,
+                    username: row.username,
+                    email: row.email,
+                    role: row.role,
+                    isActive: row.isActive === true,
+                    isGuest: row.isGuest === true,
+                    isTestAccount: row.isTestAccount === true,
+                    createdAt: row.createdAt,
+                    quizResultCount: Number(row.quizResultCount),
+                })),
+                totalCount,
+            };
+        });
     },
 
     /**
      * Карточка одного пользователя для админ-support (read-only detail).
      * Тот же безопасный набор полей, что и в списке — без passwordHash.
-     * Unpooled direct pg: тот же Neon-friendly путь, что findAllForAdmin.
+     * Unpooled direct pg: тот же Neon-friendly путь, что findPageForAdmin.
      */
     async findByIdForAdmin(userId: string): Promise<AdminUserRow | null> {
         const result = await withDirectPgClient((client) =>

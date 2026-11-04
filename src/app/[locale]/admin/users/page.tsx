@@ -1,8 +1,19 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import { userRepository } from '@/entities/user/user.repository';
+import { AdminListPagination } from '@/features/admin/components/AdminListPagination';
+import { AdminUsersFilters } from '@/features/admin/components/AdminUsersFilters';
 import { AdminUsersTable } from '@/features/admin/components/AdminUsersTable';
-import { getAdminErrorMessage, mapAdminUsers } from '@/features/admin/lib';
+import {
+    ADMIN_USER_LIST_PAGE_SIZE,
+    buildAdminUserListHref,
+    getAdminErrorMessage,
+    getAdminQuestionListPageMeta,
+    hasActiveAdminUserListFilters,
+    mapAdminUsers,
+    parseAdminUserListFilters,
+} from '@/features/admin/lib';
 import type { AdminErrorCode } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
 import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
@@ -10,7 +21,7 @@ import { buttonClassName, InlineAlert } from '@/shared/ui';
 
 type AdminUsersPageProps = {
     params: Promise<{ locale: string }>;
-    searchParams: Promise<{ error?: string }>;
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 function localizedHref(locale: Locale, href: string) {
@@ -44,26 +55,57 @@ export default async function AdminUsersPage({
     searchParams,
 }: AdminUsersPageProps) {
     const { locale } = await params;
-    const { error } = await searchParams;
+    const rawSearchParams = await searchParams;
+    const error = Array.isArray(rawSearchParams.error)
+        ? rawSearchParams.error[0]
+        : rawSearchParams.error;
     const safeLocale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
     const session = await requireAdmin(safeLocale);
 
+    const filters = parseAdminUserListFilters(rawSearchParams);
+
     let entries: ReturnType<typeof mapAdminUsers> = [];
+    let totalCount = 0;
     let loadErrorMessage: string | undefined;
 
     try {
-        const rows = await userRepository.findAllForAdmin();
-        entries = mapAdminUsers(rows);
+        const result = await userRepository.findPageForAdmin({
+            q: filters.q,
+            includeGuests: filters.guests,
+            page: filters.page,
+            pageSize: ADMIN_USER_LIST_PAGE_SIZE,
+        });
+        entries = mapAdminUsers(result.rows);
+        totalCount = result.totalCount;
     } catch (loadError) {
         if (process.env.NODE_ENV === 'development') {
             console.error(
-                '[admin/users] findAllForAdmin failed:',
+                '[admin/users] findPageForAdmin failed:',
                 loadError instanceof Error ? loadError.message : loadError,
             );
         }
         loadErrorMessage = dictionary.admin.errors.usersLoadFailed;
     }
+
+    // Та же математика страниц, что у вопросов (from/to/totalPages).
+    const pageMeta = getAdminQuestionListPageMeta(
+        totalCount,
+        filters.page,
+        ADMIN_USER_LIST_PAGE_SIZE,
+    );
+
+    // page за пределами (пользователей удалили) → последняя существующая.
+    if (!loadErrorMessage && totalCount > 0 && pageMeta.page !== filters.page) {
+        redirect(
+            buildAdminUserListHref(safeLocale, {
+                ...filters,
+                page: pageMeta.page,
+            }),
+        );
+    }
+
+    const listHref = buildAdminUserListHref(safeLocale, filters);
 
     const actionErrorMessage = getAdminErrorMessage(
         dictionary,
@@ -118,7 +160,7 @@ export default async function AdminUsersPage({
                     <InlineAlert>{adminErrorMessage}</InlineAlert>
                     {loadErrorMessage ? (
                         <Link
-                            href={localizedHref(safeLocale, '/admin/users')}
+                            href={listHref}
                             className="rounded-sm text-sm font-medium text-primary underline-offset-2 hover:underline hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                         >
                             {dictionary.admin.retryLoad}
@@ -127,13 +169,39 @@ export default async function AdminUsersPage({
                 </div>
             ) : null}
 
-            <AdminUsersTable
-                entries={entries}
-                labels={dictionary.admin}
+            <AdminUsersFilters
                 locale={safeLocale}
-                currentUserId={session.user.id}
-                workingLabel={dictionary.common.working}
+                labels={dictionary.admin}
+                filters={filters}
             />
+
+            {!loadErrorMessage ? (
+                <>
+                    <AdminUsersTable
+                        entries={entries}
+                        labels={dictionary.admin}
+                        locale={safeLocale}
+                        currentUserId={session.user.id}
+                        workingLabel={dictionary.common.working}
+                        emptyTitle={
+                            hasActiveAdminUserListFilters(filters)
+                                ? dictionary.admin.usersEmptyFiltered
+                                : undefined
+                        }
+                    />
+                    <AdminListPagination
+                        listHref={listHref}
+                        navLabel={dictionary.admin.usersPaginationNavLabel}
+                        page={pageMeta.page}
+                        totalPages={pageMeta.totalPages}
+                        totalCount={pageMeta.totalCount}
+                        from={pageMeta.from}
+                        to={pageMeta.to}
+                        labels={dictionary.admin}
+                        loadingLabel={dictionary.common.loading}
+                    />
+                </>
+            ) : null}
         </main>
     );
 }

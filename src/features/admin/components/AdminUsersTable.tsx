@@ -30,6 +30,8 @@ type AdminUsersTableProps = {
     currentUserId: string;
     /** common.working — pendingLabel для Server Action кнопок */
     workingLabel: string;
+    /** Пустая выдача поиска («никого не нашлось») вместо «пока нет». */
+    emptyTitle?: string;
 };
 
 /** Как у questions: компактный hit target, не full Button. */
@@ -330,9 +332,15 @@ export function AdminUsersTable({
     locale,
     currentUserId,
     workingLabel,
+    emptyTitle,
 }: AdminUsersTableProps) {
     if (entries.length === 0) {
-        return <EmptyState className="mt-6" title={labels.usersEmpty} />;
+        return (
+            <EmptyState
+                className="mt-6"
+                title={emptyTitle ?? labels.usersEmpty}
+            />
+        );
     }
 
     const dateLocale = locale === 'en' ? 'en-US' : 'ru-RU';

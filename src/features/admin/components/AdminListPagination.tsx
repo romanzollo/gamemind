@@ -2,15 +2,15 @@
 
 import { useState, type MouseEvent } from 'react';
 
-import {
-    buildAdminQuestionListHref,
-    type AdminQuestionListFilters,
-} from '@/features/admin/lib/parse-admin-question-list-filters';
-import type { Dictionary, Locale } from '@/shared/i18n';
+import type { Dictionary } from '@/shared/i18n';
 import { buttonClassName, PendingSpinner } from '@/shared/ui';
 
 /**
- * Пагинация `/admin/questions` — Scoreboard Editorial, dense admin.
+ * Пагинация списков админки (`/admin/questions`, `/admin/users`) —
+ * Scoreboard Editorial, dense admin.
+ *
+ * Список передаёт свой URL первой страницы (с фильтрами); номер страницы
+ * компонент подставляет сам (`withPageParam`) — фильтры не теряются.
  *
  * Hard navigation (`location.assign`), не soft `<Link>` / RSC:
  * soft-nav после list-read в next dev (Windows + Neon) клинит connect —
@@ -23,9 +23,11 @@ import { buttonClassName, PendingSpinner } from '@/shared/ui';
  * Desktop: + компактный ряд номеров (1 … 4 5 6 … N).
  */
 
-type AdminQuestionsPaginationProps = {
-    locale: Locale;
-    filters: AdminQuestionListFilters;
+type AdminListPaginationProps = {
+    /** URL списка с текущими фильтрами; `page` в нём игнорируется. */
+    listHref: string;
+    /** aria-label навигации: «Страницы списка вопросов / пользователей». */
+    navLabel: string;
     page: number;
     totalPages: number;
     totalCount: number;
@@ -37,6 +39,18 @@ type AdminQuestionsPaginationProps = {
 };
 
 type PageItem = number | 'ellipsis';
+
+/** URL списка → тот же URL на странице `page` (1 — без параметра). */
+export function withPageParam(listHref: string, page: number): string {
+    const [pathname, query = ''] = listHref.split('?');
+    const params = new URLSearchParams(query);
+    params.delete('page');
+    if (page > 1) {
+        params.set('page', String(page));
+    }
+    const next = params.toString();
+    return next ? `${pathname}?${next}` : pathname;
+}
 
 /** Компактный ряд страниц: всегда края + окно вокруг текущей. */
 function buildPageItems(current: number, total: number): PageItem[] {
@@ -92,9 +106,9 @@ function isModifiedClick(event: MouseEvent<HTMLAnchorElement>): boolean {
     );
 }
 
-export function AdminQuestionsPagination({
-    locale,
-    filters,
+export function AdminListPagination({
+    listHref,
+    navLabel,
     page,
     totalPages,
     totalCount,
@@ -102,7 +116,7 @@ export function AdminQuestionsPagination({
     to,
     labels,
     loadingLabel,
-}: AdminQuestionsPaginationProps) {
+}: AdminListPaginationProps) {
     const [isPending, setIsPending] = useState(false);
 
     if (totalCount === 0) {
@@ -119,10 +133,7 @@ export function AdminQuestionsPagination({
         .replace('{totalPages}', String(totalPages));
 
     function hrefForPage(nextPage: number) {
-        return buildAdminQuestionListHref(locale, {
-            ...filters,
-            page: nextPage,
-        });
+        return withPageParam(listHref, nextPage);
     }
 
     function hardNavigate(
@@ -144,7 +155,7 @@ export function AdminQuestionsPagination({
     return (
         <nav
             className={`mt-4 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between ${isPending ? 'opacity-80' : ''}`}
-            aria-label={labels.paginationNavLabel}
+            aria-label={navLabel}
             aria-busy={isPending}
         >
             <div className="flex min-w-0 flex-wrap items-center gap-2">

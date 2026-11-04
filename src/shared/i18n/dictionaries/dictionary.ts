@@ -409,6 +409,10 @@ export type Dictionary = {
         /** Empty-state когда фильтры/поиск ничего не нашли (не пустая БД). */
         emptyFiltered: string;
         usersEmpty: string;
+        usersSearchPlaceholder: string;
+        usersShowGuests: string;
+        usersEmptyFiltered: string;
+        usersPaginationNavLabel: string;
         /** Подписи GET-фильтров списка вопросов (status / difficulty / type / q). */
         filterStatusAll: string;
         /** Фильтр по publicationStatus (шаг URL-фильтра; отдельно от isActive). */

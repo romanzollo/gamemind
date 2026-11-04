@@ -9,7 +9,7 @@ import {
     AdminQuestionsFilters,
     type AdminTagFilterOption,
 } from '@/features/admin/components/AdminQuestionsFilters';
-import { AdminQuestionsPagination } from '@/features/admin/components/AdminQuestionsPagination';
+import { AdminListPagination } from '@/features/admin/components/AdminListPagination';
 import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
 import {
     buildAdminQuestionListHref,
@@ -244,9 +244,12 @@ export default async function AdminQuestionsPage({
                                 : dictionary.admin.empty
                         }
                     />
-                    <AdminQuestionsPagination
-                        locale={safeLocale}
-                        filters={{ ...filters, page: pageMeta.page }}
+                    <AdminListPagination
+                        listHref={buildAdminQuestionListHref(
+                            safeLocale,
+                            filters,
+                        )}
+                        navLabel={dictionary.admin.paginationNavLabel}
                         page={pageMeta.page}
                         totalPages={pageMeta.totalPages}
                         totalCount={pageMeta.totalCount}
