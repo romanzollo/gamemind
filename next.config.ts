@@ -59,6 +59,24 @@ const nextConfig: NextConfig = {
     // pg — тоже external: Turbopack-бандл коррелировал с TLS hang к Neon в next dev.
     serverExternalPackages: ['sharp', '@vercel/blob', 'pg'],
     images: {
+        /**
+         * next/image сейчас только у превью списка админки (AdminPromptImage):
+         * ужимаем лишь свои пути — картинки вопросов и загрузки в /media
+         * (rewrite в Blob ниже). Список — тот же, что в canOptimizePromptImage
+         * (src/features/admin/lib/can-optimize-prompt-image.ts).
+         */
+        localPatterns: [
+            { pathname: '/quiz-images/**', search: '' },
+            { pathname: '/media/**', search: '' },
+        ],
+        // Next 16 требует явный список качеств; одно значение — меньше копий.
+        qualities: [75],
+        /**
+         * 31 день: исходники неизменяемы (имя = хеш содержимого или uuid
+         * загрузки), новая картинка — новый URL. Меньше повторных ужатий —
+         * меньше расход лимита Vercel (ADR «Admin list previews via next/image»).
+         */
+        minimumCacheTTL: 2_678_400,
         // Dev seed uses SVG placeholders from public/quiz-images/.
         dangerouslyAllowSVG: true,
         contentDispositionType: 'attachment',

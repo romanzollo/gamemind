@@ -32,6 +32,24 @@ function localizedHref(locale: Locale, href: string) {
     return `/${locale}${href}`;
 }
 
+/** Метки для фильтра; ошибка не роняет страницу — фильтр просто скрыт. */
+async function loadTagOptions(locale: Locale): Promise<AdminTagFilterOption[]> {
+    try {
+        const tags = await questionTagsRepository.findAllTagOptions();
+        return tags.map((tag) => ({
+            id: tag.id,
+            label: locale === 'en' ? tag.nameEn : tag.nameRu,
+            group: locale === 'en' ? tag.facetNameEn : tag.facetNameRu,
+        }));
+    } catch (tagsError) {
+        console.warn(
+            '[admin/questions] tag options load failed:',
+            tagsError instanceof Error ? tagsError.message : tagsError,
+        );
+        return [];
+    }
+}
+
 export default async function AdminQuestionsPage({
     params,
     searchParams,
@@ -48,6 +66,12 @@ export default async function AdminQuestionsPage({
         ? rawSearchParams.error[0]
         : rawSearchParams.error;
     const notice = parseAdminNotice(rawSearchParams.notice);
+
+    // Каталог меток для фильтра — параллельно со списком и soft-fail: без него
+    // фильтр скрыт, список работает. На проде это два независимых соединения;
+    // в `next dev` общая очередь Direct (direct-pg.ts) всё равно выстроит их
+    // по одному.
+    const tagOptionsPromise = loadTagOptions(safeLocale);
 
     let entries: ReturnType<typeof mapAdminQuestions> = [];
     let totalCount = 0;
@@ -96,24 +120,7 @@ export default async function AdminQuestionsPage({
     }
 
     const pageMeta = getAdminQuestionListPageMeta(totalCount, listPage);
-
-    // Каталог меток для фильтра — после списка и soft-fail: без него фильтр
-    // скрыт, список работает. Не параллельно list-read (hang playbook).
-    let tagOptions: AdminTagFilterOption[] = [];
-    try {
-        tagOptions = (await questionTagsRepository.findAllTagOptions()).map(
-            (tag) => ({
-                id: tag.id,
-                label: safeLocale === 'en' ? tag.nameEn : tag.nameRu,
-                group: safeLocale === 'en' ? tag.facetNameEn : tag.facetNameRu,
-            }),
-        );
-    } catch (tagsError) {
-        console.warn(
-            '[admin/questions] tag options load failed:',
-            tagsError instanceof Error ? tagsError.message : tagsError,
-        );
-    }
+    const tagOptions = await tagOptionsPromise;
 
     const actionErrorMessage =
         error === 'DELETE_FAILED'
@@ -218,7 +225,10 @@ export default async function AdminQuestionsPage({
                     <AdminQuestionsTable
                         entries={entries}
                         labels={dictionary.admin}
-                        dictionary={dictionary}
+                        dictionary={{
+                            admin: dictionary.admin,
+                            notifications: dictionary.notifications,
+                        }}
                         locale={safeLocale}
                         workingLabel={dictionary.common.working}
                         emptyTitle={

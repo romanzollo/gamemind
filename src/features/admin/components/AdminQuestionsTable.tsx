@@ -16,6 +16,7 @@ import {
     submitQuestionForReviewAction,
     submitQuestionsForReviewBulkAction,
 } from '@/features/admin/actions/questions';
+import { AdminPromptImage } from '@/features/admin/components/AdminPromptImage';
 import { AdminQuestionRowMoreActions } from '@/features/admin/components/AdminQuestionRowMoreActions';
 import {
     getBulkToolbarCapabilities,
@@ -34,7 +35,8 @@ import type { AdminBulkActionResult, AdminQuestionListItem } from '../types';
  * Список вопросов admin: Scoreboard Editorial.
  *
  * Mobile/tablet: отдельные surface-блоки; IMAGE — full-bleed hero сверху
- * (16:10), текст и actions ниже. Desktop: таблица + difficulty chip.
+ * (16:9), текст и actions ниже. Desktop: таблица + difficulty chip.
+ * Превью — ужатые копии через AdminPromptImage, не исходники 1280×720.
  *
  * Две оси статуса: isActive (витрина) и publicationStatus (редактура).
  * Кнопки публикации только для разрешённых переходов (см. DECISIONS).
@@ -57,11 +59,17 @@ const bulkToolbarLinkClassName =
 const bulkGroupLabelClassName =
     'font-mono text-2xs font-medium uppercase tracking-wide text-muted';
 
+/**
+ * Часть словаря для тостов массовых действий — всё, что таблице нужно
+ * сверх `labels`. Явная зависимость вместо всего Dictionary.
+ */
+export type AdminTableDictionary = Pick<Dictionary, 'admin' | 'notifications'>;
+
 type AdminQuestionsTableProps = {
     entries: AdminQuestionListItem[];
     labels: Dictionary['admin'];
     /** Нужен для bulk toast / error copy без redirect. */
-    dictionary: Dictionary;
+    dictionary: AdminTableDictionary;
     locale: Locale;
     /** common.working — pendingLabel для Server Action кнопок списка */
     workingLabel: string;
@@ -397,15 +405,14 @@ function PromptThumb({
     alt: string;
 }) {
     // Desktop queue preview: достаточно крупно, чтобы распознать screenshot,
-    // но всё ещё не превращает admin row в галерею.
+    // но всё ещё не превращает admin row в галерею. 112×64 = размер рамки.
     return (
         <div className="h-16 w-28 shrink-0 overflow-hidden rounded-md border border-border bg-surface-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element -- admin preview должен показывать весь кадр, не LCP-контент */}
-            <img
+            <AdminPromptImage
                 src={url}
                 alt={alt}
-                loading="lazy"
-                decoding="async"
+                width={112}
+                height={64}
                 className="h-full w-full object-contain object-center"
             />
         </div>
@@ -433,17 +440,17 @@ function CardHeroImage({
     alt: string;
     emptyLabel: string;
 }) {
-    // 320: достаточно крупно. Ближе к lg: max-h, иначе 16:10 на всю ширину ≈ гигант.
+    // Ближе к lg: max-h, иначе 16:9 на всю ширину ≈ гигант. Видимый кадр
+    // не шире ~400px (max-h-56 × 16:9) — ужимаем под 320, на телефоне 2x = 640.
     // object-contain — админ видит весь кадр (cover сильно кропал скриншоты).
     return (
         <div className="flex w-full items-center justify-center bg-surface-muted">
             {url ? (
-                /* eslint-disable-next-line @next/next/no-img-element -- admin list preview должен сохранять весь кадр через object-contain */
-                <img
+                <AdminPromptImage
                     src={url}
                     alt={alt}
-                    loading="lazy"
-                    decoding="async"
+                    width={320}
+                    height={180}
                     className="max-h-44 w-full object-contain object-center sm:max-h-52 md:max-h-56"
                 />
             ) : (
@@ -562,7 +569,7 @@ function BulkActionForm({
     className: string;
     children: string;
     onSubmit: () => void;
-    dictionary: Dictionary;
+    dictionary: AdminTableDictionary;
 }) {
     const router = useRouter();
 
@@ -638,7 +645,7 @@ function BulkQuestionsToolbar({
 }: {
     selectedEntries: readonly AdminQuestionListItem[];
     labels: Dictionary['admin'];
-    dictionary: Dictionary;
+    dictionary: AdminTableDictionary;
     locale: Locale;
     workingLabel: string;
     allVisibleSelected: boolean;

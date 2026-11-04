@@ -1573,6 +1573,44 @@ Important decision: generated questions should not go directly into live quizzes
 
 **Do not:** unbounded list SELECT; soft page navigation; revive 3× over-fetch-by-page; put list work on quiz Direct queue; await `client.end()` on response path.
 
+### Update — Admin list: one query, dev-only lab guards (November 4, 2026)
+
+**Context:** ROADMAP 4.5a; owner: the list is slow on prod, worst with the «image» filter. Measured on dev Neon: the SQL itself runs in 0.1–0.3 ms (549 questions, no index needed); a fresh connect costs ~2 s from Windows `next dev`. The page made 4 sequential connects (COUNT, page, PROMPT urls, tag options) and the admin queue waited 300 ms after each — **also on prod**, where it was pure added latency (~0.9 s per uncached list). Dev page: 12.7–13.3 s.
+
+**Decision:**
+
+| Piece | Choice |
+|------|--------|
+| Read | One simple-query SQL on one connect: `WITH page AS (… COUNT(*) OVER () … ORDER BY createdAt DESC, id DESC LIMIT 25 OFFSET …)`, then EN text and PROMPT url as scalar subqueries over the 25 page rows (EXPLAIN: 25 loops each, index scans). Still no JOIN, no `$n` params, one query per client |
+| Out-of-range page | Empty page with `page > 1` → one extra COUNT; `page.tsx` redirects to the last page (rare: stale URL) |
+| Order | `id` as a tie-breaker: equal `createdAt` (rows inserted in one transaction) left OFFSET pages undefined. Dev has no ties; it is a safeguard |
+| Tag options | Started in parallel with the list. On prod — two independent connects; in `next dev` the shared Direct queue (`direct-pg.ts`) still runs them one by one |
+| Lab guards | Admin queue + 300 ms settle and the 60 s list cache — **dev only** (`isDevelopment`). On prod the cache in one instance's memory could also show a stale row after a mutation served by another instance. The PROMPT-url cache is gone (url comes with the row) |
+
+**Measured (dev, same pages):** HTML 12.7–13.3 s → ~8 s (the admin check `findSessionUserById` and tag options are the other hops). Local `next start` (no lab guards): 4.2–5.2 s = two sequential connects at ~2 s each from home; before it was five plus 0.9 s. On prod (`fra1` ↔ Neon Frankfurt) a connect is tens of ms. Dev smoke passed: full → filter → full, EN page 2, search, `tag=untagged`, `page=99` → redirect to 7.
+
+**Supersedes:** items 4 (settle on prod) and 6 (separate thumbs connect + 60 s PROMPT map) of «Admin List Neon Hang Mitigation» and the 3-step read of the pagination update.
+
+**Do not:** bring the settle or the in-memory list cache back on prod; split the read again into COUNT + page + assets; run the admin check in parallel with the list (data must not be read before the role is known).
+
+## Admin list previews via next/image (November 4, 2026)
+
+**Context:** ROADMAP 4.5a. IMAGE_GUESS sources are 1280×720 WebP (~74 KB, 171 files). The admin list showed them at 112×64 (desktop table) and ~340×180 (phone card): a page with the image filter loaded 1.85 MB on desktop and ~1 MB on a phone (lazy), so cells stayed empty on a slow network.
+
+**Decision:** `AdminPromptImage` (client) wraps `next/image` with fixed width/height — 112×64 in the table (srcset 128 / 256 px), 320×180 in the card (384 / 640 px). The optimizer is `/_next/image` on our own domain, so it works from Russia like the rest of the site.
+
+| Piece | Choice |
+|------|--------|
+| Allowlist | `images.localPatterns`: `/quiz-images/**` and `/media/**`, no query. `canOptimizePromptImage` mirrors it: other paths, absolute URLs and SVG are shown as is (in dev `next/image` throws on a path outside the allowlist) |
+| Fallback | If the optimized URL fails (Hobby limit → 402, a source it cannot fetch), `onError` switches that image to the original file. Checked with `/_next/image` forced to 402: the card shows the original |
+| Cost | Vercel Hobby: 5K transformations / month; we need ~500 once (171 images × 2–3 widths). `minimumCacheTTL` 31 days, `qualities: [75]`: sources never change under one URL (hash / uuid names) |
+
+**Measured (dev):** desktop page 1.85 MB → ~50 KB of images; phone page 1.06 MB → 0.2 MB. Page HTML +~12 KB raw (srcset attributes). Narrowing the table's `dictionary` prop to `admin` + `notifications` saved nothing measurable: the layout already sends the full dictionary once and React does not repeat it.
+
+**Not verified yet:** `/media/…` admin uploads through the optimizer on Vercel (the rewrite to Blob). The fallback covers it; check on prod.
+
+**Not chosen:** own thumbnails from `sharp` (`images:optimize` + upload) — no Vercel dependency, but more code, a backfill of 171 files and of prod uploads; worth it only if the quiz itself needs thumbnails or we leave Vercel.
+
 ---
 
 ## Daily Challenge MVP (July 29?30, 2026)

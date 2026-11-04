@@ -28,7 +28,7 @@ const ERROR_MAP: Record<AdminErrorCode, keyof Dictionary['admin']['errors']> = {
 
 // функция для получения сообщения об ошибке для админ-панели
 export function getAdminErrorMessage(
-    dictionary: Dictionary,
+    dictionary: Pick<Dictionary, 'admin'>,
     errorCode?: AdminErrorCode,
 ): string | undefined {
     if (!errorCode) return undefined;

@@ -1,7 +1,7 @@
 /**
  * Admin question list / CRUD (Neon-hardened path).
  *
- * Зачем отдельный модуль (§11.7): admin list queue, thumbs cache и bulk CTE
+ * Зачем отдельный модуль (§11.7): admin list queue, list cache и bulk CTE
  * create/edit не должны смешиваться с quiz-pick hot path.
  *
  * publicationStatus — жизненный цикл контента (DRAFT / IN_REVIEW / PUBLISHED);
@@ -59,27 +59,23 @@ const PUBLICATION_TRANSITIONS: Record<
 };
 
 /**
- * Admin list read: serialized fresh Client → Neon **pooler**.
+ * Admin list read: fresh Client → Neon unpooled (withDirectPgClient:
+ * wall-clock timeout → socket.destroy, затем retry).
  *
- * Почему не Pool max:1 + Promise.race:
- * - при wall-clock timeout race отклонялся, а client оставался checked-out
- *   → следующий GET (Сброс) ждал слот вечно / connect timeout;
- * - shared Pool после «грязного» simple/extended query клинил в next dev.
+ * Список — один запрос за одно соединение: страница, общее число
+ * (COUNT(*) OVER) и ссылка на картинку-подсказку. Сам SQL на Neon занимает
+ * доли миллисекунды; время страницы — это число соединений (ADR «Admin list:
+ * one query, dev-only lab guards»).
  *
- * Почему не параллельные fresh Client:
- * - на Windows + Neon параллельный TLS wedge; teardown без destroy ~10–19s
- *   клинит следующий soft-nav/Reset.
- *
- * Паттерн: очередь (один list за раз) + withDirectPgClient (unpooled)
- * (timeout → socket.destroy, затем retry). Quiz/snapshot не трогаем.
- *
- * Cold start Neon (~10–15s) смягчаем: warmAdminListConnection (dev keep-warm
- * + ping с admin hub) и TTL-кэш PROMPT urls + list page (повторный GET
- * без лишнего TLS). List = COUNT + LIMIT/OFFSET (не unbounded SELECT /
- * не 3× over-fetch — page≥3 ловил DirectPgTimeout 18s).
- * После каждого connect очередь держит ~300ms — hard-nav Сброс не стартует
- * TLS, пока предыдущий end() ещё клинит Windows+Neon.
+ * Только для `next dev` на Windows (TLS-лаборатория, docs/QUIZ_NEON_HOT_PATH.md):
+ * - очередь «один list за раз» + пауза ~300ms после connect: параллельный или
+ *   back-to-back TLS к Neon там клинит следующий soft-nav / «Сброс»;
+ * - TTL-кэш страницы списка: connect в dev ~2s, повторный GET без TLS.
+ * На проде (fra1 ↔ Neon Frankfurt, connect ~десятки ms) обе меры только
+ * добавляли задержку, а кэш в памяти одного инстанса мог показать устаревшую
+ * строку после правки, ушедшей на другой инстанс.
  */
+const isDevelopment = process.env.NODE_ENV === 'development';
 /** Строка результата findAllForAdmin (для TTL-кэша списка). */
 type AdminListResultRow = {
     id: string;
@@ -104,10 +100,6 @@ export type AdminQuestionListPageResult = {
 
 const globalForAdminListPg = globalThis as unknown as {
     adminListTail?: Promise<unknown>;
-    adminPromptCache?: {
-        at: number;
-        map: Map<string, string>;
-    };
     adminListResultCache?: {
         at: number;
         key: string;
@@ -124,30 +116,11 @@ const globalForAdminListPg = globalThis as unknown as {
     adminListCacheGeneration?: number;
 };
 
-/** Кэш thumbs / list: после мутаций сбрасываем; TTL страхует stale. */
-const ADMIN_PROMPT_CACHE_TTL_MS = 60_000;
+/** Кэш списка (только dev): после мутаций сбрасываем; TTL страхует stale. */
 const ADMIN_LIST_RESULT_CACHE_TTL_MS = 60_000;
 
 function getAdminListCacheGeneration(): number {
     return globalForAdminListPg.adminListCacheGeneration ?? 0;
-}
-
-function getCachedAdminPrompts(): Map<string, string> | null {
-    const cache = globalForAdminListPg.adminPromptCache;
-    if (!cache) {
-        return null;
-    }
-    if (Date.now() - cache.at > ADMIN_PROMPT_CACHE_TTL_MS) {
-        return null;
-    }
-    return cache.map;
-}
-
-function setCachedAdminPrompts(map: Map<string, string>) {
-    globalForAdminListPg.adminPromptCache = {
-        at: Date.now(),
-        map,
-    };
 }
 
 /**
@@ -173,6 +146,9 @@ function buildAdminListCacheKey(
 function getCachedAdminListResult(
     key: string,
 ): AdminQuestionListPageResult | null {
+    if (!isDevelopment) {
+        return null;
+    }
     const cache = globalForAdminListPg.adminListResultCache;
     if (!cache || cache.key !== key) {
         return null;
@@ -193,6 +169,9 @@ function setCachedAdminListResult(
     result: AdminQuestionListPageResult,
     generationAtStart: number,
 ) {
+    if (!isDevelopment) {
+        return;
+    }
     // Мутация во время медленного list SELECT — не травим TTL stale rows.
     if (generationAtStart !== getAdminListCacheGeneration()) {
         return;
@@ -209,22 +188,22 @@ function setCachedAdminListResult(
 }
 
 /**
- * Сброс thumbs + list cache после create/update/delete (состав списка меняется).
+ * Сброс list cache после create/update/delete (состав списка меняется).
  * Экспорт — для правки меток (question-tags.repository): фильтр по метке.
  */
 export function invalidateAdminListCaches() {
     globalForAdminListPg.adminListCacheGeneration =
         getAdminListCacheGeneration() + 1;
-    globalForAdminListPg.adminPromptCache = undefined;
     globalForAdminListPg.adminListResultCache = undefined;
 }
 
 /**
- * Точечное обновление одной строки в TTL list-cache после status-мутации.
+ * Точечное обновление одной строки в TTL list-cache (dev) после status-мутации.
  *
- * Зачем: полный invalidate → после redirect снова 3×SELECT + settle (~2–4s).
+ * Зачем: полный invalidate → после redirect снова connect к Neon (~2s в dev).
  * Для publication/isActive достаточно поправить row in-memory: DB уже обновлена,
- * prompt thumbs не меняются. Это cache coherence, не «фальшивый UI».
+ * картинка не меняется. Это cache coherence, не «фальшивый UI».
+ * На проде кэша нет — функция ничего не делает.
  *
  * Когда всё же invalidate: активный URL-фильтр по status/publication — строка
  * может выпасть из выборки; безопаснее перечитать.
@@ -295,6 +274,11 @@ function patchAdminListCacheQuestion(
 async function withAdminListPgClient<T>(
     operation: (client: Client) => Promise<T>,
 ): Promise<T> {
+    // Прод: без очереди и паузы — это защита от TLS-клина Windows `next dev`.
+    if (!isDevelopment) {
+        return withDirectPgClient(operation);
+    }
+
     const previous = globalForAdminListPg.adminListTail ?? Promise.resolve();
     let releaseTail!: () => void;
     const tail = new Promise<void>((resolve) => {
@@ -313,20 +297,13 @@ async function withAdminListPgClient<T>(
         // Unpooled: pooler + hard-nav Reset после filter чаще клинил connect
         // во время teardown предыдущего TLS. Quiz/snapshot не трогаем.
         const value = await withDirectPgClient(operation);
-
-        if (process.env.NODE_ENV === 'development') {
-            console.info(`[admin-list-pg] ok ${Date.now() - started}ms`);
-        }
-
+        console.info(`[admin-list-pg] ok ${Date.now() - started}ms`);
         return value;
     } catch (error) {
-        if (process.env.NODE_ENV === 'development') {
-            console.warn(
-                `[admin-list-pg] fail ${Date.now() - started}ms:`,
-                error instanceof Error ? error.message : error,
-            );
-        }
-
+        console.warn(
+            `[admin-list-pg] fail ${Date.now() - started}ms:`,
+            error instanceof Error ? error.message : error,
+        );
         throw error;
     } finally {
         // Не отпускать очередь, пока socket.destroy/end предыдущего client
@@ -1325,20 +1302,14 @@ async function setManyPublicationStatusByIds(
 /** Методы admin для фасада questionRepository (без смены сигнатур). */
 export const questionAdminMethods = {
     /**
-     * Список вопросов для админ-панели: одна страница + totalCount.
-     *
-     * Serialized fresh Client → pooler + simple SQL (withAdminListPgClient).
-     * Не JOIN translations в list SELECT; не client.query(sql, params).
+     * Список вопросов для админ-панели: одна страница + totalCount + ссылка
+     * на картинку IMAGE_GUESS — один simple-query SQL (withAdminListPgClient).
      * Пагинация обязательна: unbounded SELECT клинит Neon и раздувает RSC.
      */
     async findAllForAdmin(
         locale: Locale,
         filters?: AdminQuestionListFilters,
     ): Promise<AdminQuestionListPageResult> {
-        // List SELECT без JOIN (hang class). Для EN используем scalar subquery
-        // по уникальному questionId+locale; это один основной read, без второго
-        // connect и без блокировки фильтров.
-
         const pageSize = ADMIN_QUESTION_LIST_PAGE_SIZE;
         const requestedPage = filters?.page ?? 1;
 
@@ -1422,11 +1393,14 @@ export const questionAdminMethods = {
             )`);
         }
 
-        // Пагинация: COUNT + LIMIT/OFFSET.
-        // Исторический hang (~24s) — unbounded SELECT всех text-строк /
-        // UNION ALL без LIMIT. С LIMIT pageSize payload крошечный.
-        // Не делаем 3× over-fetch TLS (page≥3 ловил DirectPgTimeout 18s).
-        // COUNT и list — один connect (меньше handshake на Neon).
+        // Страница, общее число и картинка — одним запросом за одно соединение
+        // (ADR «Admin list: one query, dev-only lab guards»). COUNT(*) OVER()
+        // считается по всей отфильтрованной выборке до LIMIT. Подзапросы текста
+        // EN и картинки — во внешнем SELECT, по 25 строкам страницы, а не по
+        // всей выборке. Simple query без $n: значения фильтров выше — allowlist.
+        // `id` — второй ключ сортировки: при равном createdAt (вставка в одной
+        // транзакции) порядок без него не определён и OFFSET-страницы могут
+        // повторить или пропустить строку.
         type AdminListRow = {
             id: string;
             text: string;
@@ -1436,6 +1410,8 @@ export const questionAdminMethods = {
             isActive: boolean;
             publicationStatus: string;
             createdAt: Date;
+            promptImageUrl: string | null;
+            totalCount: number | string;
         };
 
         const listTextSql =
@@ -1444,31 +1420,18 @@ export const questionAdminMethods = {
                     (
                         SELECT qt_en."text"
                         FROM "QuestionTranslation" qt_en
-                        WHERE qt_en."questionId" = q."id"
+                        WHERE qt_en."questionId" = page."id"
                           AND qt_en."locale" = 'en'::"ContentLocale"
                         LIMIT 1
                     ),
-                    q."text"
+                    page."text"
                 )`
-                : `q."text"`;
-
-        const listSelectSql = `
-            SELECT
-                q."id",
-                ${listTextSql} AS "text",
-                q."type"::text AS "type",
-                q."difficulty"::text AS "difficulty",
-                q."category",
-                q."isActive",
-                q."publicationStatus"::text AS "publicationStatus",
-                q."createdAt"
-            FROM "Question" q
-        `;
+                : `page."text"`;
 
         const cacheKey = buildAdminListCacheKey(locale, filters);
         const cachedList = getCachedAdminListResult(cacheKey);
         if (cachedList) {
-            if (process.env.NODE_ENV === 'development') {
+            if (isDevelopment) {
                 console.info(
                     `[admin/questions] findAllForAdmin cache hit (rows=${cachedList.rows.length}, total=${cachedList.totalCount}, page=${cachedList.page})`,
                 );
@@ -1493,105 +1456,78 @@ export const questionAdminMethods = {
             whereParts.length > 0
                 ? `WHERE ${whereParts.join(' AND ')}`
                 : '';
+        const offset = (Math.max(1, requestedPage) - 1) * pageSize;
 
-        // Два коротких connect (не 3× over-fetch): COUNT, затем страница.
-        // Не совмещаем в одном client — второй query после list/read
-        // на admin list historically клинил Neon pooler (thumbs playbook).
-        const totalCount = await withAdminListPgClient(async (client) => {
-            const countResult = await client.query<{ c: number | string }>(
-                `SELECT COUNT(*)::int AS c FROM "Question" q ${whereSql}`,
-            );
-            return parseCount(countResult.rows[0]?.c);
+        const listRows = await withAdminListPgClient(async (client) => {
+            const listResult = await client.query<AdminListRow>(`
+                WITH page AS (
+                    SELECT
+                        q."id",
+                        q."text",
+                        q."type",
+                        q."difficulty",
+                        q."category",
+                        q."isActive",
+                        q."publicationStatus",
+                        q."createdAt",
+                        COUNT(*) OVER () AS "totalCount"
+                    FROM "Question" q
+                    ${whereSql}
+                    ORDER BY q."createdAt" DESC, q."id" DESC
+                    LIMIT ${pageSize} OFFSET ${offset}
+                )
+                SELECT
+                    page."id",
+                    ${listTextSql} AS "text",
+                    page."type"::text AS "type",
+                    page."difficulty"::text AS "difficulty",
+                    page."category",
+                    page."isActive",
+                    page."publicationStatus"::text AS "publicationStatus",
+                    page."createdAt",
+                    CASE
+                        WHEN page."type" = 'IMAGE_GUESS'::"QuestionType" THEN (
+                            SELECT qa."url"
+                            FROM "QuestionAsset" qa
+                            WHERE qa."questionId" = page."id"
+                              AND qa."role" = 'PROMPT'::"QuestionAssetRole"
+                            ORDER BY qa."order" ASC, qa."id" ASC
+                            LIMIT 1
+                        )
+                    END AS "promptImageUrl",
+                    page."totalCount"::int AS "totalCount"
+                FROM page
+                ORDER BY page."createdAt" DESC, page."id" DESC
+            `);
+            return listResult.rows;
         });
+
+        let totalCount = parseCount(listRows[0]?.totalCount);
+
+        // Пустая страница при page > 1: ссылка устарела (вопросы удалили) —
+        // OVER() без строк не знает общего числа. Редкий путь: отдельный
+        // COUNT, page.tsx уведёт на последнюю существующую страницу.
+        if (listRows.length === 0 && requestedPage > 1) {
+            totalCount = await withAdminListPgClient(async (client) => {
+                const countResult = await client.query<{ c: number | string }>(
+                    `SELECT COUNT(*)::int AS c FROM "Question" q ${whereSql}`,
+                );
+                return parseCount(countResult.rows[0]?.c);
+            });
+        }
 
         const pageMeta = getAdminQuestionListPageMeta(
             totalCount,
             requestedPage,
             pageSize,
         );
-        const offset = (pageMeta.page - 1) * pageSize;
 
-        const listRows =
-            totalCount === 0
-                ? []
-                : await withAdminListPgClient(async (client) => {
-                      const listResult = await client.query<AdminListRow>(
-                          `
-                              ${listSelectSql}
-                              ${whereSql}
-                              ORDER BY q."createdAt" DESC
-                              LIMIT ${pageSize} OFFSET ${offset}
-                          `,
-                      );
-                      return listResult.rows;
-                  });
-
-        // Thumbs: кэш 60s; miss — отдельный connect только по id страницы
-        // (не весь QuestionAsset). ANY($1) ок на fresh client (write path так же).
-        const imageGuessIds = [
-            ...new Set(
-                listRows
-                    .filter((row) => row.type === 'IMAGE_GUESS')
-                    .map((row) => row.id),
-            ),
-        ];
-
-        const promptByQuestionId = new Map<string, string>();
-
-        if (imageGuessIds.length > 0) {
-            const cached = getCachedAdminPrompts();
-            const missingIds: string[] = [];
-
-            for (const id of imageGuessIds) {
-                const url = cached?.get(id);
-                if (url) {
-                    promptByQuestionId.set(id, url);
-                } else {
-                    missingIds.push(id);
-                }
-            }
-
-            if (missingIds.length > 0) {
-                const fetched = new Map<string, string>();
-
-                await withAdminListPgClient(async (client) => {
-                    const assetResult = await client.query<{
-                        questionId: string;
-                        url: string;
-                    }>(
-                        `
-                            SELECT qa."questionId", qa."url"
-                            FROM "QuestionAsset" qa
-                            WHERE qa."role" = 'PROMPT'::"QuestionAssetRole"
-                              AND qa."questionId" = ANY($1::text[])
-                            ORDER BY qa."order" ASC, qa."id" ASC
-                        `,
-                        [missingIds],
-                    );
-
-                    for (const asset of assetResult.rows) {
-                        if (fetched.has(asset.questionId)) {
-                            continue;
-                        }
-                        fetched.set(asset.questionId, asset.url);
-                    }
-                });
-
-                const nextCache = new Map(cached ?? []);
-                for (const [id, url] of fetched) {
-                    nextCache.set(id, url);
-                    promptByQuestionId.set(id, url);
-                }
-                setCachedAdminPrompts(nextCache);
-            }
-        }
-
-        // optionsCount пока 0: COUNT/ANY после list тоже клинили pooler.
+        // optionsCount не читаем: список его не показывает.
         const rows: AdminListResultRow[] = listRows.map((row) => ({
             id: row.id,
             text: row.text,
             type: toQuestionType(row.type),
-            promptImageUrl: promptByQuestionId.get(row.id) ?? null,
+            promptImageUrl: row.promptImageUrl,
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,
