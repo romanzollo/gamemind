@@ -90,29 +90,91 @@ export function useSurvivalWaveStart(startedAt: string): SurvivalWaveStartState 
 type SurvivalWaveStartCountdownProps = {
     waveLabel: string;
     secondsLeft: number | null;
+    /** «Банк на старте: 20 с», «12 вопросов» — части не переносятся внутри. */
+    waveFacts: string[];
+    ruleCorrect: string;
+    ruleWrong: string;
 };
 
+/**
+ * Заставка раунда: волна, цифра в кольце, банк и правило. Пока цифр нет
+ * (первые секунды паузы) — та же карточка без цифры: банк и правило
+ * читаются заранее. Только вид: время считает `useSurvivalWaveStart`.
+ */
 export function SurvivalWaveStartCountdown({
     waveLabel,
     secondsLeft,
+    waveFacts,
+    ruleCorrect,
+    ruleWrong,
 }: SurvivalWaveStartCountdownProps) {
     return (
         <div
-            className="flex min-h-72 flex-col items-center justify-center rounded-lg border border-border bg-surface px-6 py-10 text-center shadow-sm sm:min-h-96"
+            className="flex min-h-72 flex-col items-center justify-center rounded-lg border border-border bg-surface px-6 py-8 text-center shadow-sm sm:min-h-96"
             role="status"
             aria-live="polite"
+            data-testid="survival-wave-countdown"
         >
             <p className="font-mono text-xs font-medium tracking-[0.18em] text-muted uppercase">
                 {waveLabel}
             </p>
-            <p
-                // key перезапускает анимацию на каждой новой цифре.
-                key={secondsLeft ?? 'pending'}
-                className="mt-3 font-display text-8xl leading-none font-semibold tabular-nums text-foreground motion-safe:animate-countdown-tick sm:text-9xl"
-                aria-hidden={secondsLeft == null}
-            >
-                {secondsLeft ?? ' '}
+
+            <div className="relative mt-4 flex size-36 items-center justify-center sm:size-44">
+                <svg
+                    viewBox="0 0 100 100"
+                    className="absolute inset-0 size-full -rotate-90"
+                    aria-hidden
+                >
+                    <circle
+                        cx={50}
+                        cy={50}
+                        r={46}
+                        fill="none"
+                        strokeWidth={4}
+                        className="stroke-border"
+                    />
+                    {secondsLeft != null ? (
+                        <circle
+                            // key перезапускает кольцо на каждой новой цифре.
+                            key={secondsLeft}
+                            cx={50}
+                            cy={50}
+                            r={46}
+                            fill="none"
+                            strokeWidth={4}
+                            strokeLinecap="round"
+                            pathLength={100}
+                            strokeDasharray={100}
+                            className="stroke-primary motion-safe:animate-countdown-ring"
+                        />
+                    ) : null}
+                </svg>
+                <p
+                    // key перезапускает анимацию на каждой новой цифре.
+                    key={secondsLeft ?? 'pending'}
+                    className="font-display text-7xl leading-none font-semibold tabular-nums text-foreground motion-safe:animate-countdown-tick sm:text-8xl"
+                    aria-hidden={secondsLeft == null}
+                >
+                    {secondsLeft ?? ' '}
+                </p>
+            </div>
+
+            <p className="mt-4 font-mono text-sm tabular-nums text-foreground">
+                {waveFacts.map((fact, index) => (
+                    <span key={fact} className="whitespace-nowrap">
+                        {index > 0 ? ' · ' : null}
+                        {fact}
+                    </span>
+                ))}
             </p>
+            <div className="mt-3 flex flex-wrap justify-center gap-2 text-sm font-medium">
+                <span className="rounded-md bg-success-muted px-2.5 py-1 text-success">
+                    {ruleCorrect}
+                </span>
+                <span className="rounded-md bg-danger-muted px-2.5 py-1 text-danger">
+                    {ruleWrong}
+                </span>
+            </div>
         </div>
     );
 }

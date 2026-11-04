@@ -46,7 +46,7 @@ import {
 } from '@/features/survival-mode/components/SurvivalWaveStartCountdown';
 import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-survival-bank-remaining-ms';
 import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
-import type { Dictionary, Locale } from '@/shared/i18n';
+import { formatPlural, type Dictionary, type Locale } from '@/shared/i18n';
 import {
     InlineAlert,
     PendingSpinner,
@@ -533,6 +533,25 @@ export function SurvivalQuizSessionForm({
                             String(survival.waveIndex),
                         )}
                         secondsLeft={waveStart.secondsLeft}
+                        waveFacts={[
+                            labels.countdownBank.replace(
+                                '{n}',
+                                String(initialBankSeconds),
+                            ),
+                            formatPlural(
+                                locale,
+                                questions.length,
+                                labels.countdownQuestions,
+                            ),
+                        ]}
+                        ruleCorrect={labels.countdownRuleCorrect.replace(
+                            '{n}',
+                            String(correctDeltaSeconds),
+                        )}
+                        ruleWrong={labels.countdownRuleWrong.replace(
+                            '{n}',
+                            String(wrongDeltaSeconds),
+                        )}
                     />
                 )}
             </div>

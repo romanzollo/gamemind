@@ -88,6 +88,8 @@
     --animate-achievement-pop: gm-achievement-pop 420ms
         cubic-bezier(0.22, 1, 0.36, 1) both;
     --animate-achievement-glow: gm-achievement-glow 1.6s ease-out 300ms both;
+    /* Кольцо вокруг цифры 3‑2‑1: убывает за секунду, на каждой цифре заново */
+    --animate-countdown-ring: gm-countdown-ring 1s linear both;
 }
 
 :root,
@@ -344,6 +346,19 @@ html:has(dialog[open]) {
     100% {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+/*
+ * Кольцо отсчёта: штрих длиной 100 (pathLength) уходит от полного к пустому.
+ * Без анимации (reduced-motion / motion-safe) кольцо остаётся полным.
+ */
+@keyframes gm-countdown-ring {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: 100;
     }
 }
 

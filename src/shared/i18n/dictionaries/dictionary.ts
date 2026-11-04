@@ -178,6 +178,11 @@ export type Dictionary = {
         runTotalLabel: string;
         /** `{n}` = номер волны. */
         waveLineLabel: string;
+        /** Заставка 3‑2‑1 перед волной: банк, число вопросов, правило. */
+        countdownBank: string;
+        countdownQuestions: PluralForms;
+        countdownRuleCorrect: string;
+        countdownRuleWrong: string;
         /** Заголовок блока с итогом текущей волны. */
         thisWaveLabel: string;
         /**
