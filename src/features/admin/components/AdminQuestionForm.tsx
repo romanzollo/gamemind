@@ -105,6 +105,9 @@ function buildInitialOptions(
     }));
 }
 
+/** До lg: отступ под закреплённую кнопку (py-3 + min-h-11 + border ≈ 4.5rem). */
+const ADMIN_FORM_FIXED_SAVE_SPACE = 'pb-20 lg:pb-0';
+
 function AdminQuestionSubmitButton({
     label,
     pendingLabel,
@@ -112,8 +115,21 @@ function AdminQuestionSubmitButton({
     label: string;
     pendingLabel: string;
 }) {
+    // До lg форма длинная (метки, текст, картинка, 4 × 2 варианта) — кнопка
+    // закреплена внизу экрана над панелью вкладок, чтобы сохранять, не
+    // пролистывая. Именно fixed, не sticky: sticky не выходит за границы
+    // формы, а она начинается ниже панели публикации и меток — на первом
+    // экране кнопки не было бы. Место под неё — ADMIN_FORM_FIXED_SAVE_SPACE.
+    // С lg — обычная кнопка в конце формы (панели вкладок нет).
     return (
-        <SubmitButton pendingLabel={pendingLabel}>{label}</SubmitButton>
+        <div className="fixed inset-x-0 bottom-[calc(var(--site-tab-bar-height)+env(safe-area-inset-bottom))] z-30 border-t border-border bg-surface/95 px-4 py-3 backdrop-blur sm:px-8 lg:static lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+            <SubmitButton
+                pendingLabel={pendingLabel}
+                className="w-full lg:w-auto"
+            >
+                {label}
+            </SubmitButton>
+        </div>
     );
 }
 
@@ -196,7 +212,7 @@ export function AdminQuestionForm({
     }
 
     return (
-        <>
+        <div className={ADMIN_FORM_FIXED_SAVE_SPACE}>
             <form
                 action={formAction}
                 // React 19 сбрасывает форму после action → file input пуст,
@@ -511,6 +527,6 @@ export function AdminQuestionForm({
             {errorMessage ? (
                 <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
             ) : null}
-        </>
+        </div>
     );
 }

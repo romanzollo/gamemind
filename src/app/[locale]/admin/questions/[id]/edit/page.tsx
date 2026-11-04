@@ -72,6 +72,21 @@ export default async function AdminEditQuestionPage({
         </div>
     );
 
+    // Вопрос, его метки и каталог меток — параллельно, три независимых
+    // чтения (на проде — три соединения сразу, а не одно за другим; в
+    // `next dev` общая очередь Direct всё равно выстроит их по одному).
+    // Метки — soft-fail: без них вопрос всё равно редактируется.
+    const tagsPromise = Promise.all([
+        questionTagsRepository.findTagsForQuestion(id),
+        questionTagsRepository.findAllTagOptions(),
+    ]).catch((tagsError: unknown) => {
+        console.warn(
+            '[admin/questions/edit] tags load failed:',
+            tagsError instanceof Error ? tagsError.message : tagsError,
+        );
+        return null;
+    });
+
     // Transient Neon read (DirectPgTimeout / Connection terminated) ≠ «вопроса нет»:
     // ловим и показываем InlineAlert + retry, иначе исключение уходит в дефолтную
     // ошибку Next (redbox в dev, «Application error» на prod).
@@ -130,22 +145,11 @@ export default async function AdminEditQuestionPage({
 
     const qualityIssues = getQuestionPublishQualityIssues(question);
 
-    // Метки — soft-fail: без них страница вопроса всё равно редактируется.
-    // Последовательно, не параллельно: общая очередь Direct (QUIZ_NEON_HOT_PATH).
-    let questionTags: AdminTagOption[] | null = null;
-    let tagOptions: AdminTagOption[] = [];
-    try {
-        questionTags = await questionTagsRepository.findTagsForQuestion(
-            question.id,
-        );
-        tagOptions = await questionTagsRepository.findAllTagOptions();
-    } catch (tagsError) {
-        console.warn(
-            '[admin/questions/edit] tags load failed:',
-            tagsError instanceof Error ? tagsError.message : tagsError,
-        );
-        questionTags = null;
-    }
+    const tagsResult = await tagsPromise;
+    const questionTags: AdminTagOption[] | null = tagsResult
+        ? tagsResult[0]
+        : null;
+    const tagOptions: AdminTagOption[] = tagsResult ? tagsResult[1] : [];
 
     return (
         <main className="mx-auto max-w-4xl px-4 py-5 sm:px-8 sm:py-10">
