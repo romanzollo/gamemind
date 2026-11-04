@@ -416,6 +416,10 @@ export const enDictionary = {
         roleAdmin: 'ADMIN',
         confirmDeleteUser:
             'Delete this user permanently? Their games and results will be deleted too.',
+        confirmDeleteQuestion:
+            'Delete this question permanently? It also disappears from past game reviews; scores stay. To just keep it out of new games, deactivate it instead.',
+        accountGuest: 'guest',
+        accountTest: 'test',
         confirmChangeRole: 'Change this user’s role?',
         tableActions: 'Actions',
         rowMoreActions: 'More',
@@ -477,6 +481,8 @@ export const enDictionary = {
             cannotModifySelf: 'You cannot modify or delete your own account.',
             cannotDeleteLastAdmin:
                 'You cannot delete, demote, or deactivate the last ADMIN.',
+            cannotPromoteGuest:
+                'A guest can’t be made ADMIN until they sign up.',
             userUpdateFailed: 'Failed to update the user. Try again.',
             userRoleUpdateFailed: 'Failed to change the role. Try again.',
             userDeactivateFailed: 'Failed to deactivate the user. Try again.',

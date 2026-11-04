@@ -9,6 +9,8 @@ export function mapAdminUsers(rows: AdminUserRow[]): AdminUserListItem[] {
         email: row.email,
         role: row.role === 'ADMIN' ? 'ADMIN' : 'USER',
         isActive: row.isActive,
+        isGuest: row.isGuest,
+        isTestAccount: row.isTestAccount,
         createdAt:
             row.createdAt instanceof Date
                 ? row.createdAt.toISOString()

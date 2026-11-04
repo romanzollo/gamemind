@@ -17,12 +17,19 @@ import {
     submitQuestionsForReviewBulkAction,
 } from '@/features/admin/actions/questions';
 import { AdminPromptImage } from '@/features/admin/components/AdminPromptImage';
+import {
+    AdminQuestionActionFields,
+    AdminQuestionListBackContext,
+    useAdminQuestionListBack,
+} from '@/features/admin/components/AdminQuestionActionFields';
 import { AdminQuestionRowMoreActions } from '@/features/admin/components/AdminQuestionRowMoreActions';
+import { ConfirmForm } from '@/features/admin/components/ConfirmForm';
 import {
     getBulkToolbarCapabilities,
     hasBulkMutationActions,
 } from '@/features/admin/lib/bulk-toolbar-capabilities';
 import { getAdminErrorMessage } from '@/features/admin/lib/get-admin-error-message';
+import { buildAdminQuestionEditHref } from '@/features/admin/lib/admin-question-list-back';
 import { BULK_QUESTION_IDS_FIELD } from '@/features/admin/lib/parse-bulk-question-ids';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { EmptyState, SubmitButton } from '@/shared/ui';
@@ -74,26 +81,16 @@ type AdminQuestionsTableProps = {
     /** common.working — pendingLabel для Server Action кнопок списка */
     workingLabel: string;
     emptyTitle?: string;
+    /**
+     * Нормализованный query текущего списка (фильтры + страница): правка и
+     * ошибки действий возвращают сюда же, а не на первую страницу.
+     */
+    listBack: string;
 };
 
 /** Compact для list-карточек: min-h-10 визуально раздувал низ карточки. */
 const rowActionClassName =
     'inline-flex min-h-8 items-center rounded-sm px-0.5 text-sm font-medium underline-offset-2 motion-safe:transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
-
-function QuestionActionFields({
-    locale,
-    questionId,
-}: {
-    locale: Locale;
-    questionId: string;
-}) {
-    return (
-        <>
-            <input type="hidden" name="locale" value={locale} />
-            <input type="hidden" name="questionId" value={questionId} />
-        </>
-    );
-}
 
 function DifficultyChip({ difficulty }: { difficulty: Difficulty }) {
     return (
@@ -176,7 +173,7 @@ function PublicationRowActions({
                 action={submitQuestionForReviewAction}
                 className={formClassName}
             >
-                <QuestionActionFields
+                <AdminQuestionActionFields
                     locale={locale}
                     questionId={entry.id}
                 />
@@ -198,7 +195,7 @@ function PublicationRowActions({
                     action={publishQuestionAction}
                     className={formClassName}
                 >
-                    <QuestionActionFields
+                    <AdminQuestionActionFields
                         locale={locale}
                         questionId={entry.id}
                     />
@@ -214,7 +211,7 @@ function PublicationRowActions({
                     action={returnQuestionToDraftAction}
                     className={formClassName}
                 >
-                    <QuestionActionFields
+                    <AdminQuestionActionFields
                         locale={locale}
                         questionId={entry.id}
                     />
@@ -236,7 +233,7 @@ function PublicationRowActions({
             action={returnQuestionToDraftAction}
             className={formClassName}
         >
-            <QuestionActionFields locale={locale} questionId={entry.id} />
+            <AdminQuestionActionFields locale={locale} questionId={entry.id} />
             <SubmitButton
                 unstyled
                 pendingLabel={workingLabel}
@@ -266,7 +263,7 @@ function ActiveToggleAction({
     if (entry.isActive) {
         return (
             <form action={deactivateQuestionAction} className={formClassName}>
-                <QuestionActionFields locale={locale} questionId={entry.id} />
+                <AdminQuestionActionFields locale={locale} questionId={entry.id} />
                 <SubmitButton
                     unstyled
                     pendingLabel={workingLabel}
@@ -280,7 +277,7 @@ function ActiveToggleAction({
 
     return (
         <form action={activateQuestionAction} className={formClassName}>
-            <QuestionActionFields locale={locale} questionId={entry.id} />
+            <AdminQuestionActionFields locale={locale} questionId={entry.id} />
             <SubmitButton
                 unstyled
                 pendingLabel={workingLabel}
@@ -308,8 +305,14 @@ function DeleteAction({
     formClassName: string;
 }) {
     return (
-        <form action={deleteQuestionAction} className={formClassName}>
-            <QuestionActionFields locale={locale} questionId={entry.id} />
+        // Удаление необратимо и каскадом чистит ответы в сыгранных играх —
+        // спрашиваем, как при удалении пользователя.
+        <ConfirmForm
+            action={deleteQuestionAction}
+            message={labels.confirmDeleteQuestion}
+            className={formClassName}
+        >
+            <AdminQuestionActionFields locale={locale} questionId={entry.id} />
             <SubmitButton
                 unstyled
                 pendingLabel={workingLabel}
@@ -317,7 +320,7 @@ function DeleteAction({
             >
                 {labels.deleteButton}
             </SubmitButton>
-        </form>
+        </ConfirmForm>
     );
 }
 
@@ -335,12 +338,18 @@ function QuestionRowActions({
     /** wrap = mobile cards; compact = desktop queue row. */
     layout?: 'wrap' | 'compact';
 }) {
+    const editHref = buildAdminQuestionEditHref(
+        locale,
+        entry.id,
+        useAdminQuestionListBack(),
+    );
+
     if (layout === 'compact') {
         return (
             <div className="flex flex-nowrap items-center gap-x-3">
                 {/* prefetch off: 25 строк × RSC-запрос с auth на каждый скролл. */}
                 <Link
-                    href={`/${locale}/admin/questions/${entry.id}/edit`}
+                    href={editHref}
                     prefetch={false}
                     className={`${rowActionClassName} text-primary hover:text-primary-hover`}
                 >
@@ -362,7 +371,7 @@ function QuestionRowActions({
     return (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <Link
-                href={`/${locale}/admin/questions/${entry.id}/edit`}
+                href={editHref}
                 prefetch={false}
                 className={`${rowActionClassName} text-primary hover:text-primary-hover`}
             >
@@ -856,6 +865,7 @@ export function AdminQuestionsTable({
     locale,
     workingLabel,
     emptyTitle,
+    listBack,
 }: AdminQuestionsTableProps) {
     const [selectedIds, setSelectedIds] = useState<Set<string>>(
         () => new Set(),
@@ -939,6 +949,7 @@ export function AdminQuestionsTable({
     );
 
     return (
+        <AdminQuestionListBackContext value={listBack}>
         <div className="mt-6">
             <BulkQuestionsToolbar
                 selectedEntries={selectedEntries}
@@ -1168,5 +1179,6 @@ export function AdminQuestionsTable({
                 </table>
             </div>
         </div>
+        </AdminQuestionListBackContext>
     );
 }

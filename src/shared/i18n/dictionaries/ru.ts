@@ -425,6 +425,10 @@ export const ruDictionary: Dictionary = {
         roleAdmin: 'ADMIN',
         confirmDeleteUser:
             'Удалить пользователя навсегда? Его игры и результаты тоже удалятся.',
+        confirmDeleteQuestion:
+            'Удалить вопрос навсегда? Он пропадёт и из разборов сыгранных игр, очки останутся. Чтобы просто убрать его из новых игр, лучше деактивировать.',
+        accountGuest: 'гость',
+        accountTest: 'тест',
         confirmChangeRole: 'Изменить роль этого пользователя?',
         tableActions: 'Действия',
         rowMoreActions: 'Ещё',
@@ -487,6 +491,8 @@ export const ruDictionary: Dictionary = {
             cannotModifySelf: 'Нельзя изменить или удалить свой аккаунт.',
             cannotDeleteLastAdmin:
                 'Нельзя удалить, понизить или деактивировать последнего ADMIN.',
+            cannotPromoteGuest:
+                'Гостя нельзя сделать ADMIN — сначала ему нужно зарегистрироваться.',
             userUpdateFailed:
                 'Не удалось обновить пользователя. Попробуй ещё раз.',
             userRoleUpdateFailed:

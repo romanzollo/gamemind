@@ -19,6 +19,7 @@ const ERROR_MAP: Record<AdminErrorCode, keyof Dictionary['admin']['errors']> = {
     PUBLISH_QUALITY_BLOCKED: 'publishQualityBlocked',
     CANNOT_MODIFY_SELF: 'cannotModifySelf',
     CANNOT_DELETE_LAST_ADMIN: 'cannotDeleteLastAdmin',
+    CANNOT_PROMOTE_GUEST: 'cannotPromoteGuest',
     USER_UPDATE_FAILED: 'userUpdateFailed',
     USER_ROLE_UPDATE_FAILED: 'userRoleUpdateFailed',
     USER_DEACTIVATE_FAILED: 'userDeactivateFailed',

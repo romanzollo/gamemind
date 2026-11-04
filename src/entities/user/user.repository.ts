@@ -20,6 +20,10 @@ export type AdminUserRow = {
     email: string | null;
     role: Role;
     isActive: boolean;
+    /** Гость без регистрации: роль ему не выдаём (см. updateRoleForAdmin). */
+    isGuest: boolean;
+    /** Служебный smoke-аккаунт (mark-test-account.cjs). */
+    isTestAccount: boolean;
     createdAt: Date;
     quizResultCount: number;
 };
@@ -73,7 +77,9 @@ export type AdminUserMutationResult =
     | 'not_found'
     | 'unchanged'
     | 'cannot_modify_self'
-    | 'cannot_delete_last_admin';
+    | 'cannot_delete_last_admin'
+    /** Гостю ADMIN не выдаём: у него нет ни пароля, ни входа — только кука. */
+    | 'cannot_promote_guest';
 
 // Репозиторий для работы с пользователями
 export const userRepository = {
@@ -178,6 +184,8 @@ export const userRepository = {
                 email: string | null;
                 role: Role;
                 isActive: boolean;
+                isGuest: boolean;
+                isTestAccount: boolean;
                 createdAt: Date;
                 quizResultCount: number;
             }>(
@@ -188,6 +196,8 @@ export const userRepository = {
                         u."email",
                         u."role",
                         u."isActive",
+                        u."isGuest",
+                        u."isTestAccount",
                         u."createdAt",
                         COALESCE(r."quizResultCount", 0)::int AS "quizResultCount"
                     FROM "User" u
@@ -207,6 +217,8 @@ export const userRepository = {
             email: row.email,
             role: row.role,
             isActive: row.isActive === true,
+            isGuest: row.isGuest === true,
+            isTestAccount: row.isTestAccount === true,
             createdAt: row.createdAt,
             quizResultCount: Number(row.quizResultCount),
         }));
@@ -225,6 +237,8 @@ export const userRepository = {
                 email: string | null;
                 role: Role;
                 isActive: boolean;
+                isGuest: boolean;
+                isTestAccount: boolean;
                 createdAt: Date;
                 quizResultCount: number;
             }>(
@@ -235,6 +249,8 @@ export const userRepository = {
                         u."email",
                         u."role",
                         u."isActive",
+                        u."isGuest",
+                        u."isTestAccount",
                         u."createdAt",
                         COALESCE(r."quizResultCount", 0)::int AS "quizResultCount"
                     FROM "User" u
@@ -263,6 +279,8 @@ export const userRepository = {
             email: row.email,
             role: row.role,
             isActive: row.isActive === true,
+            isGuest: row.isGuest === true,
+            isTestAccount: row.isTestAccount === true,
             createdAt: row.createdAt,
             quizResultCount: Number(row.quizResultCount),
         };
@@ -270,7 +288,9 @@ export const userRepository = {
 
     /**
      * Смена роли USER ↔ ADMIN.
-     * Нельзя менять себя; нельзя снять роль с последнего ADMIN.
+     * Нельзя менять себя; нельзя снять роль с последнего ADMIN;
+     * гостя нельзя сделать ADMIN (проверка здесь, а не только в UI —
+     * форму можно отправить и в обход кнопки).
      */
     async updateRoleForAdmin(
         targetUserId: string,
@@ -284,9 +304,10 @@ export const userRepository = {
         return withDirectPgWriteRetry(async (client) => {
             const current = await client.query<{
                 role: Role;
+                isGuest: boolean;
             }>(
                 `
-                    SELECT "role"
+                    SELECT "role", "isGuest"
                     FROM "User"
                     WHERE "id" = $1
                     LIMIT 1
@@ -302,6 +323,10 @@ export const userRepository = {
 
             if (row.role === nextRole) {
                 return 'unchanged';
+            }
+
+            if (nextRole === 'ADMIN' && row.isGuest === true) {
+                return 'cannot_promote_guest';
             }
 
             if (row.role === 'ADMIN' && nextRole === 'USER') {

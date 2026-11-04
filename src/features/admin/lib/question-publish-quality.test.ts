@@ -103,6 +103,55 @@ describe('getQuestionPublishQualityIssues', () => {
         });
     });
 
+    it('does not warn when an option is the same Latin name in RU and EN', () => {
+        const input = makeCleanQuestion({
+            options: [
+                {
+                    isCorrect: true,
+                    translations: {
+                        ru: { text: 'Half-Life 2' },
+                        en: { text: 'Half-Life 2' },
+                    },
+                },
+                {
+                    isCorrect: false,
+                    translations: {
+                        ru: { text: 'Portal' },
+                        en: { text: 'Portal' },
+                    },
+                },
+            ],
+        });
+
+        expect(getQuestionPublishQualityIssues(input)).toEqual([]);
+    });
+
+    it('warns IDENTICAL_OPTION_LOCALES when EN option is untranslated Cyrillic', () => {
+        const input = makeCleanQuestion({
+            options: [
+                {
+                    isCorrect: true,
+                    translations: {
+                        ru: { text: 'Нинтендо' },
+                        en: { text: 'Нинтендо' },
+                    },
+                },
+                {
+                    isCorrect: false,
+                    translations: {
+                        ru: { text: 'Сега' },
+                        en: { text: 'Sega' },
+                    },
+                },
+            ],
+        });
+
+        expect(getQuestionPublishQualityIssues(input)).toContainEqual({
+            code: 'IDENTICAL_OPTION_LOCALES',
+            severity: 'warning',
+        });
+    });
+
     it('returns MISSING_PROMPT_IMAGE blocker for IMAGE_GUESS without image', () => {
         const input = makeCleanQuestion({
             type: 'IMAGE_GUESS',

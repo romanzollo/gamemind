@@ -27,6 +27,7 @@ function parseAdminErrorCode(
         'DELETE_FAILED',
         'CANNOT_MODIFY_SELF',
         'CANNOT_DELETE_LAST_ADMIN',
+        'CANNOT_PROMOTE_GUEST',
         'USER_UPDATE_FAILED',
         'USER_ROLE_UPDATE_FAILED',
         'USER_DEACTIVATE_FAILED',

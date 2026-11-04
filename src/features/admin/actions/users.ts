@@ -52,6 +52,7 @@ function redirectMutationResult(
         | 'unchanged'
         | 'cannot_modify_self'
         | 'cannot_delete_last_admin'
+        | 'cannot_promote_guest'
         | null,
 ) {
     if (!result || result === 'not_found') {
@@ -64,6 +65,10 @@ function redirectMutationResult(
 
     if (result === 'cannot_delete_last_admin') {
         redirect(usersPath(locale, 'CANNOT_DELETE_LAST_ADMIN'));
+    }
+
+    if (result === 'cannot_promote_guest') {
+        redirect(usersPath(locale, 'CANNOT_PROMOTE_GUEST'));
     }
 
     revalidatePath(`/${locale}/admin/users`);

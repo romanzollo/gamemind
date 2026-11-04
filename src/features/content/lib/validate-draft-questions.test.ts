@@ -34,15 +34,16 @@ describe('validateDraftQuestionsBatch', () => {
 
         expect(result.batch.version).toBe(1);
         expect(result.batch.questions).toHaveLength(3);
-        // Strategy B titles → IDENTICAL_OPTION_LOCALES warning, не blocker
         expect(result.hasPublishBlockers).toBe(false);
+        // Strategy B: латинские названия одинаковы в RU и EN — это норма,
+        // IDENTICAL_OPTION_LOCALES ловит только непереведённую кириллицу.
         expect(
             result.qualityReports.some((report) =>
                 report.issues.some(
                     (issue) => issue.code === 'IDENTICAL_OPTION_LOCALES',
                 ),
             ),
-        ).toBe(true);
+        ).toBe(false);
     });
 
     it('отклоняет version !== 1', () => {

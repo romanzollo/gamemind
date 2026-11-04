@@ -13,6 +13,7 @@ import { AdminQuestionsPagination } from '@/features/admin/components/AdminQuest
 import { AdminQuestionsTable } from '@/features/admin/components/AdminQuestionsTable';
 import {
     buildAdminQuestionListHref,
+    buildAdminQuestionListQuery,
     getAdminQuestionListPageMeta,
     hasActiveAdminQuestionListFilters,
     mapAdminQuestions,
@@ -120,6 +121,11 @@ export default async function AdminQuestionsPage({
     }
 
     const pageMeta = getAdminQuestionListPageMeta(totalCount, listPage);
+    // Куда вернуться из редактора и после ошибки действия в строке.
+    const listBack = buildAdminQuestionListQuery({
+        ...filters,
+        page: pageMeta.page,
+    });
     const tagOptions = await tagOptionsPromise;
 
     const actionErrorMessage =
@@ -231,6 +237,7 @@ export default async function AdminQuestionsPage({
                         }}
                         locale={safeLocale}
                         workingLabel={dictionary.common.working}
+                        listBack={listBack}
                         emptyTitle={
                             filtersActive
                                 ? dictionary.admin.emptyFiltered

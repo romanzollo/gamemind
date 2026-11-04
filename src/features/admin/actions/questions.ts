@@ -7,6 +7,13 @@ import { redirect } from 'next/navigation';
 import type { ZodError } from 'zod';
 
 import { questionRepository } from '@/entities/question/question.repository';
+import {
+    ADMIN_QUESTION_LIST_BACK_PARAM,
+    buildAdminQuestionEditHref,
+    buildAdminQuestionListHrefFromBack,
+    parseAdminQuestionListBack,
+    withAdminErrorParam,
+} from '@/features/admin/lib/admin-question-list-back';
 import { parseBulkQuestionIdsFromFormData } from '@/features/admin/lib/parse-bulk-question-ids';
 import { appendAdminNotice } from '@/features/admin/lib/parse-admin-notice';
 import {
@@ -40,10 +47,25 @@ function getLocaleFromFormData(formData: FormData): Locale {
         : defaultLocale;
 }
 
+/** Нормализованный query списка из формы (см. admin-question-list-back). */
+function getListBack(formData: FormData): string {
+    return parseAdminQuestionListBack(
+        formData.get(ADMIN_QUESTION_LIST_BACK_PARAM),
+    );
+}
+
+/** Тот же список (фильтры + страница), откуда пришло действие. */
+function getListReturnPath(formData: FormData, locale: Locale): string {
+    return buildAdminQuestionListHrefFromBack(
+        locale,
+        formData.get(ADMIN_QUESTION_LIST_BACK_PARAM),
+    );
+}
+
 /**
  * Куда вернуть после publication action.
  * `returnTo=edit` — остаёмся на странице edit (кнопки панели редактирования);
- * иначе список `/admin/questions` (кнопки в таблице).
+ * иначе тот же список, откуда нажали (кнопки в таблице).
  */
 function getPublicationRedirectPath(
     formData: FormData,
@@ -53,10 +75,14 @@ function getPublicationRedirectPath(
     const returnTo = formData.get('returnTo');
 
     if (returnTo === 'edit') {
-        return `/${locale}/admin/questions/${questionId}/edit`;
+        return buildAdminQuestionEditHref(
+            locale,
+            questionId,
+            getListBack(formData),
+        );
     }
 
-    return `/${locale}/admin/questions`;
+    return getListReturnPath(formData, locale);
 }
 
 function getPublicationReturnTo(formData: FormData): 'edit' | 'list' {
@@ -82,7 +108,7 @@ function redirectWithOptionalError(path: string, error?: string): never {
         redirect(path);
     }
 
-    redirect(`${path}?error=${error}`);
+    redirect(withAdminErrorParam(path, error));
 }
 
 /**
@@ -101,6 +127,8 @@ async function assertPublishQualityOrRedirect(
         skipIfStatus: 'PUBLISHED' | 'IN_REVIEW';
         loadFailedError: 'PUBLISH_FAILED' | 'SUBMIT_FOR_REVIEW_FAILED';
         fallbackRedirectPath: string;
+        /** Query списка — чтобы из редактора можно было вернуться на место. */
+        back: string;
     },
 ): Promise<void> {
     let question: Awaited<
@@ -127,7 +155,10 @@ async function assertPublishQualityOrRedirect(
     const issues = getQuestionPublishQualityIssues(question);
     if (hasPublishQualityBlockers(issues)) {
         redirect(
-            `/${locale}/admin/questions/${questionId}/edit?error=PUBLISH_QUALITY_BLOCKED`,
+            withAdminErrorParam(
+                buildAdminQuestionEditHref(locale, questionId, options.back),
+                'PUBLISH_QUALITY_BLOCKED',
+            ),
         );
     }
 }
@@ -433,7 +464,7 @@ export async function deactivateQuestionAction(formData: FormData) {
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
-        redirect(`/${locale}/admin/questions`);
+        redirect(getListReturnPath(formData, locale));
     }
 
     let result: Awaited<
@@ -443,11 +474,11 @@ export async function deactivateQuestionAction(formData: FormData) {
     try {
         result = await questionRepository.deactivateById(questionId);
     } catch {
-        redirect(`/${locale}/admin/questions?error=DEACTIVATE_FAILED`);
+        redirect(withAdminErrorParam(getListReturnPath(formData, locale), 'DEACTIVATE_FAILED'));
     }
 
     if (!result || result.status === 'not_found') {
-        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+        redirect(withAdminErrorParam(getListReturnPath(formData, locale), 'NOT_FOUND'));
     }
 
     revalidatePath(`/${locale}/admin/questions`);
@@ -464,7 +495,7 @@ export async function activateQuestionAction(formData: FormData) {
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
-        redirect(`/${locale}/admin/questions`);
+        redirect(getListReturnPath(formData, locale));
     }
 
     let result: Awaited<
@@ -474,11 +505,11 @@ export async function activateQuestionAction(formData: FormData) {
     try {
         result = await questionRepository.activateById(questionId);
     } catch {
-        redirect(`/${locale}/admin/questions?error=ACTIVATE_FAILED`);
+        redirect(withAdminErrorParam(getListReturnPath(formData, locale), 'ACTIVATE_FAILED'));
     }
 
     if (!result || result.status === 'not_found') {
-        redirect(`/${locale}/admin/questions?error=NOT_FOUND`);
+        redirect(withAdminErrorParam(getListReturnPath(formData, locale), 'NOT_FOUND'));
     }
 
     revalidatePath(`/${locale}/admin/questions`);
@@ -636,13 +667,13 @@ export async function deleteQuestionAction(formData: FormData) {
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
-        redirect(`/${locale}/admin/questions`);
+        redirect(getListReturnPath(formData, locale));
     }
 
     try {
         await questionRepository.deleteById(questionId);
     } catch {
-        redirect(`/${locale}/admin/questions?error=DELETE_FAILED`);
+        redirect(withAdminErrorParam(getListReturnPath(formData, locale), 'DELETE_FAILED'));
     }
 
     revalidatePath(`/${locale}/admin/questions`);
@@ -661,7 +692,7 @@ export async function publishQuestionAction(formData: FormData) {
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
-        redirect(`/${locale}/admin/questions`);
+        redirect(getListReturnPath(formData, locale));
     }
 
     const redirectPath = getPublicationRedirectPath(
@@ -674,6 +705,7 @@ export async function publishQuestionAction(formData: FormData) {
         skipIfStatus: 'PUBLISHED',
         loadFailedError: 'PUBLISH_FAILED',
         fallbackRedirectPath: redirectPath,
+        back: getListBack(formData),
     });
 
     let result: Awaited<
@@ -717,7 +749,7 @@ export async function submitQuestionForReviewAction(formData: FormData) {
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
-        redirect(`/${locale}/admin/questions`);
+        redirect(getListReturnPath(formData, locale));
     }
 
     const redirectPath = getPublicationRedirectPath(
@@ -730,6 +762,7 @@ export async function submitQuestionForReviewAction(formData: FormData) {
         skipIfStatus: 'IN_REVIEW',
         loadFailedError: 'SUBMIT_FOR_REVIEW_FAILED',
         fallbackRedirectPath: redirectPath,
+        back: getListBack(formData),
     });
 
     let result: Awaited<
@@ -776,7 +809,7 @@ export async function returnQuestionToDraftAction(formData: FormData) {
     const questionId = formData.get('questionId');
 
     if (typeof questionId !== 'string' || questionId.trim() === '') {
-        redirect(`/${locale}/admin/questions`);
+        redirect(getListReturnPath(formData, locale));
     }
 
     const redirectPath = getPublicationRedirectPath(
@@ -903,10 +936,8 @@ export async function updateQuestionAction(
 
     revalidatePath(`/${locale}/admin/questions`);
     revalidatePath(`/${locale}/admin/questions/${parsed.data.questionId}/edit`);
+    // Назад в тот же список (фильтры + страница), а не на первую страницу.
     redirect(
-        appendAdminNotice(
-            `/${locale}/admin/questions`,
-            'question_saved',
-        ),
+        appendAdminNotice(getListReturnPath(formData, locale), 'question_saved'),
     );
 }

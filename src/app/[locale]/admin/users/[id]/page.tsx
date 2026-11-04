@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import { userRepository } from '@/entities/user/user.repository';
 import { AdminUserResultHistory } from '@/features/admin/components/AdminUserResultHistory';
+import { AccountKindBadge } from '@/features/admin/components/AdminUsersTable';
 import {
     ADMIN_USER_RESULT_HISTORY_LIMIT,
     mapAdminUserDetail,
@@ -150,10 +151,15 @@ export default async function AdminUserDetailPage({
                     <dt className="text-sm font-medium text-muted sm:w-40 sm:shrink-0">
                         {dictionary.admin.tableRole}
                     </dt>
-                    <dd className="text-foreground">
+                    <dd className="flex flex-wrap items-center gap-2 text-foreground">
                         {user.role === 'ADMIN'
                             ? dictionary.admin.roleAdmin
                             : dictionary.admin.roleUser}
+                        <AccountKindBadge
+                            isGuest={user.isGuest}
+                            isTestAccount={user.isTestAccount}
+                            labels={dictionary.admin}
+                        />
                     </dd>
                 </div>
                 <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">

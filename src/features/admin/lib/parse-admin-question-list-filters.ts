@@ -176,6 +176,19 @@ export function buildAdminQuestionListHref(
     locale: string,
     filters: AdminQuestionListFilters,
 ): string {
+    const query = buildAdminQuestionListQuery(filters);
+    const base = `/${locale}/admin/questions`;
+
+    return query ? `${base}?${query}` : base;
+}
+
+/**
+ * Query списка без ведущего `?` (пустая строка = список по умолчанию).
+ * Общая часть href и адреса возврата из редактора (admin-question-list-back).
+ */
+export function buildAdminQuestionListQuery(
+    filters: AdminQuestionListFilters,
+): string {
     const params = new URLSearchParams();
 
     if (filters.status !== 'all') {
@@ -206,10 +219,7 @@ export function buildAdminQuestionListHref(
         params.set('page', String(filters.page));
     }
 
-    const query = params.toString();
-    const base = `/${locale}/admin/questions`;
-
-    return query ? `${base}?${query}` : base;
+    return params.toString();
 }
 
 /** Мета пагинации для UI (from/to/totalPages) из totalCount + page. */

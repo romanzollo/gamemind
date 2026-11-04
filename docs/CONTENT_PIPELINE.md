@@ -283,7 +283,7 @@ npm run content:smoke-status
    - **Publish** directly from DRAFT (allowed for solo admin)
 6. Confirm badge → Published
 7. Optional: publish Columbia the same way
-8. FromSoft titles: may show warning `IDENTICAL_OPTION_LOCALES` (strategy B) — **warning does not block publish**
+8. Latin titles identical in RU and EN (strategy B) are fine — `IDENTICAL_OPTION_LOCALES` fires only when the EN option still has Cyrillic (untranslated copy); it is a warning and does not block publish
 9. List filter `?publication=PUBLISHED` — rows visible
 10. Start a short Classic quiz on `/ru/quiz` — if pool pick hits them, texts look coherent (not required to see all three)
 

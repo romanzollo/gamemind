@@ -18,7 +18,9 @@ import {
     returnQuestionToDraftAction,
     submitQuestionForReviewAction,
 } from '@/features/admin/actions/questions';
+import { AdminQuestionActionFields as HiddenFields } from '@/features/admin/components/AdminQuestionActionFields';
 import { AdminRowMoreMenu } from '@/features/admin/components/AdminRowMoreMenu';
+import { ConfirmForm } from '@/features/admin/components/ConfirmForm';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { SubmitButton } from '@/shared/ui';
 import type { QuestionPublicationStatus } from '@/types';
@@ -34,21 +36,6 @@ type AdminQuestionRowMoreActionsProps = {
     labels: Dictionary['admin'];
     workingLabel: string;
 };
-
-function HiddenFields({
-    locale,
-    questionId,
-}: {
-    locale: Locale;
-    questionId: string;
-}) {
-    return (
-        <>
-            <input type="hidden" name="locale" value={locale} />
-            <input type="hidden" name="questionId" value={questionId} />
-        </>
-    );
-}
 
 export function AdminQuestionRowMoreActions({
     questionId,
@@ -150,7 +137,11 @@ export function AdminQuestionRowMoreActions({
                 </form>
             )}
 
-            <form action={deleteQuestionAction} className="block w-full">
+            <ConfirmForm
+                action={deleteQuestionAction}
+                message={labels.confirmDeleteQuestion}
+                className="block w-full"
+            >
                 <HiddenFields locale={locale} questionId={questionId} />
                 <SubmitButton
                     unstyled
@@ -159,7 +150,7 @@ export function AdminQuestionRowMoreActions({
                 >
                     {labels.deleteButton}
                 </SubmitButton>
-            </form>
+            </ConfirmForm>
         </AdminRowMoreMenu>
     );
 }

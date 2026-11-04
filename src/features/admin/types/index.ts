@@ -67,6 +67,8 @@ export type AdminErrorCode =
     | 'PUBLISH_QUALITY_BLOCKED'
     | 'CANNOT_MODIFY_SELF'
     | 'CANNOT_DELETE_LAST_ADMIN'
+    /** Попытка выдать ADMIN гостю (UI кнопку не показывает). */
+    | 'CANNOT_PROMOTE_GUEST'
     | 'USER_UPDATE_FAILED'
     | 'USER_ROLE_UPDATE_FAILED'
     | 'USER_DEACTIVATE_FAILED'
@@ -95,6 +97,8 @@ export type AdminUserListItem = {
     email: string | null;
     role: 'USER' | 'ADMIN';
     isActive: boolean;
+    isGuest: boolean;
+    isTestAccount: boolean;
     /** ISO string — безопасно для Client Components */
     createdAt: string;
     quizResultCount: number;

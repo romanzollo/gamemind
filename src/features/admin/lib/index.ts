@@ -30,6 +30,7 @@ export {
     parseAdminQuestionListFilters,
     hasActiveAdminQuestionListFilters,
     buildAdminQuestionListHref,
+    buildAdminQuestionListQuery,
     getAdminQuestionListPageMeta,
 } from './parse-admin-question-list-filters';
 export type {
@@ -44,3 +45,10 @@ export {
     parseAdminNotice,
 } from './parse-admin-notice';
 export type { AdminNoticeCode } from './parse-admin-notice';
+export {
+    ADMIN_QUESTION_LIST_BACK_PARAM,
+    buildAdminQuestionEditHref,
+    buildAdminQuestionListHrefFromBack,
+    parseAdminQuestionListBack,
+    withAdminErrorParam,
+} from './admin-question-list-back';

@@ -11,23 +11,22 @@ import { AdminQuestionPublicationControls } from '@/features/admin/components/Ad
 import { AdminQuestionPublishQualityPanel } from '@/features/admin/components/AdminQuestionPublishQualityPanel';
 import { AdminQuestionTags } from '@/features/admin/components/AdminQuestionTags';
 import {
+    buildAdminQuestionEditHref,
+    buildAdminQuestionListHrefFromBack,
     getAdminErrorMessage,
+    parseAdminQuestionListBack,
     getQuestionPublishQualityIssues,
     mapAdminQuestionDetail,
 } from '@/features/admin/lib';
 import type { AdminErrorCode } from '@/features/admin/types';
 import { requireAdmin } from '@/lib/auth/guards';
-import { getDictionary, isLocale, type Locale } from '@/shared/i18n';
+import { getDictionary, isLocale } from '@/shared/i18n';
 import { buttonClassName, InlineAlert } from '@/shared/ui';
 
 type AdminEditQuestionPageProps = {
     params: Promise<{ locale: string; id: string }>;
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
-
-function localizedHref(locale: Locale, href: string) {
-    return `/${locale}${href}`;
-}
 
 /** URL ?error= только из allowlist — чужой query не мапится в сообщение. */
 const ADMIN_EDIT_ERROR_CODES = new Set<string>([
@@ -50,10 +49,10 @@ export default async function AdminEditQuestionPage({
 
     await requireAdmin(safeLocale);
 
-    const editHref = localizedHref(
-        safeLocale,
-        `/admin/questions/${encodeURIComponent(id)}/edit`,
-    );
+    // Откуда пришли в редактор: «Вопросы» и сохранение ведут туда же.
+    const listBack = parseAdminQuestionListBack(rawSearchParams.back);
+    const listHref = buildAdminQuestionListHrefFromBack(safeLocale, listBack);
+    const editHref = buildAdminQuestionEditHref(safeLocale, id, listBack);
 
     const header = (
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -61,7 +60,7 @@ export default async function AdminEditQuestionPage({
                 {dictionary.admin.editTitle}
             </h1>
             <Link
-                href={localizedHref(safeLocale, '/admin/questions')}
+                href={listHref}
                 prefetch={false}
                 className={buttonClassName({
                     variant: 'secondary',
@@ -170,6 +169,7 @@ export default async function AdminEditQuestionPage({
                 locale={safeLocale}
                 labels={dictionary.admin}
                 workingLabel={dictionary.common.working}
+                listBack={listBack}
             />
 
             {questionTags ? (
@@ -188,6 +188,7 @@ export default async function AdminEditQuestionPage({
                 dictionary={dictionary}
                 mode="edit"
                 initialValues={question}
+                listBack={listBack}
             />
         </main>
     );

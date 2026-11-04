@@ -56,6 +56,9 @@ export type QuestionPublishQualityInput = {
     }>;
 };
 
+/** Есть ли кириллица (включая ё) — признак непереведённого EN. */
+const CYRILLIC_PATTERN = /[Ѐ-ӿ]/;
+
 function normalizeText(value: string): string {
     return value.trim().replace(/\s+/g, ' ').toLowerCase();
 }
@@ -163,12 +166,16 @@ export function getQuestionPublishQualityIssues(
         });
     }
 
+    // Варианты — чаще всего названия игр/студий, они законно одинаковы
+    // в RU и EN («Half-Life» / «Half-Life»). Тревога только когда в EN
+    // осталась кириллица: русский текст скопировали и не перевели.
     const identicalOptionLocales = input.options.some((option) => {
         const ru = option.translations.ru.text.trim();
         const en = option.translations.en.text.trim();
         return (
             ru.length > 0 &&
             en.length > 0 &&
+            CYRILLIC_PATTERN.test(en) &&
             normalizeText(ru) === normalizeText(en)
         );
     });

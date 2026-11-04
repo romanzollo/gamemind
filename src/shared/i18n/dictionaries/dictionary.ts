@@ -498,6 +498,10 @@ export type Dictionary = {
         roleUser: string;
         roleAdmin: string;
         confirmDeleteUser: string;
+        confirmDeleteQuestion: string;
+        /** Метки рядом с ролью: гость без регистрации, служебный smoke-аккаунт. */
+        accountGuest: string;
+        accountTest: string;
         confirmChangeRole: string;
         tableActions: string;
         /**
@@ -549,6 +553,7 @@ export type Dictionary = {
             publishQualityBlocked: string;
             cannotModifySelf: string;
             cannotDeleteLastAdmin: string;
+            cannotPromoteGuest: string;
             userUpdateFailed: string;
             userRoleUpdateFailed: string;
             userDeactivateFailed: string;

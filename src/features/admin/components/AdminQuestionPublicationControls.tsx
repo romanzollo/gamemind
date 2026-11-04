@@ -3,6 +3,7 @@ import {
     returnQuestionToDraftAction,
     submitQuestionForReviewAction,
 } from '@/features/admin/actions/questions';
+import { ADMIN_QUESTION_LIST_BACK_PARAM } from '@/features/admin/lib/admin-question-list-back';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { SubmitButton } from '@/shared/ui';
 import type { QuestionPublicationStatus } from '@/types';
@@ -26,6 +27,8 @@ type AdminQuestionPublicationControlsProps = {
     locale: Locale;
     labels: Dictionary['admin'];
     workingLabel: string;
+    /** Query списка: после ошибки/блока остаёмся в редакторе, но помним путь назад. */
+    listBack: string;
 };
 
 function publicationStatusLabel(
@@ -72,6 +75,7 @@ export function AdminQuestionPublicationControls({
     locale,
     labels,
     workingLabel,
+    listBack,
 }: AdminQuestionPublicationControlsProps) {
     // Новый JSX на каждый form — не переиспользовать один fragment (React key).
     const fields = () => (
@@ -79,6 +83,13 @@ export function AdminQuestionPublicationControls({
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="questionId" value={questionId} />
             <input type="hidden" name="returnTo" value="edit" />
+            {listBack ? (
+                <input
+                    type="hidden"
+                    name={ADMIN_QUESTION_LIST_BACK_PARAM}
+                    value={listBack}
+                />
+            ) : null}
         </>
     );
 

@@ -22,7 +22,10 @@ import {
     createQuestionAction,
     updateQuestionAction,
 } from '@/features/admin/actions/questions';
-import { getAdminErrorMessage } from '@/features/admin/lib';
+import {
+    ADMIN_QUESTION_LIST_BACK_PARAM,
+    getAdminErrorMessage,
+} from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
@@ -69,11 +72,14 @@ type BaseAdminQuestionFormProps = {
 type AdminQuestionFormCreateProps = BaseAdminQuestionFormProps & {
     mode?: 'create';
     initialValues?: never;
+    listBack?: never;
 };
 
 type AdminQuestionFormEditProps = BaseAdminQuestionFormProps & {
     mode: 'edit';
     initialValues: AdminQuestionDetail;
+    /** Query списка: после «Сохранить» возвращаемся на ту же страницу списка. */
+    listBack: string;
 };
 
 type AdminQuestionFormProps =
@@ -116,6 +122,7 @@ export function AdminQuestionForm({
     dictionary,
     mode = 'create',
     initialValues,
+    listBack,
 }: AdminQuestionFormProps) {
     const isEdit = mode === 'edit';
     const action = isEdit ? updateQuestionAction : createQuestionAction;
@@ -205,6 +212,13 @@ export function AdminQuestionForm({
                         type="hidden"
                         name="questionId"
                         value={editValues!.id}
+                    />
+                ) : null}
+                {isEdit && listBack ? (
+                    <input
+                        type="hidden"
+                        name={ADMIN_QUESTION_LIST_BACK_PARAM}
+                        value={listBack}
                     />
                 ) : null}
 

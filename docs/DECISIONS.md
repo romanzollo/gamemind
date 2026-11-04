@@ -2597,3 +2597,23 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 | OG image | Graphite hex values (the generator cannot read CSS variables) |
 
 **Not chosen:** B «Dusk» (lighter, blue — drifts toward an IDE look, weaker scoreboard feel); C «Deep» (closest to the old one, still reads as «too dark»); a new brand palette (out of scope; identity stays).
+
+## Admin safety and «keep my place» (November 4, 2026)
+
+**Context:** ROADMAP 4.5b, after a walk through all admin pages on dev (desktop and phone). Deleting a question had no confirmation; «Save» in the editor and the editor's «Questions» link went back to page 1 with no filters; a guest could be made ADMIN (button shown, no server check); the «RU and EN options match» warning fired on 310 of 549 questions — all game titles.
+
+**Decision:**
+
+| Piece | Choice |
+|------|--------|
+| Delete question | `ConfirmForm` (as for users), in the phone card and the desktop «More» menu. The text says the truth from the schema: `QuizAnswer` / `QuizSessionQuestion` cascade, so the question also leaves past game reviews; `QuizResult` scores stay; deactivate is the soft option |
+| Return to the list | Links and forms carry only the list query (`back`), never a URL. The server runs it through `parseAdminQuestionListFilters` and builds the path itself from the locale and `/admin/questions` (`admin-question-list-back.ts`) — no open redirect, junk falls back to the default list. Used by: edit links, editor back link, editor save, publication controls, single-row action errors, quality-block redirect |
+| Guest → ADMIN | Refused in `updateRoleForAdmin` (`cannot_promote_guest` → `CANNOT_PROMOTE_GUEST`); the UI hides the button. A guest has only a cookie — no password, no sign-in to protect admin rights |
+| Badges | «guest» / «test» next to the role in the users list and on the user card (`isGuest`, `isTestAccount` in the admin DTO) |
+| RU = EN option warning | Only when the EN option still contains Cyrillic — Latin titles identical in both languages are the norm (strategy B, `CONTENT_PIPELINE.md`) |
+
+**Not chosen:**
+
+- A `returnTo` URL validated by prefix — easy to get wrong (`//host`, `\`, encodings); rebuilding from parsed filters has nothing to bypass.
+- Soft navigation for filters and pagination — the dev-lab ADR still holds; measure first.
+- Keeping the place after bulk quality-block redirects — rare; bulk forms are client-built, left for later.

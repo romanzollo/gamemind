@@ -70,6 +70,30 @@ function RoleBadge({
     );
 }
 
+/**
+ * Гость / служебный аккаунт — рядом с ролью, чтобы не путать с игроками.
+ * Экспорт: та же метка на карточке пользователя.
+ */
+export function AccountKindBadge({
+    isGuest,
+    isTestAccount,
+    labels,
+}: {
+    isGuest: boolean;
+    isTestAccount: boolean;
+    labels: Dictionary['admin'];
+}) {
+    if (!isGuest && !isTestAccount) {
+        return null;
+    }
+
+    return (
+        <span className="inline-flex rounded-sm border border-border px-1.5 py-0.5 text-2xs font-medium tracking-wide text-muted">
+            {isGuest ? labels.accountGuest : labels.accountTest}
+        </span>
+    );
+}
+
 function UserRowActions({
     entry,
     labels,
@@ -104,7 +128,9 @@ function UserRowActions({
 
             {isSelf ? null : (
                 <>
-                    {entry.role === 'USER' ? (
+                    {/* Гостю ADMIN не выдаём — сервер тоже откажет (updateRoleForAdmin). */}
+                    {entry.isGuest && entry.role === 'USER' ? null : entry.role ===
+                      'USER' ? (
                         <ConfirmForm
                             action={updateUserRoleAction}
                             message={labels.confirmChangeRole}
@@ -256,6 +282,11 @@ function UserListCard({
                         {entry.username}
                     </Link>
                     <RoleBadge role={entry.role} labels={labels} />
+                    <AccountKindBadge
+                        isGuest={entry.isGuest}
+                        isTestAccount={entry.isTestAccount}
+                        labels={labels}
+                    />
                     <StatusBadge isActive={entry.isActive} labels={labels} />
                 </div>
                 <p className="mt-1 break-all text-sm text-muted">
@@ -371,10 +402,19 @@ export function AdminUsersTable({
                                         {entry.email ?? '—'}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-2.5">
-                                        <RoleBadge
-                                            role={entry.role}
-                                            labels={labels}
-                                        />
+                                        <span className="inline-flex items-center gap-1.5">
+                                            <RoleBadge
+                                                role={entry.role}
+                                                labels={labels}
+                                            />
+                                            <AccountKindBadge
+                                                isGuest={entry.isGuest}
+                                                isTestAccount={
+                                                    entry.isTestAccount
+                                                }
+                                                labels={labels}
+                                            />
+                                        </span>
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-2.5">
                                         <StatusBadge
