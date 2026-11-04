@@ -357,6 +357,8 @@ export const ruDictionary: Dictionary = {
         filterSearch: 'Поиск',
         filterSearchPlaceholder: 'Текст вопроса…',
         filterReset: 'Сбросить',
+        filtersToggle: 'Фильтры',
+        listCorrectAnswer: 'Ответ',
         tags: {
             title: 'Метки',
             hint: 'Платформу, эпоху и жанр вопрос получает от своей игры в каталоге. Здесь — правка одного вопроса; метку из каталога следующая синхронизация вернёт.',

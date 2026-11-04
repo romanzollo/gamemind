@@ -18,6 +18,8 @@ export type AdminQuestionListItem = {
     type: QuestionType;
     /** URL prompt-изображения; только для IMAGE_GUESS (иначе null). */
     promptImageUrl: string | null;
+    /** Верный ответ — только для IMAGE_GUESS (текст вопроса у них одинаковый). */
+    correctAnswer: string | null;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;

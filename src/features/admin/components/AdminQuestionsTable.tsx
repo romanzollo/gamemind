@@ -5,25 +5,17 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 import {
-    activateQuestionAction,
     activateQuestionsBulkAction,
-    deactivateQuestionAction,
     deactivateQuestionsBulkAction,
-    deleteQuestionAction,
-    publishQuestionAction,
     publishQuestionsBulkAction,
-    returnQuestionToDraftAction,
-    submitQuestionForReviewAction,
     submitQuestionsForReviewBulkAction,
 } from '@/features/admin/actions/questions';
 import { AdminPromptImage } from '@/features/admin/components/AdminPromptImage';
 import {
-    AdminQuestionActionFields,
     AdminQuestionListBackContext,
     useAdminQuestionListBack,
 } from '@/features/admin/components/AdminQuestionActionFields';
 import { AdminQuestionRowMoreActions } from '@/features/admin/components/AdminQuestionRowMoreActions';
-import { ConfirmForm } from '@/features/admin/components/ConfirmForm';
 import {
     getBulkToolbarCapabilities,
     hasBulkMutationActions,
@@ -142,201 +134,20 @@ function PublicationBadge({
 }
 
 /**
- * Publication CTA по статусу — взаимоисключающие «вперёд»-шаги
- * (как Activate ↔ Deactivate): не показывать сразу «На ревью» и «Опубликовать».
- *
- * List UI = линейный пайплайн DRAFT → IN_REVIEW → PUBLISHED.
- * Прямой DRAFT → PUBLISHED остаётся на edit-панели (solo-admin shortcut, ADR).
- *
- * Mobile: те же CTA видимы без «Ещё».
- * Desktop: те же CTA внутри AdminRowMoreMenu (className/formClassName).
+ * Действия строки — одинаково на телефоне и компьютере: «Править» на виду,
+ * остальное (публикация, витрина, удаление) в меню «⋯». На телефоне ряд
+ * из четырёх ссылок с «Удалить» прямо под пальцем был лишним риском.
  */
-function PublicationRowActions({
-    entry,
-    labels,
-    locale,
-    workingLabel,
-    className = rowActionClassName,
-    formClassName = 'inline-flex',
-}: {
-    entry: AdminQuestionListItem;
-    labels: Dictionary['admin'];
-    locale: Locale;
-    workingLabel: string;
-    className?: string;
-    formClassName?: string;
-}) {
-    // Новый JSX на каждый form — не переиспользовать один fragment (React key warning).
-    if (entry.publicationStatus === 'DRAFT') {
-        return (
-            <form
-                action={submitQuestionForReviewAction}
-                className={formClassName}
-            >
-                <AdminQuestionActionFields
-                    locale={locale}
-                    questionId={entry.id}
-                />
-                <SubmitButton
-                    unstyled
-                    pendingLabel={workingLabel}
-                    className={`${className} cursor-pointer text-warning hover:opacity-90`}
-                >
-                    {labels.submitForReviewButton}
-                </SubmitButton>
-            </form>
-        );
-    }
-
-    if (entry.publicationStatus === 'IN_REVIEW') {
-        return (
-            <>
-                <form
-                    action={publishQuestionAction}
-                    className={formClassName}
-                >
-                    <AdminQuestionActionFields
-                        locale={locale}
-                        questionId={entry.id}
-                    />
-                    <SubmitButton
-                        unstyled
-                        pendingLabel={workingLabel}
-                        className={`${className} cursor-pointer text-success hover:opacity-90`}
-                    >
-                        {labels.publishButton}
-                    </SubmitButton>
-                </form>
-                <form
-                    action={returnQuestionToDraftAction}
-                    className={formClassName}
-                >
-                    <AdminQuestionActionFields
-                        locale={locale}
-                        questionId={entry.id}
-                    />
-                    <SubmitButton
-                        unstyled
-                        pendingLabel={workingLabel}
-                        className={`${className} cursor-pointer text-warning hover:opacity-90`}
-                    >
-                        {labels.returnToDraftButton}
-                    </SubmitButton>
-                </form>
-            </>
-        );
-    }
-
-    // PUBLISHED
-    return (
-        <form
-            action={returnQuestionToDraftAction}
-            className={formClassName}
-        >
-            <AdminQuestionActionFields locale={locale} questionId={entry.id} />
-            <SubmitButton
-                unstyled
-                pendingLabel={workingLabel}
-                className={`${className} cursor-pointer text-warning hover:opacity-90`}
-            >
-                {labels.returnToDraftButton}
-            </SubmitButton>
-        </form>
-    );
-}
-
-function ActiveToggleAction({
-    entry,
-    labels,
-    locale,
-    workingLabel,
-    className,
-    formClassName,
-}: {
-    entry: AdminQuestionListItem;
-    labels: Dictionary['admin'];
-    locale: Locale;
-    workingLabel: string;
-    className: string;
-    formClassName: string;
-}) {
-    if (entry.isActive) {
-        return (
-            <form action={deactivateQuestionAction} className={formClassName}>
-                <AdminQuestionActionFields locale={locale} questionId={entry.id} />
-                <SubmitButton
-                    unstyled
-                    pendingLabel={workingLabel}
-                    className={`${className} cursor-pointer text-warning hover:opacity-90`}
-                >
-                    {labels.deactivateButton}
-                </SubmitButton>
-            </form>
-        );
-    }
-
-    return (
-        <form action={activateQuestionAction} className={formClassName}>
-            <AdminQuestionActionFields locale={locale} questionId={entry.id} />
-            <SubmitButton
-                unstyled
-                pendingLabel={workingLabel}
-                className={`${className} cursor-pointer text-success hover:opacity-90`}
-            >
-                {labels.activateButton}
-            </SubmitButton>
-        </form>
-    );
-}
-
-function DeleteAction({
-    entry,
-    labels,
-    locale,
-    workingLabel,
-    className,
-    formClassName,
-}: {
-    entry: AdminQuestionListItem;
-    labels: Dictionary['admin'];
-    locale: Locale;
-    workingLabel: string;
-    className: string;
-    formClassName: string;
-}) {
-    return (
-        // Удаление необратимо и каскадом чистит ответы в сыгранных играх —
-        // спрашиваем, как при удалении пользователя.
-        <ConfirmForm
-            action={deleteQuestionAction}
-            message={labels.confirmDeleteQuestion}
-            className={formClassName}
-        >
-            <AdminQuestionActionFields locale={locale} questionId={entry.id} />
-            <SubmitButton
-                unstyled
-                pendingLabel={workingLabel}
-                className={`${className} cursor-pointer text-danger hover:opacity-90`}
-            >
-                {labels.deleteButton}
-            </SubmitButton>
-        </ConfirmForm>
-    );
-}
-
 function QuestionRowActions({
     entry,
     labels,
     locale,
     workingLabel,
-    layout = 'wrap',
 }: {
     entry: AdminQuestionListItem;
     labels: Dictionary['admin'];
     locale: Locale;
     workingLabel: string;
-    /** wrap = mobile cards; compact = desktop queue row. */
-    layout?: 'wrap' | 'compact';
 }) {
     const editHref = buildAdminQuestionEditHref(
         locale,
@@ -344,32 +155,9 @@ function QuestionRowActions({
         useAdminQuestionListBack(),
     );
 
-    if (layout === 'compact') {
-        return (
-            <div className="flex flex-nowrap items-center gap-x-3">
-                {/* prefetch off: 25 строк × RSC-запрос с auth на каждый скролл. */}
-                <Link
-                    href={editHref}
-                    prefetch={false}
-                    className={`${rowActionClassName} text-primary hover:text-primary-hover`}
-                >
-                    {labels.editLink}
-                </Link>
-
-                <AdminQuestionRowMoreActions
-                    questionId={entry.id}
-                    publicationStatus={entry.publicationStatus}
-                    isActive={entry.isActive}
-                    locale={locale}
-                    labels={labels}
-                    workingLabel={workingLabel}
-                />
-            </div>
-        );
-    }
-
     return (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <div className="flex flex-nowrap items-center gap-x-3">
+            {/* prefetch off: 25 строк × RSC-запрос с auth на каждый скролл. */}
             <Link
                 href={editHref}
                 prefetch={false}
@@ -378,29 +166,13 @@ function QuestionRowActions({
                 {labels.editLink}
             </Link>
 
-            <PublicationRowActions
-                entry={entry}
-                labels={labels}
+            <AdminQuestionRowMoreActions
+                questionId={entry.id}
+                publicationStatus={entry.publicationStatus}
+                isActive={entry.isActive}
                 locale={locale}
-                workingLabel={workingLabel}
-            />
-
-            <ActiveToggleAction
-                entry={entry}
                 labels={labels}
-                locale={locale}
                 workingLabel={workingLabel}
-                className={rowActionClassName}
-                formClassName="inline-flex"
-            />
-
-            <DeleteAction
-                entry={entry}
-                labels={labels}
-                locale={locale}
-                workingLabel={workingLabel}
-                className={rowActionClassName}
-                formClassName="inline-flex"
             />
         </div>
     );
@@ -468,6 +240,29 @@ function CardHeroImage({
                 </div>
             )}
         </div>
+    );
+}
+
+/**
+ * Верный ответ под текстом IMAGE_GUESS: текст у таких вопросов один на всех,
+ * без ответа строки различаются только картинкой.
+ */
+function CorrectAnswerLine({
+    answer,
+    label,
+}: {
+    answer: string | null;
+    label: string;
+}) {
+    if (!answer) {
+        return null;
+    }
+
+    return (
+        <p className="mt-0.5 truncate text-xs">
+            <span className="text-muted">{label}: </span>
+            <span className="font-medium text-foreground">{answer}</span>
+        </p>
     );
 }
 
@@ -1004,6 +799,12 @@ export function AdminQuestionsTable({
                                                 <p className="mt-1.5 line-clamp-2 text-sm font-medium leading-snug text-foreground">
                                                     {entry.text}
                                                 </p>
+                                                <CorrectAnswerLine
+                                                    answer={entry.correctAnswer}
+                                                    label={
+                                                        labels.listCorrectAnswer
+                                                    }
+                                                />
                                                 <ListCardMeta
                                                     entry={entry}
                                                     locale={locale}
@@ -1136,6 +937,12 @@ export function AdminQuestionsTable({
                                                 <span className="line-clamp-2 text-sm font-medium leading-snug">
                                                     {entry.text}
                                                 </span>
+                                                <CorrectAnswerLine
+                                                    answer={entry.correctAnswer}
+                                                    label={
+                                                        labels.listCorrectAnswer
+                                                    }
+                                                />
                                                 <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
                                                     <DifficultyChip
                                                         difficulty={
@@ -1169,7 +976,6 @@ export function AdminQuestionsTable({
                                             labels={labels}
                                             locale={locale}
                                             workingLabel={workingLabel}
-                                            layout="compact"
                                         />
                                     </td>
                                 </tr>

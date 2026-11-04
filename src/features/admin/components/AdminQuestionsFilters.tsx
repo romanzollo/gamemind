@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 import type {
     AdminQuestionListFilters,
@@ -22,6 +22,9 @@ import type { Difficulty, QuestionType } from '@/types';
  * Soft RSC после list-read в next dev (Windows + Neon) клинил connect
  * (Reset / смена фильтра выглядели как зависание).
  * Поиск — debounce, чтобы не бить Neon на каждый символ.
+ *
+ * Телефон: поиск всегда на виду, пять селектов свёрнуты в «Фильтры (N)»,
+ * иначе они занимают весь первый экран до вопросов. С md — всё развёрнуто.
  *
  * Две оси статуса в URL:
  * - `status` → isActive (витрина);
@@ -63,6 +66,16 @@ export function AdminQuestionsFilters({
     const tagGroups = [...new Set(tagOptions.map((option) => option.group))];
     const [searchText, setSearchText] = useState(filters.q);
     const showReset = hasActiveAdminQuestionListFilters(filters);
+    // Сколько селектов сужают список (поиск виден всегда — не считаем).
+    const activeSelectCount = [
+        filters.status !== 'all',
+        filters.publication !== 'all',
+        filters.difficulty !== 'all',
+        filters.type !== 'all',
+        filters.tag !== 'all',
+    ].filter(Boolean).length;
+    const [selectsOpen, setSelectsOpen] = useState(false);
+    const selectsId = useId();
 
     function navigate(next: AdminQuestionListFilters) {
         window.location.assign(buildAdminQuestionListHref(locale, next));
@@ -104,9 +117,33 @@ export function AdminQuestionsFilters({
 
     return (
         <div
-            className="mt-6 rounded-lg border border-border bg-surface p-3 sm:p-4"
+            className="mt-6 flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 sm:p-4"
             aria-label={labels.questionsTitle}
         >
+            {/* Только телефон: открыть/закрыть селекты. */}
+            <button
+                type="button"
+                aria-expanded={selectsOpen}
+                aria-controls={selectsId}
+                onClick={() => setSelectsOpen((open) => !open)}
+                className={buttonClassName({
+                    variant: 'secondary',
+                    className:
+                        'order-2 min-h-10 w-full justify-between px-3 text-sm md:hidden',
+                })}
+            >
+                <span>
+                    {activeSelectCount > 0
+                        ? `${labels.filtersToggle} (${activeSelectCount})`
+                        : labels.filtersToggle}
+                </span>
+                <span aria-hidden="true">{selectsOpen ? '▴' : '▾'}</span>
+            </button>
+
+            <div
+                id={selectsId}
+                className={`order-3 flex-col gap-3 md:order-1 md:flex ${selectsOpen ? 'flex' : 'hidden'}`}
+            >
             {/*
               4 selects: isActive + publication + difficulty + type.
               На md — 2×2; на lg — один ряд (Scoreboard dense admin).
@@ -230,7 +267,7 @@ export function AdminQuestionsFilters({
             </div>
 
             {tagOptions.length > 0 ? (
-                <label className="mt-3 block min-w-0">
+                <label className="block min-w-0">
                     <span className="mb-1 block text-xs font-medium text-muted">
                         {labels.tags.filterLabel}
                     </span>
@@ -268,8 +305,9 @@ export function AdminQuestionsFilters({
                     </select>
                 </label>
             ) : null}
+            </div>
 
-            <label className="mt-3 block min-w-0">
+            <label className="order-1 block min-w-0 md:order-2">
                 <span className="mb-1 block text-xs font-medium text-muted">
                     {labels.filterSearch}
                 </span>
@@ -288,7 +326,7 @@ export function AdminQuestionsFilters({
             </label>
 
             {showReset ? (
-                <div className="mt-3 flex flex-wrap gap-2">
+                <div className="order-4 flex flex-wrap gap-2">
                     <button
                         type="button"
                         className={buttonClassName({

@@ -82,6 +82,8 @@ type AdminListResultRow = {
     text: string;
     type: QuestionType;
     promptImageUrl: string | null;
+    /** Текст верного варианта на языке страницы; только для IMAGE_GUESS. */
+    correctAnswer: string | null;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
@@ -1411,6 +1413,7 @@ export const questionAdminMethods = {
             publicationStatus: string;
             createdAt: Date;
             promptImageUrl: string | null;
+            correctAnswer: string | null;
             totalCount: number | string;
         };
 
@@ -1427,6 +1430,23 @@ export const questionAdminMethods = {
                     page."text"
                 )`
                 : `page."text"`;
+
+        // Верный вариант — только у IMAGE_GUESS: у них одинаковый текст
+        // («Угадай игру…»), и строки иначе не различить без картинки.
+        // EN — перевод варианта, иначе базовый текст (как у текста вопроса).
+        const correctAnswerTextSql =
+            locale === 'en'
+                ? `COALESCE(
+                    (
+                        SELECT aot."text"
+                        FROM "AnswerOptionTranslation" aot
+                        WHERE aot."optionId" = ao."id"
+                          AND aot."locale" = 'en'::"ContentLocale"
+                        LIMIT 1
+                    ),
+                    ao."text"
+                )`
+                : `ao."text"`;
 
         const cacheKey = buildAdminListCacheKey(locale, filters);
         const cachedList = getCachedAdminListResult(cacheKey);
@@ -1495,6 +1515,16 @@ export const questionAdminMethods = {
                             LIMIT 1
                         )
                     END AS "promptImageUrl",
+                    CASE
+                        WHEN page."type" = 'IMAGE_GUESS'::"QuestionType" THEN (
+                            SELECT ${correctAnswerTextSql}
+                            FROM "AnswerOption" ao
+                            WHERE ao."questionId" = page."id"
+                              AND ao."isCorrect" = true
+                            ORDER BY ao."order" ASC, ao."id" ASC
+                            LIMIT 1
+                        )
+                    END AS "correctAnswer",
                     page."totalCount"::int AS "totalCount"
                 FROM page
                 ORDER BY page."createdAt" DESC, page."id" DESC
@@ -1528,6 +1558,7 @@ export const questionAdminMethods = {
             text: row.text,
             type: toQuestionType(row.type),
             promptImageUrl: row.promptImageUrl,
+            correctAnswer: row.correctAnswer,
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,

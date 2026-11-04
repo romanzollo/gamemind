@@ -12,6 +12,7 @@ type RawAdminQuestionRow = {
     text: string;
     type: QuestionType;
     promptImageUrl: string | null;
+    correctAnswer: string | null;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
@@ -38,6 +39,8 @@ export function mapAdminQuestions(
                 type === 'IMAGE_GUESS'
                     ? normalizeQuizImageUrl(row.promptImageUrl)
                     : null,
+            correctAnswer:
+                type === 'IMAGE_GUESS' ? row.correctAnswer : null,
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,

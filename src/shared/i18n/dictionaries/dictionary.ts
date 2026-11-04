@@ -418,6 +418,10 @@ export type Dictionary = {
         filterSearch: string;
         filterSearchPlaceholder: string;
         filterReset: string;
+        /** Телефон: кнопка свёрнутых фильтров, «(N)» добавляется в коде. */
+        filtersToggle: string;
+        /** Подпись верного ответа в строке IMAGE_GUESS: «Ответ: Portal». */
+        listCorrectAnswer: string;
         /** Метки таксономии: блок на странице вопроса и фильтр списка. */
         tags: {
             title: string;

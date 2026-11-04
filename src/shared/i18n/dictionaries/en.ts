@@ -350,6 +350,8 @@ export const enDictionary = {
         filterSearch: 'Search',
         filterSearchPlaceholder: 'Question text…',
         filterReset: 'Reset',
+        filtersToggle: 'Filters',
+        listCorrectAnswer: 'Answer',
         tags: {
             title: 'Tags',
             hint: "Platform, era and genre come from the question's game in the catalog. This edits one question; the next sync brings catalog tags back.",
