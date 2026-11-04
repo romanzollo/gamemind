@@ -2542,3 +2542,20 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - Per-mode personal bests on the tiles — a read per mode on every home GET; belongs to profile statistics (4.4).
 - A weekly percentile across modes — heavy, and the shared daily set is the only fair comparison.
 - Animated tiles — motion answers events, it does not decorate (`docs/DESIGN.md`).
+
+## Graphite palette (November 4, 2026)
+
+**Context:** ROADMAP 4.3f; owner feedback «the dark theme is too dark». Measured: dark background at L* ≈ 4 (almost black), card vs background ΔL* 4.4 at the darkest end where the eye separates least, and the sheet/toasts were the same colour as cards (ΔL* 0). Text contrast was already fine — the problem was depth, not legibility.
+
+**Decision:** keep the «scoreboard» identity (teal accent, Oswald, Plex); change only levels and soft state colours. Chosen by the owner from `docs/redesign/4.3f-palette.html` (current / A Graphite / B Dusk / C Deep, each with a WCAG table computed from its own tokens): **A «Graphite»**.
+
+| Piece | Choice |
+|------|--------|
+| Dark levels | background `#16191f` → surface `#20242c` → raised `#2a2f39`, steps ΔL* ≈ 5; in the dark theme depth comes from surface colour, shadows only help |
+| Dark states | success/danger/warning/info and their muted plates re-tuned for the lighter surfaces; podium plaques lifted so medals stand out; tier inks and avatar tones checked (≥ 6.5:1) |
+| Light | background one step darker (`#eef1f4`) so white cards separate (ΔL* 3.6 → 5.0); muted text and shadows slightly stronger; raised stays white and is lifted by its shadow |
+| Contrast | every text pair and the «right / wrong» plates pass WCAG AA in both themes |
+| Disabled chips | opacity 60 → 70 % (readable, still clearly unavailable) |
+| OG image | Graphite hex values (the generator cannot read CSS variables) |
+
+**Not chosen:** B «Dusk» (lighter, blue — drifts toward an IDE look, weaker scoreboard feel); C «Deep» (closest to the old one, still reads as «too dark»); a new brand palette (out of scope; identity stays).

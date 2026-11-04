@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GameMind — палитра 4.3f</title>
+<!--
+  Сравнение палитр шага 4.3f (ROADMAP 4.3, ADR — после выбора владельца).
+  Каждая колонка — один набор токенов в тех же именах, что в
+  src/app/globals.css; разметка повторяет экраны продукта упрощённо.
+  Таблица контраста под колонкой считается здесь же, из её токенов.
+  Шрифты — из node_modules/@fontsource (открывать файл из репозитория).
+-->
+<style>
+  @font-face { font-family: Oswald; font-weight: 600; src: url(../../node_modules/@fontsource/oswald/files/oswald-cyrillic-600-normal.woff2) format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: Oswald; font-weight: 600; src: url(../../node_modules/@fontsource/oswald/files/oswald-latin-600-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+2000-206F; }
+  @font-face { font-family: Plex; font-weight: 400; src: url(../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-cyrillic-400-normal.woff2) format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: Plex; font-weight: 400; src: url(../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+2000-206F; }
+  @font-face { font-family: Plex; font-weight: 600; src: url(../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-cyrillic-600-normal.woff2) format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: Plex; font-weight: 600; src: url(../../node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+2000-206F; }
+  @font-face { font-family: PlexMono; font-weight: 500; src: url(../../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-cyrillic-500-normal.woff2) format('woff2'); unicode-range: U+0400-04FF; }
+  @font-face { font-family: PlexMono; font-weight: 500; src: url(../../node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+2000-206F; }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; background: #8a919b; font-family: Plex, system-ui, sans-serif; color: #111; }
+  h1 { font-family: Oswald, sans-serif; margin: 0 0 4px; }
+  .lead { margin: 0 0 20px; max-width: 70ch; }
+  .group-title { font-family: Oswald, sans-serif; font-size: 22px; margin: 28px 0 10px; }
+  .row { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 12px; align-items: flex-start; }
+
+  /* ---- Наборы токенов: имена как в globals.css ---- */
+  .t-dark-current { --background:#0c0f14; --foreground:#e8ecf1; --muted:#9aa3b0; --border:#2a313c; --surface:#141922; --surface-muted:#1a212c; --surface-hover:#222a36; --surface-raised:#141922; --primary:#3ecf8e; --primary-foreground:#071510; --success:#5ecf8a; --success-muted:#0d2818; --danger:#f07178; --danger-muted:#3b1518; --warning:#e6b84d; --warning-muted:#2f2410; --info:#7eb6d9; --info-muted:#143044; --shadow: 0 1px 2px rgb(0 0 0 / .45); --shadow-lg: 0 -8px 24px rgb(0 0 0 / .5); }
+  .t-dark-a { --background:#16191f; --foreground:#e8ecf1; --muted:#a3acb8; --border:#3a414d; --surface:#20242c; --surface-muted:#292e37; --surface-hover:#30363f; --surface-raised:#2a2f39; --primary:#3ecf8e; --primary-foreground:#06140d; --success:#62d390; --success-muted:#183825; --danger:#f47e84; --danger-muted:#442326; --warning:#e8bd55; --warning-muted:#352b12; --info:#88c0e2; --info-muted:#18344b; --shadow: 0 1px 2px rgb(0 0 0 / .35); --shadow-lg: 0 -8px 24px rgb(0 0 0 / .4); }
+  .t-dark-b { --background:#1c2129; --foreground:#e7edf4; --muted:#a7b2c0; --border:#404958; --surface:#252b35; --surface-muted:#2e3540; --surface-hover:#353d49; --surface-raised:#2f3642; --primary:#45d495; --primary-foreground:#06140d; --success:#66d695; --success-muted:#1b3c2a; --danger:#f6858a; --danger-muted:#4a272b; --warning:#ebc15c; --warning-muted:#3a2f15; --info:#8cc4e6; --info-muted:#1c3a52; --shadow: 0 1px 2px rgb(0 0 0 / .3); --shadow-lg: 0 -8px 24px rgb(0 0 0 / .35); }
+  .t-dark-c { --background:#101318; --foreground:#e8ecf1; --muted:#9ea7b4; --border:#333a46; --surface:#1a1e26; --surface-muted:#222831; --surface-hover:#2a313b; --surface-raised:#242a33; --primary:#3ecf8e; --primary-foreground:#071510; --success:#5ecf8a; --success-muted:#132d1d; --danger:#f2767c; --danger-muted:#3b1b1f; --warning:#e6b84d; --warning-muted:#322811; --info:#80b9dc; --info-muted:#163249; --shadow: 0 1px 2px rgb(0 0 0 / .4); --shadow-lg: 0 -8px 24px rgb(0 0 0 / .45); }
+  .t-light-current { --background:#f3f5f7; --foreground:#14181f; --muted:#5a6573; --border:#d5dbe3; --surface:#ffffff; --surface-muted:#e9eef3; --surface-hover:#e1e7ee; --surface-raised:#ffffff; --primary:#0b6e4f; --primary-foreground:#f7fffb; --success:#1b7a3d; --success-muted:#e8f6ed; --danger:#c62828; --danger-muted:#fdecea; --warning:#a16207; --warning-muted:#fef6e7; --info:#1f5f8b; --info-muted:#e4eef6; --shadow: 0 1px 2px rgb(20 24 31 / .06); --shadow-lg: 0 -8px 24px rgb(20 24 31 / .12); }
+  .t-light-new { --background:#eef1f4; --foreground:#14181f; --muted:#566170; --border:#d3d9e1; --surface:#ffffff; --surface-muted:#e8edf2; --surface-hover:#dfe5ec; --surface-raised:#ffffff; --primary:#0b6e4f; --primary-foreground:#f7fffb; --success:#1b7a3d; --success-muted:#e6f5ec; --danger:#c62828; --danger-muted:#fdeceb; --warning:#9a5d06; --warning-muted:#fdf3e1; --info:#1f5f8b; --info-muted:#e2edf6; --shadow: 0 1px 3px rgb(20 24 31 / .09); --shadow-lg: 0 -8px 28px rgb(20 24 31 / .16); }
+
+  /* ---- Телефон ---- */
+  .col { flex: 0 0 360px; }
+  .col-title { font-family: Oswald, sans-serif; font-size: 18px; margin: 0 0 2px; color: #111; }
+  .col-sub { font-size: 13px; margin: 0 0 8px; color: #222; min-height: 34px; }
+  .phone { width: 360px; background: var(--background); color: var(--foreground); border-radius: 18px; overflow: hidden; border: 1px solid rgb(0 0 0 / .4); position: relative; }
+  .bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--background); border-bottom: 1px solid var(--border); font-family: Oswald, sans-serif; font-size: 16px; }
+  .bar small { font-family: Plex; font-size: 12px; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; }
+  .page { padding: 14px; display: grid; gap: 12px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); }
+  .hero { border-left: 4px solid var(--primary); }
+  .eyebrow { font-family: PlexMono, monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .h { font-family: Oswald, sans-serif; font-size: 24px; margin: 4px 0 2px; }
+  .muted { color: var(--muted); font-size: 13px; margin: 0; }
+  .score { font-family: Oswald, sans-serif; font-size: 22px; margin: 10px 0 0; }
+  .ok { color: var(--success); font-weight: 600; }
+  .streak { margin-top: 10px; background: color-mix(in srgb, var(--surface-muted) 50%, transparent); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 8px; }
+  .day { height: 24px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); }
+  .day.on { background: var(--primary); border-color: var(--primary); }
+  .day.today { border: 2px solid var(--primary); background: transparent; }
+  .day.future { border-style: dashed; background: transparent; }
+  .track { position: relative; height: 6px; border-radius: 3px; background: var(--border); margin: 12px 6px 4px; }
+  .track i { position: absolute; left: 0; top: 0; bottom: 0; width: 22%; border-radius: 3px; background: var(--warning); }
+  .btn { display: block; width: 100%; text-align: center; padding: 11px; border-radius: 8px; background: var(--primary); color: var(--primary-foreground); font-weight: 600; font-size: 14px; margin-top: 12px; }
+  .btn2 { display: block; text-align: center; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-size: 14px; font-weight: 600; margin-top: 10px; }
+  .tile { display: flex; align-items: center; gap: 12px; padding: 12px; }
+  .glyph { width: 40px; height: 40px; border-radius: 8px; background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); display: grid; place-items: center; }
+  .tile b { font-family: Oswald, sans-serif; font-size: 18px; font-weight: 600; display: block; }
+  .tile span { font-family: PlexMono, monospace; font-size: 12px; color: var(--muted); }
+  .opt { border: 2px solid var(--border); background: var(--surface); border-radius: 12px; padding: 10px 14px; font-weight: 600; font-size: 15px; margin-top: 8px; }
+  .opt.right { border-color: var(--success); background: var(--success-muted); }
+  .opt.wrong { border-color: var(--danger); background: var(--danger-muted); }
+  .opt.dim { opacity: .6; }
+  .verdict { margin-top: 10px; border-left: 4px solid var(--danger); background: var(--danger-muted); border-radius: 8px; padding: 8px 10px; }
+  .verdict b { font-family: Oswald, sans-serif; font-size: 18px; color: var(--danger); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip { border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; font-size: 13px; background: var(--surface); }
+  .chip.sel { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+  .chip.off { border-style: dashed; color: var(--muted); opacity: .6; }
+  .sheet { background: var(--surface-raised); border: 1px solid var(--border); border-bottom: 0; border-radius: 16px 16px 0 0; padding: 14px; box-shadow: var(--shadow-lg); }
+  .scrim { background: rgb(0 0 0 / .5); padding-top: 26px; }
+  .toast { background: var(--surface-raised); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 13px; box-shadow: var(--shadow-lg); }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .tag { font-size: 12px; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+  .contrast { margin-top: 8px; width: 360px; border-collapse: collapse; font-size: 12px; background: #fff; color: #111; }
+  .contrast td { padding: 3px 6px; border-top: 1px solid #ddd; }
+  .contrast td:last-child { text-align: right; font-family: PlexMono, monospace; }
+  .bad { color: #b00020; font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Палитра 4.3f — выбери тёмную тему</h1>
+<p class="lead">Стиль тот же («табло»: бирюза, Oswald, Plex) — меняются только уровни фона и поверхностей и смягчённые цвета состояний. В каждой колонке один и тот же экран: карточка дня после игры, плитка режима, вопрос с ответом «мимо», чипы (выбран / обычный / серый), шторка и тост. Под колонкой — контраст по WCAG: текст ≥ 4.5, уровни — насколько карточка отделяется от фона (ΔL* — разница воспринимаемой яркости).</p>
+
+<template id="phone">
+  <div class="phone">
+    <div class="bar"><span>GameMind</span><small>Тёмная</small></div>
+    <div class="page">
+      <div class="card hero">
+        <div class="eyebrow">Сегодня</div>
+        <div class="h">Челлендж дня</div>
+        <p class="muted">Общий сет. Одна попытка. Реванш — завтра.</p>
+        <p class="score">Очки: 640 · 7/10</p>
+        <p style="margin:2px 0 0;font-size:13px"><b>Ты #4 из 37</b> · <span class="ok">лучше 91% игроков</span></p>
+        <div class="streak">
+          <b style="font-family:Oswald;font-size:16px;color:var(--warning)">● </b><b style="font-family:Oswald;font-size:16px">2 дня подряд</b>
+          <div class="week"><div class="day on"></div><div class="day on"></div><div class="day today"></div><div class="day future"></div><div class="day future"></div><div class="day future"></div><div class="day future"></div></div>
+          <div class="track"><i></i></div>
+          <p class="muted" style="font-size:12px">До ачивки «Три дня подряд» — 1 день</p>
+        </div>
+        <div class="btn2">Смотреть результат</div>
+      </div>
+      <div class="card tile">
+        <div class="glyph"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 20a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M12 13V9.5"/><path d="M10 3h4"/></svg></div>
+        <div><b>Блиц</b><span>На время · 10 вопросов · 60 сек</span></div>
+      </div>
+      <div class="card">
+        <div style="font-weight:600;font-size:16px">Какая студия сделала The Witcher 3?</div>
+        <div class="opt wrong">BioWare</div>
+        <div class="opt dim">Bethesda</div>
+        <div class="opt right">CD Projekt Red</div>
+        <div class="verdict"><b>Мимо</b><div style="font-size:13px">Правильно: CD Projekt Red</div></div>
+        <div class="tags">
+          <span class="tag" style="background:var(--warning-muted);color:var(--warning)">Черновик</span>
+          <span class="tag" style="background:var(--info-muted);color:var(--info)">Ссылка</span>
+          <span class="tag" style="background:var(--success-muted);color:var(--success)">+4 с</span>
+        </div>
+      </div>
+      <div class="toast">Готово. Имя сохранено.</div>
+    </div>
+    <div class="scrim">
+      <div class="sheet">
+        <div class="h" style="font-size:20px">Классика</div>
+        <p class="muted">Ни таймера, ни спешки.</p>
+        <div class="chips"><span class="chip sel">Средне</span><span class="chip">Сложно</span><span class="chip off">Ролевые</span><span class="chip">2010-е</span></div>
+        <div class="btn">Начать классику</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<div class="group-title">Тёмная тема</div>
+<div class="row" id="dark"></div>
+<div class="group-title">Светлая тема (небольшая правка)</div>
+<div class="row" id="light"></div>
+
+<script>
+  const columns = {
+    dark: [
+      ['t-dark-current', 'Сейчас', 'Фон почти чёрный, карточка почти сливается с фоном; шторка того же цвета, что карточка.'],
+      ['t-dark-a', 'A · Графит', 'Нейтральный тёмно-серый с холодным оттенком. Чёткие ступени фон → карточка → шторка. Рекомендую.'],
+      ['t-dark-b', 'B · Сумерки', 'Светлее и с синевой (как «dimmed» темы). Мягче для глаз вечером, но меньше «табло».'],
+      ['t-dark-c', 'C · Глубокий', 'Ближе всего к нынешней: фон чуть светлее, ступени заметнее. Минимальная перемена.'],
+    ],
+    light: [
+      ['t-light-current', 'Сейчас', 'Карточка и фон различаются слабо.'],
+      ['t-light-new', 'Предлагаю', 'Фон на тон темнее, серый текст чуть контрастнее, тени мягче и заметнее.'],
+    ],
+  };
+
+  const lum = (hex) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  };
+  const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  const lstar = (hex) => { const y = lum(hex); return y > 0.008856 ? 116 * Math.cbrt(y) - 16 : 903.3 * y; };
+
+  for (const [group, list] of Object.entries(columns)) {
+    const row = document.getElementById(group);
+    for (const [cls, title, sub] of list) {
+      const col = document.createElement('div');
+      col.className = 'col ' + cls;
+      col.innerHTML = `<p class="col-title">${title}</p><p class="col-sub">${sub}</p>`;
+      const phone = document.getElementById('phone').content.cloneNode(true);
+      if (group === 'light') phone.querySelector('.bar small').textContent = 'Светлая';
+      col.appendChild(phone);
+      row.appendChild(col);
+      const v = (n) => getComputedStyle(col).getPropertyValue('--' + n).trim();
+      const checks = [
+        ['Текст на фоне', ratio(v('foreground'), v('background')), 4.5],
+        ['Серый текст на карточке', ratio(v('muted'), v('surface')), 4.5],
+        ['Серый текст в шторке', ratio(v('muted'), v('surface-raised')), 4.5],
+        ['Кнопка: текст на бирюзе', ratio(v('primary-foreground'), v('primary')), 4.5],
+        ['«Мимо» на красной плашке', ratio(v('danger'), v('danger-muted')), 4.5],
+        ['«Верно» на зелёной плашке', ratio(v('success'), v('success-muted')), 4.5],
+        ['Предупреждение на плашке', ratio(v('warning'), v('warning-muted')), 4.5],
+      ];
+      const steps = [
+        ['ΔL* фон → карточка', lstar(v('surface')) - lstar(v('background'))],
+        ['ΔL* карточка → шторка', lstar(v('surface-raised')) - lstar(v('surface'))],
+      ];
+      const table = document.createElement('table');
+      table.className = 'contrast';
+      table.innerHTML = checks.map(([n, r, min]) => `<tr><td>${n}</td><td class="${r < min ? 'bad' : ''}">${r.toFixed(2)}</td></tr>`).join('')
+        + steps.map(([n, d]) => `<tr><td>${n}</td><td>${d.toFixed(1)}</td></tr>`).join('');
+      col.appendChild(table);
+    }
+  }
+</script>
+</body>
+</html>

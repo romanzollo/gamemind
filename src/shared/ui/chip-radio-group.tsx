@@ -51,7 +51,7 @@ export function ChipRadioGroup<Value extends string>({
                             onChange={() => onChange(option.value)}
                             className="peer sr-only"
                         />
-                        <span className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-border bg-surface px-4 text-sm text-foreground transition peer-checked:border-primary peer-checked:bg-primary peer-checked:font-medium peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring hover:bg-surface-hover peer-checked:hover:bg-primary-hover peer-disabled:cursor-not-allowed peer-disabled:border-dashed peer-disabled:text-muted peer-disabled:opacity-60 peer-disabled:hover:bg-surface">
+                        <span className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-border bg-surface px-4 text-sm text-foreground transition peer-checked:border-primary peer-checked:bg-primary peer-checked:font-medium peer-checked:text-primary-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring hover:bg-surface-hover peer-checked:hover:bg-primary-hover peer-disabled:cursor-not-allowed peer-disabled:border-dashed peer-disabled:text-muted peer-disabled:opacity-70 peer-disabled:hover:bg-surface">
                             {option.label}
                         </span>
                     </label>

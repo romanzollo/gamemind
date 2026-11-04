@@ -9,6 +9,8 @@
  * Файлы шрифтов дополнительно перечислены в outputFileTracingIncludes
  * (next.config.ts) — на случай рендера в функции Vercel.
  * Вложенные страницы наследуют картинку.
+ * Цвета — значения тёмной темы из globals.css строками: генератор не
+ * знает CSS-переменных. Сменилась палитра — обнови и здесь.
  */
 
 import { readFile } from 'node:fs/promises';
@@ -74,7 +76,7 @@ export default async function OpenGraphImage({
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     padding: '72px 80px',
-                    background: '#0c0f14',
+                    background: '#16191f',
                     color: '#e8ecf1',
                     fontFamily: 'Plex',
                 }}
@@ -111,7 +113,7 @@ export default async function OpenGraphImage({
                     >
                         {dictionary.home.headline}
                     </div>
-                    <div style={{ fontSize: 32, color: '#9aa4b2' }}>{modes}</div>
+                    <div style={{ fontSize: 32, color: '#a3acb8' }}>{modes}</div>
                 </div>
 
                 <div
@@ -120,12 +122,12 @@ export default async function OpenGraphImage({
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         fontSize: 28,
-                        color: '#9aa4b2',
+                        color: '#a3acb8',
                     }}
                 >
                     <div>game-mind.ru</div>
                     <div style={{ display: 'flex', gap: 10 }}>
-                        {['#3ecf8e', '#3ecf8e', '#ef4444', '#3ecf8e', '#3ecf8e'].map(
+                        {['#3ecf8e', '#3ecf8e', '#f47e84', '#3ecf8e', '#3ecf8e'].map(
                             (color, index) => (
                                 <div
                                     key={index}
