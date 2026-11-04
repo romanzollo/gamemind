@@ -1,23 +1,18 @@
 import Link from 'next/link';
 
-import {
-    activateUserAction,
-    deactivateUserAction,
-    deleteUserAction,
-    updateUserRoleAction,
-} from '@/features/admin/actions/users';
-import { ConfirmForm } from '@/features/admin/components/ConfirmForm';
+import { AdminUserRowMoreActions } from '@/features/admin/components/AdminUserRowMoreActions';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { EmptyState, SubmitButton } from '@/shared/ui';
+import { EmptyState } from '@/shared/ui';
 import type { AdminUserListItem } from '../types';
 
 /**
  * Список пользователей admin: Scoreboard Editorial.
  *
  * Тот же контракт, что AdminQuestionsTable (проверенный в продукте):
- * - &lt;lg: плотные surface-карточки, actions = text-links с wrap (без full-width CTA,
- *   без CSS-grid на 3 пункта — иначе «Удалить» сиротой на второй строке);
- * - lg+: таблица, sticky actions, nowrap как у вопросов.
+ * - &lt;lg: плотные surface-карточки;
+ * - lg+: таблица, sticky actions;
+ * - действия строки везде одинаковые: «Карточка» + меню «⋯»
+ *   (AdminUserRowMoreActions).
  *
  * Имя пользователя = primary вход в detail; «Карточка» дублирует явно в actions.
  * Presentation only — guards / mutations / last-admin не трогаем.
@@ -96,162 +91,36 @@ export function AccountKindBadge({
     );
 }
 
+/** «Карточка» на виду; роль, витрина и удаление — в меню «⋯» (не для себя). */
 function UserRowActions({
     entry,
     labels,
     locale,
     workingLabel,
     isSelf,
-    nowrap = false,
 }: {
     entry: AdminUserListItem;
     labels: Dictionary['admin'];
     locale: Locale;
     workingLabel: string;
     isSelf: boolean;
-    nowrap?: boolean;
 }) {
-    const detailHref = `/${locale}/admin/users/${entry.id}`;
-
     return (
-        <div
-            className={
-                nowrap
-                    ? 'flex flex-nowrap items-center gap-x-3'
-                    : 'flex flex-wrap items-center gap-x-4 gap-y-0.5'
-            }
-        >
+        <div className="flex flex-nowrap items-center gap-x-3">
             <Link
-                href={detailHref}
+                href={`/${locale}/admin/users/${entry.id}`}
                 className={`${rowActionClassName} text-info hover:opacity-90`}
             >
                 {labels.viewUserLink}
             </Link>
 
             {isSelf ? null : (
-                <>
-                    {/* Гостю ADMIN не выдаём — сервер тоже откажет (updateRoleForAdmin). */}
-                    {entry.isGuest && entry.role === 'USER' ? null : entry.role ===
-                      'USER' ? (
-                        <ConfirmForm
-                            action={updateUserRoleAction}
-                            message={labels.confirmChangeRole}
-                            className="inline-flex"
-                        >
-                            <input
-                                type="hidden"
-                                name="locale"
-                                value={locale}
-                            />
-                            <input
-                                type="hidden"
-                                name="userId"
-                                value={entry.id}
-                            />
-                            <input type="hidden" name="role" value="ADMIN" />
-                            <SubmitButton
-                                unstyled
-                                pendingLabel={workingLabel}
-                                className={`${rowActionClassName} cursor-pointer text-primary hover:text-primary-hover`}
-                            >
-                                {labels.makeAdminButton}
-                            </SubmitButton>
-                        </ConfirmForm>
-                    ) : (
-                        <ConfirmForm
-                            action={updateUserRoleAction}
-                            message={labels.confirmChangeRole}
-                            className="inline-flex"
-                        >
-                            <input
-                                type="hidden"
-                                name="locale"
-                                value={locale}
-                            />
-                            <input
-                                type="hidden"
-                                name="userId"
-                                value={entry.id}
-                            />
-                            <input type="hidden" name="role" value="USER" />
-                            <SubmitButton
-                                unstyled
-                                pendingLabel={workingLabel}
-                                className={`${rowActionClassName} cursor-pointer text-primary hover:text-primary-hover`}
-                            >
-                                {labels.makeUserButton}
-                            </SubmitButton>
-                        </ConfirmForm>
-                    )}
-
-                    {entry.isActive ? (
-                        <form
-                            action={deactivateUserAction}
-                            className="inline-flex"
-                        >
-                            <input
-                                type="hidden"
-                                name="locale"
-                                value={locale}
-                            />
-                            <input
-                                type="hidden"
-                                name="userId"
-                                value={entry.id}
-                            />
-                            <SubmitButton
-                                unstyled
-                                pendingLabel={workingLabel}
-                                className={`${rowActionClassName} cursor-pointer text-warning hover:opacity-90`}
-                            >
-                                {labels.deactivateButton}
-                            </SubmitButton>
-                        </form>
-                    ) : (
-                        <form
-                            action={activateUserAction}
-                            className="inline-flex"
-                        >
-                            <input
-                                type="hidden"
-                                name="locale"
-                                value={locale}
-                            />
-                            <input
-                                type="hidden"
-                                name="userId"
-                                value={entry.id}
-                            />
-                            <SubmitButton
-                                unstyled
-                                pendingLabel={workingLabel}
-                                className={`${rowActionClassName} cursor-pointer text-success hover:opacity-90`}
-                            >
-                                {labels.activateButton}
-                            </SubmitButton>
-                        </form>
-                    )}
-
-                    <ConfirmForm
-                        action={deleteUserAction}
-                        message={labels.confirmDeleteUser}
-                        className="inline-flex"
-                    >
-                        <input type="hidden" name="locale" value={locale} />
-                        <input
-                            type="hidden"
-                            name="userId"
-                            value={entry.id}
-                        />
-                        <SubmitButton
-                            unstyled
-                            pendingLabel={workingLabel}
-                            className={`${rowActionClassName} cursor-pointer text-danger hover:opacity-90`}
-                        >
-                            {labels.deleteButton}
-                        </SubmitButton>
-                    </ConfirmForm>
-                </>
+                <AdminUserRowMoreActions
+                    entry={entry}
+                    locale={locale}
+                    labels={labels}
+                    workingLabel={workingLabel}
+                />
             )}
         </div>
     );
@@ -445,7 +314,6 @@ export function AdminUsersTable({
                                             locale={locale}
                                             workingLabel={workingLabel}
                                             isSelf={isSelf}
-                                            nowrap
                                         />
                                     </td>
                                 </tr>

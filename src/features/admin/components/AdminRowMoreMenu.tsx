@@ -12,7 +12,7 @@ import {
 import { createPortal } from 'react-dom';
 
 /**
- * Компактное «Ещё»-меню для desktop admin row.
+ * Компактное меню «⋯» строки списков админки (вопросы, пользователи).
  *
  * Зачем: в content-queue нельзя держать 4–6 текстовых actions в одной ячейке —
  * снаружи только Edit (стабильная колонка), редкие и статусные действия сюда.
@@ -40,22 +40,56 @@ type AdminRowMoreMenuProps = {
 type PanelCoords = {
     top: number;
     left: number;
+    /** Посчитано с реальной высотой панели (второй проход после рендера). */
+    measured: boolean;
 };
 
 const PANEL_MIN_WIDTH_PX = 176; // min-w-44
 
-function computePanelCoords(summary: HTMLElement): PanelCoords {
+/** Низ экрана, закрытый панелью вкладок (на lg переменная = 0). */
+function readBottomInsetPx(): number {
+    // Переменная задана на body (globals.css), не на :root.
+    const raw = getComputedStyle(document.body)
+        .getPropertyValue('--site-tab-bar-height')
+        .trim();
+    const rem = Number.parseFloat(raw);
+    if (!Number.isFinite(rem)) {
+        return 0;
+    }
+    const rootFontPx = Number.parseFloat(
+        getComputedStyle(document.documentElement).fontSize,
+    );
+    return raw.endsWith('px') ? rem : rem * (rootFontPx || 16);
+}
+
+/**
+ * Под trigger, а если снизу не хватает места (строка у низа экрана) — над
+ * ним. Без высоты панели (первый проход) — только «под»; второй проход
+ * после рендера знает высоту. Раньше панель уходила за низ экрана, и до
+ * нижних пунктов («Удалить») было не дотянуться: fixed не прокручивается.
+ */
+function computePanelCoords(
+    summary: HTMLElement,
+    panelHeight: number | null,
+): PanelCoords {
     const rect = summary.getBoundingClientRect();
     const left = Math.min(
         Math.max(8, rect.right - PANEL_MIN_WIDTH_PX),
         window.innerWidth - PANEL_MIN_WIDTH_PX - 8,
     );
-    // Снизу от trigger; если мало места — чуть выше, всё ещё fixed (без clip).
-    const preferredTop = rect.bottom + 4;
-    const maxTop = window.innerHeight - 8;
-    const top = Math.min(preferredTop, maxTop);
+    const below = rect.bottom + 4;
 
-    return { top, left };
+    if (panelHeight === null) {
+        return { top: below, left, measured: false };
+    }
+
+    const visibleBottom = window.innerHeight - readBottomInsetPx() - 8;
+    const fitsBelow = below + panelHeight <= visibleBottom;
+    const top = fitsBelow
+        ? below
+        : Math.max(8, rect.top - 4 - panelHeight);
+
+    return { top, left, measured: true };
 }
 
 export function AdminRowMoreMenu({ label, children }: AdminRowMoreMenuProps) {
@@ -71,7 +105,9 @@ export function AdminRowMoreMenu({ label, children }: AdminRowMoreMenuProps) {
         if (!summary) {
             return;
         }
-        setCoords(computePanelCoords(summary));
+        setCoords(
+            computePanelCoords(summary, panelRef.current?.offsetHeight ?? null),
+        );
     }
 
     useLayoutEffect(() => {
@@ -80,6 +116,14 @@ export function AdminRowMoreMenu({ label, children }: AdminRowMoreMenuProps) {
         }
         syncPosition();
     }, [open]);
+
+    // Второй проход: панель отрисована — уточняем позицию по её высоте
+    // до отрисовки кадра (layout effect), без видимого прыжка.
+    useLayoutEffect(() => {
+        if (open && coords && !coords.measured) {
+            syncPosition();
+        }
+    }, [open, coords]);
 
     useEffect(() => {
         const details = detailsRef.current;
