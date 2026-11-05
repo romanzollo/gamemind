@@ -1160,6 +1160,8 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 - `question.repository` ? types + quiz-pick + admin + thin facade (July 26; `6c663e6`).
 - `quiz-session.repository` ? types + snapshot helpers + start + submit + reads + thin facade (July 27; `34a00d2`). Stable import `@/entities/quiz-session/quiz-session.repository`. Relational create kept inside start module (no separate `*-relational-legacy` file). `buildValuesPlaceholder` still duplicated start/submit (tidy later if desired).
 
+**Update (November 5, 2026, ROADMAP 4.5f):** `question-admin.repository` (1786 lines) split the same way, move-only: `question-admin-list` (list query, dev-only queue/settle, list cache and its invalidate/patch), `question-admin-write` (editor read, create, update with recovery, delete), `question-admin-status` (isActive and publication transitions, single and bulk); `question-admin.repository` is now a thin facade with the same `questionAdminMethods` signatures. Same for the UI: `AdminQuestionsTable` (1172 lines) → table + `AdminQuestionRowParts` + `AdminQuestionsBulkToolbar`.
+
 **Original decision:** defer splitting until after Post-Launch UX (or before a new quiz mode). Size alone is not a bug; split by **scenario**, not line count.
 
 **How (followed)**
