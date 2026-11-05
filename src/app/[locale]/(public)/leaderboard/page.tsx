@@ -1,156 +1,212 @@
-import { LeaderboardDifficultyFilters } from '@/features/leaderboard/components/leaderboard-difficulty-filters';
-import { LeaderboardModeFilters } from '@/features/leaderboard/components/leaderboard-mode-filters';
-import { LeaderboardPeriodFilters } from '@/features/leaderboard/components/leaderboard-period-filters';
-import { LeaderboardTable } from '@/features/leaderboard/components/leaderboard-table';
+import { RatingMeCard, type RatingMeState } from '@/features/leaderboard/components/rating-me-card';
+import { RatingPeriodSwitch } from '@/features/leaderboard/components/rating-period-switch';
+import { RatingRecords } from '@/features/leaderboard/components/rating-records';
+import { RatingTable } from '@/features/leaderboard/components/rating-table';
 import {
-    getLeaderboardPeriodCutoff,
-    hasActiveLeaderboardFilters,
-    LEADERBOARD_LIMIT,
-    leaderboardRepository,
-    mapLeaderboardEntries,
-    parseLeaderboardFilters,
+    getMoscowWeekStart,
+    getNextMoscowWeekStart,
+    getRatingPeriodWindow,
+    RATING_BOARD_LIMIT,
+    RATING_DAILY_POINTS_CAP,
+    ratingPointsRepository,
+    type RatingPeriod,
 } from '@/features/leaderboard/lib';
-import { getDictionary, isLocale } from '@/shared/i18n';
-import { InlineAlert } from '@/shared/ui';
+import { buildRatingHref, parseRatingPeriod } from '@/features/leaderboard/lib/rating-period-params';
+import { formatTimeLeft, formatWeekRange } from '@/features/leaderboard/lib/rating-format';
+import { auth } from '@/lib/auth';
+import { getDictionary, isLocale, type Dictionary, type Locale } from '@/shared/i18n';
+import { buttonClassName, EmptyState, InlineAlert, PendingLink } from '@/shared/ui';
+
+/**
+ * Рейтинг — очки за период по всем режимам (ADR «Weekly rating points»).
+ *
+ * Один переключатель — период (`?period=last|all`, по умолчанию текущая
+ * неделя МСК). Сверху карточка «я» (только текущая неделя), дальше таблица
+ * с разбивкой по режимам в строке и рекорды Блица и Выживания.
+ *
+ * Публичная страница: сессия нужна только для карточки и подсветки своей
+ * строки. Чтение — `withDirectPgClient`, без JSONB; ошибка чтения — плашка,
+ * не 500 и не `notFound()`.
+ */
 
 type LeaderboardPageProps = {
     params: Promise<{ locale: string }>;
-    /** URL-фильтры (`?mode=` / `?period=` / `?difficulty=`); Next.js 15+ — Promise. */
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function periodMeta(
+    period: RatingPeriod,
+    locale: Locale,
+    now: Date,
+    labels: Dictionary['leaderboard'],
+): string {
+    if (period === 'all') {
+        return labels.allTimeMeta;
+    }
+
+    const weekStart = getMoscowWeekStart(now);
+
+    if (period === 'lastWeek') {
+        const lastWeekStart = new Date(weekStart.getTime() - 7 * DAY_MS);
+
+        return labels.lastWeekMeta.replace(
+            '{range}',
+            formatWeekRange(locale, lastWeekStart),
+        );
+    }
+
+    return labels.weekMeta
+        .replace('{range}', formatWeekRange(locale, weekStart))
+        .replace(
+            '{left}',
+            formatTimeLeft(getNextMoscowWeekStart(now).getTime() - now.getTime(), {
+                daysShort: labels.daysShort,
+                hoursShort: labels.hoursShort,
+            }),
+        );
+}
+
+function emptyText(period: RatingPeriod, labels: Dictionary['leaderboard']) {
+    if (period === 'lastWeek') {
+        return { title: labels.emptyLastWeek, description: undefined };
+    }
+
+    if (period === 'all') {
+        return { title: labels.emptyAllTime, description: undefined };
+    }
+
+    return { title: labels.empty, description: labels.emptyWeekText };
+}
 
 export default async function LeaderboardPage({
     params,
     searchParams,
 }: LeaderboardPageProps) {
     const { locale } = await params;
-    const rawSearchParams = await searchParams;
-    const safeLocale = isLocale(locale) ? locale : 'ru';
+    const safeLocale: Locale = isLocale(locale) ? locale : 'ru';
     const dictionary = getDictionary(safeLocale);
-    // URL → Zod safe defaults → SQL; битый query не роняет страницу.
-    const filters = parseLeaderboardFilters(rawSearchParams);
-    const filtersActive = hasActiveLeaderboardFilters(filters);
-
-    let entries: ReturnType<typeof mapLeaderboardEntries> = [];
-    let loadErrorMessage: string | undefined;
-
-    try {
-        // Feature знает week/month/mode; entity — Date + allowlist mode.
-        const rows = await leaderboardRepository.findBestScores(
-            LEADERBOARD_LIMIT,
-            {
-                mode: filters.mode,
-                difficulty: filters.difficulty,
-                completedAfter: getLeaderboardPeriodCutoff(filters.period),
-            },
-        );
-        entries = mapLeaderboardEntries(rows);
-    } catch {
-        loadErrorMessage = dictionary.leaderboard.loadFailed;
-    }
-
-    const tableLabels = {
-        ...dictionary.leaderboard,
-        empty: filtersActive
-            ? dictionary.leaderboard.emptyFiltered
-            : dictionary.leaderboard.empty,
+    const labels = dictionary.leaderboard;
+    const period = parseRatingPeriod(await searchParams);
+    const now = new Date();
+    const periodWindow = getRatingPeriodWindow(period, now);
+    const filters = {
+        ...periodWindow,
+        mode: 'all' as const,
+        dailyCap: RATING_DAILY_POINTS_CAP,
     };
 
-    const periodHint =
-        filters.period === 'week'
-            ? dictionary.leaderboard.weekWindowHint
-            : filters.period === 'month'
-              ? dictionary.leaderboard.monthWindowHint
-              : dictionary.leaderboard.allTimeHint;
-    const showBlitzHint = filters.mode === 'blitz';
-    // Доски Классики и Блица считают только игры на всём банке (Play topics).
-    const showTopicHint =
-        filters.mode === 'classic' || filters.mode === 'blitz';
+    const session = await auth();
+    const user = session?.user?.id
+        ? { id: session.user.id, isGuest: session.user.isGuest === true }
+        : null;
+    // Гость скрыт из рейтингов — его место не ищем.
+    const standingUserId = user && !user.isGuest ? user.id : null;
+
+    let loadFailed = false;
+    let board: Awaited<ReturnType<typeof ratingPointsRepository.findBoard>> = [];
+    let records: Awaited<ReturnType<typeof ratingPointsRepository.findRecords>> =
+        { blitz: null, survival: null };
+    let standing: Awaited<
+        ReturnType<typeof ratingPointsRepository.findStanding>
+    > = null;
+
+    try {
+        [board, records, standing] = await Promise.all([
+            ratingPointsRepository.findBoard(filters, RATING_BOARD_LIMIT),
+            ratingPointsRepository.findRecords(periodWindow),
+            standingUserId
+                ? ratingPointsRepository.findStanding(filters, standingUserId)
+                : Promise.resolve(null),
+        ]);
+    } catch {
+        loadFailed = true;
+    }
+
+    const meState: RatingMeState | null =
+        period !== 'week' || !user || loadFailed
+            ? null
+            : user.isGuest
+              ? { kind: 'guest' }
+              : standing
+                ? { kind: 'standing', standing }
+                : { kind: 'noPoints' };
+    const trailingEntry =
+        standing && standing.rank > board.length ? standing : null;
+    const empty = emptyText(period, labels);
 
     return (
-        <main className="mx-auto max-w-3xl px-4 py-8 sm:px-8 sm:py-12">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                {dictionary.leaderboard.title}
+        <main className="mx-auto max-w-2xl px-4 py-6 sm:px-8 sm:py-10">
+            <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+                {labels.title}
             </h1>
-            <p className="mt-2 text-sm text-muted sm:text-base">
-                {dictionary.leaderboard.description}
+            <p className="mt-1 font-mono text-xs text-muted">
+                {periodMeta(period, safeLocale, now, labels)}
             </p>
 
-            <LeaderboardModeFilters
-                locale={safeLocale}
-                filters={filters}
-                labels={{
-                    filterModeLabel: dictionary.leaderboard.filterModeLabel,
-                    filterModeClassic:
-                        dictionary.leaderboard.filterModeClassic,
-                    filterModeBlitz: dictionary.leaderboard.filterModeBlitz,
-                    filterModeDaily: dictionary.leaderboard.filterModeDaily,
-                    filterModeSurvival:
-                        dictionary.leaderboard.filterModeSurvival,
-                }}
-            />
+            <RatingPeriodSwitch locale={safeLocale} period={period} labels={labels} />
 
-            <LeaderboardPeriodFilters
-                locale={safeLocale}
-                filters={filters}
-                labels={{
-                    filterPeriodLabel:
-                        dictionary.leaderboard.filterPeriodLabel,
-                    filterPeriodAll: dictionary.leaderboard.filterPeriodAll,
-                    filterPeriodWeek: dictionary.leaderboard.filterPeriodWeek,
-                    filterPeriodMonth:
-                        dictionary.leaderboard.filterPeriodMonth,
-                }}
-            />
-
-            <LeaderboardDifficultyFilters
-                locale={safeLocale}
-                filters={filters}
-                labels={{
-                    filterDifficultyLabel:
-                        dictionary.leaderboard.filterDifficultyLabel,
-                    filterAll: dictionary.leaderboard.filterAll,
-                    easy: dictionary.quiz.easy,
-                    medium: dictionary.quiz.medium,
-                    hard: dictionary.quiz.hard,
-                    filterMixed: dictionary.leaderboard.filterMixed,
-                }}
-            />
-
-            {periodHint || showBlitzHint || showTopicHint ? (
-                <p className="mt-3 text-xs leading-snug text-muted">
-                    {[
-                        periodHint,
-                        showBlitzHint
-                            ? dictionary.leaderboard.blitzSpeedHint
-                            : null,
-                        showTopicHint
-                            ? dictionary.leaderboard.topicGamesHint
-                            : null,
-                    ]
-                        .filter(Boolean)
-                        .join(' · ')}
-                </p>
+            {meState ? (
+                <RatingMeCard locale={safeLocale} state={meState} labels={labels} />
             ) : null}
 
-            {loadErrorMessage ? (
-                <InlineAlert className="mt-6">{loadErrorMessage}</InlineAlert>
-            ) : null}
-
-            {!loadErrorMessage ? (
-                <LeaderboardTable
-                    entries={entries}
-                    locale={safeLocale}
-                    labels={tableLabels}
+            {loadFailed ? (
+                <InlineAlert className="mt-6">{labels.loadFailed}</InlineAlert>
+            ) : board.length === 0 ? (
+                <EmptyState
+                    className="mt-5"
+                    title={empty.title}
+                    description={empty.description}
+                    action={
+                        period === 'week' ? (
+                            <div className="flex w-full max-w-xs flex-col gap-2">
+                                <PendingLink
+                                    href={`/${safeLocale}`}
+                                    className={buttonClassName({
+                                        className: 'w-full justify-center',
+                                    })}
+                                >
+                                    {labels.playButton}
+                                </PendingLink>
+                                <PendingLink
+                                    href={buildRatingHref(safeLocale, 'lastWeek')}
+                                    className={buttonClassName({
+                                        variant: 'secondary',
+                                        className: 'w-full justify-center',
+                                    })}
+                                >
+                                    {labels.lastWeekLink}
+                                </PendingLink>
+                            </div>
+                        ) : undefined
+                    }
                 />
-            ) : null}
+            ) : (
+                <RatingTable
+                    entries={board}
+                    trailingEntry={trailingEntry}
+                    currentUserId={standingUserId}
+                    showWinner={period === 'lastWeek'}
+                    labels={labels}
+                />
+            )}
+
+            {loadFailed ? null : (
+                <RatingRecords
+                    locale={safeLocale}
+                    period={period}
+                    records={records}
+                    labels={labels}
+                />
+            )}
 
             <details className="mt-6 rounded-md border border-border bg-surface px-3 py-2">
-                <summary className="cursor-pointer select-none font-mono text-xs font-medium uppercase tracking-wider text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
-                    {dictionary.leaderboard.scoringDetailsLabel}
+                <summary className="flex min-h-11 cursor-pointer select-none items-center font-mono text-xs font-medium uppercase tracking-wider text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+                    {labels.scoringDetailsLabel}
                 </summary>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {dictionary.leaderboard.scoringDetails}
+                <p className="pb-2 text-sm leading-relaxed text-muted">
+                    {labels.scoringDetails}
                 </p>
             </details>
         </main>

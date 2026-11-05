@@ -8,5 +8,5 @@ export {
 export type { Locale } from './config';
 export { getDictionary } from './dictionaries';
 export type { Dictionary } from './dictionaries';
-export { formatPlural } from './format-plural';
+export { formatPlural, formatPluralWord } from './format-plural';
 export type { PluralForms } from './format-plural';

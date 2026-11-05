@@ -2701,3 +2701,24 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 - **Players with 0 points** (all answers wrong) are not in the table: getting in takes one point.
 - **Tie on equal points:** the earlier last game with points ranks higher, then user id for a stable order.
 - **Checked:** on dev, SQL matched an independent JS recount for 3 periods × 5 modes × 2 caps (600 and a tight 15).
+
+**Update (November 5, 2026, 4.6c/4.6d — page):**
+
+- **One control: the period.**
+  - `?period=last|all`; no param is the current week.
+  - Old `?mode=` / `?difficulty=` links open the current week instead of failing.
+- **«Your week» card** (current week only):
+  - place, «of N», games, and the gap to the place above (or the lead over #2);
+  - a guest gets the sign-up call: guests are hidden from ratings, and their games move to the new account;
+  - a signed-in player with no points gets «Play».
+- **Table:**
+  - columns: place · player · games · points;
+  - every row is a native `<details>` with the per-mode points (`byMode`, before the daily cap) — no client JS;
+  - my row is highlighted; when it falls below the shown 50, it follows a «· · ·» row.
+- **Records:**
+  - best Blitz: score, then time, then the earlier game;
+  - best Survival run: `totalScore` and its clock-verified waves;
+  - same period window; the Survival run is placed in the period by its start, as on the old board.
+  - No Classic record (capped at 30); the daily board lives on home.
+- **No podium block for now:** 1–3 players a week leave it half empty. Medals on rows keep the scoreboard look. Revisit at 10+ weekly players.
+- **Removed:** the mode, period and difficulty filter components, `parseLeaderboardFilters`, `findBestScores` (+ Survival best-run board). `leaderboardModeWhereSql` stays: rating-points uses it.

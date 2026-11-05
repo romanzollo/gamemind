@@ -45,16 +45,46 @@ export type RatingPointsEntry = {
     rank: number;
     userId: string;
     username: string;
+    /** URL фото профиля; null — эмблема по id. */
+    image: string | null;
     points: number;
     /** Число засчитанных игр за период (волна Выживания = игра). */
     games: number;
+    /**
+     * Очки по режимам до дневного потолка. Сумма может быть больше `points`
+     * только у игрока, упёршегося в потолок дня.
+     */
+    byMode: RatingPointsByMode;
 };
+
+export type RatingPointsByMode = Record<FindBestScoresMode, number>;
 
 export type RatingPointsStanding = RatingPointsEntry & {
     /** Очки игрока на месте выше; null — игрок первый. */
     pointsAbove: number | null;
+    /** Очки игрока на месте ниже; null — ниже никого. */
+    pointsBelow: number | null;
     /** Сколько игроков в таблице периода. */
     totalPlayers: number;
+};
+
+/** Рекорд Блица периода: лучшие очки, при равенстве — быстрее. */
+export type BlitzRecord = {
+    username: string;
+    score: number;
+    seconds: number;
+};
+
+/** Рекорд Выживания периода: лучший забег (сумма волн с честными часами). */
+export type SurvivalRecord = {
+    username: string;
+    score: number;
+    waves: number;
+};
+
+export type RatingRecords = {
+    blitz: BlitzRecord | null;
+    survival: SurvivalRecord | null;
 };
 
 type SqlQuery = { text: string; values: unknown[] };
@@ -63,13 +93,31 @@ type RankedRow = {
     rank: number;
     user_id: string;
     username: string;
+    image: string | null;
     points: number;
     games: number;
+    classic_points: number;
+    blitz_points: number;
+    daily_points: number;
+    survival_points: number;
 };
 
 type StandingRow = RankedRow & {
     points_above: number | null;
+    points_below: number | null;
     total_players: number;
+};
+
+type BlitzRecordRow = { username: string; score: number; seconds: number };
+type SurvivalRecordRow = { username: string; score: number; waves: number };
+
+/** Режим игры по скалярам сессии — как дискриминаторы досок (Layer 1). */
+const MODE_FILTER_SQL: Record<FindBestScoresMode, string> = {
+    daily: 's."dailyChallengeId" IS NOT NULL',
+    survival: 's."survivalRunId" IS NOT NULL',
+    blitz: 's."dailyChallengeId" IS NULL AND s."timedEndsAt" IS NOT NULL',
+    classic:
+        's."dailyChallengeId" IS NULL AND s."timedEndsAt" IS NULL AND s."survivalRunId" IS NULL',
 };
 
 /** WHERE засчитанных игр для режима (скаляры сессии, без JSONB). */
@@ -83,30 +131,49 @@ function countedGamesWhereSql(mode: RatingPointsMode): string[] {
 }
 
 /**
- * CTE `ranked`: все игроки периода с очками > 0 и их место.
- * Колонка `completedAt` — `timestamp` без пояса, хранит UTC. Границы
- * передаём ISO-строкой с `Z` и приводим явно: иначе node-pg отдал бы Date
- * в локальном поясе процесса, а Postgres молча отбросил бы смещение.
+ * Условия `[from, to)` по колонке времени.
+ * Колонки времени — `timestamp` без пояса, хранят UTC. Границы передаём
+ * ISO-строкой с `Z` и приводим явно: иначе node-pg отдал бы Date в
+ * локальном поясе процесса, а Postgres молча отбросил бы смещение.
  */
-function buildRankedCte(
-    filters: RatingPointsFilters,
+function periodWhereSql(
+    column: string,
+    filters: Pick<RatingPointsFilters, 'from' | 'to'>,
     values: unknown[],
-): string {
-    const where = countedGamesWhereSql(filters.mode);
+): string[] {
+    const where: string[] = [];
 
     if (filters.from) {
         values.push(filters.from.toISOString());
         where.push(
-            `r."completedAt" >= ($${values.length}::timestamptz AT TIME ZONE 'UTC')`,
+            `${column} >= ($${values.length}::timestamptz AT TIME ZONE 'UTC')`,
         );
     }
 
     if (filters.to) {
         values.push(filters.to.toISOString());
         where.push(
-            `r."completedAt" < ($${values.length}::timestamptz AT TIME ZONE 'UTC')`,
+            `${column} < ($${values.length}::timestamptz AT TIME ZONE 'UTC')`,
         );
     }
+
+    return where;
+}
+
+/** Сумма очков дня по одному режиму (до потолка — для разбивки в строке). */
+function modePointsSql(mode: FindBestScoresMode): string {
+    return `COALESCE(SUM(r."score") FILTER (WHERE ${MODE_FILTER_SQL[mode]}), 0)`;
+}
+
+/** CTE `ranked`: все игроки периода с очками > 0 и их место. */
+function buildRankedCte(
+    filters: RatingPointsFilters,
+    values: unknown[],
+): string {
+    const where = [
+        ...countedGamesWhereSql(filters.mode),
+        ...periodWhereSql('r."completedAt"', filters, values),
+    ];
 
     values.push(filters.dailyCap);
     const capParam = `$${values.length}`;
@@ -118,7 +185,11 @@ function buildRankedCte(
                 (r."completedAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Europe/Moscow')::date AS day,
                 SUM(r."score") AS day_points,
                 COUNT(*) AS games,
-                MAX(r."completedAt") FILTER (WHERE r."score" > 0) AS last_scored_at
+                MAX(r."completedAt") FILTER (WHERE r."score" > 0) AS last_scored_at,
+                ${modePointsSql('classic')} AS classic_points,
+                ${modePointsSql('blitz')} AS blitz_points,
+                ${modePointsSql('daily')} AS daily_points,
+                ${modePointsSql('survival')} AS survival_points
             FROM "QuizResult" AS r
             INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
             INNER JOIN "User" AS u ON u."id" = r."userId"
@@ -130,7 +201,11 @@ function buildRankedCte(
                 user_id,
                 SUM(LEAST(day_points, ${capParam}::int))::int AS points,
                 SUM(games)::int AS games,
-                MAX(last_scored_at) AS last_scored_at
+                MAX(last_scored_at) AS last_scored_at,
+                SUM(classic_points)::int AS classic_points,
+                SUM(blitz_points)::int AS blitz_points,
+                SUM(daily_points)::int AS daily_points,
+                SUM(survival_points)::int AS survival_points
             FROM per_day
             GROUP BY user_id
         ),
@@ -141,13 +216,31 @@ function buildRankedCte(
                 ))::int AS rank,
                 pu.user_id,
                 u."username" AS username,
+                u."image" AS image,
                 pu.points,
-                pu.games
+                pu.games,
+                pu.classic_points,
+                pu.blitz_points,
+                pu.daily_points,
+                pu.survival_points
             FROM per_user AS pu
             INNER JOIN "User" AS u ON u."id" = pu.user_id
             WHERE pu.points > 0
         )`;
 }
+
+const RANKED_COLUMNS = [
+    'rank',
+    'user_id',
+    'username',
+    'image',
+    'points',
+    'games',
+    'classic_points',
+    'blitz_points',
+    'daily_points',
+    'survival_points',
+] as const;
 
 /** SQL таблицы периода: первые `limit` мест. */
 export function buildRatingBoardSql(
@@ -160,7 +253,7 @@ export function buildRatingBoardSql(
 
     return {
         text: `${cte}
-        SELECT rank, user_id, username, points, games
+        SELECT ${RANKED_COLUMNS.join(', ')}
         FROM ranked
         ORDER BY rank
         LIMIT $${values.length}`,
@@ -168,7 +261,7 @@ export function buildRatingBoardSql(
     };
 }
 
-/** SQL места одного игрока + очки соседа выше + размер таблицы. */
+/** SQL места одного игрока + очки соседей + размер таблицы. */
 export function buildRatingStandingSql(
     filters: RatingPointsFilters,
     userId: string,
@@ -180,12 +273,80 @@ export function buildRatingStandingSql(
     return {
         text: `${cte}
         SELECT
-            me.rank, me.user_id, me.username, me.points, me.games,
+            ${RANKED_COLUMNS.map((column) => `me.${column}`).join(', ')},
             above.points AS points_above,
+            below.points AS points_below,
             (SELECT COUNT(*) FROM ranked)::int AS total_players
         FROM ranked AS me
         LEFT JOIN ranked AS above ON above.rank = me.rank - 1
+        LEFT JOIN ranked AS below ON below.rank = me.rank + 1
         WHERE me.user_id = $${values.length}`,
+        values,
+    };
+}
+
+/**
+ * SQL рекорда Блица: лучшая игра периода (без тем), при равных очках —
+ * короче по времени, потом раньше. Как сортировка доски Блица (Layer 1).
+ */
+export function buildBlitzRecordSql(
+    filters: Pick<RatingPointsFilters, 'from' | 'to'>,
+): SqlQuery {
+    const values: unknown[] = [];
+    const where = [
+        ...leaderboardModeWhereSql('blitz'),
+        'r."score" > 0',
+        LEADERBOARD_VISIBLE_USER_SQL,
+        ...periodWhereSql('r."completedAt"', filters, values),
+    ];
+
+    return {
+        text: `
+        SELECT
+            u."username" AS username,
+            r."score" AS score,
+            CEIL(EXTRACT(EPOCH FROM (r."completedAt" - s."startedAt")))::int AS seconds
+        FROM "QuizResult" AS r
+        INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
+        INNER JOIN "User" AS u ON u."id" = r."userId"
+        WHERE ${where.join(' AND ')}
+        ORDER BY r."score" DESC, (r."completedAt" - s."startedAt") ASC, r."completedAt" ASC
+        LIMIT 1`,
+        values,
+    };
+}
+
+/**
+ * SQL рекорда Выживания: лучший забег периода по `SurvivalRun.totalScore`
+ * (сумма волн с честными часами); период — по старту забега, как у доски
+ * Выживания. Волны — число таких волн.
+ */
+export function buildSurvivalRecordSql(
+    filters: Pick<RatingPointsFilters, 'from' | 'to'>,
+): SqlQuery {
+    const values: unknown[] = [];
+    const where = [
+        'sr."totalScore" > 0',
+        LEADERBOARD_VISIBLE_USER_SQL,
+        ...periodWhereSql('sr."startedAt"', filters, values),
+    ];
+
+    return {
+        text: `
+        SELECT
+            u."username" AS username,
+            sr."totalScore" AS score,
+            (
+                SELECT COUNT(*)
+                FROM "QuizSession" AS s
+                INNER JOIN "QuizResult" AS r ON r."sessionId" = s."id"
+                WHERE s."survivalRunId" = sr."id" AND s."survivalClockOk" IS TRUE
+            )::int AS waves
+        FROM "SurvivalRun" AS sr
+        INNER JOIN "User" AS u ON u."id" = sr."userId"
+        WHERE ${where.join(' AND ')}
+        ORDER BY sr."totalScore" DESC, sr."startedAt" ASC
+        LIMIT 1`,
         values,
     };
 }
@@ -195,8 +356,15 @@ function toEntry(row: RankedRow): RatingPointsEntry {
         rank: row.rank,
         userId: row.user_id,
         username: row.username,
+        image: row.image,
         points: row.points,
         games: row.games,
+        byMode: {
+            classic: row.classic_points,
+            blitz: row.blitz_points,
+            daily: row.daily_points,
+            survival: row.survival_points,
+        },
     };
 }
 
@@ -237,7 +405,35 @@ export const ratingPointsRepository = {
         return {
             ...toEntry(row),
             pointsAbove: row.points_above,
+            pointsBelow: row.points_below,
             totalPlayers: row.total_players,
         };
+    },
+
+    /** Рекорды Блица и Выживания периода — два запроса на одном соединении. */
+    async findRecords(
+        filters: Pick<RatingPointsFilters, 'from' | 'to'>,
+    ): Promise<RatingRecords> {
+        const blitzQuery = buildBlitzRecordSql(filters);
+        const survivalQuery = buildSurvivalRecordSql(filters);
+
+        return withDirectPgClient(
+            async (client) => {
+                const blitz = await client.query<BlitzRecordRow>(
+                    blitzQuery.text,
+                    blitzQuery.values,
+                );
+                const survival = await client.query<SurvivalRecordRow>(
+                    survivalQuery.text,
+                    survivalQuery.values,
+                );
+
+                return {
+                    blitz: blitz.rows[0] ?? null,
+                    survival: survival.rows[0] ?? null,
+                };
+            },
+            { debugLabel: 'rating.records' },
+        );
     },
 };

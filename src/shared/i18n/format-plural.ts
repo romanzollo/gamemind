@@ -25,17 +25,38 @@ function getPluralRules(locale: Locale): Intl.PluralRules {
     return rules;
 }
 
+function selectPluralTemplate(
+    locale: Locale,
+    count: number,
+    forms: PluralForms,
+): string {
+    const rule = getPluralRules(locale).select(count);
+
+    return rule === 'one' || rule === 'few' || rule === 'many'
+        ? forms[rule]
+        : forms.other;
+}
+
 /** Подставляет `{n}` в форму, выбранную правилами языка. */
 export function formatPlural(
     locale: Locale,
     count: number,
     forms: PluralForms,
 ): string {
-    const rule = getPluralRules(locale).select(count);
-    const template =
-        rule === 'one' || rule === 'few' || rule === 'many'
-            ? forms[rule]
-            : forms.other;
+    return selectPluralTemplate(locale, count, forms).replace(
+        '{n}',
+        String(count),
+    );
+}
 
-    return template.replace('{n}', String(count));
+/**
+ * Только слово формы без числа: «очков», «points». Для вёрстки, где число
+ * крупное, а слово — мелкой подписью под ним.
+ */
+export function formatPluralWord(
+    locale: Locale,
+    count: number,
+    forms: PluralForms,
+): string {
+    return selectPluralTemplate(locale, count, forms).replace('{n}', '').trim();
 }

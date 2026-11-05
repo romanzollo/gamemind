@@ -1,7 +1,6 @@
 // Работа с результатами викторин
 import { withDirectPgClient, withPooledPgClient } from '@/lib/db/direct-pg';
 import { parseSnapshotData } from '@/entities/quiz-session/quiz-session-snapshot';
-import { LEADERBOARD_VISIBLE_USER_SQL } from '@/entities/user/leaderboard-visibility';
 import {
     parseCompactReviewPayload,
     type CompactReviewPayloadV1,
@@ -100,54 +99,12 @@ export type QuizResultReviewLoad =
           sessionId: string;
       };
 
-type LeaderboardScoreRow = {
-    user_id: string;
-    username: string;
-    score: number;
-    total_questions: number;
-    correct_count: number;
-    completed_at: Date;
-};
-
 /**
- * Режим публичной доски. Не play-mode Survival.
+ * Режим игры для рейтинга (очки по режиму, рекорды, rating-points.repository).
  * Дискриминация только скалярами QuizSession (DECISIONS → Leaderboard Layer 1).
  * Classic: dailyChallengeId / timedEndsAt / survivalRunId все NULL.
  */
 export type FindBestScoresMode = 'classic' | 'blitz' | 'daily' | 'survival';
-
-/**
- * Фильтр рейтинга.
- * JOIN Session всегда: mode режет Classic / Blitz / Daily по скалярам.
- * Classic дополнительно `survivalRunId IS NULL` — иначе HARD-волна 36
- * попадёт на недельную доску (DECISIONS → Survival Mode MVP + Layer 1).
- * - difficulty omit/`all` = все сложности внутри mode (mix входит в «все»);
- * - EASY|MEDIUM|HARD = poolKind SINGLE + эта difficulty (mix не в Medium);
- * - MIXED = poolKind MIXED;
- * - completedAfter = `QuizResult.completedAt >=` даты; null/omit = без окна.
- *
- * Семантику week/month считает feature (`getLeaderboardPeriodCutoff`);
- * entity знает Date и mode — без features → entities.
- * mode / difficulty в SQL только из allowlist (Zod на page). Omit mode = classic:
- * не смешивать потолки, даже если page забыл передать поле.
- */
-export type FindBestScoresFilters = {
-    difficulty?: Difficulty | 'MIXED' | 'all';
-    /** Нижняя граница `QuizResult.completedAt` (скользящее окно). */
-    completedAfter?: Date | null;
-    /** Omit = classic. Нет значения «все режимы». */
-    mode?: FindBestScoresMode;
-};
-
-function resolveLeaderboardMode(
-    mode: FindBestScoresMode | undefined,
-): FindBestScoresMode {
-    if (mode === 'blitz' || mode === 'daily' || mode === 'survival') {
-        return mode;
-    }
-
-    return 'classic';
-}
 
 /**
  * WHERE по скалярам сессии — без snapshotData.
@@ -181,33 +138,6 @@ export function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
     ];
 }
 
-/**
- * DISTINCT ON требует, чтобы ORDER BY начинался с userId.
- * Blitz: равный score → меньшая длительность выше. Classic/Daily этим ключом
- * не сортируем — только completedAt (иначе классика стала бы гонкой на скорость).
- */
-function leaderboardBestOrderSql(mode: FindBestScoresMode): {
-    durationSelect: string;
-    innerOrderBy: string;
-    outerOrderBy: string;
-} {
-    if (mode === 'blitz') {
-        return {
-            durationSelect: `, (r."completedAt" - s."startedAt") AS "duration"`,
-            innerOrderBy:
-                'r."userId" ASC, r."score" DESC, (r."completedAt" - s."startedAt") ASC, r."completedAt" ASC',
-            outerOrderBy:
-                'best."score" DESC, best."duration" ASC, best."completedAt" ASC',
-        };
-    }
-
-    return {
-        durationSelect: '',
-        innerOrderBy: 'r."userId" ASC, r."score" DESC, r."completedAt" ASC',
-        outerOrderBy: 'best."score" DESC, best."completedAt" ASC',
-    };
-}
-
 function parseSessionPoolKind(value: string | null): QuizSessionPoolKind {
     return value === 'MIXED' ? 'MIXED' : 'SINGLE';
 }
@@ -229,105 +159,6 @@ function parseSetupDifficulty(
     }
 
     return 'EASY';
-}
-
-/**
- * Survival board: best run totalScore per user (не best одна волна).
- * Period = startedAt run в окне; difficulty = SurvivalRun.difficulty.
- * totalQuestions / correctCount — SUM clockOk-волн того же run.
- */
-async function findBestSurvivalRunScores(
-    limit: number,
-    filters?: FindBestScoresFilters,
-) {
-    const difficulty = filters?.difficulty;
-    const filterBySingle =
-        difficulty === 'EASY' ||
-        difficulty === 'MEDIUM' ||
-        difficulty === 'HARD';
-    const completedAfter = filters?.completedAfter ?? null;
-
-    const params: unknown[] = [limit];
-    const whereParts: string[] = ['sr."totalScore" > 0'];
-
-    if (filterBySingle) {
-        params.push(difficulty);
-        whereParts.push(
-            `sr."difficulty" = $${params.length}::"Difficulty"`,
-        );
-    }
-
-    if (completedAfter) {
-        params.push(completedAfter);
-        whereParts.push(`sr."startedAt" >= $${params.length}`);
-    }
-
-    const whereSql = `WHERE ${whereParts.join(' AND ')}`;
-
-    const result = await withDirectPgClient(
-        (client) =>
-            client.query<LeaderboardScoreRow>(
-                `
-                SELECT
-                    best."userId" AS "user_id",
-                    u."username" AS "username",
-                    best."score" AS "score",
-                    best."totalQuestions" AS "total_questions",
-                    best."correctCount" AS "correct_count",
-                    best."completedAt" AS "completed_at"
-                FROM (
-                    SELECT DISTINCT ON (sr."userId")
-                        sr."userId",
-                        sr."totalScore" AS "score",
-                        COALESCE(agg."total_questions", 0) AS "totalQuestions",
-                        COALESCE(agg."correct_count", 0) AS "correctCount",
-                        COALESCE(sr."completedAt", agg."last_completed", sr."startedAt")
-                            AS "completedAt"
-                    FROM "SurvivalRun" AS sr
-                    LEFT JOIN LATERAL (
-                        SELECT
-                            SUM(r."totalQuestions")::int AS "total_questions",
-                            SUM(r."correctCount")::int AS "correct_count",
-                            MAX(r."completedAt") AS "last_completed"
-                        FROM "QuizResult" AS r
-                        INNER JOIN "QuizSession" AS s
-                            ON s."id" = r."sessionId"
-                        WHERE
-                            s."survivalRunId" = sr."id"
-                            AND s."survivalClockOk" IS TRUE
-                    ) AS agg ON TRUE
-                    ${whereSql}
-                    ORDER BY
-                        sr."userId" ASC,
-                        sr."totalScore" DESC,
-                        COALESCE(sr."completedAt", agg."last_completed", sr."startedAt") ASC
-                ) AS best
-                INNER JOIN "User" AS u
-                    ON u."id" = best."userId"
-                    AND ${LEADERBOARD_VISIBLE_USER_SQL}
-                ORDER BY
-                    best."score" DESC,
-                    best."completedAt" ASC
-                LIMIT $1
-            `,
-                params,
-            ),
-        {
-            debugLabel: 'leaderboard.best-survival-runs',
-        },
-    );
-
-    return result.rows.map((row) => ({
-        userId: row.user_id,
-        score: row.score,
-        totalQuestions: row.total_questions,
-        correctCount: row.correct_count,
-        completedAt: row.completed_at,
-        user: {
-            id: row.user_id,
-            username: row.username,
-        },
-    }));
 }
 
 type RecentResultRow = {
@@ -581,110 +412,6 @@ async function loadResultReviewBySessionIdForUser(
 
 // репозиторий для работы с результатами викторины
 export const quizResultRepository = {
-    /**
-     * Лучший результат на пользователя внутри доски — unpooled pg.
-     *
-     * Classic/Blitz/Daily: JOIN QuizSession + QuizResult (скаляры, не JSONB).
-     * Survival: best `SurvivalRun.totalScore` per user (сумма clockOk-волн).
-     * Difficulty / completedAfter — дополнительные WHERE.
-     * Blitz ORDER BY длительности только в blitz-ветке.
-     *
-     * См. DECISIONS.md → Leaderboard retention meta — Layer 1 + Survival wave 2+.
-     */
-    async findBestScores(limit: number, filters?: FindBestScoresFilters) {
-        const mode = resolveLeaderboardMode(filters?.mode);
-
-        if (mode === 'survival') {
-            return findBestSurvivalRunScores(limit, filters);
-        }
-
-        const difficulty = filters?.difficulty;
-        const filterBySingle =
-            difficulty === 'EASY' ||
-            difficulty === 'MEDIUM' ||
-            difficulty === 'HARD';
-        const filterByMixed = difficulty === 'MIXED';
-        const completedAfter = filters?.completedAfter ?? null;
-        const orderSql = leaderboardBestOrderSql(mode);
-
-        const params: unknown[] = [limit];
-        const whereParts: string[] = [...leaderboardModeWhereSql(mode)];
-
-        if (filterByMixed) {
-            params.push('MIXED');
-            whereParts.push(
-                `s."poolKind" = $${params.length}::"QuizSessionPoolKind"`,
-            );
-        } else if (filterBySingle) {
-            params.push('SINGLE');
-            whereParts.push(
-                `s."poolKind" = $${params.length}::"QuizSessionPoolKind"`,
-            );
-            params.push(difficulty);
-            whereParts.push(
-                `s."difficulty" = $${params.length}::"Difficulty"`,
-            );
-        }
-
-        if (completedAfter) {
-            params.push(completedAfter);
-            whereParts.push(`r."completedAt" >= $${params.length}`);
-        }
-
-        const whereSql = `WHERE ${whereParts.join(' AND ')}`;
-
-        const result = await withDirectPgClient(
-            (client) =>
-                client.query<LeaderboardScoreRow>(
-                    `
-                    SELECT
-                        best."userId" AS "user_id",
-                        u."username" AS "username",
-                        best."score" AS "score",
-                        best."totalQuestions" AS "total_questions",
-                        best."correctCount" AS "correct_count",
-                        best."completedAt" AS "completed_at"
-                    FROM (
-                        SELECT DISTINCT ON (r."userId")
-                            r."userId",
-                            r."score",
-                            r."totalQuestions",
-                            r."correctCount",
-                            r."completedAt"
-                            ${orderSql.durationSelect}
-                        FROM "QuizResult" AS r
-                        INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
-                        ${whereSql}
-                        ORDER BY
-                            ${orderSql.innerOrderBy}
-                    ) AS best
-                    INNER JOIN "User" AS u
-                        ON u."id" = best."userId"
-                        AND ${LEADERBOARD_VISIBLE_USER_SQL}
-                    ORDER BY
-                        ${orderSql.outerOrderBy}
-                    LIMIT $1
-                `,
-                    params,
-                ),
-            {
-                debugLabel: 'leaderboard.best-scores',
-            },
-        );
-
-        return result.rows.map((row) => ({
-            userId: row.user_id,
-            score: row.score,
-            totalQuestions: row.total_questions,
-            correctCount: row.correct_count,
-            completedAt: row.completed_at,
-            user: {
-                id: row.user_id,
-                username: row.username,
-            },
-        }));
-    },
-
     /** Score/rematch без JSONB — critical path после submit. */
     findSummaryBySessionIdForUser(sessionId: string, userId: string) {
         return loadResultSummaryBySessionIdForUser(sessionId, userId);

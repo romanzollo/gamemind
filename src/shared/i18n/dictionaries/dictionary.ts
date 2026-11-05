@@ -692,69 +692,70 @@ export type Dictionary = {
     };
     leaderboard: {
         title: string;
-        /**
-         * Одна строка под h1. Правила очков — scoringDetails, не сюда.
-         */
+        /** Одна строка под h1: что такое очки недели. Правила — scoringDetails. */
         description: string;
         /** `<summary>` свёрнутых правил. */
         scoringDetailsLabel: string;
-        /**
-         * Тело `<details>`: веса 1/2/3, потолок Classic HARD 10, режимы раздельно.
-         */
+        /** Тело `<details>`: веса 1/2/3, все режимы кроме тем, неделя МСК, потолок дня. */
         scoringDetails: string;
-        /**
-         * Когда открыта неделя (default). Коротко: окно 7 дней.
-         * Не писать «сойдёт с доски». Не обещать сброс в понедельник.
-         */
-        weekWindowHint: string;
-        /** Доски Классики и Блица: игры с темой не считаются (Play topics). */
-        topicGamesHint: string;
-        /** Когда открыт «Месяц»: скользящее окно 30 дней, как у недели. */
-        monthWindowHint: string;
-        /**
-         * Когда открыто «Всё время».
-         * Смысл: это рекорды без окна в 7 дней; живая гонка — вкладка «Неделя».
-         */
-        allTimeHint: string;
-        /**
-         * На доске Blitz: при равных очках выше более быстрый забег.
-         */
-        blitzSpeedHint: string;
+        /** Место — aria у медали и доска дня на главной. */
         rank: string;
         player: string;
-        /** Взвешенные очки (EASY=1, MEDIUM=2, HARD=3) — не путать с correctCount */
+        /** Очки (EASY=1, MEDIUM=2, HARD=3) — шапка таблицы и доска дня. */
         score: string;
-        /**
-         * Точность: correctCount / totalQuestions.
-         * Отдельно от score: очки взвешены, точность — «сколько угадал».
-         */
+        /** Точность correctCount / totalQuestions — доска дня на главной. */
         accuracy: string;
-        /** Дата лучшего результата (QuizResult.completedAt); уже в DTO, раньше не показывали */
-        date: string;
+        /** Заголовок пустой текущей недели. */
         empty: string;
-        /** Пусто при не-default ?difficulty= / ?period= / ?mode= */
-        emptyFiltered: string;
         loadFailed: string;
-        /** aria-label группы чипов режима */
-        filterModeLabel: string;
-        filterModeClassic: string;
-        filterModeBlitz: string;
-        filterModeDaily: string;
-        filterModeSurvival: string;
-        /** aria-label группы чипов сложности */
-        filterDifficultyLabel: string;
-        /** Чип «все сложности» → URL без ?difficulty= */
-        filterAll: string;
-        /** Короткий chip фильтра mix-сессий (`?difficulty=MIXED`). */
-        filterMixed: string;
-        /** aria-label группы чипов периода */
-        filterPeriodLabel: string;
-        /** Чип all-time → явный `?period=all` (больше не default) */
-        filterPeriodAll: string;
-        /** Скользящие 7×24ч — default живой доски, в URL не пишем */
-        filterPeriodWeek: string;
-        /** Скользящие 30×24ч */
-        filterPeriodMonth: string;
+        /** aria-label переключателя периода. */
+        periodLabel: string;
+        periodWeek: string;
+        periodLast: string;
+        periodAll: string;
+        /** `{range}` — «2–8 ноября», `{left}` — «3 д 14 ч». */
+        weekMeta: string;
+        lastWeekMeta: string;
+        allTimeMeta: string;
+        daysShort: string;
+        hoursShort: string;
+        meTitle: string;
+        /** После крупной цифры места: «место из 12». */
+        mePlaceOf: string;
+        pointsCount: PluralForms;
+        gamesCount: PluralForms;
+        /** `{place}` — место выше, `{points}` — pointsCount. */
+        meGap: string;
+        /** Очков поровну с местом выше (ничья по времени). */
+        meTie: string;
+        /** Я первый; `{points}` — отрыв от второго (pointsCount). */
+        meLeader: string;
+        meNotYet: string;
+        guestTitle: string;
+        guestText: string;
+        guestButton: string;
+        playButton: string;
+        colGames: string;
+        youBadge: string;
+        /** aria раскрытия строки с очками по режимам. */
+        breakdownLabel: string;
+        /** aria для «· · ·» перед моей строкой вне топа. */
+        skippedPlaces: string;
+        winnerBadge: string;
+        recordsWeek: string;
+        recordsLast: string;
+        recordsAll: string;
+        recordSeconds: string;
+        recordWaves: PluralForms;
+        recordEmpty: string;
+        emptyWeekText: string;
+        emptyLastWeek: string;
+        emptyAllTime: string;
+        lastWeekLink: string;
+        modeClassic: string;
+        modeBlitz: string;
+        modeDaily: string;
+        modeSurvival: string;
     };
     /**
      * Ephemeral toasts (Sonner). Сообщения для helpers; call site может

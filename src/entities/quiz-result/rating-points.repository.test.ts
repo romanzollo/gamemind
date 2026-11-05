@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    buildBlitzRecordSql,
     buildRatingBoardSql,
     buildRatingStandingSql,
+    buildSurvivalRecordSql,
     type RatingPointsFilters,
 } from './rating-points.repository';
 
@@ -91,7 +93,65 @@ describe('buildRatingBoardSql', () => {
     });
 });
 
+describe('mode breakdown', () => {
+    it('sums each mode by session scalars, before the daily cap', () => {
+        const { text } = buildRatingBoardSql(WEEK, 20);
+
+        expect(text).toContain(
+            'FILTER (WHERE s."dailyChallengeId" IS NULL AND s."timedEndsAt" IS NOT NULL)',
+        );
+        expect(text).toContain(
+            'FILTER (WHERE s."dailyChallengeId" IS NULL AND s."timedEndsAt" IS NULL AND s."survivalRunId" IS NULL)',
+        );
+        expect(text).toContain('SUM(classic_points)::int AS classic_points');
+        expect(text).toContain('survival_points');
+    });
+});
+
+describe('records', () => {
+    it('Blitz record: no topic games, best score then faster then earlier', () => {
+        const { text, values } = buildBlitzRecordSql(WEEK);
+
+        expect(text).toContain('s."timedEndsAt" IS NOT NULL');
+        expect(text).toContain('s."topicTagId" IS NULL');
+        expect(text).toContain(
+            'ORDER BY r."score" DESC, (r."completedAt" - s."startedAt") ASC, r."completedAt" ASC',
+        );
+        expect(values).toEqual(['2026-11-01T21:00:00.000Z']);
+    });
+
+    it('Survival record: run window by start, waves with a valid clock only', () => {
+        const { text, values } = buildSurvivalRecordSql({
+            from: WEEK.from,
+            to: new Date('2026-11-08T21:00:00.000Z'),
+        });
+
+        expect(text).toContain(
+            `sr."startedAt" >= ($1::timestamptz AT TIME ZONE 'UTC')`,
+        );
+        expect(text).toContain(
+            `sr."startedAt" < ($2::timestamptz AT TIME ZONE 'UTC')`,
+        );
+        expect(text).toContain('s."survivalClockOk" IS TRUE');
+        expect(text).toContain('u."isGuest" = false');
+        expect(values).toHaveLength(2);
+    });
+
+    it('records never read snapshot or review JSON', () => {
+        const all = `${buildBlitzRecordSql(WEEK).text}${buildSurvivalRecordSql(WEEK).text}`;
+
+        expect(all).not.toMatch(/snapshotData|reviewPayload|reviewSnapshot/);
+    });
+});
+
 describe('buildRatingStandingSql', () => {
+    it('returns both neighbours', () => {
+        const { text } = buildRatingStandingSql(WEEK, 'user-1');
+
+        expect(text).toContain('below.rank = me.rank + 1');
+        expect(text).toContain('me.image');
+    });
+
     it('filters by the user id as the last parameter', () => {
         const { text, values } = buildRatingStandingSql(WEEK, 'user-1');
 
