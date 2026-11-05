@@ -1051,6 +1051,8 @@ Full checklist: `PROJECT_CONTEXT.md` ? Public Deploy Plan; tracking boxes in `RO
 
 **Status (August 21, 2026):** Layer 1 + Survival mode chip **on prod**; lobby copy compact; mode chips wrap 2×2 on 320px. User www smoke OK after Survival schema catch-up (Aug 21).
 
+**Update (November 5, 2026):** superseded as the default board by «Weekly rating points» (calendar MSK week, sum over all modes). Best-game per mode stays only as a record view.
+
 ## Admin Panel
 
 - List, create, and delete implemented at `/:locale/admin/questions` (+ `/new`).
@@ -2638,3 +2640,48 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 **No index on `User.createdAt` / `isGuest`:** with thousands of users a sort in memory costs less than an index paid on every sign-up and guest creation. Revisit when the users page gets slow on prod or the table passes ~50k rows; then `@@index([isGuest, createdAt])`.
 
 **Measured (dev, 12 users / 206 results):** old 0.21 ms, new 0.34 ms — on a tiny table a full scan beats per-row lookups; the gain is in growth (old cost ∝ all results, new ∝ 25 users' results).
+
+## Weekly rating points (November 5, 2026)
+
+**Context:** ROADMAP 4.6a, owner feedback. `/leaderboard` is 4 modes × 5 difficulties × 3 periods = 60 boards, each showing a player's best **single game** inside that slice. No board answers «who scored how much in total». Best-game boards hit the ceiling: Classic / Blitz 10 HARD = 30, after which only the earlier time of reaching 30 decides. The rolling week (Layer 1) has no finish line, so there is no «week results» moment.
+
+**Decision:** the main rating is **weekly points**: the sum of points from every counted game of the week, across all modes. This supersedes Layer 1 (August 19) as the default board: rolling week, mandatory exclusive mode, best-game ranking.
+
+| Piece | Choice |
+|------|--------|
+| Currency | `QuizResult.score` as it is: a correct answer = its difficulty weight (EASY 1 / MEDIUM 2 / HARD 3, ADR Weighted scoring). Same weight in every mode, so modes add up without normalisation. Scoring code and submit are unchanged |
+| Counted games | A `QuizResult` exists (completed; a late Blitz has none). Survival: only waves with `survivalClockOk = true` (same rule as `SurvivalRun.totalScore`). Topic games (`topicTagId IS NOT NULL`) do not count (ADR Play topics). Guests, test accounts and inactive users are hidden (`LEADERBOARD_VISIBLE_USER_SQL`); a guest who registers keeps the same `userId`, so earlier games count |
+| Week | Calendar week, Moscow time: Monday 00:00 – Sunday 23:59:59 MSK (UTC+3, no DST). Same clock as the daily challenge (`get-moscow-date-key`). EN players see the reset time in their own time zone |
+| Daily cap | At most N rating points per player per Moscow day; the rest of the day's points still go to stats and achievements. N is set from prod data (4.6b) so that normal play never reaches it — it exists against bots and mass random clicking, not to ration players. The cap applies per day, before the weekly sum: `SUM(LEAST(day_points, N))` |
+| Ties | Equal points: the player who reached the total earlier (earlier last counted game) ranks higher |
+| Page controls | Period: this week / last week / all time (all time = sum over history, a hall of fame). Mode: all / Classic / Blitz / Daily / Survival — the same sum restricted to one mode. No difficulty filter: difficulty is already in the points |
+| Best-game records | Not the main board any more. Best Blitz (with time) and best Survival run move to a second level; where exactly is decided in 4.6c (UX) |
+
+**Examples:**
+
+- Anya's week: Classic 10 HARD with 7 correct = 21, Blitz MEDIUM with 8 correct = 16, daily challenge 6 correct = 12, Survival waves 18 + 12 = 30 → **79**.
+- A Survival wave with `survivalClockOk = false` adds 0, as in the run total.
+- A Classic game on the «Shooters» topic adds 0 to the rating and still counts for achievements and the profile.
+- Two players with 64: whoever finished their last counted game earlier is above.
+
+**Why:**
+
+- One number per player answers the owner's question directly; one rule («a correct answer earns its difficulty points») explains it.
+- No ceiling: every game moves you, the race stays open until Sunday.
+- A fixed week gives a finish line, «last week's results» and the base for leagues (ROADMAP 5.4) without new maths.
+- Read-only: it sums existing `QuizResult` rows, so the quiz hot path (start, submit, clock) is untouched.
+
+**Not chosen:**
+
+| Option | Why not |
+|--------|---------|
+| Keep best-game boards, simplify the screen | Still no total; still capped at 30 |
+| Normalise each mode's best to 0–100 and add up | Hard to explain; caps at 100 per mode the same way |
+| Hidden skill rating (Elo / Glicko) | Fair but opaque («why 1487?»). Kept for online-duel matchmaking (ROADMAP 5.5), as a separate number |
+| Mode multipliers (e.g. daily ×2) | Not without data. Changing the formula mid-week is felt as unfair: any change starts from a new week |
+| Rolling 7-day sum | Points would «leak» every day without playing (300 yesterday, 250 today) |
+| No cap | One script or a random clicker could own the board; a generous cap costs normal players nothing |
+
+**Accepted trade-off:** whoever plays more ranks higher — this is a rating of active fans, not of single-game skill. Single-game skill stays visible in records and, later, in leagues by groups.
+
+**Open for 4.6b (data):** the value of N (needs a read-only look at prod daily points, with the owner's permission); computing on the fly with an index vs. a weekly aggregate written by the outbox after submit (outside the critical path) — chosen by measurement. Never `snapshotData` / `reviewPayload` in these reads.
