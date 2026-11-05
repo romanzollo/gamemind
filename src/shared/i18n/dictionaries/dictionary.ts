@@ -756,6 +756,20 @@ export type Dictionary = {
         modeBlitz: string;
         modeDaily: string;
         modeSurvival: string;
+        /** Заголовок блока «Рейтинг недели» на результате и в профиле. */
+        weekRatingTitle: string;
+        /** «+21 очко»: `{points}` — pointsCount. */
+        resultGain: string;
+        /** «4-е место из 12». */
+        resultPlace: string;
+        placesCount: PluralForms;
+        /** «выше на 2 места»: `{places}` — placesCount. */
+        resultMovedUp: string;
+        /** Первые очки недели: до этой игры игрока в таблице не было. */
+        resultNewEntry: string;
+        resultTopic: string;
+        resultCapReached: string;
+        profileRatingEmpty: string;
     };
     /**
      * Ephemeral toasts (Sonner). Сообщения для helpers; call site может

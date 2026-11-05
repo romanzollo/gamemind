@@ -673,6 +673,21 @@ export const ruDictionary: Dictionary = {
         modeBlitz: 'Блиц',
         modeDaily: 'Челлендж',
         modeSurvival: 'Выживание',
+        weekRatingTitle: 'Рейтинг недели',
+        resultGain: '+{points}',
+        resultPlace: '{place}-е место из {total}',
+        placesCount: {
+            one: '{n} место',
+            few: '{n} места',
+            many: '{n} мест',
+            other: '{n} места',
+        },
+        resultMovedUp: 'выше на {places}',
+        resultNewEntry: 'Ты в таблице',
+        resultTopic: 'Игры по теме в рейтинг не идут.',
+        resultCapReached:
+            'Дневной лимит в 600 очков набран — рейтинг продолжится завтра.',
+        profileRatingEmpty: 'На этой неделе тебя пока нет в таблице.',
     },
     notifications: {
         errorGeneric: 'Что-то пошло не так. Попробуй ещё раз.',

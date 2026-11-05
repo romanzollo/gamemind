@@ -2722,3 +2722,19 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
   - No Classic record (capped at 30); the daily board lives on home.
 - **No podium block for now:** 1–3 players a week leave it half empty. Medals on rows keep the scoreboard look. Revisit at 10+ weekly players.
 - **Removed:** the mode, period and difficulty filter components, `parseLeaderboardFilters`, `findBestScores` (+ Survival best-run board). `leaderboardModeWhereSql` stays: rating-points uses it.
+
+**Update (November 5, 2026, 4.6e — result and profile):**
+
+- **«+N» on the result screen** = the player's weekly points **after** minus **before** the game.
+  - `findGameContribution`: the same standing query twice on one connection, the second one with `r."sessionId" <> $game`.
+  - Cap, topics, the Survival clock and visibility come from the table SQL, not from rules repeated in JS.
+  - The place change and «first time on the board» come from the same pair.
+- **The game must fall in this week.** SQL checks that its `QuizResult` is inside the window (`buildSessionInPeriodSql`), so an old result shows nothing. JS does not compare dates: `completedAt` is a zoneless timestamp, so the result would depend on the server time zone.
+- **What the block shows** (`resolveRatingGameOutcome`):
+  - topic game → a note that topic games do not count;
+  - the game counted but the daily cap left +0 → the cap line;
+  - a guest, a player hidden from ratings, a game outside the week, 0 points, or a Survival wave with a bad clock → nothing.
+- **Hot path:**
+  - result block and profile block each render inside `<Suspense fallback={null}>`, like the daily streak;
+  - the score card and buttons never wait for them, and submit is untouched;
+  - a failed read hides the block (soft-miss).

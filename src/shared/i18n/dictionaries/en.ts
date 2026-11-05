@@ -657,6 +657,21 @@ export const enDictionary = {
         modeBlitz: 'Blitz',
         modeDaily: 'Daily',
         modeSurvival: 'Survival',
+        weekRatingTitle: "This week's rating",
+        resultGain: '+{points}',
+        resultPlace: '#{place} of {total}',
+        placesCount: {
+            one: '{n} place',
+            few: '{n} places',
+            many: '{n} places',
+            other: '{n} places',
+        },
+        resultMovedUp: 'up {places}',
+        resultNewEntry: "You're on the board",
+        resultTopic: "Topic games don't count for the rating.",
+        resultCapReached:
+            "You've hit today's 600-point limit. The board picks up again tomorrow.",
+        profileRatingEmpty: "You're not on this week's board yet.",
     },
     notifications: {
         errorGeneric: 'Something went wrong. Try again.',

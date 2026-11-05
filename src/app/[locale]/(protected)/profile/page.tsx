@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import {
     userRepository,
     type SignInMethods,
@@ -16,6 +17,7 @@ import { ChangeUsernameForm } from '@/features/profile/components/ChangeUsername
 import { ProfileFoldSection } from '@/features/profile/components/ProfileFoldSection';
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
 import { ProfileSettingsSection } from '@/features/profile/components/ProfileSettingsSection';
+import { RatingProfileWeek } from '@/features/leaderboard/components/rating-profile-week';
 import { ProfileStatsSummary } from '@/features/profile/components/ProfileStatsSummary';
 import { SetPasswordForm } from '@/features/profile/components/SetPasswordForm';
 import { SignInMethodsList } from '@/features/profile/components/SignInMethodsList';
@@ -240,6 +242,15 @@ export default async function ProfilePage({
                         locale={safeLocale}
                         labels={dictionary.profile}
                     />
+                    {isGuest ? null : (
+                        <Suspense fallback={null}>
+                            <RatingProfileWeek
+                                userId={session.user.id}
+                                locale={safeLocale}
+                                dictionary={dictionary}
+                            />
+                        </Suspense>
+                    )}
                 </section>
 
                 <div className="mt-6 border-t border-border lg:mt-10 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-10 lg:border-t-0">

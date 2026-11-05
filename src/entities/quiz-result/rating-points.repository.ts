@@ -82,6 +82,13 @@ export type SurvivalRecord = {
     waves: number;
 };
 
+/** Место игрока до и после одной игры (null — не в таблице). */
+export type RatingGameContribution = {
+    inPeriod: boolean;
+    before: RatingPointsStanding | null;
+    after: RatingPointsStanding | null;
+};
+
 export type RatingRecords = {
     blitz: BlitzRecord | null;
     survival: SurvivalRecord | null;
@@ -165,15 +172,24 @@ function modePointsSql(mode: FindBestScoresMode): string {
     return `COALESCE(SUM(r."score") FILTER (WHERE ${MODE_FILTER_SQL[mode]}), 0)`;
 }
 
-/** CTE `ranked`: все игроки периода с очками > 0 и их место. */
+/**
+ * CTE `ranked`: все игроки периода с очками > 0 и их место.
+ * `excludeSessionId` — таблица «как было до этой игры» (результат игры, 4.6e).
+ */
 function buildRankedCte(
     filters: RatingPointsFilters,
     values: unknown[],
+    excludeSessionId?: string,
 ): string {
     const where = [
         ...countedGamesWhereSql(filters.mode),
         ...periodWhereSql('r."completedAt"', filters, values),
     ];
+
+    if (excludeSessionId) {
+        values.push(excludeSessionId);
+        where.push(`r."sessionId" <> $${values.length}`);
+    }
 
     values.push(filters.dailyCap);
     const capParam = `$${values.length}`;
@@ -265,9 +281,10 @@ export function buildRatingBoardSql(
 export function buildRatingStandingSql(
     filters: RatingPointsFilters,
     userId: string,
+    excludeSessionId?: string,
 ): SqlQuery {
     const values: unknown[] = [];
-    const cte = buildRankedCte(filters, values);
+    const cte = buildRankedCte(filters, values, excludeSessionId);
     values.push(userId);
 
     return {
@@ -281,6 +298,23 @@ export function buildRatingStandingSql(
         LEFT JOIN ranked AS above ON above.rank = me.rank - 1
         LEFT JOIN ranked AS below ON below.rank = me.rank + 1
         WHERE me.user_id = $${values.length}`,
+        values,
+    };
+}
+
+/** SQL: попала ли игра (её `QuizResult`) в окно периода. */
+export function buildSessionInPeriodSql(
+    filters: Pick<RatingPointsFilters, 'from' | 'to'>,
+    sessionId: string,
+): SqlQuery {
+    const values: unknown[] = [sessionId];
+    const where = [
+        'r."sessionId" = $1',
+        ...periodWhereSql('r."completedAt"', filters, values),
+    ];
+
+    return {
+        text: `SELECT EXISTS (SELECT 1 FROM "QuizResult" AS r WHERE ${where.join(' AND ')}) AS in_period`,
         values,
     };
 }
@@ -368,6 +402,15 @@ function toEntry(row: RankedRow): RatingPointsEntry {
     };
 }
 
+function toStanding(row: StandingRow): RatingPointsStanding {
+    return {
+        ...toEntry(row),
+        pointsAbove: row.points_above,
+        pointsBelow: row.points_below,
+        totalPlayers: row.total_players,
+    };
+}
+
 export const ratingPointsRepository = {
     /** Таблица периода: места 1…limit. */
     async findBoard(
@@ -398,16 +441,52 @@ export const ratingPointsRepository = {
         );
         const row = result.rows[0];
 
-        if (!row) {
-            return null;
-        }
+        return row ? toStanding(row) : null;
+    },
 
-        return {
-            ...toEntry(row),
-            pointsAbove: row.points_above,
-            pointsBelow: row.points_below,
-            totalPlayers: row.total_players,
-        };
+    /**
+     * Место игрока «до» и «после» одной игры — для «+N в рейтинг» на экране
+     * результата. Три чтения на одном соединении, только скаляры; вызывать
+     * вне критического пути сдачи (Suspense под результатом).
+     * `inPeriod = false` — игра не из этого периода (старый результат).
+     */
+    async findGameContribution(
+        filters: RatingPointsFilters,
+        userId: string,
+        sessionId: string,
+    ): Promise<RatingGameContribution> {
+        const inPeriodQuery = buildSessionInPeriodSql(filters, sessionId);
+        const afterQuery = buildRatingStandingSql(filters, userId);
+        const beforeQuery = buildRatingStandingSql(filters, userId, sessionId);
+
+        return withDirectPgClient(
+            async (client) => {
+                const inPeriod = await client.query<{ in_period: boolean }>(
+                    inPeriodQuery.text,
+                    inPeriodQuery.values,
+                );
+
+                if (!inPeriod.rows[0]?.in_period) {
+                    return { inPeriod: false, before: null, after: null };
+                }
+
+                const after = await client.query<StandingRow>(
+                    afterQuery.text,
+                    afterQuery.values,
+                );
+                const before = await client.query<StandingRow>(
+                    beforeQuery.text,
+                    beforeQuery.values,
+                );
+
+                return {
+                    inPeriod: true,
+                    before: before.rows[0] ? toStanding(before.rows[0]) : null,
+                    after: after.rows[0] ? toStanding(after.rows[0]) : null,
+                };
+            },
+            { debugLabel: 'rating.game-contribution' },
+        );
     },
 
     /** Рекорды Блица и Выживания периода — два запроса на одном соединении. */

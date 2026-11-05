@@ -9,6 +9,7 @@ import { survivalRunRepository } from '@/entities/survival-run/survival-run.repo
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
 import { SaveGuestProgress } from '@/features/auth/components/SaveGuestProgress';
 import { DailyStreakResult } from '@/features/daily-challenge/components/daily-streak-result';
+import { RatingGameResult } from '@/features/leaderboard/components/rating-game-result';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
 import { ShareResult } from '@/features/quiz/components/ShareResult';
 import { buildShareTitle } from '@/features/quiz/lib/build-result-share';
@@ -381,6 +382,22 @@ export default async function QuizResultPage({
                         />
                     )}
 
+                    {authSession.user.isGuest ? null : (
+                        // Рейтинг недели — своим запросом в Suspense: счёт и
+                        // кнопки его не ждут (горячий путь, ROADMAP 4.6e).
+                        <Suspense fallback={null}>
+                            <RatingGameResult
+                                sessionId={sessionId}
+                                userId={authSession.user.id}
+                                locale={safeLocale}
+                                score={summary.score}
+                                isTopicGame={summary.topic !== null}
+                                isSurvival={summary.isSurvival}
+                                survivalClockOk={summary.survivalClockOk}
+                                dictionary={dictionary}
+                            />
+                        </Suspense>
+                    )}
                     {/* isGuest — из requireUser выше, лишнего запроса нет. */}
                     {authSession.user.isGuest ? (
                         <SaveGuestProgress

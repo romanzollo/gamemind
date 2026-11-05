@@ -4,6 +4,7 @@ import {
     buildBlitzRecordSql,
     buildRatingBoardSql,
     buildRatingStandingSql,
+    buildSessionInPeriodSql,
     buildSurvivalRecordSql,
     type RatingPointsFilters,
 } from './rating-points.repository';
@@ -158,5 +159,22 @@ describe('buildRatingStandingSql', () => {
         expect(values.at(-1)).toBe('user-1');
         expect(text).toContain(`WHERE me.user_id = $${values.length}`);
         expect(text).toContain('above.rank = me.rank - 1');
+    });
+});
+
+describe('game contribution', () => {
+    it('standing without one game excludes its session', () => {
+        const { text, values } = buildRatingStandingSql(WEEK, 'user-1', 'sess-9');
+
+        expect(values).toEqual(['2026-11-01T21:00:00.000Z', 'sess-9', 600, 'user-1']);
+        expect(text).toContain('r."sessionId" <> $2');
+    });
+
+    it('in-period check uses the same window', () => {
+        const { text, values } = buildSessionInPeriodSql(WEEK, 'sess-9');
+
+        expect(values).toEqual(['sess-9', '2026-11-01T21:00:00.000Z']);
+        expect(text).toContain('r."sessionId" = $1');
+        expect(text).toContain(`r."completedAt" >= ($2::timestamptz AT TIME ZONE 'UTC')`);
     });
 });
