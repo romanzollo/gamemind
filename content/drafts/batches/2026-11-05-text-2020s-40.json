@@ -1,0 +1,2647 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 1 — games of the 2020s, 40 TEXT (14 EASY / 14 MEDIUM / 12 HARD). Facts: Wikipedia pages in metadata.source. No spoilers past the setup for games released within 2 years. New games added to content/taxonomy/games.json; existing game entries untouched. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-bg3-dnd",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Baldur's Gate 3",
+        "topic": "rules",
+        "source": "https://en.wikipedia.org/wiki/Baldur%27s_Gate_3",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "По правилам какой настольной ролевой игры работает Baldur's Gate 3?"
+        },
+        "en": {
+          "text": "Which tabletop role-playing game's rules does Baldur's Gate 3 run on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dungeons & Dragons"
+            },
+            "en": {
+              "text": "Dungeons & Dragons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pathfinder"
+            },
+            "en": {
+              "text": "Pathfinder"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Warhammer Fantasy Roleplay"
+            },
+            "en": {
+              "text": "Warhammer Fantasy Roleplay"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "GURPS"
+            },
+            "en": {
+              "text": "GURPS"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-elden-ring-martin",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Elden_Ring",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой писатель придумал для Elden Ring мифологию мира?"
+        },
+        "en": {
+          "text": "Which novelist wrote the world mythology for Elden Ring?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джордж Р. Р. Мартин"
+            },
+            "en": {
+              "text": "George R. R. Martin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нил Гейман"
+            },
+            "en": {
+              "text": "Neil Gaiman"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Брэндон Сандерсон"
+            },
+            "en": {
+              "text": "Brandon Sanderson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Анджей Сапковский"
+            },
+            "en": {
+              "text": "Andrzej Sapkowski"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-gow-ragnarok-myth",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "God of War Ragnarök",
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/God_of_War_Ragnar%C3%B6k",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "На мифологии какого народа построена God of War Ragnarök?"
+        },
+        "en": {
+          "text": "Which mythology is God of War Ragnarök built on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Скандинавской"
+            },
+            "en": {
+              "text": "Norse"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Греческой"
+            },
+            "en": {
+              "text": "Greek"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Египетской"
+            },
+            "en": {
+              "text": "Egyptian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Японской"
+            },
+            "en": {
+              "text": "Japanese"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-spider-man-2-heroes",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Marvel's Spider-Man 2",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Marvel%27s_Spider-Man_2",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "За каких двух Человеков-пауков играют в Marvel's Spider-Man 2?"
+        },
+        "en": {
+          "text": "Which two Spider-Men are playable in Marvel's Spider-Man 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Питер Паркер и Майлз Моралес"
+            },
+            "en": {
+              "text": "Peter Parker and Miles Morales"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Питер Паркер и Гвен Стейси"
+            },
+            "en": {
+              "text": "Peter Parker and Gwen Stacy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Майлз Моралес и Мигель О’Хара"
+            },
+            "en": {
+              "text": "Miles Morales and Miguel O'Hara"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Питер Паркер и Бен Райли"
+            },
+            "en": {
+              "text": "Peter Parker and Ben Reilly"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-stray-hero",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Stray",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Stray_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто главный герой Stray, бродящий по городу роботов?"
+        },
+        "en": {
+          "text": "Who is the hero of Stray, wandering a city of robots?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кот"
+            },
+            "en": {
+              "text": "A cat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Робот-уборщик"
+            },
+            "en": {
+              "text": "A cleaning robot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бродячий пёс"
+            },
+            "en": {
+              "text": "A stray dog"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лис"
+            },
+            "en": {
+              "text": "A fox"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-palworld-guns",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Palworld",
+        "topic": "identity",
+        "source": "https://en.wikipedia.org/wiki/Palworld",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой игре 2024 года пойманные существа работают на фабриках, а в лапах держат оружие?"
+        },
+        "en": {
+          "text": "In which 2024 game do captured creatures work in factories and carry guns?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Palworld"
+            },
+            "en": {
+              "text": "Palworld"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Temtem"
+            },
+            "en": {
+              "text": "Temtem"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Cassette Beasts"
+            },
+            "en": {
+              "text": "Cassette Beasts"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nexomon"
+            },
+            "en": {
+              "text": "Nexomon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-starfield-studio",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Starfield",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Starfield_(video_game)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала космическую RPG Starfield?"
+        },
+        "en": {
+          "text": "Which studio made the space RPG Starfield?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Bethesda Game Studios"
+            },
+            "en": {
+              "text": "Bethesda Game Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BioWare"
+            },
+            "en": {
+              "text": "BioWare"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Obsidian Entertainment"
+            },
+            "en": {
+              "text": "Obsidian Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "CD Projekt Red"
+            },
+            "en": {
+              "text": "CD Projekt Red"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-sf6-publisher",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Street Fighter 6",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Street_Fighter_6",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая компания выпустила файтинг Street Fighter 6?"
+        },
+        "en": {
+          "text": "Which company released the fighting game Street Fighter 6?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Capcom"
+            },
+            "en": {
+              "text": "Capcom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "SNK"
+            },
+            "en": {
+              "text": "SNK"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bandai Namco"
+            },
+            "en": {
+              "text": "Bandai Namco"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Arc System Works"
+            },
+            "en": {
+              "text": "Arc System Works"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-cyberpunk-keanu",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "cast",
+        "source": "https://en.wikipedia.org/wiki/Cyberpunk_2077",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какого персонажа Cyberpunk 2077 сыграл Киану Ривз?"
+        },
+        "en": {
+          "text": "Which Cyberpunk 2077 character is played by Keanu Reeves?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джонни Сильверхенда"
+            },
+            "en": {
+              "text": "Johnny Silverhand"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джеки Уэллса"
+            },
+            "en": {
+              "text": "Jackie Welles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Горо Такэмуру"
+            },
+            "en": {
+              "text": "Goro Takemura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Декстера Дешона"
+            },
+            "en": {
+              "text": "Dexter DeShawn"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-re4-remake-ashley",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Resident Evil 4 (2023)",
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Resident_Evil_4_(2023_video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кого Леон спасает в ремейке Resident Evil 4 2023 года?"
+        },
+        "en": {
+          "text": "Who does Leon rescue in the 2023 remake of Resident Evil 4?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Эшли Грэм, дочь президента США"
+            },
+            "en": {
+              "text": "Ashley Graham, the US president's daughter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аду Вонг, шпионку"
+            },
+            "en": {
+              "text": "Ada Wong, a spy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Клэр Редфилд, сестру Криса"
+            },
+            "en": {
+              "text": "Claire Redfield, Chris's sister"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шерри Биркин, дочь учёного"
+            },
+            "en": {
+              "text": "Sherry Birkin, a scientist's daughter"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-lies-of-p-tale",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Lies of P",
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Lies_of_P",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "По мотивам какой сказки сделана Lies of P?"
+        },
+        "en": {
+          "text": "Which fairy tale is Lies of P based on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Пиноккио»"
+            },
+            "en": {
+              "text": "Pinocchio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Алиса в Стране чудес»"
+            },
+            "en": {
+              "text": "Alice's Adventures in Wonderland"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Питер Пэн»"
+            },
+            "en": {
+              "text": "Peter Pan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Щелкунчик»"
+            },
+            "en": {
+              "text": "The Nutcracker"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-genshin-publisher",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Genshin Impact",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Genshin_Impact",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая компания выпустила Genshin Impact?"
+        },
+        "en": {
+          "text": "Which company released Genshin Impact?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "miHoYo (HoYoverse)"
+            },
+            "en": {
+              "text": "miHoYo (HoYoverse)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NetEase"
+            },
+            "en": {
+              "text": "NetEase"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tencent"
+            },
+            "en": {
+              "text": "Tencent"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nexon"
+            },
+            "en": {
+              "text": "Nexon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-balatro-poker",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Balatro",
+        "topic": "rules",
+        "source": "https://en.wikipedia.org/wiki/Balatro",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Комбинации какой карточной игры собирают в Balatro?"
+        },
+        "en": {
+          "text": "Which card game do you build hands from in Balatro?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Покера"
+            },
+            "en": {
+              "text": "Poker"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Блэкджека"
+            },
+            "en": {
+              "text": "Blackjack"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бриджа"
+            },
+            "en": {
+              "text": "Bridge"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Преферанса"
+            },
+            "en": {
+              "text": "Preference"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-easy-silksong-hornet",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Hollow Knight: Silksong",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Hollow_Knight:_Silksong",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "За кого играют в Hollow Knight: Silksong?"
+        },
+        "en": {
+          "text": "Who do you play as in Hollow Knight: Silksong?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "За Хорнет"
+            },
+            "en": {
+              "text": "Hornet"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Рыцаря из первой части"
+            },
+            "en": {
+              "text": "The Knight from the first game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Квиррела"
+            },
+            "en": {
+              "text": "Quirrel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Зота"
+            },
+            "en": {
+              "text": "Zote"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-alan-wake-2-studio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Alan Wake 2",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Alan_Wake_2",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала Alan Wake 2?"
+        },
+        "en": {
+          "text": "Which studio made Alan Wake 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Remedy Entertainment"
+            },
+            "en": {
+              "text": "Remedy Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bloober Team"
+            },
+            "en": {
+              "text": "Bloober Team"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Supermassive Games"
+            },
+            "en": {
+              "text": "Supermassive Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Frictional Games"
+            },
+            "en": {
+              "text": "Frictional Games"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-lethal-company-quota",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Lethal Company",
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Lethal_Company",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что команда в Lethal Company должна сдать к сроку, чтобы её не «уволили»?"
+        },
+        "en": {
+          "text": "What must the crew in Lethal Company hand in by the deadline to avoid being \"fired\"?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Квоту лома, собранного на спутниках"
+            },
+            "en": {
+              "text": "A quota of scrap collected on moons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нужное число убитых монстров"
+            },
+            "en": {
+              "text": "A set number of monster kills"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Карты всех посещённых спутников"
+            },
+            "en": {
+              "text": "Maps of every moon visited"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Топливо для обратного полёта"
+            },
+            "en": {
+              "text": "Fuel for the flight home"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-wukong-novel",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Black Myth: Wukong",
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Black_Myth:_Wukong",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "По какому классическому китайскому роману сделана Black Myth: Wukong?"
+        },
+        "en": {
+          "text": "Which classic Chinese novel is Black Myth: Wukong based on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Путешествие на Запад»"
+            },
+            "en": {
+              "text": "Journey to the West"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Троецарствие»"
+            },
+            "en": {
+              "text": "Romance of the Three Kingdoms"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Речные заводи»"
+            },
+            "en": {
+              "text": "Water Margin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Сон в красном тереме»"
+            },
+            "en": {
+              "text": "Dream of the Red Chamber"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-hades-ii-hero",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Hades II",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Hades_II",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто главная героиня Hades II?"
+        },
+        "en": {
+          "text": "Who is the protagonist of Hades II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мелиноя, сестра Загрея"
+            },
+            "en": {
+              "text": "Melinoë, sister of Zagreus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Геката, ведьма перекрёстков"
+            },
+            "en": {
+              "text": "Hecate, witch of the crossroads"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Немезида, богиня возмездия"
+            },
+            "en": {
+              "text": "Nemesis, goddess of retribution"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Персефона, царица подземного мира"
+            },
+            "en": {
+              "text": "Persephone, queen of the Underworld"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-tga-2024",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Astro Bot",
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Awards_2024",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2024?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2024?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Astro Bot"
+            },
+            "en": {
+              "text": "Astro Bot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Black Myth: Wukong"
+            },
+            "en": {
+              "text": "Black Myth: Wukong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Final Fantasy VII Rebirth"
+            },
+            "en": {
+              "text": "Final Fantasy VII Rebirth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metaphor: ReFantazio"
+            },
+            "en": {
+              "text": "Metaphor: ReFantazio"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-it-takes-two-couple",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "It Takes Two",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/It_Takes_Two_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут двух героев It Takes Two?"
+        },
+        "en": {
+          "text": "What are the names of the two heroes of It Takes Two?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Коди и Мэй"
+            },
+            "en": {
+              "text": "Cody and May"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лео и Винсент"
+            },
+            "en": {
+              "text": "Leo and Vincent"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хьюго и Амиция"
+            },
+            "en": {
+              "text": "Hugo and Amicia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джоэл и Элли"
+            },
+            "en": {
+              "text": "Joel and Ellie"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-tsushima-hero",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Ghost of Tsushima",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Ghost_of_Tsushima",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут самурая — героя Ghost of Tsushima?"
+        },
+        "en": {
+          "text": "What is the name of the samurai hero of Ghost of Tsushima?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дзин Сакай"
+            },
+            "en": {
+              "text": "Jin Sakai"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рю Хаябуса"
+            },
+            "en": {
+              "text": "Ryu Hayabusa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ясукэ"
+            },
+            "en": {
+              "text": "Yasuke"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хандзо Хаттори"
+            },
+            "en": {
+              "text": "Hanzo Hattori"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-elden-ring-dlc",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "dlc",
+        "source": "https://en.wikipedia.org/wiki/Elden_Ring:_Shadow_of_the_Erdtree",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется большое дополнение к Elden Ring, вышедшее в 2024 году?"
+        },
+        "en": {
+          "text": "What is the name of the large Elden Ring expansion released in 2024?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Shadow of the Erdtree"
+            },
+            "en": {
+              "text": "Shadow of the Erdtree"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Ringed City"
+            },
+            "en": {
+              "text": "The Ringed City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Old Hunters"
+            },
+            "en": {
+              "text": "The Old Hunters"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ashes of Ariandel"
+            },
+            "en": {
+              "text": "Ashes of Ariandel"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-hi-fi-rush-beat",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Hi-Fi Rush",
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Hi-Fi_Rush",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Hi-Fi Rush живёт в такт музыке?"
+        },
+        "en": {
+          "text": "What moves to the beat of the music in Hi-Fi Rush?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Весь мир: враги, платформы и удары героя"
+            },
+            "en": {
+              "text": "The whole world: enemies, platforms and the hero's attacks"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Только финальные удары комбо"
+            },
+            "en": {
+              "text": "Only the final hits of a combo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Только боссы, обычные враги — без ритма"
+            },
+            "en": {
+              "text": "Only bosses; regular enemies ignore the beat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ничего: музыка — просто фон"
+            },
+            "en": {
+              "text": "Nothing: the music is just background"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-dave-the-diver-sushi",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Dave the Diver",
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Dave_the_Diver",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем Дэйв в Dave the Diver занимается вечером после погружений?"
+        },
+        "en": {
+          "text": "What does Dave do in the evening after his dives in Dave the Diver?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Работает в суши-ресторане"
+            },
+            "en": {
+              "text": "Runs a sushi restaurant"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Продаёт улов на рыбном рынке"
+            },
+            "en": {
+              "text": "Sells the catch at a fish market"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чинит лодки в доке"
+            },
+            "en": {
+              "text": "Repairs boats at the dock"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ухаживает за городским аквариумом"
+            },
+            "en": {
+              "text": "Looks after the town aquarium"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-armored-core-vi-studio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Armored Core VI: Fires of Rubicon",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Armored_Core_VI:_Fires_of_Rubicon",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала Armored Core VI: Fires of Rubicon?"
+        },
+        "en": {
+          "text": "Which studio made Armored Core VI: Fires of Rubicon?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "FromSoftware"
+            },
+            "en": {
+              "text": "FromSoftware"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "PlatinumGames"
+            },
+            "en": {
+              "text": "PlatinumGames"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Capcom"
+            },
+            "en": {
+              "text": "Capcom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Konami"
+            },
+            "en": {
+              "text": "Konami"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-diablo-iv-villain",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Diablo IV",
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Diablo_IV",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто главная злодейка Diablo IV?"
+        },
+        "en": {
+          "text": "Who is the main villain of Diablo IV?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Лилит"
+            },
+            "en": {
+              "text": "Lilith"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Андариэль"
+            },
+            "en": {
+              "text": "Andariel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Малтаэль"
+            },
+            "en": {
+              "text": "Malthael"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Азмодан"
+            },
+            "en": {
+              "text": "Azmodan"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-bg3-tadpole",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Baldur's Gate 3",
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Baldur%27s_Gate_3",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что сидит в голове у героя с самого начала Baldur's Gate 3?"
+        },
+        "en": {
+          "text": "What is lodged in the hero's head from the very start of Baldur's Gate 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Личинка свежевателя разума"
+            },
+            "en": {
+              "text": "A mind flayer tadpole"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Осколок кристалла гитьянки"
+            },
+            "en": {
+              "text": "A githyanki crystal shard"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Демоническая метка Бездны"
+            },
+            "en": {
+              "text": "A demonic mark of the Abyss"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Проклятие теневого мира"
+            },
+            "en": {
+              "text": "A curse of the shadow realm"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-medium-ffxvi-hero",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Final Fantasy XVI",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Final_Fantasy_XVI",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут главного героя Final Fantasy XVI?"
+        },
+        "en": {
+          "text": "What is the name of the protagonist of Final Fantasy XVI?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Клайв Росфилд"
+            },
+            "en": {
+              "text": "Clive Rosfield"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ноктис Люцис Кэлум"
+            },
+            "en": {
+              "text": "Noctis Lucis Caelum"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Клауд Страйф"
+            },
+            "en": {
+              "text": "Cloud Strife"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Скволл Леонхарт"
+            },
+            "en": {
+              "text": "Squall Leonhart"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-clair-obscur-studio",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Clair Obscur: Expedition 33",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Clair_Obscur:_Expedition_33",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала Clair Obscur: Expedition 33?"
+        },
+        "en": {
+          "text": "Which studio made Clair Obscur: Expedition 33?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sandfall Interactive"
+            },
+            "en": {
+              "text": "Sandfall Interactive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Don’t Nod"
+            },
+            "en": {
+              "text": "Don’t Nod"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Spiders"
+            },
+            "en": {
+              "text": "Spiders"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ubisoft Montpellier"
+            },
+            "en": {
+              "text": "Ubisoft Montpellier"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-pizza-tower-hero",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Pizza Tower",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Pizza_Tower",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут повара — героя Pizza Tower?"
+        },
+        "en": {
+          "text": "What is the name of the chef hero of Pizza Tower?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Peppino Spaghetti"
+            },
+            "en": {
+              "text": "Peppino Spaghetti"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Papa Louie"
+            },
+            "en": {
+              "text": "Papa Louie"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Wario"
+            },
+            "en": {
+              "text": "Wario"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Marco Rossi"
+            },
+            "en": {
+              "text": "Marco Rossi"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-rift-apart-rivet",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Ratchet & Clank: Rift Apart",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Ratchet_%26_Clank:_Rift_Apart",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут ломбакса из другого измерения — вторую героиню Ratchet & Clank: Rift Apart?"
+        },
+        "en": {
+          "text": "What is the name of the Lombax from another dimension, the second hero of Ratchet & Clank: Rift Apart?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ривет"
+            },
+            "en": {
+              "text": "Rivet"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Анджела Кросс"
+            },
+            "en": {
+              "text": "Angela Cross"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Талвин Аподжи"
+            },
+            "en": {
+              "text": "Talwyn Apogee"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Саша Файроникс"
+            },
+            "en": {
+              "text": "Sasha Phyronix"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-tga-2020",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "The Last of Us Part II",
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Awards_2020",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2020?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2020?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Last of Us Part II"
+            },
+            "en": {
+              "text": "The Last of Us Part II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ghost of Tsushima"
+            },
+            "en": {
+              "text": "Ghost of Tsushima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Doom Eternal"
+            },
+            "en": {
+              "text": "Doom Eternal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-msfs-earth-data",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Microsoft Flight Simulator (2020)",
+        "topic": "technology",
+        "source": "https://en.wikipedia.org/wiki/Microsoft_Flight_Simulator_(2020_video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Откуда Microsoft Flight Simulator 2020 года берёт рельеф и здания всей Земли?"
+        },
+        "en": {
+          "text": "Where does the 2020 Microsoft Flight Simulator get the terrain and buildings of the whole Earth?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Из спутниковых данных Bing Maps с обработкой в облаке Azure"
+            },
+            "en": {
+              "text": "From Bing Maps satellite data processed in the Azure cloud"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Из лицензионных карт Google Earth"
+            },
+            "en": {
+              "text": "From licensed Google Earth maps"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Художники вручную собрали каждую страну"
+            },
+            "en": {
+              "text": "Artists built every country by hand"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мир генерируется случайно по высотам NASA"
+            },
+            "en": {
+              "text": "The world is generated randomly from NASA heightmaps"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-pentiment-setting",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Pentiment",
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Pentiment_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где и когда происходит действие Pentiment?"
+        },
+        "en": {
+          "text": "Where and when is Pentiment set?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Баварии XVI века"
+            },
+            "en": {
+              "text": "In 16th-century Bavaria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Во Флоренции XV века"
+            },
+            "en": {
+              "text": "In 15th-century Florence"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Англии XIII века"
+            },
+            "en": {
+              "text": "In 13th-century England"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Во Франции XVII века"
+            },
+            "en": {
+              "text": "In 17th-century France"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-metaphor-team",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Metaphor: ReFantazio",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Metaphor:_ReFantazio",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая команда Atlus сделала Metaphor: ReFantazio?"
+        },
+        "en": {
+          "text": "Which Atlus team made Metaphor: ReFantazio?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Studio Zero"
+            },
+            "en": {
+              "text": "Studio Zero"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "P-Studio"
+            },
+            "en": {
+              "text": "P-Studio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Ninja"
+            },
+            "en": {
+              "text": "Team Ninja"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Vanillaware"
+            },
+            "en": {
+              "text": "Vanillaware"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-sea-of-stars-studio",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Sea of Stars",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Sea_of_Stars_(video_game)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала ролевую игру Sea of Stars?"
+        },
+        "en": {
+          "text": "Which studio made the RPG Sea of Stars?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sabotage Studio"
+            },
+            "en": {
+              "text": "Sabotage Studio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Supergiant Games"
+            },
+            "en": {
+              "text": "Supergiant Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Cherry"
+            },
+            "en": {
+              "text": "Team Cherry"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Motion Twin"
+            },
+            "en": {
+              "text": "Motion Twin"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-it-takes-two-hakim",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "It Takes Two",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/It_Takes_Two_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто ведёт Коди и Мэй через всё приключение It Takes Two и учит их снова любить друг друга?"
+        },
+        "en": {
+          "text": "Who guides Cody and May through It Takes Two and tries to make them fall in love again?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Говорящая книга доктор Хаким"
+            },
+            "en": {
+              "text": "Dr. Hakim, a talking book"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Их дочь Роуз"
+            },
+            "en": {
+              "text": "Their daughter Rose"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Робот-пылесос из их дома"
+            },
+            "en": {
+              "text": "A robot vacuum from their house"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Белка-командир с чердака"
+            },
+            "en": {
+              "text": "A squirrel commander from the attic"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-phantom-liberty-elba",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "cast",
+        "source": "https://en.wikipedia.org/wiki/Cyberpunk_2077:_Phantom_Liberty",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой актёр сыграл агента Соломона Рида в дополнении Phantom Liberty к Cyberpunk 2077?"
+        },
+        "en": {
+          "text": "Which actor played agent Solomon Reed in the Phantom Liberty expansion for Cyberpunk 2077?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Идрис Эльба"
+            },
+            "en": {
+              "text": "Idris Elba"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ланс Реддик"
+            },
+            "en": {
+              "text": "Lance Reddick"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мадс Миккельсен"
+            },
+            "en": {
+              "text": "Mads Mikkelsen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Норман Ридус"
+            },
+            "en": {
+              "text": "Norman Reedus"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-indika-heroine",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Indika",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Indika_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто героиня Indika — игры 2024 года?"
+        },
+        "en": {
+          "text": "Who is the heroine of Indika, the 2024 game?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Молодая монахиня, которая слышит голос дьявола"
+            },
+            "en": {
+              "text": "A young nun who hears the devil's voice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сестра милосердия в госпитале на фронте"
+            },
+            "en": {
+              "text": "A nurse in a frontline hospital"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ведьма, сбежавшая от инквизиции"
+            },
+            "en": {
+              "text": "A witch on the run from the Inquisition"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Крестьянка, которая ищет пропавшего брата"
+            },
+            "en": {
+              "text": "A peasant girl searching for her missing brother"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-2020s-hard-alan-wake-2-saga",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Alan Wake 2",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Alan_Wake_2",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "За кого, кроме самого Алана, играют в Alan Wake 2?"
+        },
+        "en": {
+          "text": "Besides Alan himself, who is playable in Alan Wake 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "За агента ФБР Сагу Андерсон"
+            },
+            "en": {
+              "text": "FBI agent Saga Anderson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За агента ФБР Алекса Кейси"
+            },
+            "en": {
+              "text": "FBI agent Alex Casey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Джесси Фейден"
+            },
+            "en": {
+              "text": "Jesse Faden"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Барри Уилера"
+            },
+            "en": {
+              "text": "Barry Wheeler"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

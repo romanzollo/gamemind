@@ -373,6 +373,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Aug 18:** mechanics TEXT wave 4 ×24 (`2026-08-17-text-mechanics-w4-24.json`) published both sides → TEXT **354** (118/118/118) + IMAGE **171** → admin ~**525**.
 
+**Nov 5:** games of the 2020s TEXT ×40 (`2026-11-05-text-2020s-40.json`, 27 new catalog games, `taxonomy:sync` both sides) published both sides → TEXT **418** (140/140/138) + IMAGE **171** → **589** live.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
