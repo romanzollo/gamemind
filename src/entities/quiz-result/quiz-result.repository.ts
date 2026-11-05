@@ -154,7 +154,7 @@ function resolveLeaderboardMode(
  * Classic / Blitz: только партии на всём банке (`topicTagId IS NULL`) —
  * фанат шутеров не должен подниматься, выбирая свою тему (Play topics).
  */
-function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
+export function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
     if (mode === 'daily') {
         return ['s."dailyChallengeId" IS NOT NULL'];
     }

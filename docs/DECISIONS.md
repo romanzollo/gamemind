@@ -2685,3 +2685,19 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 **Accepted trade-off:** whoever plays more ranks higher — this is a rating of active fans, not of single-game skill. Single-game skill stays visible in records and, later, in leagues by groups.
 
 **Open for 4.6b (data):** the value of N (needs a read-only look at prod daily points, with the owner's permission); computing on the fly with an index vs. a weekly aggregate written by the outbox after submit (outside the critical path) — chosen by measurement. Never `snapshotData` / `reviewPayload` in these reads.
+
+**Update (November 5, 2026, 4.6b — data):**
+
+- **Prod numbers (read-only, owner's permission):**
+  - 261 results, 9 visible players;
+  - points per player-day: median 25, p90 86, max 544 (36 games, a real player);
+  - points per week: median 51, max 544.
+- **N = 600** (`RATING_DAILY_POINTS_CAP`): above the most active real day. 600 is 20 perfect HARD games or 3+ hours non-stop. Revisit at 100+ weekly players; a new value starts with a new week.
+- **On the fly, no aggregate table, no migration.** The weekly query with the cap took 0.55 ms on prod. An aggregate would add a write after every submit and a way to drift from the results. Add `@@index([completedAt])` on `QuizResult` when results pass ~50k or the query passes 50 ms on prod.
+- **Code:**
+  - `src/entities/quiz-result/rating-points.repository.ts`: `findBoard` and `findStanding` (place, points of the player above, table size). SQL is built by pure functions and unit-tested.
+  - `src/features/leaderboard/lib/rating-week.ts`: MSK week bounds as UTC instants, a fixed +3 h offset (no DST since 2014).
+  - Period bounds go to pg as ISO strings cast `::timestamptz AT TIME ZONE 'UTC'`. `completedAt` is `timestamp` without a zone, and a raw `Date` parameter would be sent in the process's local zone, with Postgres silently dropping the offset.
+- **Players with 0 points** (all answers wrong) are not in the table: getting in takes one point.
+- **Tie on equal points:** the earlier last game with points ranks higher, then user id for a stable order.
+- **Checked:** on dev, SQL matched an independent JS recount for 3 periods × 5 modes × 2 caps (600 and a tight 15).
