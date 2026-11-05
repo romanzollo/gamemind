@@ -1,0 +1,2676 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 5 — weak genres: strategy, racing, simulation, sports, fighting. 15/11/14 to lift easy and hard. Series or studio questions carry explicit genre tags. Duplicates checked by keywords across the bank. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-starcraft-races",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/StarCraft_(video_game)",
+        "localizationStrategy": "full",
+        "game": "StarCraft"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой расы нет в StarCraft?"
+        },
+        "en": {
+          "text": "Which race is not in StarCraft?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Орков"
+            },
+            "en": {
+              "text": "Orcs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Терранов"
+            },
+            "en": {
+              "text": "Terrans"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Зергов"
+            },
+            "en": {
+              "text": "Zerg"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Протоссов"
+            },
+            "en": {
+              "text": "Protoss"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-aoe2-resources",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Age_of_Empires_II",
+        "localizationStrategy": "full",
+        "game": "Age of Empires II: The Age of Kings"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой ресурс не добывают в Age of Empires II?"
+        },
+        "en": {
+          "text": "Which resource don't you gather in Age of Empires II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Нефть"
+            },
+            "en": {
+              "text": "Oil"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Еду"
+            },
+            "en": {
+              "text": "Food"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Камень"
+            },
+            "en": {
+              "text": "Stone"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Золото"
+            },
+            "en": {
+              "text": "Gold"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-wow-factions",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/World_of_Warcraft",
+        "localizationStrategy": "full",
+        "game": "World of Warcraft"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какие две фракции противостоят друг другу в World of Warcraft?"
+        },
+        "en": {
+          "text": "Which two factions face off in World of Warcraft?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Альянс и Орда"
+            },
+            "en": {
+              "text": "The Alliance and the Horde"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Империя и Повстанцы"
+            },
+            "en": {
+              "text": "The Empire and the Rebels"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Свет и Тьма"
+            },
+            "en": {
+              "text": "Light and Shadow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Терраны и Зерги"
+            },
+            "en": {
+              "text": "Terrans and Zerg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-fh5-mexico",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Forza_Horizon_5",
+        "localizationStrategy": "full",
+        "game": "Forza Horizon 5"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой стране проходят гонки Forza Horizon 5?"
+        },
+        "en": {
+          "text": "Which country is Forza Horizon 5 set in?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Мексике"
+            },
+            "en": {
+              "text": "Mexico"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Австралии"
+            },
+            "en": {
+              "text": "Australia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Великобритании"
+            },
+            "en": {
+              "text": "Great Britain"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Италии"
+            },
+            "en": {
+              "text": "Italy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-forza-motorsport-xbox",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "identity",
+        "source": "https://en.wikipedia.org/wiki/Forza_Motorsport",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая серия гоночных симуляторов от Turn 10 — ответ Xbox на Gran Turismo?"
+        },
+        "en": {
+          "text": "Which Turn 10 racing-sim series is Xbox's answer to Gran Turismo?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Forza Motorsport"
+            },
+            "en": {
+              "text": "Forza Motorsport"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ridge Racer"
+            },
+            "en": {
+              "text": "Ridge Racer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Need for Speed"
+            },
+            "en": {
+              "text": "Need for Speed"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "DiRT"
+            },
+            "en": {
+              "text": "DiRT"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:forza",
+        "genre:racing",
+        "platform:xbox"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-simcity-wright",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/SimCity_(1989_video_game)",
+        "localizationStrategy": "full",
+        "game": "SimCity (1989)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто придумал SimCity?"
+        },
+        "en": {
+          "text": "Who created SimCity?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Уилл Райт"
+            },
+            "en": {
+              "text": "Will Wright"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сид Мейер"
+            },
+            "en": {
+              "text": "Sid Meier"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Питер Молиньё"
+            },
+            "en": {
+              "text": "Peter Molyneux"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Крис Сойер"
+            },
+            "en": {
+              "text": "Chris Sawyer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-sims-simlish",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "world",
+        "source": "https://en.wikipedia.org/wiki/Simlish",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется выдуманный язык, на котором болтают персонажи The Sims?"
+        },
+        "en": {
+          "text": "What is the made-up language the characters in The Sims speak?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Симлиш"
+            },
+            "en": {
+              "text": "Simlish"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Симоглот"
+            },
+            "en": {
+              "text": "Simglot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сим-эсперанто"
+            },
+            "en": {
+              "text": "Sim-Esperanto"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Плюмбобский"
+            },
+            "en": {
+              "text": "Plumbobese"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:the-sims",
+        "genre:simulation"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-sims-plumbob",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "world",
+        "source": "https://en.wikipedia.org/wiki/The_Sims",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется зелёный кристалл над головой сима?"
+        },
+        "en": {
+          "text": "What is the green crystal above a Sim's head called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Плюмбоб"
+            },
+            "en": {
+              "text": "Plumbob"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Симолеон"
+            },
+            "en": {
+              "text": "Simoleon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мудлет"
+            },
+            "en": {
+              "text": "Moodlet"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Симкристалл"
+            },
+            "en": {
+              "text": "Simcrystal"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:the-sims",
+        "genre:simulation"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-stardew-one-dev",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Stardew_Valley",
+        "localizationStrategy": "full",
+        "game": "Stardew Valley"
+      },
+      "translations": {
+        "ru": {
+          "text": "Сколько человек сделали Stardew Valley — код, графику и музыку?"
+        },
+        "en": {
+          "text": "How many people made Stardew Valley, including code, art and music?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Один — Эрик Бароне"
+            },
+            "en": {
+              "text": "One: Eric Barone"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Двое братьев"
+            },
+            "en": {
+              "text": "Two brothers"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Студия из 12 человек"
+            },
+            "en": {
+              "text": "A 12-person studio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Команда из 40 человек"
+            },
+            "en": {
+              "text": "A team of 40"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-efootball-rename",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/EFootball",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как Konami переименовала серию Pro Evolution Soccer в 2021 году?"
+        },
+        "en": {
+          "text": "What did Konami rename the Pro Evolution Soccer series to in 2021?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "eFootball"
+            },
+            "en": {
+              "text": "eFootball"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "EA Sports FC"
+            },
+            "en": {
+              "text": "EA Sports FC"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Konami Football Pro"
+            },
+            "en": {
+              "text": "Konami Football Pro"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Winning Eleven Pro"
+            },
+            "en": {
+              "text": "Winning Eleven Pro"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:sports",
+        "era:2020s"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-pong-sport",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Pong",
+        "localizationStrategy": "full",
+        "game": "Pong"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой вид спорта изображала Pong 1972 года?"
+        },
+        "en": {
+          "text": "Which sport did the 1972 Pong depict?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Настольный теннис"
+            },
+            "en": {
+              "text": "Table tennis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хоккей"
+            },
+            "en": {
+              "text": "Ice hockey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бадминтон"
+            },
+            "en": {
+              "text": "Badminton"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Волейбол"
+            },
+            "en": {
+              "text": "Volleyball"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-fm-identity",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "identity",
+        "source": "https://en.wikipedia.org/wiki/Football_Manager",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой серии ты не бьёшь по мячу сам, а управляешь футбольным клубом — трансферы, тактика, бюджет?"
+        },
+        "en": {
+          "text": "In which series do you never kick the ball yourself but run a football club: transfers, tactics, budget?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Football Manager"
+            },
+            "en": {
+              "text": "Football Manager"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "eFootball"
+            },
+            "en": {
+              "text": "eFootball"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "EA Sports FC"
+            },
+            "en": {
+              "text": "EA Sports FC"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Rocket League"
+            },
+            "en": {
+              "text": "Rocket League"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:sports",
+        "genre:simulation"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-mk-scorpion",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Scorpion_(Mortal_Kombat)",
+        "localizationStrategy": "full",
+        "game": "Mortal Kombat"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто из Mortal Kombat кричит «Get over here!», бросая гарпун?"
+        },
+        "en": {
+          "text": "Which Mortal Kombat fighter yells \"Get over here!\" with his spear?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Скорпион"
+            },
+            "en": {
+              "text": "Scorpion"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Саб-Зиро"
+            },
+            "en": {
+              "text": "Sub-Zero"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Райден"
+            },
+            "en": {
+              "text": "Raiden"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лю Кан"
+            },
+            "en": {
+              "text": "Liu Kang"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-mk-subzero",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Sub-Zero_(Mortal_Kombat)",
+        "localizationStrategy": "full",
+        "game": "Mortal Kombat"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой ниндзя Mortal Kombat замораживает противников льдом?"
+        },
+        "en": {
+          "text": "Which Mortal Kombat ninja freezes opponents with ice?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Саб-Зиро"
+            },
+            "en": {
+              "text": "Sub-Zero"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Скорпион"
+            },
+            "en": {
+              "text": "Scorpion"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рептилия"
+            },
+            "en": {
+              "text": "Reptile"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нуб Сайбот"
+            },
+            "en": {
+              "text": "Noob Saibot"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-easy-double-dash-pairs",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Mario_Kart:_Double_Dash",
+        "localizationStrategy": "full",
+        "game": "Mario Kart: Double Dash!!"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем Mario Kart: Double Dash!! отличается от других частей серии?"
+        },
+        "en": {
+          "text": "What sets Mario Kart: Double Dash!! apart from the rest of the series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В каждом карте сидят двое гонщиков"
+            },
+            "en": {
+              "text": "Each kart carries two racers"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гонки идут только под водой"
+            },
+            "en": {
+              "text": "Races only happen underwater"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Карты можно строить из деталей"
+            },
+            "en": {
+              "text": "You build karts from parts"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В ней нет предметов"
+            },
+            "en": {
+              "text": "It has no items"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-red-alert-einstein",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Command_%26_Conquer:_Red_Alert",
+        "localizationStrategy": "full",
+        "game": "Command & Conquer: Red Alert"
+      },
+      "translations": {
+        "ru": {
+          "text": "С чего начинается альтернативная история Command & Conquer: Red Alert?"
+        },
+        "en": {
+          "text": "How does the alternate history of Command & Conquer: Red Alert begin?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Эйнштейн отправляется в прошлое и стирает Гитлера"
+            },
+            "en": {
+              "text": "Einstein travels back in time and erases Hitler"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "СССР первым высаживается на Луну"
+            },
+            "en": {
+              "text": "The USSR lands on the Moon first"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тиберий падает на Землю с метеоритом"
+            },
+            "en": {
+              "text": "Tiberium arrives on a meteorite"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Германия выигрывает Первую мировую"
+            },
+            "en": {
+              "text": "Germany wins the First World War"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-xcom-firaxis",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/XCOM:_Enemy_Unknown",
+        "localizationStrategy": "latin-titles",
+        "game": "XCOM: Enemy Unknown"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия перезапустила XCOM в 2012 году с XCOM: Enemy Unknown?"
+        },
+        "en": {
+          "text": "Which studio rebooted XCOM in 2012 with XCOM: Enemy Unknown?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Firaxis Games"
+            },
+            "en": {
+              "text": "Firaxis Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Relic Entertainment"
+            },
+            "en": {
+              "text": "Relic Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Creative Assembly"
+            },
+            "en": {
+              "text": "Creative Assembly"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mythos Games"
+            },
+            "en": {
+              "text": "Mythos Games"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-starcraft-korea",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/StarCraft_in_esports",
+        "localizationStrategy": "full",
+        "game": "StarCraft"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой стране StarCraft стал почти национальным спортом с собственными ТВ-каналами?"
+        },
+        "en": {
+          "text": "In which country did StarCraft become almost a national sport with its own TV channels?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Южной Корее"
+            },
+            "en": {
+              "text": "South Korea"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Японии"
+            },
+            "en": {
+              "text": "Japan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Китае"
+            },
+            "en": {
+              "text": "China"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Швеции"
+            },
+            "en": {
+              "text": "Sweden"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-wc3-arthas",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Arthas_Menethil",
+        "localizationStrategy": "full",
+        "game": "Warcraft III: Reign of Chaos"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто в Warcraft III и дополнении The Frozen Throne становится Королём-личом?"
+        },
+        "en": {
+          "text": "Who becomes the Lich King in Warcraft III and The Frozen Throne?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Принц Артас"
+            },
+            "en": {
+              "text": "Prince Arthas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Иллидан"
+            },
+            "en": {
+              "text": "Illidan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тралл"
+            },
+            "en": {
+              "text": "Thrall"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Утер"
+            },
+            "en": {
+              "text": "Uther"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-burnout-takedown",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Burnout_3:_Takedown",
+        "localizationStrategy": "full",
+        "game": "Burnout 3: Takedown"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Burnout 3: Takedown называется «тейкдауном»?"
+        },
+        "en": {
+          "text": "What counts as a \"takedown\" in Burnout 3: Takedown?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Таранить соперника, пока он не разобьётся"
+            },
+            "en": {
+              "text": "Ramming a rival until he crashes"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Обогнать на последнем круге"
+            },
+            "en": {
+              "text": "Overtaking on the final lap"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пройти поворот в заносе"
+            },
+            "en": {
+              "text": "Drifting through a corner"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Уйти от полиции"
+            },
+            "en": {
+              "text": "Escaping the police"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-fzero-falcon",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Captain_Falcon",
+        "localizationStrategy": "full",
+        "game": "F-Zero"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут самого известного пилота F-Zero — того, что потом попал в Super Smash Bros.?"
+        },
+        "en": {
+          "text": "What is the name of the most famous F-Zero pilot, the one who later joined Super Smash Bros.?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Капитан Фалкон"
+            },
+            "en": {
+              "text": "Captain Falcon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фокс Макклауд"
+            },
+            "en": {
+              "text": "Fox McCloud"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Самурай Горо"
+            },
+            "en": {
+              "text": "Samurai Goroh"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Самус Аран"
+            },
+            "en": {
+              "text": "Samus Aran"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-ets2-scs",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Euro_Truck_Simulator_2",
+        "localizationStrategy": "latin-titles",
+        "game": "Euro Truck Simulator 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая чешская студия делает Euro Truck Simulator 2?"
+        },
+        "en": {
+          "text": "Which Czech studio makes Euro Truck Simulator 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "SCS Software"
+            },
+            "en": {
+              "text": "SCS Software"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bohemia Interactive"
+            },
+            "en": {
+              "text": "Bohemia Interactive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Giants Software"
+            },
+            "en": {
+              "text": "Giants Software"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Warhorse Studios"
+            },
+            "en": {
+              "text": "Warhorse Studios"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-papers-arstotzka",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Papers,_Please",
+        "localizationStrategy": "full",
+        "game": "Papers, Please"
+      },
+      "translations": {
+        "ru": {
+          "text": "Границу какой страны охраняет инспектор в Papers, Please?"
+        },
+        "en": {
+          "text": "Whose border does the inspector guard in Papers, Please?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Арстотцки"
+            },
+            "en": {
+              "text": "Arstotzka"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Колечии"
+            },
+            "en": {
+              "text": "Kolechia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Обристана"
+            },
+            "en": {
+              "text": "Obristan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Антегрии"
+            },
+            "en": {
+              "text": "Antegria"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-punchout-little-mac",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Mike_Tyson%27s_Punch-Out!!",
+        "localizationStrategy": "full",
+        "game": "Mike Tyson's Punch-Out!!"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут невысокого боксёра — героя Mike Tyson's Punch-Out!!?"
+        },
+        "en": {
+          "text": "What is the name of the short boxer who stars in Mike Tyson's Punch-Out!!?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Литл Мак"
+            },
+            "en": {
+              "text": "Little Mac"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Глас Джо"
+            },
+            "en": {
+              "text": "Glass Joe"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кинг Хиппо"
+            },
+            "en": {
+              "text": "King Hippo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Док Луис"
+            },
+            "en": {
+              "text": "Doc Louis"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-tekken-mishima",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Tekken",
+        "localizationStrategy": "full",
+        "game": "Tekken (1994)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Вокруг какой семьи крутится сюжет серии Tekken?"
+        },
+        "en": {
+          "text": "Which family is the Tekken story centred on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мисима"
+            },
+            "en": {
+              "text": "The Mishimas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хаябуса"
+            },
+            "en": {
+              "text": "The Hayabusas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сакай"
+            },
+            "en": {
+              "text": "The Sakais"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ёсимура"
+            },
+            "en": {
+              "text": "The Yoshimuras"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-medium-sf2-chun-li",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Chun-Li",
+        "localizationStrategy": "full",
+        "game": "Street Fighter II"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто стала первой играбельной девушкой-бойцом в серии Street Fighter?"
+        },
+        "en": {
+          "text": "Who was the first playable female fighter in the Street Fighter series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Чунь Ли"
+            },
+            "en": {
+              "text": "Chun-Li"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кэмми"
+            },
+            "en": {
+              "text": "Cammy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сакура"
+            },
+            "en": {
+              "text": "Sakura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джури"
+            },
+            "en": {
+              "text": "Juri"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-paradox-grand-strategy",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Paradox_Interactive",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая шведская компания делает Crusader Kings и Europa Universalis?"
+        },
+        "en": {
+          "text": "Which Swedish company makes Crusader Kings and Europa Universalis?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Paradox Interactive"
+            },
+            "en": {
+              "text": "Paradox Interactive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Creative Assembly"
+            },
+            "en": {
+              "text": "Creative Assembly"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Firaxis Games"
+            },
+            "en": {
+              "text": "Firaxis Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Relic Entertainment"
+            },
+            "en": {
+              "text": "Relic Entertainment"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:strategy"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-total-war-ca",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Total_War_(video_game_series)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая британская студия делает серию Total War?"
+        },
+        "en": {
+          "text": "Which British studio makes the Total War series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Creative Assembly"
+            },
+            "en": {
+              "text": "Creative Assembly"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Relic Entertainment"
+            },
+            "en": {
+              "text": "Relic Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Paradox Interactive"
+            },
+            "en": {
+              "text": "Paradox Interactive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Rebellion"
+            },
+            "en": {
+              "text": "Rebellion"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:strategy"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-dota-mod",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Defense_of_the_Ancients",
+        "localizationStrategy": "latin-titles",
+        "game": "Warcraft III: Reign of Chaos"
+      },
+      "translations": {
+        "ru": {
+          "text": "Пользовательской картой к какой игре была первая DotA (Defense of the Ancients)?"
+        },
+        "en": {
+          "text": "Which game was the original DotA (Defense of the Ancients) a custom map for?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Warcraft III"
+            },
+            "en": {
+              "text": "Warcraft III"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "StarCraft: Brood War"
+            },
+            "en": {
+              "text": "StarCraft: Brood War"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Age of Empires II"
+            },
+            "en": {
+              "text": "Age of Empires II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Command & Conquer: Generals"
+            },
+            "en": {
+              "text": "Command & Conquer: Generals"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-cnc-kane-actor",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "cast",
+        "source": "https://en.wikipedia.org/wiki/Joseph_D._Kucan",
+        "localizationStrategy": "full",
+        "game": "Command & Conquer (1995)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто сыграл Кейна, лидера Братства Нод, в видеовставках Command & Conquer?"
+        },
+        "en": {
+          "text": "Who played Kane, leader of the Brotherhood of Nod, in the Command & Conquer cutscenes?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джозеф Д. Кукан"
+            },
+            "en": {
+              "text": "Joseph D. Kucan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тим Карри"
+            },
+            "en": {
+              "text": "Tim Curry"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джеймс Эрл Джонс"
+            },
+            "en": {
+              "text": "James Earl Jones"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Майкл Айронсайд"
+            },
+            "en": {
+              "text": "Michael Ironside"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-trackmania-editor",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/TrackMania",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем серия Trackmania от Nadeo отличается от большинства гонок?"
+        },
+        "en": {
+          "text": "What sets the Trackmania series by Nadeo apart from most racing games?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Игроки сами строят трассы в редакторе"
+            },
+            "en": {
+              "text": "Players build their own tracks in an editor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В ней нет таймера"
+            },
+            "en": {
+              "text": "It has no timer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Машины ломаются по-настоящему"
+            },
+            "en": {
+              "text": "Cars take realistic damage"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гонять можно только по ночам"
+            },
+            "en": {
+              "text": "You can only race at night"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:racing"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-gt-yamauchi",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Kazunori_Yamauchi",
+        "localizationStrategy": "full",
+        "game": "Gran Turismo (1997)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто создал серию Gran Turismo?"
+        },
+        "en": {
+          "text": "Who created the Gran Turismo series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кадзунори Ямаути"
+            },
+            "en": {
+              "text": "Kazunori Yamauchi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ю Судзуки"
+            },
+            "en": {
+              "text": "Yu Suzuki"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хидео Кодзима"
+            },
+            "en": {
+              "text": "Hideo Kojima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тосихиро Нагоси"
+            },
+            "en": {
+              "text": "Toshihiro Nagoshi"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-outrun-ferrari",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "cars",
+        "source": "https://en.wikipedia.org/wiki/Out_Run",
+        "localizationStrategy": "latin-titles",
+        "game": "Out Run"
+      },
+      "translations": {
+        "ru": {
+          "text": "На какой машине едет герой Out Run 1986 года?"
+        },
+        "en": {
+          "text": "What car does the hero drive in the 1986 Out Run?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ferrari Testarossa"
+            },
+            "en": {
+              "text": "Ferrari Testarossa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Lamborghini Countach"
+            },
+            "en": {
+              "text": "Lamborghini Countach"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Porsche 911"
+            },
+            "en": {
+              "text": "Porsche 911"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chevrolet Corvette"
+            },
+            "en": {
+              "text": "Chevrolet Corvette"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-rct-assembly",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/RollerCoaster_Tycoon_(video_game)",
+        "localizationStrategy": "full",
+        "game": "RollerCoaster Tycoon"
+      },
+      "translations": {
+        "ru": {
+          "text": "На чём Крис Сойер почти целиком написал RollerCoaster Tycoon?"
+        },
+        "en": {
+          "text": "What did Chris Sawyer write almost all of RollerCoaster Tycoon in?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "На ассемблере"
+            },
+            "en": {
+              "text": "Assembly language"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На C++"
+            },
+            "en": {
+              "text": "C++"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На Java"
+            },
+            "en": {
+              "text": "Java"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На Visual Basic"
+            },
+            "en": {
+              "text": "Visual Basic"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-cities-colossal",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Cities:_Skylines",
+        "localizationStrategy": "latin-titles",
+        "game": "Cities: Skylines"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая финская студия разработала Cities: Skylines?"
+        },
+        "en": {
+          "text": "Which Finnish studio developed Cities: Skylines?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Colossal Order"
+            },
+            "en": {
+              "text": "Colossal Order"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Remedy Entertainment"
+            },
+            "en": {
+              "text": "Remedy Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Housemarque"
+            },
+            "en": {
+              "text": "Housemarque"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Frozenbyte"
+            },
+            "en": {
+              "text": "Frozenbyte"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-pes-fake-names",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Pro_Evolution_Soccer",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Почему в Pro Evolution Soccer годами были клубы вроде «Man Red» вместо Manchester United?"
+        },
+        "en": {
+          "text": "Why did Pro Evolution Soccer have clubs like \"Man Red\" instead of Manchester United for years?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "У Konami не было лицензии на настоящие названия"
+            },
+            "en": {
+              "text": "Konami lacked the licence for the real names"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Это была шутка разработчиков"
+            },
+            "en": {
+              "text": "It was a developer joke"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Так требовала УЕФА от всех игр"
+            },
+            "en": {
+              "text": "UEFA required it of every game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Названия меняли для японского рынка"
+            },
+            "en": {
+              "text": "The names were changed for Japan"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:sports"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-championship-manager",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Sports_Interactive",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называлась футбольная серия Sports Interactive до Football Manager?"
+        },
+        "en": {
+          "text": "What was Sports Interactive's football series called before Football Manager?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Championship Manager"
+            },
+            "en": {
+              "text": "Championship Manager"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Premier Manager"
+            },
+            "en": {
+              "text": "Premier Manager"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Total Club Manager"
+            },
+            "en": {
+              "text": "Total Club Manager"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "LMA Manager"
+            },
+            "en": {
+              "text": "LMA Manager"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:sports",
+        "genre:simulation"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-guilty-gear-arcsys",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Guilty_Gear",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия делает файтинги Guilty Gear?"
+        },
+        "en": {
+          "text": "Which studio makes the Guilty Gear fighting games?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Arc System Works"
+            },
+            "en": {
+              "text": "Arc System Works"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "SNK"
+            },
+            "en": {
+              "text": "SNK"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Ninja"
+            },
+            "en": {
+              "text": "Team Ninja"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NetherRealm Studios"
+            },
+            "en": {
+              "text": "NetherRealm Studios"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:fighting"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-soul-edge",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Soul_Edge",
+        "localizationStrategy": "latin-titles",
+        "game": "Soulcalibur"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называлась игра Namco, с которой началась серия Soulcalibur?"
+        },
+        "en": {
+          "text": "What was the Namco game that started the Soulcalibur series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Soul Edge"
+            },
+            "en": {
+              "text": "Soul Edge"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Soul Blade Origins"
+            },
+            "en": {
+              "text": "Soul Blade Origins"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bushido Blade"
+            },
+            "en": {
+              "text": "Bushido Blade"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tekken Blade"
+            },
+            "en": {
+              "text": "Tekken Blade"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-genres-hard-punchout-tyson",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Mike_Tyson%27s_Punch-Out!!",
+        "localizationStrategy": "full",
+        "game": "Mike Tyson's Punch-Out!!"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой реальный боксёр стал финальным боссом Punch-Out!! на NES в 1987 году?"
+        },
+        "en": {
+          "text": "Which real boxer was the final boss of Punch-Out!! on the NES in 1987?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Майк Тайсон"
+            },
+            "en": {
+              "text": "Mike Tyson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мухаммед Али"
+            },
+            "en": {
+              "text": "Muhammad Ali"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эвандер Холифилд"
+            },
+            "en": {
+              "text": "Evander Holyfield"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джордж Форман"
+            },
+            "en": {
+              "text": "George Foreman"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
