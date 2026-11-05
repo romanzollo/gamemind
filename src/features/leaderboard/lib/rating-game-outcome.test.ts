@@ -42,7 +42,27 @@ describe('resolveRatingGameOutcome', () => {
             movedUp: 2,
             newEntry: false,
             capReached: false,
+            lead: null,
         });
+    });
+
+    it('first place: lead over second', () => {
+        const leader = { ...standing(1, 121), pointsBelow: 96 };
+        const outcome = resolveRatingGameOutcome({
+            ...BASE,
+            contribution: { inPeriod: true, before: standing(1, 100), after: leader },
+        });
+
+        expect(outcome).toMatchObject({ kind: 'gain', lead: 25, movedUp: null });
+    });
+
+    it('alone on the board: lead equals own points', () => {
+        const outcome = resolveRatingGameOutcome({
+            ...BASE,
+            contribution: { inPeriod: true, before: null, after: standing(1, 21, 1) },
+        });
+
+        expect(outcome).toMatchObject({ kind: 'gain', lead: 21, newEntry: true });
     });
 
     it('first points of the week: new entry, no climb', () => {

@@ -26,6 +26,11 @@ export type RatingGameOutcome =
           newEntry: boolean;
           /** Лимит дня срезал часть очков игры. */
           capReached: boolean;
+          /**
+           * Отрыв от второго места, если игрок первый; один в таблице —
+           * отрыв равен его очкам. null — не первый.
+           */
+          lead: number | null;
       };
 
 export type RatingGameInput = {
@@ -84,5 +89,6 @@ export function resolveRatingGameOutcome(
         movedUp,
         newEntry: before === null,
         capReached: gain < input.score,
+        lead: after.rank === 1 ? after.points - (after.pointsBelow ?? 0) : null,
     };
 }
