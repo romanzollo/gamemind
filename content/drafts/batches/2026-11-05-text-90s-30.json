@@ -1,0 +1,1987 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 2 — games of the 1990s, easy and medium (the 90s topic had 17 EASY / 13 MEDIUM vs 52 HARD), plus 2 HARD to even out batch 1. Facts: Wikipedia pages in metadata.source. New catalog games carry a year in the title where the catalog already has a series alias, so older series-level questions keep their tags. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-pokemon-starter",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Pokémon Red / Blue",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Pok%C3%A9mon_Red_and_Blue",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какого покемона нельзя выбрать стартовым в Pokémon Red и Blue?"
+        },
+        "en": {
+          "text": "Which Pokémon can't be picked as a starter in Pokémon Red and Blue?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пикачу"
+            },
+            "en": {
+              "text": "Pikachu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бульбазавра"
+            },
+            "en": {
+              "text": "Bulbasaur"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чармандера"
+            },
+            "en": {
+              "text": "Charmander"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сквиртла"
+            },
+            "en": {
+              "text": "Squirtle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-sonic-villain",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Sonic the Hedgehog",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Sonic_the_Hedgehog_(1991_video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут учёного-злодея из первой Sonic the Hedgehog?"
+        },
+        "en": {
+          "text": "What is the name of the villainous scientist in the first Sonic the Hedgehog?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Доктор Роботник"
+            },
+            "en": {
+              "text": "Dr. Robotnik"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Доктор Вайли"
+            },
+            "en": {
+              "text": "Dr. Wily"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Доктор Нео Кортекс"
+            },
+            "en": {
+              "text": "Dr. Neo Cortex"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Доктор Нефариус"
+            },
+            "en": {
+              "text": "Dr. Nefarious"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-tomb-raider-lara",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Tomb Raider",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Tomb_Raider_(1996_video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут героиню Tomb Raider 1996 года?"
+        },
+        "en": {
+          "text": "What is the name of the heroine of the 1996 Tomb Raider?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Лара Крофт"
+            },
+            "en": {
+              "text": "Lara Croft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джилл Валентайн"
+            },
+            "en": {
+              "text": "Jill Valentine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Самус Аран"
+            },
+            "en": {
+              "text": "Samus Aran"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ада Вонг"
+            },
+            "en": {
+              "text": "Ada Wong"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-mk-fatality",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Mortal Kombat",
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Fatality_(Mortal_Kombat)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется добивающий приём, которым Mortal Kombat прославилась в 1992 году?"
+        },
+        "en": {
+          "text": "What is the name of the finishing move that made Mortal Kombat famous in 1992?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Fatality"
+            },
+            "en": {
+              "text": "Fatality"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ultra Combo"
+            },
+            "en": {
+              "text": "Ultra Combo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Art"
+            },
+            "en": {
+              "text": "Super Art"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "K.O. Rush"
+            },
+            "en": {
+              "text": "K.O. Rush"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-sf2-hadouken",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Street Fighter II",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Street_Fighter_II",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какие бойцы Street Fighter II бросают огненный шар «Хадокен»?"
+        },
+        "en": {
+          "text": "Which Street Fighter II fighters throw the Hadouken fireball?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Рю и Кен"
+            },
+            "en": {
+              "text": "Ryu and Ken"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гайл и Чунь Ли"
+            },
+            "en": {
+              "text": "Guile and Chun-Li"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бланка и Зангиев"
+            },
+            "en": {
+              "text": "Blanka and Zangief"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дхалсим и Э. Хонда"
+            },
+            "en": {
+              "text": "Dhalsim and E. Honda"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-doom-studio",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "DOOM (1993)",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Doom_(1993_video_game)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия создала Doom 1993 года?"
+        },
+        "en": {
+          "text": "Which studio made the 1993 Doom?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "id Software"
+            },
+            "en": {
+              "text": "id Software"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "3D Realms"
+            },
+            "en": {
+              "text": "3D Realms"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Raven Software"
+            },
+            "en": {
+              "text": "Raven Software"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Epic MegaGames"
+            },
+            "en": {
+              "text": "Epic MegaGames"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-half-life-hero",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Half-Life",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Half-Life_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут учёного — героя Half-Life?"
+        },
+        "en": {
+          "text": "What is the name of the scientist hero of Half-Life?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гордон Фримен"
+            },
+            "en": {
+              "text": "Gordon Freeman"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Адриан Шепард"
+            },
+            "en": {
+              "text": "Adrian Shephard"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Барни Калхун"
+            },
+            "en": {
+              "text": "Barney Calhoun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Айзек Кларк"
+            },
+            "en": {
+              "text": "Isaac Clarke"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-ff7-villain",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Final Fantasy VII",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Final_Fantasy_VII",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто главный злодей Final Fantasy VII?"
+        },
+        "en": {
+          "text": "Who is the main villain of Final Fantasy VII?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сефирот"
+            },
+            "en": {
+              "text": "Sephiroth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кефка"
+            },
+            "en": {
+              "text": "Kefka"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ультимеция"
+            },
+            "en": {
+              "text": "Ultimecia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гарленд"
+            },
+            "en": {
+              "text": "Garland"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-warcraft-ii-sides",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Warcraft II: Tides of Darkness",
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Warcraft_II:_Tides_of_Darkness",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какие две стороны воюют в Warcraft II: Tides of Darkness?"
+        },
+        "en": {
+          "text": "Which two sides are at war in Warcraft II: Tides of Darkness?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Люди и орки"
+            },
+            "en": {
+              "text": "Humans and orcs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Терраны и зерги"
+            },
+            "en": {
+              "text": "Terrans and Zerg"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эльфы и нежить"
+            },
+            "en": {
+              "text": "Elves and the undead"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Союзники и Советы"
+            },
+            "en": {
+              "text": "Allies and Soviets"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-super-mario-kart-console",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Super Mario Kart",
+        "topic": "platform",
+        "source": "https://en.wikipedia.org/wiki/Super_Mario_Kart",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "На какой консоли вышла первая Mario Kart — Super Mario Kart?"
+        },
+        "en": {
+          "text": "Which console did the first Mario Kart, Super Mario Kart, come out on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "SNES"
+            },
+            "en": {
+              "text": "SNES"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NES"
+            },
+            "en": {
+              "text": "NES"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nintendo 64"
+            },
+            "en": {
+              "text": "Nintendo 64"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Game Boy"
+            },
+            "en": {
+              "text": "Game Boy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-dkc-partner",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Donkey Kong Country",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Donkey_Kong_Country",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "С каким напарником Донки Конг проходит уровни в Donkey Kong Country?"
+        },
+        "en": {
+          "text": "Which partner runs through the levels with Donkey Kong in Donkey Kong Country?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "С Дидди Конгом"
+            },
+            "en": {
+              "text": "Diddy Kong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С Дикси Конг"
+            },
+            "en": {
+              "text": "Dixie Kong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С Крэнки Конгом"
+            },
+            "en": {
+              "text": "Cranky Kong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С Фанки Конгом"
+            },
+            "en": {
+              "text": "Funky Kong"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-re1-heroes",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Resident Evil",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Resident_Evil_(1996_video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "За каких двух героев можно играть в первом Resident Evil?"
+        },
+        "en": {
+          "text": "Which two heroes can you play as in the first Resident Evil?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Крис Редфилд и Джилл Валентайн"
+            },
+            "en": {
+              "text": "Chris Redfield and Jill Valentine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Леон Кеннеди и Клэр Редфилд"
+            },
+            "en": {
+              "text": "Leon Kennedy and Claire Redfield"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джилл Валентайн и Карлос Оливейра"
+            },
+            "en": {
+              "text": "Jill Valentine and Carlos Oliveira"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Крис Редфилд и Шева Аломар"
+            },
+            "en": {
+              "text": "Chris Redfield and Sheva Alomar"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-wolfenstein-hero",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Wolfenstein 3D",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Wolfenstein_3D",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "За кого играют в Wolfenstein 3D?"
+        },
+        "en": {
+          "text": "Who do you play as in Wolfenstein 3D?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "За Би Джея Бласковица"
+            },
+            "en": {
+              "text": "B.J. Blazkowicz"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Дюка Нюкема"
+            },
+            "en": {
+              "text": "Duke Nukem"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Гордона Фримена"
+            },
+            "en": {
+              "text": "Gordon Freeman"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Корво Аттано"
+            },
+            "en": {
+              "text": "Corvo Attano"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-easy-rayman-limbs",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "game": "Rayman (1995)",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Rayman_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чего нет у Реймана, героя Rayman?"
+        },
+        "en": {
+          "text": "What does Rayman, the hero of Rayman, not have?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Рук и ног — кисти и ступни висят в воздухе"
+            },
+            "en": {
+              "text": "Arms and legs: his hands and feet float"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рта — он никогда не говорит"
+            },
+            "en": {
+              "text": "A mouth: he never speaks"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Волос — он лысый"
+            },
+            "en": {
+              "text": "Hair: he is bald"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Носа — вместо него маска"
+            },
+            "en": {
+              "text": "A nose: he wears a mask instead"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-sm64-stars",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Super Mario 64",
+        "topic": "collectibles",
+        "source": "https://en.wikipedia.org/wiki/Super_Mario_64",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Сколько звёзд силы всего в Super Mario 64?"
+        },
+        "en": {
+          "text": "How many Power Stars are there in Super Mario 64 in total?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "120"
+            },
+            "en": {
+              "text": "120"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "70"
+            },
+            "en": {
+              "text": "70"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "100"
+            },
+            "en": {
+              "text": "100"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "150"
+            },
+            "en": {
+              "text": "150"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-heroes-iii-towns",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Heroes of Might and Magic III",
+        "topic": "identity",
+        "source": "https://en.wikipedia.org/wiki/Heroes_of_Might_and_Magic_III",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой стратегии 1999 года герои водят армии между городами вроде Оплота, Некрополиса и Темницы?"
+        },
+        "en": {
+          "text": "In which 1999 strategy game do heroes lead armies between towns like Rampart, Necropolis and Dungeon?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Heroes of Might and Magic III"
+            },
+            "en": {
+              "text": "Heroes of Might and Magic III"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Disciples: Sacred Lands"
+            },
+            "en": {
+              "text": "Disciples: Sacred Lands"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Age of Wonders"
+            },
+            "en": {
+              "text": "Age of Wonders"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "King's Bounty"
+            },
+            "en": {
+              "text": "King's Bounty"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-gta1-studio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Grand Theft Auto (1997)",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_(video_game)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая британская студия сделала первую Grand Theft Auto 1997 года?"
+        },
+        "en": {
+          "text": "Which British studio made the first Grand Theft Auto in 1997?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "DMA Design"
+            },
+            "en": {
+              "text": "DMA Design"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bullfrog Productions"
+            },
+            "en": {
+              "text": "Bullfrog Productions"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Psygnosis"
+            },
+            "en": {
+              "text": "Psygnosis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Rare"
+            },
+            "en": {
+              "text": "Rare"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-aoe2-studio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Age of Empires II: The Age of Kings",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Age_of_Empires_II",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала Age of Empires II: The Age of Kings?"
+        },
+        "en": {
+          "text": "Which studio made Age of Empires II: The Age of Kings?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ensemble Studios"
+            },
+            "en": {
+              "text": "Ensemble Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Westwood Studios"
+            },
+            "en": {
+              "text": "Westwood Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Blizzard Entertainment"
+            },
+            "en": {
+              "text": "Blizzard Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Relic Entertainment"
+            },
+            "en": {
+              "text": "Relic Entertainment"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-cnc-factions",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Command & Conquer (1995)",
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Command_%26_Conquer_(1995_video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какие стороны воюют в Command & Conquer 1995 года?"
+        },
+        "en": {
+          "text": "Which sides fight in the 1995 Command & Conquer?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "GDI и Братство Нод"
+            },
+            "en": {
+              "text": "GDI and the Brotherhood of Nod"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Союзники и Советы"
+            },
+            "en": {
+              "text": "Allies and Soviets"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Атрейдесы и Харконнены"
+            },
+            "en": {
+              "text": "Atreides and Harkonnen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Люди и орки"
+            },
+            "en": {
+              "text": "Humans and orcs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-silent-hill-hero",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Silent Hill (1999)",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Silent_Hill_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут героя первой Silent Hill, который ищет пропавшую дочь?"
+        },
+        "en": {
+          "text": "What is the name of the hero of the first Silent Hill, searching for his missing daughter?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гарри Мейсон"
+            },
+            "en": {
+              "text": "Harry Mason"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джеймс Сандерленд"
+            },
+            "en": {
+              "text": "James Sunderland"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Генри Таунсенд"
+            },
+            "en": {
+              "text": "Henry Townshend"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Трэвис Грейди"
+            },
+            "en": {
+              "text": "Travis Grady"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-baldurs-gate-engine",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Baldur's Gate (1998)",
+        "topic": "technology",
+        "source": "https://en.wikipedia.org/wiki/Infinity_Engine",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "На каком движке BioWare сделала Baldur's Gate 1998 года?"
+        },
+        "en": {
+          "text": "Which engine did BioWare build the 1998 Baldur's Gate on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Infinity Engine"
+            },
+            "en": {
+              "text": "Infinity Engine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Aurora Engine"
+            },
+            "en": {
+              "text": "Aurora Engine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Odyssey Engine"
+            },
+            "en": {
+              "text": "Odyssey Engine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Build Engine"
+            },
+            "en": {
+              "text": "Build Engine"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-fallout-water-chip",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Fallout",
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Fallout_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что выходец из Убежища 13 ищет в первом Fallout?"
+        },
+        "en": {
+          "text": "What does the Vault 13 dweller go looking for in the first Fallout?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Водяной чип"
+            },
+            "en": {
+              "text": "A water chip"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "ГЭКК"
+            },
+            "en": {
+              "text": "A G.E.C.K."
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Детали для реактора убежища"
+            },
+            "en": {
+              "text": "Parts for the vault's reactor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вакцину от вируса ВРЭ"
+            },
+            "en": {
+              "text": "A cure for the FEV virus"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-dune-ii-resource",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Dune II",
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Dune_II",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой ресурс добывают харвестеры в Dune II?"
+        },
+        "en": {
+          "text": "What resource do harvesters collect in Dune II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пряность"
+            },
+            "en": {
+              "text": "Spice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тиберий"
+            },
+            "en": {
+              "text": "Tiberium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Минералы и газ"
+            },
+            "en": {
+              "text": "Minerals and gas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Золото и лес"
+            },
+            "en": {
+              "text": "Gold and lumber"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-mmx-partner",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Mega Man X",
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Mega_Man_X_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут охотника на мавериков — старшего напарника X в Mega Man X?"
+        },
+        "en": {
+          "text": "What is the name of the Maverick Hunter who is X's senior partner in Mega Man X?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Зеро"
+            },
+            "en": {
+              "text": "Zero"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Протомен"
+            },
+            "en": {
+              "text": "Proto Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Басс"
+            },
+            "en": {
+              "text": "Bass"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сигма"
+            },
+            "en": {
+              "text": "Sigma"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-tekken-company",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Tekken (1994)",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Tekken_(video_game)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая компания создала файтинг Tekken в 1994 году?"
+        },
+        "en": {
+          "text": "Which company created the fighting game Tekken in 1994?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Namco"
+            },
+            "en": {
+              "text": "Namco"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Capcom"
+            },
+            "en": {
+              "text": "Capcom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "SNK"
+            },
+            "en": {
+              "text": "SNK"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sega"
+            },
+            "en": {
+              "text": "Sega"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-gran-turismo-subtitle",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Gran Turismo (1997)",
+        "topic": "identity",
+        "source": "https://en.wikipedia.org/wiki/Gran_Turismo_(1997_video_game)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой подзаголовок стоял у первой Gran Turismo?"
+        },
+        "en": {
+          "text": "What subtitle did the first Gran Turismo carry?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Real Driving Simulator"
+            },
+            "en": {
+              "text": "The Real Driving Simulator"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Ultimate Racing Experience"
+            },
+            "en": {
+              "text": "The Ultimate Racing Experience"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Speed Unlimited"
+            },
+            "en": {
+              "text": "Speed Unlimited"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Road to Legend"
+            },
+            "en": {
+              "text": "Road to Legend"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-diablo-studio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Diablo",
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Diablo_(video_game)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала первую Diablo?"
+        },
+        "en": {
+          "text": "Which studio developed the first Diablo?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Blizzard North"
+            },
+            "en": {
+              "text": "Blizzard North"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Westwood Studios"
+            },
+            "en": {
+              "text": "Westwood Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Interplay"
+            },
+            "en": {
+              "text": "Interplay"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Origin Systems"
+            },
+            "en": {
+              "text": "Origin Systems"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-medium-quake-sound",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "game": "Quake",
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Quake_(video_game)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал музыку и звуки к Quake 1996 года?"
+        },
+        "en": {
+          "text": "Who made the music and sound for the 1996 Quake?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Трент Резнор (Nine Inch Nails)"
+            },
+            "en": {
+              "text": "Trent Reznor (Nine Inch Nails)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бобби Принс"
+            },
+            "en": {
+              "text": "Bobby Prince"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Марк Морган"
+            },
+            "en": {
+              "text": "Mark Morgan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мик Гордон"
+            },
+            "en": {
+              "text": "Mick Gordon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-hard-star-fox-chip",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Star Fox (1993)",
+        "topic": "technology",
+        "source": "https://en.wikipedia.org/wiki/Super_FX",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой чип в картридже Star Fox 1993 года позволил SNES рисовать 3D-графику?"
+        },
+        "en": {
+          "text": "Which chip in the 1993 Star Fox cartridge let the SNES draw 3D graphics?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Super FX"
+            },
+            "en": {
+              "text": "Super FX"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "SA-1"
+            },
+            "en": {
+              "text": "SA-1"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mode 7"
+            },
+            "en": {
+              "text": "Mode 7"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Emotion Engine"
+            },
+            "en": {
+              "text": "Emotion Engine"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-90s-hard-pokemon-mew",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "game": "Pokémon Red / Blue",
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Mew_(Pok%C3%A9mon)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какого покемона программист Сигэки Моримото тайком добавил в первые игры серии в последний момент?"
+        },
+        "en": {
+          "text": "Which Pokémon did programmer Shigeki Morimoto secretly slip into the first games at the last minute?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мью"
+            },
+            "en": {
+              "text": "Mew"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мьюту"
+            },
+            "en": {
+              "text": "Mewtwo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Целеби"
+            },
+            "en": {
+              "text": "Celebi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дитто"
+            },
+            "en": {
+              "text": "Ditto"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
