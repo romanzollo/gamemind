@@ -1,0 +1,1982 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 3 — game awards (owner's idea): TGA, DICE, BAFTA, Golden Joystick winners, records, show history and stories. Facts checked on Nov 5, 2026 against the winner lists in metadata.source. Questions about the shows themselves have no game and no tags. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-tga-2022",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Elden Ring"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2022?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2022?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring"
+            },
+            "en": {
+              "text": "Elden Ring"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "God of War Ragnarök"
+            },
+            "en": {
+              "text": "God of War Ragnarök"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Horizon Forbidden West"
+            },
+            "en": {
+              "text": "Horizon Forbidden West"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Stray"
+            },
+            "en": {
+              "text": "Stray"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-tga-2025",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Clair Obscur: Expedition 33"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2025?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2025?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Clair Obscur: Expedition 33"
+            },
+            "en": {
+              "text": "Clair Obscur: Expedition 33"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hades II"
+            },
+            "en": {
+              "text": "Hades II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight: Silksong"
+            },
+            "en": {
+              "text": "Hollow Knight: Silksong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Death Stranding 2: On the Beach"
+            },
+            "en": {
+              "text": "Death Stranding 2: On the Beach"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-tga-2017",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "The Legend of Zelda: Breath of the Wild"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2017?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2017?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Legend of Zelda: Breath of the Wild"
+            },
+            "en": {
+              "text": "The Legend of Zelda: Breath of the Wild"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Mario Odyssey"
+            },
+            "en": {
+              "text": "Super Mario Odyssey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Horizon Zero Dawn"
+            },
+            "en": {
+              "text": "Horizon Zero Dawn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Persona 5"
+            },
+            "en": {
+              "text": "Persona 5"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-tga-2015",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "The Witcher 3: Wild Hunt"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2015?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2015?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Witcher 3: Wild Hunt"
+            },
+            "en": {
+              "text": "The Witcher 3: Wild Hunt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bloodborne"
+            },
+            "en": {
+              "text": "Bloodborne"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Fallout 4"
+            },
+            "en": {
+              "text": "Fallout 4"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metal Gear Solid V: The Phantom Pain"
+            },
+            "en": {
+              "text": "Metal Gear Solid V: The Phantom Pain"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-tga-2018",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "God of War (2018)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2018?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2018?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "God of War"
+            },
+            "en": {
+              "text": "God of War"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Red Dead Redemption 2"
+            },
+            "en": {
+              "text": "Red Dead Redemption 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Marvel's Spider-Man"
+            },
+            "en": {
+              "text": "Marvel's Spider-Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Monster Hunter: World"
+            },
+            "en": {
+              "text": "Monster Hunter: World"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-tga-2016",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Overwatch (2016)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2016?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2016?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Overwatch"
+            },
+            "en": {
+              "text": "Overwatch"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Doom"
+            },
+            "en": {
+              "text": "Doom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Uncharted 4: A Thief’s End"
+            },
+            "en": {
+              "text": "Uncharted 4: A Thief’s End"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Titanfall 2"
+            },
+            "en": {
+              "text": "Titanfall 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-tga-2021",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "It Takes Two"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2021?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2021?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "It Takes Two"
+            },
+            "en": {
+              "text": "It Takes Two"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metroid Dread"
+            },
+            "en": {
+              "text": "Metroid Dread"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deathloop"
+            },
+            "en": {
+              "text": "Deathloop"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Psychonauts 2"
+            },
+            "en": {
+              "text": "Psychonauts 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-bg3-sweep",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/Baldur%27s_Gate_3",
+        "localizationStrategy": "latin-titles",
+        "game": "Baldur's Gate 3"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра 2023 года взяла главный приз и на The Game Awards, и на DICE, и на BAFTA, и на Golden Joystick?"
+        },
+        "en": {
+          "text": "Which 2023 game took the top prize at The Game Awards, DICE, BAFTA and the Golden Joysticks alike?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Baldur's Gate 3"
+            },
+            "en": {
+              "text": "Baldur's Gate 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Legend of Zelda: Tears of the Kingdom"
+            },
+            "en": {
+              "text": "The Legend of Zelda: Tears of the Kingdom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Alan Wake 2"
+            },
+            "en": {
+              "text": "Alan Wake 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Marvel's Spider-Man 2"
+            },
+            "en": {
+              "text": "Marvel's Spider-Man 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-keighley",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Awards",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто придумал, продюсирует и ведёт The Game Awards?"
+        },
+        "en": {
+          "text": "Who created, produces and hosts The Game Awards?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джефф Кейли"
+            },
+            "en": {
+              "text": "Geoff Keighley"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Реджи Фис-Эме"
+            },
+            "en": {
+              "text": "Reggie Fils-Aimé"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Грег Миллер"
+            },
+            "en": {
+              "text": "Greg Miller"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аарон Гринберг"
+            },
+            "en": {
+              "text": "Aaron Greenberg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-easy-dice-goose",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/D.I.C.E._Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Untitled Goose Game"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра 2019 года, где ты хулиганишь в тихой английской деревне, получила главный приз DICE Awards?"
+        },
+        "en": {
+          "text": "Which 2019 game about causing trouble in a quiet English village won the top DICE Award?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Untitled Goose Game"
+            },
+            "en": {
+              "text": "Untitled Goose Game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Death Stranding"
+            },
+            "en": {
+              "text": "Death Stranding"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sekiro: Shadows Die Twice"
+            },
+            "en": {
+              "text": "Sekiro: Shadows Die Twice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Control"
+            },
+            "en": {
+              "text": "Control"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-tga-2019",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Sekiro: Shadows Die Twice"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра стала «Игрой года» на The Game Awards 2019?"
+        },
+        "en": {
+          "text": "Which game won Game of the Year at The Game Awards 2019?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sekiro: Shadows Die Twice"
+            },
+            "en": {
+              "text": "Sekiro: Shadows Die Twice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Death Stranding"
+            },
+            "en": {
+              "text": "Death Stranding"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Control"
+            },
+            "en": {
+              "text": "Control"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Resident Evil 2"
+            },
+            "en": {
+              "text": "Resident Evil 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-tga-2014-first",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Dragon Age: Inquisition"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра выиграла самую первую «Игру года» The Game Awards в 2014 году?"
+        },
+        "en": {
+          "text": "Which game won the very first Game of the Year at The Game Awards, in 2014?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dragon Age: Inquisition"
+            },
+            "en": {
+              "text": "Dragon Age: Inquisition"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dark Souls II"
+            },
+            "en": {
+              "text": "Dark Souls II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Middle-earth: Shadow of Mordor"
+            },
+            "en": {
+              "text": "Middle-earth: Shadow of Mordor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bayonetta 2"
+            },
+            "en": {
+              "text": "Bayonetta 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-gj-2024",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/Golden_Joystick_Awards",
+        "localizationStrategy": "latin-titles",
+        "game": "Black Myth: Wukong"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какую игру Golden Joystick Awards 2024 назвали главной игрой года — хотя на The Game Awards в тот год победила Astro Bot?"
+        },
+        "en": {
+          "text": "Which game did the 2024 Golden Joystick Awards name Ultimate Game of the Year, even though Astro Bot won at The Game Awards?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Black Myth: Wukong"
+            },
+            "en": {
+              "text": "Black Myth: Wukong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Final Fantasy VII Rebirth"
+            },
+            "en": {
+              "text": "Final Fantasy VII Rebirth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring Shadow of the Erdtree"
+            },
+            "en": {
+              "text": "Elden Ring Shadow of the Erdtree"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metaphor: ReFantazio"
+            },
+            "en": {
+              "text": "Metaphor: ReFantazio"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-bafta-2022",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/British_Academy_Games_Award_for_Best_Game",
+        "localizationStrategy": "latin-titles",
+        "game": "Vampire Survivors"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра получила BAFTA «Лучшая игра» по итогам 2022 года?"
+        },
+        "en": {
+          "text": "Which game won the BAFTA for Best Game for 2022?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Vampire Survivors"
+            },
+            "en": {
+              "text": "Vampire Survivors"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring"
+            },
+            "en": {
+              "text": "Elden Ring"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "God of War Ragnarök"
+            },
+            "en": {
+              "text": "God of War Ragnarök"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Horizon Forbidden West"
+            },
+            "en": {
+              "text": "Horizon Forbidden West"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-bafta-2021",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/British_Academy_Games_Award_for_Best_Game",
+        "localizationStrategy": "latin-titles",
+        "game": "Returnal"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра получила BAFTA «Лучшая игра» по итогам 2021 года?"
+        },
+        "en": {
+          "text": "Which game won the BAFTA for Best Game for 2021?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Returnal"
+            },
+            "en": {
+              "text": "Returnal"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "It Takes Two"
+            },
+            "en": {
+              "text": "It Takes Two"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deathloop"
+            },
+            "en": {
+              "text": "Deathloop"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Psychonauts 2"
+            },
+            "en": {
+              "text": "Psychonauts 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-spike-vga",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/Spike_Video_Game_Awards",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называлась телепремия, которую Джефф Кейли делал до The Game Awards?"
+        },
+        "en": {
+          "text": "What was the TV awards show Geoff Keighley produced before The Game Awards?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Spike Video Game Awards"
+            },
+            "en": {
+              "text": "Spike Video Game Awards"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Golden Joystick Awards"
+            },
+            "en": {
+              "text": "Golden Joystick Awards"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "G-Phoria"
+            },
+            "en": {
+              "text": "G-Phoria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Game Critics Awards"
+            },
+            "en": {
+              "text": "Game Critics Awards"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-hades-hugo",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://www.guinnessworldrecords.com/world-records/689533-first-videogame-to-win-a-hugo-award",
+        "localizationStrategy": "latin-titles",
+        "game": "Hades"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра первой получила литературную премию «Хьюго»?"
+        },
+        "en": {
+          "text": "Which video game was the first to win a Hugo Award?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Last of Us Part II"
+            },
+            "en": {
+              "text": "The Last of Us Part II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Disco Elysium"
+            },
+            "en": {
+              "text": "Disco Elysium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Outer Wilds"
+            },
+            "en": {
+              "text": "Outer Wilds"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-dice-2020",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/D.I.C.E._Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Hades"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра 2020 года получила главный приз DICE Awards?"
+        },
+        "en": {
+          "text": "Which 2020 game won the top DICE Award?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Last of Us Part II"
+            },
+            "en": {
+              "text": "The Last of Us Part II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ghost of Tsushima"
+            },
+            "en": {
+              "text": "Ghost of Tsushima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Final Fantasy VII Remake"
+            },
+            "en": {
+              "text": "Final Fantasy VII Remake"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-fromsoftware-twice",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия единственная выигрывала «Игру года» на The Game Awards больше одного раза?"
+        },
+        "en": {
+          "text": "Which developer is the only one to have won Game of the Year at The Game Awards more than once?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "FromSoftware"
+            },
+            "en": {
+              "text": "FromSoftware"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Santa Monica Studio"
+            },
+            "en": {
+              "text": "Santa Monica Studio"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Naughty Dog"
+            },
+            "en": {
+              "text": "Naughty Dog"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nintendo EPD"
+            },
+            "en": {
+              "text": "Nintendo EPD"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-medium-gj-2021",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/Golden_Joystick_Awards",
+        "localizationStrategy": "latin-titles",
+        "game": "Resident Evil Village"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какую игру Golden Joystick Awards 2021 назвали главной игрой года?"
+        },
+        "en": {
+          "text": "Which game did the 2021 Golden Joystick Awards name Ultimate Game of the Year?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Resident Evil Village"
+            },
+            "en": {
+              "text": "Resident Evil Village"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "It Takes Two"
+            },
+            "en": {
+              "text": "It Takes Two"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deathloop"
+            },
+            "en": {
+              "text": "Deathloop"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metroid Dread"
+            },
+            "en": {
+              "text": "Metroid Dread"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-clair-obscur-record",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Awards_2025",
+        "localizationStrategy": "full",
+        "game": "Clair Obscur: Expedition 33"
+      },
+      "translations": {
+        "ru": {
+          "text": "Сколько наград взяла Clair Obscur: Expedition 33 на The Game Awards 2025 — рекорд шоу?"
+        },
+        "en": {
+          "text": "How many awards did Clair Obscur: Expedition 33 win at The Game Awards 2025, a record for the show?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "9"
+            },
+            "en": {
+              "text": "9"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "6"
+            },
+            "en": {
+              "text": "6"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "7"
+            },
+            "en": {
+              "text": "7"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "11"
+            },
+            "en": {
+              "text": "11"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-kojima-why",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://www.gameinformer.com/b/news/archive/2015/12/03/hideo-kojima-legally-prohibited-from-attending-the-game-awards.aspx",
+        "localizationStrategy": "full",
+        "game": "Metal Gear Solid V: The Phantom Pain"
+      },
+      "translations": {
+        "ru": {
+          "text": "Почему Хидео Кодзима не приехал на The Game Awards 2015, где награждали Metal Gear Solid V?"
+        },
+        "en": {
+          "text": "Why didn't Hideo Kojima attend The Game Awards 2015, where Metal Gear Solid V won?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Konami не разрешила ему по контракту"
+            },
+            "en": {
+              "text": "Konami barred him under his contract"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Он бойкотировал премию"
+            },
+            "en": {
+              "text": "He boycotted the show"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Он не успел на самолёт из Токио"
+            },
+            "en": {
+              "text": "He missed his flight from Tokyo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Он был на съёмках с Норманом Ридусом"
+            },
+            "en": {
+              "text": "He was on a shoot with Norman Reedus"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-sutherland",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://www.tomshardware.com/news/game-awards-2015-show-recap,30693.html",
+        "localizationStrategy": "full",
+        "game": "Metal Gear Solid V: The Phantom Pain"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой актёр вышел на сцену The Game Awards 2015 вместо Кодзимы за наградой Metal Gear Solid V?"
+        },
+        "en": {
+          "text": "Which actor took the stage at The Game Awards 2015 to collect the Metal Gear Solid V award in place of Kojima?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кифер Сазерленд"
+            },
+            "en": {
+              "text": "Kiefer Sutherland"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дэвид Хейтер"
+            },
+            "en": {
+              "text": "David Hayter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Норман Ридус"
+            },
+            "en": {
+              "text": "Norman Reedus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мадс Миккельсен"
+            },
+            "en": {
+              "text": "Mads Mikkelsen"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-elden-ring-mic",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Awards_2022",
+        "localizationStrategy": "full",
+        "game": "Elden Ring"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что случилось на The Game Awards 2022 сразу после речи создателей Elden Ring?"
+        },
+        "en": {
+          "text": "What happened at The Game Awards 2022 right after the Elden Ring team’s speech?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Подросток взял микрофон и упомянул «раввина Билла Клинтона»"
+            },
+            "en": {
+              "text": "A teenager grabbed the mic and named \"rabbi Bill Clinton\""
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Миядзаки отказался забирать награду"
+            },
+            "en": {
+              "text": "Miyazaki refused to take the award"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В зале на минуту отключился свет"
+            },
+            "en": {
+              "text": "The lights in the hall went out for a minute"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Награду по ошибке вручили другой игре"
+            },
+            "en": {
+              "text": "The award was handed to the wrong game"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-bafta-2019",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/British_Academy_Games_Award_for_Best_Game",
+        "localizationStrategy": "latin-titles",
+        "game": "Outer Wilds"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра получила BAFTA «Лучшая игра» по итогам 2019 года?"
+        },
+        "en": {
+          "text": "Which game won the BAFTA for Best Game for 2019?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Outer Wilds"
+            },
+            "en": {
+              "text": "Outer Wilds"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Death Stranding"
+            },
+            "en": {
+              "text": "Death Stranding"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Disco Elysium"
+            },
+            "en": {
+              "text": "Disco Elysium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Control"
+            },
+            "en": {
+              "text": "Control"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-sony-publisher",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой издатель чаще всех получал «Игру года» на The Game Awards?"
+        },
+        "en": {
+          "text": "Which publisher has won Game of the Year at The Game Awards the most times?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sony Interactive Entertainment"
+            },
+            "en": {
+              "text": "Sony Interactive Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nintendo"
+            },
+            "en": {
+              "text": "Nintendo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bandai Namco"
+            },
+            "en": {
+              "text": "Bandai Namco"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Microsoft"
+            },
+            "en": {
+              "text": "Microsoft"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-dice-2015",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/D.I.C.E._Award_for_Game_of_the_Year",
+        "localizationStrategy": "latin-titles",
+        "game": "Fallout 4"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра 2015 года получила главный приз DICE Awards?"
+        },
+        "en": {
+          "text": "Which 2015 game won the top DICE Award?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Fallout 4"
+            },
+            "en": {
+              "text": "Fallout 4"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Witcher 3: Wild Hunt"
+            },
+            "en": {
+              "text": "The Witcher 3: Wild Hunt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Metal Gear Solid V: The Phantom Pain"
+            },
+            "en": {
+              "text": "Metal Gear Solid V: The Phantom Pain"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bloodborne"
+            },
+            "en": {
+              "text": "Bloodborne"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-bafta-2017",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/British_Academy_Games_Award_for_Best_Game",
+        "localizationStrategy": "latin-titles",
+        "game": "What Remains of Edith Finch"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра получила BAFTA «Лучшая игра» по итогам 2017 года?"
+        },
+        "en": {
+          "text": "Which game won the BAFTA for Best Game for 2017?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "What Remains of Edith Finch"
+            },
+            "en": {
+              "text": "What Remains of Edith Finch"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Legend of Zelda: Breath of the Wild"
+            },
+            "en": {
+              "text": "The Legend of Zelda: Breath of the Wild"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Horizon Zero Dawn"
+            },
+            "en": {
+              "text": "Horizon Zero Dawn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Mario Odyssey"
+            },
+            "en": {
+              "text": "Super Mario Odyssey"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-gow-ragnarok-six",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Awards_2022",
+        "localizationStrategy": "full",
+        "game": "God of War Ragnarök"
+      },
+      "translations": {
+        "ru": {
+          "text": "Сколько наград собрала God of War Ragnarök на The Game Awards 2022, уступив «Игру года» Elden Ring?"
+        },
+        "en": {
+          "text": "How many awards did God of War Ragnarök collect at The Game Awards 2022 while losing Game of the Year to Elden Ring?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "6"
+            },
+            "en": {
+              "text": "6"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "2"
+            },
+            "en": {
+              "text": "2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "4"
+            },
+            "en": {
+              "text": "4"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "8"
+            },
+            "en": {
+              "text": "8"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-05-awards-hard-tga-first-year",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "awards",
+        "source": "https://en.wikipedia.org/wiki/The_Game_Awards",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком году прошла первая церемония The Game Awards?"
+        },
+        "en": {
+          "text": "In what year was the first The Game Awards ceremony held?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "2014"
+            },
+            "en": {
+              "text": "2014"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "2003"
+            },
+            "en": {
+              "text": "2003"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "2011"
+            },
+            "en": {
+              "text": "2011"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "2016"
+            },
+            "en": {
+              "text": "2016"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

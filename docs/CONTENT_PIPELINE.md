@@ -377,6 +377,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 5 (later):** games of the 1990s easy/medium TEXT ×30 (`2026-11-05-text-90s-30.json`, 16 new catalog games + franchise Tekken, `taxonomy:sync` both sides) published both sides → TEXT **448** (154/154/140) + IMAGE **171** → **619** live.
 
+**Nov 5 (evening):** game awards TEXT ×30 (`2026-11-05-text-awards-30.json`, 5 new catalog games; 5 show-level questions have no tags) published both sides → TEXT **478** (164/164/150) + IMAGE **171** → **649** live. Duplicate «Half-Life hero» from the 90s batch replaced in place by `content/fixes/2026-11-05-dup-half-life-hero.json` (applied on dev and prod).
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:

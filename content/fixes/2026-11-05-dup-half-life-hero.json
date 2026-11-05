@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "note": "Дубль из партии 5.2-2 (2026-11-05-text-90s-30): «герой Half-Life — Гордон Фримен» уже есть в банке (Q-vg-medium-005). Вопрос партии меняем на месте на факт первой Half-Life — монтировка Гордона. Применять scripts/apply-question-fixes.cjs (dev, потом прод); реимпорт запрещён.",
+  "fixes": [
+    {
+      "key": "dup-2026-11-05-90s-easy-half-life-hero",
+      "difficulty": "EASY",
+      "matchQuestionRu": "Как зовут учёного — героя Half-Life?",
+      "matchRu": [
+        "Гордон Фримен",
+        "Адриан Шепард",
+        "Барни Калхун",
+        "Айзек Кларк"
+      ],
+      "question": {
+        "ru": "Каким оружием ближнего боя Гордон Фримен дерётся с первых минут Half-Life?",
+        "en": "Which melee weapon does Gordon Freeman fight with from the first minutes of Half-Life?"
+      },
+      "options": [
+        { "fromRu": "Гордон Фримен", "ru": "Монтировкой", "en": "A crowbar" },
+        { "fromRu": "Адриан Шепард", "ru": "Гаечным ключом", "en": "A pipe wrench" },
+        { "fromRu": "Барни Калхун", "ru": "Армейским ножом", "en": "A combat knife" },
+        { "fromRu": "Айзек Кларк", "ru": "Бейсбольной битой", "en": "A baseball bat" }
+      ]
+    }
+  ]
+}
