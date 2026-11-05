@@ -1,0 +1,2017 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 4 — Nintendo, medium (the Nintendo topic had 21 medium), plus 6 hard to keep hard close. Questions about a series or hardware carry explicit tags with a platform so they land in the Nintendo topic. Duplicates checked by keywords across the whole bank. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-oot-navi",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Navi_(The_Legend_of_Zelda)",
+        "localizationStrategy": "full",
+        "game": "The Legend of Zelda: Ocarina of Time"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут фею, которая сопровождает Линка в Ocarina of Time?"
+        },
+        "en": {
+          "text": "What is the name of the fairy who travels with Link in Ocarina of Time?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Нави"
+            },
+            "en": {
+              "text": "Navi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тэтл"
+            },
+            "en": {
+              "text": "Tatl"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мидна"
+            },
+            "en": {
+              "text": "Midna"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фай"
+            },
+            "en": {
+              "text": "Fi"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-botw-calamity",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Breath_of_the_Wild",
+        "localizationStrategy": "full",
+        "game": "The Legend of Zelda: Breath of the Wild"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какое зло сто лет держит в осаде замок Хайрула в Breath of the Wild?"
+        },
+        "en": {
+          "text": "What evil has kept Hyrule Castle under siege for a hundred years in Breath of the Wild?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Бедствие Ганон"
+            },
+            "en": {
+              "text": "Calamity Ganon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маска Маджоры"
+            },
+            "en": {
+              "text": "Majora's Mask"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Демон Гирахим"
+            },
+            "en": {
+              "text": "The demon Ghirahim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Колдун Ваати"
+            },
+            "en": {
+              "text": "The sorcerer Vaati"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-majora-moon",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Majora%27s_Mask",
+        "localizationStrategy": "full",
+        "game": "The Legend of Zelda: Majora's Mask"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что грозит упасть на Термину в конце трёх дней Majora's Mask?"
+        },
+        "en": {
+          "text": "What threatens to crash into Termina at the end of the three days in Majora's Mask?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Луна"
+            },
+            "en": {
+              "text": "The moon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Метеорит"
+            },
+            "en": {
+              "text": "A meteor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Небесный замок"
+            },
+            "en": {
+              "text": "A sky castle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Летающий корабль"
+            },
+            "en": {
+              "text": "A flying ship"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-galaxy-rosalina",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Rosalina",
+        "localizationStrategy": "full",
+        "game": "Super Mario Galaxy"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто хранительница кометной обсерватории в Super Mario Galaxy?"
+        },
+        "en": {
+          "text": "Who watches over the Comet Observatory in Super Mario Galaxy?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Розалина"
+            },
+            "en": {
+              "text": "Rosalina"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Принцесса Дейзи"
+            },
+            "en": {
+              "text": "Princess Daisy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Полин"
+            },
+            "en": {
+              "text": "Pauline"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тоадетта"
+            },
+            "en": {
+              "text": "Toadette"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-odyssey-pauline",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Pauline_(Nintendo)",
+        "localizationStrategy": "full",
+        "game": "Super Mario Odyssey"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто стал мэром Нью-Донк-Сити в Super Mario Odyssey?"
+        },
+        "en": {
+          "text": "Who is the mayor of New Donk City in Super Mario Odyssey?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Полин"
+            },
+            "en": {
+              "text": "Pauline"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Принцесса Пич"
+            },
+            "en": {
+              "text": "Princess Peach"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Розалина"
+            },
+            "en": {
+              "text": "Rosalina"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Принцесса Дейзи"
+            },
+            "en": {
+              "text": "Princess Daisy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-luigis-mansion-vacuum",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Luigi%27s_Mansion",
+        "localizationStrategy": "full",
+        "game": "Luigi's Mansion"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем Луиджи ловит призраков в Luigi's Mansion?"
+        },
+        "en": {
+          "text": "What does Luigi use to catch ghosts in Luigi's Mansion?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пылесосом Poltergust 3000"
+            },
+            "en": {
+              "text": "The Poltergust 3000 vacuum"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Протонным ранцем"
+            },
+            "en": {
+              "text": "A proton pack"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фонарём-ловушкой"
+            },
+            "en": {
+              "text": "A trap lantern"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сачком профессора Гада"
+            },
+            "en": {
+              "text": "Professor E. Gadd's net"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-ac-nook",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Tom_Nook",
+        "localizationStrategy": "full",
+        "game": "Animal Crossing: New Horizons"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой енот-предприниматель продаёт тебе путёвку на остров в Animal Crossing: New Horizons?"
+        },
+        "en": {
+          "text": "Which raccoon businessman sells you the island getaway package in Animal Crossing: New Horizons?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Том Нук"
+            },
+            "en": {
+              "text": "Tom Nook"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Изабель"
+            },
+            "en": {
+              "text": "Isabelle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Блэзерс"
+            },
+            "en": {
+              "text": "Blathers"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Реттсетти"
+            },
+            "en": {
+              "text": "Resetti"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-kirby-popstar",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Kirby_(series)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется родная планета Кирби?"
+        },
+        "en": {
+          "text": "What is the name of Kirby's home planet?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Поп-Стар"
+            },
+            "en": {
+              "text": "Popstar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Халкандра"
+            },
+            "en": {
+              "text": "Halcandra"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шивер-Стар"
+            },
+            "en": {
+              "text": "Shiver Star"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рипл-Стар"
+            },
+            "en": {
+              "text": "Ripple Star"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:kirby",
+        "platform:nintendo"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-kirby-dedede",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/King_Dedede",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой король — давний соперник Кирби?"
+        },
+        "en": {
+          "text": "Which king is Kirby's long-time rival?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Король Дидиди"
+            },
+            "en": {
+              "text": "King Dedede"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Король Бу"
+            },
+            "en": {
+              "text": "King Boo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Король К. Рул"
+            },
+            "en": {
+              "text": "King K. Rool"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Король Боб-омб"
+            },
+            "en": {
+              "text": "King Bob-omb"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:kirby",
+        "platform:nintendo"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-metroid-ridley",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Ridley_(Metroid)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут крылатого лидера космических пиратов — заклятого врага Самус?"
+        },
+        "en": {
+          "text": "What is the name of the winged Space Pirate leader who is Samus's sworn enemy?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ридли"
+            },
+            "en": {
+              "text": "Ridley"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Крейд"
+            },
+            "en": {
+              "text": "Kraid"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мать-мозг"
+            },
+            "en": {
+              "text": "Mother Brain"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тёмная Самус"
+            },
+            "en": {
+              "text": "Dark Samus"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:metroid",
+        "platform:nintendo"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-three-houses-houses",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Fire_Emblem:_Three_Houses",
+        "localizationStrategy": "latin-titles",
+        "game": "Fire Emblem: Three Houses"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какие три дома есть в Fire Emblem: Three Houses?"
+        },
+        "en": {
+          "text": "What are the three houses in Fire Emblem: Three Houses?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Black Eagles, Blue Lions, Golden Deer"
+            },
+            "en": {
+              "text": "Black Eagles, Blue Lions, Golden Deer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Red Dragons, White Wolves, Silver Hawks"
+            },
+            "en": {
+              "text": "Red Dragons, White Wolves, Silver Hawks"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Black Lions, Blue Eagles, Golden Stags"
+            },
+            "en": {
+              "text": "Black Lions, Blue Eagles, Golden Stags"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Iron Bears, Crimson Foxes, Azure Owls"
+            },
+            "en": {
+              "text": "Iron Bears, Crimson Foxes, Azure Owls"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-sword-shield-galar",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Pok%C3%A9mon_Sword_and_Shield",
+        "localizationStrategy": "full",
+        "game": "Pokémon Sword / Shield"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется регион, где происходят Pokémon Sword и Shield?"
+        },
+        "en": {
+          "text": "What is the region where Pokémon Sword and Shield take place?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Галар"
+            },
+            "en": {
+              "text": "Galar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пальдеа"
+            },
+            "en": {
+              "text": "Paldea"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Алола"
+            },
+            "en": {
+              "text": "Alola"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Калос"
+            },
+            "en": {
+              "text": "Kalos"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-smash-sakurai",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Masahiro_Sakurai",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто придумал серию Super Smash Bros.?"
+        },
+        "en": {
+          "text": "Who created the Super Smash Bros. series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Масахиро Сакураи"
+            },
+            "en": {
+              "text": "Masahiro Sakurai"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сигэру Миямото"
+            },
+            "en": {
+              "text": "Shigeru Miyamoto"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эйдзи Аонума"
+            },
+            "en": {
+              "text": "Eiji Aonuma"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ёсио Сакамото"
+            },
+            "en": {
+              "text": "Yoshio Sakamoto"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:smash-bros",
+        "platform:nintendo"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-mk8-blue-shell",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Mario_Kart_8",
+        "localizationStrategy": "full",
+        "game": "Mario Kart 8 Deluxe"
+      },
+      "translations": {
+        "ru": {
+          "text": "На кого летит синий панцирь в Mario Kart 8 Deluxe?"
+        },
+        "en": {
+          "text": "Who does the blue shell fly at in Mario Kart 8 Deluxe?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "На лидера гонки"
+            },
+            "en": {
+              "text": "The race leader"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На гонщика прямо перед тобой"
+            },
+            "en": {
+              "text": "The racer right in front of you"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На последнего в гонке"
+            },
+            "en": {
+              "text": "The racer in last place"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На ближайшего соперника сзади"
+            },
+            "en": {
+              "text": "The nearest rival behind you"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-game-boy-tetris",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "hardware",
+        "source": "https://en.wikipedia.org/wiki/Game_Boy",
+        "localizationStrategy": "latin-titles",
+        "game": "Tetris"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра шла в комплекте с Game Boy в Северной Америке и Европе?"
+        },
+        "en": {
+          "text": "Which game came bundled with the Game Boy in North America and Europe?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Tetris"
+            },
+            "en": {
+              "text": "Tetris"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Mario Land"
+            },
+            "en": {
+              "text": "Super Mario Land"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Kirby's Dream Land"
+            },
+            "en": {
+              "text": "Kirby's Dream Land"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pokémon Red"
+            },
+            "en": {
+              "text": "Pokémon Red"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "game:tetris",
+        "platform:game-boy"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-wii-revolution",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "hardware",
+        "source": "https://en.wikipedia.org/wiki/Wii",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким кодовым именем Nintendo разрабатывала Wii?"
+        },
+        "en": {
+          "text": "What was the Wii called during development?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Revolution"
+            },
+            "en": {
+              "text": "Revolution"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dolphin"
+            },
+            "en": {
+              "text": "Dolphin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Project Reality"
+            },
+            "en": {
+              "text": "Project Reality"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NX"
+            },
+            "en": {
+              "text": "NX"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "platform:wii"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-nintendo-hanafuda",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Nintendo",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "С чего начинала Nintendo в 1889 году?"
+        },
+        "en": {
+          "text": "What did Nintendo start out making in 1889?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "С игральных карт ханафуда"
+            },
+            "en": {
+              "text": "Hanafuda playing cards"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С игрушечных поездов"
+            },
+            "en": {
+              "text": "Toy trains"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С фотоаппаратов"
+            },
+            "en": {
+              "text": "Cameras"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С радиоприёмников"
+            },
+            "en": {
+              "text": "Radios"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "platform:nintendo"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-donkey-kong-jumpman",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Mario",
+        "localizationStrategy": "latin-titles",
+        "game": "Donkey Kong"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как звали Марио в Donkey Kong 1981 года?"
+        },
+        "en": {
+          "text": "What was Mario called in the 1981 Donkey Kong?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Jumpman"
+            },
+            "en": {
+              "text": "Jumpman"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Runman"
+            },
+            "en": {
+              "text": "Runman"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hammer Joe"
+            },
+            "en": {
+              "text": "Hammer Joe"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mr. Climber"
+            },
+            "en": {
+              "text": "Mr. Climber"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "game:donkey-kong",
+        "platform:nintendo"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-pikmin-olimar",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Pikmin_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Pikmin"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут капитана, который разбился на чужой планете в первой Pikmin?"
+        },
+        "en": {
+          "text": "What is the name of the captain who crash-lands on an alien planet in the first Pikmin?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Олимар"
+            },
+            "en": {
+              "text": "Olimar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Луи"
+            },
+            "en": {
+              "text": "Louie"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Альф"
+            },
+            "en": {
+              "text": "Alph"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фалко"
+            },
+            "en": {
+              "text": "Falco"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-wonder-elephant",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Super_Mario_Bros._Wonder",
+        "localizationStrategy": "full",
+        "game": "Super Mario Bros. Wonder"
+      },
+      "translations": {
+        "ru": {
+          "text": "В кого превращается Марио, съев фрукт в Super Mario Bros. Wonder?"
+        },
+        "en": {
+          "text": "What does Mario turn into after eating the fruit in Super Mario Bros. Wonder?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В слона"
+            },
+            "en": {
+              "text": "An elephant"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В енота"
+            },
+            "en": {
+              "text": "A raccoon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В кота"
+            },
+            "en": {
+              "text": "A cat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В пингвина"
+            },
+            "en": {
+              "text": "A penguin"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-3ds-glasses-free",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "hardware",
+        "source": "https://en.wikipedia.org/wiki/Nintendo_3DS",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем удивляла Nintendo 3DS на старте продаж?"
+        },
+        "en": {
+          "text": "What made the Nintendo 3DS stand out at launch?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Объёмной картинкой без очков"
+            },
+            "en": {
+              "text": "3D images without glasses"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Первым сенсорным экраном у Nintendo"
+            },
+            "en": {
+              "text": "Nintendo's first touchscreen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Съёмным геймпадом"
+            },
+            "en": {
+              "text": "A detachable controller"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Встроенным проектором"
+            },
+            "en": {
+              "text": "A built-in projector"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "platform:3ds"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-sunshine-bowser-jr",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Bowser_Jr.",
+        "localizationStrategy": "full",
+        "game": "Super Mario Sunshine"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто в Super Mario Sunshine разрисовал остров граффити, переодевшись Марио?"
+        },
+        "en": {
+          "text": "Who covered the island in graffiti while disguised as Mario in Super Mario Sunshine?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Боузер-младший"
+            },
+            "en": {
+              "text": "Bowser Jr."
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ларри Купа"
+            },
+            "en": {
+              "text": "Larry Koopa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Камек"
+            },
+            "en": {
+              "text": "Kamek"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Варио"
+            },
+            "en": {
+              "text": "Wario"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-prime-studio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Metroid_Prime",
+        "localizationStrategy": "latin-titles",
+        "game": "Metroid Prime"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала Metroid Prime?"
+        },
+        "en": {
+          "text": "Which studio made Metroid Prime?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Retro Studios"
+            },
+            "en": {
+              "text": "Retro Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Next Level Games"
+            },
+            "en": {
+              "text": "Next Level Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Monolith Soft"
+            },
+            "en": {
+              "text": "Monolith Soft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Intelligent Systems"
+            },
+            "en": {
+              "text": "Intelligent Systems"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-medium-dkc-studio",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Donkey_Kong_Country",
+        "localizationStrategy": "latin-titles",
+        "game": "Donkey Kong Country"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая британская студия сделала Donkey Kong Country?"
+        },
+        "en": {
+          "text": "Which British studio made Donkey Kong Country?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Rare"
+            },
+            "en": {
+              "text": "Rare"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Traveller’s Tales"
+            },
+            "en": {
+              "text": "Traveller’s Tales"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Argonaut Games"
+            },
+            "en": {
+              "text": "Argonaut Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Codemasters"
+            },
+            "en": {
+              "text": "Codemasters"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-hard-xenoblade-titans",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Xenoblade_Chronicles_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Xenoblade Chronicles (2010)"
+      },
+      "translations": {
+        "ru": {
+          "text": "На чём живут люди и машины в первой Xenoblade Chronicles?"
+        },
+        "en": {
+          "text": "What do people and machines live on in the first Xenoblade Chronicles?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "На телах двух застывших титанов — Биониса и Мехониса"
+            },
+            "en": {
+              "text": "On the bodies of two frozen titans, Bionis and Mechonis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На парящих островах над морем облаков"
+            },
+            "en": {
+              "text": "On floating islands above a sea of clouds"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На кольце вокруг умирающего солнца"
+            },
+            "en": {
+              "text": "On a ring around a dying sun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На спине гигантской черепахи"
+            },
+            "en": {
+              "text": "On the back of a giant turtle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-hard-skyward-fi",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Skyward_Sword",
+        "localizationStrategy": "full",
+        "game": "The Legend of Zelda: Skyward Sword"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут дух меча, который помогает Линку в Skyward Sword?"
+        },
+        "en": {
+          "text": "What is the name of the sword spirit who helps Link in Skyward Sword?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Фай"
+            },
+            "en": {
+              "text": "Fi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нави"
+            },
+            "en": {
+              "text": "Navi"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мидна"
+            },
+            "en": {
+              "text": "Midna"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тэтл"
+            },
+            "en": {
+              "text": "Tatl"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-hard-dread-emmi",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Metroid_Dread",
+        "localizationStrategy": "latin-titles",
+        "game": "Metroid Dread"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называются роботы-охотники, от которых убегает Самус в Metroid Dread?"
+        },
+        "en": {
+          "text": "What are the hunter robots Samus runs from in Metroid Dread called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "E.M.M.I."
+            },
+            "en": {
+              "text": "E.M.M.I."
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "SA-X"
+            },
+            "en": {
+              "text": "SA-X"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chozo Soldiers"
+            },
+            "en": {
+              "text": "Chozo Soldiers"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sentries"
+            },
+            "en": {
+              "text": "Sentries"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-hard-virtual-boy-colours",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "hardware",
+        "source": "https://en.wikipedia.org/wiki/Virtual_Boy",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каких цветах показывал картинку Virtual Boy 1995 года?"
+        },
+        "en": {
+          "text": "In what colours did the 1995 Virtual Boy show its picture?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Красный на чёрном"
+            },
+            "en": {
+              "text": "Red on black"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Зелёный на сером"
+            },
+            "en": {
+              "text": "Green on grey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Синий на белом"
+            },
+            "en": {
+              "text": "Blue on white"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Янтарный на чёрном"
+            },
+            "en": {
+              "text": "Amber on black"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "platform:nintendo"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-hard-kondo-music",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Koji_Kondo",
+        "localizationStrategy": "full",
+        "game": "Super Mario Bros."
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал музыку к первым Super Mario Bros. и The Legend of Zelda?"
+        },
+        "en": {
+          "text": "Who composed the music for the first Super Mario Bros. and The Legend of Zelda?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кодзи Кондо"
+            },
+            "en": {
+              "text": "Koji Kondo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нобуо Уэмацу"
+            },
+            "en": {
+              "text": "Nobuo Uematsu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Коити Сугияма"
+            },
+            "en": {
+              "text": "Koichi Sugiyama"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Юдзо Косиро"
+            },
+            "en": {
+              "text": "Yuzo Koshiro"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-nintendo-hard-zelda-cdi",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda_CD-i_games",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "На какой консоли Philips вышли неофициальные Zelda 1993 года, сделанные не Nintendo?"
+        },
+        "en": {
+          "text": "On which Philips console did the 1993 Zelda games not made by Nintendo come out?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "CD-i"
+            },
+            "en": {
+              "text": "CD-i"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "3DO"
+            },
+            "en": {
+              "text": "3DO"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Atari Jaguar"
+            },
+            "en": {
+              "text": "Atari Jaguar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sega CD"
+            },
+            "en": {
+              "text": "Sega CD"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:zelda"
+      ]
+    }
+  ]
+}

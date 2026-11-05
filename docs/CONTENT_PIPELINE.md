@@ -379,6 +379,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 5 (evening):** game awards TEXT ×30 (`2026-11-05-text-awards-30.json`, 5 new catalog games; 5 show-level questions have no tags) published both sides → TEXT **478** (164/164/150) + IMAGE **171** → **649** live. Duplicate «Half-Life hero» from the 90s batch replaced in place by `content/fixes/2026-11-05-dup-half-life-hero.json` (applied on dev and prod).
 
+**Nov 6:** Nintendo medium TEXT ×30 (`2026-11-06-text-nintendo-30.json`, 24 medium / 6 hard, 8 new catalog games, 11 questions with draft `tags` carrying a platform) published both sides → TEXT **508** (164/188/156) + IMAGE **171** → **679** live.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
