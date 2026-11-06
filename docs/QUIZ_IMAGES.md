@@ -414,3 +414,25 @@ Pass = images load + lightbox open/close in light and dark. Fail = 404 WebP, mil
 | `npm run images:hash -- --prune-legacy --dry-run` / `… --prune-legacy` | Delete slug-named files that have an identical hashed copy |
 
 **Rollout order (prod):** deploy hashed copies next to slug files → `images:migrate-urls -- --target=prod` → dry-run shows 0 on dev and prod → `--prune-legacy` → second deploy. Deleting slug files earlier breaks running quizzes and old reviews; keeping them forever keeps the leak (byte comparison maps them back).
+
+---
+
+## 8. Press-kit frames and new question kinds (Nov 2026)
+
+Owner decision (Nov 6): frames may come from **any official press kit** of the studio or publisher. Every question records `metadata.source` (kit URL) and `metadata.sourceFile`; a frame is removed if the rights holder asks.
+
+**Kits checked (Nov 6):**
+
+| Kit | Result |
+|-----|--------|
+| Hollow Knight (Team Cherry Google Drive, linked from hollowknight.com) | 25 gameplay shots, file names = locations/bosses; 2017 builds — skip frames that changed by release |
+| CD PROJEKT RED press center (press.cdprojektred.com) | Witcher 3 Remastered `*_CLEAN` shots (no text) |
+| Supergiant Hades media zip | gameplay + character wallpapers (crop the corner logo) |
+| Stardew Valley press kit (images.zip) | 11 shots, few usable |
+| Sony Asset Library | one key art / logo per game — useless for frames |
+| Larian press | archive link 404 |
+| GamesPress, Nintendo press | login required — not used (no accounts) |
+
+**Flow:** download kit to `raw-quiz-images/_presskits/<kit>/` (gitignored) → contact sheet → pick frames where the answer is not on screen (no logo, title, name plate) → crop → `raw-quiz-images/{difficulty}/{slug}.png` → `images:optimize` → batch JSON (`kind: IMAGE_GUESS_BATCH`) → import DRAFT → HTML review → commit + deploy WebP → prod import → publish.
+
+**Question kinds** (the quiz shows the question's own text): «Где это в …?», «Кто это в …?», a mechanic («Какой Знак…»), an event («Какое событие…»). Wrong options come from the same game; exclude places that contain the answer (the Hive is inside Kingdom's Edge) and names whose official RU translation is not confirmed.
