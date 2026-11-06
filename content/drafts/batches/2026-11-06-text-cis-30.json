@@ -1,0 +1,1996 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 6 — games from CIS studios. 10/10/10. Studio questions ask the name, not the country (studios relocated). Series questions carry explicit tags. Duplicates checked by keywords across the bank. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-metro-glukhovsky",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Metro_2033_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Metro 2033"
+      },
+      "translations": {
+        "ru": {
+          "text": "По роману какого писателя сделана игра Metro 2033?"
+        },
+        "en": {
+          "text": "Which author wrote the novel Metro 2033 is based on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дмитрий Глуховский"
+            },
+            "en": {
+              "text": "Dmitry Glukhovsky"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сергей Лукьяненко"
+            },
+            "en": {
+              "text": "Sergei Lukyanenko"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ник Перумов"
+            },
+            "en": {
+              "text": "Nick Perumov"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аркадий Стругацкий"
+            },
+            "en": {
+              "text": "Arkady Strugatsky"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-metro-moscow-metro",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Metro_2033_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Metro 2033"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где прячутся уцелевшие люди в Metro 2033?"
+        },
+        "en": {
+          "text": "Where do the survivors hide in Metro 2033?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В тоннелях московского метро"
+            },
+            "en": {
+              "text": "In the Moscow Metro tunnels"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В бункерах под Петербургом"
+            },
+            "en": {
+              "text": "In bunkers under St. Petersburg"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В подземных городах Урала"
+            },
+            "en": {
+              "text": "In underground cities in the Urals"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На заброшенной атомной станции"
+            },
+            "en": {
+              "text": "At an abandoned nuclear plant"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-metro-artyom",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Metro_(franchise)",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут главного героя игр серии Metro?"
+        },
+        "en": {
+          "text": "What is the name of the protagonist of the Metro games?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Артём"
+            },
+            "en": {
+              "text": "Artyom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мельник"
+            },
+            "en": {
+              "text": "Miller"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хан"
+            },
+            "en": {
+              "text": "Khan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Охотник"
+            },
+            "en": {
+              "text": "Hunter"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:metro",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-wot-studio",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/World_of_Tanks",
+        "localizationStrategy": "latin-titles",
+        "game": "World of Tanks"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала World of Tanks?"
+        },
+        "en": {
+          "text": "Which studio made World of Tanks?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Wargaming"
+            },
+            "en": {
+              "text": "Wargaming"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gaijin Entertainment"
+            },
+            "en": {
+              "text": "Gaijin Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nival"
+            },
+            "en": {
+              "text": "Nival"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Battlestate Games"
+            },
+            "en": {
+              "text": "Battlestate Games"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-war-thunder-studio",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/War_Thunder",
+        "localizationStrategy": "latin-titles",
+        "game": "War Thunder"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала War Thunder?"
+        },
+        "en": {
+          "text": "Which studio made War Thunder?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Gaijin Entertainment"
+            },
+            "en": {
+              "text": "Gaijin Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Wargaming"
+            },
+            "en": {
+              "text": "Wargaming"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1C Game Studios"
+            },
+            "en": {
+              "text": "1C Game Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bohemia Interactive"
+            },
+            "en": {
+              "text": "Bohemia Interactive"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-tarkov-studio",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Escape_from_Tarkov",
+        "localizationStrategy": "latin-titles",
+        "game": "Escape from Tarkov"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала Escape from Tarkov?"
+        },
+        "en": {
+          "text": "Which studio made Escape from Tarkov?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Battlestate Games"
+            },
+            "en": {
+              "text": "Battlestate Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bohemia Interactive"
+            },
+            "en": {
+              "text": "Bohemia Interactive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gaijin Entertainment"
+            },
+            "en": {
+              "text": "Gaijin Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "GSC Game World"
+            },
+            "en": {
+              "text": "GSC Game World"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-hello-neighbor-basement",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Hello_Neighbor",
+        "localizationStrategy": "full",
+        "game": "Hello Neighbor"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что пытается сделать игрок в Hello Neighbor?"
+        },
+        "en": {
+          "text": "What is the player trying to do in Hello Neighbor?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пробраться в подвал к соседу"
+            },
+            "en": {
+              "text": "Sneak into the neighbor's basement"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Помириться с соседом"
+            },
+            "en": {
+              "text": "Make peace with the neighbor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Обойти соседа в конкурсе садоводов"
+            },
+            "en": {
+              "text": "Beat the neighbor in a garden contest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Найти пропавшую собаку соседа"
+            },
+            "en": {
+              "text": "Find the neighbor's missing dog"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-il2-air-combat",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "identity",
+        "source": "https://en.wikipedia.org/wiki/IL-2_Sturmovik_(video_game)",
+        "localizationStrategy": "full",
+        "game": "IL-2 Sturmovik"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что моделирует симулятор «Ил-2 Штурмовик» 2001 года?"
+        },
+        "en": {
+          "text": "What does the 2001 simulator IL-2 Sturmovik recreate?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Воздушные бои Второй мировой"
+            },
+            "en": {
+              "text": "WWII air combat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Танковые сражения Второй мировой"
+            },
+            "en": {
+              "text": "WWII tank battles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Морские бои Первой мировой"
+            },
+            "en": {
+              "text": "WWI naval battles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Полёты на орбитальной станции"
+            },
+            "en": {
+              "text": "Life on an orbital station"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-smuta-era",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Smuta_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Smuta"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какое время происходит действие игры «Смута» (2024)?"
+        },
+        "en": {
+          "text": "When is Smuta (2024) set?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В начале XVII века"
+            },
+            "en": {
+              "text": "In the early 17th century"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В эпоху Петра I"
+            },
+            "en": {
+              "text": "In the age of Peter the Great"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "При Иване Грозном"
+            },
+            "en": {
+              "text": "Under Ivan the Terrible"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В войну 1812 года"
+            },
+            "en": {
+              "text": "During the War of 1812"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-easy-loop-hero-cards",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Loop_Hero",
+        "localizationStrategy": "full",
+        "game": "Loop Hero"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что делает игрок в Loop Hero, пока герой сам идёт по кругу?"
+        },
+        "en": {
+          "text": "In Loop Hero, what do you do while the hero walks the loop on his own?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Выкладывает карты вокруг дороги"
+            },
+            "en": {
+              "text": "Place cards around the road"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ведёт героя в бою стрелками"
+            },
+            "en": {
+              "text": "Steer the hero in fights"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Строит замок и нанимает армию"
+            },
+            "en": {
+              "text": "Build a castle and hire an army"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Отвечает на загадки стражей"
+            },
+            "en": {
+              "text": "Answer the guards' riddles"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-metro-exodus-aurora",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "setting",
+        "source": "https://en.wikipedia.org/wiki/Metro_Exodus",
+        "localizationStrategy": "full",
+        "game": "Metro Exodus"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется паровоз, на котором герои едут через всю страну в Metro Exodus?"
+        },
+        "en": {
+          "text": "What is the name of the train the heroes ride across the country in Metro Exodus?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Аврора»"
+            },
+            "en": {
+              "text": "Aurora"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Ласточка»"
+            },
+            "en": {
+              "text": "Swallow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Заря»"
+            },
+            "en": {
+              "text": "Dawn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Победа»"
+            },
+            "en": {
+              "text": "Victory"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-stalker2-skif",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/S.T.A.L.K.E.R._2:_Heart_of_Chornobyl",
+        "localizationStrategy": "full",
+        "game": "S.T.A.L.K.E.R. 2: Heart of Chornobyl"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут главного героя S.T.A.L.K.E.R. 2: Heart of Chornobyl?"
+        },
+        "en": {
+          "text": "What is the protagonist of S.T.A.L.K.E.R. 2: Heart of Chornobyl called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Скиф"
+            },
+            "en": {
+              "text": "Skif"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Меченый"
+            },
+            "en": {
+              "text": "The Marked One"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шрам"
+            },
+            "en": {
+              "text": "Scar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дегтярёв"
+            },
+            "en": {
+              "text": "Degtyarev"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-pathologic-bachelor",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Pathologic",
+        "localizationStrategy": "full",
+        "game": "Pathologic"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кем из трёх героев «Мора. Утопии» является Даниил Данковский?"
+        },
+        "en": {
+          "text": "In Pathologic, which of the three healers is Daniil Dankovsky?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Бакалавр"
+            },
+            "en": {
+              "text": "The Bachelor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гаруспик"
+            },
+            "en": {
+              "text": "The Haruspex"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Самозванка"
+            },
+            "en": {
+              "text": "The Changeling"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Инквизитор"
+            },
+            "en": {
+              "text": "The Inquisitor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-space-rangers-klissans",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Space_Rangers_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Space Rangers"
+      },
+      "translations": {
+        "ru": {
+          "text": "С кем воюют рейнджеры в первых «Космических рейнджерах»?"
+        },
+        "en": {
+          "text": "Who do the rangers fight in the first Space Rangers?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "С клисанами"
+            },
+            "en": {
+              "text": "The Klissans"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С доминаторами"
+            },
+            "en": {
+              "text": "The Dominators"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С пеленгами"
+            },
+            "en": {
+              "text": "The Pelengs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С малоками"
+            },
+            "en": {
+              "text": "The Maloqs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-space-rangers-2-dominators",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://en.wikipedia.org/wiki/Space_Rangers_2:_Dominators",
+        "localizationStrategy": "full",
+        "game": "Space Rangers 2: Dominators"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто такие доминаторы в «Космических рейнджерах 2»?"
+        },
+        "en": {
+          "text": "Who are the Dominators in Space Rangers 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Боевые роботы, вышедшие из-под контроля"
+            },
+            "en": {
+              "text": "Combat robots gone rogue"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Раса разумных насекомых"
+            },
+            "en": {
+              "text": "A race of sentient insects"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пиратский клан из соседней галактики"
+            },
+            "en": {
+              "text": "A pirate clan from another galaxy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Древние создатели всех рас"
+            },
+            "en": {
+              "text": "The ancient creators of all races"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-homm5-nival",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Heroes_of_Might_and_Magic_V",
+        "localizationStrategy": "latin-titles",
+        "game": "Heroes of Might and Magic V"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия разработала Heroes of Might and Magic V?"
+        },
+        "en": {
+          "text": "Which studio developed Heroes of Might and Magic V?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Nival"
+            },
+            "en": {
+              "text": "Nival"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "New World Computing"
+            },
+            "en": {
+              "text": "New World Computing"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Limbic Entertainment"
+            },
+            "en": {
+              "text": "Limbic Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Katauri Interactive"
+            },
+            "en": {
+              "text": "Katauri Interactive"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-corsairs-sea-dogs",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Sea_Dogs_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Sea Dogs"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким названием первые «Корсары» (2000) вышли на Западе?"
+        },
+        "en": {
+          "text": "Under what title was the Russian game Korsary (2000) released in the West?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sea Dogs"
+            },
+            "en": {
+              "text": "Sea Dogs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Port Royale"
+            },
+            "en": {
+              "text": "Port Royale"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tortuga: Two Treasures"
+            },
+            "en": {
+              "text": "Tortuga: Two Treasures"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sid Meier's Pirates!"
+            },
+            "en": {
+              "text": "Sid Meier's Pirates!"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-ex-machina-truck",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Hard_Truck:_Apocalypse",
+        "localizationStrategy": "full",
+        "game": "Ex Machina"
+      },
+      "translations": {
+        "ru": {
+          "text": "На чём путешествует герой по пустошам в Ex Machina?"
+        },
+        "en": {
+          "text": "What does the hero travel the wastelands in, in Ex Machina?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "На бронированном грузовике"
+            },
+            "en": {
+              "text": "An armored truck"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На дирижабле"
+            },
+            "en": {
+              "text": "An airship"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На мотоцикле"
+            },
+            "en": {
+              "text": "A motorcycle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На шагающем роботе"
+            },
+            "en": {
+              "text": "A walking mech"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-black-book-vasilisa",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "characters",
+        "source": "https://en.wikipedia.org/wiki/Black_Book_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Black Book"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут юную ведьму, героиню «Чёрной книги»?"
+        },
+        "en": {
+          "text": "What is the name of the young witch who stars in Black Book?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Василиса"
+            },
+            "en": {
+              "text": "Vasilisa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аглая"
+            },
+            "en": {
+              "text": "Aglaya"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Марья"
+            },
+            "en": {
+              "text": "Marya"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ярослава"
+            },
+            "en": {
+              "text": "Yaroslava"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-medium-cossacks-gsc",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Cossacks:_European_Wars",
+        "localizationStrategy": "latin-titles",
+        "game": "Cossacks: European Wars"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала стратегию «Казаки: Европейские войны»?"
+        },
+        "en": {
+          "text": "Which studio made the strategy game Cossacks: European Wars?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "GSC Game World"
+            },
+            "en": {
+              "text": "GSC Game World"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nival"
+            },
+            "en": {
+              "text": "Nival"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ensemble Studios"
+            },
+            "en": {
+              "text": "Ensemble Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "K-D Lab"
+            },
+            "en": {
+              "text": "K-D Lab"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-stalker-x-ray",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "technology",
+        "source": "https://en.wikipedia.org/wiki/X-Ray_Engine",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "На каком движке сделана оригинальная трилогия S.T.A.L.K.E.R.?"
+        },
+        "en": {
+          "text": "Which engine powers the original S.T.A.L.K.E.R. trilogy?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "X-Ray Engine"
+            },
+            "en": {
+              "text": "X-Ray Engine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "4A Engine"
+            },
+            "en": {
+              "text": "4A Engine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "CryEngine"
+            },
+            "en": {
+              "text": "CryEngine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Unreal Engine 2"
+            },
+            "en": {
+              "text": "Unreal Engine 2"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:stalker",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-4a-games-gsc",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/4A_Games",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Выходцы из какой студии основали 4A Games, авторов серии Metro?"
+        },
+        "en": {
+          "text": "Former developers from which studio founded 4A Games, makers of the Metro series?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "GSC Game World"
+            },
+            "en": {
+              "text": "GSC Game World"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nival"
+            },
+            "en": {
+              "text": "Nival"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Crytek"
+            },
+            "en": {
+              "text": "Crytek"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Targem Games"
+            },
+            "en": {
+              "text": "Targem Games"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:metro",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-corsairs-2-potc",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Pirates_of_the_Caribbean_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Pirates of the Caribbean (2003)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким названием в 2003 году вышла игра, которую Akella делала как «Корсары II»?"
+        },
+        "en": {
+          "text": "Akella developed it as Korsary II. What title did it ship under in 2003?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Pirates of the Caribbean"
+            },
+            "en": {
+              "text": "Pirates of the Caribbean"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Age of Pirates: Caribbean Tales"
+            },
+            "en": {
+              "text": "Age of Pirates: Caribbean Tales"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sid Meier's Pirates!"
+            },
+            "en": {
+              "text": "Sid Meier's Pirates!"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Port Royale 2"
+            },
+            "en": {
+              "text": "Port Royale 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-allods-rage-of-mages",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Rage_of_Mages",
+        "localizationStrategy": "latin-titles",
+        "game": "Rage of Mages"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким названием «Аллоды: Печать тайны» вышли на Западе?"
+        },
+        "en": {
+          "text": "What was the Western title of the Russian RPG Allods: Seal of Mystery?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Rage of Mages"
+            },
+            "en": {
+              "text": "Rage of Mages"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Evil Islands"
+            },
+            "en": {
+              "text": "Evil Islands"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Etherlords"
+            },
+            "en": {
+              "text": "Etherlords"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Silent Storm"
+            },
+            "en": {
+              "text": "Silent Storm"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-red-comrades-title",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "history",
+        "source": "https://en.wikipedia.org/wiki/Red_Comrades_Save_the_Galaxy",
+        "localizationStrategy": "latin-titles",
+        "game": "Red Comrades Save the Galaxy"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким названием на Западе вышел квест 1998 года про Петьку и Василия Ивановича?"
+        },
+        "en": {
+          "text": "What English title did the 1998 Russian adventure about Petka and Vasily Ivanovich get?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Red Comrades Save the Galaxy"
+            },
+            "en": {
+              "text": "Red Comrades Save the Galaxy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Comrades of the Red Planet"
+            },
+            "en": {
+              "text": "Comrades of the Red Planet"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chapaev: The Space Mission"
+            },
+            "en": {
+              "text": "Chapaev: The Space Mission"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mission: Red Galaxy"
+            },
+            "en": {
+              "text": "Mission: Red Galaxy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-vangers-kd-lab",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Vangers",
+        "localizationStrategy": "latin-titles",
+        "game": "Vangers"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала «Вангеров» (1998)?"
+        },
+        "en": {
+          "text": "Which studio made Vangers (1998)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "K-D Lab"
+            },
+            "en": {
+              "text": "K-D Lab"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nival"
+            },
+            "en": {
+              "text": "Nival"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elemental Games"
+            },
+            "en": {
+              "text": "Elemental Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Targem Games"
+            },
+            "en": {
+              "text": "Targem Games"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-perimeter-frame",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "mechanics",
+        "source": "https://en.wikipedia.org/wiki/Perimeter_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Perimeter"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как в «Периметре» называется огромный летающий город — главная база игрока?"
+        },
+        "en": {
+          "text": "In Perimeter, what is the huge flying city that serves as the player's base called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Фрейм"
+            },
+            "en": {
+              "text": "Frame"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ковчег"
+            },
+            "en": {
+              "text": "Ark"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Цитадель"
+            },
+            "en": {
+              "text": "Citadel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Улей"
+            },
+            "en": {
+              "text": "Hive"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-kings-bounty-katauri",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/King%27s_Bounty:_The_Legend",
+        "localizationStrategy": "latin-titles",
+        "game": "King's Bounty: The Legend"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала King's Bounty: Легенда о рыцаре (2008)?"
+        },
+        "en": {
+          "text": "Which studio made King's Bounty: The Legend (2008)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Katauri Interactive"
+            },
+            "en": {
+              "text": "Katauri Interactive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "New World Computing"
+            },
+            "en": {
+              "text": "New World Computing"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nival"
+            },
+            "en": {
+              "text": "Nival"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1C Game Studios"
+            },
+            "en": {
+              "text": "1C Game Studios"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-pathfinder-owlcat",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "studio",
+        "source": "https://en.wikipedia.org/wiki/Pathfinder:_Kingmaker",
+        "localizationStrategy": "latin-titles",
+        "game": "Pathfinder: Kingmaker"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая студия сделала Pathfinder: Kingmaker?"
+        },
+        "en": {
+          "text": "Which studio made Pathfinder: Kingmaker?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Owlcat Games"
+            },
+            "en": {
+              "text": "Owlcat Games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Larian Studios"
+            },
+            "en": {
+              "text": "Larian Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Obsidian Entertainment"
+            },
+            "en": {
+              "text": "Obsidian Entertainment"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "inXile Entertainment"
+            },
+            "en": {
+              "text": "inXile Entertainment"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-cis-hard-pathologic-sand-plague",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "story",
+        "source": "https://pathologic.wiki.gg/wiki/Plague",
+        "localizationStrategy": "full",
+        "game": "Pathologic"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется болезнь, охватившая город в «Море. Утопии»?"
+        },
+        "en": {
+          "text": "What is the disease that sweeps the town in Pathologic called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Песчаная язва"
+            },
+            "en": {
+              "text": "The Sand Plague"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чёрная гниль"
+            },
+            "en": {
+              "text": "The Black Rot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Серая хворь"
+            },
+            "en": {
+              "text": "The Grey Blight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Степная лихорадка"
+            },
+            "en": {
+              "text": "The Steppe Fever"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

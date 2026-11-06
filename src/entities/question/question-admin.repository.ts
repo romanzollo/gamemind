@@ -41,6 +41,7 @@ import {
     deleteAdminQuestionById,
     findByIdForAdminWithDirectPg,
     updateAdminQuestion,
+    type CreateQuestionOptions,
 } from '@/entities/question/question-admin-write.repository';
 import type {
     AdminQuestionForEdit,
@@ -72,8 +73,11 @@ export const questionAdminMethods = {
     },
 
     // создание вопроса с вариантами ответа (admin create flow)
-    createWithOptions(input: CreateQuestionInput) {
-        return createAdminQuestion(input);
+    createWithOptions(
+        input: CreateQuestionInput,
+        options?: CreateQuestionOptions,
+    ) {
+        return createAdminQuestion(input, options);
     },
 
     // обновление вопроса и вариантов по id (admin edit flow)

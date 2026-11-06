@@ -18,9 +18,18 @@ export {
 export { mapDraftQuestionToCreateInput } from './map-draft-to-create-input';
 
 export {
+    planDraftImport,
+    type DraftImportCandidate,
+    type DraftImportDecision,
+    type DraftImportSkipReason,
+    type ExistingImportRow,
+} from './plan-draft-import';
+
+export {
     importDraftQuestionsBatch,
     type ImportDraftCreatedItem,
     type ImportDraftPlannedItem,
     type ImportDraftQuestionsOptions,
     type ImportDraftQuestionsResult,
+    type ImportDraftSkippedItem,
 } from './import-draft-questions';

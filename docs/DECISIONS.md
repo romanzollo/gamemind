@@ -2738,3 +2738,28 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
   - result block and profile block each render inside `<Suspense fallback={null}>`, like the daily streak;
   - the score card and buttons never wait for them, and submit is untouched;
   - a failed read hides the block (soft-miss).
+
+## Draft import is re-runnable (November 6, 2026)
+
+**Context:** ROADMAP 5.2. The owner's network drops Neon connections often. On Nov 6 the import of batch 8 stopped after 10 of 30 questions; running it again would have created the first 10 a second time (every import got new UUIDs), so a one-off script loaded only the questions whose RU text was missing. The publish CLI was already safe to re-run; the import was not.
+
+**Decision:** before writing, the import reads what the target DB already has and creates only the rest.
+
+| Piece | Choice |
+|------|--------|
+| «Already there» | First match wins: a row with `contentKey` = the draft's `draftKey` (also finds a question whose text a `content/fixes` file changed later), else a row with the same RU text after `normalizeQuestionText` (older rows that have no key yet). Same text under **another** key = the batch repeats a question from another batch: not created, reported separately |
+| Plan | Pure `planDraftImport(candidates, existingRows)` — unit-tested without Neon; the import reads rows (one SELECT: every TEXT question + rows with the batch's keys, ~1000 rows) and applies the plan |
+| Key on create | The new row gets `contentKey = draftKey` **in the same INSERT** as the question (`createAdminQuestion(input, { contentKey })`; admin create passes none). One statement: a row never exists without its key, and the unique index on `contentKey` refuses a second row with the same key even if the check missed it. On `ON CONFLICT (id)` (the write retry) an existing key is kept |
+| Batch file | Duplicate RU text inside one file is a contract error (duplicate `draftKey` already was): the import would count the two as one question |
+| Order | validate → map every question (a bad one in the middle no longer leaves half a batch) → read the DB → create one by one |
+| Dry-run | Reads the target DB (SELECT only) and prints the same split: `+` create, `=` skip with the reason. Offline checks stay in `content:validate-drafts` |
+| Taxonomy | `taxonomy:sync` only fills `contentKey` where it is NULL, so new rows are simply skipped there and get their tags by the same key as before |
+
+**Not chosen:**
+
+- A deterministic id from `draftKey` + upsert — a re-run would overwrite the text of a question already published or fixed (the reason the importer uses UUIDs, see the mapper).
+- Writing the key with a separate `UPDATE` after the INSERT — no change to the admin create SQL, but a dropped connection between the two leaves a row without a key (the text fallback would still catch it; the DB guard would not).
+- Matching by key only — rows imported before this change and not yet synced have no key.
+- One transaction for the whole batch — the Neon write path avoids long `BEGIN` (DECISIONS → Content taxonomy, sync), and a dropped connection would roll back questions that were fine.
+
+**Hot path:** untouched. The admin create SQL gets one more nullable parameter; no migration (`contentKey` exists since the taxonomy migration).
