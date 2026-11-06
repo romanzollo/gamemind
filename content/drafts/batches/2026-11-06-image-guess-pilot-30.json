@@ -1,0 +1,2168 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Pilot ×30 (10/10/10): new image question kinds — where is this / who is this / which Sign / which event — not only «guess the game». Frames from official press kits (metadata.source + sourceFile); logos cropped. Hollow Knight: official RU localization names (Грязьмут, Город слёз…), checked against RU wiki and guides. Import is idempotent by draftKey.",
+  "questions": [
+    {
+      "draftKey": "img3-easy-hk-dirtmouth",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hk-dirtmouth",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hk-dirtmouth.webp",
+      "rawDropAs": "raw-quiz-images/easy/hk-dirtmouth.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "dirtmouth.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Грязьмут"
+            },
+            "en": {
+              "text": "Dirtmouth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Забытое перепутье"
+            },
+            "en": {
+              "text": "Forgotten Crossroads"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Воющие утёсы"
+            },
+            "en": {
+              "text": "Howling Cliffs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туманный каньон"
+            },
+            "en": {
+              "text": "Fog Canyon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-hk-false-knight",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hk-false-knight",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hk-false-knight.webp",
+      "rawDropAs": "raw-quiz-images/easy/hk-false-knight.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-character",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "False_Knight.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Who is this in Hollow Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ложный рыцарь"
+            },
+            "en": {
+              "text": "False Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мастер душ"
+            },
+            "en": {
+              "text": "Soul Master"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лорды богомолов"
+            },
+            "en": {
+              "text": "Mantis Lords"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Разбитый сосуд"
+            },
+            "en": {
+              "text": "Broken Vessel"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-hk-city-of-tears",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hk-city-of-tears",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hk-city-of-tears.webp",
+      "rawDropAs": "raw-quiz-images/easy/hk-city-of-tears.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "City_of_Tears.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Город слёз"
+            },
+            "en": {
+              "text": "City of Tears"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Королевские стоки"
+            },
+            "en": {
+              "text": "Royal Waterways"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туманный каньон"
+            },
+            "en": {
+              "text": "Fog Canyon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Грибные пустоши"
+            },
+            "en": {
+              "text": "Fungal Wastes"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-hades-zeus",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hades-zeus",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hades-zeus.webp",
+      "rawDropAs": "raw-quiz-images/easy/hades-zeus.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Olympians_Zeus_01.jpg",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Зевс"
+            },
+            "en": {
+              "text": "Zeus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Посейдон"
+            },
+            "en": {
+              "text": "Poseidon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Арес"
+            },
+            "en": {
+              "text": "Ares"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дионис"
+            },
+            "en": {
+              "text": "Dionysus"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-hades-hermes",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hades-hermes",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hades-hermes.webp",
+      "rawDropAs": "raw-quiz-images/easy/hades-hermes.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Hermes.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гермес"
+            },
+            "en": {
+              "text": "Hermes"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Арес"
+            },
+            "en": {
+              "text": "Ares"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дионис"
+            },
+            "en": {
+              "text": "Dionysus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Зевс"
+            },
+            "en": {
+              "text": "Zeus"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-hades-dionysus",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hades-dionysus",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hades-dionysus.webp",
+      "rawDropAs": "raw-quiz-images/easy/hades-dionysus.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Dionysus01.jpg",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дионис"
+            },
+            "en": {
+              "text": "Dionysus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гермес"
+            },
+            "en": {
+              "text": "Hermes"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Арес"
+            },
+            "en": {
+              "text": "Ares"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Посейдон"
+            },
+            "en": {
+              "text": "Poseidon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-hades-athena",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hades-athena",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hades-athena.webp",
+      "rawDropAs": "raw-quiz-images/easy/hades-athena.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Olympians_Athena_01.jpg",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Афина"
+            },
+            "en": {
+              "text": "Athena"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Артемида"
+            },
+            "en": {
+              "text": "Artemis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Афродита"
+            },
+            "en": {
+              "text": "Aphrodite"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Деметра"
+            },
+            "en": {
+              "text": "Demeter"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-w3-ciri",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "w3-ciri",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/w3-ciri.webp",
+      "rawDropAs": "raw-quiz-images/easy/w3-ciri.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-character",
+        "source": "https://press.cdprojektred.com/en",
+        "sourceFile": "Ciri_NS2_CLEAN.jpeg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в «Ведьмаке 3»?"
+        },
+        "en": {
+          "text": "Who is this in The Witcher 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Цири"
+            },
+            "en": {
+              "text": "Ciri"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Йеннифэр"
+            },
+            "en": {
+              "text": "Yennefer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Трисс"
+            },
+            "en": {
+              "text": "Triss"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кейра Мец"
+            },
+            "en": {
+              "text": "Keira Metz"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-w3-skellige",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "w3-skellige",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/w3-skellige.webp",
+      "rawDropAs": "raw-quiz-images/easy/w3-skellige.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-location",
+        "source": "https://press.cdprojektred.com/en",
+        "sourceFile": "TW3RE_Gamescom_Boat_PC_16x9_CLEAN.jpeg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в «Ведьмаке 3»?"
+        },
+        "en": {
+          "text": "Where in The Witcher 3 is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Скеллиге"
+            },
+            "en": {
+              "text": "Skellige"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туссент"
+            },
+            "en": {
+              "text": "Toussaint"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Велен"
+            },
+            "en": {
+              "text": "Velen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Каэр Морхен"
+            },
+            "en": {
+              "text": "Kaer Morhen"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-easy-w3-igni",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "w3-igni",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/w3-igni.webp",
+      "rawDropAs": "raw-quiz-images/easy/w3-igni.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-mechanic",
+        "source": "https://press.cdprojektred.com/en",
+        "sourceFile": "TW3RE_Gamescom_Combat_Signs_PC_16x9_CLEAN.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой Знак Геральт применяет на этом кадре?"
+        },
+        "en": {
+          "text": "Which Sign is Geralt casting in this shot?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Игни"
+            },
+            "en": {
+              "text": "Igni"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аард"
+            },
+            "en": {
+              "text": "Aard"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Квен"
+            },
+            "en": {
+              "text": "Quen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ирден"
+            },
+            "en": {
+              "text": "Yrden"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hk-greenpath",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hk-greenpath",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hk-greenpath.webp",
+      "rawDropAs": "raw-quiz-images/medium/hk-greenpath.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "Moss_charger.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Зелёная тропа"
+            },
+            "en": {
+              "text": "Greenpath"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туманный каньон"
+            },
+            "en": {
+              "text": "Fog Canyon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Грибные пустоши"
+            },
+            "en": {
+              "text": "Fungal Wastes"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Глубинное гнездо"
+            },
+            "en": {
+              "text": "Deepnest"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hk-crystal-peak",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hk-crystal-peak",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hk-crystal-peak.webp",
+      "rawDropAs": "raw-quiz-images/medium/hk-crystal-peak.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "mines.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кристальный пик"
+            },
+            "en": {
+              "text": "Crystal Peak"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Древний котлован"
+            },
+            "en": {
+              "text": "Ancient Basin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Глубинное гнездо"
+            },
+            "en": {
+              "text": "Deepnest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Воющие утёсы"
+            },
+            "en": {
+              "text": "Howling Cliffs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hk-grimm",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hk-grimm",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hk-grimm.webp",
+      "rawDropAs": "raw-quiz-images/medium/hk-grimm.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-character",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "Grimm.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Who is this in Hollow Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гримм"
+            },
+            "en": {
+              "text": "Grimm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Квиррел"
+            },
+            "en": {
+              "text": "Quirrel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хорнет"
+            },
+            "en": {
+              "text": "Hornet"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мастер душ"
+            },
+            "en": {
+              "text": "Soul Master"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hades-asphodel",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hades-asphodel",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hades-asphodel.webp",
+      "rawDropAs": "raw-quiz-images/medium/hades-asphodel.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-location",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Hades_09-dec-2019_02.jpg",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hades?"
+        },
+        "en": {
+          "text": "Where in Hades is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Асфодель"
+            },
+            "en": {
+              "text": "Asphodel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тартар"
+            },
+            "en": {
+              "text": "Tartarus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Элизиум"
+            },
+            "en": {
+              "text": "Elysium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Храм Стикса"
+            },
+            "en": {
+              "text": "Temple of Styx"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hades-elysium",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hades-elysium",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hades-elysium.webp",
+      "rawDropAs": "raw-quiz-images/medium/hades-elysium.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-location",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Hades_Aug19_04.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hades?"
+        },
+        "en": {
+          "text": "Where in Hades is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Элизиум"
+            },
+            "en": {
+              "text": "Elysium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тартар"
+            },
+            "en": {
+              "text": "Tartarus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Асфодель"
+            },
+            "en": {
+              "text": "Asphodel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Храм Стикса"
+            },
+            "en": {
+              "text": "Temple of Styx"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hades-tartarus",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hades-tartarus",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hades-tartarus.webp",
+      "rawDropAs": "raw-quiz-images/medium/hades-tartarus.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-location",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Tartarus.jpg",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hades?"
+        },
+        "en": {
+          "text": "Where in Hades is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Тартар"
+            },
+            "en": {
+              "text": "Tartarus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Асфодель"
+            },
+            "en": {
+              "text": "Asphodel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Элизиум"
+            },
+            "en": {
+              "text": "Elysium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Храм Стикса"
+            },
+            "en": {
+              "text": "Temple of Styx"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hades-chaos",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hades-chaos",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hades-chaos.webp",
+      "rawDropAs": "raw-quiz-images/medium/hades-chaos.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Chaos.jpg",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Хаос"
+            },
+            "en": {
+              "text": "Chaos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Никта"
+            },
+            "en": {
+              "text": "Nyx"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Танатос"
+            },
+            "en": {
+              "text": "Thanatos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гипнос"
+            },
+            "en": {
+              "text": "Hypnos"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-hades-thanatos",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hades-thanatos",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hades-thanatos.webp",
+      "rawDropAs": "raw-quiz-images/medium/hades-thanatos.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Thanatos.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Танатос"
+            },
+            "en": {
+              "text": "Thanatos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гипнос"
+            },
+            "en": {
+              "text": "Hypnos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Харон"
+            },
+            "en": {
+              "text": "Charon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ахиллес"
+            },
+            "en": {
+              "text": "Achilles"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-w3-toussaint",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "w3-toussaint",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/w3-toussaint.webp",
+      "rawDropAs": "raw-quiz-images/medium/w3-toussaint.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-location",
+        "source": "https://press.cdprojektred.com/en",
+        "sourceFile": "TW3RE_Gamescom_BaW_1_PC_16x9_CLEAN.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в «Ведьмаке 3»?"
+        },
+        "en": {
+          "text": "Where in The Witcher 3 is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Туссент"
+            },
+            "en": {
+              "text": "Toussaint"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Скеллиге"
+            },
+            "en": {
+              "text": "Skellige"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Велен"
+            },
+            "en": {
+              "text": "Velen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Белый Сад"
+            },
+            "en": {
+              "text": "White Orchard"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-medium-sdv-night-market",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sdv-night-market",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sdv-night-market.webp",
+      "rawDropAs": "raw-quiz-images/medium/sdv-night-market.png",
+      "metadata": {
+        "game": "Stardew Valley",
+        "topic": "image-event",
+        "source": "https://www.stardewvalley.net/press/",
+        "sourceFile": "NightMarket.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какое событие Stardew Valley на кадре?"
+        },
+        "en": {
+          "text": "Which Stardew Valley event is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ночной рынок"
+            },
+            "en": {
+              "text": "Night Market"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Танец лунных медуз"
+            },
+            "en": {
+              "text": "Dance of the Moonlight Jellies"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Праздник Зимней звезды"
+            },
+            "en": {
+              "text": "Feast of the Winter Star"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фестиваль льда"
+            },
+            "en": {
+              "text": "Festival of Ice"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hk-the-hive",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hk-the-hive",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hk-the-hive.webp",
+      "rawDropAs": "raw-quiz-images/hard/hk-the-hive.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "The Hive.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Улей"
+            },
+            "en": {
+              "text": "The Hive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кристальный пик"
+            },
+            "en": {
+              "text": "Crystal Peak"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Глубинное гнездо"
+            },
+            "en": {
+              "text": "Deepnest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Грибные пустоши"
+            },
+            "en": {
+              "text": "Fungal Wastes"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hk-colosseum",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hk-colosseum",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hk-colosseum.webp",
+      "rawDropAs": "raw-quiz-images/hard/hk-colosseum.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "colosseum.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Колизей глупцов"
+            },
+            "en": {
+              "text": "Colosseum of Fools"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Белый дворец"
+            },
+            "en": {
+              "text": "White Palace"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Древний котлован"
+            },
+            "en": {
+              "text": "Ancient Basin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Город слёз"
+            },
+            "en": {
+              "text": "City of Tears"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hk-white-palace",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hk-white-palace",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hk-white-palace.webp",
+      "rawDropAs": "raw-quiz-images/hard/hk-white-palace.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "white palace.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Белый дворец"
+            },
+            "en": {
+              "text": "White Palace"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Город слёз"
+            },
+            "en": {
+              "text": "City of Tears"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туманный каньон"
+            },
+            "en": {
+              "text": "Fog Canyon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Колизей глупцов"
+            },
+            "en": {
+              "text": "Colosseum of Fools"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hk-the-abyss",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hk-the-abyss",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hk-the-abyss.webp",
+      "rawDropAs": "raw-quiz-images/hard/hk-the-abyss.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "HK_screens_0012_The_Abyss.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Бездна"
+            },
+            "en": {
+              "text": "The Abyss"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Глубинное гнездо"
+            },
+            "en": {
+              "text": "Deepnest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Воющие утёсы"
+            },
+            "en": {
+              "text": "Howling Cliffs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Королевские стоки"
+            },
+            "en": {
+              "text": "Royal Waterways"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hk-lake-of-unn",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hk-lake-of-unn",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hk-lake-of-unn.webp",
+      "rawDropAs": "raw-quiz-images/hard/hk-lake-of-unn.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "Lake_of_Unn.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Озеро Унн"
+            },
+            "en": {
+              "text": "Lake of Unn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туманный каньон"
+            },
+            "en": {
+              "text": "Fog Canyon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Королевские стоки"
+            },
+            "en": {
+              "text": "Royal Waterways"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кристальный пик"
+            },
+            "en": {
+              "text": "Crystal Peak"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hk-monomon",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hk-monomon",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hk-monomon.webp",
+      "rawDropAs": "raw-quiz-images/hard/hk-monomon.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-character",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "Teacher.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Who is this in Hollow Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мономона Наставница"
+            },
+            "en": {
+              "text": "Monomon the Teacher"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лурьен Хранитель"
+            },
+            "en": {
+              "text": "Lurien the Watcher"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Херра Зверь"
+            },
+            "en": {
+              "text": "Herrah the Beast"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хорнет"
+            },
+            "en": {
+              "text": "Hornet"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hk-sheo",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hk-sheo",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hk-sheo.webp",
+      "rawDropAs": "raw-quiz-images/hard/hk-sheo.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-character",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "Paintmaster.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Who is this in Hollow Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мастер кисти Шео"
+            },
+            "en": {
+              "text": "Paintmaster Sheo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мастер гвоздя Оро"
+            },
+            "en": {
+              "text": "Nailmaster Oro"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мастер гвоздя Мато"
+            },
+            "en": {
+              "text": "Nailmaster Mato"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Квиррел"
+            },
+            "en": {
+              "text": "Quirrel"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hades-alecto",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hades-alecto",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hades-alecto.webp",
+      "rawDropAs": "raw-quiz-images/hard/hades-alecto.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Alecto.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Алекто"
+            },
+            "en": {
+              "text": "Alecto"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мегера"
+            },
+            "en": {
+              "text": "Megaera"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тисифона"
+            },
+            "en": {
+              "text": "Tisiphone"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Никта"
+            },
+            "en": {
+              "text": "Nyx"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-hades-theseus-asterius",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hades-theseus-asterius",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hades-theseus-asterius.webp",
+      "rawDropAs": "raw-quiz-images/hard/hades-theseus-asterius.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Heroes.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто эти двое в Hades?"
+        },
+        "en": {
+          "text": "Who are these two in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Тесей и Астерий"
+            },
+            "en": {
+              "text": "Theseus and Asterius"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ахиллес и Патрокл"
+            },
+            "en": {
+              "text": "Achilles and Patroclus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Орфей и Эвридика"
+            },
+            "en": {
+              "text": "Orpheus and Eurydice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гипнос и Танатос"
+            },
+            "en": {
+              "text": "Hypnos and Thanatos"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img3-hard-sdv-flower-dance",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "sdv-flower-dance",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/sdv-flower-dance.webp",
+      "rawDropAs": "raw-quiz-images/hard/sdv-flower-dance.png",
+      "metadata": {
+        "game": "Stardew Valley",
+        "topic": "image-event",
+        "source": "https://www.stardewvalley.net/press/",
+        "sourceFile": "Multiplayer_Screenshot3.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-06-image-guess-pilot-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какое событие Stardew Valley на кадре?"
+        },
+        "en": {
+          "text": "Which Stardew Valley event is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Танец цветов"
+            },
+            "en": {
+              "text": "Flower Dance"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Праздник яиц"
+            },
+            "en": {
+              "text": "Egg Festival"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Луау"
+            },
+            "en": {
+              "text": "Luau"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ярмарка Долины"
+            },
+            "en": {
+              "text": "Stardew Valley Fair"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
