@@ -383,6 +383,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 6 (later):** weak genres TEXT ×40 (`2026-11-06-text-genres-40.json`, 15/11/14, 14 new catalog games, 22 questions with draft genre `tags`) published both sides → TEXT **548** (179/199/170) + IMAGE **171** → **719** live. Prod publish needed retries: the local network kept dropping Neon / GitHub / Vercel (connect ~8 s vs the 10 s client timeout); drafts stayed hidden meanwhile and the publish CLI is safe to re-run.
 
+**Nov 6 (night):** CIS games TEXT ×30 (`2026-11-06-text-cis-30.json`, 10/10/10, 25 new catalog games + franchise `metro`, 3 series questions with draft `tags`; studio questions ask the name, not the country) published both sides → TEXT **578** (189/209/180) + IMAGE **171** → **749** live.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
