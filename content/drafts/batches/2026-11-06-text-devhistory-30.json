@@ -1,0 +1,1994 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 9 — development history. 10/10/10. Only dated «firsts» and origins, no counters. Co-founders/co-authors are never wrong options. Studio questions carry explicit tags. Duplicates checked by keywords across the bank. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-fortnite-save-the-world",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Fortnite:_Save_the_World",
+        "localizationStrategy": "latin-titles",
+        "game": "Fortnite"
+      },
+      "translations": {
+        "ru": {
+          "text": "Каким был Fortnite, когда вышел в ранний доступ летом 2017 года, ещё до Battle Royale?"
+        },
+        "en": {
+          "text": "What was Fortnite when it entered early access in summer 2017, before Battle Royale?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кооператив против зомби с фортами"
+            },
+            "en": {
+              "text": "Co-op zombie survival with forts"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Командная MOBA на трёх линиях"
+            },
+            "en": {
+              "text": "A three-lane team MOBA"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Карточная стратегия по сети"
+            },
+            "en": {
+              "text": "An online card strategy game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гоночная аркада на выживание"
+            },
+            "en": {
+              "text": "A survival racing arcade game"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-minecraft-mojang-microsoft",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Mojang_Studios",
+        "localizationStrategy": "latin-titles",
+        "game": "Minecraft"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая компания купила Mojang, студию Minecraft, в 2014 году?"
+        },
+        "en": {
+          "text": "Which company bought Mojang, the studio behind Minecraft, in 2014?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Microsoft"
+            },
+            "en": {
+              "text": "Microsoft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Google"
+            },
+            "en": {
+              "text": "Google"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sony"
+            },
+            "en": {
+              "text": "Sony"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Electronic Arts"
+            },
+            "en": {
+              "text": "Electronic Arts"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-pokemon-tajiri-insects",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Satoshi_Tajiri",
+        "localizationStrategy": "latin-titles",
+        "game": "Pokémon Red / Blue"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какое детское увлечение Сатоси Тадзири подсказало ему идею Pokémon?"
+        },
+        "en": {
+          "text": "Which childhood hobby gave Satoshi Tajiri the idea for Pokémon?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ловля насекомых"
+            },
+            "en": {
+              "text": "Collecting insects"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рыбалка"
+            },
+            "en": {
+              "text": "Fishing"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Собирание марок"
+            },
+            "en": {
+              "text": "Stamp collecting"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Разведение голубей"
+            },
+            "en": {
+              "text": "Keeping pigeons"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-sonic-mascot",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Sonic_the_Hedgehog_(1991_video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Sonic the Hedgehog"
+      },
+      "translations": {
+        "ru": {
+          "text": "Зачем Sega в 1991 году понадобился Соник?"
+        },
+        "en": {
+          "text": "Why did Sega need Sonic in 1991?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Маскот против Марио от Nintendo"
+            },
+            "en": {
+              "text": "A mascot to rival Nintendo’s Mario"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Герой рекламы газировки"
+            },
+            "en": {
+              "text": "The star of a soda commercial"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Персонаж для мультсериала"
+            },
+            "en": {
+              "text": "The lead of a cartoon series"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Герой обучающей игры для школ"
+            },
+            "en": {
+              "text": "The hero of a school learning game"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-angry-birds-rovio-finland",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Rovio_Entertainment",
+        "localizationStrategy": "latin-titles",
+        "game": "Angry Birds"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой страны студия Rovio, выпустившая Angry Birds?"
+        },
+        "en": {
+          "text": "Which country is Rovio, the studio behind Angry Birds, from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Финляндия"
+            },
+            "en": {
+              "text": "Finland"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Швеция"
+            },
+            "en": {
+              "text": "Sweden"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эстония"
+            },
+            "en": {
+              "text": "Estonia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дания"
+            },
+            "en": {
+              "text": "Denmark"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-cyberpunk-tabletop",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Cyberpunk_(role-playing_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Cyberpunk 2077"
+      },
+      "translations": {
+        "ru": {
+          "text": "На чём основан мир Cyberpunk 2077?"
+        },
+        "en": {
+          "text": "What is the world of Cyberpunk 2077 based on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Настольная ролевая игра"
+            },
+            "en": {
+              "text": "A tabletop role-playing game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Роман «Нейромант»"
+            },
+            "en": {
+              "text": "The novel Neuromancer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фильм «Бегущий по лезвию»"
+            },
+            "en": {
+              "text": "The film Blade Runner"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аниме «Акира»"
+            },
+            "en": {
+              "text": "The anime Akira"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-duke-nukem-forever-14-years",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Duke_Nukem_Forever",
+        "localizationStrategy": "latin-titles",
+        "game": "Duke Nukem Forever"
+      },
+      "translations": {
+        "ru": {
+          "text": "Сколько лет прошло от анонса Duke Nukem Forever в 1997 году до её выхода?"
+        },
+        "en": {
+          "text": "How many years passed between Duke Nukem Forever’s 1997 announcement and its release?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "14 лет"
+            },
+            "en": {
+              "text": "14 years"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "6 лет"
+            },
+            "en": {
+              "text": "6 years"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "9 лет"
+            },
+            "en": {
+              "text": "9 years"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "20 лет"
+            },
+            "en": {
+              "text": "20 years"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-undertale-kickstarter",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Undertale",
+        "localizationStrategy": "latin-titles",
+        "game": "Undertale"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как Тоби Фокс собрал деньги на разработку Undertale в 2013 году?"
+        },
+        "en": {
+          "text": "How did Toby Fox fund Undertale’s development in 2013?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Через Kickstarter"
+            },
+            "en": {
+              "text": "Through Kickstarter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Получил грант от государства"
+            },
+            "en": {
+              "text": "With a government grant"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Продал права издателю"
+            },
+            "en": {
+              "text": "By selling the rights to a publisher"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Через ранний доступ в Steam"
+            },
+            "en": {
+              "text": "Through Steam Early Access"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-doom-source-code-1997",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Doom_(1993_video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "DOOM (1993)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что id Software сделала с исходным кодом Doom в 1997 году?"
+        },
+        "en": {
+          "text": "What did id Software do with Doom’s source code in 1997?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Выложила его для всех"
+            },
+            "en": {
+              "text": "Released it to the public"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Продала его Microsoft"
+            },
+            "en": {
+              "text": "Sold it to Microsoft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Уничтожила все копии"
+            },
+            "en": {
+              "text": "Destroyed every copy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Передала его в музей MoMA"
+            },
+            "en": {
+              "text": "Donated it to MoMA"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-easy-halo-macworld-jobs",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Halo:_Combat_Evolved",
+        "localizationStrategy": "latin-titles",
+        "game": "Halo: Combat Evolved"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто первым показал Halo публике — на выставке Macworld в 1999 году?"
+        },
+        "en": {
+          "text": "Who first showed Halo to the public, at Macworld 1999?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Стив Джобс"
+            },
+            "en": {
+              "text": "Steve Jobs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Билл Гейтс"
+            },
+            "en": {
+              "text": "Bill Gates"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Стив Балмер"
+            },
+            "en": {
+              "text": "Steve Ballmer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Питер Мур"
+            },
+            "en": {
+              "text": "Peter Moore"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-pac-man-puck-man",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Pac-Man",
+        "localizationStrategy": "latin-titles",
+        "game": "Pac-Man"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким названием Pac-Man вышел в Японии в 1980 году?"
+        },
+        "en": {
+          "text": "Under what name was Pac-Man released in Japan in 1980?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Puck Man"
+            },
+            "en": {
+              "text": "Puck Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Munch Man"
+            },
+            "en": {
+              "text": "Munch Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chomp Man"
+            },
+            "en": {
+              "text": "Chomp Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pizza Man"
+            },
+            "en": {
+              "text": "Pizza Man"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-portal-narbacular-drop",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Narbacular_Drop",
+        "localizationStrategy": "latin-titles",
+        "game": "Portal"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какого студенческого проекта DigiPen вырос Portal?"
+        },
+        "en": {
+          "text": "Which DigiPen student project did Portal grow out of?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Narbacular Drop"
+            },
+            "en": {
+              "text": "Narbacular Drop"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Antichamber"
+            },
+            "en": {
+              "text": "Antichamber"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Q.U.B.E."
+            },
+            "en": {
+              "text": "Q.U.B.E."
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Quantum Conundrum"
+            },
+            "en": {
+              "text": "Quantum Conundrum"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-overwatch-titan",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Overwatch_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Overwatch (2016)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какого отменённого проекта Blizzard вырос Overwatch?"
+        },
+        "en": {
+          "text": "Which cancelled Blizzard project did Overwatch grow out of?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Titan"
+            },
+            "en": {
+              "text": "Titan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Nomad"
+            },
+            "en": {
+              "text": "Nomad"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "StarCraft: Ghost"
+            },
+            "en": {
+              "text": "StarCraft: Ghost"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Warcraft Adventures"
+            },
+            "en": {
+              "text": "Warcraft Adventures"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-devil-may-cry-re4",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Devil_May_Cry_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Devil May Cry"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая игра Capcom выросла из ранней версии Resident Evil 4?"
+        },
+        "en": {
+          "text": "Which Capcom game grew out of an early version of Resident Evil 4?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Devil May Cry"
+            },
+            "en": {
+              "text": "Devil May Cry"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dino Crisis"
+            },
+            "en": {
+              "text": "Dino Crisis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dead Rising"
+            },
+            "en": {
+              "text": "Dead Rising"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Lost Planet"
+            },
+            "en": {
+              "text": "Lost Planet"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-assassins-creed-prince-of-persia",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Assassin%27s_Creed_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Assassin's Creed"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем Assassin’s Creed был в начале разработки?"
+        },
+        "en": {
+          "text": "What was Assassin’s Creed at the start of development?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Спин-оффом Prince of Persia"
+            },
+            "en": {
+              "text": "A Prince of Persia spin-off"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Новой частью Splinter Cell"
+            },
+            "en": {
+              "text": "A new Splinter Cell game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Продолжением Beyond Good & Evil"
+            },
+            "en": {
+              "text": "A Beyond Good & Evil sequel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Историческим Far Cry"
+            },
+            "en": {
+              "text": "A historical Far Cry"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-gta-race-n-chase",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Grand Theft Auto (1997)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким рабочим названием создавали первую Grand Theft Auto?"
+        },
+        "en": {
+          "text": "What was the working title of the first Grand Theft Auto?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Race'n'Chase"
+            },
+            "en": {
+              "text": "Race'n'Chase"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Getaway Driver"
+            },
+            "en": {
+              "text": "Getaway Driver"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Car Jack City"
+            },
+            "en": {
+              "text": "Car Jack City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Street Chase"
+            },
+            "en": {
+              "text": "Street Chase"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-mortal-kombat-van-damme",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Mortal_Kombat_(1992_video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Mortal Kombat"
+      },
+      "translations": {
+        "ru": {
+          "text": "Игрой с каким актёром изначально задумывалась Mortal Kombat?"
+        },
+        "en": {
+          "text": "Mortal Kombat was first conceived as a game starring which actor?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Жан-Клод Ван Дамм"
+            },
+            "en": {
+              "text": "Jean-Claude Van Damme"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Стивен Сигал"
+            },
+            "en": {
+              "text": "Steven Seagal"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чак Норрис"
+            },
+            "en": {
+              "text": "Chuck Norris"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дольф Лундгрен"
+            },
+            "en": {
+              "text": "Dolph Lundgren"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-valve-founders-microsoft",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Valve_Corporation",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где работали Гейб Ньюэлл и Майк Харрингтон до того, как основали Valve в 1996 году?"
+        },
+        "en": {
+          "text": "Where did Gabe Newell and Mike Harrington work before founding Valve in 1996?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Microsoft"
+            },
+            "en": {
+              "text": "At Microsoft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Apple"
+            },
+            "en": {
+              "text": "At Apple"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Sierra"
+            },
+            "en": {
+              "text": "At Sierra"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В id Software"
+            },
+            "en": {
+              "text": "At id Software"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:half-life",
+        "era:1990s"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-pubg-arma-2-mod",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Brendan_Greene",
+        "localizationStrategy": "latin-titles",
+        "game": "PlayerUnknown's Battlegrounds"
+      },
+      "translations": {
+        "ru": {
+          "text": "Для какой игры Брендан Грин, создатель PUBG, сделал свой первый мод в жанре battle royale?"
+        },
+        "en": {
+          "text": "For which game did Brendan Greene, the creator of PUBG, make his first battle royale mod?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "ARMA 2"
+            },
+            "en": {
+              "text": "ARMA 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Battlefield 2"
+            },
+            "en": {
+              "text": "Battlefield 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Counter-Strike: Source"
+            },
+            "en": {
+              "text": "Counter-Strike: Source"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Minecraft"
+            },
+            "en": {
+              "text": "Minecraft"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-medium-rocket-league-sarpbc-ps3",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Supersonic_Acrobatic_Rocket-Powered_Battle-Cars",
+        "localizationStrategy": "latin-titles",
+        "game": "Rocket League"
+      },
+      "translations": {
+        "ru": {
+          "text": "На какой платформе в 2008 году вышла предшественница Rocket League — Supersonic Acrobatic Rocket-Powered Battle-Cars?"
+        },
+        "en": {
+          "text": "On which platform did Rocket League’s 2008 predecessor, Supersonic Acrobatic Rocket-Powered Battle-Cars, come out?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "PlayStation 3"
+            },
+            "en": {
+              "text": "PlayStation 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Xbox 360"
+            },
+            "en": {
+              "text": "Xbox 360"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Wii"
+            },
+            "en": {
+              "text": "Wii"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "ПК"
+            },
+            "en": {
+              "text": "PC"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-blizzard-silicon-synapse",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Blizzard_Entertainment",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким названием Blizzard была основана в 1991 году?"
+        },
+        "en": {
+          "text": "Under what name was Blizzard founded in 1991?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Silicon & Synapse"
+            },
+            "en": {
+              "text": "Silicon & Synapse"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Westwood Studios"
+            },
+            "en": {
+              "text": "Westwood Studios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Origin Systems"
+            },
+            "en": {
+              "text": "Origin Systems"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bullfrog Productions"
+            },
+            "en": {
+              "text": "Bullfrog Productions"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "era:1990s"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-epic-megagames",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Epic_Games",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называлась Epic Games большую часть 1990-х?"
+        },
+        "en": {
+          "text": "What was Epic Games called for most of the 1990s?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Epic MegaGames"
+            },
+            "en": {
+              "text": "Epic MegaGames"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Apogee Software"
+            },
+            "en": {
+              "text": "Apogee Software"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Epic Interactive"
+            },
+            "en": {
+              "text": "Epic Interactive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Raven Software"
+            },
+            "en": {
+              "text": "Raven Software"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "era:1990s"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-crash-sonics-ass-game",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Crash_Bandicoot_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Crash Bandicoot"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какое шуточное рабочее название было у Crash Bandicoot в Naughty Dog?"
+        },
+        "en": {
+          "text": "What was Crash Bandicoot’s joke working title at Naughty Dog?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Sonic's Ass Game"
+            },
+            "en": {
+              "text": "Sonic's Ass Game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mario Killer"
+            },
+            "en": {
+              "text": "Mario Killer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hedgehog Hunter"
+            },
+            "en": {
+              "text": "Hedgehog Hunter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Plumber's Nightmare"
+            },
+            "en": {
+              "text": "Plumber's Nightmare"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-simcity-bungeling-bay-editor",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/SimCity_(1989_video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "SimCity (1989)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из чего вырос SimCity Уилла Райта?"
+        },
+        "en": {
+          "text": "What did Will Wright’s SimCity grow out of?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Из редактора уровней другой игры"
+            },
+            "en": {
+              "text": "Another game’s level editor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Из программы для архитекторов"
+            },
+            "en": {
+              "text": "Training software for architects"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Из настольной игры о мэрах"
+            },
+            "en": {
+              "text": "A board game about mayors"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Из военного симулятора"
+            },
+            "en": {
+              "text": "A military simulator"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-diablo-turn-based",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Diablo_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Diablo"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой студия Condor изначально задумывала Diablo?"
+        },
+        "en": {
+          "text": "What was Diablo originally designed as at Condor?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пошаговой RPG"
+            },
+            "en": {
+              "text": "A turn-based RPG"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Стратегией в реальном времени"
+            },
+            "en": {
+              "text": "A real-time strategy game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Текстовым квестом"
+            },
+            "en": {
+              "text": "A text adventure"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шутером от первого лица"
+            },
+            "en": {
+              "text": "A first-person shooter"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-prince-of-persia-rotoscope-brother",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Prince_of_Persia_(1989_video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Prince of Persia (1989)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кого Джордан Мекнер снимал на плёнку, чтобы оживить героя Prince of Persia?"
+        },
+        "en": {
+          "text": "Who did Jordan Mechner film to animate the hero of Prince of Persia?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Своего брата"
+            },
+            "en": {
+              "text": "His brother"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Себя в зеркале"
+            },
+            "en": {
+              "text": "Himself in a mirror"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Голливудского каскадёра"
+            },
+            "en": {
+              "text": "A Hollywood stuntman"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Олимпийского гимнаста"
+            },
+            "en": {
+              "text": "An Olympic gymnast"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-witcher-aurora-engine",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/The_Witcher_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "The Witcher"
+      },
+      "translations": {
+        "ru": {
+          "text": "На каком движке сделан первый «Ведьмак» 2007 года?"
+        },
+        "en": {
+          "text": "Which engine was the first Witcher (2007) built on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Aurora"
+            },
+            "en": {
+              "text": "Aurora"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Unreal Engine 2"
+            },
+            "en": {
+              "text": "Unreal Engine 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gamebryo"
+            },
+            "en": {
+              "text": "Gamebryo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Source"
+            },
+            "en": {
+              "text": "Source"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-fallout-gurps",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Fallout_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Fallout"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какую настольную систему правил Interplay сначала собиралась использовать в Fallout?"
+        },
+        "en": {
+          "text": "Which tabletop rule system did Interplay originally plan to use for Fallout?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "GURPS"
+            },
+            "en": {
+              "text": "GURPS"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dungeons & Dragons"
+            },
+            "en": {
+              "text": "Dungeons & Dragons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Shadowrun"
+            },
+            "en": {
+              "text": "Shadowrun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Warhammer Fantasy Roleplay"
+            },
+            "en": {
+              "text": "Warhammer Fantasy Roleplay"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-celeste-pico-8",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Celeste_(video_game)",
+        "localizationStrategy": "latin-titles",
+        "game": "Celeste"
+      },
+      "translations": {
+        "ru": {
+          "text": "Celeste выросла из игры, сделанной за четыре дня в 2015 году. Для какой платформы?"
+        },
+        "en": {
+          "text": "Celeste grew out of a game made in four days in 2015. For which platform?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "PICO-8"
+            },
+            "en": {
+              "text": "PICO-8"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Game Boy"
+            },
+            "en": {
+              "text": "Game Boy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Adobe Flash"
+            },
+            "en": {
+              "text": "Adobe Flash"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "TIC-80"
+            },
+            "en": {
+              "text": "TIC-80"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-devhistory-hard-pong-alcorn",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "development",
+        "source": "https://en.wikipedia.org/wiki/Pong",
+        "localizationStrategy": "latin-titles",
+        "game": "Pong"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кому Нолан Бушнелл дал Pong как учебное задание?"
+        },
+        "en": {
+          "text": "Who did Nolan Bushnell give Pong to as a training exercise?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Аллану Алкорну"
+            },
+            "en": {
+              "text": "Allan Alcorn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Стиву Возняку"
+            },
+            "en": {
+              "text": "Steve Wozniak"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Стиву Джобсу"
+            },
+            "en": {
+              "text": "Steve Jobs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Томохиро Нисикадо"
+            },
+            "en": {
+              "text": "Tomohiro Nishikado"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

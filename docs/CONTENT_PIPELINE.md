@@ -389,6 +389,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 6 (day):** soundtracks TEXT ×30 (`2026-11-06-text-soundtracks-30.json`, 10/10/10, 5 new catalog games; easy = how music works in the game, composer names in medium/hard; co-composers never used as wrong options) published both sides → TEXT **638** (209/229/200) + IMAGE **171** → **809** live. The dev import dropped mid-batch (10 of 30 created); `import-draft-questions.ts` is not idempotent, so the rest went in as a «missing only» file matched by RU text. A Beat Saber draft overlapping an older question was deleted on dev (DRAFT, never played) and replaced by a Super Mario Bros. timer-music question before prod.
 
+**Nov 6 (evening):** development history TEXT ×30 (`2026-11-06-text-devhistory-30.json`, 10/10/10, 5 new catalog games; 3 studio questions with draft `tags`; only dated facts and origins, co-founders never used as wrong options) published both sides (`taxonomy:sync` both sides) → TEXT **668** (219/239/210) + IMAGE **171** → **839** live. A second import run was started by mistake on dev; a check by RU text showed exactly 30 rows (no duplicates). Do not re-import.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
