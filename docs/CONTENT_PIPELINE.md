@@ -385,6 +385,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 6 (night):** CIS games TEXT ×30 (`2026-11-06-text-cis-30.json`, 10/10/10, 25 new catalog games + franchise `metro`, 3 series questions with draft `tags`; studio questions ask the name, not the country) published both sides → TEXT **578** (189/209/180) + IMAGE **171** → **749** live.
 
+**Nov 6 (late night):** esports TEXT ×30 (`2026-11-06-text-esports-30.json`, 10/10/10, 1 new catalog game — Street Fighter III: 3rd Strike; 12 player/event questions with draft `tags`; only dated events and «firsts», no running counts) published both sides → TEXT **608** (199/219/190) + IMAGE **171** → **779** live.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:

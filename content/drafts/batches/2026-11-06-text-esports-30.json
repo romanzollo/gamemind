@@ -1,0 +1,2017 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 7 — esports. 10/10/10. Only dated events and «firsts», no running counts (titles, records) that go stale. Questions about events or players without one game carry explicit tags. Duplicates checked by keywords across the bank. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-ti-game",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/The_International_(esports)",
+        "localizationStrategy": "latin-titles",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "По какой игре проводят турнир The International?"
+        },
+        "en": {
+          "text": "Which game is The International tournament for?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dota 2"
+            },
+            "en": {
+              "text": "Dota 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "League of Legends"
+            },
+            "en": {
+              "text": "League of Legends"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Counter-Strike 2"
+            },
+            "en": {
+              "text": "Counter-Strike 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "StarCraft II"
+            },
+            "en": {
+              "text": "StarCraft II"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-faker-game",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Faker_(gamer)",
+        "localizationStrategy": "latin-titles",
+        "game": "League of Legends"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой игре прославился корейский игрок Faker?"
+        },
+        "en": {
+          "text": "Which game made the Korean player Faker famous?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "League of Legends"
+            },
+            "en": {
+              "text": "League of Legends"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dota 2"
+            },
+            "en": {
+              "text": "Dota 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "StarCraft II"
+            },
+            "en": {
+              "text": "StarCraft II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Overwatch"
+            },
+            "en": {
+              "text": "Overwatch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-s1mple-game",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/S1mple",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой игре прославился s1mple?"
+        },
+        "en": {
+          "text": "Which game made s1mple famous?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Counter-Strike"
+            },
+            "en": {
+              "text": "Counter-Strike"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Valorant"
+            },
+            "en": {
+              "text": "Valorant"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dota 2"
+            },
+            "en": {
+              "text": "Dota 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Apex Legends"
+            },
+            "en": {
+              "text": "Apex Legends"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:counter-strike",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-evo-genre",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Evolution_Championship_Series",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Игры какого жанра главные на турнире EVO?"
+        },
+        "en": {
+          "text": "What genre are the main games at EVO?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Файтинги"
+            },
+            "en": {
+              "text": "Fighting games"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шутеры"
+            },
+            "en": {
+              "text": "Shooters"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "MOBA"
+            },
+            "en": {
+              "text": "MOBAs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гоночные симуляторы"
+            },
+            "en": {
+              "text": "Racing sims"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "genre:fighting"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-navi-meaning",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Natus_Vincere",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что значит название команды Natus Vincere в переводе с латыни?"
+        },
+        "en": {
+          "text": "What does the team name Natus Vincere mean in Latin?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Рождённый побеждать»"
+            },
+            "en": {
+              "text": "Born to win"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Победа любой ценой»"
+            },
+            "en": {
+              "text": "Victory at any cost"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Новое поколение»"
+            },
+            "en": {
+              "text": "The new generation"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Вместе мы сила»"
+            },
+            "en": {
+              "text": "Together we are strong"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "game:dota-2",
+        "franchise:counter-strike"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-cs-ace",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Glossary_of_video_game_terms",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в Counter-Strike называют «эйсом»?"
+        },
+        "en": {
+          "text": "What is an \"ace\" in Counter-Strike?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Один игрок убил всех пятерых соперников за раунд"
+            },
+            "en": {
+              "text": "One player kills all five enemies in a round"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Победу в матче без единого проигранного раунда"
+            },
+            "en": {
+              "text": "Winning a match without dropping a round"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Убийство через стену с одного выстрела"
+            },
+            "en": {
+              "text": "A one-shot kill through a wall"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Разминирование бомбы в последнюю секунду"
+            },
+            "en": {
+              "text": "Defusing the bomb at the last second"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:counter-strike",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-ti-aegis",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/The_International_(esports)",
+        "localizationStrategy": "latin-titles",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Победители какого турнира получают трофей «Эгида чемпионов»?"
+        },
+        "en": {
+          "text": "Winners of which tournament lift the Aegis of Champions?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The International"
+            },
+            "en": {
+              "text": "The International"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Worlds по League of Legends"
+            },
+            "en": {
+              "text": "League of Legends Worlds"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мейджор по Counter-Strike"
+            },
+            "en": {
+              "text": "A Counter-Strike Major"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "EVO"
+            },
+            "en": {
+              "text": "EVO"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-clutch",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Glossary_of_video_game_terms",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что в киберспорте называют «клатчем»?"
+        },
+        "en": {
+          "text": "In esports, what is a \"clutch\"?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Победу в раунде одного против нескольких"
+            },
+            "en": {
+              "text": "Winning a round alone against several"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сдачу матча до конца последней карты"
+            },
+            "en": {
+              "text": "Forfeiting before the last map ends"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Замену игрока прямо посреди карты"
+            },
+            "en": {
+              "text": "Swapping a player in the middle of a map"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Техническую паузу по просьбе команды"
+            },
+            "en": {
+              "text": "A technical pause called by a team"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:counter-strike",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-iem-katowice-country",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Intel_Extreme_Masters",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой стране проходит турнир IEM Katowice?"
+        },
+        "en": {
+          "text": "Which country hosts IEM Katowice?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Польше"
+            },
+            "en": {
+              "text": "Poland"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Германии"
+            },
+            "en": {
+              "text": "Germany"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Чехии"
+            },
+            "en": {
+              "text": "Czechia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Словакии"
+            },
+            "en": {
+              "text": "Slovakia"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:counter-strike",
+        "franchise:starcraft"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-easy-ewc-2024-city",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Esports_World_Cup",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком городе прошёл первый Esports World Cup в 2024 году?"
+        },
+        "en": {
+          "text": "Which city hosted the first Esports World Cup in 2024?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Эр-Рияде"
+            },
+            "en": {
+              "text": "Riyadh"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Дубае"
+            },
+            "en": {
+              "text": "Dubai"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Дохе"
+            },
+            "en": {
+              "text": "Doha"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Абу-Даби"
+            },
+            "en": {
+              "text": "Abu Dhabi"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "era:2020s"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-ti10-winner",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/The_International_2021",
+        "localizationStrategy": "latin-titles",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая команда выиграла The International 2021 (TI10)?"
+        },
+        "en": {
+          "text": "Which team won The International 2021 (TI10)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Team Spirit"
+            },
+            "en": {
+              "text": "Team Spirit"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "PSG.LGD"
+            },
+            "en": {
+              "text": "PSG.LGD"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "OG"
+            },
+            "en": {
+              "text": "OG"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Secret"
+            },
+            "en": {
+              "text": "Team Secret"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-ti1-winner",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/The_International_2011",
+        "localizationStrategy": "latin-titles",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая команда выиграла самый первый The International в 2011 году?"
+        },
+        "en": {
+          "text": "Which team won the very first The International in 2011?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Natus Vincere"
+            },
+            "en": {
+              "text": "Natus Vincere"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "EHOME"
+            },
+            "en": {
+              "text": "EHOME"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Invictus Gaming"
+            },
+            "en": {
+              "text": "Invictus Gaming"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Liquid"
+            },
+            "en": {
+              "text": "Team Liquid"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-ti-prize-pool-source",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/The_International_(esports)",
+        "localizationStrategy": "full",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Почему призовой фонд The International годами рос до рекордов?"
+        },
+        "en": {
+          "text": "Why did The International prize pool keep climbing to records for years?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В него шла часть денег с продаж боевого пропуска"
+            },
+            "en": {
+              "text": "A share of Battle Pass sales went into it"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Команды платили крупные взносы за участие"
+            },
+            "en": {
+              "text": "Teams paid large entry fees"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Его целиком оплачивали спонсоры-букмекеры"
+            },
+            "en": {
+              "text": "Betting sponsors paid for all of it"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В него шли деньги от продажи билетов"
+            },
+            "en": {
+              "text": "Ticket sales went into it"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-pgl-stockholm-2021",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/PGL_Major_Stockholm_2021",
+        "localizationStrategy": "latin-titles",
+        "game": "Counter-Strike: Global Offensive"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая команда выиграла мейджор PGL Stockholm 2021 по CS:GO?"
+        },
+        "en": {
+          "text": "Which team won the PGL Major Stockholm 2021 in CS:GO?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Natus Vincere"
+            },
+            "en": {
+              "text": "Natus Vincere"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "G2 Esports"
+            },
+            "en": {
+              "text": "G2 Esports"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gambit Esports"
+            },
+            "en": {
+              "text": "Gambit Esports"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Astralis"
+            },
+            "en": {
+              "text": "Astralis"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-worlds-summoners-cup",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/League_of_Legends_World_Championship",
+        "localizationStrategy": "full",
+        "game": "League of Legends"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется трофей чемпионата мира по League of Legends?"
+        },
+        "en": {
+          "text": "What is the League of Legends World Championship trophy called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кубок призывателя"
+            },
+            "en": {
+              "text": "Summoner's Cup"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кубок Нексуса"
+            },
+            "en": {
+              "text": "Nexus Cup"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кубок Разлома"
+            },
+            "en": {
+              "text": "Rift Cup"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Корона чемпионов"
+            },
+            "en": {
+              "text": "Champion's Crown"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-faker-team",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/T1_(esports)",
+        "localizationStrategy": "latin-titles",
+        "game": "League of Legends"
+      },
+      "translations": {
+        "ru": {
+          "text": "В составе какой команды Faker выиграл свой первый чемпионат мира в 2013 году?"
+        },
+        "en": {
+          "text": "Which team did Faker win his first World Championship with in 2013?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "SK Telecom T1"
+            },
+            "en": {
+              "text": "SK Telecom T1"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Samsung Galaxy"
+            },
+            "en": {
+              "text": "Samsung Galaxy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Royal Club"
+            },
+            "en": {
+              "text": "Royal Club"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "KT Rolster"
+            },
+            "en": {
+              "text": "KT Rolster"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-og-first-double",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/OG_(esports)",
+        "localizationStrategy": "latin-titles",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая команда первой выиграла The International дважды?"
+        },
+        "en": {
+          "text": "Which team was the first to win The International twice?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "OG"
+            },
+            "en": {
+              "text": "OG"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Spirit"
+            },
+            "en": {
+              "text": "Team Spirit"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team Liquid"
+            },
+            "en": {
+              "text": "Team Liquid"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Evil Geniuses"
+            },
+            "en": {
+              "text": "Evil Geniuses"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-twitch-origin",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Twitch_(service)",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какого сервиса в 2011 году выделился Twitch?"
+        },
+        "en": {
+          "text": "Which service did Twitch spin off from in 2011?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Justin.tv"
+            },
+            "en": {
+              "text": "Justin.tv"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ustream"
+            },
+            "en": {
+              "text": "Ustream"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "YouTube Gaming"
+            },
+            "en": {
+              "text": "YouTube Gaming"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mixer"
+            },
+            "en": {
+              "text": "Mixer"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "era:2010s"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-owl-cities",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Overwatch_League",
+        "localizationStrategy": "full",
+        "game": "Overwatch (2016)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем Overwatch League (2018–2023) отличалась от большинства киберспортивных лиг?"
+        },
+        "en": {
+          "text": "What set the Overwatch League (2018–2023) apart from most esports leagues?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Команды представляли города, как в NBA"
+            },
+            "en": {
+              "text": "Teams represented cities, like in the NBA"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Матчи играли только на консолях"
+            },
+            "en": {
+              "text": "Matches were played on consoles only"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Составы менялись случайно перед каждой картой"
+            },
+            "en": {
+              "text": "Rosters were shuffled before every map"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Зрители выбирали героев за игроков"
+            },
+            "en": {
+              "text": "Viewers picked heroes for the players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-medium-s1mple-name",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/S1mple",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как на самом деле зовут игрока s1mple?"
+        },
+        "en": {
+          "text": "What is s1mple's real name?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Александр Костылев"
+            },
+            "en": {
+              "text": "Oleksandr Kostyliev"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Даниил Тесленко"
+            },
+            "en": {
+              "text": "Danylo Teslenko"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Егор Васильев"
+            },
+            "en": {
+              "text": "Yegor Vasilyev"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Денис Шарипов"
+            },
+            "en": {
+              "text": "Denis Sharipov"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:counter-strike",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-evo-moment-37",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Evo_Moment_37",
+        "localizationStrategy": "latin-titles",
+        "game": "Street Fighter III: 3rd Strike"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой игре на EVO 2004 Дайго Умэхара отбил все удары супера и вошёл в историю как «Evo Moment #37»?"
+        },
+        "en": {
+          "text": "In which game did Daigo Umehara parry an entire super at EVO 2004, the famous \"Evo Moment #37\"?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Street Fighter III: 3rd Strike"
+            },
+            "en": {
+              "text": "Street Fighter III: 3rd Strike"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Street Fighter II Turbo"
+            },
+            "en": {
+              "text": "Street Fighter II Turbo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Street Fighter Alpha 3"
+            },
+            "en": {
+              "text": "Street Fighter Alpha 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Super Street Fighter IV"
+            },
+            "en": {
+              "text": "Super Street Fighter IV"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-fatal1ty-quake",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Fatal1ty",
+        "localizationStrategy": "latin-titles"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой серии шутеров прославился один из первых профессиональных игроков, Fatal1ty?"
+        },
+        "en": {
+          "text": "Which shooter series made Fatal1ty, one of the first pro gamers, famous?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Quake"
+            },
+            "en": {
+              "text": "Quake"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Unreal Tournament"
+            },
+            "en": {
+              "text": "Unreal Tournament"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Counter-Strike"
+            },
+            "en": {
+              "text": "Counter-Strike"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Doom"
+            },
+            "en": {
+              "text": "Doom"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:quake",
+        "genre:shooter"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-first-csgo-major",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/DreamHack_Winter_2013",
+        "localizationStrategy": "latin-titles",
+        "game": "Counter-Strike: Global Offensive"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая команда выиграла первый мейджор по CS:GO — DreamHack Winter 2013?"
+        },
+        "en": {
+          "text": "Which team won the first CS:GO Major, DreamHack Winter 2013?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Fnatic"
+            },
+            "en": {
+              "text": "Fnatic"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ninjas in Pyjamas"
+            },
+            "en": {
+              "text": "Ninjas in Pyjamas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Natus Vincere"
+            },
+            "en": {
+              "text": "Natus Vincere"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Virtus.pro"
+            },
+            "en": {
+              "text": "Virtus.pro"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-lol-s1-winner",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/League_of_Legends_World_Championship",
+        "localizationStrategy": "latin-titles",
+        "game": "League of Legends"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая команда выиграла первый чемпионат мира по League of Legends в 2011 году?"
+        },
+        "en": {
+          "text": "Which team won the first League of Legends World Championship in 2011?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Fnatic"
+            },
+            "en": {
+              "text": "Fnatic"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "against All authority"
+            },
+            "en": {
+              "text": "against All authority"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Team SoloMid"
+            },
+            "en": {
+              "text": "Team SoloMid"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Moscow Five"
+            },
+            "en": {
+              "text": "Moscow Five"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-ti1-venue",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/The_International_2011",
+        "localizationStrategy": "full",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где прошёл первый The International в 2011 году?"
+        },
+        "en": {
+          "text": "Where was the first The International held in 2011?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "На gamescom в Кёльне"
+            },
+            "en": {
+              "text": "At gamescom in Cologne"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Сиэтле"
+            },
+            "en": {
+              "text": "In Seattle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Лос-Анджелесе"
+            },
+            "en": {
+              "text": "In Los Angeles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Шанхае"
+            },
+            "en": {
+              "text": "In Shanghai"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-ti10-prize-pool",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/The_International_2021",
+        "localizationStrategy": "full",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Каким был призовой фонд The International 2021?"
+        },
+        "en": {
+          "text": "How big was the prize pool of The International 2021?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Больше 40 млн долларов"
+            },
+            "en": {
+              "text": "Over $40 million"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Около 10 млн долларов"
+            },
+            "en": {
+              "text": "About $10 million"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Около 25 млн долларов"
+            },
+            "en": {
+              "text": "About $25 million"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Больше 60 млн долларов"
+            },
+            "en": {
+              "text": "Over $60 million"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-fortnite-wc-solo",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Fortnite_World_Cup",
+        "localizationStrategy": "latin-titles",
+        "game": "Fortnite"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто выиграл одиночный турнир Fortnite World Cup 2019 и 3 миллиона долларов?"
+        },
+        "en": {
+          "text": "Who won the solo Fortnite World Cup 2019 and its $3 million prize?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Bugha"
+            },
+            "en": {
+              "text": "Bugha"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ninja"
+            },
+            "en": {
+              "text": "Ninja"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tfue"
+            },
+            "en": {
+              "text": "Tfue"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Aqua"
+            },
+            "en": {
+              "text": "Aqua"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-boxer-nickname",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/BoxeR",
+        "localizationStrategy": "latin-titles",
+        "game": "StarCraft"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким ником прославился легенда StarCraft Лим Ё Хван?"
+        },
+        "en": {
+          "text": "Under what nickname did StarCraft legend Lim Yo-hwan become famous?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "BoxeR"
+            },
+            "en": {
+              "text": "BoxeR"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Flash"
+            },
+            "en": {
+              "text": "Flash"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "NaDa"
+            },
+            "en": {
+              "text": "NaDa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Jaedong"
+            },
+            "en": {
+              "text": "Jaedong"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-dendi-position",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/Dendi_(gamer)",
+        "localizationStrategy": "full",
+        "game": "Dota 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "На какой позиции играл Dendi в Natus Vincere?"
+        },
+        "en": {
+          "text": "Which position did Dendi play for Natus Vincere?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мид"
+            },
+            "en": {
+              "text": "Mid"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Керри"
+            },
+            "en": {
+              "text": "Carry"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Оффлейн"
+            },
+            "en": {
+              "text": "Offlane"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Саппорт"
+            },
+            "en": {
+              "text": "Support"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-esports-hard-wcg-country",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "esports",
+        "source": "https://en.wikipedia.org/wiki/World_Cyber_Games",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой стране в 2000 году появились World Cyber Games?"
+        },
+        "en": {
+          "text": "Which country launched the World Cyber Games in 2000?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Южной Корее"
+            },
+            "en": {
+              "text": "South Korea"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Японии"
+            },
+            "en": {
+              "text": "Japan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В США"
+            },
+            "en": {
+              "text": "The United States"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Китае"
+            },
+            "en": {
+              "text": "China"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "era:2000s",
+        "genre:strategy"
+      ]
+    }
+  ]
+}
