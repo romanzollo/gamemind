@@ -1,20 +1,35 @@
 /**
  * Import пакета draft JSON как publicationStatus=DRAFT.
  *
- * Поток: validate → map → (dry-run | createWithOptions по одному).
+ * Поток: validate → map (всех вопросов, до записи) → чтение целевой БД →
+ * план (`planDraftImport`) → dry-run | createWithOptions по одному.
  * Никогда не выставляет PUBLISHED — это только admin publish + quality gate.
  *
- * Идемпотентность: каждый успешный import создаёт НОВЫЕ id (UUID).
- * Повторный запуск того же файла = ещё один набор DRAFT-строк.
+ * Повторный запуск безопасен: вопросы, которые уже есть в БД (по
+ * `contentKey` = draftKey или по RU-тексту), пропускаются. Оборванный
+ * посередине импорт перезапускают той же командой. Новый вопрос получает
+ * `contentKey = draftKey` тем же запросом, что создаёт строку.
+ * Dry-run тоже читает БД (только SELECT), чтобы показать тот же план.
  *
- * См. docs/CONTENT_PIPELINE.md; DECISIONS → Content Scale Pipeline.
+ * См. docs/CONTENT_PIPELINE.md; DECISIONS → Draft import is re-runnable.
  */
 
 import { questionRepository } from '@/entities/question/question.repository';
-import { createQuestionSchema } from '@/features/admin/lib/validation';
+import {
+    findQuestionsForDraftImport,
+    type DraftImportExistingRow,
+} from '@/entities/question/question-draft-import.repository';
+import {
+    createQuestionSchema,
+    type CreateQuestionInput,
+} from '@/features/admin/lib/validation';
 
 import type { DraftQuestionsBatch } from './draft-questions.schema';
 import { mapDraftQuestionToCreateInput } from './map-draft-to-create-input';
+import {
+    planDraftImport,
+    type DraftImportSkipReason,
+} from './plan-draft-import';
 import {
     validateDraftQuestionsBatch,
     type DraftBatchValidationIssue,
@@ -29,6 +44,12 @@ export type ImportDraftPlannedItem = {
 
 export type ImportDraftCreatedItem = ImportDraftPlannedItem & {
     id: string;
+};
+
+export type ImportDraftSkippedItem = ImportDraftPlannedItem & {
+    reason: DraftImportSkipReason;
+    existingId: string;
+    existingContentKey: string | null;
 };
 
 export type ImportDraftQuestionsResult =
@@ -51,16 +72,24 @@ export type ImportDraftQuestionsResult =
       }
     | {
           ok: false;
+          /** Не удалось прочитать, что уже есть в БД, — ничего не записано. */
+          stage: 'load';
+          message: string;
+      }
+    | {
+          ok: false;
           stage: 'create';
           index: number;
           draftKey?: string;
           message: string;
           createdBeforeFailure: ImportDraftCreatedItem[];
+          skipped: ImportDraftSkippedItem[];
       }
     | {
           ok: true;
           dryRun: true;
-          planned: ImportDraftPlannedItem[];
+          toCreate: ImportDraftPlannedItem[];
+          skipped: ImportDraftSkippedItem[];
           qualityReports: DraftQuestionQualityReport[];
           hasPublishBlockers: boolean;
       }
@@ -68,20 +97,25 @@ export type ImportDraftQuestionsResult =
           ok: true;
           dryRun: false;
           created: ImportDraftCreatedItem[];
+          skipped: ImportDraftSkippedItem[];
           qualityReports: DraftQuestionQualityReport[];
           hasPublishBlockers: boolean;
       };
 
 export type ImportDraftQuestionsOptions = {
-    /** Только validate + map, без Neon. */
+    /** validate + map + чтение БД, без записи. */
     dryRun?: boolean;
     /** Не импортировать, если есть publish blockers. */
     failOnPublishBlockers?: boolean;
 };
 
+function errorMessage(error: unknown, fallback: string): string {
+    return error instanceof Error ? error.message : fallback;
+}
+
 /**
  * Принимает уже распарсенный JSON (unknown).
- * Вызывающий CLI обязан загрузить .env до первого create.
+ * Вызывающий CLI обязан загрузить .env до первого обращения к БД.
  */
 export async function importDraftQuestionsBatch(
     input: unknown,
@@ -108,47 +142,15 @@ export async function importDraftQuestionsBatch(
         };
     }
 
-    const planned: ImportDraftPlannedItem[] = validated.batch.questions.map(
-        (question, index) => ({
-            index,
-            draftKey: question.draftKey,
-            difficulty: question.difficulty,
-        }),
-    );
+    const questions = validated.batch.questions;
 
-    if (dryRun) {
-        // Проверяем map+Zod заранее, чтобы dry-run ловил несовместимость с create
-        for (const [index, question] of validated.batch.questions.entries()) {
-            const mapped = mapDraftQuestionToCreateInput(question);
-            const parsed = createQuestionSchema.safeParse(mapped);
-
-            if (!parsed.success) {
-                return {
-                    ok: false,
-                    stage: 'map',
-                    index,
-                    draftKey: question.draftKey,
-                    message: parsed.error.issues
-                        .map((issue) => issue.message)
-                        .join('; '),
-                };
-            }
-        }
-
-        return {
-            ok: true,
-            dryRun: true,
-            planned,
-            qualityReports: validated.qualityReports,
-            hasPublishBlockers: validated.hasPublishBlockers,
-        };
-    }
-
-    const created: ImportDraftCreatedItem[] = [];
-
-    for (const [index, question] of validated.batch.questions.entries()) {
-        const mapped = mapDraftQuestionToCreateInput(question);
-        const parsed = createQuestionSchema.safeParse(mapped);
+    // Map+Zod для всей партии до первой записи: несовместимый вопрос в
+    // середине файла не оставит половину партии в БД.
+    const mapped: CreateQuestionInput[] = [];
+    for (const [index, question] of questions.entries()) {
+        const parsed = createQuestionSchema.safeParse(
+            mapDraftQuestionToCreateInput(question),
+        );
 
         if (!parsed.success) {
             return {
@@ -161,26 +163,82 @@ export async function importDraftQuestionsBatch(
                     .join('; '),
             };
         }
+        mapped.push(parsed.data);
+    }
 
-        try {
-            const row = await questionRepository.createWithOptions(parsed.data);
-            created.push({
-                index,
-                draftKey: question.draftKey,
-                difficulty: question.difficulty,
-                id: row.id,
+    let existing: DraftImportExistingRow[];
+    try {
+        existing = await findQuestionsForDraftImport(
+            questions.flatMap((question) =>
+                question.draftKey ? [question.draftKey] : [],
+            ),
+        );
+    } catch (error) {
+        return {
+            ok: false,
+            stage: 'load',
+            message: errorMessage(error, 'Unknown read error'),
+        };
+    }
+
+    const decisions = planDraftImport(
+        questions.map((question, index) => ({
+            index,
+            draftKey: question.draftKey,
+            ruText: question.translations.ru.text,
+        })),
+        existing,
+    );
+
+    const toCreate: ImportDraftPlannedItem[] = [];
+    const skipped: ImportDraftSkippedItem[] = [];
+    for (const decision of decisions) {
+        const item: ImportDraftPlannedItem = {
+            index: decision.index,
+            draftKey: decision.draftKey,
+            difficulty: questions[decision.index].difficulty,
+        };
+        if (decision.action === 'create') {
+            toCreate.push(item);
+        } else {
+            skipped.push({
+                ...item,
+                reason: decision.reason,
+                existingId: decision.existingId,
+                existingContentKey: decision.existingContentKey,
             });
-        } catch (error) {
-            const message =
-                error instanceof Error ? error.message : 'Unknown create error';
+        }
+    }
 
+    if (dryRun) {
+        return {
+            ok: true,
+            dryRun: true,
+            toCreate,
+            skipped,
+            qualityReports: validated.qualityReports,
+            hasPublishBlockers: validated.hasPublishBlockers,
+        };
+    }
+
+    const created: ImportDraftCreatedItem[] = [];
+
+    for (const item of toCreate) {
+        try {
+            const row = await questionRepository.createWithOptions(
+                mapped[item.index],
+                { contentKey: item.draftKey ?? null },
+            );
+            created.push({ ...item, id: row.id });
+        } catch (error) {
             return {
                 ok: false,
                 stage: 'create',
-                index,
-                draftKey: question.draftKey,
-                message,
+                index: item.index,
+                draftKey: item.draftKey,
+                message: errorMessage(error, 'Unknown create error'),
                 createdBeforeFailure: created,
+                skipped,
             };
         }
     }
@@ -189,6 +247,7 @@ export async function importDraftQuestionsBatch(
         ok: true,
         dryRun: false,
         created,
+        skipped,
         qualityReports: validated.qualityReports,
         hasPublishBlockers: validated.hasPublishBlockers,
     };

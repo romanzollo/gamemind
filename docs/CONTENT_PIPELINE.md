@@ -118,8 +118,8 @@ Each question object:
 | `category` | no | Default on import: `"video-games"` |
 | `metadata` | no | Free object (franchise, topic, game, …) — not used by quiz hot path. `metadata.game` gives the question its taxonomy tags through `content/taxonomy/games.json` (title or alias) |
 | `tags` | no | Taxonomy tags instead of `metadata.game`: `["game:portal"]`, `["franchise:hitman", "genre:stealth"]`. Validate fails on a tag missing from the catalog |
-| `draftKey` | no | Stable string for humans / future idempotent re-import (not a DB id) |
-| `translations.ru.text` | yes | Non-empty after trim |
+| `draftKey` | no | Stable key, unique in the file (not a DB id). Import writes it to `Question.contentKey` and skips a question whose key is already in the DB — re-run safe |
+| `translations.ru.text` | yes | Non-empty after trim; unique in the file (case / spaces / quotes ignored) — import also recognises older rows by it |
 | `translations.en.text` | yes | Non-empty after trim |
 | `options` | yes | Exactly **4** options in v1 (stricter than admin Zod 2–6) |
 | `options[].isCorrect` | yes | Exactly **one** `true` in the array |
@@ -159,7 +159,7 @@ author JSON  →  validate (schema + domain)  →  import as DRAFT
       →  npm run taxonomy:sync (dev; prod on the owner’s go-ahead)
 ```
 
-**Taxonomy (Nov 2):** import does not write tags. After import / publish run `npm run taxonomy:sync` (dry run), then `-- --apply`: it sets `Question.contentKey` (= `draftKey`) and adds the tags. A new game goes into `content/taxonomy/games.json` first (year, first-year platforms, up to 3 genres, series). A question about a whole series or about hardware gets `tags` in the draft or a line in `content/taxonomy/question-overrides.json`. Which filters have enough questions: `npm run taxonomy:coverage`. Canon: DECISIONS → Content taxonomy.
+**Taxonomy (Nov 2):** import does not write tags. It writes `Question.contentKey` (= `draftKey`) itself (Nov 6). After import / publish run `npm run taxonomy:sync` (dry run), then `-- --apply`: it adds the tags (and keys for older rows that have none). A new game goes into `content/taxonomy/games.json` first (year, first-year platforms, up to 3 genres, series). A question about a whole series or about hardware gets `tags` in the draft or a line in `content/taxonomy/question-overrides.json`. Which filters have enough questions: `npm run taxonomy:coverage`. Canon: DECISIONS → Content taxonomy.
 
 Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans still review.
 
@@ -222,7 +222,8 @@ Later (Phase 5 leftover): AI/API emits **the same** `version: 1` JSON; humans st
 
 - [x] `mapDraftQuestionToCreateInput` + `importDraftQuestionsBatch`
 - [x] Reuses `questionRepository.createWithOptions` (always DRAFT in SQL)
-- [x] New UUID per row (not idempotent; safe vs overwriting PUBLISHED)
+- [x] New UUID per row (safe vs overwriting PUBLISHED)
+- [x] Re-run safe (Nov 6): questions already in the target DB (`contentKey` = `draftKey`, or the same RU text) are skipped; new rows get `contentKey` in the same INSERT
 - [x] `--dry-run` and real import of sample verified locally
 - [x] Never sets `PUBLISHED` in this path
 
@@ -324,7 +325,8 @@ Remove-Item Env:DATABASE_URL_UNPOOLED
 ```
 
 3. Admin on prod: `?publication=DRAFT` → review → Publish.
-4. Do **not** paste secrets into git. Rotate Neon password if it was shared in chat.
+4. Connection dropped mid-import? Run the **same command** again: questions already in the DB are skipped, the output ends with `Created N DRAFT question(s), skipped M (already present)`. The dry-run reads the target DB too and prints the same split. `skip: same RU text, OTHER contentKey` means the batch repeats a question from another batch — fix the batch (DECISIONS → Draft import is re-runnable).
+5. Do **not** paste secrets into git. Rotate Neon password if it was shared in chat.
 
 **Note:** `vercel env pull` may download Encrypted vars as empty `""` — use Console Reveal / Neon instead.
 

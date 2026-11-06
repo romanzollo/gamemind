@@ -11,6 +11,7 @@
 
 import { z } from 'zod';
 
+import { normalizeQuestionText } from '../taxonomy/content-key';
 import { tagRefSchema } from '../taxonomy/taxonomy-catalog.schema';
 
 const localizedQuestionTextSchema = z
@@ -74,7 +75,10 @@ function assertExactlyOneCorrectOption(
 
 /**
  * Корень файла: version + questions[].
- * Дубликат draftKey внутри пакета — ошибка формы (не publish gate).
+ * Дубликат draftKey или RU-текста внутри пакета — ошибка формы (не publish
+ * gate): draftKey станет уникальным `Question.contentKey`, а по RU-тексту
+ * импорт узнаёт уже загруженные вопросы — два одинаковых текста он счёл бы
+ * одним вопросом (DECISIONS → Draft import is re-runnable).
  */
 export const draftQuestionsBatchSchema = z
     .object({
@@ -84,12 +88,23 @@ export const draftQuestionsBatchSchema = z
     })
     .superRefine((batch, ctx) => {
         const seenKeys = new Set<string>();
+        const seenTexts = new Set<string>();
 
         batch.questions.forEach((question, index) => {
             assertExactlyOneCorrectOption(question.options, ctx, [
                 'questions',
                 index,
             ]);
+
+            const text = normalizeQuestionText(question.translations.ru.text);
+            if (seenTexts.has(text)) {
+                ctx.addIssue({
+                    code: 'custom',
+                    path: ['questions', index, 'translations', 'ru', 'text'],
+                    message: 'Duplicate RU question text in the batch',
+                });
+            }
+            seenTexts.add(text);
 
             const key = question.draftKey?.trim();
             if (!key) {

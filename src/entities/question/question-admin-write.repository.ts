@@ -255,10 +255,22 @@ async function recoverAdminUpdateAfterWriteError(
     return { id: input.questionId, previousPromptImageUrl: null };
 }
 
+/**
+ * Необязательные поля создания, которых нет в форме админки.
+ * `contentKey` пишет импорт черновиков (= draftKey) тем же запросом, что и
+ * вопрос: строка без ключа не появляется даже при обрыве, а уникальный
+ * индекс не даст создать второй вопрос с тем же ключом
+ * (DECISIONS → Draft import is re-runnable).
+ */
+export type CreateQuestionOptions = {
+    contentKey?: string | null;
+};
+
 async function applyAdminQuestionCreateWithPg(
     client: Client,
     questionId: string,
     input: CreateQuestionInput,
+    options: CreateQuestionOptions,
 ): Promise<{ id: string }> {
     const promptImageUrl = input.promptImageUrl?.trim() ?? '';
     const assetId = `qa-${questionId}-prompt`;
@@ -315,6 +327,7 @@ async function applyAdminQuestionCreateWithPg(
         promptAsset?.width ?? null,
         promptAsset?.height ?? null,
         promptAsset?.byteSize ?? null,
+        options.contentKey ?? null,
     ];
     const questionTranslationParams = questionTranslationRows.flatMap((row) => [
         row.id,
@@ -363,6 +376,7 @@ async function applyAdminQuestionCreateWithPg(
                     "category",
                     "isActive",
                     "publicationStatus",
+                    "contentKey",
                     "createdAt",
                     "updatedAt"
                 )
@@ -374,6 +388,7 @@ async function applyAdminQuestionCreateWithPg(
                     $5,
                     true,
                     'DRAFT'::"QuestionPublicationStatus",
+                    $13::text,
                     NOW(),
                     NOW()
                 )
@@ -383,6 +398,8 @@ async function applyAdminQuestionCreateWithPg(
                     "difficulty" = EXCLUDED."difficulty",
                     "category" = EXCLUDED."category",
                     "isActive" = true,
+                    -- повтор после обрыва: уже записанный ключ не трогаем
+                    "contentKey" = COALESCE("Question"."contentKey", EXCLUDED."contentKey"),
                     "updatedAt" = NOW()
                 RETURNING "id"
             ),
@@ -538,12 +555,14 @@ async function applyAdminQuestionCreateWithPg(
 
 async function createWithOptionsWithDirectPg(
     input: CreateQuestionInput,
+    options: CreateQuestionOptions,
 ): Promise<{ id: string }> {
     // id из action (после upload) или новый UUID
     const questionId = input.id?.trim() || randomUUID();
 
     return withDirectPgWriteRetry(
-        (client) => applyAdminQuestionCreateWithPg(client, questionId, input),
+        (client) =>
+            applyAdminQuestionCreateWithPg(client, questionId, input, options),
         2,
     );
 }
@@ -847,8 +866,11 @@ async function updateWithOptionsWithDirectPg(
 }
 
 /** Создание вопроса с вариантами (admin create flow). */
-export async function createAdminQuestion(input: CreateQuestionInput) {
-    const created = await createWithOptionsWithDirectPg(input);
+export async function createAdminQuestion(
+    input: CreateQuestionInput,
+    options: CreateQuestionOptions = {},
+) {
+    const created = await createWithOptionsWithDirectPg(input, options);
     invalidateAdminListCaches();
     return created;
 }

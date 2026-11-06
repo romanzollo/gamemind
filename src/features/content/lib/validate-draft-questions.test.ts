@@ -102,6 +102,26 @@ describe('validateDraftQuestionsBatch', () => {
         ).toBe(true);
     });
 
+    it('отклоняет дубликат RU-текста вопроса (с точностью до регистра и пробелов)', () => {
+        const batch = cloneSample();
+        const questions = batch.questions as Array<{
+            translations: { ru: { text: string } };
+        }>;
+        questions[1].translations.ru.text = `  ${questions[0].translations.ru.text.toUpperCase()} `;
+
+        const result = validateDraftQuestionsBatch(batch);
+
+        expect(result.ok).toBe(false);
+        if (result.ok) {
+            return;
+        }
+
+        expect(result.issues).toContainEqual({
+            path: 'questions[1].translations.ru.text',
+            message: 'Duplicate RU question text in the batch',
+        });
+    });
+
     it('контракт ок, но duplicate option text → hasPublishBlockers', () => {
         const batch = cloneSample();
         const questions = batch.questions as Array<{

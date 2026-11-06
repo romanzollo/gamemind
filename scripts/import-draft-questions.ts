@@ -7,7 +7,11 @@
  *   npm run content:import-drafts -- content/drafts/examples/sample-text-v1.json
  *
  * Requires DATABASE_URL_UNPOOLED (or DATABASE_URL) in .env — same as seed/smoke.
- * Never sets PUBLISHED. Re-run creates new UUID rows (not idempotent).
+ * Never sets PUBLISHED. Dry-run тоже читает БД (только SELECT).
+ *
+ * Повторный запуск безопасен: вопросы, которые уже есть в целевой БД
+ * (contentKey = draftKey или тот же RU-текст), пропускаются — оборванный
+ * импорт перезапускают той же командой (DECISIONS → Draft import is re-runnable).
  *
  * Canon: docs/CONTENT_PIPELINE.md.
  */
@@ -15,7 +19,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { importDraftQuestionsBatch } from '../src/features/content/lib/import-draft-questions';
+import {
+    importDraftQuestionsBatch,
+    type ImportDraftSkippedItem,
+} from '../src/features/content/lib/import-draft-questions';
 
 const DEFAULT_PATH = 'content/drafts/examples/sample-text-v1.json';
 
@@ -58,7 +65,8 @@ function printUsage(): void {
   npm run content:import-drafts -- <file.json> [--dry-run] [--fail-on-publish-blockers]
 
 Default file: ${DEFAULT_PATH}
-Import always creates DRAFT rows (never PUBLISHED).`);
+Import always creates DRAFT rows (never PUBLISHED).
+Safe to re-run: questions already in the database are skipped.`);
 }
 
 async function main(): Promise<void> {
@@ -94,7 +102,7 @@ async function main(): Promise<void> {
     }
 
     console.log(`File: ${relativePath}`);
-    console.log(`Mode: ${dryRun ? 'dry-run (no DB write)' : 'import DRAFT'}`);
+    console.log(`Mode: ${dryRun ? 'dry-run (read-only)' : 'import DRAFT'}`);
 
     const result = await importDraftQuestionsBatch(parsed, {
         dryRun,
@@ -129,6 +137,13 @@ async function main(): Promise<void> {
                     (result.draftKey ? ` (${result.draftKey})` : '') +
                     `: ${result.message}`,
             );
+            console.error('No database writes were made.');
+            process.exit(1);
+        }
+
+        if (result.stage === 'load') {
+            console.error(`Could not read existing questions: ${result.message}`);
+            console.error('No database writes were made. Re-run the same command.');
             process.exit(1);
         }
 
@@ -137,17 +152,12 @@ async function main(): Promise<void> {
                 (result.draftKey ? ` (${result.draftKey})` : '') +
                 `: ${result.message}`,
         );
-        if (result.createdBeforeFailure.length > 0) {
-            console.error(
-                `Already created ${result.createdBeforeFailure.length} DRAFT row(s) before failure:`,
-            );
-            for (const item of result.createdBeforeFailure) {
-                console.error(
-                    `  - ${item.id}` +
-                        (item.draftKey ? ` (${item.draftKey})` : ''),
-                );
-            }
-        }
+        console.error(
+            `Created ${result.createdBeforeFailure.length}, skipped ${result.skipped.length} (already present) before the failure.`,
+        );
+        console.error(
+            'Re-run the same command: questions already in the database are skipped.',
+        );
         process.exit(1);
     }
 
@@ -157,29 +167,66 @@ async function main(): Promise<void> {
         );
     }
 
+    const conflicts = result.skipped.filter(
+        (item) => item.reason === 'text-other-key',
+    );
+
     if (result.dryRun) {
-        console.log(`Dry-run OK: would create ${result.planned.length} DRAFT question(s):`);
-        for (const item of result.planned) {
-            console.log(
-                `  - #${item.index} ${item.difficulty}` +
-                    (item.draftKey ? ` [${item.draftKey}]` : ''),
-            );
+        for (const item of result.toCreate) {
+            console.log(`  + #${item.index} ${item.difficulty}${keyLabel(item.draftKey)}`);
         }
+        printSkipped(result.skipped);
+        console.log(
+            `Dry-run: would create ${result.toCreate.length}, skip ${result.skipped.length} (already present).`,
+        );
+        printConflictsWarning(conflicts.length);
         console.log('No database writes were made.');
         process.exit(0);
     }
 
-    console.log(`Imported ${result.created.length} DRAFT question(s):`);
     for (const item of result.created) {
         console.log(
-            `  - ${item.id} ${item.difficulty}` +
-                (item.draftKey ? ` [${item.draftKey}]` : ''),
+            `  + #${item.index} ${item.id} ${item.difficulty}${keyLabel(item.draftKey)}`,
         );
     }
+    printSkipped(result.skipped);
     console.log(
-        'Next: open /ru/admin/questions?publication=DRAFT — review, then publish via existing UI/gate.',
+        `Created ${result.created.length} DRAFT question(s), skipped ${result.skipped.length} (already present).`,
+    );
+    printConflictsWarning(conflicts.length);
+    console.log(
+        'Next: npm run taxonomy:sync, then review /ru/admin/questions?publication=DRAFT and publish.',
     );
     process.exit(0);
+}
+
+function keyLabel(draftKey: string | undefined): string {
+    return draftKey ? ` [${draftKey}]` : '';
+}
+
+const SKIP_REASON_LABEL: Record<ImportDraftSkippedItem['reason'], string> = {
+    'content-key': 'same contentKey',
+    text: 'same RU text',
+    'text-other-key': 'same RU text, OTHER contentKey',
+};
+
+function printSkipped(skipped: readonly ImportDraftSkippedItem[]): void {
+    for (const item of skipped) {
+        console.log(
+            `  = #${item.index}${keyLabel(item.draftKey)} skip: ${SKIP_REASON_LABEL[item.reason]}` +
+                ` → ${item.existingId}` +
+                (item.existingContentKey ? ` (${item.existingContentKey})` : ''),
+        );
+    }
+}
+
+/** Тот же текст уже есть под другим ключом — дубль вопроса из другой партии. */
+function printConflictsWarning(count: number): void {
+    if (count > 0) {
+        console.log(
+            `Warning: ${count} question(s) duplicate a question from another batch (OTHER contentKey) — fix the batch.`,
+        );
+    }
 }
 
 main().catch((error: unknown) => {
