@@ -1,0 +1,1993 @@
+{
+  "version": 1,
+  "source": "ai",
+  "notes": "5.2 batch 8 — soundtracks, warm-up for AUDIO_GUESS. 10/10/10. Easy = how music works in the game; names in medium/hard. Co-composers are never wrong options. Awards only as dated «firsts». Duplicates checked by keywords across the bank. Do not re-import.",
+  "questions": [
+    {
+      "draftKey": "batch-2026-11-06-music-easy-minecraft-c418",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/C418",
+        "localizationStrategy": "latin-titles",
+        "game": "Minecraft"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под каким псевдонимом выступает автор знаменитой музыки Minecraft?"
+        },
+        "en": {
+          "text": "Under what alias does the composer of the classic Minecraft music work?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "C418"
+            },
+            "en": {
+              "text": "C418"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Disasterpeace"
+            },
+            "en": {
+              "text": "Disasterpeace"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Chipzel"
+            },
+            "en": {
+              "text": "Chipzel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Kubbi"
+            },
+            "en": {
+              "text": "Kubbi"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-ff-uematsu",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Nobuo_Uematsu",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто главный композитор классических частей Final Fantasy?"
+        },
+        "en": {
+          "text": "Who is the main composer of the classic Final Fantasy games?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Нобуо Уэмацу"
+            },
+            "en": {
+              "text": "Nobuo Uematsu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кодзи Кондо"
+            },
+            "en": {
+              "text": "Koji Kondo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ёко Симомура"
+            },
+            "en": {
+              "text": "Yoko Shimomura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мотои Сакураба"
+            },
+            "en": {
+              "text": "Motoi Sakuraba"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:final-fantasy",
+        "genre:rpg"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-portal-still-alive",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Still_Alive",
+        "localizationStrategy": "latin-titles",
+        "game": "Portal"
+      },
+      "translations": {
+        "ru": {
+          "text": "В финальных титрах какой игры GLaDOS поёт песню «Still Alive»?"
+        },
+        "en": {
+          "text": "In the end credits of which game does GLaDOS sing \"Still Alive\"?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Portal"
+            },
+            "en": {
+              "text": "Portal"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Half-Life 2"
+            },
+            "en": {
+              "text": "Half-Life 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BioShock"
+            },
+            "en": {
+              "text": "BioShock"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Left 4 Dead"
+            },
+            "en": {
+              "text": "Left 4 Dead"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-tetris-korobeiniki",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Korobeiniki",
+        "localizationStrategy": "full",
+        "game": "Tetris"
+      },
+      "translations": {
+        "ru": {
+          "text": "На мотив какой народной песни написана знаменитая мелодия Tetris для Game Boy?"
+        },
+        "en": {
+          "text": "Which folk song is the famous Game Boy Tetris tune based on?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Коробейники»"
+            },
+            "en": {
+              "text": "Korobeiniki"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Калинка»"
+            },
+            "en": {
+              "text": "Kalinka"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Катюша»"
+            },
+            "en": {
+              "text": "Katyusha"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Эй, ухнем!»"
+            },
+            "en": {
+              "text": "Song of the Volga Boatmen"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-vice-city-80s",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Grand_Theft_Auto:_Vice_City",
+        "localizationStrategy": "full",
+        "game": "Grand Theft Auto: Vice City"
+      },
+      "translations": {
+        "ru": {
+          "text": "Хиты какого десятилетия звучат по радио в GTA: Vice City?"
+        },
+        "en": {
+          "text": "Which decade's hits play on the radio in GTA: Vice City?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "1980-х"
+            },
+            "en": {
+              "text": "The 1980s"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1960-х"
+            },
+            "en": {
+              "text": "The 1960s"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1970-х"
+            },
+            "en": {
+              "text": "The 1970s"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "1990-х"
+            },
+            "en": {
+              "text": "The 1990s"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-guitar-hero-controller",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Guitar_Hero_(video_game)",
+        "localizationStrategy": "full",
+        "game": "Guitar Hero"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем играют в Guitar Hero?"
+        },
+        "en": {
+          "text": "What do you play Guitar Hero with?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Контроллером в форме гитары"
+            },
+            "en": {
+              "text": "A guitar-shaped controller"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Танцевальным ковриком"
+            },
+            "en": {
+              "text": "A dance mat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Микрофоном"
+            },
+            "en": {
+              "text": "A microphone"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Барабанными палочками"
+            },
+            "en": {
+              "text": "Drumsticks"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-smb-hurry-up",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://www.mariowiki.com/Time_limit",
+        "localizationStrategy": "full",
+        "game": "Super Mario Bros."
+      },
+      "translations": {
+        "ru": {
+          "text": "Что происходит с музыкой в Super Mario Bros., когда на таймере остаётся мало времени?"
+        },
+        "en": {
+          "text": "In Super Mario Bros., what happens to the music when the timer runs low?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мелодия ускоряется"
+            },
+            "en": {
+              "text": "The tune speeds up"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Музыка стихает"
+            },
+            "en": {
+              "text": "The music fades out"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Играет мелодия неуязвимости"
+            },
+            "en": {
+              "text": "The invincibility tune plays"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мелодия звучит ниже"
+            },
+            "en": {
+              "text": "The tune drops in pitch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-ddr-dance-mat",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Dance_Dance_Revolution",
+        "localizationStrategy": "full",
+        "game": "Dance Dance Revolution"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как играют в Dance Dance Revolution?"
+        },
+        "en": {
+          "text": "How do you play Dance Dance Revolution?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Наступают на стрелки танцевального коврика"
+            },
+            "en": {
+              "text": "Step on arrows on a dance pad"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Машут руками перед камерой"
+            },
+            "en": {
+              "text": "Wave your arms in front of a camera"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Поют в микрофон под караоке"
+            },
+            "en": {
+              "text": "Sing karaoke into a microphone"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бьют по барабанам в такт"
+            },
+            "en": {
+              "text": "Hit drums to the beat"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-skyrim-dragon-choir",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Music_of_The_Elder_Scrolls",
+        "localizationStrategy": "full",
+        "game": "The Elder Scrolls V: Skyrim"
+      },
+      "translations": {
+        "ru": {
+          "text": "На каком языке поёт хор в главной теме Skyrim?"
+        },
+        "en": {
+          "text": "In what language does the choir sing in the Skyrim main theme?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "На драконьем"
+            },
+            "en": {
+              "text": "Dragon language"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На латыни"
+            },
+            "en": {
+              "text": "Latin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На древнеисландском"
+            },
+            "en": {
+              "text": "Old Norse"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На эльфийском"
+            },
+            "en": {
+              "text": "Elvish"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-easy-undertale-megalovania",
+      "type": "TEXT",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Megalovania",
+        "localizationStrategy": "latin-titles",
+        "game": "Undertale"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под какую мелодию идёт бой с Сансом в Undertale?"
+        },
+        "en": {
+          "text": "Which track plays during the Sans fight in Undertale?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Megalovania"
+            },
+            "en": {
+              "text": "Megalovania"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hopes and Dreams"
+            },
+            "en": {
+              "text": "Hopes and Dreams"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Spear of Justice"
+            },
+            "en": {
+              "text": "Spear of Justice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Death by Glamour"
+            },
+            "en": {
+              "text": "Death by Glamour"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-doom-mick-gordon",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Mick_Gordon",
+        "localizationStrategy": "full",
+        "game": "DOOM (2016)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал металлический саундтрек DOOM 2016 года?"
+        },
+        "en": {
+          "text": "Who composed the metal soundtrack of 2016's DOOM?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мик Гордон"
+            },
+            "en": {
+              "text": "Mick Gordon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бобби Принс"
+            },
+            "en": {
+              "text": "Bobby Prince"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Инон Зур"
+            },
+            "en": {
+              "text": "Inon Zur"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джеспер Кид"
+            },
+            "en": {
+              "text": "Jesper Kyd"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-halo-odonnell",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Martin_O%27Donnell",
+        "localizationStrategy": "full",
+        "game": "Halo: Combat Evolved"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал главную тему Halo с григорианским хором?"
+        },
+        "en": {
+          "text": "Who composed the Halo main theme with its Gregorian chant?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Марти О'Доннелл"
+            },
+            "en": {
+              "text": "Marty O'Donnell"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джереми Соул"
+            },
+            "en": {
+              "text": "Jeremy Soule"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Инон Зур"
+            },
+            "en": {
+              "text": "Inon Zur"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гарри Шайман"
+            },
+            "en": {
+              "text": "Garry Schyman"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-silent-hill-yamaoka",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Akira_Yamaoka",
+        "localizationStrategy": "full",
+        "game": "Silent Hill (1999)"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал музыку к первым частям Silent Hill?"
+        },
+        "en": {
+          "text": "Who composed the music for the early Silent Hill games?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Акира Ямаока"
+            },
+            "en": {
+              "text": "Akira Yamaoka"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нобуо Уэмацу"
+            },
+            "en": {
+              "text": "Nobuo Uematsu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ясунори Мицуда"
+            },
+            "en": {
+              "text": "Yasunori Mitsuda"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Масато Накамура"
+            },
+            "en": {
+              "text": "Masato Nakamura"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-tlou-santaolalla",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Gustavo_Santaolalla",
+        "localizationStrategy": "full",
+        "game": "The Last of Us"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой композитор, обладатель двух «Оскаров», написал музыку к The Last of Us?"
+        },
+        "en": {
+          "text": "Which two-time Oscar-winning composer scored The Last of Us?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Густаво Сантаолалья"
+            },
+            "en": {
+              "text": "Gustavo Santaolalla"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ханс Циммер"
+            },
+            "en": {
+              "text": "Hans Zimmer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Людвиг Йоранссон"
+            },
+            "en": {
+              "text": "Ludwig Göransson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бир Маккрири"
+            },
+            "en": {
+              "text": "Bear McCreary"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-ff7-one-winged-angel",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/One-Winged_Angel",
+        "localizationStrategy": "full",
+        "game": "Final Fantasy VII"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чья это тема — «One-Winged Angel» из Final Fantasy VII?"
+        },
+        "en": {
+          "text": "Whose theme is \"One-Winged Angel\" in Final Fantasy VII?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сефирота"
+            },
+            "en": {
+              "text": "Sephiroth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Клауда"
+            },
+            "en": {
+              "text": "Cloud"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аэрис"
+            },
+            "en": {
+              "text": "Aerith"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Баррета"
+            },
+            "en": {
+              "text": "Barret"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-mgs3-snake-eater-bond",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Metal_Gear_Solid_3:_Snake_Eater",
+        "localizationStrategy": "full",
+        "game": "Metal Gear Solid 3: Snake Eater"
+      },
+      "translations": {
+        "ru": {
+          "text": "Под заставки каких фильмов стилизована песня «Snake Eater» из MGS3?"
+        },
+        "en": {
+          "text": "Which film series' opening songs is \"Snake Eater\" from MGS3 styled after?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Про Джеймса Бонда"
+            },
+            "en": {
+              "text": "James Bond"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Миссия невыполнима»"
+            },
+            "en": {
+              "text": "Mission: Impossible"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Звёздные войны»"
+            },
+            "en": {
+              "text": "Star Wars"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Про Индиану Джонса"
+            },
+            "en": {
+              "text": "Indiana Jones"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-hotline-miami-synthwave",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Hotline_Miami",
+        "localizationStrategy": "full",
+        "game": "Hotline Miami"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая музыка задаёт ритм Hotline Miami?"
+        },
+        "en": {
+          "text": "What kind of music drives Hotline Miami?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Электроника и синтвейв"
+            },
+            "en": {
+              "text": "Electronic and synthwave"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кантри и блюграсс"
+            },
+            "en": {
+              "text": "Country and bluegrass"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Оркестр и хор"
+            },
+            "en": {
+              "text": "Orchestra and choir"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джаз и свинг"
+            },
+            "en": {
+              "text": "Jazz and swing"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-baba-yetu-grammy",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Baba_Yetu",
+        "localizationStrategy": "latin-titles",
+        "game": "Civilization IV"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая песня из игры первой получила «Грэмми» (2011)?"
+        },
+        "en": {
+          "text": "Which song from a game was the first to win a Grammy (2011)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Baba Yetu (Civilization IV)"
+            },
+            "en": {
+              "text": "Baba Yetu (Civilization IV)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Liberi Fatali (Final Fantasy VIII)"
+            },
+            "en": {
+              "text": "Liberi Fatali (Final Fantasy VIII)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sweden (Minecraft)"
+            },
+            "en": {
+              "text": "Sweden (Minecraft)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Gerudo Valley (Ocarina of Time)"
+            },
+            "en": {
+              "text": "Gerudo Valley (Ocarina of Time)"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-ac2-jesper-kyd",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Jesper_Kyd",
+        "localizationStrategy": "full",
+        "game": "Assassin's Creed II"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал тему «Ezio's Family» из Assassin's Creed II?"
+        },
+        "en": {
+          "text": "Who composed \"Ezio's Family\" for Assassin's Creed II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джеспер Кид"
+            },
+            "en": {
+              "text": "Jesper Kyd"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Брайан Тайлер"
+            },
+            "en": {
+              "text": "Brian Tyler"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мик Гордон"
+            },
+            "en": {
+              "text": "Mick Gordon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Инон Зур"
+            },
+            "en": {
+              "text": "Inon Zur"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-medium-persona5-meguro",
+      "type": "TEXT",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Shoji_Meguro",
+        "localizationStrategy": "full",
+        "game": "Persona 5"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто главный композитор Persona 5?"
+        },
+        "en": {
+          "text": "Who is the lead composer of Persona 5?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сёдзи Мегуро"
+            },
+            "en": {
+              "text": "Shoji Meguro"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ёко Симомура"
+            },
+            "en": {
+              "text": "Yoko Shimomura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ясунори Мицуда"
+            },
+            "en": {
+              "text": "Yasunori Mitsuda"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кэйити Окабэ"
+            },
+            "en": {
+              "text": "Keiichi Okabe"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-chrono-trigger-mitsuda",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Yasunori_Mitsuda",
+        "localizationStrategy": "full",
+        "game": "Chrono Trigger"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто главный композитор Chrono Trigger?"
+        },
+        "en": {
+          "text": "Who is the lead composer of Chrono Trigger?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ясунори Мицуда"
+            },
+            "en": {
+              "text": "Yasunori Mitsuda"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ёко Симомура"
+            },
+            "en": {
+              "text": "Yoko Shimomura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мотои Сакураба"
+            },
+            "en": {
+              "text": "Motoi Sakuraba"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кэйити Окабэ"
+            },
+            "en": {
+              "text": "Keiichi Okabe"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-shimomura-sf2-kh",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Yoko_Shimomura",
+        "localizationStrategy": "full"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто писал музыку и к Street Fighter II, и к Kingdom Hearts?"
+        },
+        "en": {
+          "text": "Who composed music for both Street Fighter II and Kingdom Hearts?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ёко Симомура"
+            },
+            "en": {
+              "text": "Yoko Shimomura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нобуо Уэмацу"
+            },
+            "en": {
+              "text": "Nobuo Uematsu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Юдзо Косиро"
+            },
+            "en": {
+              "text": "Yuzo Koshiro"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сёдзи Мегуро"
+            },
+            "en": {
+              "text": "Shoji Meguro"
+            }
+          }
+        }
+      ],
+      "tags": [
+        "franchise:street-fighter",
+        "game:kingdom-hearts"
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-journey-grammy-nomination",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Austin_Wintory",
+        "localizationStrategy": "latin-titles",
+        "game": "Journey"
+      },
+      "translations": {
+        "ru": {
+          "text": "Саундтрек какой игры первым номинировали на «Грэмми» в категории музыки к фильмам и визуальным медиа?"
+        },
+        "en": {
+          "text": "Which game score was the first nominated for the Grammy for Best Score Soundtrack for Visual Media?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Journey"
+            },
+            "en": {
+              "text": "Journey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Halo 3"
+            },
+            "en": {
+              "text": "Halo 3"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BioShock"
+            },
+            "en": {
+              "text": "BioShock"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Last of Us"
+            },
+            "en": {
+              "text": "The Last of Us"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-hades-korb-zagreus",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Darren_Korb",
+        "localizationStrategy": "full",
+        "game": "Hades"
+      },
+      "translations": {
+        "ru": {
+          "text": "Композитор Hades Даррен Корб ещё и озвучил в игре одного персонажа. Кого?"
+        },
+        "en": {
+          "text": "Hades composer Darren Korb also voices one of its characters. Who?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Загрея"
+            },
+            "en": {
+              "text": "Zagreus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аида"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гермеса"
+            },
+            "en": {
+              "text": "Hermes"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Харона"
+            },
+            "en": {
+              "text": "Charon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-celeste-lena-raine",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Lena_Raine",
+        "localizationStrategy": "full",
+        "game": "Celeste"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал музыку к Celeste?"
+        },
+        "en": {
+          "text": "Who composed the music for Celeste?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Лена Рейн"
+            },
+            "en": {
+              "text": "Lena Raine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кристофер Ларкин"
+            },
+            "en": {
+              "text": "Christopher Larkin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Даррен Корб"
+            },
+            "en": {
+              "text": "Darren Korb"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Остин Уинтори"
+            },
+            "en": {
+              "text": "Austin Wintory"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-hollow-knight-larkin",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Hollow_Knight",
+        "localizationStrategy": "full",
+        "game": "Hollow Knight"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал музыку к Hollow Knight?"
+        },
+        "en": {
+          "text": "Who composed the music for Hollow Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кристофер Ларкин"
+            },
+            "en": {
+              "text": "Christopher Larkin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лена Рейн"
+            },
+            "en": {
+              "text": "Lena Raine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дэнни Барановски"
+            },
+            "en": {
+              "text": "Danny Baranowsky"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бен Прунти"
+            },
+            "en": {
+              "text": "Ben Prunty"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-cyberpunk-samurai-refused",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Refused",
+        "localizationStrategy": "latin-titles",
+        "game": "Cyberpunk 2077"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая реальная шведская группа исполнила песни Samurai — группы Джонни Сильверхенда в Cyberpunk 2077?"
+        },
+        "en": {
+          "text": "Which real Swedish band performed the songs of Samurai, Johnny Silverhand's band in Cyberpunk 2077?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Refused"
+            },
+            "en": {
+              "text": "Refused"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ghost"
+            },
+            "en": {
+              "text": "Ghost"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sabaton"
+            },
+            "en": {
+              "text": "Sabaton"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "In Flames"
+            },
+            "en": {
+              "text": "In Flames"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-sonic-nakamura",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Masato_Nakamura",
+        "localizationStrategy": "full",
+        "game": "Sonic the Hedgehog"
+      },
+      "translations": {
+        "ru": {
+          "text": "Басист какой поп-группы написал музыку к первому Sonic the Hedgehog (1991)?"
+        },
+        "en": {
+          "text": "The bassist of which pop band composed the music for the first Sonic the Hedgehog (1991)?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dreams Come True"
+            },
+            "en": {
+              "text": "Dreams Come True"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Southern All Stars"
+            },
+            "en": {
+              "text": "Southern All Stars"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mr. Children"
+            },
+            "en": {
+              "text": "Mr. Children"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "B'z"
+            },
+            "en": {
+              "text": "B'z"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-dkc2-david-wise",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/David_Wise",
+        "localizationStrategy": "full",
+        "game": "Donkey Kong Country 2: Diddy's Kong Quest"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал музыку к Donkey Kong Country 2?"
+        },
+        "en": {
+          "text": "Who composed the music for Donkey Kong Country 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дэвид Уайз"
+            },
+            "en": {
+              "text": "David Wise"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Грант Киркхоуп"
+            },
+            "en": {
+              "text": "Grant Kirkhope"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кодзи Кондо"
+            },
+            "en": {
+              "text": "Koji Kondo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Юдзо Косиро"
+            },
+            "en": {
+              "text": "Yuzo Koshiro"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "batch-2026-11-06-music-hard-sor2-koshiro",
+      "type": "TEXT",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "metadata": {
+        "topic": "music",
+        "source": "https://en.wikipedia.org/wiki/Yuzo_Koshiro",
+        "localizationStrategy": "full",
+        "game": "Streets of Rage 2"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто написал клубную электронную музыку к Streets of Rage 2?"
+        },
+        "en": {
+          "text": "Who composed the club-style electronic music for Streets of Rage 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Юдзо Косиро"
+            },
+            "en": {
+              "text": "Yuzo Koshiro"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дэвид Уайз"
+            },
+            "en": {
+              "text": "David Wise"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Масато Накамура"
+            },
+            "en": {
+              "text": "Masato Nakamura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хирокадзу Танака"
+            },
+            "en": {
+              "text": "Hirokazu Tanaka"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
