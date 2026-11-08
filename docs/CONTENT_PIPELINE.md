@@ -397,6 +397,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 8 (evening):** press-kit image batch 3 IMAGE_GUESS ×13 (`2026-11-08-image-guess-presskits3-13.json`, 4/5/4; Cyberpunk 2077, Hades II, Cuphead, Hollow Knight: Silksong; no new catalog games). WebP + manifest committed and deployed first (421405a), then prod import → `taxonomy:sync` → publish (quality gate, filtered by draftKey) → IMAGE **230** + TEXT **668** → **898** live. Do not re-import.
 
+**Nov 8 (night):** Steam screenshot batch 4 IMAGE_GUESS ×30 (`2026-11-08-image-guess-steam-30.json`, 10/10/10; 12 games; new UI-fragment kind; 4 new catalog games). Dev import was cut twice by Neon timeouts and finished on re-run (the image importer is idempotent; checked: 30 questions, 120 options, 30 assets). WebP + manifest committed and deployed first (597f275), then prod import → `taxonomy:sync` → publish (quality gate, filtered by draftKey) → IMAGE **260** + TEXT **668** → **928** live. Do not re-import.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:

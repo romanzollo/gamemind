@@ -444,6 +444,15 @@ Owner decision (Nov 6): frames may come from **any official press kit** of the s
 | Hollow Knight: Silksong (Team Cherry Drive, linked from the game site) | 11 shots named after areas; RU area names not confirmed |
 | Devolver, Subnautica, Ori, Klei | 429 / no public kit — not used |
 
+**Steam store screenshots (from Nov 8, owner decision).** The main source is now the game's Steam page. These screenshots are uploaded by the publisher. Fetch them through the public endpoint `store.steampowered.com/api/appdetails?appids=<id>&filters=screenshots` (`path_full`, 1920×1080), and record the store URL in `metadata.source` and the screenshot URL in `metadata.sourceFile`. Watch for:
+- letterbox bars and «Captured on PC» (Sony ports);
+- a corner logo (God of War);
+- mob or boss names in the HUD (Terraria shows «Wall of Flesh»).
+
+For games that are not on Steam, use the vgtimes.ru or ggrealm.ru galleries as a fallback, and check their frames harder: they may come from mods, betas or the wrong part of a series.
+
+**UI-fragment kind:** crop a small, recognizable piece of the HUD or of an outfit, and ask «Из какой игры этот фрагмент интерфейса?» or «Чья это куртка?». The fragment must not contain the game's title.
+
 **Flow:** download kit to `raw-quiz-images/_presskits/<kit>/` (gitignored) → contact sheet → pick frames where the answer is not on screen (no logo, title, name plate) → crop → `raw-quiz-images/{difficulty}/{slug}.png` → `images:optimize` → batch JSON (`kind: IMAGE_GUESS_BATCH`) → import DRAFT → HTML review → commit + deploy WebP → prod import → publish.
 
 **Question kinds** (the quiz shows the question's own text): «Где это в …?», «Кто это в …?», a mechanic («Какой Знак…»), an event («Какое событие…»). Wrong options come from the same game; exclude places that contain the answer (the Hive is inside Kingdom's Edge) and names whose official RU translation is not confirmed.
