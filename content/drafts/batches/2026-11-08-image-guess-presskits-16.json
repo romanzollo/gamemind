@@ -1,0 +1,1160 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 2 ×16 (6/5/5) from official press kits (Valheim, Outer Wilds, Dead Cells, Untitled Goose Game, INSIDE, LIMBO) + spare frames of the pilot kits. Kinds: where / who / which game / mechanic. RU names only where the official translation is confirmed; otherwise the question avoids names (which game, instrument, creature). Import is idempotent by draftKey (complete rows are skipped).",
+  "questions": [
+    {
+      "draftKey": "img4-easy-goose-which-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "goose-which-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/goose-which-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/goose-which-game.png",
+      "metadata": {
+        "game": "Untitled Goose Game",
+        "topic": "image-guess",
+        "source": "https://goose.game/presskit/",
+        "sourceFile": "goose_screenshot-09.png",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Untitled Goose Game"
+            },
+            "en": {
+              "text": "Untitled Goose Game"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Goat Simulator"
+            },
+            "en": {
+              "text": "Goat Simulator"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Overcooked!"
+            },
+            "en": {
+              "text": "Overcooked!"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Human: Fall Flat"
+            },
+            "en": {
+              "text": "Human: Fall Flat"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-easy-valheim-portal",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "valheim-portal",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/valheim-portal.webp",
+      "rawDropAs": "raw-quiz-images/easy/valheim-portal.png",
+      "metadata": {
+        "game": "Valheim",
+        "topic": "image-mechanic",
+        "source": "https://www.valheimgame.com/press/",
+        "sourceFile": "Valheim7.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за кольцо с горящими рунами в Valheim?"
+        },
+        "en": {
+          "text": "What is this ring of glowing runes in Valheim?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Портал"
+            },
+            "en": {
+              "text": "Portal"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Верстак"
+            },
+            "en": {
+              "text": "Workbench"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кузница"
+            },
+            "en": {
+              "text": "Forge"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Котёл"
+            },
+            "en": {
+              "text": "Cauldron"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-easy-hk-crossroads",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hk-crossroads",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hk-crossroads.webp",
+      "rawDropAs": "raw-quiz-images/easy/hk-crossroads.png",
+      "metadata": {
+        "game": "Hollow Knight",
+        "topic": "image-location",
+        "source": "https://drive.google.com/drive/folders/1SPCRaalJJepKYOQ4fdxZEzqNukJiUQCo",
+        "sourceFile": "Crossroads Entrance.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Hollow Knight?"
+        },
+        "en": {
+          "text": "Where in Hollow Knight is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Забытое перепутье"
+            },
+            "en": {
+              "text": "Forgotten Crossroads"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Грязьмут"
+            },
+            "en": {
+              "text": "Dirtmouth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Зелёная тропа"
+            },
+            "en": {
+              "text": "Greenpath"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Город слёз"
+            },
+            "en": {
+              "text": "City of Tears"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-easy-hades-zagreus",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hades-zagreus",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hades-zagreus.webp",
+      "rawDropAs": "raw-quiz-images/easy/hades-zagreus.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Zagreus01.jpg",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Загрей"
+            },
+            "en": {
+              "text": "Zagreus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Танатос"
+            },
+            "en": {
+              "text": "Thanatos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ахиллес"
+            },
+            "en": {
+              "text": "Achilles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гермес"
+            },
+            "en": {
+              "text": "Hermes"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-easy-sdv-autumn-farm",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "sdv-autumn-farm",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/sdv-autumn-farm.webp",
+      "rawDropAs": "raw-quiz-images/easy/sdv-autumn-farm.png",
+      "metadata": {
+        "game": "Stardew Valley",
+        "topic": "image-mechanic",
+        "source": "https://www.stardewvalley.net/press/",
+        "sourceFile": "farm_evening_1920x1080.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какое время года на этой ферме в Stardew Valley?"
+        },
+        "en": {
+          "text": "What season is it on this Stardew Valley farm?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Осень"
+            },
+            "en": {
+              "text": "Fall"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лето"
+            },
+            "en": {
+              "text": "Summer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Весна"
+            },
+            "en": {
+              "text": "Spring"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Зима"
+            },
+            "en": {
+              "text": "Winter"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-easy-limbo-spider",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "limbo-spider",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/limbo-spider.webp",
+      "rawDropAs": "raw-quiz-images/easy/limbo-spider.png",
+      "metadata": {
+        "game": "LIMBO",
+        "topic": "image-guess",
+        "source": "https://playdead.com/press/",
+        "sourceFile": "Screenshot 6.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "LIMBO"
+            },
+            "en": {
+              "text": "LIMBO"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "INSIDE"
+            },
+            "en": {
+              "text": "INSIDE"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Little Nightmares"
+            },
+            "en": {
+              "text": "Little Nightmares"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Unravel"
+            },
+            "en": {
+              "text": "Unravel"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-medium-dead-cells-which-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dead-cells-which-game",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dead-cells-which-game.webp",
+      "rawDropAs": "raw-quiz-images/medium/dead-cells-which-game.png",
+      "metadata": {
+        "game": "Dead Cells",
+        "topic": "image-guess",
+        "source": "https://motiontwin.com/presskit/81",
+        "sourceFile": "2145a35d_9570173.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dead Cells"
+            },
+            "en": {
+              "text": "Dead Cells"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight"
+            },
+            "en": {
+              "text": "Hollow Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Blasphemous"
+            },
+            "en": {
+              "text": "Blasphemous"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Salt and Sanctuary"
+            },
+            "en": {
+              "text": "Salt and Sanctuary"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-medium-valheim-black-forest",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "valheim-black-forest",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/valheim-black-forest.webp",
+      "rawDropAs": "raw-quiz-images/medium/valheim-black-forest.png",
+      "metadata": {
+        "game": "Valheim",
+        "topic": "image-location",
+        "source": "https://www.valheimgame.com/press/",
+        "sourceFile": "Valheim2.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Valheim?"
+        },
+        "en": {
+          "text": "Where in Valheim is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Чёрный лес"
+            },
+            "en": {
+              "text": "Black Forest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Луга"
+            },
+            "en": {
+              "text": "Meadows"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Болото"
+            },
+            "en": {
+              "text": "Swamp"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туманные земли"
+            },
+            "en": {
+              "text": "Mistlands"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-medium-valheim-swamp",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "valheim-swamp",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/valheim-swamp.webp",
+      "rawDropAs": "raw-quiz-images/medium/valheim-swamp.png",
+      "metadata": {
+        "game": "Valheim",
+        "topic": "image-location",
+        "source": "https://www.valheimgame.com/press/",
+        "sourceFile": "ValheimArt3.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Valheim?"
+        },
+        "en": {
+          "text": "Where in Valheim is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Болото"
+            },
+            "en": {
+              "text": "Swamp"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чёрный лес"
+            },
+            "en": {
+              "text": "Black Forest"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Туманные земли"
+            },
+            "en": {
+              "text": "Mistlands"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Равнины"
+            },
+            "en": {
+              "text": "Plains"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-medium-inside-crowd",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "inside-crowd",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/inside-crowd.webp",
+      "rawDropAs": "raw-quiz-images/medium/inside-crowd.png",
+      "metadata": {
+        "game": "INSIDE",
+        "topic": "image-guess",
+        "source": "https://playdead.com/press/",
+        "sourceFile": "INSIDE_08.png",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "INSIDE"
+            },
+            "en": {
+              "text": "INSIDE"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "LIMBO"
+            },
+            "en": {
+              "text": "LIMBO"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Little Nightmares"
+            },
+            "en": {
+              "text": "Little Nightmares"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Black The Fall"
+            },
+            "en": {
+              "text": "Black The Fall"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-medium-ow-riebeck-banjo",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "ow-riebeck-banjo",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/ow-riebeck-banjo.webp",
+      "rawDropAs": "raw-quiz-images/medium/ow-riebeck-banjo.png",
+      "metadata": {
+        "game": "Outer Wilds",
+        "topic": "image-character",
+        "source": "https://www.mobiusdigitalgames.com/press.html",
+        "sourceFile": "OW_Riebeck.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "На чём играет этот путешественник в Outer Wilds?"
+        },
+        "en": {
+          "text": "What is this Outer Wilds traveler playing?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Банджо"
+            },
+            "en": {
+              "text": "Banjo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Барабаны"
+            },
+            "en": {
+              "text": "Drums"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Губная гармошка"
+            },
+            "en": {
+              "text": "Harmonica"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Флейта"
+            },
+            "en": {
+              "text": "Flute"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-hard-valheim-lox",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "valheim-lox",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/valheim-lox.webp",
+      "rawDropAs": "raw-quiz-images/hard/valheim-lox.png",
+      "metadata": {
+        "game": "Valheim",
+        "topic": "image-character",
+        "source": "https://www.valheimgame.com/press/",
+        "sourceFile": "ValheimArt1.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Valheim?"
+        },
+        "en": {
+          "text": "What creature is this in Valheim?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Локс"
+            },
+            "en": {
+              "text": "Lox"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кабан"
+            },
+            "en": {
+              "text": "Boar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Волк"
+            },
+            "en": {
+              "text": "Wolf"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Олень"
+            },
+            "en": {
+              "text": "Deer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-hard-valheim-serpent",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "valheim-serpent",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/valheim-serpent.webp",
+      "rawDropAs": "raw-quiz-images/hard/valheim-serpent.png",
+      "metadata": {
+        "game": "Valheim",
+        "topic": "image-character",
+        "source": "https://www.valheimgame.com/press/",
+        "sourceFile": "ValheimArt2.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто нападает на корабль в Valheim?"
+        },
+        "en": {
+          "text": "What is attacking the ship in Valheim?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Морской змей"
+            },
+            "en": {
+              "text": "Sea serpent"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кракен"
+            },
+            "en": {
+              "text": "Kraken"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кит"
+            },
+            "en": {
+              "text": "Whale"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Акула"
+            },
+            "en": {
+              "text": "Shark"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-hard-ow-anglerfish",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ow-anglerfish",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ow-anglerfish.webp",
+      "rawDropAs": "raw-quiz-images/hard/ow-anglerfish.png",
+      "metadata": {
+        "game": "Outer Wilds",
+        "topic": "image-character",
+        "source": "https://www.mobiusdigitalgames.com/press.html",
+        "sourceFile": "OW_Skeleton.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за существо в тумане Outer Wilds?"
+        },
+        "en": {
+          "text": "What is this creature in the Outer Wilds fog?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Удильщик"
+            },
+            "en": {
+              "text": "Anglerfish"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кит"
+            },
+            "en": {
+              "text": "Whale"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кальмар"
+            },
+            "en": {
+              "text": "Squid"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Медуза"
+            },
+            "en": {
+              "text": "Jellyfish"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-hard-inside-cornfield",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "inside-cornfield",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/inside-cornfield.webp",
+      "rawDropAs": "raw-quiz-images/hard/inside-cornfield.png",
+      "metadata": {
+        "game": "INSIDE",
+        "topic": "image-guess",
+        "source": "https://playdead.com/press/",
+        "sourceFile": "INSIDE_02.png",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "INSIDE"
+            },
+            "en": {
+              "text": "INSIDE"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "LIMBO"
+            },
+            "en": {
+              "text": "LIMBO"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Little Nightmares"
+            },
+            "en": {
+              "text": "Little Nightmares"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Unravel"
+            },
+            "en": {
+              "text": "Unravel"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img4-hard-hades-tisiphone",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hades-tisiphone",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hades-tisiphone.webp",
+      "rawDropAs": "raw-quiz-images/hard/hades-tisiphone.png",
+      "metadata": {
+        "game": "Hades",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades/",
+        "sourceFile": "Wallpaper_Tisiphone.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-08-image-guess-presskits-16"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades?"
+        },
+        "en": {
+          "text": "Who is this in Hades?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Тисифона"
+            },
+            "en": {
+              "text": "Tisiphone"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мегера"
+            },
+            "en": {
+              "text": "Megaera"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Алекто"
+            },
+            "en": {
+              "text": "Alecto"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Никта"
+            },
+            "en": {
+              "text": "Nyx"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
