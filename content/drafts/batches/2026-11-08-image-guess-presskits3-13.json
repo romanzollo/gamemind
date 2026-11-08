@@ -1,0 +1,944 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 3 ×13 (4/5/4) from official press kits (Cyberpunk 2077 — CDPR press center, Hades II — Supergiant, Cuphead — Studio MDHR, Hollow Knight: Silksong — Team Cherry). Kinds: where / who / which game / mechanic. RU names only where the official translation is confirmed; otherwise the question avoids names (which game, instrument, creature). Import is idempotent by draftKey (complete rows are skipped).",
+  "questions": [
+    {
+      "draftKey": "img5-easy-cp-smasher",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "cp-smasher",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/cp-smasher.webp",
+      "rawDropAs": "raw-quiz-images/easy/cp-smasher.png",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "image-character",
+        "source": "https://press.cdprojektred.com/en/224/797",
+        "sourceFile": "Cyberpunk2077_PS5_Pro_Smasher_CLEAN.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Cyberpunk 2077?"
+        },
+        "en": {
+          "text": "Who is this in Cyberpunk 2077?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Адам Смэшер"
+            },
+            "en": {
+              "text": "Adam Smasher"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Горо Такэмура"
+            },
+            "en": {
+              "text": "Goro Takemura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джеки Уэллс"
+            },
+            "en": {
+              "text": "Jackie Welles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Соломон Рид"
+            },
+            "en": {
+              "text": "Solomon Reed"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-easy-cuphead-contracts",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "cuphead-contracts",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/cuphead-contracts.webp",
+      "rawDropAs": "raw-quiz-images/easy/cuphead-contracts.png",
+      "metadata": {
+        "game": "Cuphead",
+        "topic": "image-mechanic",
+        "source": "https://www.studiomdhr.com/press/",
+        "sourceFile": "cuphead_screenshot_featured_1.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что братья забирают у каждого побеждённого босса в Cuphead?"
+        },
+        "en": {
+          "text": "What do the brothers take from every defeated boss in Cuphead?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Контракт на душу"
+            },
+            "en": {
+              "text": "A soul contract"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Золотую монету"
+            },
+            "en": {
+              "text": "A gold coin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ключ"
+            },
+            "en": {
+              "text": "A key"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Корону"
+            },
+            "en": {
+              "text": "A crown"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-easy-silksong-needle",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "silksong-needle",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/silksong-needle.webp",
+      "rawDropAs": "raw-quiz-images/easy/silksong-needle.png",
+      "metadata": {
+        "game": "Hollow Knight: Silksong",
+        "topic": "image-mechanic",
+        "source": "https://drive.google.com/drive/folders/1VE_YoUA36IwZRHnZhvEGUhqgU2GIEm4y",
+        "sourceFile": "03_chambers.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем сражается героиня Silksong?"
+        },
+        "en": {
+          "text": "What does the Silksong heroine fight with?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Иглой"
+            },
+            "en": {
+              "text": "A needle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гвоздём"
+            },
+            "en": {
+              "text": "A nail"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Косой"
+            },
+            "en": {
+              "text": "A scythe"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Копьём"
+            },
+            "en": {
+              "text": "A spear"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-easy-hades2-nemesis",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hades2-nemesis",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hades2-nemesis.webp",
+      "rawDropAs": "raw-quiz-images/easy/hades2-nemesis.png",
+      "metadata": {
+        "game": "Hades II",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades-ii/",
+        "sourceFile": "H2_Wallpaper_Nemesis_4k_01.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Hades II?"
+        },
+        "en": {
+          "text": "Who is this in Hades II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Немезида"
+            },
+            "en": {
+              "text": "Nemesis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мегера"
+            },
+            "en": {
+              "text": "Megaera"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Геката"
+            },
+            "en": {
+              "text": "Hecate"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Артемида"
+            },
+            "en": {
+              "text": "Artemis"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-medium-cp-reed",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "cp-reed",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/cp-reed.webp",
+      "rawDropAs": "raw-quiz-images/medium/cp-reed.png",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "image-character",
+        "source": "https://press.cdprojektred.com/en/224/797",
+        "sourceFile": "Cyberpunk2077_PS5_Pro_Reed_CLEAN.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Cyberpunk 2077?"
+        },
+        "en": {
+          "text": "Who is this in Cyberpunk 2077?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Соломон Рид"
+            },
+            "en": {
+              "text": "Solomon Reed"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джеки Уэллс"
+            },
+            "en": {
+              "text": "Jackie Welles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Горо Такэмура"
+            },
+            "en": {
+              "text": "Goro Takemura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Адам Смэшер"
+            },
+            "en": {
+              "text": "Adam Smasher"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-medium-cp-rogue",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "cp-rogue",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/cp-rogue.webp",
+      "rawDropAs": "raw-quiz-images/medium/cp-rogue.png",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "image-character",
+        "source": "https://press.cdprojektred.com/en/224/797",
+        "sourceFile": "CP77_UE_NS2_Rogue_EN_16x9.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Cyberpunk 2077?"
+        },
+        "en": {
+          "text": "Who is this in Cyberpunk 2077?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Роуг"
+            },
+            "en": {
+              "text": "Rogue"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Панам"
+            },
+            "en": {
+              "text": "Panam"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джуди"
+            },
+            "en": {
+              "text": "Judy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Альт"
+            },
+            "en": {
+              "text": "Alt"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-medium-cuphead-devil",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "cuphead-devil",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/cuphead-devil.webp",
+      "rawDropAs": "raw-quiz-images/medium/cuphead-devil.png",
+      "metadata": {
+        "game": "Cuphead",
+        "topic": "image-event",
+        "source": "https://www.studiomdhr.com/press/",
+        "sourceFile": "cuphead_screenshot_featured_3.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "С кем братья заключили сделку, проигравшись в этом казино Cuphead?"
+        },
+        "en": {
+          "text": "Who did the brothers make a deal with after losing in this Cuphead casino?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "С Дьяволом"
+            },
+            "en": {
+              "text": "The Devil"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Со Смертью"
+            },
+            "en": {
+              "text": "Death"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С призраком"
+            },
+            "en": {
+              "text": "A ghost"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С волшебником"
+            },
+            "en": {
+              "text": "A wizard"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-medium-cuphead-dlc",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "cuphead-dlc",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/cuphead-dlc.webp",
+      "rawDropAs": "raw-quiz-images/medium/cuphead-dlc.png",
+      "metadata": {
+        "game": "Cuphead",
+        "topic": "image-guess",
+        "source": "https://www.studiomdhr.com/press/",
+        "sourceFile": "cuphead_dlc_screenshot_1080_1.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какого дополнения этот кадр Cuphead?"
+        },
+        "en": {
+          "text": "Which Cuphead expansion is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "The Delicious Last Course"
+            },
+            "en": {
+              "text": "The Delicious Last Course"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Frozen Wilds"
+            },
+            "en": {
+              "text": "The Frozen Wilds"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Blood and Wine"
+            },
+            "en": {
+              "text": "Blood and Wine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Old Hunters"
+            },
+            "en": {
+              "text": "The Old Hunters"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-medium-hades2-hecate",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hades2-hecate",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hades2-hecate.webp",
+      "rawDropAs": "raw-quiz-images/medium/hades2-hecate.png",
+      "metadata": {
+        "game": "Hades II",
+        "topic": "image-character",
+        "source": "https://www.supergiantgames.com/games/hades-ii/",
+        "sourceFile": "H2_Wallpaper_Melinoe_4k_01.png",
+        "localizationStrategy": "mythology-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто наставница этой героини Hades II?"
+        },
+        "en": {
+          "text": "Who is the mentor of this Hades II heroine?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Геката"
+            },
+            "en": {
+              "text": "Hecate"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Афина"
+            },
+            "en": {
+              "text": "Athena"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Артемида"
+            },
+            "en": {
+              "text": "Artemis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Персефона"
+            },
+            "en": {
+              "text": "Persephone"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-hard-cp-misty",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "cp-misty",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/cp-misty.webp",
+      "rawDropAs": "raw-quiz-images/hard/cp-misty.png",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "image-location",
+        "source": "https://press.cdprojektred.com/en/224/797",
+        "sourceFile": "Cyberpunk2077_PS5_Pro_Misty_CLEAN.png",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чья это лавка в Cyberpunk 2077?"
+        },
+        "en": {
+          "text": "Whose shop is this in Cyberpunk 2077?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мисти"
+            },
+            "en": {
+              "text": "Misty"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джуди"
+            },
+            "en": {
+              "text": "Judy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Роуг"
+            },
+            "en": {
+              "text": "Rogue"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Панам"
+            },
+            "en": {
+              "text": "Panam"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-hard-hades2-which-1",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hades2-which-1",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hades2-which-1.webp",
+      "rawDropAs": "raw-quiz-images/hard/hades2-which-1.png",
+      "metadata": {
+        "game": "Hades II",
+        "topic": "image-guess",
+        "source": "https://www.supergiantgames.com/games/hades-ii/",
+        "sourceFile": "hades2_apr24_05.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hades II"
+            },
+            "en": {
+              "text": "Hades II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pyre"
+            },
+            "en": {
+              "text": "Pyre"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Transistor"
+            },
+            "en": {
+              "text": "Transistor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-hard-hades2-which-2",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hades2-which-2",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hades2-which-2.webp",
+      "rawDropAs": "raw-quiz-images/hard/hades2-which-2.png",
+      "metadata": {
+        "game": "Hades II",
+        "topic": "image-guess",
+        "source": "https://www.supergiantgames.com/games/hades-ii/",
+        "sourceFile": "hades2_apr24_10.png",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hades II"
+            },
+            "en": {
+              "text": "Hades II"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bastion"
+            },
+            "en": {
+              "text": "Bastion"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Pyre"
+            },
+            "en": {
+              "text": "Pyre"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img5-hard-silksong-which",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "silksong-which",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/silksong-which.webp",
+      "rawDropAs": "raw-quiz-images/hard/silksong-which.png",
+      "metadata": {
+        "game": "Hollow Knight: Silksong",
+        "topic": "image-guess",
+        "source": "https://drive.google.com/drive/folders/1VE_YoUA36IwZRHnZhvEGUhqgU2GIEm4y",
+        "sourceFile": "02_coral.png",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-presskits3-13"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this shot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight: Silksong"
+            },
+            "en": {
+              "text": "Hollow Knight: Silksong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hollow Knight"
+            },
+            "en": {
+              "text": "Hollow Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ori and the Will of the Wisps"
+            },
+            "en": {
+              "text": "Ori and the Will of the Wisps"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Blasphemous"
+            },
+            "en": {
+              "text": "Blasphemous"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
