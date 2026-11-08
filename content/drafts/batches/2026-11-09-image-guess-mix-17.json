@@ -1,0 +1,1232 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 6 from Steam store screenshots and vgtimes.ru galleries: Dishonored 1–2 / Death of the Outsider, Sekiro, BG3 (RU names supplied by the owner) plus Metro, S.T.A.L.K.E.R. and Atomic Heart (native RU names). Facts already in the bank were dropped. Import is idempotent by draftKey (complete rows are skipped).",
+  "questions": [
+    {
+      "draftKey": "img8-easy-metro-filters",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "metro-filters",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/metro-filters.webp",
+      "rawDropAs": "raw-quiz-images/easy/metro-filters.png",
+      "metadata": {
+        "game": "Metro Exodus",
+        "topic": "image-mechanic",
+        "source": "https://store.steampowered.com/app/412020/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/412020/ss_f0297eacbfb4266f311a8cb4137e4ef8b7cdd00b.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что нужно вовремя менять в противогазе в Metro Exodus?"
+        },
+        "en": {
+          "text": "What do you have to replace in your gas mask in Metro Exodus?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Фильтр"
+            },
+            "en": {
+              "text": "The filter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Батарейку"
+            },
+            "en": {
+              "text": "The battery"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Стекло"
+            },
+            "en": {
+              "text": "The glass"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Клапан"
+            },
+            "en": {
+              "text": "The valve"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-easy-stalker-chnpp",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "stalker-chnpp",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/stalker-chnpp.webp",
+      "rawDropAs": "raw-quiz-images/easy/stalker-chnpp.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/4500/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4500/0000002183.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за здание в S.T.A.L.K.E.R.?"
+        },
+        "en": {
+          "text": "What is this building in S.T.A.L.K.E.R.?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Чернобыльская АЭС"
+            },
+            "en": {
+              "text": "The Chernobyl NPP"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Радар"
+            },
+            "en": {
+              "text": "The Radar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Агропром"
+            },
+            "en": {
+              "text": "Agroprom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Янтарь"
+            },
+            "en": {
+              "text": "Yantar"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-easy-ah-twins",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ah-twins",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ah-twins.webp",
+      "rawDropAs": "raw-quiz-images/easy/ah-twins.png",
+      "metadata": {
+        "game": "Atomic Heart",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/668580/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/668580/ss_ae18117a9ba4c2394503c843812c93c7fc1a0724.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называют этих роботов-балерин в Atomic Heart?"
+        },
+        "en": {
+          "text": "What are these ballerina robots called in Atomic Heart?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Близняшки"
+            },
+            "en": {
+              "text": "The Twins"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вовчики"
+            },
+            "en": {
+              "text": "Vovchiks"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пчёлы"
+            },
+            "en": {
+              "text": "Bees"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рафики"
+            },
+            "en": {
+              "text": "Rafiks"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-easy-bg3-illithid",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "bg3-illithid",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/bg3-illithid.webp",
+      "rawDropAs": "raw-quiz-images/easy/bg3-illithid.png",
+      "metadata": {
+        "game": "Baldur's Gate 3",
+        "topic": "image-character",
+        "source": "https://vgtimes.ru/games/baldurs-gate-3/screenshots/",
+        "sourceFile": "https://files.vgtimes.ru/gallery/main/170875/8041318914_20230810070635_1.webp",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за существо в Baldur's Gate 3?"
+        },
+        "en": {
+          "text": "What creature is this in Baldur's Gate 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Иллитид"
+            },
+            "en": {
+              "text": "A mind flayer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гитьянки"
+            },
+            "en": {
+              "text": "A githyanki"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дроу"
+            },
+            "en": {
+              "text": "A drow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тифлинг"
+            },
+            "en": {
+              "text": "A tiefling"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-easy-dh-windblast",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "dh-windblast",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/dh-windblast.webp",
+      "rawDropAs": "raw-quiz-images/easy/dh-windblast.png",
+      "metadata": {
+        "game": "Dishonored",
+        "topic": "image-mechanic",
+        "source": "https://store.steampowered.com/app/205100/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/205100/ss_30e0328295a5d208283e69eb382fac2fa94809a8.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какую способность применил герой Dishonored?"
+        },
+        "en": {
+          "text": "Which power did the Dishonored hero use?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Порыв ветра"
+            },
+            "en": {
+              "text": "Windblast"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Изгиб времени"
+            },
+            "en": {
+              "text": "Bend Time"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Жадная стая"
+            },
+            "en": {
+              "text": "Devouring Swarm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Перенос"
+            },
+            "en": {
+              "text": "Blink"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-medium-dh-swarm",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dh-swarm",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dh-swarm.webp",
+      "rawDropAs": "raw-quiz-images/medium/dh-swarm.png",
+      "metadata": {
+        "game": "Dishonored",
+        "topic": "image-mechanic",
+        "source": "https://vgtimes.ru/games/dishonored/screenshots/",
+        "sourceFile": "https://files.vgtimes.ru/gallery/main/155/1582778949_130.webp",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какую способность применил герой Dishonored?"
+        },
+        "en": {
+          "text": "Which power did the Dishonored hero use?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Жадная стая"
+            },
+            "en": {
+              "text": "Devouring Swarm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вселение"
+            },
+            "en": {
+              "text": "Possession"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Порыв ветра"
+            },
+            "en": {
+              "text": "Windblast"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тёмное зрение"
+            },
+            "en": {
+              "text": "Dark Vision"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-medium-dh2-clockwork",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dh2-clockwork",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dh2-clockwork.webp",
+      "rawDropAs": "raw-quiz-images/medium/dh2-clockwork.png",
+      "metadata": {
+        "game": "Dishonored 2",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/403640/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/403640/ss_f1d900f18408c0451ee9b343dbe1fc7b8f2b373e.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за механический враг в Dishonored 2?"
+        },
+        "en": {
+          "text": "What mechanical enemy is this in Dishonored 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Заводной солдат"
+            },
+            "en": {
+              "text": "A Clockwork Soldier"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Смотритель"
+            },
+            "en": {
+              "text": "An Overseer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Плакальщик"
+            },
+            "en": {
+              "text": "A Weeper"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ведьма"
+            },
+            "en": {
+              "text": "A witch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-medium-ah-babazina",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "ah-babazina",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/ah-babazina.webp",
+      "rawDropAs": "raw-quiz-images/medium/ah-babazina.png",
+      "metadata": {
+        "game": "Atomic Heart",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/668580/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/668580/ss_2fce9ef441a18361b9ab8f1b1ac70160c8226577.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто эта бабушка рядом с майором Нечаевым?"
+        },
+        "en": {
+          "text": "Who is this granny next to Major Nechayev?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Баба Зина"
+            },
+            "en": {
+              "text": "Granny Zina"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Баба Нюра"
+            },
+            "en": {
+              "text": "Granny Nyura"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Баба Валя"
+            },
+            "en": {
+              "text": "Granny Valya"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Баба Маша"
+            },
+            "en": {
+              "text": "Granny Masha"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-medium-stalker-snork",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "stalker-snork",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/stalker-snork.webp",
+      "rawDropAs": "raw-quiz-images/medium/stalker-snork.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/4500/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4500/0000002179.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за мутант Зоны в S.T.A.L.K.E.R.?"
+        },
+        "en": {
+          "text": "Which Zone mutant is this in S.T.A.L.K.E.R.?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Снорк"
+            },
+            "en": {
+              "text": "A snork"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кровосос"
+            },
+            "en": {
+              "text": "A bloodsucker"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Контролёр"
+            },
+            "en": {
+              "text": "A controller"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Плоть"
+            },
+            "en": {
+              "text": "A flesh"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-medium-metro2033-demon",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "metro2033-demon",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/metro2033-demon.webp",
+      "rawDropAs": "raw-quiz-images/medium/metro2033-demon.png",
+      "metadata": {
+        "game": "Metro 2033",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/286690/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/286690/112337526a32cfc5a14e73f739a880c00721d5c7/ss_112337526a32cfc5a14e73f739a880c00721d5c7.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за летающий мутант в Metro 2033?"
+        },
+        "en": {
+          "text": "What flying mutant is this in Metro 2033?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Демон"
+            },
+            "en": {
+              "text": "A demon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Библиотекарь"
+            },
+            "en": {
+              "text": "A librarian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Носач"
+            },
+            "en": {
+              "text": "A nosalis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чёрный"
+            },
+            "en": {
+              "text": "A dark one"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-medium-bg3-jaheira",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bg3-jaheira",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bg3-jaheira.webp",
+      "rawDropAs": "raw-quiz-images/medium/bg3-jaheira.png",
+      "metadata": {
+        "game": "Baldur's Gate 3",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1086940/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_0efa1a469a37beeb4fd0cb8e16dc99bd36357dc4.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Baldur's Gate 3?"
+        },
+        "en": {
+          "text": "Who is this in Baldur's Gate 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джайхейра"
+            },
+            "en": {
+              "text": "Jaheira"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шэдоухарт"
+            },
+            "en": {
+              "text": "Shadowheart"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лаэзель"
+            },
+            "en": {
+              "text": "Lae'zel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Минтара"
+            },
+            "en": {
+              "text": "Minthara"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-hard-dh2-darkvision",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "dh2-darkvision",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/dh2-darkvision.webp",
+      "rawDropAs": "raw-quiz-images/hard/dh2-darkvision.png",
+      "metadata": {
+        "game": "Dishonored 2",
+        "topic": "image-mechanic",
+        "source": "https://vgtimes.ru/games/dishonored-2/screenshots/",
+        "sourceFile": "https://files.vgtimes.ru/gallery/main/139417/1582779044_32.webp",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая способность включена на этом кадре Dishonored 2?"
+        },
+        "en": {
+          "text": "Which power is active in this Dishonored 2 shot?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Тёмное зрение"
+            },
+            "en": {
+              "text": "Dark Vision"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Изгиб времени"
+            },
+            "en": {
+              "text": "Bend Time"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Перенос"
+            },
+            "en": {
+              "text": "Blink"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вселение"
+            },
+            "en": {
+              "text": "Possession"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-hard-doto-daud",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "doto-daud",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/doto-daud.webp",
+      "rawDropAs": "raw-quiz-images/hard/doto-daud.png",
+      "metadata": {
+        "game": "Dishonored: Death of the Outsider",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/614570/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/614570/ss_dc9833e5773668db1091265e0080d398b1b3974e.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Dishonored: Death of the Outsider?"
+        },
+        "en": {
+          "text": "Who is this in Dishonored: Death of the Outsider?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дауд"
+            },
+            "en": {
+              "text": "Daud"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Корво Аттано"
+            },
+            "en": {
+              "text": "Corvo Attano"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чужой"
+            },
+            "en": {
+              "text": "The Outsider"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кирин Джиндош"
+            },
+            "en": {
+              "text": "Kirin Jindosh"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-hard-sekiro-mikiri",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "sekiro-mikiri",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/sekiro-mikiri.webp",
+      "rawDropAs": "raw-quiz-images/hard/sekiro-mikiri.png",
+      "metadata": {
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "image-mechanic",
+        "source": "https://vgtimes.ru/games/sekiro-shadows-die-twice/screenshots/",
+        "sourceFile": "https://files.vgtimes.ru/gallery/main/167894/1534876026_7406.webp",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Каким приёмом в Sekiro отвечают на такой выпад копьём?"
+        },
+        "en": {
+          "text": "Which technique answers a spear thrust like this in Sekiro?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Контрудар Микири"
+            },
+            "en": {
+              "text": "Mikiri Counter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Прыжок"
+            },
+            "en": {
+              "text": "A jump"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Блок"
+            },
+            "en": {
+              "text": "A block"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Протез синоби"
+            },
+            "en": {
+              "text": "The Shinobi Prosthetic"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-hard-metro-volga",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "metro-volga",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/metro-volga.webp",
+      "rawDropAs": "raw-quiz-images/hard/metro-volga.png",
+      "metadata": {
+        "game": "Metro Exodus",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/412020/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/412020/ss_23815433fdd4a63064da79222fdefb569eeafaba.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Metro Exodus?"
+        },
+        "en": {
+          "text": "Where in Metro Exodus is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Волга"
+            },
+            "en": {
+              "text": "The Volga"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Каспий"
+            },
+            "en": {
+              "text": "The Caspian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тайга"
+            },
+            "en": {
+              "text": "The Taiga"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мёртвый город"
+            },
+            "en": {
+              "text": "The Dead City"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-hard-stalker2-duga",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "stalker2-duga",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/stalker2-duga.webp",
+      "rawDropAs": "raw-quiz-images/hard/stalker2-duga.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/1643320/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1643320/dc84227622e39f7af2595cddcab10f131b3640c3/ss_dc84227622e39f7af2595cddcab10f131b3640c3.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называлась настоящая советская РЛС, которую видно на этом кадре S.T.A.L.K.E.R. 2?"
+        },
+        "en": {
+          "text": "What was the real Soviet radar seen in this S.T.A.L.K.E.R. 2 shot called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Дуга»"
+            },
+            "en": {
+              "text": "Duga"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Волна»"
+            },
+            "en": {
+              "text": "Volna"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Купол»"
+            },
+            "en": {
+              "text": "Kupol"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Луч»"
+            },
+            "en": {
+              "text": "Luch"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img8-hard-stalker-bloodsucker",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "stalker-bloodsucker",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/stalker-bloodsucker.webp",
+      "rawDropAs": "raw-quiz-images/hard/stalker-bloodsucker.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R.: Call of Pripyat",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/41700/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/41700/ss_e6ceac2a4b603559f6613e1d37971caff65d25ce.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-mix-17"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за мутант Зоны в S.T.A.L.K.E.R.?"
+        },
+        "en": {
+          "text": "Which Zone mutant is this in S.T.A.L.K.E.R.?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кровосос"
+            },
+            "en": {
+              "text": "A bloodsucker"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Снорк"
+            },
+            "en": {
+              "text": "A snork"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Излом"
+            },
+            "en": {
+              "text": "An izlom"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Псевдогигант"
+            },
+            "en": {
+              "text": "A pseudogiant"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

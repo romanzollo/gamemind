@@ -255,6 +255,8 @@
     { "slug": "diablo-iv", "title": "Diablo IV", "year": 2023, "platforms": ["pc", "ps4", "ps5", "xbox-one", "xbox-series"], "genres": ["rpg", "action"], "franchise": "diablo" },
     { "slug": "disco-elysium", "title": "Disco Elysium", "year": 2019, "platforms": ["pc"], "genres": ["rpg"] },
     { "slug": "dishonored", "title": "Dishonored", "year": 2012, "platforms": ["pc", "ps3", "xbox-360"], "genres": ["stealth", "action"] },
+    { "slug": "dishonored-2", "title": "Dishonored 2", "year": 2016, "platforms": ["pc", "ps4", "xbox-one"], "genres": ["action", "stealth"] },
+    { "slug": "dishonored-death-of-the-outsider", "title": "Dishonored: Death of the Outsider", "year": 2017, "platforms": ["pc", "ps4", "xbox-one"], "genres": ["action", "stealth"] },
     { "slug": "divinity-original-sin-2", "title": "Divinity: Original Sin 2", "year": 2017, "platforms": ["pc", "ps4", "xbox-one"], "genres": ["rpg"], "franchise": "divinity" },
     { "slug": "donkey-kong", "title": "Donkey Kong", "year": 1981, "platforms": ["arcade"], "genres": ["arcade", "platformer"], "franchise": "donkey-kong" },
     { "slug": "dont-starve", "title": "Don't Starve", "year": 2013, "platforms": ["pc", "ps4"], "genres": ["sandbox"] },
