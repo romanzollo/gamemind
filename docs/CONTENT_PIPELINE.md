@@ -393,6 +393,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 6 (night):** image pilot IMAGE_GUESS ×30 (`2026-11-06-image-guess-pilot-30.json`, 10/10/10; new kinds — where / who / which Sign / which event — in Hollow Knight, Hades, The Witcher 3, Stardew Valley; frames from official press kits, see `QUIZ_IMAGES.md` §8). WebP + manifest committed and deployed first (cf7296c), then prod import → `taxonomy:sync` → publish (quality gate, filtered by draftKey) → IMAGE **201** + TEXT **668** → **869** live. Hollow Knight options were switched to official RU names on dev by an in-place UPDATE (the image importer skips complete rows).
 
+**Nov 8:** press-kit image batch 2 IMAGE_GUESS ×16 (`2026-11-08-image-guess-presskits-16.json`, 6/5/5; Valheim, Outer Wilds, Dead Cells, Untitled Goose Game, INSIDE, LIMBO + spare pilot-kit frames; 3 new catalog games). WebP + manifest committed and deployed first (ca9f5a5), then prod import → `taxonomy:sync` → publish (quality gate, filtered by draftKey) → IMAGE **217** + TEXT **668** → **885** live. Do not re-import.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:

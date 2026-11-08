@@ -432,6 +432,12 @@ Owner decision (Nov 6): frames may come from **any official press kit** of the s
 | Sony Asset Library | one key art / logo per game — useless for frames |
 | Larian press | archive link 404 |
 | GamesPress, Nintendo press | login required — not used (no accounts) |
+| Valheim press (valheimgame.com/press) | gameplay + art; check the minimap (biome name) and creature name plates |
+| Outer Wilds (Mobius Digital press page) | character and scene shots; planet names have no confirmed RU translation |
+| Dead Cells (Motion Twin press kit) | gameplay shots; biome names avoided (no confirmed RU translation) |
+| Untitled Goose Game press kit | a few gameplay shots |
+| Playdead press (INSIDE, LIMBO) | wordless frames — good for «which game», few per batch |
+| Metro Exodus (4A Games press) | bot protection — not used, never circumvented |
 
 **Flow:** download kit to `raw-quiz-images/_presskits/<kit>/` (gitignored) → contact sheet → pick frames where the answer is not on screen (no logo, title, name plate) → crop → `raw-quiz-images/{difficulty}/{slug}.png` → `images:optimize` → batch JSON (`kind: IMAGE_GUESS_BATCH`) → import DRAFT → HTML review → commit + deploy WebP → prod import → publish.
 
