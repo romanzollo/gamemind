@@ -1,0 +1,2168 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 4 ×30 (10/10/10) from Steam store screenshots (publisher uploads, public appdetails endpoint). Kinds: who / where / creature / mechanic / which part of the series / UI fragment. Facts already in the bank (main heroes) avoided. Import is idempotent by draftKey (complete rows are skipped).",
+  "questions": [
+    {
+      "draftKey": "img6-easy-er-erdtree",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "er-erdtree",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/er-erdtree.webp",
+      "rawDropAs": "raw-quiz-images/easy/er-erdtree.png",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/1245620/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_943bf6fe62352757d9070c1d33e50b92fe8539f1.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется это золотое древо в Elden Ring?"
+        },
+        "en": {
+          "text": "What is this golden tree in Elden Ring called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Древо Эрд"
+            },
+            "en": {
+              "text": "The Erdtree"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мировое древо"
+            },
+            "en": {
+              "text": "The World Tree"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Древо жизни"
+            },
+            "en": {
+              "text": "The Tree of Life"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Иггдрасиль"
+            },
+            "en": {
+              "text": "Yggdrasil"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-bg3-shadowheart",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "bg3-shadowheart",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/bg3-shadowheart.webp",
+      "rawDropAs": "raw-quiz-images/easy/bg3-shadowheart.png",
+      "metadata": {
+        "game": "Baldur's Gate 3",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1086940/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_b6a6ee6e046426d08ceea7a4506a1b5f44181543.1920x1080.jpg",
+        "localizationStrategy": "press-transliteration",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Baldur's Gate 3?"
+        },
+        "en": {
+          "text": "Who is this in Baldur's Gate 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Шэдоухарт"
+            },
+            "en": {
+              "text": "Shadowheart"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лаэзель"
+            },
+            "en": {
+              "text": "Lae'zel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Карлах"
+            },
+            "en": {
+              "text": "Karlach"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Минтара"
+            },
+            "en": {
+              "text": "Minthara"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-gow-serpent",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "gow-serpent",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/gow-serpent.webp",
+      "rawDropAs": "raw-quiz-images/easy/gow-serpent.png",
+      "metadata": {
+        "game": "God of War (2018)",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1593500/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1593500/ss_f1bff24d3967a21d303d95e11ed892e3d9113057.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот гигантский змей в God of War?"
+        },
+        "en": {
+          "text": "Who is this giant serpent in God of War?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мировой змей"
+            },
+            "en": {
+              "text": "The World Serpent"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фафнир"
+            },
+            "en": {
+              "text": "Fafnir"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нидхёгг"
+            },
+            "en": {
+              "text": "Nidhogg"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Левиафан"
+            },
+            "en": {
+              "text": "Leviathan"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-portal2-gel",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "portal2-gel",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/portal2-gel.webp",
+      "rawDropAs": "raw-quiz-images/easy/portal2-gel.png",
+      "metadata": {
+        "game": "Portal 2",
+        "topic": "image-mechanic",
+        "source": "https://store.steampowered.com/app/620/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/620/ss_358127df30a766a1516ad139083c2bcec3fe0975.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что делает этот синий гель в Portal 2?"
+        },
+        "en": {
+          "text": "What does this blue gel do in Portal 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "От него отскакиваешь"
+            },
+            "en": {
+              "text": "You bounce off it"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Разгоняет до огромной скорости"
+            },
+            "en": {
+              "text": "It speeds you up"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Позволяет ставить порталы где угодно"
+            },
+            "en": {
+              "text": "It lets you place portals anywhere"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Растворяет предметы"
+            },
+            "en": {
+              "text": "It dissolves objects"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-hl2-citadel",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hl2-citadel",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hl2-citadel.webp",
+      "rawDropAs": "raw-quiz-images/easy/hl2-citadel.png",
+      "metadata": {
+        "game": "Half-Life 2",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/220/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220/ss_0e499071a60a20b24149ad65a8edb769250f2921.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта башня в Half-Life 2?"
+        },
+        "en": {
+          "text": "What is this tower in Half-Life 2 called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Цитадель"
+            },
+            "en": {
+              "text": "The Citadel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нова Проспект"
+            },
+            "en": {
+              "text": "Nova Prospekt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чёрная Меза"
+            },
+            "en": {
+              "text": "Black Mesa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Белая Роща"
+            },
+            "en": {
+              "text": "White Forest"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-me-garrus",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "me-garrus",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/me-garrus.webp",
+      "rawDropAs": "raw-quiz-images/easy/me-garrus.png",
+      "metadata": {
+        "game": "Mass Effect 2",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1328670/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1328670/ss_3cfdbd8a5d94f9005d33ba17bb6b163dc458ddf7.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Mass Effect?"
+        },
+        "en": {
+          "text": "Who is this in Mass Effect?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гаррус Вакариан"
+            },
+            "en": {
+              "text": "Garrus Vakarian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Урднот Рекс"
+            },
+            "en": {
+              "text": "Urdnot Wrex"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мордин Солус"
+            },
+            "en": {
+              "text": "Mordin Solus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тейн Криос"
+            },
+            "en": {
+              "text": "Thane Krios"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-re4-ada",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "re4-ada",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/re4-ada.webp",
+      "rawDropAs": "raw-quiz-images/easy/re4-ada.png",
+      "metadata": {
+        "game": "Resident Evil 4 (2023)",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/2050650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/ss_2f026b10ab2facd11820737453512b3b88c5a863.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Resident Evil 4?"
+        },
+        "en": {
+          "text": "Who is this in Resident Evil 4?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ада Вонг"
+            },
+            "en": {
+              "text": "Ada Wong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эшли Грэм"
+            },
+            "en": {
+              "text": "Ashley Graham"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Клэр Редфилд"
+            },
+            "en": {
+              "text": "Claire Redfield"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джилл Валентайн"
+            },
+            "en": {
+              "text": "Jill Valentine"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-ac-origins",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ac-origins",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ac-origins.webp",
+      "rawDropAs": "raw-quiz-images/easy/ac-origins.png",
+      "metadata": {
+        "game": "Assassin's Creed Origins",
+        "topic": "image-guess",
+        "source": "https://store.steampowered.com/app/582160/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/582160/f0ce8b50a3f2519c0e64e03bd587fcc3dad3b418/ss_f0ce8b50a3f2519c0e64e03bd587fcc3dad3b418.1920x1080.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая это часть Assassin's Creed?"
+        },
+        "en": {
+          "text": "Which Assassin's Creed game is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Origins"
+            },
+            "en": {
+              "text": "Assassin's Creed Origins"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Odyssey"
+            },
+            "en": {
+              "text": "Assassin's Creed Odyssey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Valhalla"
+            },
+            "en": {
+              "text": "Assassin's Creed Valhalla"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Unity"
+            },
+            "en": {
+              "text": "Assassin's Creed Unity"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-terraria-hearts",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "terraria-hearts",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/terraria-hearts.webp",
+      "rawDropAs": "raw-quiz-images/easy/terraria-hearts.png",
+      "metadata": {
+        "game": "Terraria",
+        "topic": "image-ui",
+        "source": "https://store.steampowered.com/app/105600/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_8c03886f214d2108cafca13845533eaa3d87d83f.1920x1080.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот фрагмент интерфейса?"
+        },
+        "en": {
+          "text": "Which game is this piece of UI from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Terraria"
+            },
+            "en": {
+              "text": "Terraria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Minecraft"
+            },
+            "en": {
+              "text": "Minecraft"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Stardew Valley"
+            },
+            "en": {
+              "text": "Stardew Valley"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Starbound"
+            },
+            "en": {
+              "text": "Starbound"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-easy-horizon-thunderjaw",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "horizon-thunderjaw",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/horizon-thunderjaw.webp",
+      "rawDropAs": "raw-quiz-images/easy/horizon-thunderjaw.png",
+      "metadata": {
+        "game": "Horizon Zero Dawn",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1151640/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1151640/ss_15f5759c441e4e5f51e1a8ee333e4ab9df9aa783.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за машина в Horizon Zero Dawn?"
+        },
+        "en": {
+          "text": "What machine is this in Horizon Zero Dawn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Громозев"
+            },
+            "en": {
+              "text": "Thunderjaw"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Буревестник"
+            },
+            "en": {
+              "text": "Stormbird"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Длинношей"
+            },
+            "en": {
+              "text": "Tallneck"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рыскарь"
+            },
+            "en": {
+              "text": "Stalker"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-skyrim-solitude",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "skyrim-solitude",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/skyrim-solitude.webp",
+      "rawDropAs": "raw-quiz-images/medium/skyrim-solitude.png",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/489830/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/489830/ss_8c7ecd394afb581b9b2137a3de04433f78fdf4ea.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Skyrim?"
+        },
+        "en": {
+          "text": "Which city in Skyrim is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Солитьюд"
+            },
+            "en": {
+              "text": "Solitude"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вайтран"
+            },
+            "en": {
+              "text": "Whiterun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Виндхельм"
+            },
+            "en": {
+              "text": "Windhelm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маркарт"
+            },
+            "en": {
+              "text": "Markarth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-skyrim-spriggan",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "skyrim-spriggan",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/skyrim-spriggan.webp",
+      "rawDropAs": "raw-quiz-images/medium/skyrim-spriggan.png",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/489830/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/489830/ss_921ccea650df936a0b14ebd5dd4ecc73c1d2a12d.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "С кем сражается герой Skyrim?"
+        },
+        "en": {
+          "text": "What is the Skyrim hero fighting?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Спригган"
+            },
+            "en": {
+              "text": "A spriggan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Драугр"
+            },
+            "en": {
+              "text": "A draugr"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тролль"
+            },
+            "en": {
+              "text": "A troll"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хоркер"
+            },
+            "en": {
+              "text": "A horker"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-er-godrick",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "er-godrick",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/er-godrick.webp",
+      "rawDropAs": "raw-quiz-images/medium/er-godrick.png",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1245620/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_b1b91299d7e4b94201ac840aa64de54d9f5cb7f3.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот босс Elden Ring?"
+        },
+        "en": {
+          "text": "Who is this Elden Ring boss?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Годрик Сторукий"
+            },
+            "en": {
+              "text": "Godrick the Grafted"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маргит"
+            },
+            "en": {
+              "text": "Margit"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Радан"
+            },
+            "en": {
+              "text": "Radahn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Морготт"
+            },
+            "en": {
+              "text": "Morgott"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-bg3-karlach",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bg3-karlach",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bg3-karlach.webp",
+      "rawDropAs": "raw-quiz-images/medium/bg3-karlach.png",
+      "metadata": {
+        "game": "Baldur's Gate 3",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1086940/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_31c13d137706fb4d9a4210513274a3ed9c3c7c96.1920x1080.jpg",
+        "localizationStrategy": "press-transliteration",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Baldur's Gate 3?"
+        },
+        "en": {
+          "text": "Who is this in Baldur's Gate 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Карлах"
+            },
+            "en": {
+              "text": "Karlach"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шэдоухарт"
+            },
+            "en": {
+              "text": "Shadowheart"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лаэзель"
+            },
+            "en": {
+              "text": "Lae'zel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Минтара"
+            },
+            "en": {
+              "text": "Minthara"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-terraria-hallow",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "terraria-hallow",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/terraria-hallow.webp",
+      "rawDropAs": "raw-quiz-images/medium/terraria-hallow.png",
+      "metadata": {
+        "game": "Terraria",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/105600/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/ss_1a091473c0b53e98d7a0708dd3ec0978dd56ba45.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это биом Terraria?"
+        },
+        "en": {
+          "text": "Which Terraria biome is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Освящение"
+            },
+            "en": {
+              "text": "The Hallow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Порча"
+            },
+            "en": {
+              "text": "The Corruption"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Багрянец"
+            },
+            "en": {
+              "text": "The Crimson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джунгли"
+            },
+            "en": {
+              "text": "The Jungle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-hl2-dog",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hl2-dog",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hl2-dog.webp",
+      "rawDropAs": "raw-quiz-images/medium/hl2-dog.png",
+      "metadata": {
+        "game": "Half-Life 2",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/220/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220/ss_412b0e9f8285d3695d0b39840da41c184dff591a.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот робот рядом с Аликс в Half-Life 2?"
+        },
+        "en": {
+          "text": "Who is this robot next to Alyx in Half-Life 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пёс"
+            },
+            "en": {
+              "text": "Dog"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Страйдер"
+            },
+            "en": {
+              "text": "A Strider"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Охотник"
+            },
+            "en": {
+              "text": "A Hunter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сканер"
+            },
+            "en": {
+              "text": "A Scanner"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-me-mordin",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "me-mordin",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/me-mordin.webp",
+      "rawDropAs": "raw-quiz-images/medium/me-mordin.png",
+      "metadata": {
+        "game": "Mass Effect 2",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1328670/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1328670/ss_72c7f551278afbf35014628afc2dfa9a8173ec34.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Mass Effect?"
+        },
+        "en": {
+          "text": "Who is this in Mass Effect?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мордин Солус"
+            },
+            "en": {
+              "text": "Mordin Solus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гаррус Вакариан"
+            },
+            "en": {
+              "text": "Garrus Vakarian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тейн Криос"
+            },
+            "en": {
+              "text": "Thane Krios"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Урднот Рекс"
+            },
+            "en": {
+              "text": "Urdnot Wrex"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-detroit-connor",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "detroit-connor",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/detroit-connor.webp",
+      "rawDropAs": "raw-quiz-images/medium/detroit-connor.png",
+      "metadata": {
+        "game": "Detroit: Become Human",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1222140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1222140/ss_f5625ad291da001ad04f19b6ef0d6c0a404d0c91.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто из героев Detroit: Become Human стоит у стойки?"
+        },
+        "en": {
+          "text": "Which Detroit: Become Human hero is standing at the bar?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Коннор"
+            },
+            "en": {
+              "text": "Connor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маркус"
+            },
+            "en": {
+              "text": "Markus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кара"
+            },
+            "en": {
+              "text": "Kara"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Саймон"
+            },
+            "en": {
+              "text": "Simon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-ac-unity",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "ac-unity",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/ac-unity.webp",
+      "rawDropAs": "raw-quiz-images/medium/ac-unity.png",
+      "metadata": {
+        "game": "Assassin's Creed Unity",
+        "topic": "image-guess",
+        "source": "https://store.steampowered.com/app/289650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/289650/ss_adc858ddceb956fa7e653e6190957a4712f6c05e.1920x1080.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая это часть Assassin's Creed?"
+        },
+        "en": {
+          "text": "Which Assassin's Creed game is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Unity"
+            },
+            "en": {
+              "text": "Assassin's Creed Unity"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Syndicate"
+            },
+            "en": {
+              "text": "Assassin's Creed Syndicate"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Origins"
+            },
+            "en": {
+              "text": "Assassin's Creed Origins"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed IV: Black Flag"
+            },
+            "en": {
+              "text": "Assassin's Creed IV: Black Flag"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-medium-horizon-stormbird",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "horizon-stormbird",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/horizon-stormbird.webp",
+      "rawDropAs": "raw-quiz-images/medium/horizon-stormbird.png",
+      "metadata": {
+        "game": "Horizon Zero Dawn",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1151640/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1151640/ss_271f850eec3f96b22aa17be35b948268e0771c7f.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за машина в Horizon Zero Dawn?"
+        },
+        "en": {
+          "text": "What machine is this in Horizon Zero Dawn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Буревестник"
+            },
+            "en": {
+              "text": "Stormbird"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Громозев"
+            },
+            "en": {
+              "text": "Thunderjaw"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Длинношей"
+            },
+            "en": {
+              "text": "Tallneck"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рыскарь"
+            },
+            "en": {
+              "text": "Stalker"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-er-stormveil",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "er-stormveil",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/er-stormveil.webp",
+      "rawDropAs": "raw-quiz-images/hard/er-stormveil.png",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/1245620/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_ef61b771ee6b269b1f0cb484233e07a0bfb5f81b.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за замок в Elden Ring?"
+        },
+        "en": {
+          "text": "Which castle in Elden Ring is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Замок Грозовой Завесы"
+            },
+            "en": {
+              "text": "Stormveil Castle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лейнделл"
+            },
+            "en": {
+              "text": "Leyndell"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Академия Райи Лукарии"
+            },
+            "en": {
+              "text": "Academy of Raya Lucaria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вулканическое поместье"
+            },
+            "en": {
+              "text": "Volcano Manor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-bg3-minthara",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "bg3-minthara",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/bg3-minthara.webp",
+      "rawDropAs": "raw-quiz-images/hard/bg3-minthara.png",
+      "metadata": {
+        "game": "Baldur's Gate 3",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1086940/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/ss_74d11c230ebb44ff9a69b4533a7333551d5bfc6c.1920x1080.jpg",
+        "localizationStrategy": "press-transliteration",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Baldur's Gate 3?"
+        },
+        "en": {
+          "text": "Who is this in Baldur's Gate 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Минтара"
+            },
+            "en": {
+              "text": "Minthara"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лаэзель"
+            },
+            "en": {
+              "text": "Lae'zel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шэдоухарт"
+            },
+            "en": {
+              "text": "Shadowheart"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джахейра"
+            },
+            "en": {
+              "text": "Jaheira"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-horizon-tallneck",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "horizon-tallneck",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/horizon-tallneck.webp",
+      "rawDropAs": "raw-quiz-images/hard/horizon-tallneck.png",
+      "metadata": {
+        "game": "Horizon Zero Dawn",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1151640/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1151640/ss_d09106060fb7de8bf342c23df18b14debc8a15a3.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что за огромная машина на заднем плане в Horizon Zero Dawn?"
+        },
+        "en": {
+          "text": "What is the huge machine in the background in Horizon Zero Dawn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Длинношей"
+            },
+            "en": {
+              "text": "Tallneck"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Громозев"
+            },
+            "en": {
+              "text": "Thunderjaw"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Буревестник"
+            },
+            "en": {
+              "text": "Stormbird"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рыскарь"
+            },
+            "en": {
+              "text": "Stalker"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-hl2-hud",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hl2-hud",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hl2-hud.webp",
+      "rawDropAs": "raw-quiz-images/hard/hl2-hud.png",
+      "metadata": {
+        "game": "Half-Life 2",
+        "topic": "image-ui",
+        "source": "https://store.steampowered.com/app/220/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220/ss_394f4ad714937db2cc90545972b318ddb6db7231.1920x1080.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот фрагмент интерфейса?"
+        },
+        "en": {
+          "text": "Which game is this piece of UI from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Half-Life 2"
+            },
+            "en": {
+              "text": "Half-Life 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Half-Life"
+            },
+            "en": {
+              "text": "Half-Life"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Portal 2"
+            },
+            "en": {
+              "text": "Portal 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Left 4 Dead 2"
+            },
+            "en": {
+              "text": "Left 4 Dead 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-me-illusive",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "me-illusive",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/me-illusive.webp",
+      "rawDropAs": "raw-quiz-images/hard/me-illusive.png",
+      "metadata": {
+        "game": "Mass Effect 2",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/1328670/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1328670/ss_4b2b412307b72a21f68148c32fab7a278875d139.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот человек в Mass Effect?"
+        },
+        "en": {
+          "text": "Who is this man in Mass Effect?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Призрак"
+            },
+            "en": {
+              "text": "The Illusive Man"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дэвид Андерсон"
+            },
+            "en": {
+              "text": "David Anderson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Доннел Удина"
+            },
+            "en": {
+              "text": "Donnel Udina"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кай Лэнг"
+            },
+            "en": {
+              "text": "Kai Leng"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-detroit-rk800",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "detroit-rk800",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/detroit-rk800.webp",
+      "rawDropAs": "raw-quiz-images/hard/detroit-rk800.png",
+      "metadata": {
+        "game": "Detroit: Become Human",
+        "topic": "image-ui",
+        "source": "https://store.steampowered.com/app/1222140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1222140/ss_4ba58d269bce7db923575cc033c888cb83cc1cba.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чья это куртка в Detroit: Become Human?"
+        },
+        "en": {
+          "text": "Whose jacket is this in Detroit: Become Human?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Коннора"
+            },
+            "en": {
+              "text": "Connor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маркуса"
+            },
+            "en": {
+              "text": "Markus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кары"
+            },
+            "en": {
+              "text": "Kara"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хэнка"
+            },
+            "en": {
+              "text": "Hank"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-ac-black-flag",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ac-black-flag",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ac-black-flag.webp",
+      "rawDropAs": "raw-quiz-images/hard/ac-black-flag.png",
+      "metadata": {
+        "game": "Assassin's Creed IV: Black Flag",
+        "topic": "image-guess",
+        "source": "https://store.steampowered.com/app/242050/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/242050/ss_7aa79ce41e1233ff22701281af51b5f0ab51245e.1920x1080.jpg",
+        "localizationStrategy": "latin-titles",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая это часть Assassin's Creed?"
+        },
+        "en": {
+          "text": "Which Assassin's Creed game is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed IV: Black Flag"
+            },
+            "en": {
+              "text": "Assassin's Creed IV: Black Flag"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Rogue"
+            },
+            "en": {
+              "text": "Assassin's Creed Rogue"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Odyssey"
+            },
+            "en": {
+              "text": "Assassin's Creed Odyssey"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Origins"
+            },
+            "en": {
+              "text": "Assassin's Creed Origins"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-re4-luis",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "re4-luis",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/re4-luis.webp",
+      "rawDropAs": "raw-quiz-images/hard/re4-luis.png",
+      "metadata": {
+        "game": "Resident Evil 4 (2023)",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/2050650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2050650/ss_82cef99075c8e19ec71d2aae8b0a19815695c5a7.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Resident Evil 4?"
+        },
+        "en": {
+          "text": "Who is this in Resident Evil 4?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Луис Сера"
+            },
+            "en": {
+              "text": "Luis Sera"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рамон Салазар"
+            },
+            "en": {
+              "text": "Ramon Salazar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джек Краузер"
+            },
+            "en": {
+              "text": "Jack Krauser"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Осмунд Садлер"
+            },
+            "en": {
+              "text": "Osmund Saddler"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-ac-odyssey-medusa",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ac-odyssey-medusa",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ac-odyssey-medusa.webp",
+      "rawDropAs": "raw-quiz-images/hard/ac-odyssey-medusa.png",
+      "metadata": {
+        "game": "Assassin's Creed Odyssey",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/812140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/812140/c8e7be4bfb91f1109a260af53770a1e912d974e1/ss_c8e7be4bfb91f1109a260af53770a1e912d974e1.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это чудовище из Assassin's Creed Odyssey?"
+        },
+        "en": {
+          "text": "Which monster from Assassin's Creed Odyssey is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Медуза"
+            },
+            "en": {
+              "text": "Medusa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сцилла"
+            },
+            "en": {
+              "text": "Scylla"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Химера"
+            },
+            "en": {
+              "text": "Chimera"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ехидна"
+            },
+            "en": {
+              "text": "Echidna"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img6-hard-hl2-strider",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "hl2-strider",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/hl2-strider.webp",
+      "rawDropAs": "raw-quiz-images/hard/hl2-strider.png",
+      "metadata": {
+        "game": "Half-Life 2",
+        "topic": "image-character",
+        "source": "https://store.steampowered.com/app/220/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220/ss_ed5532325f508728f8481f0109d662352a519e0a.1920x1080.jpg",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-08-image-guess-steam-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта шагающая машина Альянса в Half-Life 2?"
+        },
+        "en": {
+          "text": "What is this walking Combine machine in Half-Life 2 called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Страйдер"
+            },
+            "en": {
+              "text": "Strider"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Охотник"
+            },
+            "en": {
+              "text": "Hunter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сканер"
+            },
+            "en": {
+              "text": "Scanner"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ганшип"
+            },
+            "en": {
+              "text": "Gunship"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
