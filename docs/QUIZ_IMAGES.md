@@ -438,6 +438,11 @@ Owner decision (Nov 6): frames may come from **any official press kit** of the s
 | Untitled Goose Game press kit | a few gameplay shots |
 | Playdead press (INSIDE, LIMBO) | wordless frames — good for «which game», few per batch |
 | Metro Exodus (4A Games press) | bot protection — not used, never circumvented |
+| Cyberpunk 2077 (CDPR press center, galleries PS5 Pro / Mac / Switch 2) | many files are localized copies of one shot with a logo; use `*_CLEAN` only |
+| Hades II (Supergiant asset pack .rar) | 12 gameplay shots + 2 character wallpapers; two shots show the name plate |
+| Cuphead (Studio MDHR press page) | 14 clean boss shots; RU boss names not confirmed |
+| Hollow Knight: Silksong (Team Cherry Drive, linked from the game site) | 11 shots named after areas; RU area names not confirmed |
+| Devolver, Subnautica, Ori, Klei | 429 / no public kit — not used |
 
 **Flow:** download kit to `raw-quiz-images/_presskits/<kit>/` (gitignored) → contact sheet → pick frames where the answer is not on screen (no logo, title, name plate) → crop → `raw-quiz-images/{difficulty}/{slug}.png` → `images:optimize` → batch JSON (`kind: IMAGE_GUESS_BATCH`) → import DRAFT → HTML review → commit + deploy WebP → prod import → publish.
 
