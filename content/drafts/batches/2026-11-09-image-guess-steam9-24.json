@@ -1,0 +1,1739 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 9 from Steam store screenshots: Far Cry 3, Devil May Cry 5, Titanfall 2, A Plague Tale: Innocence, Warhammer 40,000: Space Marine 2, Cult of the Lamb, Ori and the Will of the Wisps, Deep Rock Galactic, Hellblade: Senua's Sacrifice, Kerbal Space Program, Tekken 8 and Ghostrunner. RU names supplied by the owner; facts already in the bank were dropped. Import is idempotent by draftKey (complete rows are skipped).",
+  "questions": [
+    {
+      "draftKey": "img11-easy-hellblade-senua",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hellblade-senua",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hellblade-senua.webp",
+      "rawDropAs": "raw-quiz-images/easy/hellblade-senua.png",
+      "metadata": {
+        "game": "Hellblade: Senua's Sacrifice",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/414340/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/414340/ss_dabe173084173e66bc9d493d94f2b3b951214658.1920x1080.jpg?t=1776350290",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут эту героиню?"
+        },
+        "en": {
+          "text": "What is this heroine called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сенуа"
+            },
+            "en": {
+              "text": "Senua"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Элой"
+            },
+            "en": {
+              "text": "Aloy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фрейя"
+            },
+            "en": {
+              "text": "Freya"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кассандра"
+            },
+            "en": {
+              "text": "Kassandra"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-easy-plague-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "plague-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/plague-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/plague-game.png",
+      "metadata": {
+        "game": "A Plague Tale: Innocence",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/752590/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/752590/ss_8433438bf03b7f524e6cf3ac81e99e96be2188c8.1920x1080.jpg?t=1784712345",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "A Plague Tale: Innocence"
+            },
+            "en": {
+              "text": "A Plague Tale: Innocence"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Kingdom Come: Deliverance"
+            },
+            "en": {
+              "text": "Kingdom Come: Deliverance"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Witcher 3: Wild Hunt"
+            },
+            "en": {
+              "text": "The Witcher 3: Wild Hunt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bloodborne"
+            },
+            "en": {
+              "text": "Bloodborne"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-easy-plague-rats",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "plague-rats",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/plague-rats.webp",
+      "rawDropAs": "raw-quiz-images/easy/plague-rats.png",
+      "metadata": {
+        "game": "A Plague Tale: Innocence",
+        "topic": "image-mechanic",
+        "source": "https://store.steampowered.com/app/752590/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/752590/ss_d61367be06a8f92ca4331e58bd51dc1b45c9984a.1920x1080.jpg?t=1784712345",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чего боятся крысы в A Plague Tale: Innocence?"
+        },
+        "en": {
+          "text": "What are the rats afraid of in A Plague Tale: Innocence?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Света и огня"
+            },
+            "en": {
+              "text": "Light and fire"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Воды"
+            },
+            "en": {
+              "text": "Water"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Громких звуков"
+            },
+            "en": {
+              "text": "Loud noises"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Колокольного звона"
+            },
+            "en": {
+              "text": "Church bells"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-easy-ksp-kerbal",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ksp-kerbal",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ksp-kerbal.webp",
+      "rawDropAs": "raw-quiz-images/easy/ksp-kerbal.png",
+      "metadata": {
+        "game": "Kerbal Space Program",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/220200/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220200/ss_395fa5eeac33f83a3f80cfabfe221899d41e21d0.1920x1080.jpg?t=1738037585",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называют этих зелёных космонавтов?"
+        },
+        "en": {
+          "text": "What are these green astronauts called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кербалы"
+            },
+            "en": {
+              "text": "Kerbals"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пикмины"
+            },
+            "en": {
+              "text": "Pikmin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лемминги"
+            },
+            "en": {
+              "text": "Lemmings"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мии"
+            },
+            "en": {
+              "text": "Miis"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-easy-cotl-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "cotl-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/cotl-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/cotl-game.png",
+      "metadata": {
+        "game": "Cult of the Lamb",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/1313140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_f4ca3fd0416c3f41c57bc3809bb45f8f20e684ec.1920x1080.jpg?t=1786554901",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Cult of the Lamb"
+            },
+            "en": {
+              "text": "Cult of the Lamb"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Don't Starve Together"
+            },
+            "en": {
+              "text": "Don't Starve Together"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hades"
+            },
+            "en": {
+              "text": "Hades"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "The Binding of Isaac: Rebirth"
+            },
+            "en": {
+              "text": "The Binding of Isaac: Rebirth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-easy-drg-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "drg-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/drg-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/drg-game.png",
+      "metadata": {
+        "game": "Deep Rock Galactic",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/548430/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/548430/ss_72a64017d059fb584cd0c5977886f2d935be8170.1920x1080.jpg?t=1792497307",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Deep Rock Galactic"
+            },
+            "en": {
+              "text": "Deep Rock Galactic"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Warhammer: Vermintide 2"
+            },
+            "en": {
+              "text": "Warhammer: Vermintide 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Borderlands 2"
+            },
+            "en": {
+              "text": "Borderlands 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Left 4 Dead 2"
+            },
+            "en": {
+              "text": "Left 4 Dead 2"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-easy-titanfall2-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "titanfall2-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/titanfall2-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/titanfall2-game.png",
+      "metadata": {
+        "game": "Titanfall 2",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/1237970/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1237970/ss_d5c13576c0ab4e6ca93b51aa39aa74271672e75f.1920x1080.jpg?t=1779987598",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Titanfall 2"
+            },
+            "en": {
+              "text": "Titanfall 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Destiny 2"
+            },
+            "en": {
+              "text": "Destiny 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Halo Infinite"
+            },
+            "en": {
+              "text": "Halo Infinite"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Call of Duty: Black Ops III"
+            },
+            "en": {
+              "text": "Call of Duty: Black Ops III"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-easy-ghostrunner-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ghostrunner-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ghostrunner-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/ghostrunner-game.png",
+      "metadata": {
+        "game": "Ghostrunner",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/1139900/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1139900/ss_19fd7fbc2af22d1a12a1816e755280fd88cc74a9.1920x1080.jpg?t=1793370755",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24",
+        "edit": "game logo painted out in the bottom-right corner"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ghostrunner"
+            },
+            "en": {
+              "text": "Ghostrunner"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Cyberpunk 2077"
+            },
+            "en": {
+              "text": "Cyberpunk 2077"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mirror's Edge Catalyst"
+            },
+            "en": {
+              "text": "Mirror's Edge Catalyst"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Deus Ex: Mankind Divided"
+            },
+            "en": {
+              "text": "Deus Ex: Mankind Divided"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-fc3-vaas",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "fc3-vaas",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/fc3-vaas.webp",
+      "rawDropAs": "raw-quiz-images/medium/fc3-vaas.png",
+      "metadata": {
+        "game": "Far Cry 3",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/220240/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220240/7955a396f98d3fac7279c0e15ae4d61b4be91e59/ss_7955a396f98d3fac7279c0e15ae4d61b4be91e59.1920x1080.jpg?t=1785282057",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Far Cry 3?"
+        },
+        "en": {
+          "text": "Who is this in Far Cry 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ваас Монтенегро"
+            },
+            "en": {
+              "text": "Vaas Montenegro"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хойт Волкер"
+            },
+            "en": {
+              "text": "Hoyt Volker"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пэйган Мин"
+            },
+            "en": {
+              "text": "Pagan Min"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джейсон Броди"
+            },
+            "en": {
+              "text": "Jason Brody"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-dmc5-v",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dmc5-v",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dmc5-v.webp",
+      "rawDropAs": "raw-quiz-images/medium/dmc5-v.png",
+      "metadata": {
+        "game": "Devil May Cry 5",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/601150/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/601150/ss_f669d4627db07e61b87728d94d72bc1eabfd0349.1920x1080.jpg?t=1790215341",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Devil May Cry 5?"
+        },
+        "en": {
+          "text": "Who is this in Devil May Cry 5?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ви"
+            },
+            "en": {
+              "text": "V"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Неро"
+            },
+            "en": {
+              "text": "Nero"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Данте"
+            },
+            "en": {
+              "text": "Dante"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Спарда"
+            },
+            "en": {
+              "text": "Sparda"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-dmc5-devil-breaker",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dmc5-devil-breaker",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dmc5-devil-breaker.webp",
+      "rawDropAs": "raw-quiz-images/medium/dmc5-devil-breaker.png",
+      "metadata": {
+        "game": "Devil May Cry 5",
+        "topic": "image-mechanic",
+        "source": "https://store.steampowered.com/app/601150/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/601150/ss_e2be70565f94a7f6c392cccddce08c67f2f87612.1920x1080.jpg?t=1790215341",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называются сменные механические руки Неро в Devil May Cry 5?"
+        },
+        "en": {
+          "text": "What are Nero's swappable mechanical arms called in Devil May Cry 5?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Бич дьявола"
+            },
+            "en": {
+              "text": "Devil Breaker"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Красная королева"
+            },
+            "en": {
+              "text": "Red Queen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Синяя роза"
+            },
+            "en": {
+              "text": "Blue Rose"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ямато"
+            },
+            "en": {
+              "text": "Yamato"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-titanfall2-bt",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "titanfall2-bt",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/titanfall2-bt.webp",
+      "rawDropAs": "raw-quiz-images/medium/titanfall2-bt.png",
+      "metadata": {
+        "game": "Titanfall 2",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/1237970/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1237970/ss_9ed56a85aef47554156999dfbd4091d225da2a47.1920x1080.jpg?t=1779987598",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут этого титана в Titanfall 2?"
+        },
+        "en": {
+          "text": "What is this titan called in Titanfall 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "БТ-7274"
+            },
+            "en": {
+              "text": "BT-7274"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ион"
+            },
+            "en": {
+              "text": "Ion"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Скорч"
+            },
+            "en": {
+              "text": "Scorch"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ронин"
+            },
+            "en": {
+              "text": "Ronin"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-plague-hugo",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "plague-hugo",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/plague-hugo.webp",
+      "rawDropAs": "raw-quiz-images/medium/plague-hugo.png",
+      "metadata": {
+        "game": "A Plague Tale: Innocence",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/752590/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/752590/ss_a1025722ac0dce88a3e63e88a34352fb73a403db.1920x1080.jpg?t=1784712345",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут мальчика на руках у Амиции?"
+        },
+        "en": {
+          "text": "What is the name of the boy Amicia is carrying?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гуго"
+            },
+            "en": {
+              "text": "Hugo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лукас"
+            },
+            "en": {
+              "text": "Lucas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Родрик"
+            },
+            "en": {
+              "text": "Rodric"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Артур"
+            },
+            "en": {
+              "text": "Arthur"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-sm2-titus",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sm2-titus",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sm2-titus.webp",
+      "rawDropAs": "raw-quiz-images/medium/sm2-titus.png",
+      "metadata": {
+        "game": "Warhammer 40,000: Space Marine 2",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/2183900/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2183900/ss_712fe9d84a853d1d2fc1faee8cd8efb36e2278d0.1920x1080.jpg?t=1790874369",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Warhammer 40,000: Space Marine 2?"
+        },
+        "en": {
+          "text": "Who is this in Warhammer 40,000: Space Marine 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Тит"
+            },
+            "en": {
+              "text": "Titus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хайрон"
+            },
+            "en": {
+              "text": "Chairon"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гадриэль"
+            },
+            "en": {
+              "text": "Gadriel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Леандрос"
+            },
+            "en": {
+              "text": "Leandros"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-sm2-tyranids",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sm2-tyranids",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sm2-tyranids.webp",
+      "rawDropAs": "raw-quiz-images/medium/sm2-tyranids.png",
+      "metadata": {
+        "game": "Warhammer 40,000: Space Marine 2",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/2183900/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2183900/ss_ee88e4cc463b7b25b0ec03930a9e58e5fba2afdf.1920x1080.jpg?t=1790874369",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "С кем сражается космодесантник на этом кадре из Space Marine 2?"
+        },
+        "en": {
+          "text": "Who is the Space Marine fighting in this Space Marine 2 screenshot?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "С тиранидами"
+            },
+            "en": {
+              "text": "Tyranids"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С орками"
+            },
+            "en": {
+              "text": "Orks"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С некронами"
+            },
+            "en": {
+              "text": "Necrons"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "С эльдарами"
+            },
+            "en": {
+              "text": "Aeldari"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-ori-ku",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "ori-ku",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/ori-ku.webp",
+      "rawDropAs": "raw-quiz-images/medium/ori-ku.png",
+      "metadata": {
+        "game": "Ori and the Will of the Wisps",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/1057090/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1057090/ss_3ae04b208aaff3869f69617c47449ec1d7a06513.1920x1080.jpg?t=1759530749",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут сову, на которой летит Ори?"
+        },
+        "en": {
+          "text": "What is the name of the owl Ori is riding?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Ку"
+            },
+            "en": {
+              "text": "Ku"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сейн"
+            },
+            "en": {
+              "text": "Sein"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нару"
+            },
+            "en": {
+              "text": "Naru"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гумо"
+            },
+            "en": {
+              "text": "Gumo"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-medium-tekken8-king",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "tekken8-king",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/tekken8-king.webp",
+      "rawDropAs": "raw-quiz-images/medium/tekken8-king.png",
+      "metadata": {
+        "game": "Tekken 8",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/1778820/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1778820/ss_853e5ffd8d75e9b5aa171e0b332d026866e1b5af.1920x1080.jpg?t=1787180720",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24",
+        "edit": "tournament logo on the microphone painted out"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Tekken 8?"
+        },
+        "en": {
+          "text": "Who is this in Tekken 8?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кинг"
+            },
+            "en": {
+              "text": "King"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пол Феникс"
+            },
+            "en": {
+              "text": "Paul Phoenix"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маршалл Ло"
+            },
+            "en": {
+              "text": "Marshall Law"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Брайан Фьюри"
+            },
+            "en": {
+              "text": "Bryan Fury"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-hard-tekken8-jun",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "tekken8-jun",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/tekken8-jun.webp",
+      "rawDropAs": "raw-quiz-images/hard/tekken8-jun.png",
+      "metadata": {
+        "game": "Tekken 8",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/1778820/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1778820/ss_bbd38a5fe748ec966cbc85ffcd4931f0f2da8ffd.1920x1080.jpg?t=1787180720",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Tekken 8?"
+        },
+        "en": {
+          "text": "Who is this in Tekken 8?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дзюн Кадзама"
+            },
+            "en": {
+              "text": "Jun Kazama"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Асука Кадзама"
+            },
+            "en": {
+              "text": "Asuka Kazama"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лин Сяоюй"
+            },
+            "en": {
+              "text": "Ling Xiaoyu"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нина Уильямс"
+            },
+            "en": {
+              "text": "Nina Williams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-hard-dmc5-cavaliere",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "dmc5-cavaliere",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/dmc5-cavaliere.webp",
+      "rawDropAs": "raw-quiz-images/hard/dmc5-cavaliere.png",
+      "metadata": {
+        "game": "Devil May Cry 5",
+        "topic": "image-mechanic",
+        "source": "https://store.steampowered.com/app/601150/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/601150/ss_d1e0b403f593f17ad195c5382a7788d71c6f406a.1920x1080.jpg?t=1790215341",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется мотоцикл-оружие Данте в Devil May Cry 5?"
+        },
+        "en": {
+          "text": "What is Dante's motorcycle weapon called in Devil May Cry 5?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кавальере"
+            },
+            "en": {
+              "text": "Cavaliere"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пандора"
+            },
+            "en": {
+              "text": "Pandora"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Цербер"
+            },
+            "en": {
+              "text": "Cerberus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бальрог"
+            },
+            "en": {
+              "text": "Balrog"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-hard-ksp-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ksp-game",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ksp-game.webp",
+      "rawDropAs": "raw-quiz-images/hard/ksp-game.png",
+      "metadata": {
+        "game": "Kerbal Space Program",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/220200/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220200/ss_d393792997ca01960a6843a5f6eb381895866662.1920x1080.jpg?t=1738037585",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24",
+        "edit": "crew name plate painted out"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Kerbal Space Program"
+            },
+            "en": {
+              "text": "Kerbal Space Program"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Kerbal Space Program 2"
+            },
+            "en": {
+              "text": "Kerbal Space Program 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Juno: New Origins"
+            },
+            "en": {
+              "text": "Juno: New Origins"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Space Engineers"
+            },
+            "en": {
+              "text": "Space Engineers"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-hard-ksp-duna",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ksp-duna",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ksp-duna.webp",
+      "rawDropAs": "raw-quiz-images/hard/ksp-duna.png",
+      "metadata": {
+        "game": "Kerbal Space Program",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/220200/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/220200/ss_65398e623d014d17fbf963b94ae69c4034d95c40.1920x1080.jpg?t=1738037585",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за планета в Kerbal Space Program?"
+        },
+        "en": {
+          "text": "Which planet is this in Kerbal Space Program?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дюна"
+            },
+            "en": {
+              "text": "Duna"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ева"
+            },
+            "en": {
+              "text": "Eve"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мохо"
+            },
+            "en": {
+              "text": "Moho"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дрес"
+            },
+            "en": {
+              "text": "Dres"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-hard-ghostrunner-dharma",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ghostrunner-dharma",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ghostrunner-dharma.webp",
+      "rawDropAs": "raw-quiz-images/hard/ghostrunner-dharma.png",
+      "metadata": {
+        "game": "Ghostrunner",
+        "topic": "image-location",
+        "source": "https://store.steampowered.com/app/1139900/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1139900/ss_b3685fcab4d6f60c9fd54ffe8757ccaaef803d9e.1920x1080.jpg?t=1793370755",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется башня-город, в которой идёт действие Ghostrunner?"
+        },
+        "en": {
+          "text": "What is the tower city where Ghostrunner takes place called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Башня Дхармы"
+            },
+            "en": {
+              "text": "Dharma Tower"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шпиль Архитектора"
+            },
+            "en": {
+              "text": "Architect's Spire"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Цитадель Кибервойда"
+            },
+            "en": {
+              "text": "Cybervoid Citadel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Башня Мары"
+            },
+            "en": {
+              "text": "Mara's Tower"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-hard-ori-baur",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ori-baur",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ori-baur.webp",
+      "rawDropAs": "raw-quiz-images/hard/ori-baur.png",
+      "metadata": {
+        "game": "Ori and the Will of the Wisps",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/1057090/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1057090/ss_3840db48776afe0a2359e983ade7177283e394fb.1920x1080.jpg?t=1759530749",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут этого медведя в Ori and the Will of the Wisps?"
+        },
+        "en": {
+          "text": "What is this bear called in Ori and the Will of the Wisps?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Баур"
+            },
+            "en": {
+              "text": "Baur"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мора"
+            },
+            "en": {
+              "text": "Mora"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Токк"
+            },
+            "en": {
+              "text": "Tokk"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лупо"
+            },
+            "en": {
+              "text": "Lupo"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img11-hard-cotl-bishops",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "cotl-bishops",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/cotl-bishops.webp",
+      "rawDropAs": "raw-quiz-images/hard/cotl-bishops.png",
+      "metadata": {
+        "game": "Cult of the Lamb",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/1313140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313140/ss_bb7f191e7d5c2fb09ad02a1694ee61dfe110dc2f.1920x1080.jpg?t=1786554901",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam9-24"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто эти трое в Cult of the Lamb?"
+        },
+        "en": {
+          "text": "Who are these three in Cult of the Lamb?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Епископы Старой Веры"
+            },
+            "en": {
+              "text": "The Bishops of the Old Faith"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Стражи Врат"
+            },
+            "en": {
+              "text": "The Gate Guardians"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сёстры Ночи"
+            },
+            "en": {
+              "text": "The Sisters of the Night"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пророки Ягнёнка"
+            },
+            "en": {
+              "text": "The Lamb's Prophets"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
