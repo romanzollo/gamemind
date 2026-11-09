@@ -892,6 +892,13 @@ Prod smoke зелёный.
   - В каталог: Team Fortress 2, DOOM Eternal, Fallout: New Vegas, Borderlands 2, Kingdom Come: Deliverance, Mafia: Definitive Edition, Mortal Kombat 11, Mortal Kombat 1 (2023); серии Borderlands и Mafia.
   - Прод: картинок 331, текстовых 668, всего 999.
   - **Урок:** у старых игр в Steam кадры бывают 640×360 (TF2) — в квизе они мягче остальных; брать такие, только если кадр сильный.
+- **Картинки: партия 8 из скриншотов Steam ✅ dev + прод (9 ноя).**
+  - Файл: `content/drafts/batches/2026-11-09-image-guess-steam8-30.json`.
+  - Состав: 30 IMAGE_GUESS (10 / 10 / 10) по 13 играм, которых раньше не было в банке картинок: злодеи Batman: Arkham City / Knight, Shadow of Mordor (Келебримбор, карагоры), ремейк RE3 (Карлос), Dying Light (Прыгун, Кайл Крейн), Little Nightmares I–II (Шестая, Моно, Сторож), Deathloop, Black Myth: Wukong, Don't Starve Together, Euro Truck Simulator 2 (Берлин, Мюнхен), Lies of P (Крат), Payday 2 (Даллас, Бульдозер). Русские названия дал владелец; имена Batman и Толкина — устоявшиеся, отмечены в ревью.
+  - Сняты как дубли банка: Немезис и Джилл, «Пиноккио», «Путешествие на Запад», система «Немезида», генераторы Dead by Daylight, темнота в Don't Starve. Dead by Daylight выпал целиком — мало кадров без генераторов.
+  - Обрезка: вывеска «Welcome to Krat»; тройной портрет Arkham Knight разрезан на три вопроса; Шестая и Моно приближены.
+  - В каталог: Batman: Arkham City, Batman: Arkham Knight, Deathloop, Don't Starve Together, Dying Light, Little Nightmares, Little Nightmares II, Payday 2, Resident Evil 3 (Remake); серия Little Nightmares.
+  - Прод: картинок 361, текстовых 668, всего 1029.
 - **5.2b Ритм:** партия 30–50 вопросов → проверка фактов → ревью владельцем
   в админке → публикация. Одна партия — один коммит контента.
 - **5.2c Качество цифрами:** % верных ответов по вопросу → флаг
