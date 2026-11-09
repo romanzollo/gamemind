@@ -1,0 +1,2174 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 8 from Steam store screenshots: Batman Arkham City / Knight, Shadow of Mordor, RE3 remake, Dying Light, Little Nightmares I–II, Deathloop, Black Myth: Wukong, Don't Starve Together, Euro Truck Simulator 2, Lies of P, Payday 2. RU names supplied by the owner; facts already in the bank were dropped. Import is idempotent by draftKey (complete rows are skipped).",
+  "questions": [
+    {
+      "draftKey": "img10-easy-bac-joker",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "bac-joker",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/bac-joker.webp",
+      "rawDropAs": "raw-quiz-images/easy/bac-joker.png",
+      "metadata": {
+        "game": "Batman: Arkham City",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/200260/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/200260/ss_6dc286958beee539957d5e2249ef9a41257b2407.1920x1080.jpg?t=1745964057",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это рядом с Харли Квинн в Batman: Arkham City?"
+        },
+        "en": {
+          "text": "Who is this next to Harley Quinn in Batman: Arkham City?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джокер"
+            },
+            "en": {
+              "text": "The Joker"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Загадочник"
+            },
+            "en": {
+              "text": "The Riddler"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пугало"
+            },
+            "en": {
+              "text": "Scarecrow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Двуликий"
+            },
+            "en": {
+              "text": "Two-Face"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-bak-batmobile",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "bak-batmobile",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/bak-batmobile.webp",
+      "rawDropAs": "raw-quiz-images/easy/bak-batmobile.png",
+      "metadata": {
+        "game": "Batman: Arkham Knight",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/208650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/208650/ss_ccff12cebf58bc7d1d3e0a5783eba65c4aecf345.1920x1080.jpg?t=1745534372",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чья это машина в Batman: Arkham Knight?"
+        },
+        "en": {
+          "text": "Whose car is this in Batman: Arkham Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Бэтмена"
+            },
+            "en": {
+              "text": "Batman's"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джокера"
+            },
+            "en": {
+              "text": "The Joker's"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пингвина"
+            },
+            "en": {
+              "text": "The Penguin's"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Двуликого"
+            },
+            "en": {
+              "text": "Two-Face's"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-ets2-berlin",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ets2-berlin",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ets2-berlin.webp",
+      "rawDropAs": "raw-quiz-images/easy/ets2-berlin.png",
+      "metadata": {
+        "game": "Euro Truck Simulator 2",
+        "topic": "image-where",
+        "source": "https://store.steampowered.com/app/227300/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/227300/c49c51974213722bcb6b509fc7006c137a1f8a67/ss_c49c51974213722bcb6b509fc7006c137a1f8a67.1920x1080.jpg?t=1793285269",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком городе едет грузовик в Euro Truck Simulator 2?"
+        },
+        "en": {
+          "text": "Which city is the truck driving through in Euro Truck Simulator 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Берлин"
+            },
+            "en": {
+              "text": "Berlin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мюнхен"
+            },
+            "en": {
+              "text": "Munich"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вена"
+            },
+            "en": {
+              "text": "Vienna"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Прага"
+            },
+            "en": {
+              "text": "Prague"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-ln1-six",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ln1-six",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ln1-six.webp",
+      "rawDropAs": "raw-quiz-images/easy/ln1-six.png",
+      "metadata": {
+        "game": "Little Nightmares",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/424840/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/424840/659c0e9407e6886ed3e27320db598274c0e352a2/ss_659c0e9407e6886ed3e27320db598274c0e352a2.1920x1080.jpg?t=1773135169",
+        "crop": "answer-leak / logo removed",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут девочку в жёлтом дождевике из Little Nightmares?"
+        },
+        "en": {
+          "text": "What is the name of the girl in the yellow raincoat from Little Nightmares?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Шестая"
+            },
+            "en": {
+              "text": "Six"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Моно"
+            },
+            "en": {
+              "text": "Mono"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Элли"
+            },
+            "en": {
+              "text": "Ellie"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Элизабет"
+            },
+            "en": {
+              "text": "Elizabeth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-pd2-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "pd2-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/pd2-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/pd2-game.png",
+      "metadata": {
+        "game": "Payday 2",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/218620/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/218620/ss_58c44f27e07c06574534f33d09918cd59e73559d.1920x1080.jpg?t=1789555107",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Payday 2"
+            },
+            "en": {
+              "text": "Payday 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Grand Theft Auto V"
+            },
+            "en": {
+              "text": "Grand Theft Auto V"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Tom Clancy's Rainbow Six Siege"
+            },
+            "en": {
+              "text": "Tom Clancy's Rainbow Six Siege"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hitman World of Assassination"
+            },
+            "en": {
+              "text": "Hitman World of Assassination"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-wk-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "wk-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/wk-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/wk-game.png",
+      "metadata": {
+        "game": "Black Myth: Wukong",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/2358720/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2358720/ss_86c4b7462bba219a0d0b89931a35812b9f188976.1920x1080.jpg?t=1760601605",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Black Myth: Wukong"
+            },
+            "en": {
+              "text": "Black Myth: Wukong"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Sekiro: Shadows Die Twice"
+            },
+            "en": {
+              "text": "Sekiro: Shadows Die Twice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ghost of Tsushima"
+            },
+            "en": {
+              "text": "Ghost of Tsushima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring"
+            },
+            "en": {
+              "text": "Elden Ring"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-dst-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "dst-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/dst-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/dst-game.png",
+      "metadata": {
+        "game": "Don't Starve Together",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/322330/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_d053a7220a03ab689da9312c6d15fe8211401f55.1920x1080.jpg?t=1793044716",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Don't Starve Together"
+            },
+            "en": {
+              "text": "Don't Starve Together"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Terraria"
+            },
+            "en": {
+              "text": "Terraria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Stardew Valley"
+            },
+            "en": {
+              "text": "Stardew Valley"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Cuphead"
+            },
+            "en": {
+              "text": "Cuphead"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-dl-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "dl-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/dl-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/dl-game.png",
+      "metadata": {
+        "game": "Dying Light",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/239140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239140/ss_ac414827362042b5f4a95ab90df508adc822ddc1.1920x1080.jpg?t=1793627304",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Dying Light"
+            },
+            "en": {
+              "text": "Dying Light"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Left 4 Dead 2"
+            },
+            "en": {
+              "text": "Left 4 Dead 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Mirror's Edge"
+            },
+            "en": {
+              "text": "Mirror's Edge"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Assassin's Creed Unity"
+            },
+            "en": {
+              "text": "Assassin's Creed Unity"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-lop-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "lop-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/lop-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/lop-game.png",
+      "metadata": {
+        "game": "Lies of P",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/1627720/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1627720/ss_b45cf70105a6adf812c774262fab1246f8c4ca4f.1920x1080.jpg?t=1764565054",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Lies of P"
+            },
+            "en": {
+              "text": "Lies of P"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Bloodborne"
+            },
+            "en": {
+              "text": "Bloodborne"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dark Souls III"
+            },
+            "en": {
+              "text": "Dark Souls III"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Elden Ring"
+            },
+            "en": {
+              "text": "Elden Ring"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-easy-dloop-game",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "dloop-game",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/dloop-game.webp",
+      "rawDropAs": "raw-quiz-images/easy/dloop-game.png",
+      "metadata": {
+        "game": "Deathloop",
+        "topic": "image-game",
+        "source": "https://store.steampowered.com/app/1252330/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1252330/ss_b18d58a9b6a161bf3b253044b9b3edb91802be0c.1920x1080.jpg?t=1750785409",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Из какой игры этот кадр?"
+        },
+        "en": {
+          "text": "Which game is this screenshot from?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Deathloop"
+            },
+            "en": {
+              "text": "Deathloop"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Dishonored 2"
+            },
+            "en": {
+              "text": "Dishonored 2"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Prey (2017)"
+            },
+            "en": {
+              "text": "Prey (2017)"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "BioShock Infinite"
+            },
+            "en": {
+              "text": "BioShock Infinite"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-bak-harley",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bak-harley",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bak-harley.webp",
+      "rawDropAs": "raw-quiz-images/medium/bak-harley.png",
+      "metadata": {
+        "game": "Batman: Arkham Knight",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/208650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/208650/ss_315ff2cdd5f50d28614ae9cfa45283bb2b9f969e.1920x1080.jpg?t=1745534372",
+        "crop": "answer-leak / logo removed",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто эта злодейка из Batman: Arkham Knight?"
+        },
+        "en": {
+          "text": "Who is this villain from Batman: Arkham Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Харли Квинн"
+            },
+            "en": {
+              "text": "Harley Quinn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Женщина-кошка"
+            },
+            "en": {
+              "text": "Catwoman"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ядовитый Плющ"
+            },
+            "en": {
+              "text": "Poison Ivy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Талия аль Гул"
+            },
+            "en": {
+              "text": "Talia al Ghul"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-bak-two-face",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bak-two-face",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bak-two-face.webp",
+      "rawDropAs": "raw-quiz-images/medium/bak-two-face.png",
+      "metadata": {
+        "game": "Batman: Arkham Knight",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/208650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/208650/ss_315ff2cdd5f50d28614ae9cfa45283bb2b9f969e.1920x1080.jpg?t=1745534372",
+        "crop": "answer-leak / logo removed",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот злодей из Batman: Arkham Knight?"
+        },
+        "en": {
+          "text": "Who is this villain from Batman: Arkham Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Двуликий"
+            },
+            "en": {
+              "text": "Two-Face"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пингвин"
+            },
+            "en": {
+              "text": "The Penguin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Загадочник"
+            },
+            "en": {
+              "text": "The Riddler"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пугало"
+            },
+            "en": {
+              "text": "Scarecrow"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-bak-arkham-knight",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bak-arkham-knight",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bak-arkham-knight.webp",
+      "rawDropAs": "raw-quiz-images/medium/bak-arkham-knight.png",
+      "metadata": {
+        "game": "Batman: Arkham Knight",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/208650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/208650/ss_9ccb4ec0388cd868c0f49580f98da94e8bd0e213.1920x1080.jpg?t=1745534372",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот враг в шлеме из Batman: Arkham Knight?"
+        },
+        "en": {
+          "text": "Who is this helmeted enemy in Batman: Arkham Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Рыцарь Аркхема"
+            },
+            "en": {
+              "text": "The Arkham Knight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дэдшот"
+            },
+            "en": {
+              "text": "Deadshot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бэйн"
+            },
+            "en": {
+              "text": "Bane"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пугало"
+            },
+            "en": {
+              "text": "Scarecrow"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-ln2-mono",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "ln2-mono",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/ln2-mono.webp",
+      "rawDropAs": "raw-quiz-images/medium/ln2-mono.png",
+      "metadata": {
+        "game": "Little Nightmares II",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/860510/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860510/ss_a2f4c8ad95844656764d6b7d3a033fc787e82144.1920x1080.jpg?t=1730127763",
+        "crop": "answer-leak / logo removed",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут героя Little Nightmares II с пакетом на голове?"
+        },
+        "en": {
+          "text": "What is the name of the Little Nightmares II hero with a bag on his head?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Моно"
+            },
+            "en": {
+              "text": "Mono"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Шестая"
+            },
+            "en": {
+              "text": "Six"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сторож"
+            },
+            "en": {
+              "text": "The Janitor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Уилсон"
+            },
+            "en": {
+              "text": "Wilson"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-dl-volatile",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dl-volatile",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dl-volatile.webp",
+      "rawDropAs": "raw-quiz-images/medium/dl-volatile.png",
+      "metadata": {
+        "game": "Dying Light",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/239140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239140/ss_e3d9596c0ee06b6e4f9b09e5320d70fbf59cc78e.1920x1080.jpg?t=1793627304",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за заражённый, который выходит на охоту ночью в Dying Light?"
+        },
+        "en": {
+          "text": "Which infected comes out to hunt at night in Dying Light?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Прыгун"
+            },
+            "en": {
+              "text": "Volatile"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Немезис"
+            },
+            "en": {
+              "text": "Nemesis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бульдозер"
+            },
+            "en": {
+              "text": "Bulldozer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сторож"
+            },
+            "en": {
+              "text": "The Janitor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-wk-staff",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "wk-staff",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/wk-staff.webp",
+      "rawDropAs": "raw-quiz-images/medium/wk-staff.png",
+      "metadata": {
+        "game": "Black Myth: Wukong",
+        "topic": "image-mechanic",
+        "source": "https://store.steampowered.com/app/2358720/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2358720/ss_d9391ab31a4d15dddf7ba4949bfa44f5d9170580.1920x1080.jpg?t=1760601605",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чем сражается герой Black Myth: Wukong?"
+        },
+        "en": {
+          "text": "What does the hero of Black Myth: Wukong fight with?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Посохом"
+            },
+            "en": {
+              "text": "A staff"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мечом"
+            },
+            "en": {
+              "text": "A sword"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Копьём"
+            },
+            "en": {
+              "text": "A spear"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Луком"
+            },
+            "en": {
+              "text": "A bow"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-lop-krat",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "lop-krat",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/lop-krat.webp",
+      "rawDropAs": "raw-quiz-images/medium/lop-krat.png",
+      "metadata": {
+        "game": "Lies of P",
+        "topic": "image-where",
+        "source": "https://store.steampowered.com/app/1627720/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1627720/ss_6da0465ea662d368ad4b2cf1c0812faa1d0ca317.1920x1080.jpg?t=1764565054",
+        "crop": "answer-leak / logo removed",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется город, где происходит действие Lies of P?"
+        },
+        "en": {
+          "text": "What is the city where Lies of P takes place called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Крат"
+            },
+            "en": {
+              "text": "Krat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ярнам"
+            },
+            "en": {
+              "text": "Yharnam"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лотрик"
+            },
+            "en": {
+              "text": "Lothric"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Колумбия"
+            },
+            "en": {
+              "text": "Columbia"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-pd2-dallas",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "pd2-dallas",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/pd2-dallas.webp",
+      "rawDropAs": "raw-quiz-images/medium/pd2-dallas.png",
+      "metadata": {
+        "game": "Payday 2",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/218620/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/218620/ss_b03b1500ae7365f6e66fff5e756d72c8b0e7ff03.1920x1080.jpg?t=1789555107",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут грабителя в маске с американским флагом из Payday 2?"
+        },
+        "en": {
+          "text": "What is the name of the Payday 2 robber in the American flag mask?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Даллас"
+            },
+            "en": {
+              "text": "Dallas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хокстон"
+            },
+            "en": {
+              "text": "Hoxton"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вольф"
+            },
+            "en": {
+              "text": "Wolf"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чейнс"
+            },
+            "en": {
+              "text": "Chains"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-dloop-julianna",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dloop-julianna",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dloop-julianna.webp",
+      "rawDropAs": "raw-quiz-images/medium/dloop-julianna.png",
+      "metadata": {
+        "game": "Deathloop",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/1252330/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1252330/ss_14b296c1c693428f94c35b83a6524fdcd7d4c574.1920x1080.jpg?t=1750785409",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто это в Deathloop?"
+        },
+        "en": {
+          "text": "Who is this in Deathloop?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джулианна Блейк"
+            },
+            "en": {
+              "text": "Julianna Blake"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Элизабет"
+            },
+            "en": {
+              "text": "Elizabeth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эмили Колдуин"
+            },
+            "en": {
+              "text": "Emily Kaldwin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джесси Фейден"
+            },
+            "en": {
+              "text": "Jesse Faden"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-medium-dst-beefalo",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dst-beefalo",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dst-beefalo.webp",
+      "rawDropAs": "raw-quiz-images/medium/dst-beefalo.png",
+      "metadata": {
+        "game": "Don't Starve Together",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/322330/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_92f4145bd510f66d63028e1cdf27eb30bd44cea1.1920x1080.jpg?t=1793044716",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за лохматый зверь из Don't Starve Together?"
+        },
+        "en": {
+          "text": "What is this shaggy beast from Don't Starve Together?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Биффало"
+            },
+            "en": {
+              "text": "Beefalo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Як"
+            },
+            "en": {
+              "text": "A yak"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бизон"
+            },
+            "en": {
+              "text": "A bison"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мамонт"
+            },
+            "en": {
+              "text": "A mammoth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-bak-penguin",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "bak-penguin",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/bak-penguin.webp",
+      "rawDropAs": "raw-quiz-images/hard/bak-penguin.png",
+      "metadata": {
+        "game": "Batman: Arkham Knight",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/208650/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/208650/ss_315ff2cdd5f50d28614ae9cfa45283bb2b9f969e.1920x1080.jpg?t=1745534372",
+        "crop": "answer-leak / logo removed",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот злодей из Batman: Arkham Knight?"
+        },
+        "en": {
+          "text": "Who is this villain from Batman: Arkham Knight?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пингвин"
+            },
+            "en": {
+              "text": "The Penguin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Двуликий"
+            },
+            "en": {
+              "text": "Two-Face"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Загадочник"
+            },
+            "en": {
+              "text": "The Riddler"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бэйн"
+            },
+            "en": {
+              "text": "Bane"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-bac-deadshot",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "bac-deadshot",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/bac-deadshot.webp",
+      "rawDropAs": "raw-quiz-images/hard/bac-deadshot.png",
+      "metadata": {
+        "game": "Batman: Arkham City",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/200260/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/200260/ss_ec8041967b7e8e37ff8be2805c6545cf484e682c.1920x1080.jpg?t=1745964057",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот снайпер из Batman: Arkham City?"
+        },
+        "en": {
+          "text": "Who is this sniper from Batman: Arkham City?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Дэдшот"
+            },
+            "en": {
+              "text": "Deadshot"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бэйн"
+            },
+            "en": {
+              "text": "Bane"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пугало"
+            },
+            "en": {
+              "text": "Scarecrow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Загадочник"
+            },
+            "en": {
+              "text": "The Riddler"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-mordor-celebrimbor",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "mordor-celebrimbor",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/mordor-celebrimbor.webp",
+      "rawDropAs": "raw-quiz-images/hard/mordor-celebrimbor.png",
+      "metadata": {
+        "game": "Middle-earth: Shadow of Mordor",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/241930/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/241930/ss_601701af77a18ef504c38f0a920053f3f62ff059.1920x1080.jpg?t=1780594906",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот призрачный эльф рядом с Талионом в Shadow of Mordor?"
+        },
+        "en": {
+          "text": "Who is the ghostly elf next to Talion in Shadow of Mordor?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Келебримбор"
+            },
+            "en": {
+              "text": "Celebrimbor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Саурон"
+            },
+            "en": {
+              "text": "Sauron"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гэндальф"
+            },
+            "en": {
+              "text": "Gandalf"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Леголас"
+            },
+            "en": {
+              "text": "Legolas"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-mordor-caragors",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "mordor-caragors",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/mordor-caragors.webp",
+      "rawDropAs": "raw-quiz-images/hard/mordor-caragors.png",
+      "metadata": {
+        "game": "Middle-earth: Shadow of Mordor",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/241930/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/241930/ss_31ed2c204afcd214a322ed4df5f09dba0c21c911.1920x1080.jpg?t=1780594906",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называются хищные звери поменьше на этом кадре из Shadow of Mordor?"
+        },
+        "en": {
+          "text": "What are the smaller predators in this Shadow of Mordor screenshot called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Карагоры"
+            },
+            "en": {
+              "text": "Caragors"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Варги"
+            },
+            "en": {
+              "text": "Wargs"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тролли"
+            },
+            "en": {
+              "text": "Trolls"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Олифанты"
+            },
+            "en": {
+              "text": "Oliphaunts"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-ln1-janitor",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ln1-janitor",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ln1-janitor.webp",
+      "rawDropAs": "raw-quiz-images/hard/ln1-janitor.png",
+      "metadata": {
+        "game": "Little Nightmares",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/424840/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/424840/351e2a93274cadae4952a1d05847c9a4ea723129/ss_351e2a93274cadae4952a1d05847c9a4ea723129.1920x1080.jpg?t=1773135169",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот длиннорукий враг из Little Nightmares?"
+        },
+        "en": {
+          "text": "Who is this long-armed enemy from Little Nightmares?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сторож"
+            },
+            "en": {
+              "text": "The Janitor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Моно"
+            },
+            "en": {
+              "text": "Mono"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Прыгун"
+            },
+            "en": {
+              "text": "Volatile"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бульдозер"
+            },
+            "en": {
+              "text": "Bulldozer"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-dst-wilson",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "dst-wilson",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/dst-wilson.webp",
+      "rawDropAs": "raw-quiz-images/hard/dst-wilson.png",
+      "metadata": {
+        "game": "Don't Starve Together",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/322330/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/ss_f94ff132f776463146136c57ee11b85604e5504a.1920x1080.jpg?t=1793044716",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут учёного с торчащими волосами из Don't Starve Together?"
+        },
+        "en": {
+          "text": "What is the name of the scientist with spiky hair from Don't Starve Together?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Уилсон"
+            },
+            "en": {
+              "text": "Wilson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вольфганг"
+            },
+            "en": {
+              "text": "Wolfgang"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Уиллоу"
+            },
+            "en": {
+              "text": "Willow"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Венди"
+            },
+            "en": {
+              "text": "Wendy"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-dl-crane",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "dl-crane",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/dl-crane.webp",
+      "rawDropAs": "raw-quiz-images/hard/dl-crane.png",
+      "metadata": {
+        "game": "Dying Light",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/239140/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/239140/ss_0f20a60df3fec00deb16c12428cdb35fcce5bf0d.1920x1080.jpg?t=1793627304",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как зовут героя Dying Light?"
+        },
+        "en": {
+          "text": "What is the name of the hero of Dying Light?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кайл Крейн"
+            },
+            "en": {
+              "text": "Kyle Crane"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кольт Ван"
+            },
+            "en": {
+              "text": "Colt Vahn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Карлос Оливейра"
+            },
+            "en": {
+              "text": "Carlos Oliveira"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Талион"
+            },
+            "en": {
+              "text": "Talion"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-pd2-bulldozer",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "pd2-bulldozer",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/pd2-bulldozer.webp",
+      "rawDropAs": "raw-quiz-images/hard/pd2-bulldozer.png",
+      "metadata": {
+        "game": "Payday 2",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/218620/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/218620/ss_b26f1852b68ab0af7fdd4932b1c9f78dc87a0325.1920x1080.jpg?t=1789555107",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называют этого спецврага в бронекостюме из Payday 2?"
+        },
+        "en": {
+          "text": "What is this armored special enemy in Payday 2 called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Бульдозер"
+            },
+            "en": {
+              "text": "Bulldozer"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Прыгун"
+            },
+            "en": {
+              "text": "Volatile"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Немезис"
+            },
+            "en": {
+              "text": "Nemesis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сторож"
+            },
+            "en": {
+              "text": "The Janitor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-ets2-munich",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ets2-munich",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ets2-munich.webp",
+      "rawDropAs": "raw-quiz-images/hard/ets2-munich.png",
+      "metadata": {
+        "game": "Euro Truck Simulator 2",
+        "topic": "image-where",
+        "source": "https://store.steampowered.com/app/227300/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/227300/ba8c4f88d6d98665ee596b3ee53b158798ca614c/ss_ba8c4f88d6d98665ee596b3ee53b158798ca614c.1920x1080.jpg?t=1793285269",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком городе это здание из Euro Truck Simulator 2?"
+        },
+        "en": {
+          "text": "Which city is this Euro Truck Simulator 2 building in?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мюнхен"
+            },
+            "en": {
+              "text": "Munich"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Штутгарт"
+            },
+            "en": {
+              "text": "Stuttgart"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Берлин"
+            },
+            "en": {
+              "text": "Berlin"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Франкфурт"
+            },
+            "en": {
+              "text": "Frankfurt"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img10-hard-re3-carlos",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "re3-carlos",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/re3-carlos.webp",
+      "rawDropAs": "raw-quiz-images/hard/re3-carlos.png",
+      "metadata": {
+        "game": "Resident Evil 3 (Remake)",
+        "topic": "image-who",
+        "source": "https://store.steampowered.com/app/952060/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/952060/ss_34f01910d65fb171a27e058cb74623c0eb53ba69.1920x1080.jpg?t=1790215956",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-steam8-30"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот боец из ремейка Resident Evil 3?"
+        },
+        "en": {
+          "text": "Who is this soldier from the Resident Evil 3 remake?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Карлос Оливейра"
+            },
+            "en": {
+              "text": "Carlos Oliveira"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Леон С. Кеннеди"
+            },
+            "en": {
+              "text": "Leon S. Kennedy"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Крис Редфилд"
+            },
+            "en": {
+              "text": "Chris Redfield"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Итан Уинтерс"
+            },
+            "en": {
+              "text": "Ethan Winters"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
