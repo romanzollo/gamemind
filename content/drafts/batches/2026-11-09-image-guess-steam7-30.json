@@ -16,17 +16,18 @@
       "metadata": {
         "game": "Team Fortress 2",
         "topic": "image-who",
-        "source": "https://store.steampowered.com/app/440/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440/0000002576.1920x1080.jpg?t=1757348372",
+        "source": "https://www.playground.ru/",
+        "sourceFile": "owner-supplied screenshot (playground.ru gallery)",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-09-image-guess-steam7-30"
+        "batch": "2026-11-09-image-guess-steam7-30",
+        "edit": "site watermark trimmed from the bottom-right edge"
       },
       "translations": {
         "ru": {
-          "text": "Какой класс Team Fortress 2 стоит на переднем плане?"
+          "text": "Какой это класс Team Fortress 2?"
         },
         "en": {
-          "text": "Which Team Fortress 2 class is in the foreground?"
+          "text": "Which Team Fortress 2 class is this?"
         }
       },
       "options": [
@@ -88,10 +89,11 @@
       "metadata": {
         "game": "Team Fortress 2",
         "topic": "image-who",
-        "source": "https://store.steampowered.com/app/440/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440/0000002577.1920x1080.jpg?t=1757348372",
+        "source": "https://www.playground.ru/",
+        "sourceFile": "owner-supplied screenshot (playground.ru gallery)",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-09-image-guess-steam7-30"
+        "batch": "2026-11-09-image-guess-steam7-30",
+        "edit": "site watermark trimmed from the bottom-right edge"
       },
       "translations": {
         "ru": {
@@ -737,17 +739,18 @@
       "metadata": {
         "game": "Team Fortress 2",
         "topic": "image-who",
-        "source": "https://store.steampowered.com/app/440/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440/0000002580.1920x1080.jpg?t=1757348372",
+        "source": "https://www.playground.ru/",
+        "sourceFile": "owner-supplied screenshot (playground.ru gallery)",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-09-image-guess-steam7-30"
+        "batch": "2026-11-09-image-guess-steam7-30",
+        "edit": "site watermark trimmed from the bottom-right edge"
       },
       "translations": {
         "ru": {
-          "text": "Какой класс Team Fortress 2 взлетает, прыгая на взрыве собственной ракеты?"
+          "text": "Какой класс Team Fortress 2 бежит с лопатой в руке?"
         },
         "en": {
-          "text": "Which Team Fortress 2 class flies up by jumping on the blast of his own rocket?"
+          "text": "Which Team Fortress 2 class is running with a shovel?"
         }
       },
       "options": [
@@ -1463,17 +1466,18 @@
       "metadata": {
         "game": "Team Fortress 2",
         "topic": "image-who",
-        "source": "https://store.steampowered.com/app/440/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440/0000002581.1920x1080.jpg?t=1757348372",
+        "source": "https://www.playground.ru/",
+        "sourceFile": "owner-supplied screenshot (playground.ru gallery)",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-09-image-guess-steam7-30"
+        "batch": "2026-11-09-image-guess-steam7-30",
+        "edit": "site watermark trimmed from the bottom-right edge"
       },
       "translations": {
         "ru": {
-          "text": "Кто подкрадывается с ножом к Снайперу в Team Fortress 2?"
+          "text": "Кто подкрадывается к Снайперу в Team Fortress 2?"
         },
         "en": {
-          "text": "Who is sneaking up on the Sniper with a knife in Team Fortress 2?"
+          "text": "Who is sneaking up on the Sniper in Team Fortress 2?"
         }
       },
       "options": [
