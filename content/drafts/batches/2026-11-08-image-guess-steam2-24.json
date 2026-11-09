@@ -160,10 +160,11 @@
       "metadata": {
         "game": "Stardew Valley",
         "topic": "image-character",
-        "source": "https://store.steampowered.com/app/413150/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/ss_30aeedc47e731232ade368831a598d6545346f70.1920x1080.jpg",
+        "source": "https://stopgame.ru/game/stardew_valley/gallery",
+        "sourceFile": "https://images.stopgame.ru/screenshots/15646/stardew_valley-3.jpg",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-08-image-guess-steam2-24"
+        "batch": "2026-11-08-image-guess-steam2-24",
+        "edit": "speaker name plate blanked"
       },
       "translations": {
         "ru": {

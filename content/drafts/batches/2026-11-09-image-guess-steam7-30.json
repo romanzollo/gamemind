@@ -1027,9 +1027,9 @@
         "topic": "image-who",
         "source": "https://store.steampowered.com/app/49520/",
         "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/49520/ss_dc9311564dcc2e410707e5ea7a127425702785c8.1920x1080.jpg?t=1793288352",
-        "crop": "answer-leak / logo removed",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-09-image-guess-steam7-30"
+        "batch": "2026-11-09-image-guess-steam7-30",
+        "edit": "place-card text blanked"
       },
       "translations": {
         "ru": {
@@ -1681,7 +1681,6 @@
         "topic": "image-who",
         "source": "https://store.steampowered.com/app/8870/",
         "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/8870/ss_3a364ffdcd2c1eeb3957435c624fc7c383d8cb69.1920x1080.jpg?t=1728673518",
-        "crop": "answer-leak / logo removed",
         "localizationStrategy": "official-ru",
         "batch": "2026-11-09-image-guess-steam7-30"
       },
@@ -1968,18 +1967,17 @@
       "metadata": {
         "game": "Divinity: Original Sin 2",
         "topic": "image-who",
-        "source": "https://store.steampowered.com/app/435150/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/435150/ss_b59e5889726cab2cf01a93d0c0d192d25928952a.1920x1080.jpg?t=1765811123",
-        "crop": "answer-leak / logo removed",
+        "source": "https://vgtimes.ru/games/divinity-original-sin-2-definitive-edition/screenshots/",
+        "sourceFile": "https://ru3-files.vgtimes.ru/gallery/main/167550/149157281_1791437775_4827.webp",
         "localizationStrategy": "official-ru",
         "batch": "2026-11-09-image-guess-steam7-30"
       },
       "translations": {
         "ru": {
-          "text": "Кто этот спутник из Divinity: Original Sin 2?"
+          "text": "Кто стоит в центре этого кадра из Divinity: Original Sin 2?"
         },
         "en": {
-          "text": "Which Divinity: Original Sin 2 companion is this?"
+          "text": "Who is standing in the middle of this Divinity: Original Sin 2 screenshot?"
         }
       },
       "options": [
@@ -2043,9 +2041,9 @@
         "topic": "image-who",
         "source": "https://store.steampowered.com/app/435150/",
         "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/435150/ss_efa99b837c22f45f690f27d3c656de31a4446075.1920x1080.jpg?t=1765811123",
-        "crop": "answer-leak / logo removed",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-09-image-guess-steam7-30"
+        "batch": "2026-11-09-image-guess-steam7-30",
+        "edit": "character name blanked in the creation UI"
       },
       "translations": {
         "ru": {

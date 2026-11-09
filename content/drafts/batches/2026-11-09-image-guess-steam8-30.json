@@ -232,9 +232,8 @@
       "metadata": {
         "game": "Little Nightmares",
         "topic": "image-who",
-        "source": "https://store.steampowered.com/app/424840/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/424840/659c0e9407e6886ed3e27320db598274c0e352a2/ss_659c0e9407e6886ed3e27320db598274c0e352a2.1920x1080.jpg?t=1773135169",
-        "crop": "answer-leak / logo removed",
+        "source": "https://stopgame.ru/game/little_nightmares/gallery",
+        "sourceFile": "https://images.stopgame.ru/screenshots/16055/little_nightmares-2.jpg",
         "localizationStrategy": "official-ru",
         "batch": "2026-11-09-image-guess-steam8-30"
       },
@@ -953,9 +952,8 @@
       "metadata": {
         "game": "Little Nightmares II",
         "topic": "image-who",
-        "source": "https://store.steampowered.com/app/860510/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/860510/ss_a2f4c8ad95844656764d6b7d3a033fc787e82144.1920x1080.jpg?t=1730127763",
-        "crop": "answer-leak / logo removed",
+        "source": "https://stopgame.ru/game/little_nightmares_2/gallery",
+        "sourceFile": "https://images.stopgame.ru/screenshots/19232/little_nightmares_2-9.jpg",
         "localizationStrategy": "official-ru",
         "batch": "2026-11-09-image-guess-steam8-30"
       },
@@ -1171,8 +1169,7 @@
         "game": "Lies of P",
         "topic": "image-where",
         "source": "https://store.steampowered.com/app/1627720/",
-        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1627720/ss_6da0465ea662d368ad4b2cf1c0812faa1d0ca317.1920x1080.jpg?t=1764565054",
-        "crop": "answer-leak / logo removed",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1627720/ss_436fc8fb935dbdb2fb3d98e191633264ce5c94ce.1920x1080.jpg?t=1764565054",
         "localizationStrategy": "official-ru",
         "batch": "2026-11-09-image-guess-steam8-30"
       },
