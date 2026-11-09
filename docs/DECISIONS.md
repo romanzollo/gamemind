@@ -235,7 +235,7 @@ For a stable overview of layers, Neon access, quiz invariants, auth, and media, 
 | `TEXT` | Localized text (optional illustration later) | Text options | ?Who developed The Witcher 3?? |
 | `IMAGE_GUESS` | Image + short localized caption | Text options | Screenshot ? guess game / level / character |
 | `IMAGE_OPTIONS` (later) | Text or image | Image or text tiles | Pick the correct character portrait |
-| `AUDIO_GUESS` (later) | Audio clip + caption | Text options | Guess OST / boss theme |
+| `AUDIO_GUESS` (ADR «Audio questions: AUDIO_GUESS», Nov 9, 2026) | Audio clip + caption | Text options | Guess OST / boss theme |
 
 **MVP target:** `TEXT` (current) + `IMAGE_GUESS`.
 
@@ -2738,3 +2738,139 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
   - result block and profile block each render inside `<Suspense fallback={null}>`, like the daily streak;
   - the score card and buttons never wait for them, and submit is untouched;
   - a failed read hides the block (soft-miss).
+
+## Audio questions: AUDIO_GUESS (November 9, 2026)
+
+**Context:** ROADMAP 5.3, owner request (Nov 5; the Blitz / Survival part on Nov 9). A new question kind: a short music clip + 4 text options («Из какой игры эта музыка?», «Чья это тема?»). The owner asked for top-product quality, above all in the fast modes, where seconds matter and listening itself takes time. The slot was reserved in «Question Media And Visual Question Types». The owner approved every point below on Nov 9.
+
+### Rights and takedown
+
+| Rule | Choice |
+|------|--------|
+| Length | Clip ≤ 10 s, usually 6–8 s; one fragment per track; 128 kbps — a quote, not a substitute for the soundtrack |
+| Attribution | «Track — composer — game» in the result review (a citation needs the author and the source, ГК РФ ст. 1274). Stored in `Question.metadata.audio` (`track`, `composer`, `source`, `sourceFile`) |
+| Excluded | Licensed songs (GTA / NFS radio), film themes, vocals that name the game (Portal «Still Alive»), an announcer saying the title |
+| Takedown | Unpublish → no new game gets the clip at once; then delete the object (per the docs, Vercel Blob's CDN stops serving it within ~60 s). Old reviews show «clip removed» on 404. A «rights holders» contact comes later (the owner picks the address) |
+| Git | **Clips never go to git.** The repo is public: a DMCA claim would hit the whole repo, and git history cannot be cleaned. Sources live in `raw-quiz-audio/` (gitignored) |
+
+The risk is not zero: the citation exception targets informational and educational use, and a quiz is entertainment. The rules above lower the risk; they do not remove it.
+
+### Clips: sources and cutting
+
+- The owner brings the sources (a bought OST, official publisher / composer channels, own in-game capture) into `raw-quiz-audio/`.
+- Claude proposes themes (skill `gamemind-questions`), cuts by timecodes from the batch file with local ffmpeg, normalizes loudness and builds an HTML review page with players.
+- Claude cannot hear audio. Silence and loudness are measured, but the owner chooses or approves the recognizable moment by ear.
+
+### Storage and delivery (RU-first)
+
+- Prod: Vercel Blob, same-origin `/media/audio/{hash}.mp3`. The `/media` rewrite is already proven from RU without VPN (ADR «Media Storage And Upload (RU-first)»); the domain stays on `76.76.21.21`.
+- Dev: `STORAGE_PROVIDER=local-public` → `public/media/audio/` (gitignored).
+- Not R2 / Cloudflare.
+
+### Format
+
+| Rule | Choice |
+|------|--------|
+| Codec | **MP3 CBR 128 kbps, 44.1 kHz, stereo**; 8 s ≈ 128 KB, cap 300 KB |
+| Loudness | −16 LUFS, true peak −1.5 dBTP; fade-in ~0.2 s, fade-out ~0.5 s |
+| Length | Validation accepts 4–11 s; the target is 6–8 s |
+
+**Not chosen:**
+- Opus: iOS Safari support depends on the version and the container (WebM / CAF / Ogg) and has playback bugs. Saving 30–40 KB is not worth the risk on the main platform.
+- AAC/M4A: slightly better quality, but MP4 tag boxes are harder to strip reliably in our own code. MP3 ID3 blocks are trivial for the server to cut.
+
+### No answer leak
+
+- Served name = the first 16 hex of SHA-256 of the MP3 bytes, as for images. `content/quiz-audio.manifest.json` maps the slug path → the served path; the app never reads it.
+- No tags. The script writes none (`-map_metadata -1`, no ID3v1/v2, no Xing/LAME frame) and checks with `ffprobe`. The server strips ID3 on upload anyway and rejects anything that is not plain MPEG audio frames.
+- Shazam on a second phone is inherent to the kind, like reverse image search. Audio questions score like any other.
+
+### Player (mobile first)
+
+| Rule | Choice |
+|------|--------|
+| Element | One shared `HTMLAudioElement` for playback. Web Audio only *decodes* (for the waveform), never plays: iOS mutes Web Audio with the silent switch, while `<audio>` ignores it (WebKit) |
+| Position | An audio question is never first and never right after another one (reordered in memory before the create INSERT). The first answer tap unlocks audio on iOS, so the next clip starts by itself. If `play()` is blocked → a big «Listen» button |
+| Preload | All clips of the game / wave are fetched whole at start (`fetch` → Blob → object URL). iOS ignores `preload`, and a clip in memory no longer depends on the network |
+| Not loaded | The question moves to the end of the queue. Still not loaded → in Blitz / Survival it is skipped without being shown (0 points, no time, no −6), and the review says «clip did not load». In Classic it is shown with «Retry», and a guess is possible. Failures are counted in Sentry |
+| Look | A waveform like Telegram voice messages (≈40 bars), computed on the device from the loaded clip, so nothing extra goes into the snapshot. The played part fills; «0:03 / 0:08»; «Again»; the play button is ≥ 44 px. `prefers-reduced-motion` → only the fill |
+
+Platform note: on iOS an `<audio>` clip pauses the player's own music (Spotify / Apple Music), which does not resume by itself. The Safari Audio Session API is a later option.
+
+### Blitz and Survival: the listening window
+
+**Problem:** Blitz = 10 questions / 60 s (~6 s each), so an 8 s clip is 13 % of the game. Survival starts with a 20 s bank, and the clip would eat 40 % of it.
+
+**Decision — listening window:** while the player is on an audio question, the clock stands still **for up to 10 s** (`audioListenWindowSeconds = 10`). The unused part does not carry over. Repeats inside the window are free; after the window the clock runs.
+
+**Server rule (no trust in the client):**
+
+```txt
+credit(j) = min(10 s, answeredAt(j) − answeredAt(previous lock))   // audio question j only
+previous lock = the lock before j in answeredAt order; none → the session clock start
+```
+
+Both times are the server `answeredAt` that Answer lock-in already writes (request arrival, JS Date). No new request, no TOAST read; the lock endpoint is unchanged.
+
+| Mode | How |
+|------|-----|
+| Survival | `replaySurvivalWave` adds `credit(j)` to the budget **before** the bank check of answer j, so the bank cannot end inside the window. The client bank uses the same pure function. Wave end, T0' and the bank-out rules are unchanged |
+| Blitz | `timedEndsAt` = JS Date after connect + 60 s + 10 s × the audio questions in the snapshot. Only the number changes; canon E is kept. This is a **hard cap**, and the lock check is unchanged. Submit replays the locks (the snapshot is already loaded on submit): answer j counts if `answeredAt(j) ≤ start + 60 s + Σ credits up to j + grace 3 s`. The client countdown uses the same formula |
+| Blitz record | New scalar `QuizResult.clockCreditMs`, written in the complete hop (scalars only). Best-Blitz time = `completedAt − startedAt − clockCreditMs` |
+| Classic | No clock, so no window. Unlimited repeats |
+| Daily | **No audio in the first release:** everyone gets the same set, and music cannot be switched off there. The Daily pick excludes `AUDIO_GUESS`. **Later (owner liked it, Nov 9): a «music day»** — one fixed weekday whose Daily includes audio, announced on the Daily card in advance, so the player chooses when to play (the Daily resumes within the day). Separate step after 5.3, decided on load-failure and «music off» stats |
+
+**Cost:** a forged client gets the same ≤ 10 s per audio question as an honest listener, but may reorder locks and spend that time on a text question. The gain is bounded and of the same class as Survival late locks. A Blitz lock may reveal the right option for an answer that will not count; Survival already accepts that too.
+
+**Not chosen:**
+- A pause «while the clip plays», reported by the client: a forged client would listen forever.
+- A separate audio time pool spent freely: it inflates the Survival bank (recognized in 2 s → +8 s of life), and in Blitz it moves listening time to text questions.
+- A share cap as the solution: it is only a supplement (see below).
+- Audio only in Classic / Daily: kept as the fallback if the window fails on prod. It loses the best moment («knew it from three notes under the clock»).
+- A «Skip» button in timed modes: the window already protects time, and a guess (25 %) beats a skip (0).
+
+**Share:** with the first batch the natural share in the pool is ~3–4 %, so a game has 0–1 audio questions. A cap in pick is a separate step with a smoke matrix, taken once the audio share of any difficulty pool exceeds ~8 %.
+
+### No sound and accessibility
+
+- A lobby switch **«Music questions»** in Classic / Blitz / Survival, remembered on this device (off on the phone in the metro, on at the PC). Off → the pick excludes `AUDIO_GUESS` (cycle `excludeIds`, same pooled hop).
+- A hint when the game / wave contains music (Survival pre-roll, first line in Blitz).
+- No text substitute for players who cannot hear: describing a melody changes the question, so switching music off is the honest answer.
+- Screen readers: real buttons with labels; the waveform is `aria-hidden`.
+
+### Admin
+
+- **Step A:** upload a ready MP3. The server checks the MPEG frames, 4–11 s and ≤ 300 KB, strips ID3, names the file by hash and stores it through the storage adapter. A player in the form and in the list; fields for track / composer / source.
+- **Step B (later; new dependency → needs the owner's ok):** trim in the browser. Pick 5–10 s on a waveform, preview with fades, encode MP3 in the browser with a JS encoder, then follow path A.
+- **Not chosen:** ffmpeg on Vercel. It is a ~70 MB binary with a slower cold start, and a function cannot take a large source file (~4.5 MB request body).
+
+### Snapshot and hot path
+
+```txt
+Schema:   enum QuestionType += AUDIO_GUESS; QuizResult.clockCreditMs INT NOT NULL DEFAULT 0
+          (prod migration BEFORE deploy — the Aug 15 / Aug 21 42703 lessons)
+Pick:     audio = the PROMPT QuestionAsset (mimeType audio/mpeg); the resolve query already returns
+          its URL → snapshot questions[].audioUrl only. No JOIN, no extra hop
+Create:   «not first, not adjacent» order in memory; Blitz duration = 60 + 10 × audio
+Lock:     unchanged
+Submit:   Blitz replay + Survival replay with credits; complete hop = scalars + clockCreditMs
+Review:   audioUrl in reviewPayload, mini player + attribution
+Daily:    ensure excludes AUDIO_GUESS
+```
+
+After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows for Classic with audio, Blitz (pause, F5 inside the window, hard cap) and Survival (bank pause, replay).
+
+**Publishing order:** no audio question is published before the listening window ships. Otherwise it would reach Blitz / Survival without the pause.
+
+### First batch
+
+30–40 themes: EASY 15 (main themes), MEDIUM 15 (bosses, famous tracks), HARD 10 (locations, «which part of the series»). The list goes through `gamemind-questions` and the owner.
+
+### How we check
+
+- Vitest: the window credit and both replays (answer after the window, two audio questions, grace, out-of-order locks).
+- Real devices: iPhone (silent switch on, first tap, screen lock), Android Chrome, desktop.
+- Prod: `/media/audio/{hash}.mp3` → 200 with `audio/mpeg`, from RU without VPN; a deleted object is gone in ~1 min; `ffprobe` shows no tags.
+- After launch: the share of clips that failed to load, the mean time on an audio question, % correct per audio question. `audioListenWindowSeconds` is tuned from this data.
+
+**References:** Question Media And Visual Question Types; Media Storage And Upload (RU-first); Quiz answer leak — opaque play ids; Answer lock-in; Survival on answer lock-in; Timed Mode MVP; Submit time = request arrival; `docs/QUIZ_NEON_HOT_PATH.md`.
