@@ -415,6 +415,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 9 (batch 9):** image batch 9 (24 Steam frames, 12 games, prefix img11, db45a11) imported, tagged and published on dev and prod with the usual order: dev publish → commit → wait for 200 on the WebP files → prod import → taxonomy:sync → prod publish. Prod: 1053 live (TEXT 668 + IMAGE 385).
 
+**Nov 9 (batch 10):** image batch 10 «places in cult games» (48 questions, prefix img12, a70086f) published on dev and prod in the same order. New source: fan wikis (fandom.com) through the MediaWiki API, approved by the owner for named locations; frames ≥1280 wide, signs that name the place are a reason to drop the frame. Prod: 1101 live (TEXT 668 + IMAGE 433).
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
