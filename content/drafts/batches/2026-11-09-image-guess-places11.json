@@ -1,0 +1,1595 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 11: memorable places in cult games, part 2 (The Witcher 3, Morrowind, Dark Souls III, Bloodborne, Half-Life 2, Mass Effect 2, Breath of the Wild, Cyberpunk 2077, Assassin's Creed II and Odyssey, God of War, GTA V). Frames from fan wikis; facts already in the bank (Yharnam, Rapture, the HL2 Citadel) were dropped. Import is idempotent by draftKey.",
+  "questions": [
+    {
+      "draftKey": "img13-medium-w3-kaertrolde",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "w3-kaertrolde",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/w3-kaertrolde.webp",
+      "rawDropAs": "raw-quiz-images/medium/w3-kaertrolde.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-place",
+        "source": "https://witcher.fandom.com/wiki/Kaer_Trolde",
+        "sourceFile": "https://static.wikia.nocookie.net/witcher/images/f/f0/Castle_of_Kaer_Trolde.jpg/revision/latest?cb=20160131180451",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за замок на Скеллиге в «Ведьмаке 3»?"
+        },
+        "en": {
+          "text": "What is this castle in Skellige in The Witcher 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Каэр Трольде"
+            },
+            "en": {
+              "text": "Kaer Trolde"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Каэр Морхен"
+            },
+            "en": {
+              "text": "Kaer Morhen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Каэр Муир"
+            },
+            "en": {
+              "text": "Kaer Muire"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ард Скеллиг"
+            },
+            "en": {
+              "text": "Ard Skellig"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-w3-crowsperch",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "w3-crowsperch",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/w3-crowsperch.webp",
+      "rawDropAs": "raw-quiz-images/hard/w3-crowsperch.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-place",
+        "source": "https://witcher.fandom.com/wiki/Crow's_Perch",
+        "sourceFile": "https://static.wikia.nocookie.net/witcher/images/e/ee/Crows_Perch.jpg/revision/latest?cb=20160212171735",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта крепость Кровавого Барона в «Ведьмаке 3»?"
+        },
+        "en": {
+          "text": "What is the Bloody Baron's fortress called in The Witcher 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Замок Вроницы"
+            },
+            "en": {
+              "text": "Crow's Perch"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Каэр Морхен"
+            },
+            "en": {
+              "text": "Kaer Morhen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Оксенфурт"
+            },
+            "en": {
+              "text": "Oxenfurt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Белый Сад"
+            },
+            "en": {
+              "text": "White Orchard"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-w3-novigrad",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "w3-novigrad",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/w3-novigrad.webp",
+      "rawDropAs": "raw-quiz-images/medium/w3-novigrad.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-place",
+        "source": "https://witcher.fandom.com/wiki/Hierarch_Square",
+        "sourceFile": "https://static.wikia.nocookie.net/witcher/images/3/39/Novigrad-hierarch-square-aerial.jpg/revision/latest?cb=20170817210055",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком городе эта площадь из «Ведьмака 3»?"
+        },
+        "en": {
+          "text": "Which city is this square in, in The Witcher 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Новиград"
+            },
+            "en": {
+              "text": "Novigrad"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Оксенфурт"
+            },
+            "en": {
+              "text": "Oxenfurt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вызима"
+            },
+            "en": {
+              "text": "Vizima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Боклер"
+            },
+            "en": {
+              "text": "Beauclair"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-morrowind-balmora",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "morrowind-balmora",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/morrowind-balmora.webp",
+      "rawDropAs": "raw-quiz-images/hard/morrowind-balmora.png",
+      "metadata": {
+        "game": "The Elder Scrolls III: Morrowind",
+        "topic": "image-place",
+        "source": "https://elderscrolls.fandom.com/wiki/Balmora_(Morrowind)",
+        "sourceFile": "https://static.wikia.nocookie.net/elderscrolls/images/8/82/Balmora_-_Morrowind.png/revision/latest?cb=20160712160622",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Morrowind?"
+        },
+        "en": {
+          "text": "Which town is this in Morrowind?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Балмора"
+            },
+            "en": {
+              "text": "Balmora"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сейда Нин"
+            },
+            "en": {
+              "text": "Seyda Neen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вивек"
+            },
+            "en": {
+              "text": "Vivec"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Альд'рун"
+            },
+            "en": {
+              "text": "Ald'ruin"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-ds3-irithyll",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "ds3-irithyll",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/ds3-irithyll.webp",
+      "rawDropAs": "raw-quiz-images/medium/ds3-irithyll.png",
+      "metadata": {
+        "game": "Dark Souls III",
+        "topic": "image-place",
+        "source": "https://darksouls.fandom.com/wiki/Irithyll_of_the_Boreal_Valley",
+        "sourceFile": "https://static.wikia.nocookie.net/darksouls/images/1/1a/Irithyll_of_the_Boreal_Valley_-_15.jpg/revision/latest?cb=20161026145933",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за город под луной в Dark Souls III?"
+        },
+        "en": {
+          "text": "What is this moonlit city in Dark Souls III?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Иритилл Холодной долины"
+            },
+            "en": {
+              "text": "Irithyll of the Boreal Valley"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Анор Лондо"
+            },
+            "en": {
+              "text": "Anor Londo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Замок Лотрика"
+            },
+            "en": {
+              "text": "Lothric Castle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ринделл"
+            },
+            "en": {
+              "text": "Ringed City"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-bb-huntersdream",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "bb-huntersdream",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/bb-huntersdream.webp",
+      "rawDropAs": "raw-quiz-images/medium/bb-huntersdream.png",
+      "metadata": {
+        "game": "Bloodborne",
+        "topic": "image-place",
+        "source": "https://bloodborne.fandom.com/wiki/Hunter's_Dream",
+        "sourceFile": "https://static.wikia.nocookie.net/bloodborne/images/6/65/Image-bloodborne-screen-36d.jpg/revision/latest?cb=20150320151427",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Bloodborne — убежище, куда охотник возвращается?"
+        },
+        "en": {
+          "text": "Where is this in Bloodborne — the refuge the hunter returns to?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сон охотника"
+            },
+            "en": {
+              "text": "Hunter's Dream"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Соборный округ"
+            },
+            "en": {
+              "text": "Cathedral Ward"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бюргенверт"
+            },
+            "en": {
+              "text": "Byrgenwerth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кошмар охотника"
+            },
+            "en": {
+              "text": "Hunter's Nightmare"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-bb-cathedral",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "bb-cathedral",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/bb-cathedral.webp",
+      "rawDropAs": "raw-quiz-images/hard/bb-cathedral.png",
+      "metadata": {
+        "game": "Bloodborne",
+        "topic": "image-place",
+        "source": "https://bloodborne.fandom.com/wiki/Cathedral_Ward",
+        "sourceFile": "https://static.wikia.nocookie.net/bloodborne/images/e/e2/Bloodborne%E2%84%A2_20151012001614.jpg/revision/latest?cb=20151013084225",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Bloodborne?"
+        },
+        "en": {
+          "text": "Where is this in Bloodborne?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Соборный округ"
+            },
+            "en": {
+              "text": "Cathedral Ward"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Старый Ярнам"
+            },
+            "en": {
+              "text": "Old Yharnam"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Запретный лес"
+            },
+            "en": {
+              "text": "Forbidden Woods"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бюргенверт"
+            },
+            "en": {
+              "text": "Byrgenwerth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-bb-mensis",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "bb-mensis",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/bb-mensis.webp",
+      "rawDropAs": "raw-quiz-images/hard/bb-mensis.png",
+      "metadata": {
+        "game": "Bloodborne",
+        "topic": "image-place",
+        "source": "https://bloodborne.fandom.com/wiki/Nightmare_of_Mensis",
+        "sourceFile": "https://static.wikia.nocookie.net/bloodborne/images/5/55/Bloodborne%E2%84%A2_20151009210427.jpg/revision/latest?cb=20151013083035",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Bloodborne?"
+        },
+        "en": {
+          "text": "Where is this in Bloodborne?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кошмар Менсиса"
+            },
+            "en": {
+              "text": "Nightmare of Mensis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кошмар охотника"
+            },
+            "en": {
+              "text": "Hunter's Nightmare"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Яаар'гул"
+            },
+            "en": {
+              "text": "Yahar'gul"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сон охотника"
+            },
+            "en": {
+              "text": "Hunter's Dream"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-easy-hl2-city17",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "hl2-city17",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/hl2-city17.webp",
+      "rawDropAs": "raw-quiz-images/easy/hl2-city17.png",
+      "metadata": {
+        "game": "Half-Life 2",
+        "topic": "image-place",
+        "source": "https://half-life.fandom.com/wiki/City_17",
+        "sourceFile": "https://static.wikia.nocookie.net/half-life/images/a/a6/Overwatch_Nexus1.jpg/revision/latest?cb=20100330155937&path-prefix=en",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Half-Life 2?"
+        },
+        "en": {
+          "text": "Where is this in Half-Life 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сити 17"
+            },
+            "en": {
+              "text": "City 17"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рейвенхолм"
+            },
+            "en": {
+              "text": "Ravenholm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нова Проспект"
+            },
+            "en": {
+              "text": "Nova Prospekt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Белая Роща"
+            },
+            "en": {
+              "text": "White Forest"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-me-citadel",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "me-citadel",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/me-citadel.webp",
+      "rawDropAs": "raw-quiz-images/medium/me-citadel.png",
+      "metadata": {
+        "game": "Mass Effect 2",
+        "topic": "image-place",
+        "source": "https://masseffect.fandom.com/wiki/Citadel",
+        "sourceFile": "https://static.wikia.nocookie.net/masseffect/images/4/4d/Citadel_final_battle_-_ward_arms_closing.png/revision/latest?cb=20220731120023",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта космическая станция в Mass Effect?"
+        },
+        "en": {
+          "text": "What is this space station called in Mass Effect?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Цитадель"
+            },
+            "en": {
+              "text": "The Citadel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Омега"
+            },
+            "en": {
+              "text": "Omega"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Арктур"
+            },
+            "en": {
+              "text": "Arcturus Station"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Горизонт"
+            },
+            "en": {
+              "text": "Horizon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-me2-illium",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "me2-illium",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/me2-illium.webp",
+      "rawDropAs": "raw-quiz-images/hard/me2-illium.png",
+      "metadata": {
+        "game": "Mass Effect 2",
+        "topic": "image-place",
+        "source": "https://masseffect.fandom.com/wiki/Illium",
+        "sourceFile": "https://static.wikia.nocookie.net/masseffect/images/1/12/Illium_-_nos_astra_ubershot.png/revision/latest?cb=20120929083623",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какая это планета в Mass Effect 2?"
+        },
+        "en": {
+          "text": "Which planet is this in Mass Effect 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Иллиум"
+            },
+            "en": {
+              "text": "Illium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тучанка"
+            },
+            "en": {
+              "text": "Tuchanka"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Новерия"
+            },
+            "en": {
+              "text": "Noveria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Омега"
+            },
+            "en": {
+              "text": "Omega"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-me2-omega",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "me2-omega",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/me2-omega.webp",
+      "rawDropAs": "raw-quiz-images/hard/me2-omega.png",
+      "metadata": {
+        "game": "Mass Effect 2",
+        "topic": "image-place",
+        "source": "https://masseffect.fandom.com/wiki/Omega",
+        "sourceFile": "https://static.wikia.nocookie.net/masseffect/images/4/4a/Omega_-_mad_prophet_2186.png/revision/latest?cb=20130507090044",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Mass Effect 2?"
+        },
+        "en": {
+          "text": "Where is this in Mass Effect 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Омега"
+            },
+            "en": {
+              "text": "Omega"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Цитадель"
+            },
+            "en": {
+              "text": "The Citadel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Иллиум"
+            },
+            "en": {
+              "text": "Illium"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Новерия"
+            },
+            "en": {
+              "text": "Noveria"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-botw-kakariko",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "botw-kakariko",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/botw-kakariko.webp",
+      "rawDropAs": "raw-quiz-images/medium/botw-kakariko.png",
+      "metadata": {
+        "game": "The Legend of Zelda: Breath of the Wild",
+        "topic": "image-place",
+        "source": "https://zelda.fandom.com/wiki/Kakariko_Village",
+        "sourceFile": "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/b/b2/BotW_Kakariko_Village.png/revision/latest?cb=20170608085919",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Breath of the Wild?"
+        },
+        "en": {
+          "text": "Where is this in Breath of the Wild?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Деревня Какарико"
+            },
+            "en": {
+              "text": "Kakariko Village"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Деревня Хатено"
+            },
+            "en": {
+              "text": "Hateno Village"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Деревня Рито"
+            },
+            "en": {
+              "text": "Rito Village"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Горон-сити"
+            },
+            "en": {
+              "text": "Goron City"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-cp2077-badlands",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "cp2077-badlands",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/cp2077-badlands.webp",
+      "rawDropAs": "raw-quiz-images/medium/cp2077-badlands.png",
+      "metadata": {
+        "game": "Cyberpunk 2077",
+        "topic": "image-place",
+        "source": "https://cyberpunk.fandom.com/wiki/Badlands",
+        "sourceFile": "https://static.wikia.nocookie.net/cyberpunk/images/1/1b/CP2077_Badlands_Nicolas_Rudowski3.jpg/revision/latest?cb=20210427143930",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11",
+        "edit": "portfolio caption bar trimmed from the bottom edge"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта пустыня вокруг Найт-Сити?"
+        },
+        "en": {
+          "text": "What is this desert around Night City called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пустоши"
+            },
+            "en": {
+              "text": "The Badlands"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пасифика"
+            },
+            "en": {
+              "text": "Pacifica"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Санто-Доминго"
+            },
+            "en": {
+              "text": "Santo Domingo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хейвуд"
+            },
+            "en": {
+              "text": "Heywood"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-easy-ac2-florence",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ac2-florence",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ac2-florence.webp",
+      "rawDropAs": "raw-quiz-images/easy/ac2-florence.png",
+      "metadata": {
+        "game": "Assassin's Creed II",
+        "topic": "image-place",
+        "source": "https://assassinscreed.fandom.com/wiki/Florence",
+        "sourceFile": "https://static.wikia.nocookie.net/assassinscreed/images/4/4b/EzioFlorenceguard.jpg/revision/latest?cb=20120909024812",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Assassin's Creed II?"
+        },
+        "en": {
+          "text": "Which city is this in Assassin's Creed II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Флоренция"
+            },
+            "en": {
+              "text": "Florence"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Венеция"
+            },
+            "en": {
+              "text": "Venice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рим"
+            },
+            "en": {
+              "text": "Rome"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Милан"
+            },
+            "en": {
+              "text": "Milan"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-easy-ac2-venice",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "ac2-venice",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/ac2-venice.webp",
+      "rawDropAs": "raw-quiz-images/easy/ac2-venice.png",
+      "metadata": {
+        "game": "Assassin's Creed II",
+        "topic": "image-place",
+        "source": "https://assassinscreed.fandom.com/wiki/Venice",
+        "sourceFile": "https://static.wikia.nocookie.net/assassinscreed/images/d/dd/Saint_marks_basilica.png/revision/latest?cb=20120909230246",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Assassin's Creed II?"
+        },
+        "en": {
+          "text": "Which city is this in Assassin's Creed II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Венеция"
+            },
+            "en": {
+              "text": "Venice"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Флоренция"
+            },
+            "en": {
+              "text": "Florence"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рим"
+            },
+            "en": {
+              "text": "Rome"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Константинополь"
+            },
+            "en": {
+              "text": "Constantinople"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-ac2-monteriggioni",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "ac2-monteriggioni",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/ac2-monteriggioni.webp",
+      "rawDropAs": "raw-quiz-images/hard/ac2-monteriggioni.png",
+      "metadata": {
+        "game": "Assassin's Creed II",
+        "topic": "image-place",
+        "source": "https://assassinscreed.fandom.com/wiki/Monteriggioni",
+        "sourceFile": "https://static.wikia.nocookie.net/assassinscreed/images/2/20/The_Corrupted.jpg/revision/latest?cb=20170126062717",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется родовое поместье Аудиторе в Assassin's Creed II?"
+        },
+        "en": {
+          "text": "What is the Auditore family's home town in Assassin's Creed II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Монтериджони"
+            },
+            "en": {
+              "text": "Monteriggioni"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сан-Джиминьяно"
+            },
+            "en": {
+              "text": "San Gimignano"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Форли"
+            },
+            "en": {
+              "text": "Forlì"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тоскана"
+            },
+            "en": {
+              "text": "Tuscany"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-easy-aco-athens",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "aco-athens",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/aco-athens.webp",
+      "rawDropAs": "raw-quiz-images/easy/aco-athens.png",
+      "metadata": {
+        "game": "Assassin's Creed Odyssey",
+        "topic": "image-place",
+        "source": "https://assassinscreed.fandom.com/wiki/Athens",
+        "sourceFile": "https://static.wikia.nocookie.net/assassinscreed/images/3/3e/ACOdyssey_Promotional_Screenshot_08.jpg/revision/latest?cb=20180614030859",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Assassin's Creed Odyssey?"
+        },
+        "en": {
+          "text": "Which city is this in Assassin's Creed Odyssey?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Афины"
+            },
+            "en": {
+              "text": "Athens"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Спарта"
+            },
+            "en": {
+              "text": "Sparta"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Коринф"
+            },
+            "en": {
+              "text": "Corinth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фивы"
+            },
+            "en": {
+              "text": "Thebes"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-gow-alfheim",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "gow-alfheim",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/gow-alfheim.webp",
+      "rawDropAs": "raw-quiz-images/medium/gow-alfheim.png",
+      "metadata": {
+        "game": "God of War (2018)",
+        "topic": "image-place",
+        "source": "https://godofwar.fandom.com/wiki/Alfheim",
+        "sourceFile": "https://static.wikia.nocookie.net/godofwar/images/0/04/Alfheim_3.jpg/revision/latest?cb=20200608024614",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11",
+        "edit": "game logo and artist credit trimmed from the bottom edge"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком из девяти миров God of War это место?"
+        },
+        "en": {
+          "text": "Which of the Nine Realms in God of War is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Альвхейм"
+            },
+            "en": {
+              "text": "Alfheim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Хельхейм"
+            },
+            "en": {
+              "text": "Helheim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Муспельхейм"
+            },
+            "en": {
+              "text": "Muspelheim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мидгард"
+            },
+            "en": {
+              "text": "Midgard"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-hard-gow-helheim",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "gow-helheim",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/gow-helheim.webp",
+      "rawDropAs": "raw-quiz-images/hard/gow-helheim.png",
+      "metadata": {
+        "game": "God of War (2018)",
+        "topic": "image-place",
+        "source": "https://godofwar.fandom.com/wiki/Helheim",
+        "sourceFile": "https://static.wikia.nocookie.net/godofwar/images/c/cb/Helheim_-_Bridge_of_the_Damned_3.jpg/revision/latest?cb=20200608034417",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11",
+        "edit": "game logo and artist credit trimmed from the bottom edge"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком из девяти миров God of War это место?"
+        },
+        "en": {
+          "text": "Which of the Nine Realms in God of War is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Хельхейм"
+            },
+            "en": {
+              "text": "Helheim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нифльхейм"
+            },
+            "en": {
+              "text": "Niflheim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Альвхейм"
+            },
+            "en": {
+              "text": "Alfheim"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ётунхейм"
+            },
+            "en": {
+              "text": "Jotunheim"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-gta5-chiliad",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "gta5-chiliad",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/gta5-chiliad.webp",
+      "rawDropAs": "raw-quiz-images/medium/gta5-chiliad.png",
+      "metadata": {
+        "game": "Grand Theft Auto V",
+        "topic": "image-place",
+        "source": "https://gta.fandom.com/wiki/Mount_Chiliad_(HD_Universe)",
+        "sourceFile": "https://static.wikia.nocookie.net/gtawiki/images/9/9f/MountChiliad-GTAV.png/revision/latest?cb=20200714130334",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется самая высокая гора GTA V?"
+        },
+        "en": {
+          "text": "What is the tallest mountain in GTA V called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гора Чилиад"
+            },
+            "en": {
+              "text": "Mount Chiliad"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гора Гордо"
+            },
+            "en": {
+              "text": "Mount Gordo"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гора Джосайя"
+            },
+            "en": {
+              "text": "Mount Josiah"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вайнвуд-Хиллз"
+            },
+            "en": {
+              "text": "Vinewood Hills"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img13-medium-gta5-delperro",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "gta5-delperro",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/gta5-delperro.webp",
+      "rawDropAs": "raw-quiz-images/medium/gta5-delperro.png",
+      "metadata": {
+        "game": "Grand Theft Auto V",
+        "topic": "image-place",
+        "source": "https://gta.fandom.com/wiki/Del_Perro_Pier",
+        "sourceFile": "https://static.wikia.nocookie.net/gtawiki/images/3/37/DelPerroPier-GTAV.png/revision/latest?cb=20211009010318",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places11"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется этот пирс в Лос-Сантосе?"
+        },
+        "en": {
+          "text": "What is this pier in Los Santos called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пирс Дель-Перро"
+            },
+            "en": {
+              "text": "Del Perro Pier"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пирс Санта-Мария"
+            },
+            "en": {
+              "text": "Santa Maria Pier"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пирс Веспуччи"
+            },
+            "en": {
+              "text": "Vespucci Pier"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пирс Ла-Пуэрта"
+            },
+            "en": {
+              "text": "La Puerta Pier"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

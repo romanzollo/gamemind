@@ -551,6 +551,7 @@
     { "slug": "tetris", "title": "Tetris", "year": 1984, "platforms": ["retro-computers"], "genres": ["puzzle"] },
     { "slug": "the-binding-of-isaac", "title": "The Binding of Isaac", "year": 2011, "platforms": ["pc"], "genres": ["roguelike", "shooter"] },
     { "slug": "the-elder-scrolls-arena", "title": "The Elder Scrolls: Arena", "year": 1994, "platforms": ["pc"], "genres": ["rpg"], "franchise": "elder-scrolls" },
+    { "slug": "the-elder-scrolls-iii-morrowind", "title": "The Elder Scrolls III: Morrowind", "year": 2002, "platforms": ["pc", "xbox-original"], "genres": ["rpg"], "franchise": "elder-scrolls" },
     { "slug": "the-elder-scrolls-iv-oblivion", "title": "The Elder Scrolls IV: Oblivion", "year": 2006, "platforms": ["pc", "ps3", "xbox-360"], "genres": ["rpg"], "franchise": "elder-scrolls" },
     { "slug": "the-elder-scrolls-v-skyrim", "title": "The Elder Scrolls V: Skyrim", "year": 2011, "platforms": ["pc", "ps3", "xbox-360"], "genres": ["rpg"], "franchise": "elder-scrolls" },
     { "slug": "the-last-of-us", "title": "The Last of Us", "year": 2013, "platforms": ["ps3"], "genres": ["action-adventure", "horror"], "franchise": "the-last-of-us" },
