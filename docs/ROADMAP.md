@@ -885,6 +885,13 @@ Prod smoke зелёный.
   - В каталог: Dishonored 2, Dishonored: Death of the Outsider.
   - Прод: картинок 301, текстовых 668, всего 969.
   - **Открыто:** боссы Sekiro — нет кадров, где их можно узнать уверенно (Steam, vgtimes, ggrealm). Вариант «Джахейра» в партии 4 исправлен на «Джайхейра» на месте (dev + прод, 9 ноя).
+- **Картинки: партия 7 из скриншотов Steam ✅ dev + прод (9 ноя).**
+  - Файл: `content/drafts/batches/2026-11-09-image-guess-steam7-30.json`.
+  - Состав: 30 IMAGE_GUESS (10 / 10 / 10) по 13 играм, которых раньше не было в банке картинок: классы TF2, демоны DOOM Eternal, BioShock Infinite (Колумбия, Элизабет, Механик, Моторизованный патриот), Fallout: New Vegas, Prey, Borderlands 2, Mortal Kombat 11 и 1, Stray, Kingdom Come, Frostpunk, Mafia DE, Divinity: Original Sin 2. Русские названия дал владелец.
+  - Сняты как дубли банка: Скорпион и Саб-Зиро, кот в Stray, мимик и Талос-1 в Prey, надежда во Frostpunk. Сняты из-за подписи с ответом: флаг НКР («New California Republic»), такси Томми («TAXI»); на остальных кадрах подписи обрезаны (Lost Heaven, Lady Tina, Columbia, легенда тепловой карты, окно создания персонажа).
+  - В каталог: Team Fortress 2, DOOM Eternal, Fallout: New Vegas, Borderlands 2, Kingdom Come: Deliverance, Mafia: Definitive Edition, Mortal Kombat 11, Mortal Kombat 1 (2023); серии Borderlands и Mafia.
+  - Прод: картинок 331, текстовых 668, всего 999.
+  - **Урок:** у старых игр в Steam кадры бывают 640×360 (TF2) — в квизе они мягче остальных; брать такие, только если кадр сильный.
 - **5.2b Ритм:** партия 30–50 вопросов → проверка фактов → ревью владельцем
   в админке → публикация. Одна партия — один коммит контента.
 - **5.2c Качество цифрами:** % верных ответов по вопросу → флаг

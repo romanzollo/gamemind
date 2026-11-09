@@ -403,6 +403,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 9:** mixed image batch 6 IMAGE_GUESS ×17 (`2026-11-09-image-guess-mix-17.json`, 5/6/6; Steam + vgtimes.ru frames; owner-supplied RU names for Dishonored, Sekiro, BG3; 2 new catalog games). WebP + manifest committed and deployed first (fbf4113), then prod import → `taxonomy:sync` → publish (quality gate, filtered by draftKey) → IMAGE **301** + TEXT **668** → **969** live. Do not re-import.
 
+**Nov 9 (night):** Steam screenshot batch 7 IMAGE_GUESS ×30 (`2026-11-09-image-guess-steam7-30.json`, 10/10/10; 13 games new to the image bank; owner-supplied RU names; 8 new catalog games + Borderlands and Mafia series). WebP + manifest committed and deployed first (9664d7f), then prod import → `taxonomy:sync` → publish (quality gate, filtered by draftKey) → IMAGE **331** + TEXT **668** → **999** live. Do not re-import.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
