@@ -448,10 +448,11 @@
       "metadata": {
         "game": "Hades",
         "topic": "image-character",
-        "source": "https://www.supergiantgames.com/games/hades/",
-        "sourceFile": "Olympians_Athena_01.jpg",
+        "source": "https://store.steampowered.com/app/1145360/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1145360/ss_2a9e3f9ad4d29d900b890d56361be5b1634225a0.1920x1080.jpg?t=1758127023",
         "localizationStrategy": "mythology-ru",
-        "batch": "2026-11-06-image-guess-pilot-30"
+        "batch": "2026-11-06-image-guess-pilot-30",
+        "edit": "name plate blanked"
       },
       "translations": {
         "ru": {

@@ -1395,9 +1395,9 @@
         "topic": "image-mechanic",
         "source": "https://store.steampowered.com/app/323190/",
         "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/323190/ss_9f89445fe1e07acc39d3537037f33eb90ad5834e.1920x1080.jpg?t=1793633192",
-        "crop": "answer-leak / logo removed",
         "localizationStrategy": "official-ru",
-        "batch": "2026-11-09-image-guess-steam7-30"
+        "batch": "2026-11-09-image-guess-steam7-30",
+        "edit": "legend labels and building tooltip blanked"
       },
       "translations": {
         "ru": {
