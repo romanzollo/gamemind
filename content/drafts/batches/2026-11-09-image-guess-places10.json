@@ -1,0 +1,3464 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 10: memorable places in cult games (Skyrim, Oblivion, The Witcher 3, RDR2, Elden Ring, The Last of Us I–II, Silent Hill 2–3, Fallout 3/NV/4, Horizon Zero Dawn, S.T.A.L.K.E.R., Dishonored 1–2, GTA). Frames from Steam store pages and fan wikis (owner approved fan wikis on 2026-11-09). Import is idempotent by draftKey.",
+  "questions": [
+    {
+      "draftKey": "img12-easy-skyrim-whiterun",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "skyrim-whiterun",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/skyrim-whiterun.webp",
+      "rawDropAs": "raw-quiz-images/easy/skyrim-whiterun.png",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-place",
+        "source": "https://elderscrolls.fandom.com/wiki/Whiterun_(Skyrim)",
+        "sourceFile": "https://static.wikia.nocookie.net/elderscrolls/images/1/13/Dragonsreach.png/revision/latest?cb=20141014114408",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Skyrim?"
+        },
+        "en": {
+          "text": "Where is this in Skyrim?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Вайтран"
+            },
+            "en": {
+              "text": "Whiterun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маркарт"
+            },
+            "en": {
+              "text": "Markarth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Виндхельм"
+            },
+            "en": {
+              "text": "Windhelm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Рифтен"
+            },
+            "en": {
+              "text": "Riften"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-skyrim-hrothgar",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "skyrim-hrothgar",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/skyrim-hrothgar.webp",
+      "rawDropAs": "raw-quiz-images/medium/skyrim-hrothgar.png",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-place",
+        "source": "https://elderscrolls.fandom.com/wiki/High_Hrothgar",
+        "sourceFile": "https://static.wikia.nocookie.net/elderscrolls/images/d/db/High_Hrothgar.png/revision/latest?cb=20141014122349",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта обитель Седобородых в Skyrim?"
+        },
+        "en": {
+          "text": "What is this home of the Greybeards in Skyrim called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Высокий Хротгар"
+            },
+            "en": {
+              "text": "High Hrothgar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Храм Небесной Гавани"
+            },
+            "en": {
+              "text": "Sky Haven Temple"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Нижний Хротгар"
+            },
+            "en": {
+              "text": "Lower Hrothgar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Глотка Мира"
+            },
+            "en": {
+              "text": "Throat of the World"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-skyrim-markarth",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "skyrim-markarth",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/skyrim-markarth.webp",
+      "rawDropAs": "raw-quiz-images/medium/skyrim-markarth.png",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-place",
+        "source": "https://elderscrolls.fandom.com/wiki/Markarth_(Skyrim)",
+        "sourceFile": "https://static.wikia.nocookie.net/elderscrolls/images/8/84/Markarth_01.jpg/revision/latest?cb=20111119223003",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Skyrim, построенный на руинах двемеров?"
+        },
+        "en": {
+          "text": "Which Skyrim city, built on Dwemer ruins, is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Маркарт"
+            },
+            "en": {
+              "text": "Markarth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вайтран"
+            },
+            "en": {
+              "text": "Whiterun"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фолкрит"
+            },
+            "en": {
+              "text": "Falkreath"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Данстар"
+            },
+            "en": {
+              "text": "Dawnstar"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-skyrim-riften",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "skyrim-riften",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/skyrim-riften.webp",
+      "rawDropAs": "raw-quiz-images/medium/skyrim-riften.png",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-place",
+        "source": "https://elderscrolls.fandom.com/wiki/Riften_(Skyrim)",
+        "sourceFile": "https://static.wikia.nocookie.net/elderscrolls/images/5/58/Riftenmain.png/revision/latest?cb=20121212222949",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Skyrim?"
+        },
+        "en": {
+          "text": "Where is this in Skyrim?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Рифтен"
+            },
+            "en": {
+              "text": "Riften"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Морфал"
+            },
+            "en": {
+              "text": "Morthal"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Винтерхолд"
+            },
+            "en": {
+              "text": "Winterhold"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фолкрит"
+            },
+            "en": {
+              "text": "Falkreath"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-skyrim-windhelm",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "skyrim-windhelm",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/skyrim-windhelm.webp",
+      "rawDropAs": "raw-quiz-images/hard/skyrim-windhelm.png",
+      "metadata": {
+        "game": "The Elder Scrolls V: Skyrim",
+        "topic": "image-place",
+        "source": "https://elderscrolls.fandom.com/wiki/Windhelm_(Skyrim)",
+        "sourceFile": "https://static.wikia.nocookie.net/elderscrolls/images/b/ba/Bridge_Leading_To_Windhelm_Skyrim.png/revision/latest?cb=20141015075128",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Skyrim?"
+        },
+        "en": {
+          "text": "Where is this in Skyrim?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Виндхельм"
+            },
+            "en": {
+              "text": "Windhelm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Солитьюд"
+            },
+            "en": {
+              "text": "Solitude"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Винтерхолд"
+            },
+            "en": {
+              "text": "Winterhold"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Данстар"
+            },
+            "en": {
+              "text": "Dawnstar"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-oblivion-imperial",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "oblivion-imperial",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/oblivion-imperial.webp",
+      "rawDropAs": "raw-quiz-images/easy/oblivion-imperial.png",
+      "metadata": {
+        "game": "The Elder Scrolls IV: Oblivion",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/2623190/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2623190/3cfe517f1464aa4d77df744c1e3d96e506da378d/ss_3cfe517f1464aa4d77df744c1e3d96e506da378d.1920x1080.jpg?t=1786648304",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой город с белой башней виден на этом кадре Oblivion?"
+        },
+        "en": {
+          "text": "Which city with a white tower is seen in this Oblivion screenshot?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Имперский город"
+            },
+            "en": {
+              "text": "The Imperial City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Кватч"
+            },
+            "en": {
+              "text": "Kvatch"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Анвил"
+            },
+            "en": {
+              "text": "Anvil"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Скинград"
+            },
+            "en": {
+              "text": "Skingrad"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-oblivion-gate",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "oblivion-gate",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/oblivion-gate.webp",
+      "rawDropAs": "raw-quiz-images/easy/oblivion-gate.png",
+      "metadata": {
+        "game": "The Elder Scrolls IV: Oblivion",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/2623190/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2623190/c715d8ef2d024bd4ec0d75a7721f71ddeab9a00e/ss_c715d8ef2d024bd4ec0d75a7721f71ddeab9a00e.1920x1080.jpg?t=1786648304",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Куда ведут такие огненные врата в Oblivion?"
+        },
+        "en": {
+          "text": "Where do fiery gates like this lead in Oblivion?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Обливион"
+            },
+            "en": {
+              "text": "To Oblivion"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Совнгард"
+            },
+            "en": {
+              "text": "To Sovngarde"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Чёрный Предел"
+            },
+            "en": {
+              "text": "To Blackreach"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Морровинд"
+            },
+            "en": {
+              "text": "To Morrowind"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-oblivion-kvatch",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "oblivion-kvatch",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/oblivion-kvatch.webp",
+      "rawDropAs": "raw-quiz-images/hard/oblivion-kvatch.png",
+      "metadata": {
+        "game": "The Elder Scrolls IV: Oblivion",
+        "topic": "image-place",
+        "source": "https://elderscrolls.fandom.com/wiki/Kvatch_(Oblivion)",
+        "sourceFile": "https://static.wikia.nocookie.net/elderscrolls/images/2/2a/Antus_Pinder_Remastered.png/revision/latest?cb=20250509103631",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой город лежит в руинах после нападения даэдра в Oblivion?"
+        },
+        "en": {
+          "text": "Which Oblivion city lies in ruins after the daedric attack?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кватч"
+            },
+            "en": {
+              "text": "Kvatch"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бравил"
+            },
+            "en": {
+              "text": "Bravil"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Брума"
+            },
+            "en": {
+              "text": "Bruma"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чейдинхол"
+            },
+            "en": {
+              "text": "Cheydinhal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-w3-oxenfurt",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "w3-oxenfurt",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/w3-oxenfurt.webp",
+      "rawDropAs": "raw-quiz-images/medium/w3-oxenfurt.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-place",
+        "source": "https://witcher.fandom.com/wiki/Oxenfurt",
+        "sourceFile": "https://static.wikia.nocookie.net/witcher/images/9/9c/Oxenfurt_main_square.jpg/revision/latest?cb=20160212202006",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой университетский город это в «Ведьмаке 3»?"
+        },
+        "en": {
+          "text": "Which university town is this in The Witcher 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Оксенфурт"
+            },
+            "en": {
+              "text": "Oxenfurt"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Новиград"
+            },
+            "en": {
+              "text": "Novigrad"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вызима"
+            },
+            "en": {
+              "text": "Vizima"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Боклер"
+            },
+            "en": {
+              "text": "Beauclair"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-w3-crookback",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "w3-crookback",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/w3-crookback.webp",
+      "rawDropAs": "raw-quiz-images/hard/w3-crookback.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-place",
+        "source": "https://witcher.fandom.com/wiki/Crookback_Bog",
+        "sourceFile": "https://static.wikia.nocookie.net/witcher/images/4/4b/Crookback_bog_by_creathor4005-d8vuu64.jpg/revision/latest?cb=20161122203414",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в «Ведьмаке 3» — здесь живут Владычицы леса?"
+        },
+        "en": {
+          "text": "Where is this in The Witcher 3 — home of the Ladies of the Wood?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кривоуховы топи"
+            },
+            "en": {
+              "text": "Crookback Bog"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Белый Сад"
+            },
+            "en": {
+              "text": "White Orchard"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Каэр Морхен"
+            },
+            "en": {
+              "text": "Kaer Morhen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Остров Туманов"
+            },
+            "en": {
+              "text": "Isle of Mists"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-w3-fables",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "w3-fables",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/w3-fables.webp",
+      "rawDropAs": "raw-quiz-images/medium/w3-fables.png",
+      "metadata": {
+        "game": "The Witcher 3: Wild Hunt",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/378648/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/378648/ss_b1fd8e52e6134eb6ad89f4e0374b469b34ba8fb5.1920x1080.jpg?t=1787687969",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в дополнении «Кровь и вино»?"
+        },
+        "en": {
+          "text": "Where is this in the Blood and Wine expansion?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Страна Тысячи Сказок"
+            },
+            "en": {
+              "text": "Land of a Thousand Fables"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Боклер"
+            },
+            "en": {
+              "text": "Beauclair"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Корво Бьянко"
+            },
+            "en": {
+              "text": "Corvo Bianco"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тесхам Мутна"
+            },
+            "en": {
+              "text": "Tesham Mutna"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-rdr2-stdenis",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "rdr2-stdenis",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/rdr2-stdenis.webp",
+      "rawDropAs": "raw-quiz-images/easy/rdr2-stdenis.png",
+      "metadata": {
+        "game": "Red Dead Redemption 2",
+        "topic": "image-place",
+        "source": "https://reddead.fandom.com/wiki/Saint_Denis",
+        "sourceFile": "https://static.wikia.nocookie.net/reddeadredemption/images/f/ff/SaintDenis.jpg/revision/latest?cb=20181009144633",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Red Dead Redemption 2?"
+        },
+        "en": {
+          "text": "Which town is this in Red Dead Redemption 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сен-Дени"
+            },
+            "en": {
+              "text": "Saint Denis"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Валентайн"
+            },
+            "en": {
+              "text": "Valentine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Блэкуотер"
+            },
+            "en": {
+              "text": "Blackwater"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аннесбург"
+            },
+            "en": {
+              "text": "Annesburg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-rdr2-valentine",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "rdr2-valentine",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/rdr2-valentine.webp",
+      "rawDropAs": "raw-quiz-images/medium/rdr2-valentine.png",
+      "metadata": {
+        "game": "Red Dead Redemption 2",
+        "topic": "image-place",
+        "source": "https://reddead.fandom.com/wiki/Valentine",
+        "sourceFile": "https://static.wikia.nocookie.net/reddeadredemption/images/9/94/Valentine_RDR2.jpg/revision/latest?cb=20200622215249",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Red Dead Redemption 2?"
+        },
+        "en": {
+          "text": "Which town is this in Red Dead Redemption 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Валентайн"
+            },
+            "en": {
+              "text": "Valentine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Роудс"
+            },
+            "en": {
+              "text": "Rhodes"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Строберри"
+            },
+            "en": {
+              "text": "Strawberry"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тамблвид"
+            },
+            "en": {
+              "text": "Tumbleweed"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-rdr2-strawberry",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "rdr2-strawberry",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/rdr2-strawberry.webp",
+      "rawDropAs": "raw-quiz-images/hard/rdr2-strawberry.png",
+      "metadata": {
+        "game": "Red Dead Redemption 2",
+        "topic": "image-place",
+        "source": "https://reddead.fandom.com/wiki/Strawberry",
+        "sourceFile": "https://static.wikia.nocookie.net/reddeadredemption/images/e/e7/General_Store_in_Strawberry.jpg/revision/latest?cb=20200426181950",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город в Red Dead Redemption 2?"
+        },
+        "en": {
+          "text": "Which town is this in Red Dead Redemption 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Строберри"
+            },
+            "en": {
+              "text": "Strawberry"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Валентайн"
+            },
+            "en": {
+              "text": "Valentine"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ван-Хорн"
+            },
+            "en": {
+              "text": "Van Horn"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аннесбург"
+            },
+            "en": {
+              "text": "Annesburg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-rdr2-colter",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "rdr2-colter",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/rdr2-colter.webp",
+      "rawDropAs": "raw-quiz-images/hard/rdr2-colter.png",
+      "metadata": {
+        "game": "Red Dead Redemption 2",
+        "topic": "image-place",
+        "source": "https://reddead.fandom.com/wiki/Colter",
+        "sourceFile": "https://static.wikia.nocookie.net/reddeadredemption/images/9/97/Colter.png/revision/latest?cb=20190415143522",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где банда Датча прячется в начале Red Dead Redemption 2?"
+        },
+        "en": {
+          "text": "Where does Dutch's gang hide at the start of Red Dead Redemption 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Колтере"
+            },
+            "en": {
+              "text": "In Colter"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Хорсшу-Оверлуке"
+            },
+            "en": {
+              "text": "At Horseshoe Overlook"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Клеменс-Пойнте"
+            },
+            "en": {
+              "text": "At Clemens Point"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Бобровом холме"
+            },
+            "en": {
+              "text": "At Beaver Hollow"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-rdr2-guarma",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "rdr2-guarma",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/rdr2-guarma.webp",
+      "rawDropAs": "raw-quiz-images/hard/rdr2-guarma.png",
+      "metadata": {
+        "game": "Red Dead Redemption 2",
+        "topic": "image-place",
+        "source": "https://reddead.fandom.com/wiki/Guarma",
+        "sourceFile": "https://static.wikia.nocookie.net/reddeadredemption/images/a/a5/Arc_in_Guarma.jpg/revision/latest?cb=20220906024338",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Куда банду выбрасывает после кораблекрушения в Red Dead Redemption 2?"
+        },
+        "en": {
+          "text": "Where does the gang wash up after the shipwreck in Red Dead Redemption 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "На остров Гуарма"
+            },
+            "en": {
+              "text": "On Guarma"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На Кубу"
+            },
+            "en": {
+              "text": "In Cuba"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На остров Сиско"
+            },
+            "en": {
+              "text": "On Sisika"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "На Ямайку"
+            },
+            "en": {
+              "text": "In Jamaica"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-er-raya",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "er-raya",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/er-raya.webp",
+      "rawDropAs": "raw-quiz-images/medium/er-raya.png",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "image-place",
+        "source": "https://eldenring.fandom.com/wiki/Academy_of_Raya_Lucaria",
+        "sourceFile": "https://static.wikia.nocookie.net/eldenring/images/6/69/East_Raya_Lucaria_Gate.png/revision/latest?cb=20230506034917",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за здание в Elden Ring?"
+        },
+        "en": {
+          "text": "What is this building in Elden Ring?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Академия Райи Лукарии"
+            },
+            "en": {
+              "text": "Academy of Raya Lucaria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вулканическое поместье"
+            },
+            "en": {
+              "text": "Volcano Manor"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Замок Морн"
+            },
+            "en": {
+              "text": "Castle Morne"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лейнделл"
+            },
+            "en": {
+              "text": "Leyndell"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-er-leyndell",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "er-leyndell",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/er-leyndell.webp",
+      "rawDropAs": "raw-quiz-images/medium/er-leyndell.png",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "image-place",
+        "source": "https://eldenring.fandom.com/wiki/Leyndell%2C_Royal_Capital",
+        "sourceFile": "https://static.wikia.nocookie.net/eldenring/images/4/40/ER_Site_of_Grace_Divine_Bridge.png/revision/latest?cb=20230710184910",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Elden Ring?"
+        },
+        "en": {
+          "text": "Where is this in Elden Ring?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Лейнделл, королевская столица"
+            },
+            "en": {
+              "text": "Leyndell, Royal Capital"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Академия Райи Лукарии"
+            },
+            "en": {
+              "text": "Academy of Raya Lucaria"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фарум-Азула"
+            },
+            "en": {
+              "text": "Crumbling Farum Azula"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Священное древо Микеллы"
+            },
+            "en": {
+              "text": "Miquella's Haligtree"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-er-caelid",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "er-caelid",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/er-caelid.webp",
+      "rawDropAs": "raw-quiz-images/easy/er-caelid.png",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "image-place",
+        "source": "https://eldenring.fandom.com/wiki/Caelid",
+        "sourceFile": "https://static.wikia.nocookie.net/eldenring/images/c/cb/ER_Rotview_Balcony.png/revision/latest?cb=20230514115554",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой край Elden Ring под таким алым небом?"
+        },
+        "en": {
+          "text": "Which Elden Ring region lies under this crimson sky?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Каэлид"
+            },
+            "en": {
+              "text": "Caelid"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лимгрейв"
+            },
+            "en": {
+              "text": "Limgrave"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лиурния"
+            },
+            "en": {
+              "text": "Liurnia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Альтус"
+            },
+            "en": {
+              "text": "Altus Plateau"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-er-siofra",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "er-siofra",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/er-siofra.webp",
+      "rawDropAs": "raw-quiz-images/hard/er-siofra.png",
+      "metadata": {
+        "game": "Elden Ring",
+        "topic": "image-place",
+        "source": "https://eldenring.fandom.com/wiki/Siofra_River",
+        "sourceFile": "https://static.wikia.nocookie.net/eldenring/images/7/7b/ER_Site_of_Grace_Mimic_Tear.png/revision/latest?cb=20230710182105",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это подземелье со звёздным небом в Elden Ring?"
+        },
+        "en": {
+          "text": "Where is this underground place with a starry sky in Elden Ring?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Река Сиофра"
+            },
+            "en": {
+              "text": "Siofra River"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Река Айнсел"
+            },
+            "en": {
+              "text": "Ainsel River"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Глубинный корень"
+            },
+            "en": {
+              "text": "Deeproot Depths"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Озеро гнили"
+            },
+            "en": {
+              "text": "Lake of Rot"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-tlou-giraffes",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "tlou-giraffes",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/tlou-giraffes.webp",
+      "rawDropAs": "raw-quiz-images/easy/tlou-giraffes.png",
+      "metadata": {
+        "game": "The Last of Us",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/1888930/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1888930/ss_8cd55ab975b2e47f4d4d9a0da4ae6948040ef807.1920x1080.jpg?t=1750959031",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком городе Элли и Джоэл встречают жирафов?"
+        },
+        "en": {
+          "text": "In which city do Ellie and Joel meet the giraffes?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Солт-Лейк-Сити"
+            },
+            "en": {
+              "text": "Salt Lake City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Бостоне"
+            },
+            "en": {
+              "text": "Boston"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Питтсбурге"
+            },
+            "en": {
+              "text": "Pittsburgh"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Денвере"
+            },
+            "en": {
+              "text": "Denver"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-tlou-pittsburgh",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "tlou-pittsburgh",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/tlou-pittsburgh.webp",
+      "rawDropAs": "raw-quiz-images/hard/tlou-pittsburgh.png",
+      "metadata": {
+        "game": "The Last of Us",
+        "topic": "image-place",
+        "source": "https://thelastofus.fandom.com/wiki/Pittsburgh",
+        "sourceFile": "https://static.wikia.nocookie.net/thelastofus/images/7/7a/Pittsburgh1.png/revision/latest?cb=20140927180620",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком городе Джоэл и Элли попадают в засаду охотников?"
+        },
+        "en": {
+          "text": "In which city do Joel and Ellie run into the hunters?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Питтсбурге"
+            },
+            "en": {
+              "text": "Pittsburgh"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Бостоне"
+            },
+            "en": {
+              "text": "Boston"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Канзас-Сити"
+            },
+            "en": {
+              "text": "Kansas City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Денвере"
+            },
+            "en": {
+              "text": "Denver"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-tlou-jackson",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "tlou-jackson",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/tlou-jackson.webp",
+      "rawDropAs": "raw-quiz-images/medium/tlou-jackson.png",
+      "metadata": {
+        "game": "The Last of Us",
+        "topic": "image-place",
+        "source": "https://thelastofus.fandom.com/wiki/Jackson",
+        "sourceFile": "https://static.wikia.nocookie.net/thelastofus/images/9/96/Tommy%27s_community.jpg/revision/latest?cb=20160419170122",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется поселение Томми в The Last of Us?"
+        },
+        "en": {
+          "text": "What is Tommy's settlement called in The Last of Us?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Джексон"
+            },
+            "en": {
+              "text": "Jackson"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бостон"
+            },
+            "en": {
+              "text": "Boston"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сиэтл"
+            },
+            "en": {
+              "text": "Seattle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Санта-Барбара"
+            },
+            "en": {
+              "text": "Santa Barbara"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-tlou2-seattle",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "tlou2-seattle",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/tlou2-seattle.webp",
+      "rawDropAs": "raw-quiz-images/medium/tlou2-seattle.png",
+      "metadata": {
+        "game": "The Last of Us Part II",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/2531310/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2531310/9b4bd495de40ad942c91cc7302f81d6e9ca4a459/ss_9b4bd495de40ad942c91cc7302f81d6e9ca4a459.1920x1080.jpg?t=1750959180",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой город Элли отправляется за Эбби в The Last of Us Part II?"
+        },
+        "en": {
+          "text": "Which city does Ellie travel to after Abby in The Last of Us Part II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Сиэтл"
+            },
+            "en": {
+              "text": "Seattle"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Портленд"
+            },
+            "en": {
+              "text": "Portland"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Сан-Франциско"
+            },
+            "en": {
+              "text": "San Francisco"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Ванкувер"
+            },
+            "en": {
+              "text": "Vancouver"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-tlou2-santabarbara",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "tlou2-santabarbara",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/tlou2-santabarbara.webp",
+      "rawDropAs": "raw-quiz-images/hard/tlou2-santabarbara.png",
+      "metadata": {
+        "game": "The Last of Us Part II",
+        "topic": "image-place",
+        "source": "https://thelastofus.fandom.com/wiki/Santa_Barbara",
+        "sourceFile": "https://static.wikia.nocookie.net/thelastofus/images/5/50/Santa_Barbara_State_Street_train_station_front.jpeg/revision/latest?cb=20210820131234",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где Элли ищет Эбби в финале The Last of Us Part II?"
+        },
+        "en": {
+          "text": "Where does Ellie look for Abby in the finale of The Last of Us Part II?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Санта-Барбаре"
+            },
+            "en": {
+              "text": "Santa Barbara"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Лос-Анджелесе"
+            },
+            "en": {
+              "text": "Los Angeles"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Сан-Диего"
+            },
+            "en": {
+              "text": "San Diego"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Сиэтле"
+            },
+            "en": {
+              "text": "Seattle"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-sh2-toluca",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sh2-toluca",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sh2-toluca.webp",
+      "rawDropAs": "raw-quiz-images/medium/sh2-toluca.png",
+      "metadata": {
+        "game": "Silent Hill 2",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/2124490/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2124490/ss_b20363454a190d737e5ff8e6410d66f0034bd807.1920x1080.jpg?t=1744248682",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какое озеро видно с этой смотровой площадки в Silent Hill 2?"
+        },
+        "en": {
+          "text": "Which lake is seen from this viewpoint in Silent Hill 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Толука"
+            },
+            "en": {
+              "text": "Toluca Lake"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мичиган"
+            },
+            "en": {
+              "text": "Lake Michigan"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сайлент-Лейк"
+            },
+            "en": {
+              "text": "Silent Lake"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Блэкуотер"
+            },
+            "en": {
+              "text": "Blackwater Lake"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-sh2-lakeview",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "sh2-lakeview",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/sh2-lakeview.webp",
+      "rawDropAs": "raw-quiz-images/hard/sh2-lakeview.png",
+      "metadata": {
+        "game": "Silent Hill 2",
+        "topic": "image-place",
+        "source": "https://silenthill.fandom.com/wiki/Lakeview_Hotel",
+        "sourceFile": "https://static.wikia.nocookie.net/silent/images/b/b1/Lakeview312.jpeg/revision/latest?cb=20150519140523",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Silent Hill 2?"
+        },
+        "en": {
+          "text": "Where is this in Silent Hill 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Отель «Лейк-Вью»"
+            },
+            "en": {
+              "text": "Lakeview Hotel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Больница Брукхейвен"
+            },
+            "en": {
+              "text": "Brookhaven Hospital"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Апартаменты «Вудсайд»"
+            },
+            "en": {
+              "text": "Woodside Apartments"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тюрьма Толуки"
+            },
+            "en": {
+              "text": "Toluca Prison"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-sh3-brookhaven",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "sh3-brookhaven",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/sh3-brookhaven.webp",
+      "rawDropAs": "raw-quiz-images/hard/sh3-brookhaven.png",
+      "metadata": {
+        "game": "Silent Hill 3",
+        "topic": "image-place",
+        "source": "https://silenthill.fandom.com/wiki/Brookhaven_Hospital",
+        "sourceFile": "https://static.wikia.nocookie.net/silent/images/7/7c/Heather_Brookhaven.png/revision/latest?cb=20141129140217",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта больница в Silent Hill 3?"
+        },
+        "en": {
+          "text": "What is this hospital called in Silent Hill 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Брукхейвен"
+            },
+            "en": {
+              "text": "Brookhaven"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Алхемилла"
+            },
+            "en": {
+              "text": "Alchemilla"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сент-Джером"
+            },
+            "en": {
+              "text": "St. Jerome's"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мидвич"
+            },
+            "en": {
+              "text": "Midwich"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-fo3-megaton",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "fo3-megaton",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/fo3-megaton.webp",
+      "rawDropAs": "raw-quiz-images/medium/fo3-megaton.png",
+      "metadata": {
+        "game": "Fallout 3",
+        "topic": "image-place",
+        "source": "https://fallout.fandom.com/wiki/Megaton",
+        "sourceFile": "https://static.wikia.nocookie.net/fallout/images/0/03/Megaton_vista9.jpg/revision/latest?cb=20130116005314",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется этот город вокруг атомной бомбы в Fallout 3?"
+        },
+        "en": {
+          "text": "What is this town built around an atomic bomb called in Fallout 3?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Мегатонна"
+            },
+            "en": {
+              "text": "Megaton"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Ривет-Сити"
+            },
+            "en": {
+              "text": "Rivet City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Большой Город"
+            },
+            "en": {
+              "text": "Big Town"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Парадиз-Фолс"
+            },
+            "en": {
+              "text": "Paradise Falls"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-fonv-goodsprings",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "fonv-goodsprings",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/fonv-goodsprings.webp",
+      "rawDropAs": "raw-quiz-images/medium/fonv-goodsprings.png",
+      "metadata": {
+        "game": "Fallout: New Vegas",
+        "topic": "image-place",
+        "source": "https://fallout.fandom.com/wiki/Goodsprings",
+        "sourceFile": "https://static.wikia.nocookie.net/fallout/images/f/ff/MitchellsHouse.jpg/revision/latest?cb=20150222184042",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "В каком городке Курьер приходит в себя в начале Fallout: New Vegas?"
+        },
+        "en": {
+          "text": "In which town does the Courier wake up at the start of Fallout: New Vegas?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "В Гудспрингс"
+            },
+            "en": {
+              "text": "Goodsprings"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Примме"
+            },
+            "en": {
+              "text": "Primm"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Новаке"
+            },
+            "en": {
+              "text": "Novac"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "В Ниптоне"
+            },
+            "en": {
+              "text": "Nipton"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-fonv-hoover",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "fonv-hoover",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/fonv-hoover.webp",
+      "rawDropAs": "raw-quiz-images/medium/fonv-hoover.png",
+      "metadata": {
+        "game": "Fallout: New Vegas",
+        "topic": "image-place",
+        "source": "https://fallout.fandom.com/wiki/Hoover_Dam",
+        "sourceFile": "https://static.wikia.nocookie.net/fallout/images/f/fb/Hoover_Dam_aerial_view.jpg/revision/latest?cb=20191123142857",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "За что идёт главная битва в Fallout: New Vegas?"
+        },
+        "en": {
+          "text": "What is the final battle of Fallout: New Vegas fought over?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "За плотину Гувера"
+            },
+            "en": {
+              "text": "Hoover Dam"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За «Гелиос-1»"
+            },
+            "en": {
+              "text": "HELIOS One"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Лаки 38"
+            },
+            "en": {
+              "text": "The Lucky 38"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "За Форт"
+            },
+            "en": {
+              "text": "The Fort"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-fonv-strip",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "fonv-strip",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/fonv-strip.webp",
+      "rawDropAs": "raw-quiz-images/easy/fonv-strip.png",
+      "metadata": {
+        "game": "Fallout: New Vegas",
+        "topic": "image-place",
+        "source": "https://fallout.fandom.com/wiki/New_Vegas_Strip",
+        "sourceFile": "https://static.wikia.nocookie.net/fallout/images/3/35/New_Vegas_Strip_%28intro%29.jpg/revision/latest?cb=20211107221513",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Fallout: New Vegas?"
+        },
+        "en": {
+          "text": "Where is this in Fallout: New Vegas?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Стрип"
+            },
+            "en": {
+              "text": "The Strip"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Фрисайд"
+            },
+            "en": {
+              "text": "Freeside"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гудспрингс"
+            },
+            "en": {
+              "text": "Goodsprings"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Новак"
+            },
+            "en": {
+              "text": "Novac"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-fo4-sanctuary",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "fo4-sanctuary",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/fo4-sanctuary.webp",
+      "rawDropAs": "raw-quiz-images/medium/fo4-sanctuary.png",
+      "metadata": {
+        "game": "Fallout 4",
+        "topic": "image-place",
+        "source": "https://fallout.fandom.com/wiki/Sanctuary_Hills",
+        "sourceFile": "https://static.wikia.nocookie.net/fallout/images/c/c7/FO4_pre-war_Sanctuary_Hills2.jpg/revision/latest?cb=20151110224525",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется этот довоенный пригород в Fallout 4?"
+        },
+        "en": {
+          "text": "What is this pre-war suburb called in Fallout 4?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сэнкчуари-Хиллз"
+            },
+            "en": {
+              "text": "Sanctuary Hills"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Конкорд"
+            },
+            "en": {
+              "text": "Concord"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Даймонд-сити"
+            },
+            "en": {
+              "text": "Diamond City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Добрососедство"
+            },
+            "en": {
+              "text": "Goodneighbor"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-fo4-prydwen",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "fo4-prydwen",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/fo4-prydwen.webp",
+      "rawDropAs": "raw-quiz-images/hard/fo4-prydwen.png",
+      "metadata": {
+        "game": "Fallout 4",
+        "topic": "image-place",
+        "source": "https://fallout.fandom.com/wiki/Prydwen",
+        "sourceFile": "https://static.wikia.nocookie.net/fallout/images/6/65/The_Prydwen.png/revision/latest?cb=20160229165235",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется этот дирижабль Братства Стали в Fallout 4?"
+        },
+        "en": {
+          "text": "What is the Brotherhood of Steel's airship called in Fallout 4?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Придвен»"
+            },
+            "en": {
+              "text": "The Prydwen"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Цитадель»"
+            },
+            "en": {
+              "text": "The Citadel"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Конституция»"
+            },
+            "en": {
+              "text": "The Constitution"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Экскалибур»"
+            },
+            "en": {
+              "text": "The Excalibur"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-hzd-meridian",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "hzd-meridian",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/hzd-meridian.webp",
+      "rawDropAs": "raw-quiz-images/medium/hzd-meridian.png",
+      "metadata": {
+        "game": "Horizon Zero Dawn",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/2561580/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2561580/ss_cf69250b6b7144244fe5ec715a82e9cf52398715.1920x1080.jpg?t=1750952943",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта столица Карджа в Horizon Zero Dawn?"
+        },
+        "en": {
+          "text": "What is this Carja capital called in Horizon Zero Dawn?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Меридиан"
+            },
+            "en": {
+              "text": "Meridian"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сердце Матери"
+            },
+            "en": {
+              "text": "Mother's Heart"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Последний Свет"
+            },
+            "en": {
+              "text": "Lastlight"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гнездо Ястреба"
+            },
+            "en": {
+              "text": "Hawk Nest"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-stalker-npp",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "stalker-npp",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/stalker-npp.webp",
+      "rawDropAs": "raw-quiz-images/easy/stalker-npp.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R.: Clear Sky",
+        "topic": "image-place",
+        "source": "https://stalker.fandom.com/wiki/Chernobyl_Nuclear_Power_Plant",
+        "sourceFile": "https://static.wikia.nocookie.net/stalker/images/d/d2/CNPP_CS.jpg/revision/latest?cb=20231230161234",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Что это за объект в центре Зоны S.T.A.L.K.E.R.?"
+        },
+        "en": {
+          "text": "What is this site at the heart of the S.T.A.L.K.E.R. Zone?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "ЧАЭС"
+            },
+            "en": {
+              "text": "Chernobyl NPP"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Радар «Дуга»"
+            },
+            "en": {
+              "text": "Duga radar"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Завод «Росток»"
+            },
+            "en": {
+              "text": "Rostok factory"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Агропром"
+            },
+            "en": {
+              "text": "Agroprom"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-stalker-pripyat",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "stalker-pripyat",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/stalker-pripyat.webp",
+      "rawDropAs": "raw-quiz-images/easy/stalker-pripyat.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R.: Call of Pripyat",
+        "topic": "image-place",
+        "source": "https://stalker.fandom.com/wiki/Pripyat",
+        "sourceFile": "https://static.wikia.nocookie.net/stalker/images/e/ee/Pripyat_panorama.jpg/revision/latest?cb=20150527160912",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой город виден на этом кадре S.T.A.L.K.E.R.?"
+        },
+        "en": {
+          "text": "Which town is seen in this S.T.A.L.K.E.R. screenshot?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Припять"
+            },
+            "en": {
+              "text": "Pripyat"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лиманск"
+            },
+            "en": {
+              "text": "Limansk"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Чернобыль"
+            },
+            "en": {
+              "text": "Chernobyl"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Славутич"
+            },
+            "en": {
+              "text": "Slavutych"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-stalker-prometheus",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "stalker-prometheus",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/stalker-prometheus.webp",
+      "rawDropAs": "raw-quiz-images/hard/stalker-prometheus.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R.: Call of Pripyat",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/41700/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/41700/ss_d55d9f4a78113b5bf1a9c466365ce637ad0f3851.1920x1080.jpg?t=1747756035",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется кинотеатр с этой статуей в Припяти?"
+        },
+        "en": {
+          "text": "What is the cinema with this statue in Pripyat called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Прометей»"
+            },
+            "en": {
+              "text": "Prometheus"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Энергетик»"
+            },
+            "en": {
+              "text": "Energetik"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Лазурный»"
+            },
+            "en": {
+              "text": "Lazurny"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Полесье»"
+            },
+            "en": {
+              "text": "Polesie"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-stalker-skadovsk",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "stalker-skadovsk",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/stalker-skadovsk.webp",
+      "rawDropAs": "raw-quiz-images/hard/stalker-skadovsk.png",
+      "metadata": {
+        "game": "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
+        "topic": "image-place",
+        "source": "https://stalker.fandom.com/wiki/Skadovsk",
+        "sourceFile": "https://static.wikia.nocookie.net/stalker/images/7/75/SkadovskHoC.jpg/revision/latest?cb=20250307231923",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта ржавая баржа — база сталкеров на Затоне?"
+        },
+        "en": {
+          "text": "What is this rusty barge, a stalker base in Zaton, called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "«Скадовск»"
+            },
+            "en": {
+              "text": "Skadovsk"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Янов»"
+            },
+            "en": {
+              "text": "Yanov"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Сто рентген»"
+            },
+            "en": {
+              "text": "100 Rads"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "«Юпитер»"
+            },
+            "en": {
+              "text": "Jupiter"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-dis-tower",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "dis-tower",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/dis-tower.webp",
+      "rawDropAs": "raw-quiz-images/hard/dis-tower.png",
+      "metadata": {
+        "game": "Dishonored",
+        "topic": "image-place",
+        "source": "https://dishonored.fandom.com/wiki/Dunwall_Tower",
+        "sourceFile": "https://static.wikia.nocookie.net/dishonoredvideogame/images/b/bb/Return_to_the_Tower.jpg/revision/latest?cb=20140325195948",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Dishonored?"
+        },
+        "en": {
+          "text": "Where is this in Dishonored?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Башня Дануолла"
+            },
+            "en": {
+              "text": "Dunwall Tower"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Маяк Кингспарроу"
+            },
+            "en": {
+              "text": "Kingsparrow Lighthouse"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тюрьма Колдридж"
+            },
+            "en": {
+              "text": "Coldridge Prison"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Затопленный квартал"
+            },
+            "en": {
+              "text": "The Flooded District"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-dis2-karnaca",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "dis2-karnaca",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/dis2-karnaca.webp",
+      "rawDropAs": "raw-quiz-images/medium/dis2-karnaca.png",
+      "metadata": {
+        "game": "Dishonored 2",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/403640/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/403640/ss_29982f240a3bca5bcf7f4a2150b88ea7de240df0.1920x1080.jpg?t=1750785918",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "В какой город попадают герои Dishonored 2?"
+        },
+        "en": {
+          "text": "Which city do the heroes of Dishonored 2 travel to?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Карнака"
+            },
+            "en": {
+              "text": "Karnaca"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Дануолл"
+            },
+            "en": {
+              "text": "Dunwall"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Тивия"
+            },
+            "en": {
+              "text": "Tyvia"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Пандиссия"
+            },
+            "en": {
+              "text": "Pandyssia"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-dis2-clockwork",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "dis2-clockwork",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/dis2-clockwork.webp",
+      "rawDropAs": "raw-quiz-images/hard/dis2-clockwork.png",
+      "metadata": {
+        "game": "Dishonored 2",
+        "topic": "image-place",
+        "source": "https://dishonored.fandom.com/wiki/Clockwork_Mansion",
+        "sourceFile": "https://static.wikia.nocookie.net/dishonoredvideogame/images/a/a2/Clockwork_Mansion_Vista.jpg/revision/latest?cb=20161020214504",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Чей это особняк в Dishonored 2?"
+        },
+        "en": {
+          "text": "Whose mansion is this in Dishonored 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Кирина Джиндоша"
+            },
+            "en": {
+              "text": "Kirin Jindosh"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Арамиса Стилтона"
+            },
+            "en": {
+              "text": "Aramis Stilton"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Брианны Ашворт"
+            },
+            "en": {
+              "text": "Breanna Ashworth"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Луки Абеле"
+            },
+            "en": {
+              "text": "Luca Abele"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-hard-dis2-dust",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "dis2-dust",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/dis2-dust.webp",
+      "rawDropAs": "raw-quiz-images/hard/dis2-dust.png",
+      "metadata": {
+        "game": "Dishonored 2",
+        "topic": "image-place",
+        "source": "https://dishonored.fandom.com/wiki/Dust_District",
+        "sourceFile": "https://static.wikia.nocookie.net/dishonoredvideogame/images/0/02/Dishonored_2_karnaca_concept_art.jpg/revision/latest?cb=20160805001023",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Где это в Dishonored 2?"
+        },
+        "en": {
+          "text": "Where is this in Dishonored 2?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Пыльный квартал"
+            },
+            "en": {
+              "text": "Dust District"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Затопленный квартал"
+            },
+            "en": {
+              "text": "The Flooded District"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Королевская консерватория"
+            },
+            "en": {
+              "text": "Royal Conservatory"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Аддермир"
+            },
+            "en": {
+              "text": "Addermire Institute"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-gtasa-grove",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "gtasa-grove",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/gtasa-grove.webp",
+      "rawDropAs": "raw-quiz-images/easy/gtasa-grove.png",
+      "metadata": {
+        "game": "Grand Theft Auto: San Andreas",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/12120/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/12120/0000003311.1920x1080.jpg?t=1634144450",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется родная улица CJ в GTA: San Andreas?"
+        },
+        "en": {
+          "text": "What is CJ's home street in GTA: San Andreas called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гроув-стрит"
+            },
+            "en": {
+              "text": "Grove Street"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Оушен-драйв"
+            },
+            "en": {
+              "text": "Ocean Drive"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Вайнвуд-бульвар"
+            },
+            "en": {
+              "text": "Vinewood Boulevard"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Джефферсон-стрит"
+            },
+            "en": {
+              "text": "Jefferson Street"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-gtasa-sanfierro",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "gtasa-sanfierro",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/gtasa-sanfierro.webp",
+      "rawDropAs": "raw-quiz-images/medium/gtasa-sanfierro.png",
+      "metadata": {
+        "game": "Grand Theft Auto: San Andreas",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/12120/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/12120/0000003303.1920x1080.jpg?t=1634144450",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой город с мостами виден на этом кадре GTA: San Andreas?"
+        },
+        "en": {
+          "text": "Which city with bridges is seen in this GTA: San Andreas screenshot?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Сан-Фиерро"
+            },
+            "en": {
+              "text": "San Fierro"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лос-Сантос"
+            },
+            "en": {
+              "text": "Los Santos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лас-Вентурас"
+            },
+            "en": {
+              "text": "Las Venturas"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Либерти-Сити"
+            },
+            "en": {
+              "text": "Liberty City"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-gtavc-oceanbeach",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "gtavc-oceanbeach",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/gtavc-oceanbeach.webp",
+      "rawDropAs": "raw-quiz-images/easy/gtavc-oceanbeach.png",
+      "metadata": {
+        "game": "Grand Theft Auto: Vice City",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/1546990/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1546990/ss_1dd957711cfdf03d40ea715a1fa191a976424ec7.1920x1080.jpg?t=1781138647",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какой это город из серии GTA?"
+        },
+        "en": {
+          "text": "Which GTA city is this?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Вайс-Сити"
+            },
+            "en": {
+              "text": "Vice City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Либерти-Сити"
+            },
+            "en": {
+              "text": "Liberty City"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Лос-Сантос"
+            },
+            "en": {
+              "text": "Los Santos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Сан-Фиерро"
+            },
+            "en": {
+              "text": "San Fierro"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-medium-gta4-happiness",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "gta4-happiness",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/gta4-happiness.webp",
+      "rawDropAs": "raw-quiz-images/medium/gta4-happiness.png",
+      "metadata": {
+        "game": "Grand Theft Auto IV",
+        "topic": "image-place",
+        "source": "https://gta.fandom.com/wiki/Statue_of_Happiness",
+        "sourceFile": "https://static.wikia.nocookie.net/gtawiki/images/6/6b/StatueofHappiness-GTAIV-AtNight.jpg/revision/latest?cb=20111007182644",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Как называется эта статуя в Либерти-Сити?"
+        },
+        "en": {
+          "text": "What is this statue in Liberty City called?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Статуя Счастья"
+            },
+            "en": {
+              "text": "Statue of Happiness"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Статуя Свободы"
+            },
+            "en": {
+              "text": "Statue of Liberty"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Статуя Удачи"
+            },
+            "en": {
+              "text": "Statue of Fortune"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Статуя Надежды"
+            },
+            "en": {
+              "text": "Statue of Hope"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img12-easy-gta5-vinewood",
+      "type": "IMAGE_GUESS",
+      "difficulty": "EASY",
+      "category": "video-games",
+      "imageStem": "gta5-vinewood",
+      "imageFolder": "easy",
+      "promptImageUrl": "/quiz-images/easy/gta5-vinewood.webp",
+      "rawDropAs": "raw-quiz-images/easy/gta5-vinewood.png",
+      "metadata": {
+        "game": "Grand Theft Auto V",
+        "topic": "image-place",
+        "source": "https://store.steampowered.com/app/3240220/",
+        "sourceFile": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3240220/6959cc5d64cce82cb68a27457cfa46fb4d50f897/ss_6959cc5d64cce82cb68a27457cfa46fb4d50f897.1920x1080.jpg?t=1781187782",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-places10"
+      },
+      "translations": {
+        "ru": {
+          "text": "Какую надпись на холме мы видим сзади в GTA V?"
+        },
+        "en": {
+          "text": "Which hillside sign are we seeing from behind in GTA V?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Vinewood"
+            },
+            "en": {
+              "text": "Vinewood"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Hollywood"
+            },
+            "en": {
+              "text": "Hollywood"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Los Santos"
+            },
+            "en": {
+              "text": "Los Santos"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Del Perro"
+            },
+            "en": {
+              "text": "Del Perro"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
