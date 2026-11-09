@@ -451,6 +451,8 @@ Owner decision (Nov 6): frames may come from **any official press kit** of the s
 
 For games that are not on Steam, use the vgtimes.ru or ggrealm.ru galleries as a fallback, and check their frames harder: they may come from mods, betas or the wrong part of a series.
 
+**Image quality first (owner rule, Nov 9).** Use full, high-resolution landscape frames: about 1280 px wide or more, close to 16:9. Never cut a frame down to a narrow or small piece, because the quiz upscales and letterboxes it and it looks bad. That is what happened to the three narrow Arkham Knight portraits in batch 8, which had to be replaced. A light trim at an edge is fine, for example a corner logo or a URL strip. If the answer is written in the scene, pick another frame. Skip low-res store shots such as TF2's 640×360. The stopgame.ru galleries are an approved source too.
+
 **UI-fragment kind:** crop a small, recognizable piece of the HUD or of an outfit, and ask «Из какой игры этот фрагмент интерфейса?» or «Чья это куртка?». The fragment must not contain the game's title.
 
 **Flow:** download kit to `raw-quiz-images/_presskits/<kit>/` (gitignored) → contact sheet → pick frames where the answer is not on screen (no logo, title, name plate) → crop → `raw-quiz-images/{difficulty}/{slug}.png` → `images:optimize` → batch JSON (`kind: IMAGE_GUESS_BATCH`) → import DRAFT → HTML review → commit + deploy WebP → prod import → publish.
