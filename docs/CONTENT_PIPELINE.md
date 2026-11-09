@@ -409,7 +409,7 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 9 (fix):** batch 8 Penguin / Two-Face / Harley images replaced with full-frame owner-supplied shots (d2ebd93). Swap flow for a published IMAGE_GUESS: replace the raw PNG → drop its key from `quiz-images.manifest.json` → `images:optimize` (new hash file) → commit + deploy, wait for 200 → `UPDATE "QuestionAsset" SET url` for `qa-<draftKey>-prompt` on dev, then prod. The question, its options and the counts stay the same.
 
-**Nov 9 (fix 2):** 8 more weak images (tiny or narrow crops from batches 4, 7 and 8) were replaced with full frames by the same swap flow (eb3dcc6), on dev and prod. The Red Prince question text changed with its new group shot. The two Mafia questions kept their old frames at the owner's request. Still open: 4 TF2 questions on 640×360 Steam shots.
+**Nov 9 (fix 2):** 8 more weak images (tiny or narrow crops from batches 4, 7 and 8) were replaced with full frames by the same swap flow (eb3dcc6), on dev and prod. The Red Prince question text changed with its new group shot. The two Mafia questions kept their old frames at the owner's request. The 4 TF2 questions moved to owner-supplied 1280×720 shots (512d616), with three question texts adjusted.
 
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
