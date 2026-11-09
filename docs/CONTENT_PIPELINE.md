@@ -419,6 +419,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 9 (batch 11):** image batch 11 «places in cult games, part 2» (22 questions, prefix img13, 430aeaa) on dev and prod. A content fix after the dev import (owner renamed one answer) was applied on dev with a targeted UPDATE, because re-import skips complete drafts; prod got the fixed spec. Prod: 1123 live (TEXT 668 + IMAGE 455).
 
+**Nov 9 (batch 12):** five Sekiro boss questions (prefix img14, c5b14f2) on dev and prod. Prod: 1128 live (TEXT 668 + IMAGE 460).
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
