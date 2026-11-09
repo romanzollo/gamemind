@@ -1,0 +1,368 @@
+{
+  "version": 1,
+  "source": "ai",
+  "kind": "IMAGE_GUESS_BATCH",
+  "notes": "Image batch 12: Sekiro bosses. RU names from the owner; frames from the Sekiro fan wiki. Corrupted Monk has no usable frame and is left out. Import is idempotent by draftKey.",
+  "questions": [
+    {
+      "draftKey": "img14-medium-sekiro-genichiro",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sekiro-genichiro",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sekiro-genichiro.webp",
+      "rawDropAs": "raw-quiz-images/medium/sekiro-genichiro.png",
+      "metadata": {
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "image-who",
+        "source": "https://sekiro.fandom.com/wiki/Genichiro_Ashina",
+        "sourceFile": "https://static.wikia.nocookie.net/shadowsdietwice/images/7/72/Sekiro-Ashina-Clan-Genichiro.png/revision/latest?cb=20190323154126",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-sekiro5"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот босс Sekiro?"
+        },
+        "en": {
+          "text": "Who is this Sekiro boss?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Генитиро Асина"
+            },
+            "en": {
+              "text": "Genichiro Ashina"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Иссин, Святой Меча"
+            },
+            "en": {
+              "text": "Isshin, the Sword Saint"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Гёбу Онива"
+            },
+            "en": {
+              "text": "Gyoubu Oniwa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Великий синоби Филин"
+            },
+            "en": {
+              "text": "Great Shinobi Owl"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img14-hard-sekiro-butterfly",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "sekiro-butterfly",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/sekiro-butterfly.webp",
+      "rawDropAs": "raw-quiz-images/hard/sekiro-butterfly.png",
+      "metadata": {
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "image-who",
+        "source": "https://sekiro.fandom.com/wiki/Lady_Butterfly",
+        "sourceFile": "https://static.wikia.nocookie.net/shadowsdietwice/images/3/33/Sekiro-Lady-Butterfly.png/revision/latest?cb=20190502172421",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-sekiro5"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот босс Sekiro?"
+        },
+        "en": {
+          "text": "Who is this Sekiro boss?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Госпожа Бабочка"
+            },
+            "en": {
+              "text": "Lady Butterfly"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Падшая монахиня"
+            },
+            "en": {
+              "text": "Corrupted Monk"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Эма"
+            },
+            "en": {
+              "text": "Emma"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Божественное дитя"
+            },
+            "en": {
+              "text": "Divine Child"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img14-medium-sekiro-ape",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sekiro-ape",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sekiro-ape.webp",
+      "rawDropAs": "raw-quiz-images/medium/sekiro-ape.png",
+      "metadata": {
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "image-who",
+        "source": "https://sekiro.fandom.com/wiki/Guardian_Ape",
+        "sourceFile": "https://static.wikia.nocookie.net/shadowsdietwice/images/5/54/Guardian_Ape_02.png/revision/latest?cb=20190505213250",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-sekiro5"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот босс Sekiro?"
+        },
+        "en": {
+          "text": "Who is this Sekiro boss?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Обезьяна-страж"
+            },
+            "en": {
+              "text": "Guardian Ape"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Демон ненависти"
+            },
+            "en": {
+              "text": "Demon of Hatred"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Великий змей"
+            },
+            "en": {
+              "text": "Great Serpent"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бык в огне"
+            },
+            "en": {
+              "text": "Blazing Bull"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img14-hard-sekiro-isshin",
+      "type": "IMAGE_GUESS",
+      "difficulty": "HARD",
+      "category": "video-games",
+      "imageStem": "sekiro-isshin",
+      "imageFolder": "hard",
+      "promptImageUrl": "/quiz-images/hard/sekiro-isshin.webp",
+      "rawDropAs": "raw-quiz-images/hard/sekiro-isshin.png",
+      "metadata": {
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "image-who",
+        "source": "https://sekiro.fandom.com/wiki/Isshin%2C_the_Sword_Saint",
+        "sourceFile": "https://static.wikia.nocookie.net/shadowsdietwice/images/6/65/Isshin%2C_Sword_Saint_05.png/revision/latest?cb=20190519191925",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-sekiro5"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот босс Sekiro?"
+        },
+        "en": {
+          "text": "Who is this Sekiro boss?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Иссин, Святой Меча"
+            },
+            "en": {
+              "text": "Isshin, the Sword Saint"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Генитиро Асина"
+            },
+            "en": {
+              "text": "Genichiro Ashina"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Великий синоби Филин"
+            },
+            "en": {
+              "text": "Great Shinobi Owl"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Мастер копья Синобу"
+            },
+            "en": {
+              "text": "Spear master Shinobu"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "draftKey": "img14-medium-sekiro-gyoubu",
+      "type": "IMAGE_GUESS",
+      "difficulty": "MEDIUM",
+      "category": "video-games",
+      "imageStem": "sekiro-gyoubu",
+      "imageFolder": "medium",
+      "promptImageUrl": "/quiz-images/medium/sekiro-gyoubu.webp",
+      "rawDropAs": "raw-quiz-images/medium/sekiro-gyoubu.png",
+      "metadata": {
+        "game": "Sekiro: Shadows Die Twice",
+        "topic": "image-who",
+        "source": "https://sekiro.fandom.com/wiki/Gyoubu_Masataka_Oniwa",
+        "sourceFile": "https://static.wikia.nocookie.net/shadowsdietwice/images/b/b6/Gyoubu_01.png/revision/latest?cb=20190427225431",
+        "localizationStrategy": "official-ru",
+        "batch": "2026-11-09-image-guess-sekiro5"
+      },
+      "translations": {
+        "ru": {
+          "text": "Кто этот босс Sekiro?"
+        },
+        "en": {
+          "text": "Who is this Sekiro boss?"
+        }
+      },
+      "options": [
+        {
+          "isCorrect": true,
+          "translations": {
+            "ru": {
+              "text": "Гёбу Онива"
+            },
+            "en": {
+              "text": "Gyoubu Oniwa"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Генитиро Асина"
+            },
+            "en": {
+              "text": "Genichiro Ashina"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Бык в огне"
+            },
+            "en": {
+              "text": "Blazing Bull"
+            }
+          }
+        },
+        {
+          "isCorrect": false,
+          "translations": {
+            "ru": {
+              "text": "Демон ненависти"
+            },
+            "en": {
+              "text": "Demon of Hatred"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
