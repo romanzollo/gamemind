@@ -155,12 +155,16 @@ export type SessionLockedAnswerView = {
     selectedOptionId: string;
     correctOptionId: string;
     isCorrect: boolean;
+    /** Время фиксации (мс) — паузы на музыку после F5 считаются как на сервере. */
+    answeredAtMs?: number;
 };
 
 /** Вопрос из snapshot для server-side scoring (с isCorrect, без текста). */
 export type SessionSnapshotScoringQuestion = {
     id: string;
     difficulty: Difficulty;
+    /** AUDIO_GUESS → окно прослушивания в пересчёте Блица / Выживания. */
+    type?: QuestionType;
     options: Array<{
         id: string;
         isCorrect: boolean;

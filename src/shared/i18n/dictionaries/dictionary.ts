@@ -675,6 +675,12 @@ export type Dictionary = {
             trackCredit: string;
             /** Разбор: клипа нет (удалён или не грузится). */
             unavailable: string;
+            /** Таймер Блица / банк Выживания стоят, пока звучит клип. */
+            clockPaused: string;
+            /** В партии есть аудиовопросы — проверить звук. */
+            soundHint: string;
+            /** Быстрые режимы: клип не скачался, вопрос пропущен без штрафа. */
+            skipped: string;
         };
         reviewTitle: string;
         yourAnswer: string;

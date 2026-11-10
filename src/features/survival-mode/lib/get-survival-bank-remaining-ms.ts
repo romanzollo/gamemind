@@ -18,6 +18,8 @@ export type SurvivalBankRemainingInput = {
     initialBankSeconds?: number;
     correctDeltaSeconds?: number;
     wrongDeltaSeconds?: number;
+    /** Паузы на музыку (окно прослушивания AUDIO_GUESS), мс. */
+    creditMs?: number;
 };
 
 function isFiniteNumber(value: number): boolean {
@@ -43,6 +45,7 @@ export function getSurvivalBankRemainingMs(
         initialBankSeconds = SURVIVAL_MODE_MVP_RULES.initialBankSeconds,
         correctDeltaSeconds = SURVIVAL_MODE_MVP_RULES.correctDeltaSeconds,
         wrongDeltaSeconds = SURVIVAL_MODE_MVP_RULES.wrongDeltaSeconds,
+        creditMs = 0,
     } = input;
 
     if (
@@ -63,6 +66,7 @@ export function getSurvivalBankRemainingMs(
         correctDeltaSeconds * correct -
         wrongDeltaSeconds * wrong;
     const budgetMs = Math.max(0, rawBudgetSeconds) * 1000;
+    const pauseMs = isFiniteNumber(creditMs) ? Math.max(0, creditMs) : 0;
 
-    return Math.max(0, budgetMs - elapsedMs);
+    return Math.max(0, budgetMs + pauseMs - elapsedMs);
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import type { QuizPublicQuestion } from '@/features/quiz/types';
 import { QuestionImage } from '@/features/quiz/components/QuestionImage';
 
@@ -19,6 +21,10 @@ type QuestionCardProps = {
     imagePriority?: boolean;
     /** Timed expired / submitting — нельзя менять ответы. */
     disabled?: boolean;
+    /** Метка над текстом вопроса (AUDIO_GUESS: «Угадай по музыке»). */
+    eyebrow?: string;
+    /** Медиа под текстом вместо картинки — плеер клипа AUDIO_GUESS. */
+    media?: ReactNode;
 };
 
 type OptionIndicatorProps = {
@@ -56,6 +62,8 @@ export function QuestionCard({
     imageCloseLabel,
     imagePriority = false,
     disabled = false,
+    eyebrow,
+    media,
 }: QuestionCardProps) {
     const hasImage = Boolean(imageUrl);
 
@@ -69,6 +77,11 @@ export function QuestionCard({
                 .join(' ')}
             aria-labelledby={`question-${question.id}-title`}
         >
+            {eyebrow ? (
+                <p className="mb-2 font-mono text-2xs font-medium uppercase tracking-[0.14em] text-muted">
+                    {eyebrow}
+                </p>
+            ) : null}
             <header className="flex items-start gap-3">
                 <span
                     className="font-display inline-flex min-h-8 min-w-8 shrink-0 items-center justify-center rounded-md bg-surface-muted px-2 text-sm font-semibold tabular-nums tracking-wide text-foreground"
@@ -83,6 +96,8 @@ export function QuestionCard({
                     {question.text}
                 </h2>
             </header>
+
+            {media ? <div className="mt-4 sm:mt-5">{media}</div> : null}
 
             {hasImage && imageUrl ? (
                 <div className="mt-4 sm:mt-5">

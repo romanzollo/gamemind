@@ -115,9 +115,13 @@ describe('records', () => {
 
         expect(text).toContain('s."timedEndsAt" IS NOT NULL');
         expect(text).toContain('s."topicTagId" IS NULL');
+        // Время без пауз на музыку (окно прослушивания AUDIO_GUESS).
+        const activeSeconds =
+            '(EXTRACT(EPOCH FROM (r."completedAt" - s."startedAt")) - r."clockCreditMs" / 1000.0)';
         expect(text).toContain(
-            'ORDER BY r."score" DESC, (r."completedAt" - s."startedAt") ASC, r."completedAt" ASC',
+            `ORDER BY r."score" DESC, ${activeSeconds} ASC, r."completedAt" ASC`,
         );
+        expect(text).toContain(`CEIL(${activeSeconds})::int AS seconds`);
         expect(values).toEqual(['2026-11-01T21:00:00.000Z']);
     });
 

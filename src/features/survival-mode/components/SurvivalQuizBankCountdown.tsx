@@ -7,11 +7,14 @@
  * Цифры только после гидрации — иначе hydration mismatch.
  * Remaining выводится в render из `nowMs` + текущих correct/wrong:
  * штраф/бонус виден сразу на lock-in, interval только двигает часы.
- * Canon: docs/DECISIONS.md → Survival Mode MVP.
+ * AUDIO_GUESS: `listening(now)` — пауза на музыку; банк стоит, пока идёт
+ * окно прослушивания, и видна отметка «Пауза на музыку».
+ * Canon: docs/DECISIONS.md → Survival Mode MVP; Audio questions: AUDIO_GUESS.
  */
 
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 
+import { ListeningPause } from '@/features/quiz/components/ListeningPause';
 import { getSurvivalBankRemainingMs } from '@/features/survival-mode/lib/get-survival-bank-remaining-ms';
 import { serverNow } from '@/shared/ui/server-clock';
 import { useHydrated } from '@/shared/ui/use-hydrated';
@@ -32,7 +35,16 @@ type SurvivalQuizBankCountdownProps = {
     frozen?: boolean;
     /** Один вызов при первом remaining = 0. */
     onExpired?: () => void;
+    /** Пауза на музыку сейчас: прибавка к банку и идёт ли окно. */
+    listening?: (nowMs: number) => {
+        creditMs: number;
+        active: boolean;
+        remainingMs: number;
+    };
+    pausedLabel?: string;
 };
+
+const NO_PAUSE = { creditMs: 0, active: false, remainingMs: 0 };
 
 function getRemainingMs(args: {
     startedAt: string;
@@ -42,6 +54,7 @@ function getRemainingMs(args: {
     initialBankSeconds: number;
     correctDeltaSeconds: number;
     wrongDeltaSeconds: number;
+    creditMs: number;
 }): number {
     const startedAtMs = new Date(args.startedAt).getTime();
 
@@ -57,6 +70,7 @@ function getRemainingMs(args: {
         initialBankSeconds: args.initialBankSeconds,
         correctDeltaSeconds: args.correctDeltaSeconds,
         wrongDeltaSeconds: args.wrongDeltaSeconds,
+        creditMs: args.creditMs,
     });
 }
 
@@ -79,6 +93,8 @@ export function SurvivalQuizBankCountdown({
     expiredLabel,
     frozen = false,
     onExpired,
+    listening,
+    pausedLabel,
 }: SurvivalQuizBankCountdownProps) {
     const hydrated = useHydrated();
     const [nowMs, setNowMs] = useState(() => serverNow());
@@ -87,6 +103,9 @@ export function SurvivalQuizBankCountdown({
     const notifyExpired = useEffectEvent(() => {
         onExpired?.();
     });
+    const readCredit = useEffectEvent(
+        (now: number) => listening?.(now).creditMs ?? 0,
+    );
 
     useEffect(() => {
         expiredNotifiedRef.current = false;
@@ -108,6 +127,7 @@ export function SurvivalQuizBankCountdown({
                 initialBankSeconds,
                 correctDeltaSeconds,
                 wrongDeltaSeconds,
+                creditMs: readCredit(now),
             });
 
             if (next <= 0 && !expiredNotifiedRef.current) {
@@ -131,6 +151,7 @@ export function SurvivalQuizBankCountdown({
         frozen,
     ]);
 
+    const pause = listening?.(nowMs) ?? NO_PAUSE;
     const remainingMs = getRemainingMs({
         startedAt,
         nowMs,
@@ -139,36 +160,46 @@ export function SurvivalQuizBankCountdown({
         initialBankSeconds,
         correctDeltaSeconds,
         wrongDeltaSeconds,
+        creditMs: pause.creditMs,
     });
     const expired = hydrated && remainingMs <= 0 && !frozen;
     const display = hydrated ? formatRemaining(remainingMs) : '--:--';
+    const paused = hydrated && pause.active && !expired && !frozen;
 
     return (
-        <div
-            className="flex items-center justify-between gap-3 text-sm"
-            aria-live="polite"
-        >
-            <span
-                className={
-                    expired
-                        ? 'font-medium text-danger'
-                        : 'font-medium text-foreground'
-                }
+        <div>
+            <div
+                className="flex items-center justify-between gap-3 text-sm"
+                aria-live="polite"
             >
-                {expired ? expiredLabel : remainingLabel}
-            </span>
-            <span
-                className={
-                    expired
-                        ? 'font-mono text-base font-semibold tabular-nums text-danger'
-                        : frozen
-                          ? 'font-mono text-base font-semibold tabular-nums text-muted'
-                          : 'font-mono text-base font-semibold tabular-nums text-foreground'
-                }
-                suppressHydrationWarning
-            >
-                {display}
-            </span>
+                <span
+                    className={
+                        expired
+                            ? 'font-medium text-danger'
+                            : 'font-medium text-foreground'
+                    }
+                >
+                    {expired ? expiredLabel : remainingLabel}
+                </span>
+                <span
+                    className={
+                        expired
+                            ? 'font-mono text-base font-semibold tabular-nums text-danger'
+                            : frozen
+                              ? 'font-mono text-base font-semibold tabular-nums text-muted'
+                              : 'font-mono text-base font-semibold tabular-nums text-foreground'
+                    }
+                    suppressHydrationWarning
+                >
+                    {display}
+                </span>
+            </div>
+            {paused && pausedLabel ? (
+                <ListeningPause
+                    label={pausedLabel}
+                    remainingMs={pause.remainingMs}
+                />
+            ) : null}
         </div>
     );
 }

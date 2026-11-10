@@ -32,6 +32,10 @@ import {
     pickTimedSnapshotBundle,
 } from '@/features/quiz/lib/pick-quiz-snapshot-bundle';
 import type { QuizErrorCode, QuizSetupDifficulty } from '@/features/quiz/types';
+import {
+    blitzSessionDurationSeconds,
+    countAudioQuestions,
+} from '@/features/quiz/lib/listening-window';
 import { TIMED_MODE_MVP_RULES } from '@/features/timed-mode/types';
 import type { Locale } from '@/shared/i18n';
 
@@ -99,7 +103,13 @@ export async function runTimedQuizStart(
             questionCount,
             sessionLocale: input.locale,
             timedEndsAt,
-            timedDurationSeconds: TIMED_MODE_MVP_RULES.durationSeconds,
+            // 60 с + окно прослушивания на каждый аудиовопрос: это потолок,
+            // засчитанные ответы решает пересчёт при сдаче (replayBlitzLocks).
+            // Дедлайн по-прежнему JS Date после connect на INSERT (канон E).
+            timedDurationSeconds: blitzSessionDurationSeconds(
+                TIMED_MODE_MVP_RULES.durationSeconds,
+                countAudioQuestions(pickedQuestions),
+            ),
             topicTagId: input.topicTagId,
             questions: buildQuizSnapshotQuestions(pickedQuestions),
             pickedQuestions,

@@ -14,7 +14,10 @@
  * - После F5 игра продолжается с первого неотвеченного (`lockedAnswers`).
  * - AUDIO_GUESS: клипы партии скачиваются при открытии, клип играет сам при
  *   показе вопроса (общий `<audio>`, разблокированный первым тапом).
- *   ADR: DECISIONS → Audio questions: AUDIO_GUESS.
+ *   Блиц: пока игрок на музыкальном вопросе, таймер стоит до окна
+ *   прослушивания (та же формула, что у пересчёта при сдаче); клип не
+ *   скачался к своему вопросу → вопрос в конец очереди, потом пропуск без
+ *   штрафа. ADR: DECISIONS → Audio questions: AUDIO_GUESS.
  *
  * Canon: docs/DECISIONS.md → Answer lock-in; QUIZ_NEON_HOT_PATH → E2.
  */
@@ -39,11 +42,19 @@ import {
 } from '@/features/quiz/components/use-quiz-audio';
 import { usePreloadQuizImages } from '@/features/quiz/components/use-preload-quiz-images';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
+import {
+    AUDIO_LISTEN_WINDOW_SECONDS,
+    advanceAudioQueue,
+    buildListeningClock,
+    countAudioQuestions,
+    type ListeningLock,
+} from '@/features/quiz/lib/listening-window';
 import type {
     QuizLockedAnswer,
     QuizPublicQuestion,
 } from '@/features/quiz/types';
 import { TimedQuizCountdown } from '@/features/timed-mode/components/TimedQuizCountdown';
+import { TIMED_MODE_MVP_RULES } from '@/features/timed-mode/types';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton, buttonClassName } from '@/shared/ui';
 import {
@@ -85,6 +96,17 @@ type LockResponse = {
 const CHECKING_DELAY_MS = 300;
 /** Блиц: сколько видна плашка до следующего вопроса. */
 const BLITZ_ADVANCE_MS = 800;
+/** Сколько видна плашка «клип не загрузился — пропускаем». */
+const SKIP_NOTICE_MS = 4000;
+
+type PlayQueue = {
+    /** Индексы вопросов в порядке показа (клип не готов → в конец). */
+    order: number[];
+    /** Позиция текущего вопроса в `order`. */
+    position: number;
+    /** Вопросы, которые уже раз отложили. */
+    deferred: ReadonlySet<number>;
+};
 
 function toOutcomes(
     lockedAnswers: readonly QuizLockedAnswer[],
@@ -122,9 +144,27 @@ export function QuizSessionForm({
     const [state, formAction, isPending] = useActionState(submitQuizAction, {});
 
     const [outcomes, setOutcomes] = useState(() => toOutcomes(lockedAnswers));
-    const [currentIndex, setCurrentIndex] = useState(() =>
-        firstUnansweredIndex(questions, toOutcomes(lockedAnswers)),
+    const [queue, setQueue] = useState<PlayQueue>(() => ({
+        order: questions.map((_, index) => index),
+        position: firstUnansweredIndex(questions, toOutcomes(lockedAnswers)),
+        deferred: new Set<number>(),
+    }));
+    const currentIndex = queue.order[queue.position] ?? 0;
+    /** Время ответа (мс, часы сервера): после F5 — фиксация, иначе тап. */
+    const [answeredAt, setAnsweredAt] = useState<Record<string, number>>(() =>
+        Object.fromEntries(
+            lockedAnswers.flatMap((answer) =>
+                answer.answeredAtMs != null
+                    ? [[answer.questionId, answer.answeredAtMs]]
+                    : [],
+            ),
+        ),
     );
+    /** Вопросы, пропущенные из-за клипа (без ответа, без штрафа). */
+    const [skipped, setSkipped] = useState<ReadonlySet<string>>(
+        () => new Set<string>(),
+    );
+    const [skipNotice, setSkipNotice] = useState(false);
     const [pendingOptionId, setPendingOptionId] = useState<string | null>(null);
     const [retryOptionId, setRetryOptionId] = useState<string | null>(null);
     const [showChecking, setShowChecking] = useState(false);
@@ -137,6 +177,11 @@ export function QuizSessionForm({
     });
 
     const autoSubmitStartedRef = useRef(false);
+    // Свежие значения для таймера Блица (переход через 0.8 с после ответа).
+    const queueRef = useRef(queue);
+    const outcomesRef = useRef(outcomes);
+    const skippedRef = useRef(skipped);
+    const clipReadyRef = useRef<(index: number) => boolean>(() => true);
     const timersRef = useRef<number[]>([]);
     const headingRef = useRef<HTMLHeadingElement>(null);
     const shownIndexRef = useRef(currentIndex);
@@ -149,6 +194,21 @@ export function QuizSessionForm({
     const hasAudio = audioUrls.some(Boolean);
     const audioClips = useQuizAudioClips(audioUrls);
     const audioPlayer = useQuizAudioPlayer(hasAudio);
+    const isClipReady = useCallback(
+        (index: number) => {
+            const item = questions[index];
+            if (!item || item.type !== 'AUDIO_GUESS') return true;
+            return audioClips.clipFor(item.audioUrl)?.status === 'ready';
+        },
+        [audioClips, questions],
+    );
+
+    useEffect(() => {
+        queueRef.current = queue;
+        outcomesRef.current = outcomes;
+        skippedRef.current = skipped;
+        clipReadyRef.current = isClipReady;
+    });
 
     useEffect(() => {
         const timers = timersRef.current;
@@ -168,9 +228,12 @@ export function QuizSessionForm({
 
     const question = questions[currentIndex];
     const outcome = question ? outcomes[question.id] : undefined;
-    const isLast = currentIndex >= questions.length - 1;
+    const isLast = questions.every(
+        (item, index) =>
+            index === currentIndex || outcomes[item.id] || skipped.has(item.id),
+    );
     const answeredCount = Object.keys(outcomes).length;
-    const allAnswered = answeredCount >= questions.length;
+    const allAnswered = answeredCount + skipped.size >= questions.length;
     const errorMessage = getQuizErrorMessage(dictionary, state.errorCode);
 
     // Серия верных подряд, заканчивающаяся на текущем вопросе.
@@ -206,10 +269,46 @@ export function QuizSessionForm({
         submit(true);
     }, [submit]);
 
-    const goNext = useCallback(() => {
+    /**
+     * Следующий вопрос. Блиц: клип не скачан → вопрос в конец очереди,
+     * второй раз → пропуск. Вопросов не осталось → 'finished'.
+     */
+    const goNext = useCallback((): 'moved' | 'finished' => {
         setLockError(null);
-        setCurrentIndex((index) => Math.min(index + 1, questions.length - 1));
-    }, [questions.length]);
+        const current = queueRef.current;
+        const next = advanceAudioQueue({
+            order: current.order,
+            position: current.position,
+            deferred: current.deferred,
+            isDone: (index) =>
+                Boolean(outcomesRef.current[questions[index]?.id ?? '']) ||
+                skippedRef.current.has(questions[index]?.id ?? ''),
+            notReady: (index) => isTimed && !clipReadyRef.current(index),
+        });
+        if (next.skipped.length > 0) {
+            const nextSkipped = new Set(skippedRef.current);
+            next.skipped.forEach((index) => nextSkipped.add(questions[index].id));
+            skippedRef.current = nextSkipped;
+            setSkipped(nextSkipped);
+            setSkipNotice(true);
+            const timer = window.setTimeout(
+                () => setSkipNotice(false),
+                SKIP_NOTICE_MS,
+            );
+            timersRef.current.push(timer);
+        }
+        if (next.position === null) {
+            return 'finished';
+        }
+        const updated = {
+            order: next.order,
+            position: next.position,
+            deferred: next.deferred,
+        };
+        queueRef.current = updated;
+        setQueue(updated);
+        return 'moved';
+    }, [isTimed, questions]);
 
     const sendAnswer = useCallback(
         async (optionId: string) => {
@@ -222,7 +321,8 @@ export function QuizSessionForm({
                 return;
             }
 
-            const answeredLast = isLast;
+            // Время ответа по часам сервера — для паузы на музыку на экране.
+            const tapAtMs = serverNow();
             setPendingOptionId(optionId);
             setLockError(null);
             const checkingTimer = window.setTimeout(
@@ -247,25 +347,30 @@ export function QuizSessionForm({
                 if (response.ok) {
                     const body = (await response.json()) as LockResponse;
                     setRetryOptionId(null);
-                    setOutcomes((previous) => ({
-                        ...previous,
+                    const nextOutcomes = {
+                        ...outcomesRef.current,
                         [question.id]: {
                             selectedOptionId: body.selectedOption,
                             correctOptionId: body.correctOption,
                             isCorrect: body.correct,
                         },
+                    };
+                    outcomesRef.current = nextOutcomes;
+                    setOutcomes(nextOutcomes);
+                    setAnsweredAt((previous) => ({
+                        ...previous,
+                        [question.id]: tapAtMs,
                     }));
 
                     if (isTimed) {
                         const timer = window.setTimeout(() => {
-                            if (answeredLast) {
+                            // Вопросов не осталось (ответы + пропуски) — сдаём.
+                            if (goNext() === 'finished') {
                                 if (!autoSubmitStartedRef.current) {
                                     autoSubmitStartedRef.current = true;
                                     submit(false);
                                 }
-                                return;
                             }
-                            goNext();
                         }, BLITZ_ADVANCE_MS);
                         timersRef.current.push(timer);
                     }
@@ -301,7 +406,6 @@ export function QuizSessionForm({
         [
             goNext,
             handleTimedExpired,
-            isLast,
             isTimed,
             locale,
             outcome,
@@ -342,6 +446,57 @@ export function QuizSessionForm({
         .replace('{n}', String(currentIndex + 1))
         .replace('{total}', String(questions.length));
 
+    // Блиц: дедлайн без пауз = потолок `timedEndsAt` − окно × аудиовопросы.
+    const audioCount = countAudioQuestions(questions);
+    const windowMs = AUDIO_LISTEN_WINDOW_SECONDS * 1000;
+    const timedEndsAtMs = timedEndsAt ? new Date(timedEndsAt).getTime() : 0;
+    const baseEndsAtMs = timedEndsAtMs - audioCount * windowMs;
+    const baseEndsAtIso =
+        timedEndsAt && Number.isFinite(baseEndsAtMs)
+            ? new Date(baseEndsAtMs).toISOString()
+            : timedEndsAt;
+    const listeningLocks: ListeningLock[] = questions.flatMap((item) =>
+        outcomes[item.id] && answeredAt[item.id] != null
+            ? [
+                  {
+                      questionId: item.id,
+                      answeredAtMs: answeredAt[item.id],
+                      isAudio: item.type === 'AUDIO_GUESS',
+                  },
+              ]
+            : [],
+    );
+    // Окно открывается сразу после ответа, если следующий вопрос — музыка.
+    const upcomingIndex = outcome
+        ? queue.order
+              .slice(queue.position + 1)
+              .find(
+                  (index) =>
+                      !outcomes[questions[index].id] &&
+                      !skipped.has(questions[index].id),
+              )
+        : currentIndex;
+    const upcoming =
+        upcomingIndex != null ? questions[upcomingIndex] : undefined;
+    const listening =
+        isTimed && audioCount > 0
+            ? buildListeningClock({
+                  startMs:
+                      baseEndsAtMs - TIMED_MODE_MVP_RULES.durationSeconds * 1000,
+                  locks: listeningLocks,
+                  upcomingIsAudio:
+                      upcoming?.type === 'AUDIO_GUESS' &&
+                      upcomingIndex != null &&
+                      isClipReady(upcomingIndex),
+              })
+            : undefined;
+    const showSoundHint =
+        hasAudio &&
+        question.type !== 'AUDIO_GUESS' &&
+        !questions.some(
+            (item) => item.type === 'AUDIO_GUESS' && outcomes[item.id],
+        );
+
     return (
         <form
             onSubmit={handleSubmit}
@@ -355,7 +510,9 @@ export function QuizSessionForm({
                     {timedEndsAt ? (
                         <div className="mb-2 border-b border-border pb-2">
                             <TimedQuizCountdown
-                                timedEndsAt={timedEndsAt}
+                                timedEndsAt={baseEndsAtIso ?? timedEndsAt}
+                                listening={listening}
+                                pausedLabel={dictionary.quiz.audio.clockPaused}
                                 remainingLabel={
                                     dictionary.quiz.timedRemainingLabel
                                 }
@@ -386,6 +543,14 @@ export function QuizSessionForm({
                             );
                         })}
                     </ol>
+                    {showSoundHint ? (
+                        <p
+                            className="mt-2 text-xs text-muted"
+                            data-testid="quiz-audio-sound-hint"
+                        >
+                            {dictionary.quiz.audio.soundHint}
+                        </p>
+                    ) : null}
                 </div>
             </div>
 
@@ -528,6 +693,16 @@ export function QuizSessionForm({
                     </div>
                 ) : null}
 
+                {skipNotice ? (
+                    <InlineAlert
+                        className="mb-3"
+                        tone="warning"
+                        data-testid="quiz-audio-skipped"
+                    >
+                        {dictionary.quiz.audio.skipped}
+                    </InlineAlert>
+                ) : null}
+
                 {showChecking ? (
                     <p className="mb-3 text-sm text-muted" role="status">
                         {labels.checking}
@@ -578,7 +753,9 @@ export function QuizSessionForm({
                         type="button"
                         data-testid="quiz-next"
                         className={buttonClassName({ className: 'w-full' })}
-                        onClick={goNext}
+                        onClick={() => {
+                            goNext();
+                        }}
                     >
                         {labels.next}
                     </button>

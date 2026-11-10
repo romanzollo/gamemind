@@ -8,6 +8,12 @@ import {
 } from '@/entities/quiz-session/quiz-public-ids';
 import { quizSessionRepository } from '@/entities/quiz-session/quiz-session.repository';
 import { isTimedSubmitExpired } from '@/features/timed-mode/lib/is-timed-submit-expired';
+import {
+    countAudioQuestions,
+    isAudioQuestionType,
+    replayBlitzLocks,
+} from '@/features/quiz/lib/listening-window';
+import { TIMED_MODE_MVP_RULES } from '@/features/timed-mode/types';
 import { requireUser } from '@/lib/auth/guards';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
@@ -190,6 +196,30 @@ export async function submitQuizAction(
         return { errorCode: 'SUBMIT_FAILED' };
     }
 
+    const audioQuestionIds = new Set(
+        questions
+            .filter((question) => isAudioQuestionType(question.type))
+            .map((question) => question.id),
+    );
+
+    // Блиц: `timedEndsAt` — потолок (60 с + окно на каждый аудиовопрос);
+    // засчитаны ответы до своего дедлайна с паузами на музыку. Без аудио —
+    // то же правило, что у фиксации ответа. ADR: Audio questions (window).
+    const blitzReplay =
+        isTimedSession && sessionForSubmit.timedEndsAt && lockedAnswers.length > 0
+            ? replayBlitzLocks({
+                  timedEndsAtMs: new Date(sessionForSubmit.timedEndsAt).getTime(),
+                  durationSeconds: TIMED_MODE_MVP_RULES.durationSeconds,
+                  audioQuestionCount: countAudioQuestions(questions),
+                  graceSeconds: TIMED_MODE_MVP_RULES.graceSeconds,
+                  locks: lockedAnswers.map((answer) => ({
+                      ...answer,
+                      answeredAtMs: new Date(answer.answeredAt).getTime(),
+                      isAudio: audioQuestionIds.has(answer.questionId),
+                  })),
+              })
+            : null;
+
     // Survival: точный пересчёт банка по времени фиксации — засчитаны только
     // ответы до конца банка. Правильность — из snapshot сессии.
     const survivalReplay =
@@ -209,6 +239,7 @@ export async function submitQuizAction(
                                       option.id === answer.selectedOptionId,
                               )?.isCorrect === true,
                       answeredAtMs: new Date(answer.answeredAt).getTime(),
+                      isAudio: audioQuestionIds.has(answer.questionId),
                   })),
               })
             : null;
@@ -216,7 +247,10 @@ export async function submitQuizAction(
     // Форма шлёт токены сессии (не id из БД — те выдавали ответ); переводим обратно.
     const { answers } = chooseScoredAnswers(
         questions,
-        { locked: lockedAnswers, counted: survivalReplay?.counted },
+        {
+            locked: lockedAnswers,
+            counted: survivalReplay?.counted ?? blitzReplay?.counted,
+        },
         () =>
             readSubmittedAnswers(
                 formData,
@@ -226,14 +260,17 @@ export async function submitQuizAction(
     );
 
     // Classic/daily: все ответы обязательны.
-    // Timed manual finish: тоже все ответы.
+    // Timed manual finish: тоже все ответы, кроме аудиовопросов — клип,
+    // который не скачался, пропускается без штрафа (0 очков).
     // Timed auto-submit (finishedByTimer): partial OK — пустые = 0 в scoring.
     // Survival: partial OK (bank=0 до 12 ответов).
     const requireAllAnswers =
         (!isTimedSession && !isSurvivalSession) || (isTimedSession && !finishedByTimer);
     if (requireAllAnswers) {
         const allAnswered = answers.every(
-            (answer) => answer.selectedOptionId.length > 0,
+            (answer) =>
+                answer.selectedOptionId.length > 0 ||
+                (isTimedSession && audioQuestionIds.has(answer.questionId)),
         );
 
         if (!allAnswered) {
@@ -342,6 +379,8 @@ export async function submitQuizAction(
             correctCount: scoreResult.correctCount,
             completedAt,
             survivalClockOk,
+            clockCreditMs:
+                blitzReplay?.clockCreditMs ?? survivalReplay?.clockCreditMs ?? 0,
             answers: answerRows.map((answer) => ({
                 questionId: answer.questionId,
                 selectedOptionId: answer.selectedOptionId,

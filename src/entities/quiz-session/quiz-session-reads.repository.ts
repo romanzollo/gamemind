@@ -662,6 +662,7 @@ async function loadLockedAnswerViews(
                 selectedOptionId: row.selectedOptionId,
                 correctOptionId: correct.id,
                 isCorrect: row.selectedOptionId === correct.id,
+                answeredAtMs: new Date(row.answeredAt).getTime(),
             },
         ];
     });

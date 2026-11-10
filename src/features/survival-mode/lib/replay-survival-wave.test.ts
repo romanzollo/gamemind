@@ -104,4 +104,49 @@ describe('replaySurvivalWave', () => {
         // 7 + 4 − 4 = 7 с.
         expect(result.bankRemainingSeconds).toBe(7);
     });
+
+    it('stops the bank while the player is on an audio question (up to the window)', () => {
+        // Банк 5 с. Музыкальный вопрос показан на 2-й секунде (после q1),
+        // ответ на 11-й: без паузы банк кончился бы на 7-й (5 + 4 − 2 = 7).
+        const result = replaySurvivalWave({
+            startedAtMs: START,
+            completedAtMs: at(12),
+            initialBankSeconds: 5,
+            answers: [
+                answer('q1', 2, true),
+                { ...answer('a1', 11, true), isAudio: true },
+            ],
+        });
+
+        expect(result.counted.map((item) => item.questionId)).toEqual(['q1', 'a1']);
+        // Пауза 9 с. Банк: 5 + 4 + 9 + 4 − 12 = 10 с.
+        expect(result.clockCreditMs).toBe(9000);
+        expect(result.bankRemainingSeconds).toBe(10);
+    });
+
+    it('gives at most the window, then the bank runs again', () => {
+        // Банк 20 с, музыка с 0-й секунды, ответ на 40-й: пауза 12 с,
+        // банк к ответу 20 + 12 − 40 < 0 (с grace 3 с) — не засчитан.
+        const result = replaySurvivalWave({
+            startedAtMs: START,
+            completedAtMs: at(40),
+            initialBankSeconds: 20,
+            answers: [{ ...answer('a1', 40, true), isAudio: true }],
+        });
+
+        expect(result.counted).toEqual([]);
+        expect(result.bankEmptied).toBe(true);
+        expect(result.clockCreditMs).toBe(0);
+    });
+
+    it('without audio answers keeps the old numbers', () => {
+        const result = replaySurvivalWave({
+            startedAtMs: START,
+            completedAtMs: at(10),
+            initialBankSeconds: 20,
+            answers: [answer('q1', 3, true), answer('q2', 6, false)],
+        });
+        expect(result.bankRemainingSeconds).toBe(8);
+        expect(result.clockCreditMs).toBe(0);
+    });
 });

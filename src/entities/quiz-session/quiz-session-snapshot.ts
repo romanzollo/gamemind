@@ -265,6 +265,7 @@ export function mapSnapshotDataToScoringQuestions(
         .map((question) => ({
             id: question.id,
             difficulty: question.difficulty,
+            type: question.type,
             options: [...question.options]
                 .sort((left, right) => left.order - right.order)
                 .map((option) => ({

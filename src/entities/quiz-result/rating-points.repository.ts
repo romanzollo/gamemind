@@ -323,6 +323,13 @@ export function buildSessionInPeriodSql(
  * SQL рекорда Блица: лучшая игра периода (без тем), при равных очках —
  * короче по времени, потом раньше. Как сортировка доски Блица (Layer 1).
  */
+/**
+ * Время Блица для рекорда: длительность минус засчитанные паузы на музыку
+ * (`clockCreditMs`, окно прослушивания AUDIO_GUESS) — иначе аудиовопрос
+ * портил бы рекорд. Без аудио `clockCreditMs` = 0 и время прежнее.
+ */
+const BLITZ_ACTIVE_SECONDS_SQL = `(EXTRACT(EPOCH FROM (r."completedAt" - s."startedAt")) - r."clockCreditMs" / 1000.0)`;
+
 export function buildBlitzRecordSql(
     filters: Pick<RatingPointsFilters, 'from' | 'to'>,
 ): SqlQuery {
@@ -339,12 +346,12 @@ export function buildBlitzRecordSql(
         SELECT
             u."username" AS username,
             r."score" AS score,
-            CEIL(EXTRACT(EPOCH FROM (r."completedAt" - s."startedAt")))::int AS seconds
+            CEIL(${BLITZ_ACTIVE_SECONDS_SQL})::int AS seconds
         FROM "QuizResult" AS r
         INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
         INNER JOIN "User" AS u ON u."id" = r."userId"
         WHERE ${where.join(' AND ')}
-        ORDER BY r."score" DESC, (r."completedAt" - s."startedAt") ASC, r."completedAt" ASC
+        ORDER BY r."score" DESC, ${BLITZ_ACTIVE_SECONDS_SQL} ASC, r."completedAt" ASC
         LIMIT 1`,
         values,
     };

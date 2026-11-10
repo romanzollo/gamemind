@@ -48,6 +48,8 @@ export type QuizLockedAnswer = {
     selectedOptionId: string;
     correctOptionId: string;
     isCorrect: boolean;
+    /** Время фиксации на сервере (мс): паузы на музыку после F5. */
+    answeredAtMs?: number;
 };
 
 // тип для статуса сессии викторины

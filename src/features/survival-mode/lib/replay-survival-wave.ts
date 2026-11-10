@@ -10,6 +10,10 @@
  * - засчитанный ответ двигает банк на +4 / −6; если неверный ответ увёл
  *   банк в ноль — волна на этом кончилась.
  *
+ * AUDIO_GUESS: перед проверкой ответа на музыкальный вопрос к банку
+ * добавляется пауза «окна прослушивания» — время на вопросе, но не больше
+ * окна (`listening-window.ts`). Банк не кончается, пока звучит клип.
+ *
  * Заменяет допущение «последний штраф списал только остаток»
  * (`isSurvivalClockOk`, Oct 30): оно было нужно, пока ответы приходили
  * пачкой без порядка. Старые страницы без фиксации идут прежним путём.
@@ -17,6 +21,7 @@
  * ADR: docs/DECISIONS.md → Survival on answer lock-in.
  */
 
+import { listeningCreditMs } from '@/features/quiz/lib/listening-window';
 import { SURVIVAL_MODE_MVP_RULES } from '@/features/survival-mode/types';
 
 export type SurvivalLockedAnswer = {
@@ -25,6 +30,8 @@ export type SurvivalLockedAnswer = {
     isCorrect: boolean;
     /** Время прихода ответа на сервер (`QuizAnswer.answeredAt`). */
     answeredAtMs: number;
+    /** Ответ на AUDIO_GUESS — к банку добавляется окно прослушивания. */
+    isAudio?: boolean;
 };
 
 export type ReplaySurvivalWaveInput = {
@@ -48,6 +55,8 @@ export type ReplaySurvivalWaveResult = {
     bankRemainingSeconds: number;
     /** Банк дошёл до нуля (по времени или неверным ответом). */
     bankEmptied: boolean;
+    /** Сумма пауз засчитанных аудиоответов, мс (`QuizResult.clockCreditMs`). */
+    clockCreditMs: number;
 };
 
 export function replaySurvivalWave(
@@ -67,6 +76,8 @@ export function replaySurvivalWave(
     // Бюджет без учёта прошедшего времени; банк = бюджет − elapsed.
     let budgetMs = Math.max(0, initialBankSeconds) * 1000;
     let emptied = false;
+    let clockCreditMs = 0;
+    let previousAtMs = startedAtMs;
     const counted: SurvivalLockedAnswer[] = [];
     const late: SurvivalLockedAnswer[] = [];
 
@@ -75,7 +86,13 @@ export function replaySurvivalWave(
     );
 
     for (const answer of ordered) {
-        const bankMs = budgetMs - elapsedAt(answer.answeredAtMs);
+        // Пауза на музыку — до проверки банка: клип не съедает время.
+        const creditMs =
+            answer.isAudio && !emptied
+                ? listeningCreditMs(previousAtMs, answer.answeredAtMs)
+                : 0;
+        previousAtMs = answer.answeredAtMs;
+        const bankMs = budgetMs + creditMs - elapsedAt(answer.answeredAtMs);
         if (emptied || bankMs + graceMs <= 0) {
             emptied = true;
             late.push(answer);
@@ -83,6 +100,8 @@ export function replaySurvivalWave(
         }
 
         counted.push(answer);
+        budgetMs += creditMs;
+        clockCreditMs += creditMs;
         budgetMs += answer.isCorrect
             ? correctDeltaSeconds * 1000
             : -wrongDeltaSeconds * 1000;
@@ -102,5 +121,6 @@ export function replaySurvivalWave(
         late,
         bankRemainingSeconds: Math.floor(finalBankMs / 1000),
         bankEmptied: emptied || finalBankMs <= 0,
+        clockCreditMs,
     };
 }

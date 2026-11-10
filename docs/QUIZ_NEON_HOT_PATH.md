@@ -146,6 +146,25 @@ BAD:  arming NOW()+duration on play-load together with TOAST SELECT
 
 Refresh must **not** reset the deadline (play-load does not UPDATE `timedEndsAt`).
 
+**AUDIO_GUESS (Nov 10):** with audio questions `timedEndsAt` = JS Date after connect + 60 s + 12 s × audio questions in the snapshot — a **hard cap**, still armed on the INSERT (only the number changes). Which locks count is decided on submit by `replayBlitzLocks` (listening window, below). Without audio the replay gives exactly the old rule.
+
+### E1. Listening window (AUDIO_GUESS, Nov 10)
+
+```txt
+OK:   credit(j) = min(12 s, answeredAt(j) − answeredAt(previous lock))   // audio answers only
+      previous lock = earlier lock by answeredAt; first → clock start
+OK:   Blitz submit: replayBlitzLocks over the locks (snapshot already loaded on submit)
+      → counted answers + QuizResult.clockCreditMs (one more scalar on the complete hop)
+OK:   Survival submit: replaySurvivalWave adds credit(j) before the bank check
+OK:   create: audio question never first / never adjacent (arrangeAudioQuestions, in memory)
+OK:   play-load: locked answers carry answeredAtMs (same scalar SELECT) → client clock after F5
+BAD:  trusting the client about «how long it listened»
+BAD:  a bank / window check on the answer hop (extra read per answer)
+BAD:  SQL NOW() anywhere in the window math (JS Dates only, canon E)
+```
+
+Code: `src/features/quiz/lib/listening-window.ts`, `src/features/survival-mode/lib/replay-survival-wave.ts`. ADR: DECISIONS → Audio questions: AUDIO_GUESS.
+
 ### E2. Answer lock-in (all modes, Nov 2)
 
 ```txt
@@ -213,6 +232,7 @@ Before merge or “готово” — **prod is the gate**, local matrix is how
 - [ ] Classic with a topic (single difficulty) + Blitz MIX with a topic: start + questions on screen; result shows the topic chip; rematch keeps it
 - [ ] Answer lock-in: each answer shows right/wrong; refresh mid-game resumes at the first unanswered; result score = locked answers
 - [ ] Blitz: an answer after 00:00 + grace is refused («time's up»); auto-submit at 00:00 still lands on result
+- [ ] AUDIO_GUESS (if you touched the window / audio): Blitz — the clock stands on an audio question and runs after the answer; `QuizResult.clockCreditMs` = time on audio questions (≤ 12 s each). Survival — the bank stands on an audio question. A clip that did not load is skipped with the notice and the game still submits
 - [ ] Home after start/result not stuck ~20s
 - [ ] If you touched pick/chunk/Direct/settle/play-load/clock: full matrix + update **this file** + playbook
 

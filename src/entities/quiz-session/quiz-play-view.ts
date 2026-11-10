@@ -53,6 +53,9 @@ export function toBrowserPlayView(
             selectedOptionId: codec.option(answer.selectedOptionId),
             correctOptionId: codec.option(answer.correctOptionId),
             isCorrect: answer.isCorrect,
+            ...(answer.answeredAtMs != null
+                ? { answeredAtMs: answer.answeredAtMs }
+                : {}),
         })),
     };
 }

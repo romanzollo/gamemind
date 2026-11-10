@@ -42,6 +42,11 @@ type CompleteQuizSessionWithResultInput = {
     correctCount: number;
     completedAt?: Date;
     survivalClockOk?: boolean | null;
+    /**
+     * Засчитанные паузы «окна прослушивания» AUDIO_GUESS, мс. Рекорд Блица
+     * по времени вычитает их из длительности. Скаляр, не JSONB.
+     */
+    clockCreditMs?: number;
     answers: CompleteQuizAnswerInput[];
     /** Slim bilingual review — пишется после complete, не блокирует submit. */
     reviewPayload?: CompactReviewPayloadV1 | null;
@@ -257,9 +262,10 @@ async function completeQuizSessionWithPgClient(
                     "userId",
                     "score",
                     "totalQuestions",
-                    "correctCount"
+                    "correctCount",
+                    "clockCreditMs"
                 )
-                VALUES ($1, $2, $3, $4, $5, $6)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
                 ON CONFLICT ("sessionId") DO NOTHING
             `,
                     [
@@ -269,6 +275,7 @@ async function completeQuizSessionWithPgClient(
                         input.score,
                         input.totalQuestions,
                         input.correctCount,
+                        Math.max(0, Math.round(input.clockCreditMs ?? 0)),
                     ],
                 );
 
