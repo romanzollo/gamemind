@@ -1,5 +1,6 @@
 /**
- * Import IMAGE_GUESS batch from a JSON manifest (kind IMAGE_GUESS_BATCH).
+ * Import IMAGE_GUESS or AUDIO_GUESS batch from a JSON manifest
+ * (kind IMAGE_GUESS_BATCH | AUDIO_GUESS_BATCH).
  *
  * Neon pattern = scripts/seed.cjs + scripts/update-quiz-image-assets.cjs:
  * - fresh Client per question (withRetry)
@@ -14,6 +15,11 @@
  *   переводится в хеш-имя через content/quiz-images.manifest.json
  *   (scripts/quiz-image-manifest.cjs): slug в URL выдал бы ответ игроку
  * - Stable ids from draftKey → re-run upserts content, keeps publicationStatus
+ * - AUDIO_GUESS: PROMPT QuestionAsset = клип `/media/audio/{hash}.mp3` по
+ *   `audioStem` из content/quiz-audio.manifest.json (scripts/build-quiz-audio.ts).
+ *   Local: файл должен лежать в public/media/audio. Prod: URL на www должен
+ *   уже отвечать 200 audio/mpeg (scripts/upload-quiz-audio.ts), иначе отказ.
+ *   ADR: docs/DECISIONS.md → Audio questions: AUDIO_GUESS.
  *
  * Usage:
  *   npm run content:import-image-guess -- --dry-run
@@ -33,6 +39,13 @@ const {
     readManifest,
     resolveQuizImageUrl,
 } = require('./quiz-image-manifest.cjs');
+const {
+    localFileForAudioUrl,
+    readAudioManifest,
+    resolveQuizAudioClip,
+} = require('./quiz-audio-manifest.cjs');
+
+const PROD_ORIGIN = 'https://www.game-mind.ru';
 
 const ROOT = path.join(__dirname, '..');
 const DEFAULT_BATCH_REL =
@@ -206,10 +219,14 @@ async function terminateOtherBackends(connectionString) {
     });
 }
 
-async function isCompleteImageGuess(client, questionId) {
+/**
+ * Вопрос уже импортирован с PROMPT-ассетом. Для клипа ещё и с тем же URL:
+ * после правки таймкода хеш другой — ассет надо переписать.
+ */
+async function isCompleteImageGuess(client, questionId, expectedUrl) {
     const result = await client.query(
         `
-        SELECT 1
+        SELECT a.url
         FROM "Question" q
         INNER JOIN "QuestionAsset" a
           ON a."questionId" = q.id
@@ -219,21 +236,24 @@ async function isCompleteImageGuess(client, questionId) {
         `,
         [questionId],
     );
-    return result.rows.length > 0;
+    if (result.rows.length === 0) return false;
+    return expectedUrl ? result.rows[0].url === expectedUrl : true;
 }
 
 /**
  * Стабильный id = draftKey (как seed использует q-…).
  * Re-run upsert'ит контент; publicationStatus / isActive не трогаем при conflict.
  */
-async function upsertImageGuess(client, question) {
+async function upsertImageGuess(client, question, kind) {
     const questionId = question.draftKey;
     const ruText = question.translations.ru.text;
     // batch из манифеста (metadata.batch), иначе legacy id — не затирать новый Wave D.
     const metadata = {
         ...question.metadata,
         draftKey: question.draftKey,
-        imageStem: question.imageStem,
+        ...(kind === 'AUDIO_GUESS'
+            ? { audioStem: question.audioStem, audio: question.audio }
+            : { imageStem: question.imageStem }),
         batch:
             (question.metadata && question.metadata.batch) ||
             '2026-08-05-image-guess-90',
@@ -250,7 +270,7 @@ async function upsertImageGuess(client, question) {
             id, text, type, difficulty, category, metadata,
             "isActive", "publicationStatus", "createdAt", "updatedAt"
         ) VALUES (
-            $1, $2, 'IMAGE_GUESS'::"QuestionType", $3::"Difficulty", $4, $5::jsonb,
+            $1, $2, $6::"QuestionType", $3::"Difficulty", $4, $5::jsonb,
             true, 'DRAFT'::"QuestionPublicationStatus", NOW(), NOW()
         )
         ON CONFLICT (id) DO UPDATE SET
@@ -266,6 +286,7 @@ async function upsertImageGuess(client, question) {
             question.difficulty,
             question.category || 'video-games',
             JSON.stringify(metadata),
+            kind,
         ],
     );
 
@@ -352,29 +373,42 @@ async function upsertImageGuess(client, question) {
     return { questionId, wasExisting };
 }
 
-async function upsertAssetOnly(client, question, imageUrl) {
+async function upsertAssetOnly(client, question, asset) {
     const questionId = question.draftKey;
     const assetId = `qa-${questionId}-prompt`;
     await client.query(
         `INSERT INTO "QuestionAsset" (
-            id, "questionId", role, url, "mimeType", width, height, "order"
+            id, "questionId", role, url, "mimeType", width, height, "byteSize", "order"
         )
-        VALUES ($1, $2, 'PROMPT'::"QuestionAssetRole", $3, $4, $5, $6, 0)
+        VALUES ($1, $2, 'PROMPT'::"QuestionAssetRole", $3, $4, $5, $6, $7, 0)
         ON CONFLICT (id) DO UPDATE SET
             url = EXCLUDED.url,
             "mimeType" = EXCLUDED."mimeType",
             width = EXCLUDED.width,
             height = EXCLUDED.height,
+            "byteSize" = EXCLUDED."byteSize",
             role = EXCLUDED.role`,
         [
             assetId,
             questionId,
-            imageUrl,
-            'image/webp',
-            1280,
-            720,
+            asset.url,
+            asset.mimeType,
+            asset.width,
+            asset.height,
+            asset.byteSize,
         ],
     );
+}
+
+/** Prod: клип должен уже раздаваться с www, иначе вопрос получит битый URL. */
+async function assertAudioServedOnWww(url) {
+    const response = await fetch(`${PROD_ORIGIN}${url}`, { method: 'HEAD' });
+    const type = response.headers.get('content-type') || '';
+    if (!response.ok || !type.startsWith('audio/mpeg')) {
+        throw new Error(
+            `${url} is not served on www (${response.status} ${type}). Run: npm run audio:upload`,
+        );
+    }
 }
 
 async function main() {
@@ -387,14 +421,56 @@ async function main() {
     }
     const batch = JSON.parse(fs.readFileSync(options.batchPath, 'utf8'));
 
-    if (batch.kind !== 'IMAGE_GUESS_BATCH') {
+    const kind =
+        batch.kind === 'IMAGE_GUESS_BATCH'
+            ? 'IMAGE_GUESS'
+            : batch.kind === 'AUDIO_GUESS_BATCH'
+              ? 'AUDIO_GUESS'
+              : null;
+    if (!kind) {
         throw new Error('Unexpected batch kind');
     }
 
-    const manifest = readManifest();
-    const imageUrlByKey = new Map();
+    const assetByKey = new Map();
+
+    if (kind === 'AUDIO_GUESS') {
+        const audioManifest = readAudioManifest();
+        const missingClips = [];
+        for (const question of batch.questions) {
+            if (question.type !== 'AUDIO_GUESS') {
+                throw new Error(`${question.draftKey}: type must be AUDIO_GUESS`);
+            }
+            let clip;
+            try {
+                clip = resolveQuizAudioClip(question.audioStem, audioManifest);
+            } catch (error) {
+                missingClips.push(error.message);
+                continue;
+            }
+            if (options.target === 'prod') {
+                await assertAudioServedOnWww(clip.url);
+            } else if (!fs.existsSync(localFileForAudioUrl(clip.url))) {
+                missingClips.push(`${question.audioStem} → ${clip.url} (no local file)`);
+                continue;
+            }
+            assetByKey.set(question.draftKey, {
+                url: clip.url,
+                mimeType: 'audio/mpeg',
+                width: null,
+                height: null,
+                byteSize: clip.bytes,
+            });
+        }
+        if (missingClips.length > 0) {
+            console.error(`Missing ${missingClips.length} clip(s). Run: npm run audio:build`);
+            for (const line of missingClips.slice(0, 15)) console.error(' ', line);
+            process.exit(1);
+        }
+    }
+
+    const manifest = kind === 'IMAGE_GUESS' ? readManifest() : null;
     const missingWebp = [];
-    for (const question of batch.questions) {
+    for (const question of kind === 'IMAGE_GUESS' ? batch.questions : []) {
         let imageUrl;
         try {
             imageUrl = resolveQuizImageUrl(question.promptImageUrl, manifest);
@@ -406,7 +482,13 @@ async function main() {
             missingWebp.push(`${question.promptImageUrl} → ${imageUrl}`);
             continue;
         }
-        imageUrlByKey.set(question.draftKey, imageUrl);
+        assetByKey.set(question.draftKey, {
+            url: imageUrl,
+            mimeType: 'image/webp',
+            width: 1280,
+            height: 720,
+            byteSize: null,
+        });
     }
     if (missingWebp.length > 0) {
         console.error(
@@ -436,7 +518,11 @@ async function main() {
     );
 
     if (options.dryRun) {
-        log('Dry-run OK — all WebP present.');
+        log(
+            kind === 'AUDIO_GUESS'
+                ? 'Dry-run OK — all clips present.'
+                : 'Dry-run OK — all WebP present.',
+        );
         return;
     }
 
@@ -451,7 +537,11 @@ async function main() {
         const questionId = question.draftKey;
 
         const alreadyDone = await withRetry(connectionString, (client) =>
-            isCompleteImageGuess(client, questionId),
+            isCompleteImageGuess(
+                client,
+                questionId,
+                kind === 'AUDIO_GUESS' ? assetByKey.get(questionId).url : null,
+            ),
         );
         if (alreadyDone) {
             skipped += 1;
@@ -461,11 +551,11 @@ async function main() {
         }
 
         const result = await withRetry(connectionString, (client) =>
-            upsertImageGuess(client, question),
+            upsertImageGuess(client, question, kind),
         );
         // Отдельный fresh client на asset — как update-quiz-image-assets.cjs.
         await withRetry(connectionString, (client) =>
-            upsertAssetOnly(client, question, imageUrlByKey.get(questionId)),
+            upsertAssetOnly(client, question, assetByKey.get(questionId)),
         );
 
         if (result.wasExisting) {

@@ -56,6 +56,11 @@ docs/PROJECT_CONTEXT.md
 !/raw-quiz-images/README.md
 !/raw-quiz-images/**/.gitkeep
 
+# AUDIO_GUESS: исходники клипов и страницы ревью — только локально.
+# Клипы не попадают в git (репозиторий публичный, права): прод — Vercel Blob.
+/raw-quiz-audio/**
+!/raw-quiz-audio/README.md
+
 # Local media uploads (STORAGE_PROVIDER=local-public) — do not commit runtime files
 /public/media/**
 !/public/media/.gitkeep

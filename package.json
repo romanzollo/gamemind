@@ -30,7 +30,10 @@
         "images:optimize": "node scripts/optimize-quiz-images.cjs",
         "images:hash": "node scripts/hash-quiz-images.cjs",
         "images:migrate-urls": "node scripts/migrate-quiz-image-urls.cjs",
-        "images:update-db": "node scripts/update-quiz-image-assets.cjs"
+        "images:update-db": "node scripts/update-quiz-image-assets.cjs",
+        "audio:build": "npx tsx scripts/build-quiz-audio.ts",
+        "audio:upload": "npx tsx scripts/upload-quiz-audio.ts",
+        "content:import-audio-guess": "node scripts/import-image-guess-batch.cjs"
     },
     "dependencies": {
         "@auth/prisma-adapter": "^2.9.1",

@@ -435,3 +435,30 @@ npm run content:smoke-image-guess -- --target=prod
 Helper for TEXT → prod without swapping `.env`: `node scripts/import-text-drafts-to-prod.cjs <files…>` (refuses `jolly-river`). Then publish with `content:publish-text-drafts -- --target=prod --file=…` (prod **requires** `--file`; bulk cap 100).
 
 **Do not:** dump one Neon onto the other; re-import C/D/fresh/samples/mechanics-12/w2-24/w3-24/w4-24/w5-24; treat hub “active” as quiz pool (`PUBLISHED + isActive`).
+
+## 11. AUDIO_GUESS clips (Nov 2026)
+
+ADR: `docs/DECISIONS.md` → Audio questions: AUDIO_GUESS. Clips never go to git (public repo, rights); prod files live in Vercel Blob and are served from `/media/audio/{hash}.mp3`.
+
+**Batch** (`kind: AUDIO_GUESS_BATCH`) — same shape as an image batch, plus per question:
+
+```json
+"audioStem": "skyrim-dragonborn",
+"audio": { "sourceFile": "raw-quiz-audio/skyrim-dragonborn.flac", "startSeconds": 12.5, "durationSeconds": 7 },
+"metadata": { "game": "…", "track": "…", "composer": "…", "source": "<official release / channel URL>", "batch": "…" }
+```
+
+**Flow:**
+
+| Step | Command | What it does |
+|------|---------|--------------|
+| 1 | owner drops sources into `raw-quiz-audio/` | gitignored |
+| 2 | `npm run audio:build -- --file=<batch> --review` | ffmpeg cut → −16 LUFS → fades → MP3 128 kbps without tags → `sanitizeQuizMp3` + `ffprobe` (no tags) → `public/media/audio/{hash}.mp3` + `content/quiz-audio.manifest.json`; review page `raw-quiz-audio/_review/<batch>.html` |
+| 3 | owner listens, timecodes fixed in the batch, step 2 again | only changed clips are rebuilt |
+| 4 | `npm run content:import-audio-guess -- --file=<batch>` | DRAFT on dev (needs local files) |
+| 5 | `npm run audio:upload -- --file=<batch>` | prod Blob `audio/{hash}.mp3`; checks www answers 200 `audio/mpeg`. Needs `PROD_BLOB_READ_WRITE_TOKEN` in `.env`. Owner's command only |
+| 6 | `npm run content:import-audio-guess -- --file=<batch> --target=prod` | refuses unless every clip is already served on www |
+
+**Do not publish** an AUDIO_GUESS question before ROADMAP 5.3d (listening window) ships — it would reach Blitz / Survival without the pause.
+
+Re-import after a timecode change rewrites the PROMPT asset URL (new hash); unchanged questions are skipped.
