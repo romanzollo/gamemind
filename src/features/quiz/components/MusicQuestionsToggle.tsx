@@ -7,7 +7,7 @@
  *
  * Не поле формы: выбор читает сам Server Action старта из cookie, поэтому
  * он действует и для «Продолжить», реванша и следующей волны.
- * Пока аудиовопросов в пуле нет, переключатель скрыт (AUDIO_QUESTIONS_IN_LOBBY).
+ * Показ управляется флагом AUDIO_QUESTIONS_IN_LOBBY.
  * ADR: docs/DECISIONS.md → AUDIO_GUESS → Mobile and «no sound».
  */
 

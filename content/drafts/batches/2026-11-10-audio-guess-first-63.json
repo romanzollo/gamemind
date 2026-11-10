@@ -1,0 +1,4745 @@
+{
+    "version": 1,
+    "source": "manual",
+    "kind": "AUDIO_GUESS_BATCH",
+    "notes": "First AUDIO_GUESS batch (ROADMAP 5.3g): owner's tracks, 10 s clips. Start times picked by analysis (dense sound + repeated motif) and adjusted by knowledge of the track; owner checks by ear on the review page. Sources stay in gitignored raw-quiz-audio/.",
+    "questions": [
+        {
+            "draftKey": "aud1-easy-smb-overworld",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "smb-overworld",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/smb-overworld.mp3",
+                "startSeconds": 0.0,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Super Mario Bros.",
+                "track": "Overworld Theme",
+                "composer": "Koji Kondo",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Super Mario Bros."
+                        },
+                        "en": {
+                            "text": "Super Mario Bros."
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Legend of Zelda"
+                        },
+                        "en": {
+                            "text": "The Legend of Zelda"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Contra"
+                        },
+                        "en": {
+                            "text": "Contra"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "DuckTales"
+                        },
+                        "en": {
+                            "text": "DuckTales"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-smb-underground",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "smb-underground",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/smb-underground.mp3",
+                "startSeconds": 0.0,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Super Mario Bros.",
+                "track": "Underground Theme",
+                "composer": "Koji Kondo",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Super Mario Bros."
+                        },
+                        "en": {
+                            "text": "Super Mario Bros."
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Kirby's Adventure"
+                        },
+                        "en": {
+                            "text": "Kirby's Adventure"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Mega Man 2"
+                        },
+                        "en": {
+                            "text": "Mega Man 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Adventure Island"
+                        },
+                        "en": {
+                            "text": "Adventure Island"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-tetris-korobeiniki",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "tetris-korobeiniki",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/tetris-korobeiniki.mp3",
+                "startSeconds": 0.0,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Tetris",
+                "track": "Korobeiniki (Type A)",
+                "composer": "Traditional, arr. Hirokazu Tanaka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Tetris"
+                        },
+                        "en": {
+                            "text": "Tetris"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dr. Mario"
+                        },
+                        "en": {
+                            "text": "Dr. Mario"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Columns"
+                        },
+                        "en": {
+                            "text": "Columns"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Arkanoid"
+                        },
+                        "en": {
+                            "text": "Arkanoid"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-zelda-main-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "zelda-main-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/zelda-main-theme.mp3",
+                "startSeconds": 69.56,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Legend of Zelda",
+                "track": "Main Theme",
+                "composer": "Koji Kondo",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Geek Music"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Legend of Zelda"
+                        },
+                        "en": {
+                            "text": "The Legend of Zelda"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Final Fantasy"
+                        },
+                        "en": {
+                            "text": "Final Fantasy"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dragon Quest"
+                        },
+                        "en": {
+                            "text": "Dragon Quest"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Metroid"
+                        },
+                        "en": {
+                            "text": "Metroid"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-sonic-green-hill",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "sonic-green-hill",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/sonic-green-hill.mp3",
+                "startSeconds": 14.67,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Sonic the Hedgehog",
+                "track": "Green Hill Zone",
+                "composer": "Masato Nakamura",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Sonic the Hedgehog"
+                        },
+                        "en": {
+                            "text": "Sonic the Hedgehog"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Super Mario World"
+                        },
+                        "en": {
+                            "text": "Super Mario World"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Ristar"
+                        },
+                        "en": {
+                            "text": "Ristar"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Rocket Knight Adventures"
+                        },
+                        "en": {
+                            "text": "Rocket Knight Adventures"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-halo-main-menu",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "halo-main-menu",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/halo-main-menu.mp3",
+                "startSeconds": 0.02,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Halo: Combat Evolved",
+                "track": "Halo Theme",
+                "composer": "Martin O'Donnell, Michael Salvatori",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Halo: Combat Evolved"
+                        },
+                        "en": {
+                            "text": "Halo: Combat Evolved"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gears of War"
+                        },
+                        "en": {
+                            "text": "Gears of War"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Destiny"
+                        },
+                        "en": {
+                            "text": "Destiny"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Mass Effect"
+                        },
+                        "en": {
+                            "text": "Mass Effect"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-skyrim-dragonborn",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "skyrim-dragonborn",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/skyrim-dragonborn.mp3",
+                "startSeconds": 36.45,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Elder Scrolls V: Skyrim",
+                "track": "Dragonborn",
+                "composer": "Jeremy Soule",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "London Music Works"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Elder Scrolls V: Skyrim"
+                        },
+                        "en": {
+                            "text": "The Elder Scrolls V: Skyrim"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dragon Age: Inquisition"
+                        },
+                        "en": {
+                            "text": "Dragon Age: Inquisition"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gothic 3"
+                        },
+                        "en": {
+                            "text": "Gothic 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Kingdoms of Amalur: Reckoning"
+                        },
+                        "en": {
+                            "text": "Kingdoms of Amalur: Reckoning"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-witcher3-silver-for-monsters",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "witcher3-silver-for-monsters",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/witcher3-silver-for-monsters.mp3",
+                "startSeconds": 34.5,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Witcher 3: Wild Hunt",
+                "track": "Silver for Monsters...",
+                "composer": "Marcin Przybyłowicz, Percival Schuttenbach",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        },
+                        "en": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Kingdom Come: Deliverance"
+                        },
+                        "en": {
+                            "text": "Kingdom Come: Deliverance"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dragon Age: Origins"
+                        },
+                        "en": {
+                            "text": "Dragon Age: Origins"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Mount & Blade: Warband"
+                        },
+                        "en": {
+                            "text": "Mount & Blade: Warband"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-gta-sa-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "gta-sa-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/gta-sa-theme.aac",
+                "startSeconds": 33.9,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Grand Theft Auto: San Andreas",
+                "track": "Theme",
+                "composer": "Michael Hunter",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Grand Theft Auto: San Andreas"
+                        },
+                        "en": {
+                            "text": "Grand Theft Auto: San Andreas"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Saints Row 2"
+                        },
+                        "en": {
+                            "text": "Saints Row 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Driver: Parallel Lines"
+                        },
+                        "en": {
+                            "text": "Driver: Parallel Lines"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "True Crime: Streets of LA"
+                        },
+                        "en": {
+                            "text": "True Crime: Streets of LA"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-mk-techno-syndrome",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "mk-techno-syndrome",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/mk-techno-syndrome.mp3",
+                "startSeconds": 36.82,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Mortal Kombat",
+                "track": "Techno Syndrome",
+                "composer": "The Immortals",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Geek Music"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Mortal Kombat"
+                        },
+                        "en": {
+                            "text": "Mortal Kombat"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Street Fighter II"
+                        },
+                        "en": {
+                            "text": "Street Fighter II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Tekken 3"
+                        },
+                        "en": {
+                            "text": "Tekken 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Killer Instinct"
+                        },
+                        "en": {
+                            "text": "Killer Instinct"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-minecraft-sweden",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "minecraft-sweden",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/minecraft-sweden.mp3",
+                "startSeconds": 84.7,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Minecraft",
+                "track": "Sweden",
+                "composer": "C418",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Minecraft"
+                        },
+                        "en": {
+                            "text": "Minecraft"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Terraria"
+                        },
+                        "en": {
+                            "text": "Terraria"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Stardew Valley"
+                        },
+                        "en": {
+                            "text": "Stardew Valley"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Don't Starve"
+                        },
+                        "en": {
+                            "text": "Don't Starve"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-doom-at-dooms-gate",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "doom-at-dooms-gate",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/doom-at-dooms-gate.mp3",
+                "startSeconds": 41.79,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Doom",
+                "track": "At Doom's Gate",
+                "composer": "Bobby Prince, arr. Mick Gordon",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Doom"
+                        },
+                        "en": {
+                            "text": "Doom"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Quake"
+                        },
+                        "en": {
+                            "text": "Quake"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Wolfenstein 3D"
+                        },
+                        "en": {
+                            "text": "Wolfenstein 3D"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Duke Nukem 3D"
+                        },
+                        "en": {
+                            "text": "Duke Nukem 3D"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-tlou-main-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "tlou-main-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/tlou-main-theme.mp3",
+                "startSeconds": 140.57,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Last of Us",
+                "track": "The Last of Us",
+                "composer": "Gustavo Santaolalla",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Last of Us"
+                        },
+                        "en": {
+                            "text": "The Last of Us"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Days Gone"
+                        },
+                        "en": {
+                            "text": "Days Gone"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Uncharted 4: A Thief's End"
+                        },
+                        "en": {
+                            "text": "Uncharted 4: A Thief's End"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Death Stranding"
+                        },
+                        "en": {
+                            "text": "Death Stranding"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-nfsu-get-low",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "nfsu-get-low",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/nfsu-get-low.aac",
+                "startSeconds": 33.53,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Need for Speed: Underground",
+                "track": "Get Low",
+                "composer": "Lil Jon & The East Side Boyz feat. Ying Yang Twins",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Need for Speed: Underground"
+                        },
+                        "en": {
+                            "text": "Need for Speed: Underground"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Need for Speed: Most Wanted"
+                        },
+                        "en": {
+                            "text": "Need for Speed: Most Wanted"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Burnout 3: Takedown"
+                        },
+                        "en": {
+                            "text": "Burnout 3: Takedown"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "FlatOut 2"
+                        },
+                        "en": {
+                            "text": "FlatOut 2"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-contra-jungle",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "contra-jungle",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/contra-jungle.mp3",
+                "startSeconds": 0.0,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Contra",
+                "track": "Jungle / Hangar",
+                "composer": "Hidenori Maezawa, Kiyohiro Sada",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Contra"
+                        },
+                        "en": {
+                            "text": "Contra"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Battletoads"
+                        },
+                        "en": {
+                            "text": "Battletoads"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Jackal"
+                        },
+                        "en": {
+                            "text": "Jackal"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Ninja Gaiden"
+                        },
+                        "en": {
+                            "text": "Ninja Gaiden"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-ac2-ezios-family",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "ac2-ezios-family",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/ac2-ezios-family.mp3",
+                "startSeconds": 51.31,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Assassin's Creed II",
+                "track": "Ezio's Family",
+                "composer": "Jesper Kyd",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Assassin's Creed II"
+                        },
+                        "en": {
+                            "text": "Assassin's Creed II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Prince of Persia: The Two Thrones"
+                        },
+                        "en": {
+                            "text": "Prince of Persia: The Two Thrones"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dishonored"
+                        },
+                        "en": {
+                            "text": "Dishonored"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Thief (2014)"
+                        },
+                        "en": {
+                            "text": "Thief (2014)"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-easy-gow-2018-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "EASY",
+            "category": "video-games",
+            "audioStem": "gow-2018-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/gow-2018-theme.mp3",
+                "startSeconds": 224.77,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "God of War (2018)",
+                "track": "God of War",
+                "composer": "Bear McCreary",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "God of War (2018)"
+                        },
+                        "en": {
+                            "text": "God of War (2018)"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Hellblade: Senua's Sacrifice"
+                        },
+                        "en": {
+                            "text": "Hellblade: Senua's Sacrifice"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Assassin's Creed Valhalla"
+                        },
+                        "en": {
+                            "text": "Assassin's Creed Valhalla"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls III"
+                        },
+                        "en": {
+                            "text": "Dark Souls III"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-heroes3-main-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "heroes3-main-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/heroes3-main-theme.mp3",
+                "startSeconds": 0.04,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Heroes of Might and Magic III",
+                "track": "Main Theme",
+                "composer": "Paul Romero",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Heroes of Might and Magic III"
+                        },
+                        "en": {
+                            "text": "Heroes of Might and Magic III"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Disciples II"
+                        },
+                        "en": {
+                            "text": "Disciples II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "King's Bounty: The Legend"
+                        },
+                        "en": {
+                            "text": "King's Bounty: The Legend"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Age of Wonders"
+                        },
+                        "en": {
+                            "text": "Age of Wonders"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-portal-still-alive",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "portal-still-alive",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/portal-still-alive.mp3",
+                "startSeconds": 0.09,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Portal",
+                "track": "Still Alive",
+                "composer": "Jonathan Coulton",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Ellen McLain"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Portal"
+                        },
+                        "en": {
+                            "text": "Portal"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Half-Life 2"
+                        },
+                        "en": {
+                            "text": "Half-Life 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Talos Principle"
+                        },
+                        "en": {
+                            "text": "The Talos Principle"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Prey (2017)"
+                        },
+                        "en": {
+                            "text": "Prey (2017)"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-minecraft-subwoofer-lullaby",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "minecraft-subwoofer-lullaby",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/minecraft-subwoofer-lullaby.mp3",
+                "startSeconds": 54.19,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Minecraft",
+                "track": "Subwoofer Lullaby",
+                "composer": "C418",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Minecraft"
+                        },
+                        "en": {
+                            "text": "Minecraft"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Terraria"
+                        },
+                        "en": {
+                            "text": "Terraria"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Stardew Valley"
+                        },
+                        "en": {
+                            "text": "Stardew Valley"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Don't Starve"
+                        },
+                        "en": {
+                            "text": "Don't Starve"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-gta4-soviet-connection",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "gta4-soviet-connection",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/gta4-soviet-connection.mp3",
+                "startSeconds": 60.69,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Grand Theft Auto IV",
+                "track": "Soviet Connection",
+                "composer": "Michael Hunter",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Geek Music"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Grand Theft Auto IV"
+                        },
+                        "en": {
+                            "text": "Grand Theft Auto IV"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Grand Theft Auto V"
+                        },
+                        "en": {
+                            "text": "Grand Theft Auto V"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Grand Theft Auto: San Andreas"
+                        },
+                        "en": {
+                            "text": "Grand Theft Auto: San Andreas"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Mafia II"
+                        },
+                        "en": {
+                            "text": "Mafia II"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-uncharted-drakes-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "uncharted-drakes-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/uncharted-drakes-theme.mp3",
+                "startSeconds": 23.03,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Uncharted: Drake's Fortune",
+                "track": "Nate's Theme",
+                "composer": "Greg Edmonson",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Geek Music"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Uncharted: Drake's Fortune"
+                        },
+                        "en": {
+                            "text": "Uncharted: Drake's Fortune"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Tomb Raider (2013)"
+                        },
+                        "en": {
+                            "text": "Tomb Raider (2013)"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Prince of Persia: The Sands of Time"
+                        },
+                        "en": {
+                            "text": "Prince of Persia: The Sands of Time"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Assassin's Creed"
+                        },
+                        "en": {
+                            "text": "Assassin's Creed"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-nfsu2-riders-on-the-storm",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "nfsu2-riders-on-the-storm",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/nfsu2-riders-on-the-storm.mp3",
+                "startSeconds": 66.22,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Need for Speed: Underground 2",
+                "track": "Riders on the Storm (Fredwreck Remix)",
+                "composer": "The Doors feat. Snoop Dogg",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Need for Speed: Underground 2"
+                        },
+                        "en": {
+                            "text": "Need for Speed: Underground 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Need for Speed: Underground"
+                        },
+                        "en": {
+                            "text": "Need for Speed: Underground"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Need for Speed: Most Wanted"
+                        },
+                        "en": {
+                            "text": "Need for Speed: Most Wanted"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Need for Speed: Carbon"
+                        },
+                        "en": {
+                            "text": "Need for Speed: Carbon"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-wow-stormwind",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "wow-stormwind",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/wow-stormwind.mp3",
+                "startSeconds": 1.06,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "World of Warcraft",
+                "track": "Stormwind",
+                "composer": "Jason Hayes",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "World of Warcraft"
+                        },
+                        "en": {
+                            "text": "World of Warcraft"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Warcraft III: Reign of Chaos"
+                        },
+                        "en": {
+                            "text": "Warcraft III: Reign of Chaos"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Guild Wars"
+                        },
+                        "en": {
+                            "text": "Guild Wars"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Elder Scrolls Online"
+                        },
+                        "en": {
+                            "text": "The Elder Scrolls Online"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-wow-legends-of-azeroth",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "wow-legends-of-azeroth",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/wow-legends-of-azeroth.mp3",
+                "startSeconds": 21.45,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "World of Warcraft",
+                "track": "Legends of Azeroth",
+                "composer": "Jason Hayes",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Geek Music"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "World of Warcraft"
+                        },
+                        "en": {
+                            "text": "World of Warcraft"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Warcraft III: Reign of Chaos"
+                        },
+                        "en": {
+                            "text": "Warcraft III: Reign of Chaos"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Lineage II"
+                        },
+                        "en": {
+                            "text": "Lineage II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "EverQuest II"
+                        },
+                        "en": {
+                            "text": "EverQuest II"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-elden-ring-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "elden-ring-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/elden-ring-theme.mp3",
+                "startSeconds": 20.34,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Elden Ring",
+                "track": "Elden Ring",
+                "composer": "Tsukasa Saitoh",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Elden Ring"
+                        },
+                        "en": {
+                            "text": "Elden Ring"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls III"
+                        },
+                        "en": {
+                            "text": "Dark Souls III"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Bloodborne"
+                        },
+                        "en": {
+                            "text": "Bloodborne"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Sekiro: Shadows Die Twice"
+                        },
+                        "en": {
+                            "text": "Sekiro: Shadows Die Twice"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-tlou-all-gone",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "tlou-all-gone",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/tlou-all-gone.mp3",
+                "startSeconds": 39.42,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Last of Us",
+                "track": "All Gone (No Escape)",
+                "composer": "Gustavo Santaolalla",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Last of Us"
+                        },
+                        "en": {
+                            "text": "The Last of Us"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Days Gone"
+                        },
+                        "en": {
+                            "text": "Days Gone"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "A Plague Tale: Innocence"
+                        },
+                        "en": {
+                            "text": "A Plague Tale: Innocence"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Life Is Strange"
+                        },
+                        "en": {
+                            "text": "Life Is Strange"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-rdr2-thats-the-way-it-is",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "rdr2-thats-the-way-it-is",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/rdr2-thats-the-way-it-is.mp3",
+                "startSeconds": 159.42,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Red Dead Redemption 2",
+                "track": "That's the Way It Is",
+                "composer": "Daniel Lanois",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Red Dead Redemption 2"
+                        },
+                        "en": {
+                            "text": "Red Dead Redemption 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Red Dead Redemption"
+                        },
+                        "en": {
+                            "text": "Red Dead Redemption"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Call of Juarez: Bound in Blood"
+                        },
+                        "en": {
+                            "text": "Call of Juarez: Bound in Blood"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Hunt: Showdown"
+                        },
+                        "en": {
+                            "text": "Hunt: Showdown"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-sh1-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "sh1-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/sh1-theme.mp3",
+                "startSeconds": 23.5,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Silent Hill",
+                "track": "Silent Hill",
+                "composer": "Akira Yamaoka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill"
+                        },
+                        "en": {
+                            "text": "Silent Hill"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Resident Evil 2"
+                        },
+                        "en": {
+                            "text": "Resident Evil 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fatal Frame"
+                        },
+                        "en": {
+                            "text": "Fatal Frame"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Parasite Eve"
+                        },
+                        "en": {
+                            "text": "Parasite Eve"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-sh2-theme-of-laura",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "sh2-theme-of-laura",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/sh2-theme-of-laura.mp3",
+                "startSeconds": 28.05,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Silent Hill 2",
+                "track": "Theme of Laura",
+                "composer": "Akira Yamaoka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill 2"
+                        },
+                        "en": {
+                            "text": "Silent Hill 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill 3"
+                        },
+                        "en": {
+                            "text": "Silent Hill 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Resident Evil 4"
+                        },
+                        "en": {
+                            "text": "Resident Evil 4"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fatal Frame II"
+                        },
+                        "en": {
+                            "text": "Fatal Frame II"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-stalker-dirge-for-the-planet",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "stalker-dirge-for-the-planet",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/stalker-dirge-for-the-planet.mp3",
+                "startSeconds": 77.55,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+                "track": "Dirge for the Planet",
+                "composer": "FireLake",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "S.T.A.L.K.E.R.: Shadow of Chernobyl"
+                        },
+                        "en": {
+                            "text": "S.T.A.L.K.E.R.: Shadow of Chernobyl"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Metro 2033"
+                        },
+                        "en": {
+                            "text": "Metro 2033"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout 3"
+                        },
+                        "en": {
+                            "text": "Fallout 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Escape from Tarkov"
+                        },
+                        "en": {
+                            "text": "Escape from Tarkov"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-witcher3-the-trail",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "witcher3-the-trail",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/witcher3-the-trail.mp3",
+                "startSeconds": 72.12,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Witcher 3: Wild Hunt",
+                "track": "The Trail",
+                "composer": "Marcin Przybyłowicz",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        },
+                        "en": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        },
+                        "en": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dragon Age: Inquisition"
+                        },
+                        "en": {
+                            "text": "Dragon Age: Inquisition"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Kingdom Come: Deliverance"
+                        },
+                        "en": {
+                            "text": "Kingdom Come: Deliverance"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-witcher3-steel-for-humans",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "witcher3-steel-for-humans",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/witcher3-steel-for-humans.mp3",
+                "startSeconds": 27.3,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Witcher 3: Wild Hunt",
+                "track": "...Steel for Humans",
+                "composer": "Marcin Przybyłowicz, Percival Schuttenbach",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        },
+                        "en": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        },
+                        "en": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Kingdom Come: Deliverance"
+                        },
+                        "en": {
+                            "text": "Kingdom Come: Deliverance"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gothic II"
+                        },
+                        "en": {
+                            "text": "Gothic II"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-fallout3-world-on-fire",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "fallout3-world-on-fire",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/fallout3-world-on-fire.mp3",
+                "startSeconds": 8.22,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Fallout 3",
+                "track": "I Don't Want to Set the World on Fire",
+                "composer": "The Ink Spots",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout 3"
+                        },
+                        "en": {
+                            "text": "Fallout 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "BioShock"
+                        },
+                        "en": {
+                            "text": "BioShock"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Wasteland 2"
+                        },
+                        "en": {
+                            "text": "Wasteland 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Metro 2033"
+                        },
+                        "en": {
+                            "text": "Metro 2033"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-mgs-encounter",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "mgs-encounter",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/mgs-encounter.mp3",
+                "startSeconds": 17.32,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Metal Gear Solid",
+                "track": "Encounter",
+                "composer": "Kazuki Muraoka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Metal Gear Solid"
+                        },
+                        "en": {
+                            "text": "Metal Gear Solid"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Syphon Filter"
+                        },
+                        "en": {
+                            "text": "Syphon Filter"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Splinter Cell"
+                        },
+                        "en": {
+                            "text": "Splinter Cell"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Hitman: Codename 47"
+                        },
+                        "en": {
+                            "text": "Hitman: Codename 47"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-mgs-introduction",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "mgs-introduction",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/mgs-introduction.mp3",
+                "startSeconds": 11.0,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Metal Gear Solid",
+                "track": "Introduction",
+                "composer": "KCE Japan Sound Team",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Metal Gear Solid"
+                        },
+                        "en": {
+                            "text": "Metal Gear Solid"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Syphon Filter"
+                        },
+                        "en": {
+                            "text": "Syphon Filter"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Splinter Cell"
+                        },
+                        "en": {
+                            "text": "Splinter Cell"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Perfect Dark"
+                        },
+                        "en": {
+                            "text": "Perfect Dark"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-halo2-mjolnir-mix",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "halo2-mjolnir-mix",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/halo2-mjolnir-mix.mp3",
+                "startSeconds": 139.87,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Halo 2",
+                "track": "Halo Theme Mjolnir Mix",
+                "composer": "Martin O'Donnell, Michael Salvatori",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Steve Vai"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Halo 2"
+                        },
+                        "en": {
+                            "text": "Halo 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gears of War"
+                        },
+                        "en": {
+                            "text": "Gears of War"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Crysis"
+                        },
+                        "en": {
+                            "text": "Crysis"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Killzone 2"
+                        },
+                        "en": {
+                            "text": "Killzone 2"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-rnr-racing-bad-to-the-bone",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "rnr-racing-bad-to-the-bone",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/rnr-racing-bad-to-the-bone.mp3",
+                "startSeconds": 4.69,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Rock n' Roll Racing",
+                "track": "Bad to the Bone",
+                "composer": "George Thorogood",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Rock n' Roll Racing"
+                        },
+                        "en": {
+                            "text": "Rock n' Roll Racing"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Road Rash"
+                        },
+                        "en": {
+                            "text": "Road Rash"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Micro Machines"
+                        },
+                        "en": {
+                            "text": "Micro Machines"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Biker Mice from Mars"
+                        },
+                        "en": {
+                            "text": "Biker Mice from Mars"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-ejim2-anything-but-tangerines",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "ejim2-anything-but-tangerines",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/ejim2-anything-but-tangerines.mp3",
+                "startSeconds": 41.56,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Earthworm Jim 2",
+                "track": "Anything But Tangerines",
+                "composer": "Tommy Tallarico",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Earthworm Jim 2"
+                        },
+                        "en": {
+                            "text": "Earthworm Jim 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Aladdin"
+                        },
+                        "en": {
+                            "text": "Aladdin"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Cool Spot"
+                        },
+                        "en": {
+                            "text": "Cool Spot"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Boogerman"
+                        },
+                        "en": {
+                            "text": "Boogerman"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-heroes3-rampart",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "heroes3-rampart",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/heroes3-rampart.mp3",
+                "startSeconds": 135.14,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Heroes of Might and Magic III",
+                "track": "Rampart Town Theme",
+                "composer": "Paul Romero",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Heroes of Might and Magic III"
+                        },
+                        "en": {
+                            "text": "Heroes of Might and Magic III"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Disciples II"
+                        },
+                        "en": {
+                            "text": "Disciples II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Warcraft II"
+                        },
+                        "en": {
+                            "text": "Warcraft II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Age of Wonders"
+                        },
+                        "en": {
+                            "text": "Age of Wonders"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-elden-ring-malenia",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "elden-ring-malenia",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/elden-ring-malenia.mp3",
+                "startSeconds": 109.97,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Elden Ring",
+                "track": "Malenia, Blade of Miquella",
+                "composer": "Yuka Kitamura",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Elden Ring"
+                        },
+                        "en": {
+                            "text": "Elden Ring"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls III"
+                        },
+                        "en": {
+                            "text": "Dark Souls III"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Bloodborne"
+                        },
+                        "en": {
+                            "text": "Bloodborne"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Lies of P"
+                        },
+                        "en": {
+                            "text": "Lies of P"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-rdr2-american-venom",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "rdr2-american-venom",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/rdr2-american-venom.mp3",
+                "startSeconds": 38.59,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Red Dead Redemption 2",
+                "track": "American Venom",
+                "composer": "Woody Jackson",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Red Dead Redemption 2"
+                        },
+                        "en": {
+                            "text": "Red Dead Redemption 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Red Dead Redemption"
+                        },
+                        "en": {
+                            "text": "Red Dead Redemption"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Grand Theft Auto V"
+                        },
+                        "en": {
+                            "text": "Grand Theft Auto V"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Call of Juarez: Gunslinger"
+                        },
+                        "en": {
+                            "text": "Call of Juarez: Gunslinger"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-sh2-promise",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "sh2-promise",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/sh2-promise.mp3",
+                "startSeconds": 67.29,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Silent Hill 2",
+                "track": "Promise",
+                "composer": "Akira Yamaoka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill 2"
+                        },
+                        "en": {
+                            "text": "Silent Hill 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill"
+                        },
+                        "en": {
+                            "text": "Silent Hill"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill 3"
+                        },
+                        "en": {
+                            "text": "Silent Hill 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill 4: The Room"
+                        },
+                        "en": {
+                            "text": "Silent Hill 4: The Room"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-sh1-not-tomorrow",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "sh1-not-tomorrow",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/sh1-not-tomorrow.mp3",
+                "startSeconds": 9.84,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Silent Hill",
+                "track": "Not Tomorrow",
+                "composer": "Akira Yamaoka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill"
+                        },
+                        "en": {
+                            "text": "Silent Hill"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill 2"
+                        },
+                        "en": {
+                            "text": "Silent Hill 2"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill 3"
+                        },
+                        "en": {
+                            "text": "Silent Hill 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Silent Hill: Origins"
+                        },
+                        "en": {
+                            "text": "Silent Hill: Origins"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-stalker-cop-pripyat-day",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "stalker-cop-pripyat-day",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/stalker-cop-pripyat-day.mp3",
+                "startSeconds": 14.76,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "S.T.A.L.K.E.R.: Call of Pripyat",
+                "track": "Theme of Pripyat. Day",
+                "composer": "Alexey Omelchuk",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "S.T.A.L.K.E.R.: Call of Pripyat"
+                        },
+                        "en": {
+                            "text": "S.T.A.L.K.E.R.: Call of Pripyat"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "S.T.A.L.K.E.R.: Shadow of Chernobyl"
+                        },
+                        "en": {
+                            "text": "S.T.A.L.K.E.R.: Shadow of Chernobyl"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "S.T.A.L.K.E.R.: Clear Sky"
+                        },
+                        "en": {
+                            "text": "S.T.A.L.K.E.R.: Clear Sky"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Metro 2033"
+                        },
+                        "en": {
+                            "text": "Metro 2033"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-heroes3-necropolis",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "heroes3-necropolis",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/heroes3-necropolis.mp3",
+                "startSeconds": 114.01,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Heroes of Might and Magic III",
+                "track": "Necropolis Town Theme",
+                "composer": "Paul Romero",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Heroes of Might and Magic III"
+                        },
+                        "en": {
+                            "text": "Heroes of Might and Magic III"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Heroes of Might and Magic II"
+                        },
+                        "en": {
+                            "text": "Heroes of Might and Magic II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Heroes of Might and Magic IV"
+                        },
+                        "en": {
+                            "text": "Heroes of Might and Magic IV"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Disciples II"
+                        },
+                        "en": {
+                            "text": "Disciples II"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-ds1-gwyn",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "ds1-gwyn",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/ds1-gwyn.mp3",
+                "startSeconds": 33.15,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Dark Souls",
+                "track": "Gwyn, Lord of Cinder",
+                "composer": "Motoi Sakuraba",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls"
+                        },
+                        "en": {
+                            "text": "Dark Souls"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls II"
+                        },
+                        "en": {
+                            "text": "Dark Souls II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls III"
+                        },
+                        "en": {
+                            "text": "Dark Souls III"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Demon's Souls"
+                        },
+                        "en": {
+                            "text": "Demon's Souls"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-ds3-main-menu",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "ds3-main-menu",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/ds3-main-menu.mp3",
+                "startSeconds": 42.95,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Dark Souls III",
+                "track": "Dark Souls III (Main Menu)",
+                "composer": "Yuka Kitamura",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls III"
+                        },
+                        "en": {
+                            "text": "Dark Souls III"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls"
+                        },
+                        "en": {
+                            "text": "Dark Souls"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dark Souls II"
+                        },
+                        "en": {
+                            "text": "Dark Souls II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Bloodborne"
+                        },
+                        "en": {
+                            "text": "Bloodborne"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-morrowind-call-of-magic",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "morrowind-call-of-magic",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/morrowind-call-of-magic.aac",
+                "startSeconds": 83.45,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Elder Scrolls III: Morrowind",
+                "track": "Call of Magic",
+                "composer": "Jeremy Soule",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Elder Scrolls III: Morrowind"
+                        },
+                        "en": {
+                            "text": "The Elder Scrolls III: Morrowind"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Elder Scrolls IV: Oblivion"
+                        },
+                        "en": {
+                            "text": "The Elder Scrolls IV: Oblivion"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Elder Scrolls V: Skyrim"
+                        },
+                        "en": {
+                            "text": "The Elder Scrolls V: Skyrim"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Elder Scrolls Online"
+                        },
+                        "en": {
+                            "text": "The Elder Scrolls Online"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-medium-oblivion-reign-of-the-septims",
+            "type": "AUDIO_GUESS",
+            "difficulty": "MEDIUM",
+            "category": "video-games",
+            "audioStem": "oblivion-reign-of-the-septims",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/oblivion-reign-of-the-septims.mp3",
+                "startSeconds": 115.59,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Elder Scrolls IV: Oblivion",
+                "track": "Reign of the Septims",
+                "composer": "Jeremy Soule",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "London Music Works"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Elder Scrolls IV: Oblivion"
+                        },
+                        "en": {
+                            "text": "The Elder Scrolls IV: Oblivion"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Dragon Age: Origins"
+                        },
+                        "en": {
+                            "text": "Dragon Age: Origins"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gothic 3"
+                        },
+                        "en": {
+                            "text": "Gothic 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Two Worlds"
+                        },
+                        "en": {
+                            "text": "Two Worlds"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-witcher1-river-of-life",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "witcher1-river-of-life",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/witcher1-river-of-life.mp3",
+                "startSeconds": 113.4,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Witcher",
+                "track": "River of Life",
+                "composer": "Adam Skorupa, Paweł Błaszczak",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher"
+                        },
+                        "en": {
+                            "text": "The Witcher"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        },
+                        "en": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        },
+                        "en": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gothic II"
+                        },
+                        "en": {
+                            "text": "Gothic II"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-witcher3-ard-skellig",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "witcher3-ard-skellig",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/witcher3-ard-skellig.mp3",
+                "startSeconds": 42.95,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Witcher 3: Wild Hunt",
+                "track": "The Fields of Ard Skellig",
+                "composer": "Marcin Przybyłowicz",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        },
+                        "en": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        },
+                        "en": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Hellblade: Senua's Sacrifice"
+                        },
+                        "en": {
+                            "text": "Hellblade: Senua's Sacrifice"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Kingdom Come: Deliverance"
+                        },
+                        "en": {
+                            "text": "Kingdom Come: Deliverance"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-witcher3-kaer-morhen",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "witcher3-kaer-morhen",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/witcher3-kaer-morhen.mp3",
+                "startSeconds": 28.56,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "The Witcher 3: Wild Hunt",
+                "track": "Kaer Morhen",
+                "composer": "Marcin Przybyłowicz",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        },
+                        "en": {
+                            "text": "The Witcher 3: Wild Hunt"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher"
+                        },
+                        "en": {
+                            "text": "The Witcher"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        },
+                        "en": {
+                            "text": "The Witcher 2: Assassins of Kings"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gothic 3"
+                        },
+                        "en": {
+                            "text": "Gothic 3"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-fnv-blue-moon",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "fnv-blue-moon",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/fnv-blue-moon.mp3",
+                "startSeconds": 0.53,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Fallout: New Vegas",
+                "track": "Blue Moon",
+                "composer": "Frank Sinatra",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout: New Vegas"
+                        },
+                        "en": {
+                            "text": "Fallout: New Vegas"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout 3"
+                        },
+                        "en": {
+                            "text": "Fallout 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout 4"
+                        },
+                        "en": {
+                            "text": "Fallout 4"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Wasteland 3"
+                        },
+                        "en": {
+                            "text": "Wasteland 3"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-fallout4-main-theme",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "fallout4-main-theme",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/fallout4-main-theme.mp3",
+                "startSeconds": 65.71,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Fallout 4",
+                "track": "Main Theme",
+                "composer": "Inon Zur",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Geek Music"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout 4"
+                        },
+                        "en": {
+                            "text": "Fallout 4"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout 3"
+                        },
+                        "en": {
+                            "text": "Fallout 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout: New Vegas"
+                        },
+                        "en": {
+                            "text": "Fallout: New Vegas"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Fallout 76"
+                        },
+                        "en": {
+                            "text": "Fallout 76"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-doom2-running-from-evil",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "doom2-running-from-evil",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/doom2-running-from-evil.mp3",
+                "startSeconds": 28.05,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Doom II",
+                "track": "Running from Evil",
+                "composer": "Bobby Prince",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Doom II"
+                        },
+                        "en": {
+                            "text": "Doom II"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Doom (1993)"
+                        },
+                        "en": {
+                            "text": "Doom (1993)"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Doom 64"
+                        },
+                        "en": {
+                            "text": "Doom 64"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Doom 3"
+                        },
+                        "en": {
+                            "text": "Doom 3"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-doom-eternal-only-thing-they-fear",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "doom-eternal-only-thing-they-fear",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/doom-eternal-only-thing-they-fear.mp3",
+                "startSeconds": 27.95,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Doom Eternal",
+                "track": "The Only Thing They Fear Is You",
+                "composer": "Mick Gordon",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Doom Eternal"
+                        },
+                        "en": {
+                            "text": "Doom Eternal"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Doom (2016)"
+                        },
+                        "en": {
+                            "text": "Doom (2016)"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Wolfenstein II: The New Colossus"
+                        },
+                        "en": {
+                            "text": "Wolfenstein II: The New Colossus"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Quake Champions"
+                        },
+                        "en": {
+                            "text": "Quake Champions"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-contra-hard-corps",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "contra-hard-corps",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/contra-hard-corps.mp3",
+                "startSeconds": 71.33,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Contra: Hard Corps",
+                "track": "The Hard Corps",
+                "composer": "Hiroshi Kobayashi, Michiru Yamane, Akira Yamaoka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Contra: Hard Corps"
+                        },
+                        "en": {
+                            "text": "Contra: Hard Corps"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Contra III: The Alien Wars"
+                        },
+                        "en": {
+                            "text": "Contra III: The Alien Wars"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Gunstar Heroes"
+                        },
+                        "en": {
+                            "text": "Gunstar Heroes"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Contra: Shattered Soldier"
+                        },
+                        "en": {
+                            "text": "Contra: Shattered Soldier"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-contra-bases",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "contra-bases",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/contra-bases.mp3",
+                "startSeconds": 6.64,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Contra",
+                "track": "Base I / II",
+                "composer": "Hidenori Maezawa, Kiyohiro Sada",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Contra"
+                        },
+                        "en": {
+                            "text": "Contra"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Super C"
+                        },
+                        "en": {
+                            "text": "Super C"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Jackal"
+                        },
+                        "en": {
+                            "text": "Jackal"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Contra Force"
+                        },
+                        "en": {
+                            "text": "Contra Force"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-robocop3-nes",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "robocop3-nes",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/robocop3-nes.mp3",
+                "startSeconds": 49.5,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "RoboCop 3",
+                "track": "Title Theme",
+                "composer": "Jeroen Tel",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "RoboCop 3"
+                        },
+                        "en": {
+                            "text": "RoboCop 3"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Terminator 2: Judgment Day"
+                        },
+                        "en": {
+                            "text": "Terminator 2: Judgment Day"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Batman"
+                        },
+                        "en": {
+                            "text": "Batman"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Darkwing Duck"
+                        },
+                        "en": {
+                            "text": "Darkwing Duck"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-mgs-best-is-yet-to-come",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "mgs-best-is-yet-to-come",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/mgs-best-is-yet-to-come.mp3",
+                "startSeconds": 173.22,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Metal Gear Solid",
+                "track": "The Best Is Yet to Come",
+                "composer": "Rika Muranaka",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Aoife Ní Fhearraigh"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Metal Gear Solid"
+                        },
+                        "en": {
+                            "text": "Metal Gear Solid"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Metal Gear Solid 2: Sons of Liberty"
+                        },
+                        "en": {
+                            "text": "Metal Gear Solid 2: Sons of Liberty"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Metal Gear Solid 3: Snake Eater"
+                        },
+                        "en": {
+                            "text": "Metal Gear Solid 3: Snake Eater"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Syphon Filter"
+                        },
+                        "en": {
+                            "text": "Syphon Filter"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-transistor-old-friends",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "transistor-old-friends",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/transistor-old-friends.mp3",
+                "startSeconds": 52.01,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Transistor",
+                "track": "Old Friends",
+                "composer": "Darren Korb",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63",
+                "performer": "Geek Music"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Transistor"
+                        },
+                        "en": {
+                            "text": "Transistor"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Bastion"
+                        },
+                        "en": {
+                            "text": "Bastion"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Hades"
+                        },
+                        "en": {
+                            "text": "Hades"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Pyre"
+                        },
+                        "en": {
+                            "text": "Pyre"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "draftKey": "aud1-hard-btdd-title",
+            "type": "AUDIO_GUESS",
+            "difficulty": "HARD",
+            "category": "video-games",
+            "audioStem": "btdd-title",
+            "audio": {
+                "sourceFile": "raw-quiz-audio/btdd-title.mp3",
+                "startSeconds": 1.62,
+                "durationSeconds": 10.0
+            },
+            "metadata": {
+                "game": "Battletoads & Double Dragon",
+                "track": "Logo ~ Game Over",
+                "composer": "David Wise",
+                "source": "owner file",
+                "topic": "audio-music",
+                "localizationStrategy": "latin-titles",
+                "batch": "2026-11-10-audio-guess-first-63"
+            },
+            "translations": {
+                "ru": {
+                    "text": "Из какой игры эта музыка?"
+                },
+                "en": {
+                    "text": "Which game is this music from?"
+                }
+            },
+            "options": [
+                {
+                    "isCorrect": true,
+                    "translations": {
+                        "ru": {
+                            "text": "Battletoads & Double Dragon"
+                        },
+                        "en": {
+                            "text": "Battletoads & Double Dragon"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Battletoads"
+                        },
+                        "en": {
+                            "text": "Battletoads"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Double Dragon II: The Revenge"
+                        },
+                        "en": {
+                            "text": "Double Dragon II: The Revenge"
+                        }
+                    }
+                },
+                {
+                    "isCorrect": false,
+                    "translations": {
+                        "ru": {
+                            "text": "Teenage Mutant Ninja Turtles III"
+                        },
+                        "en": {
+                            "text": "Teenage Mutant Ninja Turtles III"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
