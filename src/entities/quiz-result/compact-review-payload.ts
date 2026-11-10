@@ -19,6 +19,7 @@ export type CompactReviewPayloadItem = {
     position: number;
     type?: QuestionType;
     imageUrl?: string | null;
+    audioUrl?: string | null;
     texts: LocalizedSnapshotTexts;
     isCorrect: boolean;
     selectedOptionId: string;

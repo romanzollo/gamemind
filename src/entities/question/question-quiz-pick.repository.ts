@@ -24,7 +24,8 @@ import type { Client } from 'pg';
 import { withDirectPgClient } from '@/lib/db/direct-pg';
 import { defaultLocale, type Locale } from '@/shared/i18n';
 import { shuffleArray } from '@/shared/utils';
-import type { Difficulty, QuestionType } from '@/types';
+import type { Difficulty } from '@/types';
+import { toQuestionType } from '@/entities/question/question-prompt-media';
 import type {
     LocalizedSnapshotTexts,
     QuestionSnapshotBundleItem,
@@ -148,10 +149,6 @@ const BILINGUAL_OPTION_TRANSLATION_JOINS_SQL = `
         ON aot_en."optionId" = ao."id"
         AND aot_en."locale" = 'en'::"ContentLocale"
 `;
-
-function toQuestionType(value: string): QuestionType {
-    return value === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
-}
 
 function pickLocalizedText(
     texts: LocalizedSnapshotTexts,

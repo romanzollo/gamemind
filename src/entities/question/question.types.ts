@@ -42,6 +42,7 @@ export type QuestionSnapshotBundleItem = {
     type: QuestionType;
     displayText: string;
     displayTexts: LocalizedSnapshotTexts;
+    /** URL PROMPT-ассета: картинка IMAGE_GUESS или клип AUDIO_GUESS (по `type`). */
     displayImageUrl: string | null;
     options: Array<{
         id: string;

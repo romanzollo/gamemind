@@ -22,6 +22,7 @@ import { toBrowserPlayView } from '@/entities/quiz-session/quiz-play-view';
 import { quizSessionAnswerMethods } from '@/entities/quiz-session/quiz-session-answer.repository';
 import { loadLocalizedTextsByQuestionIds } from '@/entities/question/question.repository';
 import { survivalRunRepository } from '@/entities/survival-run/survival-run.repository';
+import { normalizeQuizAudioUrl } from '@/entities/question/question-prompt-media';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type {
     QuizSessionPublicView,
@@ -500,6 +501,7 @@ async function loadCompletedSessionReview(
             difficulty: question.difficulty,
             type: question.type,
             imageUrl: normalizeQuizImageUrl(question.imageUrl),
+            audioUrl: normalizeQuizAudioUrl(question.type, question.audioUrl),
             position: question.position,
             options: [...question.options]
                 .sort((left, right) => left.order - right.order)

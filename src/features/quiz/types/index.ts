@@ -11,7 +11,7 @@ export type QuizSetupDifficulty = Difficulty | 'MIXED';
 export type QuizSessionPoolKind = 'SINGLE' | 'MIXED';
 
 // тип вопроса (совпадает с Prisma enum QuestionType)
-export type QuestionType = 'TEXT' | 'IMAGE_GUESS';
+export type QuestionType = 'TEXT' | 'IMAGE_GUESS' | 'AUDIO_GUESS';
 
 /** Жизненный цикл контента (Prisma QuestionPublicationStatus). Не путать с isActive. */
 export type QuestionPublicationStatus = 'DRAFT' | 'IN_REVIEW' | 'PUBLISHED';
@@ -30,6 +30,8 @@ export type QuizPublicQuestion = {
     difficulty: Difficulty;
     type?: QuestionType;
     imageUrl?: string | null;
+    /** Клип AUDIO_GUESS (`/media/audio/{hash}.mp3`); у других типов нет. */
+    audioUrl?: string | null;
     /** Ключ ответа для `/api/quiz/:id/answer` (Classic / Blitz / Daily). */
     answerKey?: string;
     options: {
@@ -79,6 +81,7 @@ export type QuizResultReviewItem = {
     text: string;
     type?: QuestionType;
     imageUrl?: string | null;
+    audioUrl?: string | null;
     isCorrect: boolean;
     selectedOption: {
         id: string;

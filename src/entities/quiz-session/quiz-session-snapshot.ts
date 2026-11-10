@@ -18,6 +18,10 @@ import type {
     SessionSnapshotPublicQuestion,
     SessionSnapshotScoringQuestion,
 } from '@/entities/quiz-session/quiz-session.types';
+import {
+    normalizeQuizAudioUrl,
+    promptMediaForType,
+} from '@/entities/question/question-prompt-media';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
 type SnapshotOptionData = {
@@ -35,6 +39,8 @@ type SnapshotQuestionData = {
     difficulty: Difficulty;
     type?: QuestionType;
     imageUrl?: string | null;
+    /** Только AUDIO_GUESS: URL клипа. Картинка и клип не пересекаются. */
+    audioUrl?: string | null;
     position: number;
     options: SnapshotOptionData[];
 };
@@ -151,7 +157,7 @@ export function buildSnapshotData(
                 texts: questionTexts,
                 difficulty: picked.difficulty,
                 type: picked.type,
-                imageUrl: normalizeQuizImageUrl(question.displayImageUrl),
+                ...promptMediaForType(picked.type, question.displayImageUrl),
                 position: question.position,
                 options: question.options.map((option) => {
                     const pickedOption = pickedOptions.get(option.optionId);
@@ -231,6 +237,7 @@ export function mapSnapshotDataToPublicQuestions(
             difficulty: question.difficulty,
             type: question.type,
             imageUrl: normalizeQuizImageUrl(question.imageUrl),
+            audioUrl: normalizeQuizAudioUrl(question.type, question.audioUrl),
             options: [...question.options]
                 .sort((left, right) => left.order - right.order)
                 .map((option) => ({

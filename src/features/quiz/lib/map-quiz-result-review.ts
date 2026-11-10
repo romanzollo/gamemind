@@ -53,6 +53,7 @@ export function mapQuizResultReview(
             text: question.text,
             type: question.type,
             imageUrl: question.imageUrl ?? null,
+            audioUrl: question.audioUrl ?? null,
             // Prefer snapshot correctness over stored QuizAnswer.isCorrect
             isCorrect: selectedOption.isCorrect,
             selectedOption: {

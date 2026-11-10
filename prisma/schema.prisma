@@ -41,6 +41,8 @@ enum ContentLocale {
 enum QuestionType {
   TEXT
   IMAGE_GUESS
+  /// Клип 6–8 с (PROMPT asset, audio/mpeg). DECISIONS → Audio questions: AUDIO_GUESS.
+  AUDIO_GUESS
 }
 
 enum QuestionAssetRole {
@@ -410,6 +412,8 @@ model QuizResult {
   /// Slim bilingual review DTO (option B): пишется на submit из уже загруженного
   /// snapshot; hot-path разбора читает его вместо большого reviewSnapshot/TOAST.
   reviewPayload  Json?
+  /// Засчитанное сервером «окно прослушивания» (мс); рекорд Блица = elapsed − это.
+  clockCreditMs  Int      @default(0)
 
   session QuizSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)

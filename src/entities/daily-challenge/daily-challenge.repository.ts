@@ -142,6 +142,10 @@ async function findPublishedQuestionIdsByDifficulty(
                 WHERE q."difficulty" = $1::"Difficulty"
                   AND q."isActive" = true
                   AND q."publicationStatus" = 'PUBLISHED'::"QuestionPublicationStatus"
+                  -- Челлендж дня пока без музыки: набор общий для всех, а
+                  -- выключить музыку здесь нельзя. «Музыкальный день» — позже.
+                  -- ADR: DECISIONS → Audio questions: AUDIO_GUESS.
+                  AND q."type" <> 'AUDIO_GUESS'::"QuestionType"
             `,
             [difficulty],
         ),

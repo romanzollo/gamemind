@@ -28,6 +28,7 @@ export type SessionSnapshotQuestionInput = {
     position: number;
     displayText: string;
     displayTexts: LocalizedSnapshotTexts;
+    /** URL PROMPT-ассета (картинка или клип — по типу вопроса в bundle). */
     displayImageUrl?: string | null;
     options: Array<{
         optionId: string;
@@ -86,6 +87,7 @@ export type SessionSnapshotPublicQuestion = {
     difficulty: Difficulty;
     type?: QuestionType;
     imageUrl?: string | null;
+    audioUrl?: string | null;
     /**
      * Ключ ответа (AES-GCM) для `/api/quiz/:id/answer` — Classic / Blitz /
      * Daily. Ставится только на выходе данных в браузер.
@@ -218,6 +220,7 @@ export type SessionReviewPayload = {
         difficulty: Difficulty;
         type?: QuestionType;
         imageUrl?: string | null;
+        audioUrl?: string | null;
         position: number;
         options: Array<{
             id: string;

@@ -37,6 +37,7 @@ export function mapCompactReviewPayloadToItems(
             text: pickSnapshotText(item.texts, undefined, options.locale),
             type: item.type,
             imageUrl: item.imageUrl ?? null,
+            audioUrl: item.audioUrl ?? null,
             isCorrect: item.isCorrect,
             selectedOption: {
                 id: item.selectedOptionId,

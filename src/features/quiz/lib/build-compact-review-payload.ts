@@ -13,6 +13,7 @@ import {
     type CompactReviewPayloadItem,
     type CompactReviewPayloadV1,
 } from '@/entities/quiz-result/compact-review-payload';
+import { normalizeQuizAudioUrl } from '@/entities/question/question-prompt-media';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 
 type AnswerRow = {
@@ -66,6 +67,7 @@ export function buildCompactReviewPayload(input: {
                 position: question.position,
                 type: question.type,
                 imageUrl: normalizeQuizImageUrl(question.imageUrl),
+                audioUrl: normalizeQuizAudioUrl(question.type, question.audioUrl),
                 texts: questionTexts,
                 isCorrect: false,
                 selectedOptionId: REVIEW_UNANSWERED_OPTION_ID,
@@ -89,6 +91,7 @@ export function buildCompactReviewPayload(input: {
             position: question.position,
             type: question.type,
             imageUrl: normalizeQuizImageUrl(question.imageUrl),
+            audioUrl: normalizeQuizAudioUrl(question.type, question.audioUrl),
             texts: questionTexts,
             isCorrect: selectedOption.isCorrect,
             selectedOptionId: selectedOption.id,

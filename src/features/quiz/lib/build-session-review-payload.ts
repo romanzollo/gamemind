@@ -11,6 +11,7 @@ import type { QuizSessionSnapshotData } from '@/entities/quiz-session/quiz-sessi
 import {
     pickSnapshotText,
 } from '@/entities/quiz-session/quiz-session-snapshot';
+import { normalizeQuizAudioUrl } from '@/entities/question/question-prompt-media';
 import { normalizeQuizImageUrl } from '@/shared/utils/normalize-quiz-image-url';
 import type { Locale } from '@/shared/i18n';
 
@@ -33,6 +34,7 @@ export function buildSessionReviewPayloadFromSnapshot(
             difficulty: question.difficulty,
             type: question.type,
             imageUrl: normalizeQuizImageUrl(question.imageUrl),
+            audioUrl: normalizeQuizAudioUrl(question.type, question.audioUrl),
             position: question.position,
             options: [...question.options]
                 .sort((left, right) => left.order - right.order)
