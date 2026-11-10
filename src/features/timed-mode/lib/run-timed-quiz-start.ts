@@ -47,6 +47,8 @@ export type RunTimedQuizStartInput = {
     /** Тема игры; null — весь банк. */
     topicTagId: string | null;
     locale: Locale;
+    /** «Музыкальные вопросы» устройства (cookie); false — без AUDIO_GUESS. */
+    includeAudio: boolean;
 };
 
 export type RunTimedQuizStartResult =
@@ -74,19 +76,12 @@ export async function runTimedQuizStart(
 
         const pickedQuestions =
             input.difficulty === 'MIXED'
-                ? await pickMixedSnapshotBundle(
-                      input.userId,
+                ? await pickMixedSnapshotBundle({ ...input, questionCount })
+                : await pickTimedSnapshotBundle({
+                      ...input,
+                      difficulty: input.difficulty,
                       questionCount,
-                      input.locale,
-                      input.topicTagId,
-                  )
-                : await pickTimedSnapshotBundle(
-                      input.userId,
-                      input.difficulty,
-                      questionCount,
-                      input.locale,
-                      input.topicTagId,
-                  );
+                  });
 
         if (pickedQuestions.length < questionCount) {
             return { ok: false, errorCode: 'NOT_ENOUGH_QUESTIONS' };

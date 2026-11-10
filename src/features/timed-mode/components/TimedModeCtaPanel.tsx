@@ -13,6 +13,7 @@
 import { useActionState, useId, useState } from 'react';
 
 import { ModeSheetCard } from '@/features/quiz/components/ModeSheetCard';
+import { MusicQuestionsToggle } from '@/features/quiz/components/MusicQuestionsToggle';
 import { PlayTopicChips } from '@/features/quiz/components/PlayTopicChips';
 import { setupDifficultyChipOptions } from '@/features/quiz/lib/difficulty-chip-options';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
@@ -44,6 +45,8 @@ type TimedModeCtaPanelProps = {
     isAuthenticated: boolean;
     /** Последний выбор из cookie (или значение по умолчанию). */
     initialSetup: BlitzSetup;
+    /** «Музыкальные вопросы» из cookie устройства (сервер, главная). */
+    initialMusicEnabled: boolean;
 };
 
 export function TimedModeCtaPanel({
@@ -51,6 +54,7 @@ export function TimedModeCtaPanel({
     dictionary,
     isAuthenticated,
     initialSetup,
+    initialMusicEnabled,
 }: TimedModeCtaPanelProps) {
     const labels = dictionary.timedMode;
     const quizLabels = dictionary.quiz;
@@ -131,6 +135,12 @@ export function TimedModeCtaPanel({
                         difficulty={difficulty}
                         value={selectedTopic}
                         onChange={setTopic}
+                    />
+
+                    <MusicQuestionsToggle
+                        label={dictionary.quiz.musicQuestionsLabel}
+                        hint={dictionary.quiz.musicQuestionsHint}
+                        initialEnabled={initialMusicEnabled}
                     />
 
                     <SubmitButton

@@ -40,6 +40,11 @@ export type RunSurvivalQuizStartInput = {
      * Continue того же SurvivalRun. Omit/null = новый забег (T0=20, abandon all).
      */
     continueRunId?: string | null;
+    /**
+     * «Музыкальные вопросы» устройства (cookie), читается на каждой волне:
+     * выбор берётся с того устройства, где игрок жмёт «Дальше».
+     */
+    includeAudio: boolean;
 };
 
 export type RunSurvivalQuizStartResult =
@@ -77,6 +82,7 @@ export async function runSurvivalQuizStart(
                 questionCount: continued.questionCount,
                 locale: input.locale,
                 excludeQuestionIds: continued.seenQuestionIds,
+                includeAudio: input.includeAudio,
             });
 
             if (pickedQuestions.length < continued.questionCount) {
@@ -113,6 +119,7 @@ export async function runSurvivalQuizStart(
             questionCount: fullWaveSize,
             locale: input.locale,
             excludeQuestionIds: run.seenQuestionIds,
+            includeAudio: input.includeAudio,
         });
 
         // Волна 1: если пул 1..11 — короткая волна, чтобы выжать максимум.

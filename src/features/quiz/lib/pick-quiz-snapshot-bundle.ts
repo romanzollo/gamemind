@@ -11,6 +11,9 @@
  * Тема игры (`topicTagId`): мешки темы в том же cycle hop; дальше всё как
  * без темы (settle, resolve chunk 5). Survival и Daily тему не передают.
  *
+ * `includeAudio: false` («Музыкальные вопросы» выключены): аудиовопросы
+ * исключаются в том же cycle hop (cycle-pool.ts), resolve не меняется.
+ *
  * Анти-паттерн (снят): Prisma JSONB remaining + Promise.race budget +
  * fallback random — давал повторы IMAGE_GUESS при «успешном» старте.
  * Теперь cycle обязан отработать; ошибка → наверх (не тихий random).
@@ -42,21 +45,29 @@ async function settleAfterCycleBeforeDirectResolve() {
     );
 }
 
+export type PickQuizSnapshotBundleInput = {
+    userId: string;
+    difficulty: Difficulty;
+    questionCount: number;
+    locale: Locale;
+    /** Тема игры; null — весь банк. */
+    topicTagId: string | null;
+    /** «Музыкальные вопросы» устройства; false — без AUDIO_GUESS. */
+    includeAudio: boolean;
+};
+
 async function pickUserCycleSnapshotBundle(
-    userId: string,
-    difficulty: Difficulty,
-    questionCount: number,
-    locale: Locale,
-    topicTagId: string | null,
+    input: PickQuizSnapshotBundleInput,
 ): Promise<QuestionSnapshotBundleItem[]> {
     const drawn = await userQuestionCycleRepository.drawQuestionIds({
-        userId,
-        difficulty,
-        needed: questionCount,
-        topicTagId,
+        userId: input.userId,
+        difficulty: input.difficulty,
+        needed: input.questionCount,
+        topicTagId: input.topicTagId,
+        includeAudio: input.includeAudio,
     });
 
-    if (!drawn.ok || drawn.questionIds.length < questionCount) {
+    if (!drawn.ok || drawn.questionIds.length < input.questionCount) {
         return [];
     }
 
@@ -64,7 +75,7 @@ async function pickUserCycleSnapshotBundle(
 
     return questionRepository.pickSnapshotBundleByQuestionIds(
         drawn.questionIds,
-        locale,
+        input.locale,
     );
 }
 
@@ -73,38 +84,18 @@ async function pickUserCycleSnapshotBundle(
  * Матрица: Easy 3 → 5 → 10; rematch без повторов до исчерпания цикла.
  */
 export function pickClassicSnapshotBundle(
-    userId: string,
-    difficulty: Difficulty,
-    questionCount: number,
-    locale: Locale,
-    topicTagId: string | null,
+    input: PickQuizSnapshotBundleInput,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    return pickUserCycleSnapshotBundle(
-        userId,
-        difficulty,
-        questionCount,
-        locale,
-        topicTagId,
-    );
+    return pickUserCycleSnapshotBundle(input);
 }
 
 /**
  * Blitz/Timed pick (тот же мешок difficulty, что Classic).
  */
 export function pickTimedSnapshotBundle(
-    userId: string,
-    difficulty: Difficulty,
-    questionCount: number,
-    locale: Locale,
-    topicTagId: string | null,
+    input: PickQuizSnapshotBundleInput,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    return pickUserCycleSnapshotBundle(
-        userId,
-        difficulty,
-        questionCount,
-        locale,
-        topicTagId,
-    );
+    return pickUserCycleSnapshotBundle(input);
 }
 
 /**
@@ -112,24 +103,22 @@ export function pickTimedSnapshotBundle(
  * Пустой массив = NOT_ENOUGH, не random.
  */
 export async function pickMixedSnapshotBundle(
-    userId: string,
-    questionCount: number,
-    locale: Locale,
-    topicTagId: string | null,
+    input: Omit<PickQuizSnapshotBundleInput, 'difficulty'>,
 ): Promise<QuestionSnapshotBundleItem[]> {
-    const split = getMixedDifficultySplit(questionCount);
+    const split = getMixedDifficultySplit(input.questionCount);
 
     if (!split) {
         return [];
     }
 
     const drawn = await userQuestionCycleRepository.drawMixedQuestionIds({
-        userId,
-        topicTagId,
+        userId: input.userId,
+        topicTagId: input.topicTagId,
         draws: listMixedCycleDraws(split),
+        includeAudio: input.includeAudio,
     });
 
-    if (!drawn.ok || drawn.questionIds.length < questionCount) {
+    if (!drawn.ok || drawn.questionIds.length < input.questionCount) {
         return [];
     }
 
@@ -139,6 +128,6 @@ export async function pickMixedSnapshotBundle(
 
     return questionRepository.pickSnapshotBundleByQuestionIds(
         sessionOrderIds,
-        locale,
+        input.locale,
     );
 }

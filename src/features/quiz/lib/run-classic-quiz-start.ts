@@ -38,6 +38,8 @@ export type RunClassicQuizStartInput = {
     /** Тема игры; null — весь банк. */
     topicTagId: string | null;
     locale: Locale;
+    /** «Музыкальные вопросы» устройства (cookie); false — без AUDIO_GUESS. */
+    includeAudio: boolean;
 };
 
 export type RunClassicQuizStartResult =
@@ -54,19 +56,11 @@ export async function runClassicQuizStart(
 
         const pickedQuestions =
             input.difficulty === 'MIXED'
-                ? await pickMixedSnapshotBundle(
-                      input.userId,
-                      input.questionCount,
-                      input.locale,
-                      input.topicTagId,
-                  )
-                : await pickClassicSnapshotBundle(
-                      input.userId,
-                      input.difficulty,
-                      input.questionCount,
-                      input.locale,
-                      input.topicTagId,
-                  );
+                ? await pickMixedSnapshotBundle(input)
+                : await pickClassicSnapshotBundle({
+                      ...input,
+                      difficulty: input.difficulty,
+                  });
 
         if (pickedQuestions.length < input.questionCount) {
             return { ok: false, errorCode: 'NOT_ENOUGH_QUESTIONS' };

@@ -528,6 +528,8 @@ export const ruDictionary: Dictionary = {
         },
     },
     quiz: {
+        musicQuestionsLabel: 'Музыкальные вопросы',
+        musicQuestionsHint: 'Выключи, если играешь без звука',
         setupTitle: 'Режимы',
         setupDescription: 'Четыре арены. Память на кону.',
         classicEyebrow: 'Без таймера',

@@ -29,6 +29,8 @@ export type PickSurvivalSnapshotBundleInput = {
     locale: Locale;
     /** Ids уже сыгранные в этом SurvivalRun. Волна 1 = []. */
     excludeQuestionIds: string[];
+    /** «Музыкальные вопросы» устройства; false — без AUDIO_GUESS в волне. */
+    includeAudio: boolean;
 };
 
 async function settleAfterPoolBeforeDirectResolve() {
@@ -54,6 +56,7 @@ export async function pickSurvivalSnapshotBundle(
         needed: input.questionCount,
         excludeQuestionIds: input.excludeQuestionIds,
         allowPartial: true,
+        includeAudio: input.includeAudio,
     });
 
     if (!drawn.ok || drawn.questionIds.length === 0) {

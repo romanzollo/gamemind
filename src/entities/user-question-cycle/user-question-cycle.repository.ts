@@ -20,6 +20,10 @@
  * PLAY_TOPIC_MIN_QUESTIONS → NOT_ENOUGH до создания строки мешка.
  * Canon: docs/DECISIONS.md → Play topics.
  *
+ * Музыка выключена (`includeAudio: false`): пул тот же, SELECT отдаёт
+ * признак аудио, и аудиовопросы идут в исключения (cycle-pool.ts) — размер
+ * пула не меняется, мешок не перемешивается заново. Тот же hop, без JOIN.
+ *
  * Mix (Classic/Blitz): compute на pooled, persist на свежем pooled (не тот же
  * сокет после fat SELECT). Не BEGIN. Не `withDirectPg*`.
  * После cycle — 300ms settle перед Direct resolve (очередь так же ждёт 300ms).
@@ -31,6 +35,10 @@ import { randomUUID } from 'node:crypto';
 import type { Client } from 'pg';
 
 import { PLAY_TOPIC_MIN_QUESTIONS } from '@/entities/play-topic/play-topic';
+import {
+    buildCycleExcludeIds,
+    type CyclePoolRow,
+} from '@/entities/user-question-cycle/cycle-pool';
 import {
     drawFromSeededCycle,
     type QuestionCycleState,
@@ -60,6 +68,11 @@ export type DrawQuestionIdsInput = {
     excludeQuestionIds?: readonly string[];
     /** Survival: последняя волна может быть короче `needed`. */
     allowPartial?: boolean;
+    /**
+     * «Музыкальные вопросы» в лобби (cookie устройства). false — аудиовопросы
+     * не выдаются. По умолчанию true.
+     */
+    includeAudio?: boolean;
 };
 
 export type DrawMixedUserQuestionCycleIdsInput = {
@@ -68,6 +81,8 @@ export type DrawMixedUserQuestionCycleIdsInput = {
     topicTagId?: string | null;
     /** Последовательные куски сплита (EASY → MEDIUM → HARD). Не MIXED-мешок. */
     draws: Array<{ difficulty: Difficulty; needed: number }>;
+    /** Как в DrawQuestionIdsInput: false — без аудиовопросов. */
+    includeAudio?: boolean;
 };
 
 export type DrawMixedUserQuestionCycleIdsResult =
@@ -272,13 +287,21 @@ async function loadOrCreateCycleState(
     return created;
 }
 
-async function loadActivePublishedPoolIds(
+type PoolRow = { id: string; is_audio: boolean };
+
+function toCyclePool(rows: readonly PoolRow[]): CyclePoolRow[] {
+    return rows.map((row) => ({ id: row.id, isAudio: row.is_audio }));
+}
+
+async function loadActivePublishedPool(
     client: Client,
     difficulty: Difficulty,
-): Promise<string[]> {
-    const result = await client.query<{ id: string }>(
+): Promise<CyclePoolRow[]> {
+    const result = await client.query<PoolRow>(
         `
-            SELECT q."id"
+            SELECT
+                q."id",
+                q."type" = 'AUDIO_GUESS'::"QuestionType" AS "is_audio"
             FROM "Question" q
             WHERE
                 q."difficulty" = $1::"Difficulty"
@@ -288,7 +311,7 @@ async function loadActivePublishedPoolIds(
         [difficulty],
     );
 
-    return result.rows.map((row) => row.id);
+    return toCyclePool(result.rows);
 }
 
 /**
@@ -296,14 +319,16 @@ async function loadActivePublishedPoolIds(
  * Метка без `playOrder` (не тема) даёт пустой пул — так сервер не доверяет
  * присланному id. EXISTS идёт по PK QuestionTag (questionId, tagId).
  */
-async function loadTopicPoolIds(
+async function loadTopicPool(
     client: Client,
     difficulty: Difficulty,
     topicTagId: string,
-): Promise<string[]> {
-    const result = await client.query<{ id: string }>(
+): Promise<CyclePoolRow[]> {
+    const result = await client.query<PoolRow>(
         `
-            SELECT q."id"
+            SELECT
+                q."id",
+                q."type" = 'AUDIO_GUESS'::"QuestionType" AS "is_audio"
             FROM "Question" q
             WHERE
                 q."difficulty" = $1::"Difficulty"
@@ -326,7 +351,7 @@ async function loadTopicPoolIds(
         [difficulty, topicTagId],
     );
 
-    return result.rows.map((row) => row.id);
+    return toCyclePool(result.rows);
 }
 
 /**
@@ -432,13 +457,17 @@ type ComputedBagDraw =
 function drawOnPool(
     input: DrawQuestionIdsInput,
     state: QuestionCycleState,
-    poolIds: readonly string[],
+    pool: readonly CyclePoolRow[],
 ): ComputedBagDraw {
     const drawn = drawFromSeededCycle({
         state,
-        poolIds,
+        poolIds: pool.map((row) => row.id),
         needed: input.needed,
-        excludeIds: input.excludeQuestionIds,
+        excludeIds: buildCycleExcludeIds({
+            pool,
+            playedIds: input.excludeQuestionIds,
+            includeAudio: input.includeAudio ?? true,
+        }),
         allowPartial: input.allowPartial,
     });
 
@@ -469,24 +498,24 @@ async function computeBagDrawOnClient(
 
     if (bag.topicTagId) {
         // Сначала пул: на неизвестной или узкой теме строку мешка не создаём.
-        const poolIds = await loadTopicPoolIds(
+        const pool = await loadTopicPool(
             client,
             input.difficulty,
             bag.topicTagId,
         );
 
-        if (poolIds.length < PLAY_TOPIC_MIN_QUESTIONS) {
+        if (pool.length < PLAY_TOPIC_MIN_QUESTIONS) {
             return { ok: false, reason: 'NOT_ENOUGH_QUESTIONS' };
         }
 
         const state = await loadOrCreateCycleState(client, bag);
-        return drawOnPool(input, state, poolIds);
+        return drawOnPool(input, state, pool);
     }
 
     const state = await loadOrCreateCycleState(client, bag);
-    const poolIds = await loadActivePublishedPoolIds(client, input.difficulty);
+    const pool = await loadActivePublishedPool(client, input.difficulty);
 
-    return drawOnPool(input, state, poolIds);
+    return drawOnPool(input, state, pool);
 }
 
 async function drawQuestionIdsOnce(
@@ -592,6 +621,7 @@ async function drawMixedQuestionIdsOnce(
                 difficulty: draw.difficulty,
                 needed: draw.needed,
                 topicTagId: input.topicTagId,
+                includeAudio: input.includeAudio,
             };
             const computed = await withPooledPgClient(
                 (client) => computeBagDrawOnClient(client, drawInput),

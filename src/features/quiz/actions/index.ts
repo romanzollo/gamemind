@@ -19,6 +19,7 @@ import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkPresetRateLimit } from '@/lib/rate-limit';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
+import { readMusicPreferenceCookie } from '@/features/quiz/lib/read-music-preference-cookie';
 import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import { calculateQuizScore } from '@/features/quiz/lib/scoring';
@@ -83,6 +84,7 @@ export async function startQuizAction(
         questionCount: parsed.data.questionCount,
         topicTagId: parsed.data.topic,
         locale,
+        includeAudio: await readMusicPreferenceCookie(),
     });
 
     if (!started.ok) {

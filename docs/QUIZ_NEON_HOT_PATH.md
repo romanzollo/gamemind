@@ -165,6 +165,18 @@ BAD:  SQL NOW() anywhere in the window math (JS Dates only, canon E)
 
 Code: `src/features/quiz/lib/listening-window.ts`, `src/features/survival-mode/lib/replay-survival-wave.ts`. ADR: DECISIONS → Audio questions: AUDIO_GUESS.
 
+**«Music questions» off (pick, Nov 10):**
+
+```txt
+OK:   start action reads cookie gm_music (request header, no Neon) → includeAudio
+OK:   cycle pool SELECT returns q."type" = 'AUDIO_GUESS' AS is_audio (same query, same pooled hop)
+OK:   music off → audio ids join excludeIds (with Survival's played ids); pool and poolSize unchanged
+BAD:  filtering audio out of the pool in SQL (poolSize changes → every toggle reshuffles the bag → repeats)
+BAD:  a separate «which ids are audio» query or a JOIN on QuestionAsset in the cycle hop
+```
+
+Code: `src/entities/user-question-cycle/cycle-pool.ts`, `src/features/quiz/lib/music-preference.ts`.
+
 ### E2. Answer lock-in (all modes, Nov 2)
 
 ```txt

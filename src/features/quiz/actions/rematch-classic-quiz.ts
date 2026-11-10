@@ -13,6 +13,7 @@
 
 import { redirect } from 'next/navigation';
 
+import { readMusicPreferenceCookie } from '@/features/quiz/lib/read-music-preference-cookie';
 import { runClassicQuizStart } from '@/features/quiz/lib/run-classic-quiz-start';
 import { quizSetupSchema } from '@/features/quiz/lib/validation';
 import type { QuizFormState } from '@/features/quiz/types';
@@ -62,6 +63,7 @@ export async function rematchClassicQuizAction(
         questionCount: parsed.data.questionCount,
         topicTagId: parsed.data.topic,
         locale,
+        includeAudio: await readMusicPreferenceCookie(),
     });
 
     if (!started.ok) {

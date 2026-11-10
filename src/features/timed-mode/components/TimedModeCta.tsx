@@ -17,6 +17,8 @@ type TimedModeCtaProps = {
     className?: string;
     /** Последний выбор сложности и темы (cookie шторки). */
     initialSetup: BlitzSetup;
+    /** «Музыкальные вопросы» из cookie устройства (сервер, главная). */
+    initialMusicEnabled: boolean;
 };
 
 export async function TimedModeCta({
@@ -24,6 +26,7 @@ export async function TimedModeCta({
     dictionary,
     className = '',
     initialSetup,
+    initialMusicEnabled,
 }: TimedModeCtaProps) {
     const session = await auth();
 
@@ -34,6 +37,7 @@ export async function TimedModeCta({
                 dictionary={dictionary}
                 isAuthenticated={Boolean(session?.user?.id)}
                 initialSetup={initialSetup}
+                initialMusicEnabled={initialMusicEnabled}
             />
         </div>
     );

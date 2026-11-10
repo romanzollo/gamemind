@@ -2834,6 +2834,9 @@ Both times are the server `answeredAt` that Answer lock-in already writes (reque
 ### No sound and accessibility
 
 - A lobby switch **«Music questions»** in Classic / Blitz / Survival, remembered on this device (off on the phone in the metro, on at the PC). Off → the pick excludes `AUDIO_GUESS` (cycle `excludeIds`, same pooled hop).
+  - **Done (5.3f, Nov 10):** cookie `gm_music` (`0` = off; missing or junk = on), one for the device, not per mode. The start Server Actions (Classic, rematch, Blitz, Survival incl. the next wave) read it themselves, so «Continue» and rematch follow it without a form field. The home page reads it for the switch's first render (useSyncExternalStore, one value in all three sheets).
+  - **Pool, not filter:** the cycle pool SELECT returns `is_audio`; with music off those ids join `excludeIds`. Filtering them in SQL would change `poolSize`, and every toggle would reshuffle the bag (repeats). The cursor walks through skipped audio — it comes back in the next cycle.
+  - **Hidden until the first batch:** `AUDIO_QUESTIONS_IN_LOBBY = false` in `music-preference.ts`; it flips to `true` in the 5.3g commit that publishes the batch. The server side works regardless.
 - A hint when the game / wave contains music (Survival pre-roll, first line in Blitz).
 - No text substitute for players who cannot hear: describing a melody changes the question, so switching music off is the honest answer.
 - Screen readers: real buttons with labels; the waveform is `aria-hidden`.

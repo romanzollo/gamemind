@@ -5,6 +5,7 @@ import { useActionState, useId, useState } from 'react';
 import { GuestPlayPrompt } from '@/features/auth/components/GuestPlayPrompt';
 import { startQuizAction } from '@/features/quiz/actions';
 import { ModeSheetCard } from '@/features/quiz/components/ModeSheetCard';
+import { MusicQuestionsToggle } from '@/features/quiz/components/MusicQuestionsToggle';
 import { PlayTopicChips } from '@/features/quiz/components/PlayTopicChips';
 import { setupDifficultyChipOptions } from '@/features/quiz/lib/difficulty-chip-options';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
@@ -34,6 +35,8 @@ type QuizSetupFormProps = {
     isAuthenticated: boolean;
     /** Последний выбор из cookie (или значения по умолчанию). */
     initialSetup: ClassicSetup;
+    /** «Музыкальные вопросы» из cookie устройства (сервер, главная). */
+    initialMusicEnabled: boolean;
 };
 
 const QUESTION_COUNT_OPTIONS = MIXED_QUESTION_COUNTS.map((count) => ({
@@ -55,6 +58,7 @@ export function QuizSetupForm({
     dictionary,
     isAuthenticated,
     initialSetup,
+    initialMusicEnabled,
 }: QuizSetupFormProps) {
     const [state, formAction] = useActionState(startQuizAction, {});
     const [difficulty, setDifficulty] = useState<QuizSetupDifficulty>(
@@ -142,7 +146,13 @@ export function QuizSetupForm({
                             </span>
                         </p>
                     ) : null}
-    
+
+                    <MusicQuestionsToggle
+                        label={dictionary.quiz.musicQuestionsLabel}
+                        hint={dictionary.quiz.musicQuestionsHint}
+                        initialEnabled={initialMusicEnabled}
+                    />
+
                     <SubmitButton
                         pendingLabel={dictionary.common.working}
                         className="w-full"

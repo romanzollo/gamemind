@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-challenge-cta';
 import { ContinueLastMode } from '@/features/quiz/components/ContinueLastMode';
 import { QuizSetupForm } from '@/features/quiz/components/QuizSetupForm';
+import { readMusicPreference } from '@/features/quiz/lib/music-preference';
 import {
     readModeSetupMemory,
     type ModeSetupMemory,
@@ -89,6 +90,9 @@ export default async function HomePage({ params }: HomePageProps) {
         (name) => cookieStore.get(name)?.value,
     );
     const continueMode = resolveContinueMode(setupMemory, sessionUser);
+    const musicEnabled = readMusicPreference(
+        (name) => cookieStore.get(name)?.value,
+    );
 
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
@@ -127,12 +131,14 @@ export default async function HomePage({ params }: HomePageProps) {
                         dictionary={dictionary}
                         isAuthenticated={sessionUser !== null}
                         initialSetup={setupMemory.classic}
+                        initialMusicEnabled={musicEnabled}
                     />
 
                     <TimedModeCta
                         locale={safeLocale}
                         dictionary={dictionary}
                         initialSetup={setupMemory.blitz}
+                        initialMusicEnabled={musicEnabled}
                     />
 
                     <div id="mode-survival" className="scroll-mt-24">
@@ -140,6 +146,7 @@ export default async function HomePage({ params }: HomePageProps) {
                             locale={safeLocale}
                             dictionary={dictionary}
                             initialDifficulty={setupMemory.survival.difficulty}
+                            initialMusicEnabled={musicEnabled}
                         />
                     </div>
                 </div>

@@ -12,6 +12,7 @@
 import { useActionState, useState } from 'react';
 
 import { ModeSheetCard } from '@/features/quiz/components/ModeSheetCard';
+import { MusicQuestionsToggle } from '@/features/quiz/components/MusicQuestionsToggle';
 import { singleDifficultyChipOptions } from '@/features/quiz/lib/difficulty-chip-options';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import { rememberModeSetup } from '@/features/quiz/lib/mode-setup-memory';
@@ -32,6 +33,8 @@ type SurvivalModeCtaPanelProps = {
     isAuthenticated: boolean;
     /** Последний выбор из cookie (или значение по умолчанию). */
     initialDifficulty: SurvivalDifficulty;
+    /** «Музыкальные вопросы» из cookie устройства (сервер, главная). */
+    initialMusicEnabled: boolean;
 };
 
 export function SurvivalModeCtaPanel({
@@ -39,6 +42,7 @@ export function SurvivalModeCtaPanel({
     dictionary,
     isAuthenticated,
     initialDifficulty,
+    initialMusicEnabled,
 }: SurvivalModeCtaPanelProps) {
     const labels = dictionary.survivalMode;
     const quizLabels = dictionary.quiz;
@@ -80,6 +84,12 @@ export function SurvivalModeCtaPanel({
                         options={singleDifficultyChipOptions(quizLabels)}
                         value={difficulty}
                         onChange={setDifficulty}
+                    />
+
+                    <MusicQuestionsToggle
+                        label={dictionary.quiz.musicQuestionsLabel}
+                        hint={dictionary.quiz.musicQuestionsHint}
+                        initialEnabled={initialMusicEnabled}
                     />
 
                     <SubmitButton

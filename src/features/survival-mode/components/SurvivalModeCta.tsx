@@ -17,6 +17,8 @@ type SurvivalModeCtaProps = {
     className?: string;
     /** Последний выбор сложности (cookie лобби). */
     initialDifficulty: SurvivalDifficulty;
+    /** «Музыкальные вопросы» из cookie устройства (сервер, главная). */
+    initialMusicEnabled: boolean;
 };
 
 export async function SurvivalModeCta({
@@ -24,6 +26,7 @@ export async function SurvivalModeCta({
     dictionary,
     className = '',
     initialDifficulty,
+    initialMusicEnabled,
 }: SurvivalModeCtaProps) {
     const session = await auth();
 
@@ -34,6 +37,7 @@ export async function SurvivalModeCta({
                 dictionary={dictionary}
                 isAuthenticated={Boolean(session?.user?.id)}
                 initialDifficulty={initialDifficulty}
+                initialMusicEnabled={initialMusicEnabled}
             />
         </div>
     );

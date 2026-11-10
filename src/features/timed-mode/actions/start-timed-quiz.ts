@@ -13,6 +13,7 @@ import { redirect } from 'next/navigation';
 
 import type { QuizFormState } from '@/features/quiz/types';
 import { timedQuizSetupSchema } from '@/features/quiz/lib/validation';
+import { readMusicPreferenceCookie } from '@/features/quiz/lib/read-music-preference-cookie';
 import { runTimedQuizStart } from '@/features/timed-mode/lib/run-timed-quiz-start';
 import { guestModesLockedHref } from '@/features/auth/lib/guest';
 import { requireUser } from '@/lib/auth/guards';
@@ -67,6 +68,7 @@ export async function startTimedQuizAction(
         difficulty: parsed.data.difficulty,
         topicTagId: parsed.data.topic,
         locale,
+        includeAudio: await readMusicPreferenceCookie(),
     });
 
     if (!started.ok) {

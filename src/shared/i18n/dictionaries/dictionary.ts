@@ -583,6 +583,9 @@ export type Dictionary = {
         };
     };
     quiz: {
+        /** Переключатель AUDIO_GUESS в шторках режимов (cookie устройства). */
+        musicQuestionsLabel: string;
+        musicQuestionsHint: string;
         setupTitle: string;
         setupDescription: string;
         /** Caps eyebrow Classic на lobby (как timedMode.eyebrow). */

@@ -512,6 +512,8 @@ export const enDictionary = {
         },
     },
     quiz: {
+        musicQuestionsLabel: 'Music questions',
+        musicQuestionsHint: 'Turn this off if you’re playing without sound',
         setupTitle: 'Modes',
         setupDescription: 'Four arenas. Memory on the line.',
         classicEyebrow: 'No timer',

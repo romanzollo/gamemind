@@ -12,6 +12,7 @@
 
 import { redirect } from 'next/navigation';
 
+import { readMusicPreferenceCookie } from '@/features/quiz/lib/read-music-preference-cookie';
 import type { QuizFormState } from '@/features/quiz/types';
 import { runSurvivalQuizStart } from '@/features/survival-mode/lib/run-survival-quiz-start';
 import { survivalQuizSetupSchema } from '@/features/survival-mode/lib/survival-quiz-setup-schema';
@@ -72,6 +73,7 @@ export async function startSurvivalQuizAction(
         difficulty: parsed.data.difficulty,
         locale,
         continueRunId: parsed.data.continueRunId ?? null,
+        includeAudio: await readMusicPreferenceCookie(),
     });
 
     if (!started.ok) {
