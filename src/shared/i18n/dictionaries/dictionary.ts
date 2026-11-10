@@ -463,6 +463,16 @@ export type Dictionary = {
         formPromptImagePreviewAlt: string;
         formPromptImageUrl: string;
         formPromptImageUrlHint: string;
+        /** Форма вопроса AUDIO_GUESS: клип и подпись трека (`Question.metadata`). */
+        formQuestionTypeAudioGuess: string;
+        formPromptAudio: string;
+        formPromptAudioFileHint: string;
+        formPromptAudioNewFile: string;
+        formAudioTrack: string;
+        formAudioComposer: string;
+        formAudioPerformer: string;
+        formAudioSource: string;
+        formAudioCreditHint: string;
         formOptionTextRu: string;
         formOptionTextEn: string;
         formOptions: string;
@@ -534,6 +544,8 @@ export type Dictionary = {
             identicalQuestionLocales: string;
             identicalOptionLocales: string;
             inactiveWillStayHidden: string;
+            missingPromptAudio: string;
+            missingTrackCredit: string;
         };
         errors: {
             loadFailed: string;
@@ -550,6 +562,7 @@ export type Dictionary = {
             saveFailed: string;
             uploadFailed: string;
             invalidImage: string;
+            invalidAudio: string;
             deleteFailed: string;
             deactivateFailed: string;
             activateFailed: string;

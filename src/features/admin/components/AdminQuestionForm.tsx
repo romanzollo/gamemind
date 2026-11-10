@@ -14,6 +14,11 @@
  *
  * IMAGE_GUESS: превью нового файла (blob: URL) или текущего/введённого URL —
  * админ видит кадр до сохранения, а не только путь.
+ *
+ * AUDIO_GUESS: готовый MP3 (проверяет и чистит сервер), плеер для
+ * прослушки нового или текущего клипа и подпись трека. Текущий клип уходит
+ * скрытым полем `promptAudioUrl` — сервер принимает только наш
+ * `/media/audio/{hash}.mp3`. ADR: docs/DECISIONS.md → AUDIO_GUESS → Admin.
  */
 
 import { useActionState, useEffect, useState } from 'react';
@@ -27,6 +32,7 @@ import {
     getAdminErrorMessage,
 } from '@/features/admin/lib';
 import type { AdminQuestionDetail } from '@/features/admin/types';
+import { isQuizAudioPublicUrl } from '@/lib/storage/quiz-audio-url';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
 import type { Difficulty, QuestionType } from '@/types';
@@ -36,6 +42,21 @@ const IMAGE_GUESS_DEFAULT_TEXT = {
     ru: 'Угадай игру по изображению.',
     en: 'Guess the game from the image.',
 };
+/** Как у партий конвейера клипов (CONTENT_PIPELINE §11). */
+const AUDIO_GUESS_DEFAULT_TEXT = {
+    ru: 'Из какой игры эта музыка?',
+    en: 'Which game is this music from?',
+};
+
+const QUESTION_TYPES: readonly QuestionType[] = [
+    'TEXT',
+    'IMAGE_GUESS',
+    'AUDIO_GUESS',
+];
+
+function toQuestionType(value: string): QuestionType {
+    return QUESTION_TYPES.find((type) => type === value) ?? 'TEXT';
+}
 
 /** Общий стиль полей — Scoreboard tokens + focus ring (как на Profile). */
 const fieldClassName =
@@ -133,6 +154,127 @@ function AdminQuestionSubmitButton({
     );
 }
 
+type AudioCreditField = keyof AdminQuestionDetail['audioCredit'];
+
+const AUDIO_CREDIT_FIELDS: ReadonlyArray<{
+    field: AudioCreditField;
+    name: string;
+    label:
+        | 'formAudioTrack'
+        | 'formAudioComposer'
+        | 'formAudioPerformer'
+        | 'formAudioSource';
+}> = [
+    { field: 'track', name: 'audioTrack', label: 'formAudioTrack' },
+    { field: 'composer', name: 'audioComposer', label: 'formAudioComposer' },
+    { field: 'performer', name: 'audioPerformer', label: 'formAudioPerformer' },
+    { field: 'source', name: 'audioSource', label: 'formAudioSource' },
+];
+
+/**
+ * Клип и подпись трека AUDIO_GUESS. Плеер — обычный `<audio controls>`:
+ * админке нужен только «послушать», игровой плеер с разблокировкой iOS
+ * здесь лишний.
+ */
+function AdminQuestionAudioFields({
+    dictionary,
+    currentClipUrl,
+    newClipPreviewUrl,
+    onClipFileChange,
+    credit,
+    onCreditChange,
+}: {
+    dictionary: Dictionary;
+    currentClipUrl: string | null;
+    newClipPreviewUrl: string | null;
+    onClipFileChange: (file: File | null) => void;
+    credit: AdminQuestionDetail['audioCredit'];
+    onCreditChange: (field: AudioCreditField, value: string) => void;
+}) {
+    const playerSrc = newClipPreviewUrl ?? currentClipUrl;
+
+    return (
+        <fieldset className="flex flex-col gap-3">
+            <legend className="font-medium text-foreground">
+                {dictionary.admin.formPromptAudio}
+            </legend>
+
+            {currentClipUrl ? (
+                <input
+                    type="hidden"
+                    name="promptAudioUrl"
+                    value={currentClipUrl}
+                />
+            ) : null}
+
+            <label className="flex flex-col gap-2 text-sm text-foreground">
+                <span>{dictionary.admin.formPromptImageFile}</span>
+                <input
+                    type="file"
+                    name="promptAudioFile"
+                    accept="audio/mpeg,.mp3"
+                    required={!currentClipUrl}
+                    onChange={(event) => {
+                        onClipFileChange(event.target.files?.[0] ?? null);
+                    }}
+                    className={fieldClassName}
+                />
+                <span className="text-sm text-muted">
+                    {dictionary.admin.formPromptAudioFileHint}
+                </span>
+            </label>
+
+            {playerSrc ? (
+                <figure className="flex flex-col gap-2">
+                    <audio
+                        key={playerSrc}
+                        src={playerSrc}
+                        controls
+                        preload="metadata"
+                        className="w-full"
+                    />
+                    <figcaption className="text-sm text-muted">
+                        {newClipPreviewUrl ? (
+                            dictionary.admin.formPromptAudioNewFile
+                        ) : (
+                            <>
+                                {dictionary.admin.formPromptImageCurrent}:{' '}
+                                <span className="break-all text-foreground">
+                                    {currentClipUrl}
+                                </span>
+                            </>
+                        )}
+                    </figcaption>
+                </figure>
+            ) : null}
+
+            <div className={bilingualGridClassName}>
+                {AUDIO_CREDIT_FIELDS.map(({ field, name, label }) => (
+                    <label
+                        key={field}
+                        className="flex flex-col gap-2 text-sm text-foreground"
+                    >
+                        <span>{dictionary.admin[label]}</span>
+                        <input
+                            type="text"
+                            name={name}
+                            maxLength={200}
+                            value={credit[field]}
+                            onChange={(event) => {
+                                onCreditChange(field, event.target.value);
+                            }}
+                            className={fieldClassName}
+                        />
+                    </label>
+                ))}
+            </div>
+            <span className="text-sm text-muted">
+                {dictionary.admin.formAudioCreditHint}
+            </span>
+        </fieldset>
+    );
+}
+
 export function AdminQuestionForm({
     locale,
     dictionary,
@@ -154,8 +296,23 @@ export function AdminQuestionForm({
     const [questionType, setQuestionType] = useState<QuestionType>(
         isEdit ? initialValues!.type : 'TEXT',
     );
+    // Клип AUDIO_GUESS не попадает в поле URL картинки: при смене типа на
+    // IMAGE_GUESS путь к MP3 не должен уйти как картинка.
+    const initialAudioUrl =
+        isEdit &&
+        initialValues!.type === 'AUDIO_GUESS' &&
+        isQuizAudioPublicUrl(initialValues!.promptImageUrl ?? '')
+            ? initialValues!.promptImageUrl!.trim()
+            : null;
     const [promptImageUrl, setPromptImageUrl] = useState(
-        isEdit ? (initialValues!.promptImageUrl ?? '') : '',
+        isEdit && initialValues!.type !== 'AUDIO_GUESS'
+            ? (initialValues!.promptImageUrl ?? '')
+            : '',
+    );
+    const [audioCredit, setAudioCredit] = useState(() =>
+        isEdit
+            ? initialValues!.audioCredit
+            : { track: '', composer: '', performer: '', source: '' },
     );
     const [difficulty, setDifficulty] = useState<Difficulty>(
         isEdit ? initialValues!.difficulty : 'EASY',
@@ -284,28 +441,26 @@ export function AdminQuestionForm({
                         name="questionType"
                         value={questionType}
                         onChange={(event) => {
-                            const nextType =
-                                event.target.value === 'IMAGE_GUESS'
-                                    ? 'IMAGE_GUESS'
-                                    : 'TEXT';
+                            const nextType = toQuestionType(event.target.value);
 
                             setQuestionType(nextType);
 
-                            // TEXT размонтирует file input — старое превью ложное.
-                            if (nextType !== 'IMAGE_GUESS') {
-                                setFilePreviewUrl(null);
-                            }
+                            // Смена типа размонтирует file input — старое превью ложное.
+                            setFilePreviewUrl(null);
 
-                            if (nextType === 'IMAGE_GUESS' && !isEdit) {
+                            const defaultText =
+                                nextType === 'IMAGE_GUESS'
+                                    ? IMAGE_GUESS_DEFAULT_TEXT
+                                    : nextType === 'AUDIO_GUESS'
+                                      ? AUDIO_GUESS_DEFAULT_TEXT
+                                      : null;
+
+                            if (defaultText && !isEdit) {
                                 setQuestionTextRu((current) =>
-                                    current.trim()
-                                        ? current
-                                        : IMAGE_GUESS_DEFAULT_TEXT.ru,
+                                    current.trim() ? current : defaultText.ru,
                                 );
                                 setQuestionTextEn((current) =>
-                                    current.trim()
-                                        ? current
-                                        : IMAGE_GUESS_DEFAULT_TEXT.en,
+                                    current.trim() ? current : defaultText.en,
                                 );
                             }
                         }}
@@ -317,6 +472,9 @@ export function AdminQuestionForm({
                         </option>
                         <option value="IMAGE_GUESS">
                             {dictionary.admin.formQuestionTypeImageGuess}
+                        </option>
+                        <option value="AUDIO_GUESS">
+                            {dictionary.admin.formQuestionTypeAudioGuess}
                         </option>
                     </select>
                 </label>
@@ -402,6 +560,26 @@ export function AdminQuestionForm({
                 ) : (
                     <input type="hidden" name="promptImageUrl" value="" />
                 )}
+
+                {questionType === 'AUDIO_GUESS' ? (
+                    <AdminQuestionAudioFields
+                        dictionary={dictionary}
+                        currentClipUrl={initialAudioUrl}
+                        newClipPreviewUrl={filePreviewUrl}
+                        onClipFileChange={(file) => {
+                            setFilePreviewUrl(
+                                file ? URL.createObjectURL(file) : null,
+                            );
+                        }}
+                        credit={audioCredit}
+                        onCreditChange={(field, value) => {
+                            setAudioCredit((current) => ({
+                                ...current,
+                                [field]: value,
+                            }));
+                        }}
+                    />
+                ) : null}
 
                 <label className="flex flex-col gap-2 text-sm text-foreground">
                     <span>{dictionary.quiz.difficultyLabel}</span>

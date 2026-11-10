@@ -289,7 +289,7 @@ export async function warmAdminListConnection(): Promise<void> {
 }
 
 export function toQuestionType(value: string): QuestionType {
-    return value === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
+    return value === 'IMAGE_GUESS' || value === 'AUDIO_GUESS' ? value : 'TEXT';
 }
 
 export function toPublicationStatus(value: string): QuestionPublicationStatus {
@@ -352,7 +352,7 @@ export async function findAdminQuestionListPage(
 
     if (filters?.type && filters.type !== 'all') {
         const type = filters.type;
-        if (type !== 'TEXT' && type !== 'IMAGE_GUESS') {
+        if (type !== 'TEXT' && type !== 'IMAGE_GUESS' && type !== 'AUDIO_GUESS') {
             throw new Error(`Invalid type filter: ${type}`);
         }
         whereParts.push(`q."type" = '${type}'::"QuestionType"`);
@@ -428,8 +428,9 @@ export async function findAdminQuestionListPage(
             )`
             : `page."text"`;
 
-    // Верный вариант — только у IMAGE_GUESS: у них одинаковый текст
-    // («Угадай игру…»), и строки иначе не различить без картинки.
+    // Верный вариант — только у IMAGE_GUESS / AUDIO_GUESS: у них одинаковый
+    // текст («Угадай игру…», «Из какой игры эта музыка?»), и строки иначе
+    // не различить.
     // EN — перевод варианта, иначе базовый текст (как у текста вопроса).
     const correctAnswerTextSql =
         locale === 'en'
@@ -503,7 +504,7 @@ export async function findAdminQuestionListPage(
                 page."publicationStatus"::text AS "publicationStatus",
                 page."createdAt",
                 CASE
-                    WHEN page."type" = 'IMAGE_GUESS'::"QuestionType" THEN (
+                    WHEN page."type" IN ('IMAGE_GUESS'::"QuestionType", 'AUDIO_GUESS'::"QuestionType") THEN (
                         SELECT qa."url"
                         FROM "QuestionAsset" qa
                         WHERE qa."questionId" = page."id"
@@ -513,7 +514,7 @@ export async function findAdminQuestionListPage(
                     )
                 END AS "promptImageUrl",
                 CASE
-                    WHEN page."type" = 'IMAGE_GUESS'::"QuestionType" THEN (
+                    WHEN page."type" IN ('IMAGE_GUESS'::"QuestionType", 'AUDIO_GUESS'::"QuestionType") THEN (
                         SELECT ${correctAnswerTextSql}
                         FROM "AnswerOption" ao
                         WHERE ao."questionId" = page."id"

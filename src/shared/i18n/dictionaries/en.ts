@@ -391,6 +391,17 @@ export const enDictionary = {
         formPromptImageUrl: 'Or URL (advanced)',
         formPromptImageUrlHint:
             'Path under public/ (e.g. /quiz-images/...) or an existing /media/... path. File upload wins over URL.',
+        formQuestionTypeAudioGuess: 'Guess by music',
+        formPromptAudio: 'Clip (MP3)',
+        formPromptAudioFileHint:
+            'A ready MP3, 4–11 s, up to 300 KB. The server strips tags.',
+        formPromptAudioNewFile:
+            'The new clip replaces the current one when you save',
+        formAudioTrack: 'Track',
+        formAudioComposer: 'Composer',
+        formAudioPerformer: 'Performer',
+        formAudioSource: 'Source',
+        formAudioCreditHint: 'Shown in the review: track — composer — game',
         formOptionTextRu: 'Option text (Russian)',
         formOptionTextEn: 'Option text (English)',
         formOptions: 'Answer options',
@@ -450,6 +461,8 @@ export const enDictionary = {
                 'One or more options have matching RU and EN text — check the translation.',
             inactiveWillStayHidden:
                 'Question is inactive: even after publish it stays out of the quiz until activated.',
+            missingPromptAudio: 'A music question needs a clip',
+            missingTrackCredit: 'No track title — the review will have no credit',
         },
         errors: {
             loadFailed:
@@ -472,6 +485,8 @@ export const enDictionary = {
                 'Failed to upload the image. Check storage settings and try again.',
             invalidImage:
                 'This file won’t work. Use JPEG, PNG or WebP up to 2 MB.',
+            invalidAudio:
+                'This MP3 won’t work: it needs to be 4–11 s and up to 300 KB',
             deleteFailed: 'Failed to delete. Try again.',
             deactivateFailed: 'Failed to deactivate the question. Try again.',
             activateFailed: 'Failed to activate the question. Try again.',

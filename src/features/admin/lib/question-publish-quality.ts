@@ -14,11 +14,13 @@
  * DECISIONS → Question publication workflow.
  */
 
+import { isQuizAudioPublicUrl } from '@/lib/storage/quiz-audio-url';
 import type { QuestionType } from '@/types';
 
 /** Стабильные коды — UI мапит через dictionary, не хардкодит текст. */
 export type QuestionPublishQualityCode =
     | 'MISSING_PROMPT_IMAGE'
+    | 'MISSING_PROMPT_AUDIO'
     | 'NOT_EXACTLY_ONE_CORRECT'
     | 'TOO_FEW_OPTIONS'
     | 'MISSING_QUESTION_TEXT'
@@ -26,7 +28,8 @@ export type QuestionPublishQualityCode =
     | 'DUPLICATE_OPTION_TEXT'
     | 'IDENTICAL_QUESTION_LOCALES'
     | 'IDENTICAL_OPTION_LOCALES'
-    | 'INACTIVE_WILL_STAY_HIDDEN';
+    | 'INACTIVE_WILL_STAY_HIDDEN'
+    | 'MISSING_TRACK_CREDIT';
 
 export type QuestionPublishQualitySeverity = 'blocker' | 'warning';
 
@@ -41,7 +44,10 @@ export type QuestionPublishQualityIssue = {
  */
 export type QuestionPublishQualityInput = {
     type: QuestionType;
+    /** URL PROMPT-ассета: картинка IMAGE_GUESS или клип AUDIO_GUESS. */
     promptImageUrl: string | null;
+    /** Подпись трека AUDIO_GUESS (`metadata.track`); для других типов не нужна. */
+    audioCredit?: { track: string };
     isActive: boolean;
     translations: {
         ru: { text: string };
@@ -138,6 +144,17 @@ export function getQuestionPublishQualityIssues(
         });
     }
 
+    // Без клипа аудиовопрос нельзя сыграть — только наш /media/audio/{hash}.mp3.
+    if (
+        input.type === 'AUDIO_GUESS' &&
+        !isQuizAudioPublicUrl(input.promptImageUrl ?? '')
+    ) {
+        issues.push({
+            code: 'MISSING_PROMPT_AUDIO',
+            severity: 'blocker',
+        });
+    }
+
     const ruOptionTexts = input.options.map(
         (option) => option.translations.ru.text,
     );
@@ -182,6 +199,14 @@ export function getQuestionPublishQualityIssues(
     if (identicalOptionLocales) {
         issues.push({
             code: 'IDENTICAL_OPTION_LOCALES',
+            severity: 'warning',
+        });
+    }
+
+    // Без названия трека в разборе не будет подписи «трек — композитор — игра».
+    if (input.type === 'AUDIO_GUESS' && !input.audioCredit?.track.trim()) {
+        issues.push({
+            code: 'MISSING_TRACK_CREDIT',
             severity: 'warning',
         });
     }

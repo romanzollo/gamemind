@@ -8,10 +8,14 @@
 
 export type StorageProvider = 'vercel-blob' | 'yandex-s3' | 'local-public';
 
-/** Пространства ключей в одном bucket/store: quiz-скрины и аватары. */
+/**
+ * Пространства ключей в одном bucket/store: quiz-скрины, аватары и клипы
+ * AUDIO_GUESS (`audio/{hash}.mp3`, имя по содержимому — см. quiz-audio.ts).
+ */
 export const STORAGE_PREFIX = {
     quiz: 'quiz',
     avatars: 'avatars',
+    audio: 'audio',
 } as const;
 
 export type StoragePrefix = (typeof STORAGE_PREFIX)[keyof typeof STORAGE_PREFIX];
@@ -42,8 +46,14 @@ export type PutObjectInput = {
     /** Ключ в store, напр. `quiz/{id}-{uuid}.webp`. */
     key: string;
     body: Buffer;
-    /** После sharp обычно всегда image/webp. */
-    contentType: 'image/webp' | MediaAllowedMimeType;
+    /** После sharp обычно всегда image/webp; клип квиза — audio/mpeg. */
+    contentType: 'image/webp' | 'audio/mpeg' | MediaAllowedMimeType;
+    /**
+     * Ключ назван по содержимому (клипы AUDIO_GUESS): тот же ключ = те же
+     * байты. Разрешаем перезапись (повторная загрузка того же файла не
+     * ошибка) и отдаём с кешем на год — объект по этому ключу не меняется.
+     */
+    immutable?: boolean;
 };
 
 export type PutObjectResult = {

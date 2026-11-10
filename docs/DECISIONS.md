@@ -2841,6 +2841,11 @@ Both times are the server `answeredAt` that Answer lock-in already writes (reque
 ### Admin
 
 - **Step A:** upload a ready MP3. The server checks the MPEG frames, 4–11 s and ≤ 300 KB, strips ID3, names the file by hash and stores it through the storage adapter. A player in the form and in the list; fields for track / composer / source.
+  - **Done (5.3e, Nov 10):** the type select knows `AUDIO_GUESS` (before, saving an audio question in the admin turned it into TEXT and dropped the clip). Upload → `sanitizeQuizMp3` → `audio/{sha256[0:16]}.mp3` via `getMediaStorage().put({ immutable: true })` (Blob: overwrite allowed, one-year cache — same bytes, same name). Without a new file the form sends the current clip back in `promptAudioUrl`; the server accepts only `/media/audio/{16hex}.mp3`.
+  - **Credit fields** track / composer / performer / source go into `Question.metadata` by merge (`metadata - removed || patch`), so `metadata.audio`, `game`, `batch` from the pipeline stay. An empty field removes its key.
+  - **Replace:** the old clip is deleted after the UPDATE and only if no other `QuestionAsset` points to it (content-addressed files can be shared).
+  - **Publish gate:** no clip → blocker `MISSING_PROMPT_AUDIO`; no track title → warning `MISSING_TRACK_CREDIT`.
+  - **Asset metadata on upsert:** a new upload takes all new values (NULL width/height for a clip); the same URL keeps the old ones; a URL changed by hand clears them.
 - **Step B (later; new dependency → needs the owner's ok):** trim in the browser. Pick 5–10 s on a waveform, preview with fades, encode MP3 in the browser with a JS encoder, then follow path A.
 - **Not chosen:** ffmpeg on Vercel. It is a ~70 MB binary with a slower cold start, and a function cannot take a large source file (~4.5 MB request body).
 

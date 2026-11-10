@@ -399,6 +399,17 @@ export const ruDictionary: Dictionary = {
         formPromptImageUrl: 'Или URL (advanced)',
         formPromptImageUrlHint:
             'Путь из public/ (например /quiz-images/...) или уже сохранённый /media/.... Файл имеет приоритет над URL.',
+        formQuestionTypeAudioGuess: 'Угадай по музыке',
+        formPromptAudio: 'Клип (MP3)',
+        formPromptAudioFileHint:
+            'Готовый MP3 на 4–11 с, до 300 КБ. Теги сервер уберёт.',
+        formPromptAudioNewFile:
+            'Новый клип заменит текущий после сохранения',
+        formAudioTrack: 'Трек',
+        formAudioComposer: 'Композитор',
+        formAudioPerformer: 'Исполнитель',
+        formAudioSource: 'Источник',
+        formAudioCreditHint: 'Покажем в разборе: трек — композитор — игра',
         formOptionTextRu: 'Текст варианта (русский)',
         formOptionTextEn: 'Текст варианта (английский)',
         formOptions: 'Варианты ответов',
@@ -459,6 +470,9 @@ export const ruDictionary: Dictionary = {
                 'У одного или нескольких вариантов RU и EN совпадают — проверь перевод.',
             inactiveWillStayHidden:
                 'Вопрос неактивен: даже после публикации он не попадёт в квиз, пока не активируешь.',
+            missingPromptAudio: 'Для вопроса с музыкой нужен клип',
+            missingTrackCredit:
+                'Нет названия трека — в разборе не будет подписи',
         },
         errors: {
             loadFailed:
@@ -481,6 +495,8 @@ export const ruDictionary: Dictionary = {
                 'Не удалось загрузить изображение. Проверь storage и попробуй ещё раз.',
             invalidImage:
                 'Этот файл не подойдёт. Нужен JPEG, PNG или WebP до 2 МБ.',
+            invalidAudio:
+                'Это не подходящий MP3: нужен клип на 4–11 с и до 300 КБ',
             deleteFailed: 'Не удалось удалить. Попробуй ещё раз.',
             deactivateFailed:
                 'Не удалось деактивировать вопрос. Попробуй ещё раз.',

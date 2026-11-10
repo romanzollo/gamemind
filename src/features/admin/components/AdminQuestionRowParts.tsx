@@ -183,8 +183,27 @@ export function CardHeroImage({
 }
 
 /**
- * Верный ответ под текстом IMAGE_GUESS: текст у таких вопросов один на всех,
- * без ответа строки различаются только картинкой.
+ * Клип AUDIO_GUESS в строке списка. `preload="none"`: список не качает
+ * все клипы страницы — файл грузится только по нажатию «play».
+ */
+export function ListClipPlayer({ url }: { url: string | null }) {
+    if (!url) {
+        return null;
+    }
+
+    return (
+        <audio
+            src={url}
+            controls
+            preload="none"
+            className="mt-2 h-9 w-full max-w-xs"
+        />
+    );
+}
+
+/**
+ * Верный ответ под текстом IMAGE_GUESS / AUDIO_GUESS: текст у таких вопросов
+ * один на всех, без ответа строки различаются только картинкой или клипом.
  */
 export function CorrectAnswerLine({
     answer,

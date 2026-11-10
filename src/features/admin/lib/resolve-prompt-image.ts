@@ -20,13 +20,17 @@ import {
  * Не вызывать из quiz start — только из admin Server Actions.
  */
 
+/** Метаданные загруженного PROMPT-ассета: картинка (WebP) или клип (MP3). */
 export type AdminPromptAssetMeta = {
     storageKey: string;
-    mimeType: 'image/webp';
-    width: number;
-    height: number;
+    mimeType: 'image/webp' | 'audio/mpeg';
+    /** У клипа размеров нет — null. */
+    width: number | null;
+    height: number | null;
     byteSize: number;
 };
+
+type AdminQuestionMediaType = 'TEXT' | 'IMAGE_GUESS' | 'AUDIO_GUESS';
 
 export type ResolvedAdminPromptImage = {
     promptImageUrl: string;
@@ -42,7 +46,7 @@ export type ResolveAdminPromptImageResult =
 
 export async function resolveAdminPromptImage(options: {
     formData: FormData;
-    type: 'TEXT' | 'IMAGE_GUESS';
+    type: AdminQuestionMediaType;
     /** Для ключа объекта и привязки к вопросу (create — сгенерированный id). */
     questionIdForKey: string;
 }): Promise<ResolveAdminPromptImageResult> {
@@ -127,7 +131,7 @@ export async function resolveAdminPromptImage(options: {
  */
 export function getPromptImageFile(
     formData: FormData,
-    type: 'TEXT' | 'IMAGE_GUESS',
+    type: AdminQuestionMediaType,
 ): File | null {
     if (type !== 'IMAGE_GUESS') {
         return null;

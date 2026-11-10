@@ -13,6 +13,7 @@ import {
     DifficultyChip,
     ListCardBadges,
     ListCardMeta,
+    ListClipPlayer,
     MissingPromptThumb,
     PromptThumb,
     QuestionRowActions,
@@ -25,6 +26,21 @@ import { EmptyState } from '@/shared/ui';
 import type { AdminQuestionListItem } from '../types';
 
 export type { AdminTableDictionary };
+
+/** Подпись типа вопроса в строке списка. */
+function getListTypeLabel(
+    entry: AdminQuestionListItem,
+    labels: Dictionary['admin'],
+): string {
+    switch (entry.type) {
+        case 'IMAGE_GUESS':
+            return labels.formQuestionTypeImageGuess;
+        case 'AUDIO_GUESS':
+            return labels.formQuestionTypeAudioGuess;
+        case 'TEXT':
+            return labels.formQuestionTypeText;
+    }
+}
 
 
 /**
@@ -169,9 +185,8 @@ export function AdminQuestionsTable({
             <ul className="space-y-3 lg:hidden">
                 {entries.map((entry) => {
                     const isImage = entry.type === 'IMAGE_GUESS';
-                    const typeLabel = isImage
-                        ? labels.formQuestionTypeImageGuess
-                        : labels.formQuestionTypeText;
+                    const isAudio = entry.type === 'AUDIO_GUESS';
+                    const typeLabel = getListTypeLabel(entry, labels);
                     const isSelected = selectedIds.has(entry.id);
 
                     return (
@@ -241,12 +256,29 @@ export function AdminQuestionsTable({
                                             <ListCardBadges
                                                 entry={entry}
                                                 labels={labels}
-                                                showTypeLabel={false}
+                                                showTypeLabel={isAudio}
                                                 typeLabel={typeLabel}
                                             />
                                             <p className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-foreground">
                                                 {entry.text}
                                             </p>
+                                            {isAudio ? (
+                                                <>
+                                                    <CorrectAnswerLine
+                                                        answer={
+                                                            entry.correctAnswer
+                                                        }
+                                                        label={
+                                                            labels.listCorrectAnswer
+                                                        }
+                                                    />
+                                                    <ListClipPlayer
+                                                        url={
+                                                            entry.promptImageUrl
+                                                        }
+                                                    />
+                                                </>
+                                            ) : null}
                                             <ListCardMeta
                                                 entry={entry}
                                                 locale={locale}
@@ -301,9 +333,8 @@ export function AdminQuestionsTable({
                     <tbody>
                         {entries.map((entry) => {
                             const isImage = entry.type === 'IMAGE_GUESS';
-                            const typeLabel = isImage
-                                ? labels.formQuestionTypeImageGuess
-                                : labels.formQuestionTypeText;
+                            const isAudio = entry.type === 'AUDIO_GUESS';
+                            const typeLabel = getListTypeLabel(entry, labels);
                             const isSelected = selectedIds.has(entry.id);
 
                             return (
@@ -339,7 +370,7 @@ export function AdminQuestionsTable({
                                                     className="mt-0.5 shrink-0 rounded-sm bg-surface-muted px-1.5 py-0.5 font-mono text-2xs font-medium tracking-wide text-muted"
                                                     title={typeLabel}
                                                 >
-                                                    TEXT
+                                                    {isAudio ? 'AUDIO' : 'TEXT'}
                                                 </span>
                                             )}
                                             <div className="min-w-0">
@@ -352,6 +383,13 @@ export function AdminQuestionsTable({
                                                         labels.listCorrectAnswer
                                                     }
                                                 />
+                                                {isAudio ? (
+                                                    <ListClipPlayer
+                                                        url={
+                                                            entry.promptImageUrl
+                                                        }
+                                                    />
+                                                ) : null}
                                                 <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
                                                     <DifficultyChip
                                                         difficulty={
@@ -361,7 +399,7 @@ export function AdminQuestionsTable({
                                                     <span>
                                                         {entry.category}
                                                     </span>
-                                                    {isImage ? (
+                                                    {isImage || isAudio ? (
                                                         <span>{typeLabel}</span>
                                                     ) : null}
                                                 </div>

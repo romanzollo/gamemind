@@ -83,7 +83,7 @@ const adminQuestionListFiltersSchema = z.object({
         .enum(['DRAFT', 'IN_REVIEW', 'PUBLISHED', 'all'])
         .default('all'),
     difficulty: z.enum(['EASY', 'MEDIUM', 'HARD', 'all']).default('all'),
-    type: z.enum(['TEXT', 'IMAGE_GUESS', 'all']).default('all'),
+    type: z.enum(['TEXT', 'IMAGE_GUESS', 'AUDIO_GUESS', 'all']).default('all'),
     tag: z
         .union([
             z.literal('all'),

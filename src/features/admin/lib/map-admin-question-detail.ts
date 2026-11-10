@@ -12,6 +12,7 @@ export function mapAdminQuestionDetail(
         id: row.id,
         type: row.type,
         promptImageUrl: row.promptImageUrl,
+        audioCredit: row.audioCredit,
         translations: row.translations,
         difficulty: row.difficulty,
         category: row.category,

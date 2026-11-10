@@ -27,6 +27,12 @@ import type {
 } from '@/entities/question/question.types';
 
 import {
+    buildAudioCreditMetadataPatch,
+    sameAudioCredit,
+    toAdminAudioCredit,
+    type AudioCreditMetadataRow,
+} from '@/entities/question/audio-credit-metadata';
+import {
     invalidateAdminListCaches,
     toPublicationStatus,
 } from '@/entities/question/question-admin-list.repository';
@@ -69,6 +75,33 @@ function buildValuesPlaceholder(
     }).join(', ');
 }
 
+/**
+ * Метаданные PROMPT-ассета при upsert по тому же id (`qa-{questionId}-prompt`).
+ *
+ * - Новая загрузка (есть mimeType) — берём всё новое, включая NULL размеры
+ *   клипа: иначе после замены картинки на клип остались бы её width/height.
+ * - URL не изменился (просто «Сохранить») — оставляем как было.
+ * - URL сменили вручную без загрузки — старые метаданные описывают другой
+ *   файл, обнуляем.
+ */
+const PROMPT_ASSET_META_ON_CONFLICT = [
+    'storageKey',
+    'mimeType',
+    'width',
+    'height',
+    'byteSize',
+]
+    .map(
+        (column) =>
+            `"${column}" = CASE
+                        WHEN EXCLUDED."mimeType" IS NOT NULL
+                            OR EXCLUDED."url" IS DISTINCT FROM "QuestionAsset"."url"
+                        THEN EXCLUDED."${column}"
+                        ELSE "QuestionAsset"."${column}"
+                    END,`,
+    )
+    .join('\n                    ');
+
 function adminQuestionMatchesUpdateInput(
     question: AdminQuestionForEdit,
     input: UpdateQuestionInput,
@@ -80,7 +113,9 @@ function adminQuestionMatchesUpdateInput(
         question.category !== input.category ||
         question.translations.ru.text !== input.translations.ru.text ||
         question.translations.en.text !== input.translations.en.text ||
-        question.options.length !== input.options.length
+        question.options.length !== input.options.length ||
+        (input.type === 'AUDIO_GUESS' &&
+            !sameAudioCredit(question.audioCredit, input.audioCredit))
     ) {
         return false;
     }
@@ -114,6 +149,7 @@ type AdminQuestionDetailRow = {
     text: string;
     type: QuestionType;
     promptImageUrl: string | null;
+    audioCredit: AudioCreditMetadataRow;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;
@@ -155,6 +191,12 @@ export async function findByIdForAdminWithDirectPg(
                         ORDER BY qa."order" ASC, qa."id" ASC
                         LIMIT 1
                     ) AS "promptImageUrl",
+                    json_build_object(
+                        'track', q."metadata"->>'track',
+                        'composer', q."metadata"->>'composer',
+                        'performer', q."metadata"->>'performer',
+                        'source', q."metadata"->>'source'
+                    ) AS "audioCredit",
                     q."difficulty"::text AS "difficulty",
                     q."category",
                     q."isActive",
@@ -218,6 +260,7 @@ export async function findByIdForAdminWithDirectPg(
         id: row.id,
         type: row.type,
         promptImageUrl: row.promptImageUrl,
+        audioCredit: toAdminAudioCredit(row.audioCredit),
         difficulty: row.difficulty,
         category: row.category,
         isActive: row.isActive,
@@ -263,6 +306,7 @@ async function applyAdminQuestionCreateWithPg(
     const promptImageUrl = input.promptImageUrl?.trim() ?? '';
     const assetId = `qa-${questionId}-prompt`;
     const promptAsset = input.promptAsset;
+    const audioCredit = buildAudioCreditMetadataPatch(input);
     const optionRows = input.options.map((option) => ({
         id: `${questionId}-opt-${option.order}`,
         text: option.translations.ru.text,
@@ -315,6 +359,7 @@ async function applyAdminQuestionCreateWithPg(
         promptAsset?.width ?? null,
         promptAsset?.height ?? null,
         promptAsset?.byteSize ?? null,
+        audioCredit.patch,
     ];
     const questionTranslationParams = questionTranslationRows.flatMap((row) => [
         row.id,
@@ -361,6 +406,7 @@ async function applyAdminQuestionCreateWithPg(
                     "type",
                     "difficulty",
                     "category",
+                    "metadata",
                     "isActive",
                     "publicationStatus",
                     "createdAt",
@@ -372,6 +418,7 @@ async function applyAdminQuestionCreateWithPg(
                     $3::"QuestionType",
                     $4::"Difficulty",
                     $5,
+                    $13::jsonb,
                     true,
                     'DRAFT'::"QuestionPublicationStatus",
                     NOW(),
@@ -382,6 +429,7 @@ async function applyAdminQuestionCreateWithPg(
                     "type" = EXCLUDED."type",
                     "difficulty" = EXCLUDED."difficulty",
                     "category" = EXCLUDED."category",
+                    "metadata" = COALESCE(EXCLUDED."metadata", "Question"."metadata"),
                     "isActive" = true,
                     "updatedAt" = NOW()
                 RETURNING "id"
@@ -412,15 +460,11 @@ async function applyAdminQuestionCreateWithPg(
                     0
                 FROM upsert_question uq
                 WHERE
-                    $3::"QuestionType" = 'IMAGE_GUESS'::"QuestionType"
+                    $3::"QuestionType" IN ('IMAGE_GUESS'::"QuestionType", 'AUDIO_GUESS'::"QuestionType")
                     AND NULLIF(BTRIM($6), '') IS NOT NULL
                 ON CONFLICT ("id") DO UPDATE SET
                     "url" = EXCLUDED."url",
-                    "storageKey" = COALESCE(EXCLUDED."storageKey", "QuestionAsset"."storageKey"),
-                    "mimeType" = COALESCE(EXCLUDED."mimeType", "QuestionAsset"."mimeType"),
-                    "width" = COALESCE(EXCLUDED."width", "QuestionAsset"."width"),
-                    "height" = COALESCE(EXCLUDED."height", "QuestionAsset"."height"),
-                    "byteSize" = COALESCE(EXCLUDED."byteSize", "QuestionAsset"."byteSize"),
+                    ${PROMPT_ASSET_META_ON_CONFLICT}
                     "role" = EXCLUDED."role"
                 RETURNING "id"
             ),
@@ -590,6 +634,7 @@ async function applyAdminQuestionUpdateWithPg(
     const promptImageUrl = input.promptImageUrl?.trim() ?? '';
     const assetId = `qa-${input.questionId}-prompt`;
     const promptAsset = input.promptAsset;
+    const audioCredit = buildAudioCreditMetadataPatch(input);
 
     const questionParams = [
         input.translations.ru.text,
@@ -604,6 +649,8 @@ async function applyAdminQuestionUpdateWithPg(
         promptAsset?.width ?? null,
         promptAsset?.height ?? null,
         promptAsset?.byteSize ?? null,
+        audioCredit.patch,
+        audioCredit.removedKeys,
     ];
     const questionTranslationParams = questionTranslationRows.flatMap((row) => [
         row.id,
@@ -661,6 +708,10 @@ async function applyAdminQuestionUpdateWithPg(
                     "type" = $2::"QuestionType",
                     "difficulty" = $3::"Difficulty",
                     "category" = $4,
+                    "metadata" = CASE
+                        WHEN $13::jsonb IS NULL THEN "metadata"
+                        ELSE (COALESCE("metadata", '{}'::jsonb) - $14::text[]) || $13::jsonb
+                    END,
                     "updatedAt" = NOW()
                 WHERE "id" = $5
                 RETURNING "id"
@@ -700,15 +751,11 @@ async function applyAdminQuestionUpdateWithPg(
                     0
                 FROM updated_question uq
                 WHERE
-                    $2::"QuestionType" = 'IMAGE_GUESS'::"QuestionType"
+                    $2::"QuestionType" IN ('IMAGE_GUESS'::"QuestionType", 'AUDIO_GUESS'::"QuestionType")
                     AND NULLIF(BTRIM($6), '') IS NOT NULL
                 ON CONFLICT ("id") DO UPDATE SET
                     "url" = EXCLUDED."url",
-                    "storageKey" = COALESCE(EXCLUDED."storageKey", "QuestionAsset"."storageKey"),
-                    "mimeType" = COALESCE(EXCLUDED."mimeType", "QuestionAsset"."mimeType"),
-                    "width" = COALESCE(EXCLUDED."width", "QuestionAsset"."width"),
-                    "height" = COALESCE(EXCLUDED."height", "QuestionAsset"."height"),
-                    "byteSize" = COALESCE(EXCLUDED."byteSize", "QuestionAsset"."byteSize"),
+                    ${PROMPT_ASSET_META_ON_CONFLICT}
                     "role" = EXCLUDED."role"
                 RETURNING "id"
             ),
@@ -878,4 +925,20 @@ export async function deleteAdminQuestionById(id: string) {
 
     invalidateAdminListCaches();
     return deleted;
+}
+
+/**
+ * Ссылается ли ещё какой-нибудь ассет на этот URL.
+ * Клипы AUDIO_GUESS названы по содержимому — один файл может быть у двух
+ * вопросов, поэтому заменённый клип удаляем, только когда он больше ничей.
+ */
+export async function isQuestionAssetUrlInUse(url: string): Promise<boolean> {
+    const result = await withDirectPgClient((client) =>
+        client.query<{ in_use: boolean }>(
+            `SELECT EXISTS (SELECT 1 FROM "QuestionAsset" WHERE "url" = $1) AS "in_use"`,
+            [url],
+        ),
+    );
+
+    return result.rows[0]?.in_use ?? true;
 }

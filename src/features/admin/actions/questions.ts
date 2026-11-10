@@ -21,8 +21,13 @@ import {
     hasPublishQualityBlockers,
 } from '@/features/admin/lib/question-publish-quality';
 import {
+    getPromptAudioFile,
+    resolveAdminPromptAudio,
+} from '@/features/admin/lib/resolve-prompt-audio';
+import {
     getPromptImageFile,
     resolveAdminPromptImage,
+    type ResolveAdminPromptImageResult,
 } from '@/features/admin/lib/resolve-prompt-image';
 import {
     createQuestionSchema,
@@ -36,7 +41,13 @@ import { requireAdmin } from '@/lib/auth/guards';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
 import { getUserRateLimitIdentity } from '@/lib/rate-limit-key';
-import { deleteReplacedMediaObject, quizMediaOwner } from '@/lib/storage';
+import {
+    deleteReplacedMediaObject,
+    getMediaStorage,
+    isQuizAudioPublicUrl,
+    quizMediaOwner,
+    storageKeyFromPublicUrl,
+} from '@/lib/storage';
 import { defaultLocale, isLocale, type Locale } from '@/shared/i18n';
 
 function getLocaleFromFormData(formData: FormData): Locale {
@@ -266,11 +277,102 @@ function parseQuestionTranslationsFromFormData(formData: FormData) {
     };
 }
 
-/** Тип вопроса из формы; file/URL резолвятся в resolveAdminPromptImage. */
-function parseQuestionTypeFromFormData(formData: FormData) {
+type AdminQuestionFormType = 'TEXT' | 'IMAGE_GUESS' | 'AUDIO_GUESS';
+
+/**
+ * Тип вопроса из формы; медиа резолвит resolveAdminPromptMedia.
+ * Неизвестное значение → TEXT (как раньше), но AUDIO_GUESS — свой тип:
+ * иначе сохранение аудиовопроса превращало бы его в текстовый и
+ * отвязывало клип.
+ */
+function parseQuestionTypeFromFormData(
+    formData: FormData,
+): AdminQuestionFormType {
     const typeRaw = getFormString(formData, 'questionType');
 
-    return typeRaw === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
+    if (typeRaw === 'IMAGE_GUESS' || typeRaw === 'AUDIO_GUESS') {
+        return typeRaw;
+    }
+
+    return 'TEXT';
+}
+
+/** Подпись трека AUDIO_GUESS из формы (только для этого типа). */
+function parseAudioCreditFromFormData(
+    formData: FormData,
+    type: AdminQuestionFormType,
+) {
+    if (type !== 'AUDIO_GUESS') {
+        return undefined;
+    }
+
+    return {
+        track: getFormString(formData, 'audioTrack'),
+        composer: getFormString(formData, 'audioComposer'),
+        performer: getFormString(formData, 'audioPerformer'),
+        source: getFormString(formData, 'audioSource'),
+    };
+}
+
+/** Есть ли в форме новый файл (картинка или клип) — для rate limit `upload`. */
+function hasPromptMediaFile(
+    formData: FormData,
+    type: AdminQuestionFormType,
+): boolean {
+    return type === 'AUDIO_GUESS'
+        ? getPromptAudioFile(formData) !== null
+        : getPromptImageFile(formData, type) !== null;
+}
+
+/** PROMPT-медиа по типу: клип AUDIO_GUESS или картинка IMAGE_GUESS. */
+async function resolveAdminPromptMedia(options: {
+    formData: FormData;
+    type: AdminQuestionFormType;
+    questionIdForKey: string;
+}): Promise<
+    | ResolveAdminPromptImageResult
+    | Awaited<ReturnType<typeof resolveAdminPromptAudio>>
+> {
+    if (options.type === 'AUDIO_GUESS') {
+        return resolveAdminPromptAudio(options.formData);
+    }
+
+    return resolveAdminPromptImage(options);
+}
+
+/**
+ * Best-effort удаление заменённого клипа — после успешного UPDATE.
+ * Клип назван по содержимому и может быть у другого вопроса: удаляем,
+ * только если на него больше не ссылается ни один ассет. Ошибку глотаем —
+ * сохранение уже прошло, лишний файл безопаснее битой ссылки.
+ */
+async function deleteReplacedQuizAudio(options: {
+    previousPublicUrl: string | null;
+    nextPublicUrl: string | null;
+}): Promise<void> {
+    const previousUrl = options.previousPublicUrl?.trim();
+
+    if (
+        !previousUrl ||
+        !isQuizAudioPublicUrl(previousUrl) ||
+        previousUrl === options.nextPublicUrl?.trim()
+    ) {
+        return;
+    }
+
+    const key = storageKeyFromPublicUrl(previousUrl);
+    if (!key) {
+        return;
+    }
+
+    try {
+        if (await questionRepository.isAssetUrlInUse(previousUrl)) {
+            return;
+        }
+        await getMediaStorage().delete({ key });
+    } catch (error) {
+        console.warn('[storage] delete replaced clip failed:', key, error);
+    }
 }
 
 function parseOptionTranslationsFromFormData(
@@ -367,7 +469,7 @@ function parseOptionsForUpdateFromFormData(formData: FormData) {
  */
 async function consumeAdminQuestionWriteRateLimit(
     userId: string,
-    hasImageFile: boolean,
+    hasMediaFile: boolean,
 ): Promise<boolean> {
     const identity = getUserRateLimitIdentity(userId);
 
@@ -376,7 +478,7 @@ async function consumeAdminQuestionWriteRateLimit(
     }
 
     return (
-        !hasImageFile ||
+        !hasMediaFile ||
         (await checkSharedPresetRateLimit('upload', identity)).ok
     );
 }
@@ -384,6 +486,7 @@ async function consumeAdminQuestionWriteRateLimit(
 /**
  * Создание вопроса.
  * Для IMAGE_GUESS: file → sharp → storage.put → URL в QuestionAsset (или URL-поле).
+ * Для AUDIO_GUESS: MP3 → sanitizeQuizMp3 → storage.put (имя по содержимому).
  * Упавший INSERT после upload оставляет orphan-объект в storage — безопасно
  * (битых ссылок нет), чистка сирот отдельно.
  */
@@ -398,7 +501,7 @@ export async function createQuestionAction(
     if (
         !(await consumeAdminQuestionWriteRateLimit(
             session.user.id,
-            getPromptImageFile(formData, type) !== null,
+            hasPromptMediaFile(formData, type),
         ))
     ) {
         return { errorCode: 'RATE_LIMITED' };
@@ -407,7 +510,7 @@ export async function createQuestionAction(
     // id заранее — совпадает со storage key до INSERT
     const questionId = randomUUID();
 
-    const resolved = await resolveAdminPromptImage({
+    const resolved = await resolveAdminPromptMedia({
         formData,
         type,
         questionIdForKey: questionId,
@@ -422,6 +525,7 @@ export async function createQuestionAction(
         type,
         promptImageUrl: resolved.value.promptImageUrl,
         promptAsset: resolved.value.promptAsset,
+        audioCredit: parseAudioCreditFromFormData(formData, type),
         translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
         category: formData.get('category') ?? 'video-games',
@@ -855,6 +959,7 @@ export async function returnQuestionToDraftAction(formData: FormData) {
  * удаляется best-effort ТОЛЬКО после успешного UPDATE. Прежний URL берём
  * из БД (результат UPDATE), не из формы: клиенту не доверяем цель delete,
  * и при смене IMAGE_GUESS → TEXT поле картинки в форме не отправляется.
+ * Заменённый клип AUDIO_GUESS удаляется, только если он больше ничей.
  */
 export async function updateQuestionAction(
     _prevState: AdminFormState,
@@ -867,7 +972,7 @@ export async function updateQuestionAction(
     if (
         !(await consumeAdminQuestionWriteRateLimit(
             session.user.id,
-            getPromptImageFile(formData, type) !== null,
+            hasPromptMediaFile(formData, type),
         ))
     ) {
         return { errorCode: 'RATE_LIMITED' };
@@ -879,7 +984,7 @@ export async function updateQuestionAction(
     }
     const questionId = questionIdRaw.trim();
 
-    const resolved = await resolveAdminPromptImage({
+    const resolved = await resolveAdminPromptMedia({
         formData,
         type,
         questionIdForKey: questionId,
@@ -894,6 +999,7 @@ export async function updateQuestionAction(
         type,
         promptImageUrl: resolved.value.promptImageUrl,
         promptAsset: resolved.value.promptAsset,
+        audioCredit: parseAudioCreditFromFormData(formData, type),
         translations: parseQuestionTranslationsFromFormData(formData),
         difficulty: formData.get('difficulty'),
         category: formData.get('category') ?? 'video-games',
@@ -925,13 +1031,17 @@ export async function updateQuestionAction(
         return { errorCode: 'NOT_FOUND' };
     }
 
+    const nextPromptUrl =
+        parsed.data.type === 'TEXT' ? null : (parsed.data.promptImageUrl ?? null);
+
     await deleteReplacedMediaObject({
         previousPublicUrl: updated.previousPromptImageUrl,
-        nextPublicUrl:
-            parsed.data.type === 'IMAGE_GUESS'
-                ? parsed.data.promptImageUrl
-                : null,
+        nextPublicUrl: nextPromptUrl,
         owner: quizMediaOwner(questionId),
+    });
+    await deleteReplacedQuizAudio({
+        previousPublicUrl: updated.previousPromptImageUrl,
+        nextPublicUrl: nextPromptUrl,
     });
 
     revalidatePath(`/${locale}/admin/questions`);

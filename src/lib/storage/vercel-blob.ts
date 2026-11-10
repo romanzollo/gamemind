@@ -30,6 +30,9 @@ function toSafePutBody(buffer: Buffer, contentType: string): Blob {
     return new Blob([ab], { type: contentType });
 }
 
+/** Год: объект с именем по содержимому не меняется (как в audio:upload). */
+const IMMUTABLE_CACHE_SECONDS = 365 * 24 * 60 * 60;
+
 export function createVercelBlobStorage(): MediaStorage {
     return {
         provider: 'vercel-blob',
@@ -46,6 +49,12 @@ export function createVercelBlobStorage(): MediaStorage {
                 contentType: input.contentType,
                 ...(token ? { token } : {}),
                 // uuid уже в ключе — не даём SDK дописывать суффикс
+                ...(input.immutable
+                    ? {
+                          allowOverwrite: true,
+                          cacheControlMaxAge: IMMUTABLE_CACHE_SECONDS,
+                      }
+                    : {}),
             });
 
             return {

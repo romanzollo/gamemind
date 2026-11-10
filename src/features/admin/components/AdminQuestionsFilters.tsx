@@ -262,6 +262,9 @@ export function AdminQuestionsFilters({
                         <option value="IMAGE_GUESS">
                             {labels.formQuestionTypeImageGuess}
                         </option>
+                        <option value="AUDIO_GUESS">
+                            {labels.formQuestionTypeAudioGuess}
+                        </option>
                     </select>
                 </label>
             </div>

@@ -40,6 +40,7 @@ import {
     createAdminQuestion,
     deleteAdminQuestionById,
     findByIdForAdminWithDirectPg,
+    isQuestionAssetUrlInUse,
     updateAdminQuestion,
 } from '@/entities/question/question-admin-write.repository';
 import type {
@@ -79,6 +80,11 @@ export const questionAdminMethods = {
     // обновление вопроса и вариантов по id (admin edit flow)
     updateWithOptions(input: UpdateQuestionInput) {
         return updateAdminQuestion(input);
+    },
+
+    /** Есть ли ещё ассет с этим URL (перед удалением заменённого клипа). */
+    isAssetUrlInUse(url: string): Promise<boolean> {
+        return isQuestionAssetUrlInUse(url);
     },
 
     // деактивация вопроса по id (admin deactivate flow)

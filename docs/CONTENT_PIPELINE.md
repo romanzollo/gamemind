@@ -440,6 +440,8 @@ Helper for TEXT → prod without swapping `.env`: `node scripts/import-text-draf
 
 ADR: `docs/DECISIONS.md` → Audio questions: AUDIO_GUESS. Clips never go to git (public repo, rights); prod files live in Vercel Blob and are served from `/media/audio/{hash}.mp3`.
 
+**One clip by hand:** the admin question form (type «Угадай по музыке») takes a ready MP3 (4–11 s, ≤ 300 KB) and checks, cleans and names it the same way as the pipeline. On prod it goes straight to Blob — no `PROD_BLOB_READ_WRITE_TOKEN` needed. The pipeline stays the way for batches (cutting, loudness, review page).
+
 **Batch** (`kind: AUDIO_GUESS_BATCH`) — same shape as an image batch, plus per question:
 
 ```json

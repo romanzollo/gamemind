@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
+import { isQuizAudioPublicUrl } from '@/lib/storage/quiz-audio-url';
+
 // схема для сложности вопроса
 const difficultySchema = z.enum(['EASY', 'MEDIUM', 'HARD']);
 
-const questionTypeSchema = z.enum(['TEXT', 'IMAGE_GUESS']);
+const questionTypeSchema = z.enum(['TEXT', 'IMAGE_GUESS', 'AUDIO_GUESS']);
 
 const promptImageUrlSchema = z
     .string()
@@ -91,16 +93,63 @@ function assertImageGuessHasPromptUrl(
     }
 }
 
+/**
+ * Клип AUDIO_GUESS — только наш `/media/audio/{hash}.mp3`
+ * (файл из админки или конвейера, см. resolve-prompt-audio.ts).
+ */
+function assertAudioGuessHasClip(
+    data: { type: z.infer<typeof questionTypeSchema>; promptImageUrl?: string },
+    ctx: z.RefinementCtx,
+) {
+    if (
+        data.type === 'AUDIO_GUESS' &&
+        !isQuizAudioPublicUrl(data.promptImageUrl ?? '')
+    ) {
+        ctx.addIssue({
+            code: 'custom',
+            path: ['promptImageUrl'],
+            message: 'Audio guess questions need an uploaded clip',
+        });
+    }
+}
+
 /** Метаданные после upload в storage (optional — URL-only путь их не заполняет). */
 const promptAssetSchema = z
+    .discriminatedUnion('mimeType', [
+        z.object({
+            storageKey: z.string().trim().min(1).max(512),
+            mimeType: z.literal('image/webp'),
+            width: z.number().int().positive().max(10000),
+            height: z.number().int().positive().max(10000),
+            byteSize: z.number().int().positive().max(10 * 1024 * 1024),
+        }),
+        z.object({
+            storageKey: z.string().trim().min(1).max(512),
+            mimeType: z.literal('audio/mpeg'),
+            width: z.null(),
+            height: z.null(),
+            byteSize: z.number().int().positive().max(1024 * 1024),
+        }),
+    ])
+    .optional();
+
+const audioCreditFieldSchema = z.string().trim().max(200);
+
+/**
+ * Подпись трека AUDIO_GUESS (`Question.metadata`: track / composer /
+ * performer / source). Пустая строка = поле не заполнено. Разбор показывает
+ * «трек — композитор — игра» (question-audio-credit.repository.ts).
+ */
+const audioCreditSchema = z
     .object({
-        storageKey: z.string().trim().min(1).max(512),
-        mimeType: z.literal('image/webp'),
-        width: z.number().int().positive().max(10000),
-        height: z.number().int().positive().max(10000),
-        byteSize: z.number().int().positive().max(10 * 1024 * 1024),
+        track: audioCreditFieldSchema,
+        composer: audioCreditFieldSchema,
+        performer: audioCreditFieldSchema,
+        source: audioCreditFieldSchema,
     })
     .optional();
+
+export type AdminAudioCredit = NonNullable<z.infer<typeof audioCreditSchema>>;
 
 // схема для создания вопроса
 export const createQuestionSchema = z
@@ -110,6 +159,7 @@ export const createQuestionSchema = z
         type: questionTypeSchema.default('TEXT'),
         promptImageUrl: promptImageUrlSchema.optional(),
         promptAsset: promptAssetSchema,
+        audioCredit: audioCreditSchema,
         translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z
@@ -126,6 +176,7 @@ export const createQuestionSchema = z
     .superRefine((data, ctx) => {
         assertExactlyOneCorrectOption(data.options, ctx);
         assertImageGuessHasPromptUrl(data, ctx);
+        assertAudioGuessHasClip(data, ctx);
     });
 
 export type CreateQuestionInput = z.infer<typeof createQuestionSchema>;
@@ -137,6 +188,7 @@ export const updateQuestionSchema = z
         type: questionTypeSchema.default('TEXT'),
         promptImageUrl: promptImageUrlSchema.optional(),
         promptAsset: promptAssetSchema,
+        audioCredit: audioCreditSchema,
         translations: questionTranslationsSchema,
         difficulty: difficultySchema,
         category: z
@@ -153,6 +205,7 @@ export const updateQuestionSchema = z
     .superRefine((data, ctx) => {
         assertExactlyOneCorrectOption(data.options, ctx);
         assertImageGuessHasPromptUrl(data, ctx);
+        assertAudioGuessHasClip(data, ctx);
     });
 
 export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;

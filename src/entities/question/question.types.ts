@@ -59,10 +59,23 @@ export type LocalizedAdminText = {
 };
 
 /** Один вопрос со всеми полями для страницы admin edit. */
+/**
+ * Подпись трека AUDIO_GUESS из `Question.metadata` (пустая строка — нет).
+ * Разбор показывает «трек — композитор — игра».
+ */
+export type AdminAudioCredit = {
+    track: string;
+    composer: string;
+    performer: string;
+    source: string;
+};
+
 export type AdminQuestionForEdit = {
     id: string;
     type: QuestionType;
+    /** URL PROMPT-ассета: картинка IMAGE_GUESS или клип AUDIO_GUESS. */
     promptImageUrl: string | null;
+    audioCredit: AdminAudioCredit;
     difficulty: Difficulty;
     category: string;
     isActive: boolean;

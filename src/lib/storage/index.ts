@@ -51,3 +51,15 @@ export {
     processQuizImageToWebp,
     type ProcessedImage,
 } from '@/lib/storage/image-process';
+
+export {
+    buildQuizAudioStorageKey,
+    isQuizAudioPublicUrl,
+} from '@/lib/storage/quiz-audio';
+
+export {
+    QUIZ_AUDIO_LIMITS,
+    sanitizeQuizMp3,
+    type Mp3Inspection,
+    type Mp3Problem,
+} from '@/lib/storage/mp3';

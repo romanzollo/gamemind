@@ -14,6 +14,7 @@ const QUALITY_MAP: Record<
     keyof Dictionary['admin']['publishQuality']
 > = {
     MISSING_PROMPT_IMAGE: 'missingPromptImage',
+    MISSING_PROMPT_AUDIO: 'missingPromptAudio',
     NOT_EXACTLY_ONE_CORRECT: 'notExactlyOneCorrect',
     TOO_FEW_OPTIONS: 'tooFewOptions',
     MISSING_QUESTION_TEXT: 'missingQuestionText',
@@ -22,6 +23,7 @@ const QUALITY_MAP: Record<
     IDENTICAL_QUESTION_LOCALES: 'identicalQuestionLocales',
     IDENTICAL_OPTION_LOCALES: 'identicalOptionLocales',
     INACTIVE_WILL_STAY_HIDDEN: 'inactiveWillStayHidden',
+    MISSING_TRACK_CREDIT: 'missingTrackCredit',
 };
 
 export function getPublishQualityMessage(

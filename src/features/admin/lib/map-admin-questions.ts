@@ -29,7 +29,9 @@ export function mapAdminQuestions(
 ): AdminQuestionListItem[] {
     return rows.map((row) => {
         const type: QuestionType =
-            row.type === 'IMAGE_GUESS' ? 'IMAGE_GUESS' : 'TEXT';
+            row.type === 'IMAGE_GUESS' || row.type === 'AUDIO_GUESS'
+                ? row.type
+                : 'TEXT';
 
         return {
             id: row.id,
@@ -38,9 +40,10 @@ export function mapAdminQuestions(
             promptImageUrl:
                 type === 'IMAGE_GUESS'
                     ? normalizeQuizImageUrl(row.promptImageUrl)
-                    : null,
-            correctAnswer:
-                type === 'IMAGE_GUESS' ? row.correctAnswer : null,
+                    : type === 'AUDIO_GUESS'
+                      ? (row.promptImageUrl?.trim() || null)
+                      : null,
+            correctAnswer: type === 'TEXT' ? null : row.correctAnswer,
             difficulty: row.difficulty,
             category: row.category,
             isActive: row.isActive,

@@ -194,3 +194,69 @@ describe('hasPublishQualityBlockers', () => {
         expect(hasPublishQualityBlockers(clean)).toBe(false);
     });
 });
+
+describe('AUDIO_GUESS', () => {
+    const CLIP = '/media/audio/0123456789abcdef.mp3';
+
+    it('blocks publishing without a clip', () => {
+        const issues = getQuestionPublishQualityIssues(
+            makeCleanQuestion({
+                type: 'AUDIO_GUESS',
+                promptImageUrl: null,
+                audioCredit: { track: 'Main Theme' },
+            }),
+        );
+
+        expect(issues).toContainEqual({
+            code: 'MISSING_PROMPT_AUDIO',
+            severity: 'blocker',
+        });
+        expect(hasPublishQualityBlockers(issues)).toBe(true);
+    });
+
+    it('a picture or a foreign path is not a clip', () => {
+        for (const url of [
+            '/quiz-images/easy/mario.webp',
+            'https://example.com/audio/0123456789abcdef.mp3',
+        ]) {
+            const issues = getQuestionPublishQualityIssues(
+                makeCleanQuestion({
+                    type: 'AUDIO_GUESS',
+                    promptImageUrl: url,
+                    audioCredit: { track: 'Main Theme' },
+                }),
+            );
+
+            expect(issues.map((issue) => issue.code)).toContain(
+                'MISSING_PROMPT_AUDIO',
+            );
+        }
+    });
+
+    it('a missing track title is a warning, not a blocker', () => {
+        const issues = getQuestionPublishQualityIssues(
+            makeCleanQuestion({
+                type: 'AUDIO_GUESS',
+                promptImageUrl: CLIP,
+                audioCredit: { track: '  ' },
+            }),
+        );
+
+        expect(issues).toEqual([
+            { code: 'MISSING_TRACK_CREDIT', severity: 'warning' },
+        ]);
+        expect(hasPublishQualityBlockers(issues)).toBe(false);
+    });
+
+    it('clip and track: nothing to report', () => {
+        expect(
+            getQuestionPublishQualityIssues(
+                makeCleanQuestion({
+                    type: 'AUDIO_GUESS',
+                    promptImageUrl: CLIP,
+                    audioCredit: { track: 'Main Theme' },
+                }),
+            ),
+        ).toEqual([]);
+    });
+});

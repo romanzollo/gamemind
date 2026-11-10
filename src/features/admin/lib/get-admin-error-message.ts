@@ -9,6 +9,7 @@ const ERROR_MAP: Record<AdminErrorCode, keyof Dictionary['admin']['errors']> = {
     SAVE_FAILED: 'saveFailed',
     UPLOAD_FAILED: 'uploadFailed',
     INVALID_IMAGE: 'invalidImage',
+    INVALID_AUDIO: 'invalidAudio',
     DELETE_FAILED: 'deleteFailed',
     DEACTIVATE_FAILED: 'deactivateFailed',
     ACTIVATE_FAILED: 'activateFailed',

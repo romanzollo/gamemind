@@ -1,3 +1,4 @@
+import type { AdminAudioCredit } from '@/entities/question/question.types';
 import type { AdminNoticeCode } from '@/features/admin/lib/parse-admin-notice';
 import type {
     Difficulty,
@@ -16,7 +17,7 @@ export type AdminQuestionListItem = {
     id: string;
     text: string;
     type: QuestionType;
-    /** URL prompt-изображения; только для IMAGE_GUESS (иначе null). */
+    /** URL PROMPT-ассета: картинка IMAGE_GUESS или клип AUDIO_GUESS (иначе null). */
     promptImageUrl: string | null;
     /** Верный ответ — только для IMAGE_GUESS (текст вопроса у них одинаковый). */
     correctAnswer: string | null;
@@ -40,7 +41,9 @@ export type AdminQuestionOptionDetail = {
 export type AdminQuestionDetail = {
     id: string;
     type: QuestionType;
+    /** URL PROMPT-ассета: картинка IMAGE_GUESS или клип AUDIO_GUESS. */
     promptImageUrl: string | null;
+    audioCredit: AdminAudioCredit;
     translations: LocalizedAdminText;
     difficulty: Difficulty;
     category: string;
@@ -57,6 +60,8 @@ export type AdminErrorCode =
     | 'SAVE_FAILED'
     | 'UPLOAD_FAILED'
     | 'INVALID_IMAGE'
+    /** MP3 не прошёл sanitizeQuizMp3: не MPEG, не 4–11 с или больше 300 КБ. */
+    | 'INVALID_AUDIO'
     | 'DELETE_FAILED'
     | 'DEACTIVATE_FAILED'
     | 'ACTIVATE_FAILED'
