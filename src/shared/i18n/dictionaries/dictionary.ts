@@ -650,6 +650,32 @@ export type Dictionary = {
         imageExpandLabel: string;
         /** Кнопка / backdrop закрытия лайтбокса. */
         imageCloseLabel: string;
+        /**
+         * Вопрос «угадай по музыке» (AUDIO_GUESS): плеер в игре и в разборе.
+         * ADR: DECISIONS → Audio questions: AUDIO_GUESS.
+         */
+        audio: {
+            /** Метка над текстом вопроса. */
+            badge: string;
+            /** aria-label кнопки воспроизведения. */
+            play: string;
+            /** aria-label кнопки паузы. */
+            pause: string;
+            /** Подсказка, если автозапуск не сработал. */
+            tapToPlay: string;
+            /** Повтор после конца клипа. */
+            replay: string;
+            loading: string;
+            loadFailed: string;
+            /** Кнопка повторной загрузки клипа. */
+            reload: string;
+            /** aria-label области плеера. */
+            regionLabel: string;
+            /** Разбор: подпись трека. {track}, {composer}. */
+            trackCredit: string;
+            /** Разбор: клипа нет (удалён или не грузится). */
+            unavailable: string;
+        };
         reviewTitle: string;
         yourAnswer: string;
         correctAnswer: string;

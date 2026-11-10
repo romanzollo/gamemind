@@ -12,6 +12,9 @@
  * - Блиц 00:00 → auto-submit partial (`finishedByTimer`), как раньше.
  * - Сдача шлёт только сессию: очки сервер считает по зафиксированным ответам.
  * - После F5 игра продолжается с первого неотвеченного (`lockedAnswers`).
+ * - AUDIO_GUESS: клипы партии скачиваются при открытии, клип играет сам при
+ *   показе вопроса (общий `<audio>`, разблокированный первым тапом).
+ *   ADR: DECISIONS → Audio questions: AUDIO_GUESS.
  *
  * Canon: docs/DECISIONS.md → Answer lock-in; QUIZ_NEON_HOT_PATH → E2.
  */
@@ -28,7 +31,12 @@ import {
 } from 'react';
 
 import { submitQuizAction } from '@/features/quiz/actions';
+import { QuestionAudio } from '@/features/quiz/components/QuestionAudio';
 import { QuestionImage } from '@/features/quiz/components/QuestionImage';
+import {
+    useQuizAudioClips,
+    useQuizAudioPlayer,
+} from '@/features/quiz/components/use-quiz-audio';
 import { usePreloadQuizImages } from '@/features/quiz/components/use-preload-quiz-images';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import type {
@@ -135,6 +143,12 @@ export function QuizSessionForm({
     const headingId = useId();
 
     usePreloadQuizImages(questions.map((question) => question.imageUrl));
+    const audioUrls = questions.map((item) =>
+        item.type === 'AUDIO_GUESS' ? item.audioUrl : null,
+    );
+    const hasAudio = audioUrls.some(Boolean);
+    const audioClips = useQuizAudioClips(audioUrls);
+    const audioPlayer = useQuizAudioPlayer(hasAudio);
 
     useEffect(() => {
         const timers = timersRef.current;
@@ -381,6 +395,14 @@ export function QuizSessionForm({
                 data-testid="quiz-question"
                 data-index={currentIndex}
             >
+                {question.type === 'AUDIO_GUESS' ? (
+                    <p
+                        className="mb-2 font-mono text-2xs font-medium uppercase tracking-[0.14em] text-muted"
+                        data-testid="quiz-audio-badge"
+                    >
+                        {dictionary.quiz.audio.badge}
+                    </p>
+                ) : null}
                 <h2
                     id={headingId}
                     ref={headingRef}
@@ -389,6 +411,27 @@ export function QuizSessionForm({
                 >
                     {question.text}
                 </h2>
+
+                {question.type === 'AUDIO_GUESS' && question.audioUrl ? (
+                    <div className="mt-4">
+                        <QuestionAudio
+                            key={question.id}
+                            clip={
+                                audioClips.clipFor(question.audioUrl) ?? {
+                                    status: 'loading',
+                                }
+                            }
+                            controller={audioPlayer}
+                            labels={dictionary.quiz.audio}
+                            autoPlay
+                            onReload={() => {
+                                if (question.audioUrl) {
+                                    audioClips.reload(question.audioUrl);
+                                }
+                            }}
+                        />
+                    </div>
+                ) : null}
 
                 {question.imageUrl ? (
                     <div className="mt-4">

@@ -2747,8 +2747,8 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 
 | Rule | Choice |
 |------|--------|
-| Length | Clip ≤ 10 s, usually 6–8 s; one fragment per track; 128 kbps — a quote, not a substitute for the soundtrack |
-| Attribution | «Track — composer — game» in the result review (a citation needs the author and the source, ГК РФ ст. 1274). Stored in `Question.metadata.audio` (`track`, `composer`, `source`, `sourceFile`) |
+| Length | Clip ≤ 10 s; **10 s by default** (owner, Nov 10), HARD may be 6–8 s (set per question); one fragment per track; 128 kbps — a quote, not a substitute for the soundtrack |
+| Attribution | «Track — composer — game» in the result review (a citation needs the author and the source, ГК РФ ст. 1274). Stored in `Question.metadata` (`track`, `composer`, optional `performer` for covers, `source`); `metadata.audio` keeps the cut (`sourceFile`, `startSeconds`, `durationSeconds`) |
 | Excluded | Licensed songs (GTA / NFS radio), film themes, vocals that name the game (Portal «Still Alive»), an announcer saying the title |
 | Takedown | Unpublish → no new game gets the clip at once; then delete the object (per the docs, Vercel Blob's CDN stops serving it within ~60 s). Old reviews show «clip removed» on 404. A «rights holders» contact comes later (the owner picks the address) |
 | Git | **Clips never go to git.** The repo is public: a DMCA claim would hit the whole repo, and git history cannot be cleaned. Sources live in `raw-quiz-audio/` (gitignored) |
@@ -2771,9 +2771,9 @@ The risk is not zero: the citation exception targets informational and education
 
 | Rule | Choice |
 |------|--------|
-| Codec | **MP3 CBR 128 kbps, 44.1 kHz, stereo**; 8 s ≈ 128 KB, cap 300 KB |
+| Codec | **MP3 CBR 128 kbps, 44.1 kHz, stereo**; 10 s ≈ 160 KB, cap 300 KB |
 | Loudness | −16 LUFS, true peak −1.5 dBTP; fade-in ~0.2 s, fade-out ~0.5 s |
-| Length | Validation accepts 4–11 s; the target is 6–8 s |
+| Length | Validation accepts 4–11 s; the default is 10 s |
 
 **Not chosen:**
 - Opus: iOS Safari support depends on the version and the container (WebM / CAF / Ogg) and has playback bugs. Saving 30–40 KB is not worth the risk on the main platform.
@@ -2801,12 +2801,12 @@ Platform note: on iOS an `<audio>` clip pauses the player's own music (Spotify /
 
 **Problem:** Blitz = 10 questions / 60 s (~6 s each), so an 8 s clip is 13 % of the game. Survival starts with a 20 s bank, and the clip would eat 40 % of it.
 
-**Decision — listening window:** while the player is on an audio question, the clock stands still **for up to 10 s** (`audioListenWindowSeconds = 10`). The unused part does not carry over. Repeats inside the window are free; after the window the clock runs.
+**Decision — listening window:** while the player is on an audio question, the clock stands still **for up to 12 s** (`audioListenWindowSeconds = 12`: a 10 s clip + 2 s to react; owner, Nov 10). The unused part does not carry over. Repeats inside the window are free; after the window the clock runs.
 
 **Server rule (no trust in the client):**
 
 ```txt
-credit(j) = min(10 s, answeredAt(j) − answeredAt(previous lock))   // audio question j only
+credit(j) = min(12 s, answeredAt(j) − answeredAt(previous lock))   // audio question j only
 previous lock = the lock before j in answeredAt order; none → the session clock start
 ```
 
@@ -2815,12 +2815,12 @@ Both times are the server `answeredAt` that Answer lock-in already writes (reque
 | Mode | How |
 |------|-----|
 | Survival | `replaySurvivalWave` adds `credit(j)` to the budget **before** the bank check of answer j, so the bank cannot end inside the window. The client bank uses the same pure function. Wave end, T0' and the bank-out rules are unchanged |
-| Blitz | `timedEndsAt` = JS Date after connect + 60 s + 10 s × the audio questions in the snapshot. Only the number changes; canon E is kept. This is a **hard cap**, and the lock check is unchanged. Submit replays the locks (the snapshot is already loaded on submit): answer j counts if `answeredAt(j) ≤ start + 60 s + Σ credits up to j + grace 3 s`. The client countdown uses the same formula |
+| Blitz | `timedEndsAt` = JS Date after connect + 60 s + 12 s × the audio questions in the snapshot. Only the number changes; canon E is kept. This is a **hard cap**, and the lock check is unchanged. Submit replays the locks (the snapshot is already loaded on submit): answer j counts if `answeredAt(j) ≤ start + 60 s + Σ credits up to j + grace 3 s`. The client countdown uses the same formula |
 | Blitz record | New scalar `QuizResult.clockCreditMs`, written in the complete hop (scalars only). Best-Blitz time = `completedAt − startedAt − clockCreditMs` |
 | Classic | No clock, so no window. Unlimited repeats |
 | Daily | **No audio in the first release:** everyone gets the same set, and music cannot be switched off there. The Daily pick excludes `AUDIO_GUESS`. **Later (owner liked it, Nov 9): a «music day»** — one fixed weekday whose Daily includes audio, announced on the Daily card in advance, so the player chooses when to play (the Daily resumes within the day). Separate step after 5.3, decided on load-failure and «music off» stats |
 
-**Cost:** a forged client gets the same ≤ 10 s per audio question as an honest listener, but may reorder locks and spend that time on a text question. The gain is bounded and of the same class as Survival late locks. A Blitz lock may reveal the right option for an answer that will not count; Survival already accepts that too.
+**Cost:** a forged client gets the same ≤ 12 s per audio question as an honest listener, but may reorder locks and spend that time on a text question. The gain is bounded and of the same class as Survival late locks. A Blitz lock may reveal the right option for an answer that will not count; Survival already accepts that too.
 
 **Not chosen:**
 - A pause «while the clip plays», reported by the client: a forged client would listen forever.

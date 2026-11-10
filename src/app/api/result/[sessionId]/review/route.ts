@@ -7,6 +7,7 @@
 
 import { NextResponse } from 'next/server';
 
+import { findAudioCreditsByQuestionIds } from '@/entities/question/question-audio-credit.repository';
 import { quizResultRepository } from '@/entities/quiz-result/quiz-result.repository';
 import { buildSessionReviewPayloadFromSnapshot } from '@/features/quiz/lib/build-session-review-payload';
 import { mapCompactReviewPayloadToItems } from '@/features/quiz/lib/map-compact-review-payload';
@@ -16,6 +17,33 @@ import { DirectPgTimeoutError } from '@/lib/db/direct-pg';
 import { auth } from '@/lib/auth';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { isLocale } from '@/shared/i18n';
+
+/**
+ * Подпись трека к аудиовопросам (ADR AUDIO_GUESS, Rights). Отдельный
+ * короткий pooled SELECT только если в партии есть клипы; сбой — разбор
+ * без подписи, а не 500.
+ */
+async function withAudioCredits(
+    items: QuizResultReviewItem[],
+): Promise<QuizResultReviewItem[]> {
+    const audioIds = items
+        .filter((item) => item.type === 'AUDIO_GUESS')
+        .map((item) => item.questionId);
+    if (audioIds.length === 0) {
+        return items;
+    }
+    try {
+        const credits = await findAudioCreditsByQuestionIds(audioIds);
+        return items.map((item) =>
+            item.type === 'AUDIO_GUESS'
+                ? { ...item, audioCredit: credits.get(item.questionId) ?? null }
+                : item,
+        );
+    } catch (error) {
+        console.error('Quiz result audio credits failed:', error);
+        return items;
+    }
+}
 
 type ReviewRouteContext = {
     params: Promise<{ sessionId: string }>;
@@ -69,7 +97,7 @@ export async function GET(
             );
         }
 
-        return NextResponse.json({ items });
+        return NextResponse.json({ items: await withAudioCredits(items) });
     } catch (error) {
         if (error instanceof DirectPgTimeoutError) {
             console.error('Quiz result review API timed out:', error.message);

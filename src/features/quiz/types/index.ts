@@ -82,6 +82,8 @@ export type QuizResultReviewItem = {
     type?: QuestionType;
     imageUrl?: string | null;
     audioUrl?: string | null;
+    /** AUDIO_GUESS: «трек · композитор» для разбора (подпись источника). */
+    audioCredit?: { track: string; composer: string } | null;
     isCorrect: boolean;
     selectedOption: {
         id: string;

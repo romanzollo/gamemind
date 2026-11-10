@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from 'react';
 
+import { QuestionAudio } from '@/features/quiz/components/QuestionAudio';
 import { QuestionImage } from '@/features/quiz/components/QuestionImage';
+import {
+    useQuizAudioClips,
+    useQuizAudioPlayer,
+} from '@/features/quiz/components/use-quiz-audio';
 import type {
     QuizResultReviewFilter,
     QuizResultReviewItem,
@@ -59,6 +64,13 @@ export function QuizResultReview({
     defaultFilter = 'wrong',
 }: QuizResultReviewProps) {
     const [filter, setFilter] = useState<QuizResultReviewFilter>(defaultFilter);
+
+    // AUDIO_GUESS в разборе: клипы скачиваются заранее, играют только по тапу.
+    const audioUrls = items.map((item) =>
+        item.type === 'AUDIO_GUESS' ? item.audioUrl : null,
+    );
+    const audioClips = useQuizAudioClips(audioUrls);
+    const audioPlayer = useQuizAudioPlayer(audioUrls.some(Boolean));
 
     const visibleItems = useMemo(
         () => items.filter((item) => matchesFilter(item, filter)),
@@ -156,6 +168,35 @@ export function QuizResultReview({
                                             : labels.statusWrong}
                                     </span>
                                 </div>
+
+                                {item.type === 'AUDIO_GUESS' && item.audioUrl ? (
+                                    <div className="mt-3 w-full">
+                                        <QuestionAudio
+                                            clip={
+                                                audioClips.clipFor(
+                                                    item.audioUrl,
+                                                ) ?? { status: 'loading' }
+                                            }
+                                            controller={audioPlayer}
+                                            labels={labels.audio}
+                                            variant="review"
+                                        />
+                                        {item.audioCredit ? (
+                                            <p className="mt-1.5 text-xs text-muted">
+                                                {labels.audio.trackCredit
+                                                    .replace(
+                                                        '{track}',
+                                                        item.audioCredit.track,
+                                                    )
+                                                    .replace(
+                                                        '{composer}',
+                                                        item.audioCredit
+                                                            .composer,
+                                                    )}
+                                            </p>
+                                        ) : null}
+                                    </div>
+                                ) : null}
 
                                 {item.imageUrl ? (
                                     <div className="mt-3 w-full">

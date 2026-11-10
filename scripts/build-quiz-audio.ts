@@ -168,7 +168,7 @@ function validateQuestion(question: AudioBatchQuestion): string[] {
     }
     if (!(audio.startSeconds >= 0)) errors.push('audio.startSeconds must be ≥ 0');
     if (!(audio.durationSeconds >= 5 && audio.durationSeconds <= 10)) {
-        errors.push('audio.durationSeconds must be 5–10 (ADR: 6–8 target)');
+        errors.push('audio.durationSeconds must be 5–10 (ADR: 10 by default, HARD may be 6–8)');
     }
     if (question.options?.filter((option) => option.isCorrect).length !== 1) {
         errors.push('exactly one correct option');
@@ -180,7 +180,12 @@ function validateQuestion(question: AudioBatchQuestion): string[] {
 function encodeClip(question: AudioBatchQuestion, workDir: string): Buffer {
     const { audio } = question;
     const sourcePath = resolve(ROOT, audio.sourceFile);
-    const cut = ['-ss', String(audio.startSeconds), '-t', String(audio.durationSeconds), '-i', sourcePath];
+    // `-map 0:a:0` + `-vn`: у MP3 часто есть обложка (поток-картинка) — в клип
+    // идёт только первая аудиодорожка, иначе ffmpeg пытается писать картинку.
+    const cut = [
+        '-ss', String(audio.startSeconds), '-t', String(audio.durationSeconds), '-i', sourcePath,
+        '-map', '0:a:0', '-vn',
+    ];
     const target = `I=${LOUDNESS.integrated}:TP=${LOUDNESS.truePeak}:LRA=${LOUDNESS.range}`;
 
     const firstPass = runTool('ffmpeg', [

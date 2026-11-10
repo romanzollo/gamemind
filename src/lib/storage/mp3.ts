@@ -13,7 +13,7 @@
  * ADR: docs/DECISIONS.md → Audio questions: AUDIO_GUESS.
  */
 
-/** Границы клипа из ADR. Цель — 6–8 с, ~128 КБ. */
+/** Границы клипа из ADR. По умолчанию 10 с ≈ 160 КБ. */
 export const QUIZ_AUDIO_LIMITS = {
     minDurationMs: 4_000,
     maxDurationMs: 11_000,
