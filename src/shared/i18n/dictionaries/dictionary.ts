@@ -689,6 +689,7 @@ export type Dictionary = {
             regionLabel: string;
             /** Разбор: подпись трека. {track}, {composer}. */
             trackCredit: string;
+            trackCreditWithPerformer: string;
             /** Разбор: клипа нет (удалён или не грузится). */
             unavailable: string;
             /** Таймер Блица / банк Выживания стоят, пока звучит клип. */

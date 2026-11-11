@@ -76,6 +76,13 @@ export type QuizFormState = {
     errorCode?: QuizErrorCode;
 };
 
+/** Подпись трека AUDIO_GUESS в разборе (ADR AUDIO_GUESS → Rights). */
+export type QuizAudioCredit = {
+    track: string;
+    composer: string;
+    performer?: string;
+};
+
 // тип для одной строки в списке результатов обзора
 export type QuizResultReviewItem = {
     questionId: string;
@@ -84,8 +91,8 @@ export type QuizResultReviewItem = {
     type?: QuestionType;
     imageUrl?: string | null;
     audioUrl?: string | null;
-    /** AUDIO_GUESS: «трек · композитор» для разбора (подпись источника). */
-    audioCredit?: { track: string; composer: string } | null;
+    /** AUDIO_GUESS: «трек · композитор · исполнитель» для разбора (подпись источника). */
+    audioCredit?: QuizAudioCredit | null;
     isCorrect: boolean;
     selectedOption: {
         id: string;

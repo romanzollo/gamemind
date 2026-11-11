@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import { QuestionAudio } from '@/features/quiz/components/QuestionAudio';
+import { formatTrackCredit } from '@/features/quiz/lib/format-track-credit';
 import { QuestionImage } from '@/features/quiz/components/QuestionImage';
 import {
     useQuizAudioClips,
@@ -183,16 +184,10 @@ export function QuizResultReview({
                                         />
                                         {item.audioCredit ? (
                                             <p className="mt-1.5 text-xs text-muted">
-                                                {labels.audio.trackCredit
-                                                    .replace(
-                                                        '{track}',
-                                                        item.audioCredit.track,
-                                                    )
-                                                    .replace(
-                                                        '{composer}',
-                                                        item.audioCredit
-                                                            .composer,
-                                                    )}
+                                                {formatTrackCredit(
+                                                    item.audioCredit,
+                                                    labels.audio,
+                                                )}
                                             </p>
                                         ) : null}
                                     </div>

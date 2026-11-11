@@ -579,6 +579,8 @@ export const enDictionary = {
             reload: 'Reload',
             regionLabel: 'Music clip',
             trackCredit: 'Track: {track} · {composer}',
+            trackCreditWithPerformer:
+                'Track: {track} · {composer} · performed by {performer}',
             unavailable: 'Clip unavailable',
             clockPaused: 'Paused for music',
             soundHint: "There's music in this game — check your sound",

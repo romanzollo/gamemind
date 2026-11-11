@@ -2749,7 +2749,8 @@ Not chosen for VK ID: the official VK ID JS SDK (a third-party script on the pag
 |------|--------|
 | Length | Clip ≤ 10 s; **10 s by default** (owner, Nov 10), HARD may be 6–8 s (set per question); one fragment per track; 128 kbps — a quote, not a substitute for the soundtrack |
 | Attribution | «Track — composer — game» in the result review (a citation needs the author and the source, ГК РФ ст. 1274). Stored in `Question.metadata` (`track`, `composer`, optional `performer` for covers, `source`); `metadata.audio` keeps the cut (`sourceFile`, `startSeconds`, `durationSeconds`) |
-| Excluded | Licensed songs (GTA / NFS radio), film themes, vocals that name the game (Portal «Still Alive»), an announcer saying the title |
+| Excluded | Film themes, vocals that sing the game's title, an announcer saying the title (the clip would give the answer away) |
+| Licensed songs | **Allowed** (owner, Nov 11): songs a game licensed (GTA / NFS radio, Fallout radio) are part of how players remember it. Same rules as the soundtrack: ≤ 10 s, one fragment, the credit names the song's author and performer. They carry the highest rights risk, so a takedown request for one is honoured first and without argument. Lyrics that hint at the game without naming it (Portal «Still Alive»: «Aperture Science») are allowed and rated no easier than MEDIUM |
 | Takedown | Unpublish → no new game gets the clip at once; then delete the object (per the docs, Vercel Blob's CDN stops serving it within ~60 s). Old reviews show «clip removed» on 404. A «rights holders» contact comes later (the owner picks the address) |
 | Git | **Clips never go to git.** The repo is public: a DMCA claim would hit the whole repo, and git history cannot be cleaned. Sources live in `raw-quiz-audio/` (gitignored) |
 

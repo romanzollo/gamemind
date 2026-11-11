@@ -595,6 +595,8 @@ export const ruDictionary: Dictionary = {
             reload: 'Загрузить снова',
             regionLabel: 'Музыкальный фрагмент',
             trackCredit: 'Трек: {track} · {composer}',
+            trackCreditWithPerformer:
+                'Трек: {track} · {composer} · исп. {performer}',
             unavailable: 'Клип недоступен',
             clockPaused: 'Пауза на музыку',
             soundHint: 'В игре есть музыка — проверь звук',
