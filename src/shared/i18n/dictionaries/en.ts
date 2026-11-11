@@ -866,4 +866,17 @@ export const enDictionary = {
         streakLine: 'Streak: {days}',
         invite: 'Can you beat it?',
     },
+    rights: {
+        footerCopyright: '© {year} GameMind',
+        footerLink: 'For rights holders',
+        eyebrow: 'For rights holders',
+        title: 'Music and screenshots in questions',
+        intro: 'Some questions use short excerpts: up to 10 seconds of music and screenshots from games. Every clip is credited with the track, its author and performer.',
+        request:
+            'If you own the rights and don’t want your work on GameMind, email us. We’ll take it down within 3 business days, no questions asked.',
+        hint: 'Tell us what to remove (the game, the track or a link to the question) and how to reach you.',
+        copyLabel: 'Copy address',
+        copied: 'Address copied',
+        pageTitle: 'For rights holders — GameMind',
+    },
 } satisfies Dictionary;

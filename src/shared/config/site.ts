@@ -5,3 +5,9 @@
  * Внутренние ссылки остаются относительными.
  */
 export const SITE_ORIGIN = 'https://www.game-mind.ru';
+
+/**
+ * Почта для правообладателей: подвал → /rights. Запросы на снятие трека
+ * или кадра — порядок в docs/DECISIONS.md → AUDIO_GUESS → Rights and takedown.
+ */
+export const RIGHTS_EMAIL = 'gamemind.rights@yandex.ru';

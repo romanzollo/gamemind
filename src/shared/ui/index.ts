@@ -11,6 +11,7 @@ export { LanguageSwitcher } from './language-switcher';
 export { PendingLink } from './pending-link';
 export { PendingSpinner } from './pending-spinner';
 export { FormPageSkeleton, Skeleton } from './skeleton';
+export { SiteFooter } from './site-footer';
 export { SiteHeader } from './site-header';
 export { SiteTabBar } from './site-tab-bar';
 export { StatusPage } from './status-page';

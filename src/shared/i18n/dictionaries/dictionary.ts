@@ -936,4 +936,18 @@ export type Dictionary = {
         streakLine: string;
         invite: string;
     };
+    /** Подвал и страница /rights (ADR AUDIO_GUESS → Rights and takedown). */
+    rights: {
+        /** `{year}` — текущий год. */
+        footerCopyright: string;
+        footerLink: string;
+        eyebrow: string;
+        title: string;
+        intro: string;
+        request: string;
+        hint: string;
+        copyLabel: string;
+        copied: string;
+        pageTitle: string;
+    };
 };

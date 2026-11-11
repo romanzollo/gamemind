@@ -6,7 +6,7 @@ import { AppSiteHeader } from '@/features/auth/components/AppSiteHeader';
 import { auth } from '@/lib/auth';
 import { SITE_ORIGIN } from '@/shared/config/site';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
-import { SiteTabBar } from '@/shared/ui';
+import { SiteFooter, SiteTabBar } from '@/shared/ui';
 import { AppToaster } from '@/shared/ui/app-toaster';
 import { getAvatarPattern } from '@/shared/ui/avatar-pattern';
 import { getSiteTabs } from '@/shared/ui/site-nav';
@@ -116,6 +116,7 @@ export default async function LocaleLayout({
                 <div id="main-content" tabIndex={-1}>
                     {children}
                 </div>
+                <SiteFooter locale={locale} labels={dictionary.rights} />
                 <SiteTabBar
                     locale={locale}
                     tabs={getSiteTabs(dictionary.nav, navUser !== null)}
