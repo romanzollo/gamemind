@@ -1,10 +1,11 @@
 'use client';
 
-import { startTransition, useActionState, useEffect } from 'react';
+import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { changeAvatarAction } from '@/features/profile/actions/change-avatar';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
+import { prepareAvatarUpload } from '@/features/profile/lib/prepare-avatar-upload';
 import type { Dictionary, Locale } from '@/shared/i18n';
 import { Button, InlineAlert, PendingSpinner, SubmitButton, UserAvatar, toastSuccess } from '@/shared/ui';
 import { refreshPreservingScroll } from '@/shared/ui/refresh-preserving-scroll';
@@ -34,7 +35,36 @@ export function ChangeAvatarForm({
         changeAvatarAction,
         {},
     );
-    const errorMessage = getProfileErrorMessage(dictionary, state.errorCode);
+    // Ошибка подготовки фото в браузере (до сервера); сбрасывается при отправке.
+    const [prepareFailed, setPrepareFailed] = useState(false);
+    const [preparing, setPreparing] = useState(false);
+    const errorMessage = getProfileErrorMessage(
+        dictionary,
+        prepareFailed ? 'INVALID_IMAGE' : state.errorCode,
+    );
+    const busy = isPending || preparing;
+
+    /**
+     * Большое фото уменьшаем до отправки (prepare-avatar-upload): иначе
+     * запрос больше лимита Server Action и падает без сообщения игроку.
+     */
+    async function submitAvatar(formData: FormData) {
+        setPrepareFailed(false);
+        const file = formData.get('avatarFile');
+        if (file instanceof File && file.size > 0) {
+            setPreparing(true);
+            const prepared = await prepareAvatarUpload(file);
+            setPreparing(false);
+            if (!prepared.ok) {
+                setPrepareFailed(true);
+                return;
+            }
+            formData.set('avatarFile', prepared.file);
+        }
+        startTransition(() => {
+            formAction(formData);
+        });
+    }
 
     // Как у username: refresh после cookie update.
     // Важно: imageUrl может быть '' (сброс) — проверяем !== undefined, не truthy.
@@ -65,7 +95,7 @@ export function ChangeAvatarForm({
 
             <form
                 key={currentImageUrl ?? ''}
-                action={formAction}
+                action={submitAvatar}
                 className="space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
             >
                 <input type="hidden" name="locale" value={locale} />
@@ -106,7 +136,7 @@ export function ChangeAvatarForm({
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <SubmitButton
                         pendingLabel={dictionary.common.submitting}
-                        disabled={isPending}
+                        disabled={busy}
                         className="w-full sm:w-auto"
                     >
                         {dictionary.profile.changeAvatarSubmit}
@@ -116,8 +146,8 @@ export function ChangeAvatarForm({
                         <Button
                             type="button"
                             variant="secondary"
-                            disabled={isPending}
-                            aria-busy={isPending}
+                            disabled={busy}
+                            aria-busy={busy}
                             className="inline-flex w-full items-center justify-center gap-1.5 sm:w-auto"
                             onClick={() => {
                                 const fd = new FormData();
@@ -128,7 +158,7 @@ export function ChangeAvatarForm({
                                 });
                             }}
                         >
-                            {isPending ? (
+                            {busy ? (
                                 <>
                                     <PendingSpinner />
                                     <span>{dictionary.common.working}</span>

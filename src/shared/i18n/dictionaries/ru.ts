@@ -256,7 +256,7 @@ export const ruDictionary: Dictionary = {
         changeAvatarTitle: 'Аватар',
         avatarFile: 'Загрузить файл',
         avatarFileHint:
-            'JPEG, PNG или WebP, до 2 МБ. Картинку обрежем до квадрата по центру.',
+            'JPEG, PNG или WebP. Большое фото уменьшим сами и обрежем до квадрата по центру.',
         avatarUrl: 'Или ссылка на картинку',
         avatarUrlHint:
             'Ссылка вида https://… Если выбран и файл, сохранится файл.',

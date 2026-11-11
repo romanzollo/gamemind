@@ -253,7 +253,7 @@ export const enDictionary = {
         changeAvatarTitle: 'Avatar',
         avatarFile: 'Upload file',
         avatarFileHint:
-            'JPEG, PNG or WebP, up to 2 MB. We’ll crop it to a centered square.',
+            'JPEG, PNG or WebP. We’ll shrink large photos and crop them to a centered square.',
         avatarUrl: 'Or an image link',
         avatarUrlHint:
             'A link starting with https://. If you also pick a file, the file wins.',
