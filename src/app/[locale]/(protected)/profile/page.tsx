@@ -171,8 +171,16 @@ export default async function ProfilePage({
 
                     {/* min-w: на узком экране кнопки уходят строкой ниже, а не сжимают ник до «a…» */}
                     <div className="min-w-[9rem] flex-1">
-                        <p className="truncate font-display text-lg font-semibold tracking-tight text-foreground sm:text-xl">
-                            {session.user.username}
+                        <p className="flex min-w-0 items-center gap-2">
+                            <span className="truncate font-display text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+                                {session.user.username}
+                            </span>
+                            {/* Роль видна только админу; игроку слово USER ничего не говорит. */}
+                            {session.user.role === 'ADMIN' ? (
+                                <span className="shrink-0 rounded-sm bg-primary/10 px-2 py-0.5 text-2xs font-semibold tracking-wide text-primary">
+                                    {dictionary.nav.admin}
+                                </span>
+                            ) : null}
                         </p>
                         {/* Почты нет у гостя и у входа через VK ID без email */}
                         {session.user.email ? (
@@ -180,9 +188,6 @@ export default async function ProfilePage({
                                 {session.user.email}
                             </p>
                         ) : null}
-                        <p className="mt-0.5 font-mono text-xs tabular-nums text-muted">
-                            {session.user.role}
-                        </p>
                     </div>
 
                     <div className="flex shrink-0 items-center gap-2">
@@ -199,7 +204,8 @@ export default async function ProfilePage({
                             </PendingLink>
                         ) : null}
 
-                        <form action={logoutAction}>
+                        {/* С lg «Выйти» есть в шапке — второй кнопки не нужно. */}
+                        <form action={logoutAction} className="lg:hidden">
                             <input
                                 type="hidden"
                                 name="locale"
@@ -291,6 +297,13 @@ export default async function ProfilePage({
                                         medium: dictionary.quiz.medium,
                                         hard: dictionary.quiz.hard,
                                         mixed: dictionary.quiz.mixed,
+                                    }}
+                                    modeLabels={{
+                                        classic: dictionary.quiz.classicTitle,
+                                        blitz: dictionary.timedMode.title,
+                                        survival: dictionary.survivalMode.title,
+                                        daily: dictionary.dailyChallenge.title,
+                                        challenge: dictionary.friendChallenge.versusEyebrow,
                                     }}
                                 />
                             </div>

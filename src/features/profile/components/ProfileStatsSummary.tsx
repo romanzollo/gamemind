@@ -67,8 +67,10 @@ export function ProfileStatsSummary({
             ? '—'
             : `${stats.averageAccuracyPercent}%`;
 
+    // Рекорд — только Классика на всём банке: очки режимов несравнимы
+    // (Выживание и Блиц считают по-своему), как доски рейтинга.
     const bestScoreText =
-        stats.bestScore === null ? '—' : String(stats.bestScore);
+        stats.bestClassicScore === null ? '—' : String(stats.bestClassicScore);
 
     const rows = [
         {

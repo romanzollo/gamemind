@@ -4,6 +4,9 @@
  * Узкий экран (&lt;640px): scoreboard-stack + превью N строк + disclosure
  * (Показать все / Свернуть секцию — как ачивки).
  * Шире — таблица целиком.
+ * У каждой игры — чип режима (Классика, Блиц, Выживание, Челлендж дня,
+ * Вызов) и подпись «сложность · тема / волна». «Верно» зелёным — только у
+ * идеальной партии: зелёный в дизайн-системе значит «верно».
  * Presentation only — без изменений scoring / snapshot.
  */
 'use client';
@@ -11,16 +14,15 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import type { QuizSetupDifficulty } from '@/features/quiz/types';
-import {
-    getSessionDifficultyChipToneClass,
-    getSessionDifficultyLabel,
-} from '@/features/quiz/lib/session-difficulty-label';
+import { getSessionDifficultyLabel } from '@/features/quiz/lib/session-difficulty-label';
 import { ProfileListDisclosureControl } from '@/features/profile/components/ProfileListDisclosureControl';
 import type { Dictionary } from '@/shared/i18n';
 import { EmptyState } from '@/shared/ui';
 
-import type { ProfileResultHistoryEntry } from '../types/result-history-entry';
+import type {
+    ProfileGameMode,
+    ProfileResultHistoryEntry,
+} from '../types/result-history-entry';
 
 /** Сколько строк истории видно на mobile до «Показать все». */
 const MOBILE_PREVIEW_COUNT = 5;
@@ -33,38 +35,53 @@ type ProfileResultHistoryProps = {
         Dictionary['quiz'],
         'easy' | 'medium' | 'hard' | 'mixed'
     >;
+    /** Названия режимов — из словарей режимов (одно слово на весь сайт). */
+    modeLabels: Record<ProfileGameMode, string>;
 };
 
 function asDate(value: Date | string): Date {
     return value instanceof Date ? value : new Date(value);
 }
 
-function difficultyLabel(
-    difficulty: QuizSetupDifficulty,
-    labels: ProfileResultHistoryProps['difficultyLabels'],
+/** «Легко · 2010-е» / «Легко · волна 2» — рядом с чипом режима. */
+function detailLine(
+    entry: ProfileResultHistoryEntry,
+    locale: string,
+    labels: ProfileResultHistoryProps['labels'],
+    difficultyLabels: ProfileResultHistoryProps['difficultyLabels'],
 ): string {
-    return getSessionDifficultyLabel(difficulty, labels);
+    const parts = [getSessionDifficultyLabel(entry.difficulty, difficultyLabels)];
+
+    if (entry.topic) {
+        parts.push(locale === 'en' ? entry.topic.nameEn : entry.topic.nameRu);
+    }
+    if (entry.mode === 'survival' && entry.waveIndex != null) {
+        parts.push(labels.historyWave.replace('{n}', String(entry.waveIndex)));
+    }
+
+    return parts.join(' · ');
 }
 
-/**
- * Плашка сложности: `bg-surface-muted` + тон по уровню.
- * EASY = foreground (не success): зелёный в блоке только у «Верно».
- * MIXED = info — не маскировать смесь под Medium.
- */
-function DifficultyChip({
-    difficulty,
-    label,
-}: {
-    difficulty: QuizSetupDifficulty;
-    label: string;
-}) {
+/** Чип режима: нейтральный; Челлендж дня — в тон бренда (главный режим дня). */
+function ModeChip({ mode, label }: { mode: ProfileGameMode; label: string }) {
     return (
         <span
-            className={`inline-flex shrink-0 items-center rounded-sm bg-surface-muted px-2 py-0.5 text-2xs font-semibold tracking-wide ${getSessionDifficultyChipToneClass(difficulty)}`}
+            className={`inline-flex shrink-0 items-center rounded-sm px-2 py-0.5 text-2xs font-semibold tracking-wide ${
+                mode === 'daily'
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-surface-muted text-foreground'
+            }`}
         >
             {label}
         </span>
     );
+}
+
+/** Зелёный — только у партии без ошибок. */
+function correctToneClass(entry: ProfileResultHistoryEntry): string {
+    return entry.totalQuestions > 0 && entry.correctCount === entry.totalQuestions
+        ? 'text-success'
+        : 'text-foreground';
 }
 
 function formatCorrect(
@@ -87,6 +104,7 @@ export function ProfileResultHistory({
     locale,
     labels,
     difficultyLabels,
+    modeLabels,
 }: ProfileResultHistoryProps) {
     const [showAllMobile, setShowAllMobile] = useState(false);
 
@@ -107,8 +125,10 @@ export function ProfileResultHistory({
             <ul className="divide-y divide-border sm:hidden">
                 {entries.map((entry, index) => {
                     const completedAt = asDate(entry.completedAt);
-                    const difficulty = difficultyLabel(
-                        entry.difficulty,
+                    const detail = detailLine(
+                        entry,
+                        locale,
+                        labels,
                         difficultyLabels,
                     );
                     const href = `/${locale}/result/${entry.sessionId}`;
@@ -137,7 +157,14 @@ export function ProfileResultHistory({
                                 className={phoneRowClassName}
                             >
                                 <div className="flex items-center justify-between gap-3">
-                                    <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
+                                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                                        <ModeChip
+                                            mode={entry.mode}
+                                            label={modeLabels[entry.mode]}
+                                        />
+                                        <span className="text-xs text-muted">
+                                            {detail}
+                                        </span>
                                         <time
                                             dateTime={completedAt.toISOString()}
                                             className="shrink-0 font-mono text-xs tabular-nums text-muted"
@@ -146,10 +173,6 @@ export function ProfileResultHistory({
                                                 locale,
                                             )}
                                         </time>
-                                        <DifficultyChip
-                                            difficulty={entry.difficulty}
-                                            label={difficulty}
-                                        />
                                     </div>
                                     <span
                                         className={`${reviewLinkClassName} shrink-0 text-sm font-medium`}
@@ -171,7 +194,9 @@ export function ProfileResultHistory({
                                         <span className="block text-2xs font-medium uppercase tracking-wide text-muted">
                                             {labels.historyCorrect}
                                         </span>
-                                        <span className="mt-0.5 block font-display text-2xl font-semibold tabular-nums tracking-wide text-success">
+                                        <span
+                                            className={`mt-0.5 block font-display text-2xl font-semibold tabular-nums tracking-wide ${correctToneClass(entry)}`}
+                                        >
                                             {correctText}
                                         </span>
                                     </p>
@@ -211,7 +236,7 @@ export function ProfileResultHistory({
                                 {labels.historyDate}
                             </th>
                             <th className="whitespace-nowrap py-2.5 pr-3 sm:pr-4">
-                                {labels.historyDifficulty}
+                                {labels.historyMode}
                             </th>
                             <th className="whitespace-nowrap py-2.5 pr-3 sm:pr-4">
                                 {labels.historyScore}
@@ -239,18 +264,25 @@ export function ProfileResultHistory({
                                         )}
                                     </td>
                                     <td className="whitespace-nowrap py-3 pr-3 sm:pr-4">
-                                        <DifficultyChip
-                                            difficulty={entry.difficulty}
-                                            label={difficultyLabel(
-                                                entry.difficulty,
+                                        <ModeChip
+                                            mode={entry.mode}
+                                            label={modeLabels[entry.mode]}
+                                        />
+                                        <span className="ml-2 text-xs text-muted">
+                                            {detailLine(
+                                                entry,
+                                                locale,
+                                                labels,
                                                 difficultyLabels,
                                             )}
-                                        />
+                                        </span>
                                     </td>
                                     <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-foreground sm:pr-4">
                                         {entry.score}
                                     </td>
-                                    <td className="whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide text-success sm:pr-4">
+                                    <td
+                                        className={`whitespace-nowrap py-3 pr-3 font-display text-base font-semibold tabular-nums tracking-wide sm:pr-4 ${correctToneClass(entry)}`}
+                                    >
                                         {formatCorrect(
                                             entry.correctCount,
                                             entry.totalQuestions,

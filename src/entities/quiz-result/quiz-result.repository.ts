@@ -181,12 +181,19 @@ type RecentResultRow = {
     completed_at: Date;
     difficulty: Difficulty | null;
     pool_kind: string | null;
+    is_daily: boolean;
+    is_timed: boolean;
+    is_friend_challenge: boolean;
+    survival_wave_index: number | null;
+    topic_name_ru: string | null;
+    topic_name_en: string | null;
 };
 
 /** Одна строка агрегата профиля — COUNT всегда есть; MAX/ROUND могут быть null. */
 type ProfileStatsRow = {
     quizzes_completed: number;
     best_score: number | null;
+    best_classic_score: number | null;
     average_accuracy_percent: number | null;
     last_played_at: Date | null;
 };
@@ -448,9 +455,16 @@ export const quizResultRepository = {
                         r."correctCount" AS "correct_count",
                         r."completedAt" AS "completed_at",
                         s."difficulty" AS "difficulty",
-                        s."poolKind"::text AS "pool_kind"
+                        s."poolKind"::text AS "pool_kind",
+                        (s."dailyChallengeId" IS NOT NULL) AS "is_daily",
+                        (s."timedEndsAt" IS NOT NULL) AS "is_timed",
+                        (s."friendChallengeId" IS NOT NULL) AS "is_friend_challenge",
+                        s."survivalWaveIndex" AS "survival_wave_index",
+                        topic."nameRu" AS "topic_name_ru",
+                        topic."nameEn" AS "topic_name_en"
                     FROM "QuizResult" AS r
                     INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
+                    LEFT JOIN "Tag" AS topic ON topic."id" = s."topicTagId"
                     WHERE r."userId" = $1
                     ORDER BY r."completedAt" DESC
                     LIMIT $2
@@ -470,13 +484,23 @@ export const quizResultRepository = {
                     parseSessionPoolKind(row.pool_kind),
                     row.difficulty,
                 ),
+                // Режим — по скалярам сессии (как доски рейтинга), без JSONB.
+                isDaily: row.is_daily,
+                isTimed: row.is_timed,
+                isFriendChallenge: row.is_friend_challenge,
+                survivalWaveIndex: row.survival_wave_index,
+                topic:
+                    row.topic_name_ru && row.topic_name_en
+                        ? { nameRu: row.topic_name_ru, nameEn: row.topic_name_en }
+                        : null,
             },
         }));
     },
 
     /**
      * Сводка профиля: один SELECT по QuizResult (не история, не leaderboard).
-     * Без JOIN на QuizSession — difficulty для stats не нужен.
+     * JOIN на QuizSession — только скаляры режима для «Рекорда Классики»
+     * (те же условия, что у доски Классики: весь банк, не вызов).
      * Aggregate без GROUP BY всегда возвращает 1 строку (COUNT=0, если игр не было).
      */
     async findStatsByUserId(userId: string) {
@@ -485,16 +509,20 @@ export const quizResultRepository = {
                 `
                     SELECT
                         COUNT(*)::int AS "quizzes_completed",
-                        MAX("score") AS "best_score",
+                        MAX(r."score") AS "best_score",
+                        MAX(r."score") FILTER (
+                            WHERE ${leaderboardModeWhereSql('classic').join(' AND ')}
+                        ) AS "best_classic_score",
                         CASE
-                            WHEN COALESCE(SUM("totalQuestions"), 0) = 0 THEN NULL
+                            WHEN COALESCE(SUM(r."totalQuestions"), 0) = 0 THEN NULL
                             ELSE ROUND(
-                                100.0 * SUM("correctCount") / SUM("totalQuestions")
+                                100.0 * SUM(r."correctCount") / SUM(r."totalQuestions")
                             )::int
                         END AS "average_accuracy_percent",
-                        MAX("completedAt") AS "last_played_at"
-                    FROM "QuizResult"
-                    WHERE "userId" = $1
+                        MAX(r."completedAt") AS "last_played_at"
+                    FROM "QuizResult" AS r
+                    INNER JOIN "QuizSession" AS s ON s."id" = r."sessionId"
+                    WHERE r."userId" = $1
                 `,
                 [userId],
             ),
@@ -507,6 +535,7 @@ export const quizResultRepository = {
             return {
                 quizzesCompleted: 0,
                 bestScore: null,
+                bestClassicScore: null,
                 averageAccuracyPercent: null,
                 lastPlayedAt: null,
             };
@@ -516,6 +545,10 @@ export const quizResultRepository = {
             quizzesCompleted,
             bestScore:
                 row?.best_score == null ? null : Number(row.best_score),
+            bestClassicScore:
+                row?.best_classic_score == null
+                    ? null
+                    : Number(row.best_classic_score),
             averageAccuracyPercent:
                 row?.average_accuracy_percent == null
                     ? null

@@ -264,7 +264,10 @@ export type Dictionary = {
         historyTitle: string;
         historyEmpty: string;
         historyDate: string;
-        historyDifficulty: string;
+        /** Колонка истории на ПК: режим игры. */
+        historyMode: string;
+        /** Подпись волны Выживания в истории: `{n}`. */
+        historyWave: string;
         historyScore: string;
         historyCorrect: string;
         /** Connector in «1 из 3» / «1 of 3» (mobile + table cells). */
@@ -309,10 +312,11 @@ export type Dictionary = {
         signInMethodNotSet: string;
         signInMethodConnect: string;
         changeAvatarTitle: string;
-        avatarFile: string;
+        avatarChoose: string;
         avatarFileHint: string;
-        avatarUrl: string;
-        avatarUrlHint: string;
+        /** Подпись к превью выбранного фото до сохранения. */
+        avatarNewPhoto: string;
+        avatarCancel: string;
         changeAvatarSubmit: string;
         clearAvatar: string;
         changeAvatarSuccess: string;

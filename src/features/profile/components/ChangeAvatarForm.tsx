@@ -1,14 +1,45 @@
 'use client';
 
-import { startTransition, useActionState, useEffect, useState } from 'react';
+/**
+ * Смена аватара в настройках профиля.
+ *
+ * Аватар и «Выбрать фото» — в одну строку. После выбора файла в круге —
+ * превью (object URL, только в браузере), «Сохранить» / «Отмена»; до
+ * сохранения на сервер ничего не уходит. Браузерное поле файла скрыто
+ * (`sr-only`): его подпись «Choose File» не переводится и выбивается из
+ * дизайна — нажимается наша кнопка-label.
+ * Большое фото уменьшаем до отправки (prepare-avatar-upload): иначе запрос
+ * больше лимита Server Action и падает без сообщения игроку.
+ * Поле «ссылка на картинку» убрано из формы; сервер ссылку по-прежнему
+ * принимает (resolve-avatar-image), формат и проверки — там.
+ */
+
+import {
+    startTransition,
+    useActionState,
+    useEffect,
+    useRef,
+    useState,
+    type ChangeEvent,
+} from 'react';
 import { useRouter } from 'next/navigation';
 
 import { changeAvatarAction } from '@/features/profile/actions/change-avatar';
 import { getProfileErrorMessage } from '@/features/profile/lib/get-profile-error-message';
 import { prepareAvatarUpload } from '@/features/profile/lib/prepare-avatar-upload';
 import type { Dictionary, Locale } from '@/shared/i18n';
-import { Button, InlineAlert, PendingSpinner, SubmitButton, UserAvatar, toastSuccess } from '@/shared/ui';
+import {
+    Button,
+    InlineAlert,
+    PendingSpinner,
+    SubmitButton,
+    UserAvatar,
+    buttonClassName,
+    toastSuccess,
+} from '@/shared/ui';
 import { refreshPreservingScroll } from '@/shared/ui/refresh-preserving-scroll';
+
+const ACCEPTED_TYPES = 'image/jpeg,image/png,image/webp';
 
 type ChangeAvatarFormProps = {
     locale: Locale;
@@ -19,22 +50,155 @@ type ChangeAvatarFormProps = {
     avatarPattern: number;
 };
 
-const fieldClassName =
-    'min-h-11 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground motion-safe:transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
+type AvatarPickerProps = ChangeAvatarFormProps & {
+    busy: boolean;
+    onSubmit: (formData: FormData) => void;
+    onClear: () => void;
+};
 
-const labelClassName = 'text-sm font-medium text-foreground sm:text-base';
-
-export function ChangeAvatarForm({
-    locale,
+/**
+ * Состояние выбора файла. Ключ — текущий URL аватара: после сохранения
+ * компонент монтируется заново и превью сбрасывается само.
+ */
+function AvatarPicker({
     dictionary,
+    locale,
     currentImageUrl,
     avatarPattern,
-}: ChangeAvatarFormProps) {
-    const router = useRouter();
-    const [state, formAction, isPending] = useActionState(
-        changeAvatarAction,
-        {},
+    busy,
+    onSubmit,
+    onClear,
+}: AvatarPickerProps) {
+    const labels = dictionary.profile;
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [preview, setPreview] = useState<{ url: string; name: string } | null>(null);
+
+    // Object URL живёт, пока показан; заменили или ушли — освобождаем.
+    useEffect(() => {
+        if (!preview) return;
+        return () => URL.revokeObjectURL(preview.url);
+    }, [preview]);
+
+    function handleChange(event: ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        setPreview(file ? { url: URL.createObjectURL(file), name: file.name } : null);
+    }
+
+    function handleCancel() {
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+        setPreview(null);
+    }
+
+    return (
+        <form
+            action={onSubmit}
+            className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
+            data-testid="avatar-form"
+        >
+            <input type="hidden" name="locale" value={locale} />
+
+            <div className="flex items-center gap-4">
+                {preview ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- blob: URL превью, next/image его не оптимизирует
+                    <img
+                        src={preview.url}
+                        alt=""
+                        className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-primary"
+                    />
+                ) : (
+                    <UserAvatar
+                        src={currentImageUrl}
+                        pattern={avatarPattern}
+                        size="base"
+                        className="!h-16 !w-16"
+                        alt={labels.changeAvatarTitle}
+                    />
+                )}
+
+                {preview ? (
+                    <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-foreground">
+                            {labels.avatarNewPhoto}
+                        </p>
+                        <p className="truncate text-sm text-muted">{preview.name}</p>
+                    </div>
+                ) : null}
+
+                {/* Поле файла в форме всегда (иначе файл не уйдёт); с превью кнопки скрыты. */}
+                <div
+                    className={`min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center ${
+                        preview ? 'hidden' : 'flex'
+                    }`}
+                >
+                    {/* label = кнопка: поле файла внутри, фокус с клавиатуры — на нём. */}
+                    <label
+                        className={buttonClassName({
+                            variant: 'secondary',
+                            className:
+                                'w-full has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-ring sm:w-auto',
+                        })}
+                    >
+                        {labels.avatarChoose}
+                        <input
+                            ref={inputRef}
+                            name="avatarFile"
+                            type="file"
+                            accept={ACCEPTED_TYPES}
+                            className="sr-only"
+                            onChange={handleChange}
+                            disabled={busy}
+                            data-testid="avatar-file"
+                        />
+                    </label>
+
+                    {currentImageUrl ? (
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            disabled={busy}
+                            aria-busy={busy}
+                            className="w-full gap-1.5 sm:w-auto"
+                            onClick={onClear}
+                        >
+                            {busy ? <PendingSpinner /> : null}
+                            {labels.clearAvatar}
+                        </Button>
+                    ) : null}
+                </div>
+            </div>
+
+            {preview ? (
+                <div className="mt-4 flex gap-2">
+                    <SubmitButton
+                        pendingLabel={dictionary.common.submitting}
+                        disabled={busy}
+                        className="flex-1 sm:flex-none"
+                        data-testid="avatar-save"
+                    >
+                        {labels.changeAvatarSubmit}
+                    </SubmitButton>
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={handleCancel}
+                    >
+                        {labels.avatarCancel}
+                    </Button>
+                </div>
+            ) : (
+                <p className="mt-3 text-sm text-muted">{labels.avatarFileHint}</p>
+            )}
+        </form>
     );
+}
+
+export function ChangeAvatarForm(props: ChangeAvatarFormProps) {
+    const { locale, dictionary, currentImageUrl } = props;
+    const router = useRouter();
+    const [state, formAction, isPending] = useActionState(changeAvatarAction, {});
     // Ошибка подготовки фото в браузере (до сервера); сбрасывается при отправке.
     const [prepareFailed, setPrepareFailed] = useState(false);
     const [preparing, setPreparing] = useState(false);
@@ -44,10 +208,6 @@ export function ChangeAvatarForm({
     );
     const busy = isPending || preparing;
 
-    /**
-     * Большое фото уменьшаем до отправки (prepare-avatar-upload): иначе
-     * запрос больше лимита Server Action и падает без сообщения игроку.
-     */
     async function submitAvatar(formData: FormData) {
         setPrepareFailed(false);
         const file = formData.get('avatarFile');
@@ -66,6 +226,15 @@ export function ChangeAvatarForm({
         });
     }
 
+    function clearAvatar() {
+        const fd = new FormData();
+        fd.set('locale', locale);
+        fd.set('clearAvatar', '1');
+        startTransition(() => {
+            formAction(fd);
+        });
+    }
+
     // Как у username: refresh после cookie update.
     // Важно: imageUrl может быть '' (сброс) — проверяем !== undefined, не truthy.
     useEffect(() => {
@@ -73,107 +242,19 @@ export function ChangeAvatarForm({
             toastSuccess(dictionary.profile.changeAvatarSuccess);
             refreshPreservingScroll(router);
         }
-    }, [
-        state.success,
-        state.imageUrl,
-        router,
-        dictionary.profile.changeAvatarSuccess,
-    ]);
+    }, [state.success, state.imageUrl, router, dictionary.profile.changeAvatarSuccess]);
 
     return (
         <div className="mt-4">
-            {currentImageUrl ? (
-                <div className="mb-4">
-                    <UserAvatar
-                        src={currentImageUrl}
-                        pattern={avatarPattern}
-                        size="md"
-                        alt={dictionary.profile.changeAvatarTitle}
-                    />
-                </div>
-            ) : null}
-
-            <form
+            <AvatarPicker
                 key={currentImageUrl ?? ''}
-                action={submitAvatar}
-                className="space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
-            >
-                <input type="hidden" name="locale" value={locale} />
+                {...props}
+                busy={busy}
+                onSubmit={submitAvatar}
+                onClear={clearAvatar}
+            />
 
-                <label className="flex flex-col gap-2">
-                    <span className={labelClassName}>
-                        {dictionary.profile.avatarFile}
-                    </span>
-                    <input
-                        name="avatarFile"
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        className={fieldClassName}
-                    />
-                    <span className="text-sm text-muted">
-                        {dictionary.profile.avatarFileHint}
-                    </span>
-                </label>
-
-                <label className="flex flex-col gap-2">
-                    <span className={labelClassName}>
-                        {dictionary.profile.avatarUrl}
-                    </span>
-                    <input
-                        name="imageUrl"
-                        type="text"
-                        inputMode="url"
-                        maxLength={2048}
-                        defaultValue=""
-                        placeholder="/media/avatars/… or https://…"
-                        className={fieldClassName}
-                    />
-                    <span className="text-sm text-muted">
-                        {dictionary.profile.avatarUrlHint}
-                    </span>
-                </label>
-
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <SubmitButton
-                        pendingLabel={dictionary.common.submitting}
-                        disabled={busy}
-                        className="w-full sm:w-auto"
-                    >
-                        {dictionary.profile.changeAvatarSubmit}
-                    </SubmitButton>
-
-                    {currentImageUrl ? (
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            disabled={busy}
-                            aria-busy={busy}
-                            className="inline-flex w-full items-center justify-center gap-1.5 sm:w-auto"
-                            onClick={() => {
-                                const fd = new FormData();
-                                fd.set('locale', locale);
-                                fd.set('clearAvatar', '1');
-                                startTransition(() => {
-                                    formAction(fd);
-                                });
-                            }}
-                        >
-                            {busy ? (
-                                <>
-                                    <PendingSpinner />
-                                    <span>{dictionary.common.working}</span>
-                                </>
-                            ) : (
-                                dictionary.profile.clearAvatar
-                            )}
-                        </Button>
-                    ) : null}
-                </div>
-            </form>
-
-            {errorMessage ? (
-                <InlineAlert className="mt-2">{errorMessage}</InlineAlert>
-            ) : null}
+            {errorMessage ? <InlineAlert className="mt-2">{errorMessage}</InlineAlert> : null}
         </div>
     );
 }

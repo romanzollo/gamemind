@@ -12,8 +12,13 @@
 export type ProfileStats = {
     /** Сколько завершённых квизов (строк QuizResult у пользователя). */
     quizzesCompleted: number;
-    /** Лучший weighted score; null если квизов ещё не было. */
+    /** Лучший weighted score среди всех режимов; null если квизов ещё не было. */
     bestScore: number | null;
+    /**
+     * Лучший счёт Классики на всём банке (без тем и вызовов) — «Рекорд
+     * Классики» в сводке; null — Классику ещё не играл.
+     */
+    bestClassicScore: number | null;
     /**
      * Средняя точность в процентах 0–100:
      * round(100 * sum(correctCount) / sum(totalQuestions)).
