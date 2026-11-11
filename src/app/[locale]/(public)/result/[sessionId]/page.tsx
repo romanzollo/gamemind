@@ -9,6 +9,9 @@ import { survivalRunRepository } from '@/entities/survival-run/survival-run.repo
 import { parseUnlockedQuery } from '@/features/achievements/lib/parse-unlocked-query';
 import { SaveGuestProgress } from '@/features/auth/components/SaveGuestProgress';
 import { DailyStreakResult } from '@/features/daily-challenge/components/daily-streak-result';
+import { FriendChallengeInvite } from '@/features/friend-challenge/components/FriendChallengeInvite';
+import { FriendChallengeVersus } from '@/features/friend-challenge/components/FriendChallengeVersus';
+import { buildChallengeSetLine } from '@/features/friend-challenge/lib/challenge-labels';
 import { RatingGameResult } from '@/features/leaderboard/components/rating-game-result';
 import { QuizResultSummary } from '@/features/quiz/components/QuizResultSummary';
 import { ShareResult } from '@/features/quiz/components/ShareResult';
@@ -24,7 +27,7 @@ import { TimedClockRoastBanner } from '@/features/timed-mode/components/TimedClo
 import { TimedRematchButton } from '@/features/timed-mode/components/TimedRematchButton';
 import { requireUser } from '@/lib/auth/guards';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
-import { getDictionary, isLocale } from '@/shared/i18n';
+import { formatPlural, getDictionary, isLocale } from '@/shared/i18n';
 import { SITE_ORIGIN } from '@/shared/config/site';
 import { InlineAlert } from '@/shared/ui';
 
@@ -328,6 +331,47 @@ export default async function QuizResultPage({
         />
     ) : null;
 
+    // «Вызов другу»: только сданная Классика на всём банке (сервер ещё раз
+    // проверит партию при создании вызова). Игра по вызову — блок сравнения.
+    const canChallengeFriend =
+        summary != null &&
+        !summary.isDaily &&
+        !summary.isTimed &&
+        !summary.isSurvival &&
+        summary.topic === null &&
+        summary.friendChallengeId === null;
+    const friendChallengeInvite =
+        summary && canChallengeFriend ? (
+            <FriendChallengeInvite
+                locale={safeLocale}
+                sessionId={sessionId}
+                siteOrigin={SITE_ORIGIN}
+                creatorName={authSession.user.username}
+                setLine={buildChallengeSetLine(
+                    dictionary,
+                    safeLocale,
+                    summary.setupDifficulty,
+                    summary.totalQuestions,
+                )}
+                score={
+                    maxPossibleScore == null
+                        ? String(summary.score)
+                        : `${summary.score} / ${maxPossibleScore}`
+                }
+                inviteText={dictionary.friendChallenge.inviteText.replace(
+                    '{questions}',
+                    formatPlural(
+                        safeLocale,
+                        summary.totalQuestions,
+                        dictionary.friendChallenge.questions,
+                    ),
+                )}
+                labels={dictionary.friendChallenge}
+                shareLabels={dictionary.share}
+                rateLimitedText={dictionary.quiz.errors.rateLimited}
+            />
+        ) : null;
+
     return (
         <main className="mx-auto max-w-2xl px-4 py-5 sm:px-8 sm:py-10">
             {summaryLoadFailed || !summary ? (
@@ -382,7 +426,24 @@ export default async function QuizResultPage({
                         />
                     )}
 
-                    {authSession.user.isGuest ? null : (
+                    {friendChallengeInvite}
+                    {summary.friendChallengeId ? (
+                        // Сравнение — своим запросом: счёт и кнопки его не ждут.
+                        <Suspense fallback={null}>
+                            <FriendChallengeVersus
+                                challengeId={summary.friendChallengeId}
+                                sessionId={sessionId}
+                                userId={authSession.user.id}
+                                userImage={authSession.user.image ?? null}
+                                myScore={summary.score}
+                                locale={safeLocale}
+                                dictionary={dictionary}
+                            />
+                        </Suspense>
+                    ) : null}
+
+                    {/* Игры по вызову в рейтинг не идут — блока очков нет. */}
+                    {authSession.user.isGuest || summary.friendChallengeId ? null : (
                         // Рейтинг недели — своим запросом в Suspense: счёт и
                         // кнопки его не ждут (горячий путь, ROADMAP 4.6e).
                         <Suspense fallback={null}>

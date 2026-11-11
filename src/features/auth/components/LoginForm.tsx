@@ -9,7 +9,14 @@ import { getDictionary, type Locale } from '@/shared/i18n';
 import { InlineAlert, SubmitButton } from '@/shared/ui';
 
 /** Вход по почте и паролю. Внешний вход — отдельный серверный блок рядом. */
-export function LoginForm({ locale }: { locale: Locale }) {
+export function LoginForm({
+    locale,
+    next = null,
+}: {
+    locale: Locale;
+    /** Проверенный путь возврата (страница вызова); null — в профиль. */
+    next?: string | null;
+}) {
     const dictionary = getDictionary(locale);
     const [state, formAction] = useActionState(loginAction, {});
     const errorMessage = getAuthErrorMessage(dictionary, state.errorCode);
@@ -22,6 +29,7 @@ export function LoginForm({ locale }: { locale: Locale }) {
                 data-testid="login-form"
             >
                 <input type="hidden" name="locale" value={locale} />
+                {next ? <input type="hidden" name="next" value={next} /> : null}
                 <input
                     name="email"
                     type="email"

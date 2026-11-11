@@ -44,6 +44,12 @@ const nextConfig: NextConfig = {
             './node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff',
             './node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-cyrillic-500-normal.woff',
         ],
+        // Превью «Вызова другу» рендерится на запрос — шрифты нужны в функции.
+        '/*/challenge/*/opengraph-image': [
+            './node_modules/@fontsource/oswald/files/oswald-latin-600-normal.woff',
+            './node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff',
+            './node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-cyrillic-500-normal.woff',
+        ],
     },
     /**
      * В Next 16.2 bodySizeLimit живёт в experimental.serverActions

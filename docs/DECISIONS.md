@@ -2886,3 +2886,34 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 - After launch: the share of clips that failed to load, the mean time on an audio question, % correct per audio question. `audioListenWindowSeconds` is tuned from this data.
 
 **References:** Question Media And Visual Question Types; Media Storage And Upload (RU-first); Quiz answer leak — opaque play ids; Answer lock-in; Survival on answer lock-in; Timed Mode MVP; Submit time = request arrival; `docs/QUIZ_NEON_HOT_PATH.md`.
+
+## Friend challenge (November 11, 2026)
+
+**Context:** ROADMAP 5.5 stage 1. A player finishes a Classic game and sends a link; a friend plays the same questions whenever it suits them and both see who won. No real-time channel: it runs on Vercel + Neon as they are. The link is also the growth channel (Telegram, VK, MAX).
+
+**Decision:** an async duel built the way Daily Challenge is built — a frozen question list plus one attempt per player.
+
+| Piece | Choice |
+|------|--------|
+| Which games | Classic only (SINGLE or MIXED), whole bank: `dailyChallengeId`, `timedEndsAt`, `survivalRunId`, `topicTagId` and `friendChallengeId` all NULL, status COMPLETED, owner = the player. Blitz compares time too, Survival waves are built on the fly, Daily is already shared, a topic game would need its chip. A challenge game cannot be re-challenged (no chains over a known set) |
+| Storage | Table `FriendChallenge`: short random id (11 chars base64url — the link), `creatorUserId` (SET NULL when the account goes), `sourceSessionId` UNIQUE (SET NULL), `difficulty` / `poolKind` / `questionCount`, `questionIds` (ordered JSON), the creator's `creatorScore` / `creatorCorrectCount` / `creatorMarks` (ordered booleans). The creator's result is copied, so the challenge page reads one row and survives a deleted account |
+| Where the list comes from | `QuizResult.reviewPayload` items (`questionId`, `position`, `isCorrect`) — the slim review written on submit. Never `snapshotData` (TOAST). Read once, when the button is pressed, off the hot path |
+| Idempotency | One challenge per source game: `INSERT … ON CONFLICT ("sourceSessionId") DO NOTHING` → SELECT. Pressing the button again returns the same link |
+| Attempt | `QuizSession.friendChallengeId` (FK → FriendChallenge, Restrict) + `UNIQUE (userId, friendChallengeId)` as Daily does; index on `friendChallengeId` for the takers list. Start = Daily's path: pick by frozen ids (no cycle, no publication filter — the freeze wins), `buildQuizSnapshotQuestions` (re-arranging an arranged order is a no-op, so the order stays the creator's), options shuffled per session, one more scalar in the create INSERT. Lock-in, submit, clock, review untouched |
+| Who can take it | Anyone signed in, guests included («Play without signing up» returns to the challenge). Not the creator: their link shows the takers |
+| Rating | Challenge games do not count (`friendChallengeId IS NULL` in the Classic / Blitz boards and the weekly points): a second account that saw the answers would farm the board. The creator's own game counts as before. Achievements and profile stats count them, as with topics |
+| Expired | A question deleted since → fewer rows than `questionCount` → «this challenge has expired», offer a regular Classic game |
+| Comparison | Friend's result page: «you vs creator» — score and ✓/✗ per question (the friend's marks from `QuizAnswer` rows by question id; no question text, no answers). Challenge page: creator + takers (scalars only: result, username, avatar) for the creator and for those who played; before playing — the count only |
+| Share | Message text in short lines (Wordle-style squares, emoji only in the shared text); link `/{locale}/challenge/{id}` with its own Open Graph image (creator, score, marks) and `og:title` «{name} challenges you: {score}», which Telegram shows in bold. Telegram / VK / MAX targets and the system share sheet reuse «Share result» |
+| Sign-in return | Login, OAuth and guest sign-in accept `next` only when it matches `/{ru|en}/challenge/{id}` (no open redirect) |
+| Rate limit | Creating and accepting use the `quiz` preset |
+
+**Hot path:** create INSERT gains one nullable scalar; start reads one PK row before the usual resolve (same as Daily's ensure). Play-load, lock-in, submit, clock unchanged. Matrix: Classic EASY 3, Classic MIXED, Blitz MIXED, Daily, Survival + challenge create → accept → submit (SINGLE and MIXED).
+
+**Not chosen:**
+- Linking the creator's session directly — every challenge read would touch `snapshotData`, and the link would expose a session id.
+- A fresh random set for both players — the creator would have to play again; «beat my score» is the point.
+- A code instead of a link — one more step for the friend.
+- Counting challenge games in the rating — farmable with a second account.
+
+**Deploy order:** migration `20261111120000_friend_challenge` on prod (additive: one table, one nullable column, two indexes) → deploy. Running code does not read the new column.

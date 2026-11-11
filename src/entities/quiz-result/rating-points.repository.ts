@@ -6,6 +6,7 @@
  * (`SUM(LEAST(очки_дня, cap))`). Засчитанные игры:
  * - есть `QuizResult` (сдана; поздний Блиц результата не имеет);
  * - не игра по теме (`topicTagId IS NULL`, ADR Play topics);
+ * - не игра по вызову друга (`friendChallengeId IS NULL`, ADR Friend challenge);
  * - Выживание — только волны с `survivalClockOk = true`;
  * - игрок видим в рейтингах (`LEADERBOARD_VISIBLE_USER_SQL`).
  * Ничья: выше тот, чья последняя игра с очками раньше; дальше — по id,
@@ -24,6 +25,7 @@
 import { withDirectPgClient } from '@/lib/db/direct-pg';
 import {
     leaderboardModeWhereSql,
+    NOT_FRIEND_CHALLENGE_SQL,
     type FindBestScoresMode,
 } from '@/entities/quiz-result/quiz-result.repository';
 import { LEADERBOARD_VISIBLE_USER_SQL } from '@/entities/user/leaderboard-visibility';
@@ -134,7 +136,12 @@ function countedGamesWhereSql(mode: RatingPointsMode): string[] {
             ? ['(s."survivalRunId" IS NULL OR s."survivalClockOk" IS TRUE)']
             : leaderboardModeWhereSql(mode);
 
-    return [...modeWhere, 's."topicTagId" IS NULL', LEADERBOARD_VISIBLE_USER_SQL];
+    return [
+        ...modeWhere,
+        's."topicTagId" IS NULL',
+        NOT_FRIEND_CHALLENGE_SQL,
+        LEADERBOARD_VISIBLE_USER_SQL,
+    ];
 }
 
 /**

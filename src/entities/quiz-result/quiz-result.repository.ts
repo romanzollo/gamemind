@@ -25,6 +25,7 @@ type QuizResultSummaryRow = {
     topic_tag_id: string | null;
     topic_name_ru: string | null;
     topic_name_en: string | null;
+    friend_challenge_id: string | null;
 };
 
 type ReviewAnswerRow = {
@@ -64,6 +65,8 @@ export type QuizResultSummary = {
     setupDifficulty: QuizSetupDifficulty;
     /** Тема игры (подпись + rematch с той же темой); null — весь банк. */
     topic: QuizResultTopic | null;
+    /** Попытка «Вызова другу»; null — обычная игра. */
+    friendChallengeId: string | null;
 };
 
 export type QuizResultTopic = {
@@ -107,9 +110,16 @@ export type QuizResultReviewLoad =
 export type FindBestScoresMode = 'classic' | 'blitz' | 'daily' | 'survival';
 
 /**
+ * Игры по «Вызову другу» в рейтинг не идут: второй аккаунт, видевший ответы
+ * автора, накручивал бы доску (DECISIONS → Friend challenge).
+ */
+export const NOT_FRIEND_CHALLENGE_SQL = 's."friendChallengeId" IS NULL';
+
+/**
  * WHERE по скалярам сессии — без snapshotData.
  * Classic / Blitz: только партии на всём банке (`topicTagId IS NULL`) —
- * фанат шутеров не должен подниматься, выбирая свою тему (Play topics).
+ * фанат шутеров не должен подниматься, выбирая свою тему (Play topics) —
+ * и не по вызову друга.
  */
 export function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
     if (mode === 'daily') {
@@ -121,6 +131,7 @@ export function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
             's."dailyChallengeId" IS NULL',
             's."timedEndsAt" IS NOT NULL',
             's."topicTagId" IS NULL',
+            NOT_FRIEND_CHALLENGE_SQL,
         ];
     }
     if (mode === 'survival') {
@@ -135,6 +146,7 @@ export function leaderboardModeWhereSql(mode: FindBestScoresMode): string[] {
         's."timedEndsAt" IS NULL',
         's."survivalRunId" IS NULL',
         's."topicTagId" IS NULL',
+        NOT_FRIEND_CHALLENGE_SQL,
     ];
 }
 
@@ -209,7 +221,8 @@ async function loadResultSummaryBySessionIdForUser(
                     (s."dailyChallengeId" IS NOT NULL) AS "is_daily",
                     s."topicTagId" AS "topic_tag_id",
                     topic."nameRu" AS "topic_name_ru",
-                    topic."nameEn" AS "topic_name_en"
+                    topic."nameEn" AS "topic_name_en",
+                    s."friendChallengeId" AS "friend_challenge_id"
                 FROM "QuizResult" r
                 INNER JOIN "QuizSession" s
                     ON s."id" = r."sessionId"
@@ -269,6 +282,7 @@ async function loadResultSummaryBySessionIdForUser(
                       nameEn: row.topic_name_en,
                   }
                 : null,
+        friendChallengeId: row.friend_challenge_id,
     };
 }
 

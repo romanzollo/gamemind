@@ -12,7 +12,14 @@ import { InlineAlert, SubmitButton } from '@/shared/ui';
  * Client: нужен текст ошибки лимита из useActionState; создание гостя
  * и проверка лимита — на сервере (guestSignInAction → провайдер `guest`).
  */
-export function GuestSignIn({ locale }: { locale: Locale }) {
+export function GuestSignIn({
+    locale,
+    next = null,
+}: {
+    locale: Locale;
+    /** Проверенный путь возврата (страница вызова); null — на главную. */
+    next?: string | null;
+}) {
     const dictionary = getDictionary(locale);
     const [state, formAction] = useActionState(guestSignInAction, {});
     const errorMessage = getAuthErrorMessage(dictionary, state.errorCode);
@@ -21,6 +28,7 @@ export function GuestSignIn({ locale }: { locale: Locale }) {
         <div className="mt-6 border-t border-border pt-6">
             <form action={formAction} className="flex flex-col">
                 <input type="hidden" name="locale" value={locale} />
+                {next ? <input type="hidden" name="next" value={next} /> : null}
                 <SubmitButton
                     variant="secondary"
                     pendingLabel={dictionary.auth.guestButton}

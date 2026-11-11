@@ -655,6 +655,15 @@ async function insertQuizSessionWithSnapshotData(
         );
     }
 
+    if (
+        input.friendChallengeId &&
+        (input.timedEndsAt || input.dailyChallengeId || input.topicTagId)
+    ) {
+        throw new Error(
+            'Friend challenge session must be plain Classic (no timed / daily / topic)',
+        );
+    }
+
     const pool = resolveSessionPoolInsert(input);
     // TIMESTAMP(3) without TZ: SQL NOW() пишет UTC-стену, node-pg читает как local
     // (UTC+2 → дедлайн в прошлом → сразу «время вышло»). Date после connect
@@ -694,11 +703,12 @@ async function insertQuizSessionWithSnapshotData(
         input.dailyChallengeId ?? null,
         timedEndsAtValue,
         input.topicTagId ?? null,
+        input.friendChallengeId ?? null,
     ] as const;
 
     // Classic / Timed / Daily: survival-колонки не перечисляем → NULL
     // (CHECK: waveIndex/clockOk тоже NULL). startedAt = SQL NOW() as-is.
-    // topicTagId — скаляр в том же INSERT (Play topics), не отдельный hop.
+    // topicTagId / friendChallengeId — скаляры в том же INSERT, не отдельный hop.
     await client.query(
         `
             INSERT INTO "QuizSession" (
@@ -713,6 +723,7 @@ async function insertQuizSessionWithSnapshotData(
                 "dailyChallengeId",
                 "timedEndsAt",
                 "topicTagId",
+                "friendChallengeId",
                 "startedAt"
             )
             VALUES (
@@ -727,6 +738,7 @@ async function insertQuizSessionWithSnapshotData(
                 $9,
                 $10,
                 $11,
+                $12,
                 NOW()
             )
         `,

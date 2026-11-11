@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { GuestSignIn } from '@/features/auth/components/GuestSignIn';
 import { LoginForm } from '@/features/auth/components/LoginForm';
 import { OAuthSignIn } from '@/features/auth/components/OAuthSignIn';
+import { readSafeNextPath } from '@/features/auth/lib/safe-next-path';
 import { getOAuthErrorMessage } from '@/features/auth/lib/get-oauth-error-message';
 import { auth } from '@/lib/auth';
 import { getDictionary, isLocale } from '@/shared/i18n';
@@ -10,7 +11,10 @@ import { InlineAlert } from '@/shared/ui';
 
 type LoginPageProps = {
     params: Promise<{ locale: string }>;
-    /** `?error=` — ошибка внешнего входа от Auth.js (pages.error). */
+    /**
+     * `?error=` — ошибка внешнего входа от Auth.js (pages.error).
+     * `?next=` — вернуть к вызову друга после входа (только проверенный путь).
+     */
     searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
@@ -19,8 +23,9 @@ export default async function LoginPage({
     searchParams,
 }: LoginPageProps) {
     const { locale: rawLocale } = await params;
-    const { error } = await searchParams;
+    const { error, next: rawNext } = await searchParams;
     const locale = isLocale(rawLocale) ? rawLocale : 'ru';
+    const next = readSafeNextPath(rawNext);
 
     // Ошибка у вошедшего игрока — это неудачная привязка входа из профиля
     // («Подключить»): Auth.js знает одну страницу ошибок, а показать её
@@ -45,9 +50,9 @@ export default async function LoginPage({
                 <InlineAlert className="mt-4">{oauthErrorMessage}</InlineAlert>
             ) : null}
 
-            <LoginForm locale={locale} />
-            <OAuthSignIn locale={locale} />
-            {session?.user ? null : <GuestSignIn locale={locale} />}
+            <LoginForm locale={locale} next={next} />
+            <OAuthSignIn locale={locale} next={next} />
+            {session?.user ? null : <GuestSignIn locale={locale} next={next} />}
         </main>
     );
 }

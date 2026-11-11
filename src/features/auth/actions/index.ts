@@ -17,6 +17,7 @@ import { registerSchema } from '@/features/auth/lib/validation';
 import { userRepository } from '@/entities/user/user.repository';
 import type { AuthFormState } from '@/features/auth/types';
 import { loginSchema } from '@/features/auth/lib/validation';
+import { readSafeNextPath } from '@/features/auth/lib/safe-next-path';
 import { captureAppError } from '@/lib/monitoring/capture-app-error';
 import { checkSharedPresetRateLimit } from '@/lib/rate-limit-shared';
 import { getIpRateLimitIdentity } from '@/lib/rate-limit-key';
@@ -166,7 +167,9 @@ export async function loginAction(
         await signIn('credentials', {
             email: parsed.data.email,
             password: parsed.data.password,
-            redirectTo: `/${locale}/profile`,
+            // Пришёл по ссылке вызова — вернём к нему (только проверенный путь).
+            redirectTo:
+                readSafeNextPath(formData.get('next')) ?? `/${locale}/profile`,
         });
     } catch (error) {
         // Обработка ошибок
@@ -203,7 +206,9 @@ export async function guestSignInAction(
     const locale = getLocaleFromFormData(formData);
 
     try {
-        await signIn('guest', { redirectTo: `/${locale}` });
+        await signIn('guest', {
+            redirectTo: readSafeNextPath(formData.get('next')) ?? `/${locale}`,
+        });
     } catch (error) {
         if (error instanceof AuthError) {
             if (error instanceof GuestRateLimited) {
@@ -230,7 +235,8 @@ export async function guestSignInAction(
 export async function oauthSignInAction(formData: FormData) {
     const locale = getLocaleFromFormData(formData);
     const provider = formData.get('provider');
-    const redirectTo = `/${locale}/profile`;
+    const redirectTo =
+        readSafeNextPath(formData.get('next')) ?? `/${locale}/profile`;
 
     // signIn бросает NEXT_REDIRECT на страницу провайдера — так и задумано.
     if (provider === 'yandex' && isYandexSignInEnabled) {

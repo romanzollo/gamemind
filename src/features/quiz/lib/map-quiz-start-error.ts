@@ -33,7 +33,7 @@ export function mapQuizStartError(error: unknown): QuizErrorCode {
 export function captureQuizStartError(
     error: unknown,
     errorCode: QuizErrorCode,
-    mode: 'classic' | 'timed' | 'survival' | 'daily',
+    mode: 'classic' | 'timed' | 'survival' | 'daily' | 'friend-challenge',
 ): void {
     if (error instanceof QuizSessionStartError) {
         return;

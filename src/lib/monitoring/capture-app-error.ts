@@ -22,6 +22,7 @@ export type AppErrorArea =
     | 'quiz-start'
     | 'quiz-submit'
     | 'quiz-result'
+    | 'friend-challenge'
     | 'media-upload'
     | 'admin-question'
     | 'achievements'

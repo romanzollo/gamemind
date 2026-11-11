@@ -14,7 +14,14 @@ type OAuthButton = {
  * Server Component: включён ли провайдер, знает только сервер (env).
  * Без ключей ни одного провайдера блока нет совсем.
  */
-export function OAuthSignIn({ locale }: { locale: Locale }) {
+export function OAuthSignIn({
+    locale,
+    next = null,
+}: {
+    locale: Locale;
+    /** Проверенный путь возврата (страница вызова); null — в профиль. */
+    next?: string | null;
+}) {
     const dictionary = getDictionary(locale);
     const buttons: OAuthButton[] = [];
 
@@ -52,6 +59,7 @@ export function OAuthSignIn({ locale }: { locale: Locale }) {
                 >
                     <input type="hidden" name="locale" value={locale} />
                     <input type="hidden" name="provider" value={provider} />
+                    {next ? <input type="hidden" name="next" value={next} /> : null}
                     <SubmitButton variant="secondary" pendingLabel={label}>
                         {label}
                     </SubmitButton>

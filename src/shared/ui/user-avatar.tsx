@@ -7,7 +7,8 @@ import {
     type AvatarShape,
 } from '@/shared/ui/avatar-pattern';
 
-type UserAvatarSize = 'sm' | 'md';
+/** sm — шапка и строки; base — заголовок карточки (вызов); md — профиль. */
+type UserAvatarSize = 'sm' | 'base' | 'md';
 
 type UserAvatarProps = {
     src: string | null | undefined;
@@ -21,6 +22,7 @@ type UserAvatarProps = {
 
 const sizeClassName: Record<UserAvatarSize, string> = {
     sm: 'h-8 w-8',
+    base: 'h-12 w-12',
     md: 'h-24 w-24',
 };
 

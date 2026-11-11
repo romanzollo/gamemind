@@ -16,7 +16,8 @@ import { formatPlural, type Locale, type PluralForms } from '@/shared/i18n';
 
 export type ShareSquare = 'correct' | 'wrong' | 'none';
 
-const SQUARE_EMOJI: Record<ShareSquare, string> = {
+/** Квадратики по вопросам; общие с текстом «Вызова другу». */
+export const SQUARE_EMOJI: Record<ShareSquare, string> = {
     correct: '🟩',
     wrong: '🟥',
     none: '⬜',

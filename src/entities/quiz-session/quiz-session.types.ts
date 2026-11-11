@@ -63,6 +63,13 @@ export type CreateQuizSessionWithSnapshotInput = CreateQuizSessionInput & {
      */
     topicTagId?: string | null;
     /**
+     * NULL/omit = обычная игра. Non-null = попытка «Вызова другу»: вопросы —
+     * замороженный набор автора, сессия не идёт в рейтинг. Только Classic
+     * (не сочетать с timedEndsAt / dailyChallengeId / topicTagId).
+     * Canon: DECISIONS.md → Friend challenge.
+     */
+    friendChallengeId?: string | null;
+    /**
      * NULL/omit = не Survival. Non-null = волна SurvivalRun.
      * Не сочетать с timedEndsAt или dailyChallengeId (CHECK).
      * Canon: DECISIONS.md → Survival Mode MVP.

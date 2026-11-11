@@ -24,6 +24,7 @@ describe('buildRatingBoardSql', () => {
             '(s."survivalRunId" IS NULL OR s."survivalClockOk" IS TRUE)',
         );
         expect(text).toContain('s."topicTagId" IS NULL');
+        expect(text).toContain('s."friendChallengeId" IS NULL');
         expect(text).toContain('u."isGuest" = false');
         expect(text).toContain('u."isTestAccount" = false');
     });
@@ -76,6 +77,13 @@ describe('buildRatingBoardSql', () => {
         expect(text).toContain('s."timedEndsAt" IS NOT NULL');
         expect(text).toContain('s."dailyChallengeId" IS NULL');
         expect(text).not.toContain('s."survivalRunId" IS NULL OR');
+    });
+
+    it('Classic mode leaves out friend challenge games', () => {
+        const { text } = buildRatingBoardSql({ ...WEEK, mode: 'classic' }, 20);
+
+        expect(text).toContain('s."timedEndsAt" IS NULL');
+        expect(text).toContain('s."friendChallengeId" IS NULL');
     });
 
     it('Survival mode keeps only clock-verified waves', () => {

@@ -940,6 +940,50 @@ export type Dictionary = {
         streakLine: string;
         invite: string;
     };
+    /** «Вызов другу» (ADR Friend challenge): результат, ссылка, страница, сравнение. */
+    friendChallenge: {
+        inviteEyebrow: string;
+        /** `{questions}` — «3 вопроса». */
+        inviteText: string;
+        inviteButton: string;
+        linkCopied: string;
+        createFailed: string;
+        questions: PluralForms;
+        /** Текст для мессенджера: `{name}`. */
+        shareHeader: string;
+        /** `{score}` — «2 / 3». */
+        shareScore: string;
+        shareInvite: string;
+        /** Заголовок превью и VK: `{name}`, `{score}`. */
+        shareTitle: string;
+        /** Описание превью: `{questions}`. */
+        ogDescription: string;
+        ogCta: string;
+        pageEyebrow: string;
+        pageSubtitle: string;
+        scoreToBeat: string;
+        ruleSame: string;
+        ruleOneTry: string;
+        acceptGuest: string;
+        acceptLogin: string;
+        accept: string;
+        /** `{count}` — сколько сыграли. */
+        takenBy: string;
+        versusEyebrow: string;
+        outcomeWin: string;
+        outcomeDraw: string;
+        outcomeLoss: string;
+        you: string;
+        allTakers: string;
+        takersEmpty: string;
+        /** Ник, если аккаунт автора удалён. */
+        deletedPlayer: string;
+        errors: {
+            expired: string;
+            own: string;
+            used: string;
+        };
+    };
     /** Подвал и страница /rights (ADR AUDIO_GUESS → Rights and takedown). */
     rights: {
         /** `{year}` — текущий год. */

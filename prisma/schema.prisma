@@ -92,6 +92,8 @@ model User {
   topicQuestionCycles UserTopicQuestionCycle[]
   /// Забеги Survival (волны = отдельные QuizSession). Classic/Blitz/Daily сюда не пишут.
   survivalRuns        SurvivalRun[]
+  /// Вызовы другу, созданные игроком из своих партий Классики.
+  friendChallenges    FriendChallenge[]
 }
 
 model Account {
@@ -274,6 +276,36 @@ model AnswerOption {
 /// Общий набор вопросов на один календарный день (Daily Challenge MVP).
 /// `challengeDate` = DATE (день без времени); `questionIds` freeze при создании.
 /// См. DECISIONS.md → Daily Challenge MVP; feature types в daily-challenge/types.ts.
+/// «Вызов другу»: замороженный набор вопросов партии автора + его результат.
+/// Друг играет те же вопросы (варианты перемешаны заново), одна попытка.
+/// Результат автора скопирован: страница вызова читает одну строку и живёт,
+/// даже если аккаунт автора удалён. Canon: DECISIONS → Friend challenge.
+model FriendChallenge {
+  /// Короткий случайный id — часть ссылки `/challenge/{id}`.
+  id                  String              @id
+  /// NULL — аккаунт автора удалён (вызов и чужие попытки остаются).
+  creatorUserId       String?
+  /// Партия автора; UNIQUE — повторное нажатие отдаёт ту же ссылку.
+  sourceSessionId     String?             @unique
+  /// SINGLE: сложность партии. MIXED: NULL.
+  difficulty          Difficulty?
+  poolKind            QuizSessionPoolKind
+  questionCount       Int
+  /// JSON-массив question id в порядке партии автора; не меняется.
+  questionIds         Json
+  creatorScore        Int
+  creatorCorrectCount Int
+  /// JSON-массив boolean «верно / нет» автора в том же порядке.
+  creatorMarks        Json
+  createdAt           DateTime            @default(now())
+
+  creator       User?         @relation(fields: [creatorUserId], references: [id], onDelete: SetNull)
+  sourceSession QuizSession?  @relation("FriendChallengeSource", fields: [sourceSessionId], references: [id], onDelete: SetNull)
+  attempts      QuizSession[] @relation("FriendChallengeAttempts")
+
+  @@index([creatorUserId])
+}
+
 model DailyChallenge {
   id            String     @id @default(cuid())
   /// Календарный день челленджа (приложение пишет Moscow YYYY-MM-DD как DATE).
@@ -361,21 +393,30 @@ model QuizSession {
   /// NULL = весь банк. Сессии с темой не идут в общий рейтинг.
   /// Canon: docs/DECISIONS.md → Play topics.
   topicTagId        String?
+  /// NULL = не вызов; non-null = попытка «Вызова другу» (те же вопросы, что у
+  /// автора). Такие игры не идут в рейтинг. Canon: DECISIONS → Friend challenge.
+  friendChallengeId String?
   startedAt         DateTime            @default(now())
   completedAt       DateTime?
 
-  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  topicTag         Tag?                  @relation(fields: [topicTagId], references: [id], onDelete: Restrict)
-  dailyChallenge   DailyChallenge?       @relation(fields: [dailyChallengeId], references: [id], onDelete: Restrict)
-  survivalRun      SurvivalRun?          @relation(fields: [survivalRunId], references: [id], onDelete: Restrict)
-  answers          QuizAnswer[]
-  result           QuizResult?
-  sessionQuestions QuizSessionQuestion[]
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicTag          Tag?                  @relation(fields: [topicTagId], references: [id], onDelete: Restrict)
+  dailyChallenge    DailyChallenge?       @relation(fields: [dailyChallengeId], references: [id], onDelete: Restrict)
+  survivalRun       SurvivalRun?          @relation(fields: [survivalRunId], references: [id], onDelete: Restrict)
+  friendChallenge   FriendChallenge?      @relation("FriendChallengeAttempts", fields: [friendChallengeId], references: [id], onDelete: Restrict)
+  /// Вызов, созданный из этой партии (одна партия — один вызов).
+  challengeFromHere FriendChallenge?      @relation("FriendChallengeSource")
+  answers           QuizAnswer[]
+  result            QuizResult?
+  sessionQuestions  QuizSessionQuestion[]
 
   /// Одна сессия на пользователя на день челленджа.
   /// Postgres: несколько строк с dailyChallengeId NULL допустимы (classic).
   @@unique([userId, dailyChallengeId])
+  /// Один вызов — одна попытка игрока (как Челлендж дня).
+  @@unique([userId, friendChallengeId])
   @@index([userId, status])
+  @@index([friendChallengeId])
   @@index([dailyChallengeId])
   @@index([survivalRunId])
   /// Leaderboard: MIXED vs SINGLE+difficulty, без UNION.
