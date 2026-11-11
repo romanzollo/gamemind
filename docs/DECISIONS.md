@@ -2774,7 +2774,8 @@ The risk is not zero: the citation exception targets informational and education
 | Rule | Choice |
 |------|--------|
 | Codec | **MP3 CBR 128 kbps, 44.1 kHz, stereo**; 10 s ≈ 160 KB, cap 300 KB |
-| Loudness | −16 LUFS, true peak −1.5 dBTP; fade-in ~0.2 s, fade-out ~0.5 s |
+| Loudness | −18 LUFS, true peak −1.5 dBTP; fade-in ~0.4 s, fade-out ~0.5 s. Was −16 / 0.2 s until Nov 11: the first clip after the quiz silence hit too hard on a high system volume (owner); clips were even (momentary max spread ~4.6 LU), so the fix is level + softer start, not per-clip tuning |
+| Volume control | Mouse devices only (`fine-pointer` variant: `hover: hover` and `pointer: fine`): speaker icon (mute) + short slider next to the waveform in `QuestionAudio`. One value per device for all questions and modes, in localStorage (`gm_audio_volume`, `src/features/quiz/lib/audio-volume.ts`), default 100 %. Phones keep the hardware buttons: iOS Safari ignores `<audio>.volume`, and a Web Audio rebuild of the player was judged not worth the risk (owner, Nov 11) |
 | Length | Validation accepts 4–11 s; the default is 10 s |
 
 **Not chosen:**

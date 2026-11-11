@@ -2,11 +2,11 @@
     "version": 1,
     "clips": {
         "ac2-ezios-family": {
-            "url": "/media/audio/2ca5d9e1c08d3678.mp3",
-            "sha256": "2ca5d9e1c08d367894f9ebb6f8699278ab0d7225bc51e6ebc2ca6448af287498",
+            "url": "/media/audio/b459a3eb7273b840.mp3",
+            "sha256": "b459a3eb7273b8402396b1c80755b991ca4da46aac5f0ae6f78bf85bf6712410",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/ac2-ezios-family.mp3",
                 "startSeconds": 51.31,
@@ -14,11 +14,11 @@
             }
         },
         "btdd-title": {
-            "url": "/media/audio/53f615b12a8300ec.mp3",
-            "sha256": "53f615b12a8300ec861a0c8820f06eed073a43063dd8f22434ba8d0c50357a88",
+            "url": "/media/audio/75bc578c97321dcb.mp3",
+            "sha256": "75bc578c97321dcb5d9a69fff4305211ea62ed7b18cdfd38a542ae9f90f23573",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/btdd-title.mp3",
                 "startSeconds": 1.62,
@@ -26,11 +26,11 @@
             }
         },
         "contra-bases": {
-            "url": "/media/audio/c1d0c4f7a7fae700.mp3",
-            "sha256": "c1d0c4f7a7fae70028b0b53fc0b62466225e043720fe0a8a305c3c0b13a349fd",
+            "url": "/media/audio/fe1a9a4bfed9ad5b.mp3",
+            "sha256": "fe1a9a4bfed9ad5be787470271746ef2392747b96e0751e24bf9bb8b1a48655b",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/contra-bases.mp3",
                 "startSeconds": 6.64,
@@ -38,11 +38,11 @@
             }
         },
         "contra-hard-corps": {
-            "url": "/media/audio/9b0eb9dde684f3b8.mp3",
-            "sha256": "9b0eb9dde684f3b8d10df72761a525b64045b86249bb3e13bffc1188c65a104a",
+            "url": "/media/audio/95874bd0c44a87e6.mp3",
+            "sha256": "95874bd0c44a87e6f876918e1bbaac3ad6bec146372b6b4d919d681527c00872",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/contra-hard-corps.mp3",
                 "startSeconds": 71.33,
@@ -50,11 +50,11 @@
             }
         },
         "contra-jungle": {
-            "url": "/media/audio/4a94db79d6568743.mp3",
-            "sha256": "4a94db79d6568743ef51fa13a880b1c6d8280551d8db7d9854f3ed33cb712c95",
+            "url": "/media/audio/3f5ddf5a1c3e02ef.mp3",
+            "sha256": "3f5ddf5a1c3e02ef54e75ad30d7049e88079e12eb2e512fd9c84ab68a0f58a0a",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/contra-jungle.mp3",
                 "startSeconds": 0,
@@ -62,11 +62,11 @@
             }
         },
         "doom-at-dooms-gate": {
-            "url": "/media/audio/4c92d9cdf6a7db46.mp3",
-            "sha256": "4c92d9cdf6a7db46c3f76067730a4301532fdc7968cac65cd790e921d9beb67f",
+            "url": "/media/audio/c317eb906c18cc46.mp3",
+            "sha256": "c317eb906c18cc46d89c2983ec5f990dec5430b1321d1521efc9b8747260128b",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/doom-at-dooms-gate.mp3",
                 "startSeconds": 41.79,
@@ -74,11 +74,11 @@
             }
         },
         "doom-eternal-only-thing-they-fear": {
-            "url": "/media/audio/14280efaf9c87d47.mp3",
-            "sha256": "14280efaf9c87d4748226f78619795fa0dee7f572ddad3a7d1d865c84772c5b9",
+            "url": "/media/audio/16e488185632b8ce.mp3",
+            "sha256": "16e488185632b8cee0a52a1442a2308f215368b12a32df82fbe2b63fab5c1325",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/doom-eternal-only-thing-they-fear.mp3",
                 "startSeconds": 27.95,
@@ -86,11 +86,11 @@
             }
         },
         "doom2-running-from-evil": {
-            "url": "/media/audio/4df1140a576bd424.mp3",
-            "sha256": "4df1140a576bd424169cbe328e2811469e06031307a4b851cd806ddb15c8bf2c",
+            "url": "/media/audio/e17e4ae1ffe341fd.mp3",
+            "sha256": "e17e4ae1ffe341fdb1e04884af01f823ca394c2e681050a91ea5f60e403b926d",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/doom2-running-from-evil.mp3",
                 "startSeconds": 28.05,
@@ -98,11 +98,11 @@
             }
         },
         "ds1-gwyn": {
-            "url": "/media/audio/4660f419a66c4608.mp3",
-            "sha256": "4660f419a66c460816ff46cfb1f786f69613000d4c69a19835ef451b56580b62",
+            "url": "/media/audio/335bf34f6a307e83.mp3",
+            "sha256": "335bf34f6a307e83cdc8907a820e2c5a016d56613e1afa31f70ac402a174160f",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.7,
             "input": {
                 "sourceFile": "raw-quiz-audio/ds1-gwyn.mp3",
                 "startSeconds": 33.15,
@@ -110,11 +110,11 @@
             }
         },
         "ds3-main-menu": {
-            "url": "/media/audio/760cf4bcfdf88a1f.mp3",
-            "sha256": "760cf4bcfdf88a1f9ca3e93790ab0af2d91ee1bfbb7a8f404dc3229f1037059c",
+            "url": "/media/audio/f01bf88f535732a4.mp3",
+            "sha256": "f01bf88f535732a49ce04aaace43631daeeaea71a30b0ee0624a291a814237f0",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.3,
+            "loudnessLufs": -18.3,
             "input": {
                 "sourceFile": "raw-quiz-audio/ds3-main-menu.mp3",
                 "startSeconds": 42.95,
@@ -122,11 +122,11 @@
             }
         },
         "ejim2-anything-but-tangerines": {
-            "url": "/media/audio/9246b2b68133b0c4.mp3",
-            "sha256": "9246b2b68133b0c4c00f1c5eb268dae1ff0f6b182a88df94c817086c427f82f0",
+            "url": "/media/audio/4dbcbf81d54ccbdc.mp3",
+            "sha256": "4dbcbf81d54ccbdcd2ef45ece5819316ce1c4bb0257d5073e6f91eff22e27531",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/ejim2-anything-but-tangerines.mp3",
                 "startSeconds": 41.56,
@@ -134,11 +134,11 @@
             }
         },
         "elden-ring-malenia": {
-            "url": "/media/audio/dab780232561aa4c.mp3",
-            "sha256": "dab780232561aa4c9a4376f70008c123db2f62cb2ccabcfc51237b2e56c5b3e9",
+            "url": "/media/audio/6b359efd553727c1.mp3",
+            "sha256": "6b359efd553727c132557070a8b594cb78e9bc945baaf3c01c275f8f0d80d2be",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/elden-ring-malenia.mp3",
                 "startSeconds": 109.97,
@@ -146,11 +146,11 @@
             }
         },
         "elden-ring-theme": {
-            "url": "/media/audio/12100a153a3a1c2f.mp3",
-            "sha256": "12100a153a3a1c2f9ae0cc258d8f4fa6542a13f2b884700c95c58181f857ba91",
+            "url": "/media/audio/8c6dbfa9b660b987.mp3",
+            "sha256": "8c6dbfa9b660b987b112ecc16d3f6e7d487659b3ea0ac85435a91c8f945e1341",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.2,
+            "loudnessLufs": -18.3,
             "input": {
                 "sourceFile": "raw-quiz-audio/elden-ring-theme.mp3",
                 "startSeconds": 20.34,
@@ -158,11 +158,11 @@
             }
         },
         "fallout3-world-on-fire": {
-            "url": "/media/audio/1eb2e314a28af197.mp3",
-            "sha256": "1eb2e314a28af197aa2a38a8e8b7965a310263434d28af042bcddd38bff2f028",
+            "url": "/media/audio/a0c798ea2e71a03f.mp3",
+            "sha256": "a0c798ea2e71a03f80f2e11433e29cf6c70e3a93692316e6e07c49177a40d384",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/fallout3-world-on-fire.mp3",
                 "startSeconds": 8.22,
@@ -170,11 +170,11 @@
             }
         },
         "fallout4-main-theme": {
-            "url": "/media/audio/5fb3cbac0fd3e0e2.mp3",
-            "sha256": "5fb3cbac0fd3e0e255a02beca8cd50a8afa4c7803719fba578f2496042b1f510",
+            "url": "/media/audio/6362f38b10cd2b3f.mp3",
+            "sha256": "6362f38b10cd2b3f14a03b00d7e196ef17fd394b383cc87e1f681ec6db3b4126",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.8,
+            "loudnessLufs": -18.9,
             "input": {
                 "sourceFile": "raw-quiz-audio/fallout4-main-theme.mp3",
                 "startSeconds": 65.71,
@@ -182,11 +182,11 @@
             }
         },
         "fnv-blue-moon": {
-            "url": "/media/audio/3f5a856e8a5a48e2.mp3",
-            "sha256": "3f5a856e8a5a48e2972142d6d6165462b62306ad5b61eafd3d2259186e77aaf2",
+            "url": "/media/audio/72a3a850ce7a67a1.mp3",
+            "sha256": "72a3a850ce7a67a18f632f22637c13b0e6ec97f33f69eab7b5981f4e5e64efce",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/fnv-blue-moon.mp3",
                 "startSeconds": 0.53,
@@ -194,11 +194,11 @@
             }
         },
         "gow-2018-theme": {
-            "url": "/media/audio/49b117dcc81418cd.mp3",
-            "sha256": "49b117dcc81418cd588ebbf49f7f1b11b5d81963f08d9e0372799f1568fd85a6",
+            "url": "/media/audio/2b3f802e9460d730.mp3",
+            "sha256": "2b3f802e9460d730fcfffd7ca1f8598232a7def808c0ad599482979bf88f9a21",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/gow-2018-theme.mp3",
                 "startSeconds": 224.77,
@@ -206,11 +206,11 @@
             }
         },
         "gta-sa-theme": {
-            "url": "/media/audio/a134b1fceff89b87.mp3",
-            "sha256": "a134b1fceff89b877ab91c211fece9bcdbb41a4e031ef26e0627a51caefe4047",
+            "url": "/media/audio/5f048ac809a323b8.mp3",
+            "sha256": "5f048ac809a323b8e69243d973da0195a4d2b7ed5d659fd81ea48db3be04f9f2",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/gta-sa-theme.aac",
                 "startSeconds": 33.9,
@@ -218,11 +218,11 @@
             }
         },
         "gta4-soviet-connection": {
-            "url": "/media/audio/64ce921c8bc09ca2.mp3",
-            "sha256": "64ce921c8bc09ca2b5a90b48fb33a303e812cae99f227a084456d881e58849c8",
+            "url": "/media/audio/5446ab68f2a62446.mp3",
+            "sha256": "5446ab68f2a62446a42b6c7fb228e1ec6ce58c0b4d927bfc1318cabb090a6ebb",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.3,
+            "loudnessLufs": -18.3,
             "input": {
                 "sourceFile": "raw-quiz-audio/gta4-soviet-connection.mp3",
                 "startSeconds": 60.69,
@@ -230,11 +230,11 @@
             }
         },
         "halo-main-menu": {
-            "url": "/media/audio/578ecd19178ee52b.mp3",
-            "sha256": "578ecd19178ee52b9284551779e7b2dbe379852b97661c79d3265753ab2daa4f",
+            "url": "/media/audio/41708ea68608f65e.mp3",
+            "sha256": "41708ea68608f65e685081c1b585a964ebfb9fc0213ac435f7f5168d876499c1",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -17.3,
+            "loudnessLufs": -19.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/halo-main-menu.mp3",
                 "startSeconds": 0.02,
@@ -242,11 +242,11 @@
             }
         },
         "halo2-mjolnir-mix": {
-            "url": "/media/audio/9c5ab8f5fbdb2a93.mp3",
-            "sha256": "9c5ab8f5fbdb2a93b2db3da37df9da6237d16e5f11796651dbd736a2c97116b0",
+            "url": "/media/audio/c23955126c847d7d.mp3",
+            "sha256": "c23955126c847d7d4910e57c51e05f39e3b5a935afc1e929e2e8ea6707635e61",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/halo2-mjolnir-mix.mp3",
                 "startSeconds": 139.87,
@@ -254,11 +254,11 @@
             }
         },
         "heroes3-main-theme": {
-            "url": "/media/audio/d01f4b106c43cd13.mp3",
-            "sha256": "d01f4b106c43cd136214f5f65d268dc9b09161b83c1041732437b9b1b8e1e105",
+            "url": "/media/audio/2c1cf848c0808fe5.mp3",
+            "sha256": "2c1cf848c0808fe56737dde998b31626cc6ef1c4189215eee8dcaa468f556ef7",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -15.4,
+            "loudnessLufs": -17.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/heroes3-main-theme.mp3",
                 "startSeconds": 0.04,
@@ -266,11 +266,11 @@
             }
         },
         "heroes3-necropolis": {
-            "url": "/media/audio/3cbdaeff3cf031fc.mp3",
-            "sha256": "3cbdaeff3cf031fcebe40037de580eb0680344f96ef338497044bbce23b7fa14",
+            "url": "/media/audio/532971cf858db751.mp3",
+            "sha256": "532971cf858db751e1252d04c44056241ecbcb05fee9f8b74dfb2beb17a9725d",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/heroes3-necropolis.mp3",
                 "startSeconds": 114.01,
@@ -278,11 +278,11 @@
             }
         },
         "heroes3-rampart": {
-            "url": "/media/audio/625e0fadf107088c.mp3",
-            "sha256": "625e0fadf107088c88f22bf94979d9a4707db408bb2bd83497a7950ab0bc66e0",
+            "url": "/media/audio/f5e2624c8f0a0330.mp3",
+            "sha256": "f5e2624c8f0a03309fcd59d3647f69e5fe7cc0c4165cd7fcdf1cf4524addb80d",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/heroes3-rampart.mp3",
                 "startSeconds": 135.14,
@@ -290,11 +290,11 @@
             }
         },
         "mgs-best-is-yet-to-come": {
-            "url": "/media/audio/5070aef22d6b7039.mp3",
-            "sha256": "5070aef22d6b70399b306ec732da0fb44d03dec141b6985f1cd8a0776586e2f1",
+            "url": "/media/audio/e81b6a87b28f603e.mp3",
+            "sha256": "e81b6a87b28f603e09f1a47e363d302c504f12a8b45f36cb1cc0f58b740d8491",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/mgs-best-is-yet-to-come.mp3",
                 "startSeconds": 173.22,
@@ -302,11 +302,11 @@
             }
         },
         "mgs-encounter": {
-            "url": "/media/audio/88f7f8bcfc78e380.mp3",
-            "sha256": "88f7f8bcfc78e38044bdb55dcb6320db1d016ffd0ad18947caafe1c97d0d0668",
+            "url": "/media/audio/ad8803d6b442f28b.mp3",
+            "sha256": "ad8803d6b442f28b6b7eb7715940cf255cd77a40759e404b1abe826f7b4f77d7",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -17.3,
+            "loudnessLufs": -19.3,
             "input": {
                 "sourceFile": "raw-quiz-audio/mgs-encounter.mp3",
                 "startSeconds": 17.32,
@@ -314,11 +314,11 @@
             }
         },
         "mgs-introduction": {
-            "url": "/media/audio/b2e813180de8a5b6.mp3",
-            "sha256": "b2e813180de8a5b6f1056ca8ad00fce8a6504b5a7bc448cb015298606129fafc",
+            "url": "/media/audio/ee388b0ab0798a52.mp3",
+            "sha256": "ee388b0ab0798a5243a9622a116e6886e23cdab4a07a2c3a81d57928fae6c539",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/mgs-introduction.mp3",
                 "startSeconds": 11,
@@ -326,11 +326,11 @@
             }
         },
         "minecraft-subwoofer-lullaby": {
-            "url": "/media/audio/9f535e397527d760.mp3",
-            "sha256": "9f535e397527d760b7582aecc2059be5a954ed958f32d675618d38219ddb4db6",
+            "url": "/media/audio/20945cc1ccd67884.mp3",
+            "sha256": "20945cc1ccd678844131400b136a87aba3e4eabac4ae5fa23a9a49da9867cd56",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/minecraft-subwoofer-lullaby.mp3",
                 "startSeconds": 54.19,
@@ -338,11 +338,11 @@
             }
         },
         "minecraft-sweden": {
-            "url": "/media/audio/357d70f6e0cb8b4b.mp3",
-            "sha256": "357d70f6e0cb8b4b7f66e3056d8f56a796452fc076a2f6c35a094e874096b8cc",
+            "url": "/media/audio/34257f4bf81737e3.mp3",
+            "sha256": "34257f4bf81737e36873c778bbfd6bc459d1c659463b461e832e4e780ac12c11",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/minecraft-sweden.mp3",
                 "startSeconds": 84.7,
@@ -350,11 +350,11 @@
             }
         },
         "mk-techno-syndrome": {
-            "url": "/media/audio/c6c018a59d236ced.mp3",
-            "sha256": "c6c018a59d236ced38f08dc5bd60081cb5abb95e864a117cafb2615903e0a310",
+            "url": "/media/audio/6223465001e06a31.mp3",
+            "sha256": "6223465001e06a31ed7a368038ef654b616643aeaa8a684d0f316527ad8ed8f0",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/mk-techno-syndrome.mp3",
                 "startSeconds": 36.82,
@@ -362,11 +362,11 @@
             }
         },
         "morrowind-call-of-magic": {
-            "url": "/media/audio/ac9f101f97bfd238.mp3",
-            "sha256": "ac9f101f97bfd2380320d33a054012c6e1646b3e84921aeab30c6914f2d2a0aa",
+            "url": "/media/audio/0225af8cefb2ae1b.mp3",
+            "sha256": "0225af8cefb2ae1bbeb549d9c070faedafe54a73c66431fe908e01f1b3f020c5",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.7,
+            "loudnessLufs": -18.8,
             "input": {
                 "sourceFile": "raw-quiz-audio/morrowind-call-of-magic.aac",
                 "startSeconds": 83.45,
@@ -374,11 +374,11 @@
             }
         },
         "nfsu-get-low": {
-            "url": "/media/audio/bcf07aeb142e2433.mp3",
-            "sha256": "bcf07aeb142e2433d88b1f5d7823eea828e6795c2fe02b15286d994490111717",
+            "url": "/media/audio/9e7d83c04f2a3cff.mp3",
+            "sha256": "9e7d83c04f2a3cff80ae8cdffc1969ae0bb1454ecd7969adeb7bf8855604d75b",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.7,
             "input": {
                 "sourceFile": "raw-quiz-audio/nfsu-get-low.aac",
                 "startSeconds": 33.53,
@@ -386,11 +386,11 @@
             }
         },
         "nfsu2-riders-on-the-storm": {
-            "url": "/media/audio/f217e7f157bb90db.mp3",
-            "sha256": "f217e7f157bb90dbdea670b713ee21b42c82f8f8bf785c3bb3d76b0609057e53",
+            "url": "/media/audio/08ce951590157095.mp3",
+            "sha256": "08ce9515901570957216228e95110005065b78c700545a1f1b552331de351e41",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/nfsu2-riders-on-the-storm.mp3",
                 "startSeconds": 66.22,
@@ -398,11 +398,11 @@
             }
         },
         "oblivion-reign-of-the-septims": {
-            "url": "/media/audio/0bf421300c5b2f40.mp3",
-            "sha256": "0bf421300c5b2f40a6390bc0a9d58cc2a3f81167f89bb644d9e95b49a31dc48c",
+            "url": "/media/audio/aa9932e1f7cbc178.mp3",
+            "sha256": "aa9932e1f7cbc1787c88661a44472ec8587669f4d3f6749a8f9088d40afe5e19",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.7,
+            "loudnessLufs": -18.7,
             "input": {
                 "sourceFile": "raw-quiz-audio/oblivion-reign-of-the-septims.mp3",
                 "startSeconds": 115.59,
@@ -410,11 +410,11 @@
             }
         },
         "portal-still-alive": {
-            "url": "/media/audio/cb2dba7d9209d8ba.mp3",
-            "sha256": "cb2dba7d9209d8ba5ba56a875ec04593c5f3cd6c736682512ef75ae17519bc15",
+            "url": "/media/audio/14ea34a3a0c02087.mp3",
+            "sha256": "14ea34a3a0c020877a31fe811c7a1e6739ca41fc9f4a264b32b863515910e571",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.8,
+            "loudnessLufs": -18.8,
             "input": {
                 "sourceFile": "raw-quiz-audio/portal-still-alive.mp3",
                 "startSeconds": 0.09,
@@ -422,11 +422,11 @@
             }
         },
         "rdr2-american-venom": {
-            "url": "/media/audio/b07333a3c6b74d96.mp3",
-            "sha256": "b07333a3c6b74d969e50202fb400d5f586f329ea6f0b3ba31fa7065c697eada7",
+            "url": "/media/audio/602569eb073a947f.mp3",
+            "sha256": "602569eb073a947f00fd2071ce2cc30560aef0b50f6d7ce4a8544c493c79c421",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/rdr2-american-venom.mp3",
                 "startSeconds": 38.59,
@@ -434,11 +434,11 @@
             }
         },
         "rdr2-thats-the-way-it-is": {
-            "url": "/media/audio/456af54a31066ece.mp3",
-            "sha256": "456af54a31066eceea1d60f9239d4a0c9589a950dfe37f8f6189a9441bbe29c1",
+            "url": "/media/audio/b608530f34e18426.mp3",
+            "sha256": "b608530f34e1842667477eb24b7210786a5ba27bc905512757914ccaa3668ad5",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.7,
+            "loudnessLufs": -18.7,
             "input": {
                 "sourceFile": "raw-quiz-audio/rdr2-thats-the-way-it-is.mp3",
                 "startSeconds": 159.42,
@@ -446,11 +446,11 @@
             }
         },
         "rnr-racing-bad-to-the-bone": {
-            "url": "/media/audio/0a9b9eccb4aa2636.mp3",
-            "sha256": "0a9b9eccb4aa263619eb51bf17accdd9f687b9970ae9a5a256a1634270bf24b6",
+            "url": "/media/audio/f2e9ac3a5f922475.mp3",
+            "sha256": "f2e9ac3a5f9224751950621f1282f55474bfc403216f01d003ca33468f474752",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/rnr-racing-bad-to-the-bone.mp3",
                 "startSeconds": 4.69,
@@ -458,11 +458,11 @@
             }
         },
         "robocop3-nes": {
-            "url": "/media/audio/65c45dcc6900c65f.mp3",
-            "sha256": "65c45dcc6900c65f44ede61c4430285774d6bf1a7565e2d3e6c20a4e21137a40",
+            "url": "/media/audio/1a21888a1f402416.mp3",
+            "sha256": "1a21888a1f4024161b91c7e270d5ce540317909acc054c5ff142a6a7eb91e224",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/robocop3-nes.mp3",
                 "startSeconds": 49.5,
@@ -470,11 +470,11 @@
             }
         },
         "sh1-not-tomorrow": {
-            "url": "/media/audio/4dd5d968cb7a22e9.mp3",
-            "sha256": "4dd5d968cb7a22e92da29514501cce734d1ae1446b881ac5b4b65a7da5a05d50",
+            "url": "/media/audio/cb4221fc425a6177.mp3",
+            "sha256": "cb4221fc425a617752dbbcf6f396587117e6ff6c0f0109f4980287c85be15572",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/sh1-not-tomorrow.mp3",
                 "startSeconds": 9.84,
@@ -482,11 +482,11 @@
             }
         },
         "sh1-theme": {
-            "url": "/media/audio/5e42cfe7d3b7ada6.mp3",
-            "sha256": "5e42cfe7d3b7ada6d9a5c92bf1dcd9848dd663ee588638c9a00c638a88b51b99",
+            "url": "/media/audio/693ff2ee29ba4b49.mp3",
+            "sha256": "693ff2ee29ba4b498134367c19bc78788408f9c5a1f2deddfe40c98459eae9c4",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/sh1-theme.mp3",
                 "startSeconds": 23.5,
@@ -494,11 +494,11 @@
             }
         },
         "sh2-promise": {
-            "url": "/media/audio/70496d622b471a02.mp3",
-            "sha256": "70496d622b471a02db1340368b5cb4d671891208d94a81a0049825a3d9360546",
+            "url": "/media/audio/a1e60c568c041f43.mp3",
+            "sha256": "a1e60c568c041f4353ba700c17745bc6d293afbc3eff272ee551496295119760",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/sh2-promise.mp3",
                 "startSeconds": 67.29,
@@ -506,11 +506,11 @@
             }
         },
         "sh2-theme-of-laura": {
-            "url": "/media/audio/714b1b265635d5b2.mp3",
-            "sha256": "714b1b265635d5b200f4770dc7d82607cb1aa4203bbd326b3caf8971ff60dbc1",
+            "url": "/media/audio/b9e0a651da70a272.mp3",
+            "sha256": "b9e0a651da70a27243ebc4ab25b6373c2711ba8b918bd3177ee695290b5fd645",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/sh2-theme-of-laura.mp3",
                 "startSeconds": 28.05,
@@ -518,11 +518,11 @@
             }
         },
         "skyrim-dragonborn": {
-            "url": "/media/audio/1d81df067c3a6457.mp3",
-            "sha256": "1d81df067c3a645757b9341e8760ea0551a25a0bc6176459b7c858107cfcb4b1",
+            "url": "/media/audio/a84c42dc45025f4c.mp3",
+            "sha256": "a84c42dc45025f4c78892533edf2dc69393c909fe2b1372de6763b22dab8a459",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.7,
             "input": {
                 "sourceFile": "raw-quiz-audio/skyrim-dragonborn.mp3",
                 "startSeconds": 36.45,
@@ -530,11 +530,11 @@
             }
         },
         "smb-overworld": {
-            "url": "/media/audio/0cf2f7c318424a10.mp3",
-            "sha256": "0cf2f7c318424a108e2eda75893f419adedc28ea7524c659fa95dda403458b56",
+            "url": "/media/audio/48f98759ad488e5f.mp3",
+            "sha256": "48f98759ad488e5f431dc0c8228f692e81860393d6b4bc8a9520465f453ce2d2",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/smb-overworld.mp3",
                 "startSeconds": 0,
@@ -542,11 +542,11 @@
             }
         },
         "smb-underground": {
-            "url": "/media/audio/33a43a5c0ed215f0.mp3",
-            "sha256": "33a43a5c0ed215f0a12b9f634b534c509fa8b1aefc7ac7139da8d17df0264e8b",
+            "url": "/media/audio/c51c24fd495f4dda.mp3",
+            "sha256": "c51c24fd495f4ddaa8499d9bd43afdb301f65fc04fc65b30d86c6c06b84ff904",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.8,
             "input": {
                 "sourceFile": "raw-quiz-audio/smb-underground.mp3",
                 "startSeconds": 0,
@@ -554,11 +554,11 @@
             }
         },
         "sonic-green-hill": {
-            "url": "/media/audio/18b2ba338f08c394.mp3",
-            "sha256": "18b2ba338f08c394bbb5a05f48220dc5fa877e3367fc8de3c6d043de53144885",
+            "url": "/media/audio/9c3bcbee4fcf8b04.mp3",
+            "sha256": "9c3bcbee4fcf8b048ec1127c9736f5f344fb7ec762fb4dfea4e90b91e7b2afb5",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/sonic-green-hill.mp3",
                 "startSeconds": 14.67,
@@ -566,11 +566,11 @@
             }
         },
         "stalker-cop-pripyat-day": {
-            "url": "/media/audio/811affd4543ea0b3.mp3",
-            "sha256": "811affd4543ea0b39f61505a19e98fb8a8751666ca3dd9dc1b166d7be0a78401",
+            "url": "/media/audio/3d73f106cad33039.mp3",
+            "sha256": "3d73f106cad33039813d2b93f678e47f9cc7574e4480d39f52e1380a70fc03e0",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/stalker-cop-pripyat-day.mp3",
                 "startSeconds": 14.76,
@@ -578,11 +578,11 @@
             }
         },
         "stalker-dirge-for-the-planet": {
-            "url": "/media/audio/0e1eef8707b22646.mp3",
-            "sha256": "0e1eef8707b2264629cfab93b62e1f270e12f0b08865c6e87d028ee7e440da3a",
+            "url": "/media/audio/519c9ab62fdfd9ff.mp3",
+            "sha256": "519c9ab62fdfd9ff9b4ff1b57519c062181a19abc61ee43472c01ae450fb472c",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/stalker-dirge-for-the-planet.mp3",
                 "startSeconds": 77.55,
@@ -590,11 +590,11 @@
             }
         },
         "tetris-korobeiniki": {
-            "url": "/media/audio/28975fd1a6d4be6a.mp3",
-            "sha256": "28975fd1a6d4be6a3ebe9dfc283754c11bacc526eb213419b686bc540464808f",
+            "url": "/media/audio/3a786e8f5e1abf2b.mp3",
+            "sha256": "3a786e8f5e1abf2b7ce9ffdbd4deb7cc1e0ce38a329ffe8031e96ea910f94b87",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/tetris-korobeiniki.mp3",
                 "startSeconds": 0,
@@ -602,11 +602,11 @@
             }
         },
         "tlou-all-gone": {
-            "url": "/media/audio/730664ff35ec08db.mp3",
-            "sha256": "730664ff35ec08dbc267489bd9120c893b11c5516f28fe093c826f8f2e084604",
+            "url": "/media/audio/d6da92c0e97b3c20.mp3",
+            "sha256": "d6da92c0e97b3c20c45ab86a523ba2b7cfcf262e04ec7dd8ec9b4c4d80955e10",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.2,
+            "loudnessLufs": -18.3,
             "input": {
                 "sourceFile": "raw-quiz-audio/tlou-all-gone.mp3",
                 "startSeconds": 39.42,
@@ -614,11 +614,11 @@
             }
         },
         "tlou-main-theme": {
-            "url": "/media/audio/393ebd1d53ab4ce0.mp3",
-            "sha256": "393ebd1d53ab4ce02c857e4d2e7761be7618afb275fd8d368351a6b5599cb720",
+            "url": "/media/audio/820b6a7ae9587598.mp3",
+            "sha256": "820b6a7ae958759820b60f3797d94440fe67515f50c60fbf60e62084264a7981",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/tlou-main-theme.mp3",
                 "startSeconds": 140.57,
@@ -626,11 +626,11 @@
             }
         },
         "transistor-old-friends": {
-            "url": "/media/audio/cbbb0799200d1a67.mp3",
-            "sha256": "cbbb0799200d1a67b0818576474f4329c43fadd02676c1a3eb5ece114ceca1dc",
+            "url": "/media/audio/6b129287e255a28a.mp3",
+            "sha256": "6b129287e255a28adbe884f638352cb9851f2b3313b1bcb4a68f46a6e25ace56",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.7,
             "input": {
                 "sourceFile": "raw-quiz-audio/transistor-old-friends.mp3",
                 "startSeconds": 52.01,
@@ -638,11 +638,11 @@
             }
         },
         "uncharted-drakes-theme": {
-            "url": "/media/audio/190e8618aaf7baa7.mp3",
-            "sha256": "190e8618aaf7baa7ec9bab47ecd6e9247b185f4d703a640c4beb6af345303055",
+            "url": "/media/audio/7dd9d2989576dc38.mp3",
+            "sha256": "7dd9d2989576dc388081d315124a51fa9bad9805875792fd5090a7f8993d01e2",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/uncharted-drakes-theme.mp3",
                 "startSeconds": 23.03,
@@ -650,11 +650,11 @@
             }
         },
         "witcher1-river-of-life": {
-            "url": "/media/audio/bb1a23e6a3bac947.mp3",
-            "sha256": "bb1a23e6a3bac9471bfc7d225f75e85552f3fca576c96b5a26825ca555f48c22",
+            "url": "/media/audio/d4b782680b065efc.mp3",
+            "sha256": "d4b782680b065efc4af95eaafdae44543ca7d46bbb594921539a16514f3ac96a",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.2,
+            "loudnessLufs": -18.3,
             "input": {
                 "sourceFile": "raw-quiz-audio/witcher1-river-of-life.mp3",
                 "startSeconds": 113.4,
@@ -662,11 +662,11 @@
             }
         },
         "witcher3-ard-skellig": {
-            "url": "/media/audio/9bebd18881ccbea6.mp3",
-            "sha256": "9bebd18881ccbea6650d837ff930f49d122a80376d7b14b61bf76331c4607d29",
+            "url": "/media/audio/82f2dba3d7fbfb16.mp3",
+            "sha256": "82f2dba3d7fbfb16de27db4bf18e02ec0e63d1aa449d5bb99fc8c1ed945289e0",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/witcher3-ard-skellig.mp3",
                 "startSeconds": 42.95,
@@ -674,11 +674,11 @@
             }
         },
         "witcher3-kaer-morhen": {
-            "url": "/media/audio/aec116170bf0c346.mp3",
-            "sha256": "aec116170bf0c346db4504f58dfa02c7842a64ab5f84ffa074f06d0ce4f9c5e2",
+            "url": "/media/audio/4049f204a066f053.mp3",
+            "sha256": "4049f204a066f0534cd1162f906a92e5d2853c455776aafa090093cb61339337",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -15.9,
+            "loudnessLufs": -18,
             "input": {
                 "sourceFile": "raw-quiz-audio/witcher3-kaer-morhen.mp3",
                 "startSeconds": 28.56,
@@ -686,11 +686,11 @@
             }
         },
         "witcher3-silver-for-monsters": {
-            "url": "/media/audio/672cf4f896a54430.mp3",
-            "sha256": "672cf4f896a54430899336415ac60c406e5952f218a2adf5437ed31dcceca4f7",
+            "url": "/media/audio/fd4bfd9b7cb212de.mp3",
+            "sha256": "fd4bfd9b7cb212de1d541c31e35db04c5972fe87508d7d6b2396207b9d22e006",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.3,
+            "loudnessLufs": -18.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/witcher3-silver-for-monsters.mp3",
                 "startSeconds": 34.5,
@@ -698,11 +698,11 @@
             }
         },
         "witcher3-steel-for-humans": {
-            "url": "/media/audio/e55201475d098892.mp3",
-            "sha256": "e55201475d0988921c413dcce5f4c0a63de829c53134a32eac507a8daaacf1b3",
+            "url": "/media/audio/9e9b83754010c8fd.mp3",
+            "sha256": "9e9b83754010c8fdb217122aa0fe7f18417760ebf9206d6e8bc2085276c5011c",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.5,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/witcher3-steel-for-humans.mp3",
                 "startSeconds": 27.3,
@@ -710,11 +710,11 @@
             }
         },
         "witcher3-the-trail": {
-            "url": "/media/audio/e8b6cdc697d31db9.mp3",
-            "sha256": "e8b6cdc697d31db93b538958f8e0f78897f45b164e665ca912c544d3a8e2b9a3",
+            "url": "/media/audio/df3d00160d53da4f.mp3",
+            "sha256": "df3d00160d53da4fdd627910b7103a663899d4dfbb2121d99dcc96876448e396",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.6,
+            "loudnessLufs": -18.6,
             "input": {
                 "sourceFile": "raw-quiz-audio/witcher3-the-trail.mp3",
                 "startSeconds": 72.12,
@@ -722,11 +722,11 @@
             }
         },
         "wow-legends-of-azeroth": {
-            "url": "/media/audio/98dcffa707517bcf.mp3",
-            "sha256": "98dcffa707517bcf83cbe4233c438c9d938caed2682cc235099855d022d7f953",
+            "url": "/media/audio/66dfe3c873dbc0a1.mp3",
+            "sha256": "66dfe3c873dbc0a17cb2242e79367b59d34262a20283578283dc9608c1520be8",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.5,
             "input": {
                 "sourceFile": "raw-quiz-audio/wow-legends-of-azeroth.mp3",
                 "startSeconds": 21.45,
@@ -734,11 +734,11 @@
             }
         },
         "wow-stormwind": {
-            "url": "/media/audio/189ffecafb0491fb.mp3",
-            "sha256": "189ffecafb0491fb3212f58db342332a83872fd544a5b461b420bd64bfc7f2d1",
+            "url": "/media/audio/a5fd1d9491d88416.mp3",
+            "sha256": "a5fd1d9491d884165985a93bf77e50cbb66c4701b0af6cb695fbd5b6f933f071",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/wow-stormwind.mp3",
                 "startSeconds": 1.06,
@@ -746,11 +746,11 @@
             }
         },
         "zelda-main-theme": {
-            "url": "/media/audio/de91d1c675c5871c.mp3",
-            "sha256": "de91d1c675c5871cfcbc96e35ff4cf13a24dd31add2b9c86e475105ef4eb9e1d",
+            "url": "/media/audio/35630886e3d8291b.mp3",
+            "sha256": "35630886e3d8291bf446573c9aaaf277f0660b517a9f99e6e22fe6fc209f9081",
             "bytes": 160496,
             "durationMs": 10031,
-            "loudnessLufs": -16.4,
+            "loudnessLufs": -18.4,
             "input": {
                 "sourceFile": "raw-quiz-audio/zelda-main-theme.mp3",
                 "startSeconds": 69.56,

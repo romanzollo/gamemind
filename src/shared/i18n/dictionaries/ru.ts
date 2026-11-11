@@ -598,6 +598,9 @@ export const ruDictionary: Dictionary = {
             trackCreditWithPerformer:
                 'Трек: {track} · {composer} · исп. {performer}',
             unavailable: 'Клип недоступен',
+            volume: 'Громкость',
+            mute: 'Выключить звук',
+            unmute: 'Включить звук',
             clockPaused: 'Пауза на музыку',
             soundHint: 'В игре есть музыка — проверь звук',
             skipped: 'Клип не загрузился — этот вопрос пропускаем, без штрафа',

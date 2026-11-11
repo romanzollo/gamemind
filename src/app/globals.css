@@ -2,6 +2,8 @@
 @import './fonts.css';
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+/* Устройство с мышью: регулятор громкости клипа (QuestionAudioVolume). */
+@custom-variant fine-pointer (@media (hover: hover) and (pointer: fine));
 
 /*
  * Стиль «табло» (Scoreboard Editorial). Правила и таблица токенов —

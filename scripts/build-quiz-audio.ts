@@ -4,8 +4,8 @@
  * Для каждого вопроса партии (`kind: AUDIO_GUESS_BATCH`):
  * 1) ffmpeg вырезает `audio.startSeconds` + `audio.durationSeconds` из
  *    `audio.sourceFile` (только из `raw-quiz-audio/`);
- * 2) громкость −16 LUFS / true peak −1.5 dBTP (loudnorm в два прохода),
- *    плавное начало 0.2 с и конец 0.5 с;
+ * 2) громкость −18 LUFS / true peak −1.5 dBTP (loudnorm в два прохода),
+ *    плавное начало 0.4 с и конец 0.5 с;
  * 3) MP3 CBR 128 кбит/с, 44.1 кГц, стерео, без тегов и кадра Xing/LAME;
  * 4) `sanitizeQuizMp3` (src/lib/storage/mp3.ts) — в файле только аудиокадры,
  *    длина 4–11 с, ≤ 300 КБ; `ffprobe` подтверждает, что тегов нет;
@@ -43,9 +43,9 @@ const REVIEW_DIR = join(RAW_DIR, '_review');
 const OUT_DIR = join(ROOT, 'public', 'media', 'audio');
 const MANIFEST_PATH = join(ROOT, 'content', 'quiz-audio.manifest.json');
 
-/** Целевая громкость клипа (ADR): одинаково громко от игры к игре. */
-const LOUDNESS = { integrated: -16, truePeak: -1.5, range: 11 } as const;
-const FADE_IN_SECONDS = 0.2;
+/** Целевая громкость клипа (ADR): одинаково от игры к игре и без «удара» после тишины квиза. */
+const LOUDNESS = { integrated: -18, truePeak: -1.5, range: 11 } as const;
+const FADE_IN_SECONDS = 0.4;
 const FADE_OUT_SECONDS = 0.5;
 /** Отклонение итоговой громкости, после которого печатаем предупреждение. */
 const LOUDNESS_WARN_LU = 1.5;
@@ -223,7 +223,7 @@ function encodeClip(question: AudioBatchQuestion, workDir: string): Buffer {
 /** ffprobe не должен видеть ни одного тега ни у файла, ни у потока. */
 function assertNoTags(filePath: string): void {
     const { stdout } = runTool('ffprobe', [
-        '-v', 'error', '-show_entries', 'format_tags:stream_tags', '-of', 'json', filePath,
+        '-v', 'error', '-f', 'mp3', '-show_entries', 'format_tags:stream_tags', '-of', 'json', filePath,
     ]);
     const probe = JSON.parse(stdout) as {
         format?: { tags?: Record<string, string> };
@@ -238,10 +238,14 @@ function assertNoTags(filePath: string): void {
     }
 }
 
-/** Итоговая громкость (EBU R128 integrated) готового клипа. */
+/**
+ * Итоговая громкость (EBU R128 integrated) готового клипа.
+ * `-f mp3` явно: у клипа нет заголовков (теги и кадр Xing сняты), и по
+ * первым байтам ffmpeg иногда угадывает чужой формат (был случай — VVC).
+ */
 function measureLoudness(filePath: string): number | null {
     const { stderr } = runTool('ffmpeg', [
-        '-hide_banner', '-nostats', '-i', filePath, '-af', 'ebur128=framelog=quiet', '-f', 'null', '-',
+        '-hide_banner', '-nostats', '-f', 'mp3', '-i', filePath, '-af', 'ebur128=framelog=quiet', '-f', 'null', '-',
     ]);
     const match = stderr.match(/I:\s+(-?\d+(?:\.\d+)?)\s+LUFS/g);
     if (!match) return null;

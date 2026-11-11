@@ -28,6 +28,7 @@ import {
     formatClipTime,
     placeholderWaveform,
 } from '@/features/quiz/lib/quiz-audio-waveform';
+import { QuestionAudioVolume } from '@/features/quiz/components/QuestionAudioVolume';
 import type { Dictionary } from '@/shared/i18n';
 import { buttonClassName } from '@/shared/ui';
 
@@ -211,6 +212,8 @@ export function QuestionAudio({
                         <span>{durationSeconds > 0 ? formatClipTime(durationSeconds) : '–:––'}</span>
                     </div>
                 </div>
+
+                <QuestionAudioVolume labels={labels} />
             </div>
 
             {clip.status === 'loading' ? (

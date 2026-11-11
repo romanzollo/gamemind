@@ -692,6 +692,10 @@ export type Dictionary = {
             trackCreditWithPerformer: string;
             /** Разбор: клипа нет (удалён или не грузится). */
             unavailable: string;
+            /** Регулятор громкости (только с мышью): ползунок и значок. */
+            volume: string;
+            mute: string;
+            unmute: string;
             /** Таймер Блица / банк Выживания стоят, пока звучит клип. */
             clockPaused: string;
             /** В партии есть аудиовопросы — проверить звук. */

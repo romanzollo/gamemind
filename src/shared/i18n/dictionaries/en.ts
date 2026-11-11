@@ -582,6 +582,9 @@ export const enDictionary = {
             trackCreditWithPerformer:
                 'Track: {track} · {composer} · performed by {performer}',
             unavailable: 'Clip unavailable',
+            volume: 'Volume',
+            mute: 'Mute',
+            unmute: 'Unmute',
             clockPaused: 'Paused for music',
             soundHint: "There's music in this game — check your sound",
             skipped: "The clip didn't load — skipping it, no penalty",

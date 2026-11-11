@@ -26,6 +26,11 @@ import {
     placeholderWaveform,
 } from '@/features/quiz/lib/quiz-audio-waveform';
 import { QUIZ_AUDIO_SILENCE_DATA_URI } from '@/features/quiz/components/quiz-audio-silence';
+import {
+    effectiveAudioVolume,
+    getAudioVolumeSnapshot,
+    subscribeAudioVolume,
+} from '@/features/quiz/lib/audio-volume';
 
 export type QuizAudioClip =
     | { status: 'loading' }
@@ -275,6 +280,11 @@ export class QuizAudioController {
         this.audio?.pause();
     }
 
+    /** 0…1. На iOS Safari не действует — там регулятор и не показываем. */
+    setVolume(volume: number): void {
+        if (this.audio) this.audio.volume = volume;
+    }
+
     /** Остановить клип, если играет именно он (смена вопроса / уход со страницы). */
     stop(src: string): void {
         const audio = this.audio;
@@ -323,12 +333,18 @@ export function useQuizAudioPlayer(enabled: boolean): QuizAudioController {
     useEffect(() => {
         if (!enabled) return;
         const detach = controller.attach();
+        // Громкость устройства (регулятор в QuestionAudio, ADR AUDIO_GUESS → Loudness).
+        const applyVolume = () =>
+            controller.setVolume(effectiveAudioVolume(getAudioVolumeSnapshot()));
+        applyVolume();
+        const unsubscribeVolume = subscribeAudioVolume(applyVolume);
         const unlock = () => controller.unlock();
         document.addEventListener('pointerdown', unlock, { capture: true });
         document.addEventListener('keydown', unlock, { capture: true });
         return () => {
             document.removeEventListener('pointerdown', unlock, { capture: true });
             document.removeEventListener('keydown', unlock, { capture: true });
+            unsubscribeVolume();
             detach();
         };
     }, [controller, enabled]);

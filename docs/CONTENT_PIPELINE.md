@@ -455,7 +455,7 @@ ADR: `docs/DECISIONS.md` → Audio questions: AUDIO_GUESS. Clips never go to git
 | Step | Command | What it does |
 |------|---------|--------------|
 | 1 | owner drops sources into `raw-quiz-audio/` | gitignored |
-| 2 | `npm run audio:build -- --file=<batch> --review` | ffmpeg cut → −16 LUFS → fades → MP3 128 kbps without tags → `sanitizeQuizMp3` + `ffprobe` (no tags) → `public/media/audio/{hash}.mp3` + `content/quiz-audio.manifest.json`; review page `raw-quiz-audio/_review/<batch>.html` |
+| 2 | `npm run audio:build -- --file=<batch> --review` | ffmpeg cut → −18 LUFS → fades → MP3 128 kbps without tags → `sanitizeQuizMp3` + `ffprobe` (no tags) → `public/media/audio/{hash}.mp3` + `content/quiz-audio.manifest.json`; review page `raw-quiz-audio/_review/<batch>.html` |
 | 3 | owner listens, timecodes fixed in the batch, step 2 again | only changed clips are rebuilt |
 | 4 | `npm run content:import-audio-guess -- --file=<batch>` | DRAFT on dev (needs local files) |
 | 5 | `npm run audio:upload -- --file=<batch>` | prod Blob `audio/{hash}.mp3`; checks www answers 200 `audio/mpeg`. Needs `PROD_BLOB_READ_WRITE_TOKEN` in `.env`. Owner's command only |
