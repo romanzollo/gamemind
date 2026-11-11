@@ -7,7 +7,8 @@
  * - Первый ответ окончательный: сервер его записал, плашка — его исход.
  * - «Проверяем…» — только если сервер не ответил за 300 мс.
  * - Сбой сети → «Ещё раз» с тем же вариантом (повтор безопасен).
- * - Classic / Daily ждут «Дальше»; Блиц идёт дальше сам через 0.8 с и
+ * - Classic / Daily ждут «Дальше» (или Enter на компьютере — enter-advance);
+ *   Блиц идёт дальше сам через 0.8 с и
  *   после последнего ответа сдаёт партию сам.
  * - Блиц 00:00 → auto-submit partial (`finishedByTimer`), как раньше.
  * - Сдача шлёт только сессию: очки сервер считает по зафиксированным ответам.
@@ -41,6 +42,7 @@ import {
     useQuizAudioPlayer,
 } from '@/features/quiz/components/use-quiz-audio';
 import { usePreloadQuizImages } from '@/features/quiz/components/use-preload-quiz-images';
+import { isEnterAdvance } from '@/features/quiz/lib/enter-advance';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import {
     AUDIO_LISTEN_WINDOW_SECONDS,
@@ -64,6 +66,18 @@ import {
 } from '@/shared/ui/answer-option';
 import { serverNow } from '@/shared/ui/server-clock';
 import type { Difficulty } from '@/types';
+
+/** Подсказка клавиши на кнопке перехода — только там, где есть мышь. */
+function EnterKeyHint() {
+    return (
+        <kbd
+            aria-hidden
+            className="ml-2 hidden rounded-sm border border-current/30 px-1.5 py-0.5 font-mono text-2xs font-medium leading-none opacity-80 fine-pointer:inline-flex"
+        >
+            Enter ↵
+        </kbd>
+    );
+}
 
 type QuizSessionFormProps = {
     locale: Locale;
@@ -431,6 +445,37 @@ export function QuizSessionForm({
         [allAnswered, isPending, submit, timedExpired],
     );
 
+    /**
+     * Enter после ответа = «Дальше» / «К результату» (Classic, Daily).
+     * Блиц переходит сам. Та же функция, что у кнопки: сервер и очки не
+     * меняются. Кнопки, ссылки и поля обрабатывают Enter сами (enter-advance).
+     */
+    const canEnterAdvance = Boolean(outcome) && !isTimed && !timedExpired;
+    useEffect(() => {
+        if (!canEnterAdvance) return;
+        const onKeyDown = (event: KeyboardEvent) => {
+            const target = event.target instanceof HTMLElement ? event.target : null;
+            const targetInfo = target
+                ? {
+                      tagName: target.tagName,
+                      type: target instanceof HTMLInputElement ? target.type : undefined,
+                      isContentEditable: target.isContentEditable,
+                  }
+                : null;
+            if (!isEnterAdvance(event, targetInfo)) return;
+            event.preventDefault();
+            if (!isLast) {
+                goNext();
+                return;
+            }
+            if (allAnswered && !isPending) {
+                submit(false);
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [allAnswered, canEnterAdvance, goNext, isLast, isPending, submit]);
+
     if (!question) {
         return null;
     }
@@ -758,6 +803,7 @@ export function QuizSessionForm({
                         }}
                     >
                         {labels.next}
+                        <EnterKeyHint />
                     </button>
                 ) : null}
 
@@ -772,6 +818,7 @@ export function QuizSessionForm({
                         data-testid="quiz-submit"
                     >
                         {labels.toResult}
+                        {isTimed ? null : <EnterKeyHint />}
                     </SubmitButton>
                 ) : null}
             </div>
