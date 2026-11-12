@@ -1,0 +1,384 @@
+{
+    "version": 1,
+    "note": "Первая партия «А ты знал?», волна A (ROADMAP 5.4b): 25 самых частых серий и 25 игр по facts:coverage на dev + 4 проверочных факта из examples. Каждая тема сверена с опубликованными вопросами той же метки.",
+    "facts": [
+        {
+            "key": "fact-gta-01",
+            "tag": "franchise:gta",
+            "ru": "Скандальную славу первой GTA раздували нарочно: издатель нанял пиарщика Макса Клиффорда, и тот сам подкидывал прессе поводы для возмущения.",
+            "en": "The first GTA's notoriety was stoked on purpose: the publisher hired publicist Max Clifford, who kept feeding the press reasons to be outraged.",
+            "source": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_(video_game)"
+        },
+        {
+            "key": "fact-counter-strike-01",
+            "tag": "franchise:counter-strike",
+            "ru": "Counter-Strike придумали двое моддеров — Минь Ле и Джесс Клифф. В 2000 году права на мод выкупили, а авторов взяли в штат.",
+            "en": "Counter-Strike was made by two modders, Minh Le and Jess Cliffe. In 2000 the rights to the mod were bought and both were hired.",
+            "source": "https://en.wikipedia.org/wiki/Counter-Strike_(video_game)"
+        },
+        {
+            "key": "fact-half-life-01",
+            "tag": "franchise:half-life",
+            "ru": "Сценарист серии Марк Лэйдлоу после ухода в 2016 году выложил в блог сюжет несостоявшегося Episode Three — под видом «Послания 3» с изменёнными именами.",
+            "en": "After leaving in 2016, series writer Marc Laidlaw posted the plot of the never-made Episode Three on his blog, disguised as «Epistle 3» with names swapped.",
+            "source": "https://en.wikipedia.org/wiki/Half-Life_2:_Episode_Three"
+        },
+        {
+            "key": "fact-zelda-01",
+            "tag": "franchise:zelda",
+            "ru": "Сигэру Миямото придумал Zelda по детским воспоминаниям: мальчиком он бродил по лесам и полям вокруг дома под Киото и однажды нашёл пещеру.",
+            "en": "Shigeru Miyamoto based Zelda on his childhood: as a boy he roamed the woods and fields around his home near Kyoto and once found a cave.",
+            "source": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda_(video_game)"
+        },
+        {
+            "key": "fact-stalker-01",
+            "tag": "franchise:stalker",
+            "ru": "Серия S.T.A.L.K.E.R. выросла из повести Стругацких «Пикник на обочине» и фильма Тарковского «Сталкер» — оттуда и само слово «сталкер».",
+            "en": "S.T.A.L.K.E.R. grew out of the Strugatsky brothers' novel Roadside Picnic and Tarkovsky's film Stalker — that is where the word itself comes from.",
+            "source": "https://en.wikipedia.org/wiki/S.T.A.L.K.E.R._(series)"
+        },
+        {
+            "key": "fact-super-mario-01",
+            "tag": "franchise:super-mario",
+            "ru": "В Donkey Kong 1981 года Марио звали Jumpman. Имя он получил позже — в честь Марио Сегале, хозяина склада, который арендовала Nintendo of America.",
+            "en": "In 1981's Donkey Kong, Mario was called Jumpman. He got his name later, after Mario Segale, the landlord of a warehouse Nintendo of America rented.",
+            "source": "https://en.wikipedia.org/wiki/Mario"
+        },
+        {
+            "key": "fact-witcher-01",
+            "tag": "franchise:witcher",
+            "ru": "Анджей Сапковский продал права на игры по «Ведьмаку» за разовую сумму, а после успеха серии потребовал доплату — в 2019 году стороны договорились.",
+            "en": "Andrzej Sapkowski sold the Witcher game rights for a one-off fee, then asked for more after the series took off — the sides settled in 2019.",
+            "source": "https://en.wikipedia.org/wiki/Andrzej_Sapkowski"
+        },
+        {
+            "key": "fact-fallout-01",
+            "tag": "franchise:fallout",
+            "ru": "Fallout задумывали как духовного наследника Wasteland 1988 года: права на ту игру были у Electronic Arts, поэтому мир и название придумали заново.",
+            "en": "Fallout was meant as a spiritual successor to 1988's Wasteland: Electronic Arts owned that game, so the world and the name had to be new.",
+            "source": "https://en.wikipedia.org/wiki/Fallout_(video_game)"
+        },
+        {
+            "key": "fact-elder-scrolls-01",
+            "tag": "franchise:elder-scrolls",
+            "ru": "Почти каждая большая часть The Elder Scrolls начинается с героя-узника: тюремная камера, трюм корабля или телега к месту казни.",
+            "en": "Almost every main Elder Scrolls game starts with the hero as a prisoner: a jail cell, a ship's hold or a cart heading to an execution.",
+            "source": "https://en.wikipedia.org/wiki/The_Elder_Scrolls"
+        },
+        {
+            "key": "fact-assassins-creed-01",
+            "tag": "franchise:assassins-creed",
+            "ru": "Девиз «Ничто не истинно, всё дозволено» авторы Assassin's Creed взяли из романа Владимира Бартола «Аламут» 1938 года — он и вдохновил серию.",
+            "en": "The creed «Nothing is true, everything is permitted» comes from Vladimir Bartol's 1938 novel Alamut, the book that inspired Assassin's Creed.",
+            "source": "https://en.wikipedia.org/wiki/Alamut_(novel)"
+        },
+        {
+            "key": "fact-baldurs-gate-01",
+            "tag": "franchise:baldurs-gate",
+            "ru": "Город Врата Балдура появился задолго до игр: его придумал Эд Гринвуд для своего мира Forgotten Realms.",
+            "en": "The city of Baldur's Gate existed long before the games: Ed Greenwood created it for his Forgotten Realms setting.",
+            "source": "https://en.wikipedia.org/wiki/Baldur%27s_Gate_(Forgotten_Realms)"
+        },
+        {
+            "key": "fact-diablo-01",
+            "tag": "franchise:diablo",
+            "ru": "Фраза Декарда Каина «Stay a while and listen» («Задержись и послушай») из первой Diablo стала одним из главных мемов серии.",
+            "en": "Deckard Cain's «Stay a while and listen» from the first Diablo became one of the series' best-known memes.",
+            "source": "https://en.wikipedia.org/wiki/Deckard_Cain"
+        },
+        {
+            "key": "fact-god-of-war-01",
+            "tag": "franchise:god-of-war",
+            "ru": "Главного героя серии до 2018 года озвучивал Терренс Карсон, а начиная с перезапуска — Кристофер Джадж, известный по «Звёздным вратам».",
+            "en": "Until 2018 the series' hero was voiced by Terrence C. Carson; since the reboot it has been Christopher Judge, known from Stargate SG-1.",
+            "source": "https://en.wikipedia.org/wiki/Kratos_(God_of_War)"
+        },
+        {
+            "key": "fact-civilization-01",
+            "tag": "franchise:civilization",
+            "ru": "Знаменитый «ядерный Ганди» из первой Civilization — миф: Сид Мейер в мемуарах 2020 года объяснил, что такой ошибки в игре не было.",
+            "en": "The famous «nuclear Gandhi» bug in the first Civilization is a myth: Sid Meier explained in his 2020 memoir that the game never had it.",
+            "source": "https://en.wikipedia.org/wiki/Nuclear_Gandhi"
+        },
+        {
+            "key": "fact-doom-01",
+            "tag": "franchise:doom",
+            "ru": "Doom запускали на калькуляторах, банкоматах, принтерах и даже на экранчике теста на беременность — «запустить Doom на чём угодно» стало традицией.",
+            "en": "Doom has been run on calculators, ATMs, printers and even a pregnancy test's tiny screen — «it runs Doom» became a tradition.",
+            "source": "https://en.wikipedia.org/wiki/List_of_Doom_ports"
+        },
+        {
+            "key": "fact-gears-of-war-01",
+            "tag": "franchise:gears-of-war",
+            "ru": "Трейлер первой Gears of War под песню «Mad World» в исполнении Гэри Джулса стал вирусным и прославил игру ещё до выхода.",
+            "en": "The first Gears of War trailer, set to Gary Jules' cover of «Mad World», went viral and made the game famous before release.",
+            "source": "https://en.wikipedia.org/wiki/Gears_of_War_(video_game)"
+        },
+        {
+            "key": "fact-hitman-01",
+            "tag": "franchise:hitman",
+            "ru": "Главного героя Hitman почти во всех частях озвучивает Дэвид Бейтсон — с самой первой игры 2000 года.",
+            "en": "The hero of Hitman has been voiced by David Bateson in almost every game, starting with the very first one in 2000.",
+            "source": "https://en.wikipedia.org/wiki/David_Bateson"
+        },
+        {
+            "key": "fact-the-last-of-us-01",
+            "tag": "franchise:the-last-of-us",
+            "ru": "Заразу в The Last of Us придумали по реальному грибу-кордицепсу, который превращает муравьёв в «зомби», — авторы увидели его в фильме BBC «Планета Земля».",
+            "en": "The infection in The Last of Us is based on a real cordyceps fungus that turns ants into «zombies» — the team saw it in the BBC's Planet Earth.",
+            "source": "https://en.wikipedia.org/wiki/The_Last_of_Us"
+        },
+        {
+            "key": "fact-tomb-raider-01",
+            "tag": "franchise:tomb-raider",
+            "ru": "Поначалу героиню Tomb Raider звали Лора Круз; перед выходом игры имя сменили на более «британское».",
+            "en": "Tomb Raider's heroine was first called Laura Cruz; before release she got a more «British» name.",
+            "source": "https://en.wikipedia.org/wiki/Lara_Croft"
+        },
+        {
+            "key": "fact-bioshock-01",
+            "tag": "franchise:bioshock",
+            "ru": "Эндрю Райан, основатель подводного города в BioShock, — отсылка к Айн Рэнд: её философия объективизма легла в основу сюжета.",
+            "en": "Andrew Ryan, founder of BioShock's underwater city, is a nod to Ayn Rand: her philosophy of Objectivism shaped the story.",
+            "source": "https://en.wikipedia.org/wiki/BioShock"
+        },
+        {
+            "key": "fact-mass-effect-01",
+            "tag": "franchise:mass-effect",
+            "ru": "Сохранение из первой Mass Effect можно было перенести во вторую и третью части — решения игрока тянулись через всю трилогию.",
+            "en": "A save from the first Mass Effect could be carried into the second and third games, so the player's choices ran through the whole trilogy.",
+            "source": "https://en.wikipedia.org/wiki/Mass_Effect"
+        },
+        {
+            "key": "fact-metro-01",
+            "tag": "franchise:metro",
+            "ru": "Роман «Метро 2033» сначала бесплатно выкладывали в интернете, и читатели сами подсказывали автору повороты сюжета.",
+            "en": "The novel Metro 2033 was first posted online for free, and readers suggested plot twists to the author.",
+            "source": "https://en.wikipedia.org/wiki/Metro_2033_(novel)"
+        },
+        {
+            "key": "fact-mortal-kombat-01",
+            "tag": "franchise:mortal-kombat",
+            "ru": "В первой Mortal Kombat 1992 года был тайный боец Рептилия: он появлялся только при редком стечении условий и стал одной из первых громких пасхалок в файтингах.",
+            "en": "The first Mortal Kombat in 1992 hid a secret fighter, Reptile, who showed up only under rare conditions — one of the first famous fighting game secrets.",
+            "source": "https://en.wikipedia.org/wiki/Reptile_(Mortal_Kombat)"
+        },
+        {
+            "key": "fact-portal-01",
+            "tag": "franchise:portal",
+            "ru": "Злого ИИ в Portal озвучила оперная певица Эллен Маклейн — её голос пропускали через фильтры, чтобы он звучал по-машинному.",
+            "en": "Portal's villainous AI is voiced by opera singer Ellen McLain — her voice was run through filters to sound like a machine.",
+            "source": "https://en.wikipedia.org/wiki/Ellen_McLain"
+        },
+        {
+            "key": "fact-silent-hill-01",
+            "tag": "franchise:silent-hill",
+            "ru": "Знаменитый туман Silent Hill появился из-за ограничений PlayStation: он прятал то, что консоль не успевала отрисовать вдали.",
+            "en": "Silent Hill's famous fog came from PlayStation limits: it hid what the console could not draw in the distance.",
+            "source": "https://en.wikipedia.org/wiki/Silent_Hill_(video_game)"
+        },
+        {
+            "key": "fact-resident-evil-01",
+            "tag": "franchise:resident-evil",
+            "ru": "В Японии серия называется Biohazard: в США это имя нельзя было зарегистрировать — так уже назывались игра для DOS и музыкальная группа.",
+            "en": "In Japan the series is called Biohazard: the name couldn't be trademarked in the US, where a DOS game and a band already used it.",
+            "source": "https://en.wikipedia.org/wiki/Resident_Evil"
+        },
+        {
+            "key": "fact-half-life-2-01",
+            "tag": "game:half-life-2",
+            "ru": "Осенью 2003 года исходный код Half-Life 2 украли и выложили в сеть — больше чем за год до выхода игры.",
+            "en": "In autumn 2003 the Half-Life 2 source code was stolen and leaked online — more than a year before the game came out.",
+            "source": "https://en.wikipedia.org/wiki/Half-Life_2"
+        },
+        {
+            "key": "fact-the-witcher-3-01",
+            "tag": "game:the-witcher-3",
+            "ru": "Гвинт так полюбился игрокам «Ведьмака 3», что в 2018 году CD Projekt RED выпустила его отдельной игрой.",
+            "en": "Witcher 3 players liked Gwent so much that CD Projekt RED released it as a standalone game in 2018.",
+            "source": "https://en.wikipedia.org/wiki/Gwent:_The_Witcher_Card_Game"
+        },
+        {
+            "key": "fact-stardew-valley-01",
+            "tag": "game:stardew-valley",
+            "ru": "Главным образцом для Stardew Valley была серия Harvest Moon: автор хотел сделать фермерскую игру, которой ему самому не хватало.",
+            "en": "Stardew Valley's main model was the Harvest Moon series: its creator wanted to make the farming game he himself was missing.",
+            "source": "https://en.wikipedia.org/wiki/Stardew_Valley"
+        },
+        {
+            "key": "fact-hades-01",
+            "tag": "game:hades",
+            "ru": "До релиза Hades почти два года провела в раннем доступе — авторы дорабатывали её по отзывам игроков.",
+            "en": "Before release Hades spent almost two years in early access, reworked along the way from player feedback.",
+            "source": "https://en.wikipedia.org/wiki/Hades_(video_game)"
+        },
+        {
+            "key": "fact-hollow-knight-01",
+            "tag": "game:hollow-knight",
+            "ru": "Hollow Knight сделала крошечная австралийская студия Team Cherry — над основной игрой работали в основном три человека.",
+            "en": "Hollow Knight was made by Team Cherry, a tiny Australian studio — mostly three people worked on the main game.",
+            "source": "https://en.wikipedia.org/wiki/Hollow_Knight"
+        },
+        {
+            "key": "fact-cyberpunk-2077-01",
+            "tag": "game:cyberpunk-2077",
+            "ru": "Cyberpunk 2077 анонсировали в 2012 году — до релиза в декабре 2020-го прошло больше восьми лет.",
+            "en": "Cyberpunk 2077 was announced in 2012 — more than eight years before its release in December 2020.",
+            "source": "https://en.wikipedia.org/wiki/Cyberpunk_2077"
+        },
+        {
+            "key": "fact-elden-ring-01",
+            "tag": "game:elden-ring",
+            "ru": "Elden Ring разошлась тиражом больше 20 миллионов копий меньше чем за год, а первые 12 миллионов — всего за 17 дней.",
+            "en": "Elden Ring sold more than 20 million copies within a year of release — the first 12 million in just 17 days.",
+            "source": "https://www.bandainamcoent.com/news/elden-ring-reaches-20-million-units-sold-worldwide-in-its-first-year"
+        },
+        {
+            "key": "fact-dota-2-01",
+            "tag": "game:dota-2",
+            "ru": "Dota выросла из любительской карты Defense of the Ancients для Warcraft III, а ведущего дизайнера Dota 2 до сих пор знают лишь по нику IceFrog.",
+            "en": "Dota grew out of Defense of the Ancients, a fan-made Warcraft III map, and the lead designer of Dota 2 is still known only as IceFrog.",
+            "source": "https://en.wikipedia.org/wiki/Dota_2"
+        },
+        {
+            "key": "fact-baldurs-gate-3-01",
+            "tag": "game:baldurs-gate-3",
+            "ru": "По подсчётам авторов, у Baldur's Gate 3 около 17 000 вариантов концовки — столько дают сочетания решений игрока.",
+            "en": "By its makers' count, Baldur's Gate 3 has about 17,000 ending variations — that is how many the player's choices combine into.",
+            "source": "https://www.pcgamer.com/baldurs-gate-3-has-17000-variations-on-its-ending-a-number-that-gives-me-a-headache-just-thinking-about-it"
+        },
+        {
+            "key": "fact-sekiro-01",
+            "tag": "game:sekiro-shadows-die-twice",
+            "ru": "Название Sekiro по-японски значит примерно «однорукий волк» — так зовут героя игры.",
+            "en": "The name Sekiro roughly means «one-armed wolf» in Japanese — the nickname of the game's hero.",
+            "source": "https://en.wikipedia.org/wiki/Sekiro:_Shadows_Die_Twice"
+        },
+        {
+            "key": "fact-skyrim-01",
+            "tag": "game:the-elder-scrolls-v-skyrim",
+            "ru": "Фраза стражников Skyrim «…пока мне не прострелили колено» стала одним из главных интернет-мемов 2011 года.",
+            "en": "The Skyrim guards' line «…then I took an arrow in the knee» became one of the biggest internet memes of 2011.",
+            "source": "https://en.wikipedia.org/wiki/The_Elder_Scrolls_V:_Skyrim"
+        },
+        {
+            "key": "fact-red-dead-redemption-2-01",
+            "tag": "game:red-dead-redemption-2",
+            "ru": "В Red Dead Redemption 2 около 200 видов животных — от бобров до аллигаторов, и у многих своё поведение.",
+            "en": "Red Dead Redemption 2 has about 200 animal species, from beavers to alligators, many with their own behaviour.",
+            "source": "https://en.wikipedia.org/wiki/Red_Dead_Redemption_2"
+        },
+        {
+            "key": "fact-atomic-heart-01",
+            "tag": "game:atomic-heart",
+            "ru": "Фонк-ремикс песни Игоря Скляра «Комарово» из саундтрека Atomic Heart возглавил чарт «Яндекс Музыки».",
+            "en": "A phonk remix of Igor Sklyar's Soviet-era song «Komarovo» from the Atomic Heart soundtrack topped the Yandex Music chart.",
+            "source": "https://rozetked.me/news/27881"
+        },
+        {
+            "key": "fact-bloodborne-01",
+            "tag": "game:bloodborne",
+            "ru": "Bloodborne создавали под впечатлением от Лавкрафта и викторианской готики, а рабочим названием проекта было Project Beast.",
+            "en": "Bloodborne drew on Lovecraft and Victorian Gothic, and the project's working title was Project Beast.",
+            "source": "https://en.wikipedia.org/wiki/Bloodborne"
+        },
+        {
+            "key": "fact-fallout-4-01",
+            "tag": "game:fallout-4",
+            "ru": "Fallout 4 анонсировали в июне 2015 года, а вышла игра уже в ноябре — меньше чем через полгода.",
+            "en": "Fallout 4 was announced in June 2015 and came out that November — less than six months later.",
+            "source": "https://en.wikipedia.org/wiki/Fallout_4"
+        },
+        {
+            "key": "fact-god-of-war-2018-01",
+            "tag": "game:god-of-war-2018",
+            "ru": "God of War 2018 года снята «одним кадром»: камера ни разу не прерывается монтажной склейкой от начала до конца.",
+            "en": "God of War (2018) is shot as «one take»: the camera never cuts away from start to finish.",
+            "source": "https://en.wikipedia.org/wiki/God_of_War_(2018_video_game)"
+        },
+        {
+            "key": "fact-horizon-zero-dawn-01",
+            "tag": "game:horizon-zero-dawn",
+            "ru": "Horizon Zero Dawn сделала Guerrilla Games — до этого студия больше десяти лет выпускала шутеры Killzone.",
+            "en": "Horizon Zero Dawn was made by Guerrilla Games, which had spent more than a decade on Killzone shooters before it.",
+            "source": "https://en.wikipedia.org/wiki/Horizon_Zero_Dawn"
+        },
+        {
+            "key": "fact-mass-effect-2-01",
+            "tag": "game:mass-effect-2",
+            "ru": "Финальную «самоубийственную миссию» Mass Effect 2 может пережить вся команда — или почти никто: исход зависит от подготовки.",
+            "en": "Mass Effect 2's final «suicide mission» can be survived by the whole squad — or almost nobody, depending on how well you prepared.",
+            "source": "https://en.wikipedia.org/wiki/Mass_Effect_2"
+        },
+        {
+            "key": "fact-minecraft-01",
+            "tag": "game:minecraft",
+            "ru": "Minecraft — самая продаваемая игра в истории: её тираж перевалил за 300 миллионов копий.",
+            "en": "Minecraft is the best-selling video game ever: it has sold more than 300 million copies.",
+            "source": "https://en.wikipedia.org/wiki/Minecraft"
+        },
+        {
+            "key": "fact-stalker-shadow-of-chernobyl-01",
+            "tag": "game:stalker-shadow-of-chernobyl",
+            "ru": "«Тень Чернобыля» делали около шести лет: игру анонсировали в 2001 году, а вышла она только в 2007-м.",
+            "en": "Shadow of Chernobyl took about six years: it was announced in 2001 and only came out in 2007.",
+            "source": "https://en.wikipedia.org/wiki/S.T.A.L.K.E.R.:_Shadow_of_Chernobyl"
+        },
+        {
+            "key": "fact-duke-nukem-3d-01",
+            "tag": "game:duke-nukem-3d",
+            "ru": "Продолжение Duke Nukem 3D — Duke Nukem Forever — анонсировали в 1997 году, а вышло оно только в 2011-м, через 14 лет.",
+            "en": "Duke Nukem 3D's sequel, Duke Nukem Forever, was announced in 1997 and only came out in 2011, 14 years later.",
+            "source": "https://en.wikipedia.org/wiki/Duke_Nukem_Forever"
+        },
+        {
+            "key": "fact-cuphead-01",
+            "tag": "game:cuphead",
+            "ru": "Ради Cuphead братья Чад и Джаред Молденхауэр уволились с работы и перезаложили дома — анимацию рисовали от руки, кадр за кадром.",
+            "en": "For Cuphead, brothers Chad and Jared Moldenhauer quit their jobs and remortgaged their homes — the animation was drawn by hand, frame by frame.",
+            "source": "https://en.wikipedia.org/wiki/Cuphead"
+        },
+        {
+            "key": "fact-dishonored-01",
+            "tag": "game:dishonored",
+            "ru": "Город Дануолл в Dishonored вдохновлён Лондоном и Эдинбургом прошлых веков — с примесью фантастики про китовый жир.",
+            "en": "Dishonored's city of Dunwall is inspired by old London and Edinburgh — with a twist of whale-oil fantasy.",
+            "source": "https://en.wikipedia.org/wiki/Dishonored"
+        },
+        {
+            "key": "fact-grand-theft-auto-v-01",
+            "tag": "game:grand-theft-auto-v",
+            "ru": "GTA V заработала миллиард долларов за первые три дня продаж — быстрее любого развлекательного продукта на тот момент.",
+            "en": "GTA V made a billion dollars in its first three days — faster than any entertainment product before it.",
+            "source": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_V"
+        },
+        {
+            "key": "fact-it-takes-two-01",
+            "tag": "game:it-takes-two",
+            "ru": "В It Takes Two нельзя играть одному, зато по «пропуску друга» напарник может присоединиться бесплатно, без своей копии игры.",
+            "en": "It Takes Two cannot be played alone, but with the Friend's Pass a partner can join for free, without owning the game.",
+            "source": "https://en.wikipedia.org/wiki/It_Takes_Two_(video_game)"
+        },
+        {
+            "key": "fact-tetris-01",
+            "tag": "game:tetris",
+            "ru": "Автор Tetris больше десяти лет не получал за игру денег: права принадлежали советскому государству, а роялти пошли только с 1996 года.",
+            "en": "Tetris's creator earned nothing from it for over a decade: the Soviet state held the rights, and royalties only began in 1996.",
+            "source": "https://en.wikipedia.org/wiki/Tetris"
+        },
+        {
+            "key": "fact-valheim-01",
+            "tag": "game:valheim",
+            "ru": "Valheim сделала шведская студия Iron Gate из пяти человек, а за первый месяц раннего доступа игра разошлась тиражом 5 миллионов копий.",
+            "en": "Valheim was made by Iron Gate, a five-person Swedish studio, and sold 5 million copies in its first month of early access.",
+            "source": "https://en.wikipedia.org/wiki/Valheim"
+        },
+        {
+            "key": "fact-celeste-01",
+            "tag": "game:celeste",
+            "ru": "В Celeste есть «режим помощи»: можно замедлить игру или стать неуязвимым — авторы хотели, чтобы до вершины дошёл каждый.",
+            "en": "Celeste has an Assist Mode: you can slow the game down or become invincible — the makers wanted everyone to reach the summit.",
+            "source": "https://en.wikipedia.org/wiki/Celeste_(video_game)"
+        }
+    ]
+}
