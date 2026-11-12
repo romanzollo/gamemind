@@ -40,8 +40,8 @@
         {
             "key": "fact-super-mario-01",
             "tag": "franchise:super-mario",
-            "ru": "В Donkey Kong 1981 года Марио звали Jumpman. Имя он получил позже — в честь Марио Сегале, хозяина склада, который арендовала Nintendo of America.",
-            "en": "In 1981's Donkey Kong, Mario was called Jumpman. He got his name later, after Mario Segale, the landlord of a warehouse Nintendo of America rented.",
+            "ru": "Марио назван в честь Марио Сегале — хозяина склада, который Nintendo of America арендовала в начале 1980-х.",
+            "en": "Mario is named after Mario Segale, the landlord of a warehouse Nintendo of America rented in the early 1980s.",
             "source": "https://en.wikipedia.org/wiki/Mario"
         },
         {
@@ -327,9 +327,9 @@
         {
             "key": "fact-duke-nukem-3d-01",
             "tag": "game:duke-nukem-3d",
-            "ru": "Продолжение Duke Nukem 3D — Duke Nukem Forever — анонсировали в 1997 году, а вышло оно только в 2011-м, через 14 лет.",
-            "en": "Duke Nukem 3D's sequel, Duke Nukem Forever, was announced in 1997 and only came out in 2011, 14 years later.",
-            "source": "https://en.wikipedia.org/wiki/Duke_Nukem_Forever"
+            "ru": "Голос Дюка — актёр Джон Сент-Джон: он озвучил героя в Duke Nukem 3D 1996 года и остался с ним в следующих играх.",
+            "en": "Duke's voice is actor Jon St. John: he voiced the hero in 1996's Duke Nukem 3D and stayed with him in the games that followed.",
+            "source": "https://en.wikipedia.org/wiki/Jon_St._John"
         },
         {
             "key": "fact-cuphead-01",

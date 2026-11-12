@@ -30,6 +30,7 @@ import { Client } from 'pg';
 import {
     TRIVIA_FACT_MAX_LENGTH,
     findFactAnswerHints,
+    normalizeForHint,
     validateDraftFactsBatch,
     type FactAnswerHint,
     type FactHintQuestion,
@@ -266,6 +267,34 @@ type ReviewQuestion = FactHintQuestion & {
 
 type ReviewTag = { id: string; nameRu: string; nameEn: string; facet: string };
 
+/**
+ * Все опубликованные вопросы с правильными ответами — для проверки «факт
+ * выдаёт ответ» по всей базе: факт серии Super Mario «Марио звали Jumpman»
+ * подсказывал вопрос серии Donkey Kong, а сверка по одной метке его не видела.
+ */
+async function loadAllHintQuestions(client: Client): Promise<FactHintQuestion[]> {
+    const { rows } = await client.query<{
+        id: string;
+        contentKey: string | null;
+        textRu: string;
+        answers: string[];
+    }>(
+        `SELECT q.id, q."contentKey", COALESCE(tr.text, q.text) AS "textRu",
+                array_remove(array_agg(DISTINCT o.text) || array_agg(DISTINCT ot.text), NULL) AS answers
+         FROM "Question" q
+         LEFT JOIN "QuestionTranslation" tr ON tr."questionId" = q.id AND tr.locale = 'ru'
+         JOIN "AnswerOption" o ON o."questionId" = q.id AND o."isCorrect"
+         LEFT JOIN "AnswerOptionTranslation" ot ON ot."optionId" = o.id
+         WHERE q."publicationStatus" = 'PUBLISHED' AND q."isActive"
+         GROUP BY q.id, q."contentKey", tr.text, q.text`,
+    );
+    return rows.map((row) => ({
+        ref: row.contentKey ?? row.id,
+        textRu: row.textRu,
+        answers: [...new Set(row.answers)],
+    }));
+}
+
 async function loadReviewQuestions(
     client: Client,
     tagIds: readonly string[],
@@ -350,6 +379,8 @@ type ReviewItem = {
     tag: ReviewTag | null;
     questions: ReviewQuestion[];
     hints: FactAnswerHint[];
+    /** Ответ вопроса другой игры / серии целиком встречается в факте. */
+    crossHints: FactAnswerHint[];
     otherFacts: FactRow[];
 };
 
@@ -365,7 +396,9 @@ function renderReview(
     target: Target,
     items: ReviewItem[],
 ): string {
-    const hintCount = items.filter((item) => item.hints.length > 0).length;
+    const hintCount = items.filter(
+        (item) => item.hints.length + item.crossHints.length > 0,
+    ).length;
     const tagCount = new Set(items.map((item) => item.fact.tagId)).size;
 
     const cards = items
@@ -383,6 +416,10 @@ function renderReview(
                 ...item.hints.map(
                     (hint) =>
                         `Подсказывает ответ: «${hint.match}» (ответ «${hint.answer}») на вопрос: ${hint.question.textRu}`,
+                ),
+                ...item.crossHints.map(
+                    (hint) =>
+                        `Подсказывает ответ «${hint.answer}» на вопрос другой игры: ${hint.question.textRu}`,
                 ),
             ];
             const questions = item.questions
@@ -457,6 +494,12 @@ async function runReview(args: Args, index: TaxonomyIndex): Promise<void> {
     const tagIds = [...new Set(facts.map((fact) => fact.tagId))];
     // Название игры или серии ответом не считается (см. find-fact-answer-hints).
     const isTitle = (answer: string) => refForGameName(index, answer) !== null;
+    // Вопросы других игр: годы и короткие слова («Six», «Rare», «Oil»)
+    // совпадают случайно — это шум, а не подсказка.
+    const isWeakCrossAnswer = (answer: string) =>
+        isTitle(answer) ||
+        /^\s*\d+\s*$/.test(answer) ||
+        normalizeForHint(answer).replace(/\s/g, '').length < 5;
 
     const items = await withDb(args.target, async (client) => {
         const { rows: tags } = await client.query<ReviewTag>(
@@ -467,6 +510,7 @@ async function runReview(args: Args, index: TaxonomyIndex): Promise<void> {
         );
         const tagById = new Map(tags.map((tag) => [tag.id, tag]));
         const questionsByTag = await loadReviewQuestions(client, tagIds);
+        const allQuestions = await loadAllHintQuestions(client);
         const keys = facts.map((fact) => fact.key);
         const { rows: stored } = await client.query<FactRow>(
             `SELECT ${FACT_COLUMNS} FROM "TriviaFact"
@@ -479,6 +523,7 @@ async function runReview(args: Args, index: TaxonomyIndex): Promise<void> {
         return facts.map((fact): ReviewItem => {
             const row = storedByKey.get(fact.key);
             const questions = questionsByTag.get(fact.tagId) ?? [];
+            const sameTag = new Set(questions.map((question) => question.ref));
             return {
                 fact,
                 status: !row
@@ -493,6 +538,11 @@ async function runReview(args: Args, index: TaxonomyIndex): Promise<void> {
                 hints: findFactAnswerHints(fact, questions, {
                     ignoreAnswer: isTitle,
                 }),
+                crossHints: findFactAnswerHints(
+                    fact,
+                    allQuestions.filter((question) => !sameTag.has(question.ref)),
+                    { ignoreAnswer: isWeakCrossAnswer, includeParts: false },
+                ),
                 otherFacts: stored.filter(
                     (other) =>
                         other.tagId === fact.tagId &&
@@ -510,7 +560,9 @@ async function runReview(args: Args, index: TaxonomyIndex): Promise<void> {
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, renderReview(batchName, args.target, items), 'utf8');
 
-    const withHints = items.filter((item) => item.hints.length > 0);
+    const withHints = items.filter(
+        (item) => item.hints.length + item.crossHints.length > 0,
+    );
     console.log(
         `Review: ${relative(process.cwd(), out)} — ${items.length} facts, ${withHints.length} with an answer hint.`,
     );
@@ -518,6 +570,11 @@ async function runReview(args: Args, index: TaxonomyIndex): Promise<void> {
         for (const hint of item.hints) {
             console.log(
                 `  ! [${item.fact.key}] «${hint.match}» (answer «${short(hint.answer, 40)}») — ${short(hint.question.textRu)}`,
+            );
+        }
+        for (const hint of item.crossHints) {
+            console.log(
+                `  ! [${item.fact.key}] other game: «${short(hint.answer, 40)}» — ${short(hint.question.textRu)}`,
             );
         }
     }

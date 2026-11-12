@@ -69,13 +69,26 @@ export function normalizeForHint(text: string): string {
 export function findFactAnswerHints(
     fact: { ru: string; en: string },
     questions: readonly FactHintQuestion[],
-    options: { ignoreAnswer?: (answer: string) => boolean } = {},
+    options: {
+        ignoreAnswer?: (answer: string) => boolean;
+        /**
+         * false — только ответ целиком. Для вопросов других игр: части
+         * ответов («Один», «Синий») там дают больше шума, чем пользы.
+         */
+        includeParts?: boolean;
+    } = {},
 ): FactAnswerHint[] {
     const haystacks = [normalizeForHint(fact.ru), normalizeForHint(fact.en)];
     const hints: FactAnswerHint[] = [];
+    const includeParts = options.includeParts ?? true;
 
     for (const question of questions) {
-        const hint = findAnswerInFact(question, haystacks, options.ignoreAnswer);
+        const hint = findAnswerInFact(
+            question,
+            haystacks,
+            options.ignoreAnswer,
+            includeParts,
+        );
         if (hint) {
             hints.push(hint);
         }
@@ -88,6 +101,7 @@ function findAnswerInFact(
     question: FactHintQuestion,
     haystacks: readonly string[],
     ignoreAnswer: ((answer: string) => boolean) | undefined,
+    includeParts: boolean,
 ): FactAnswerHint | null {
     for (const answer of question.answers) {
         // Название игры целиком — не подсказка, и его части тоже
@@ -95,7 +109,10 @@ function findAnswerInFact(
         if (ignoreAnswer?.(answer)) {
             continue;
         }
-        for (const needle of answerNeedles(answer)) {
+        const needles = includeParts
+            ? answerNeedles(answer)
+            : answerNeedles(answer).slice(0, 1);
+        for (const needle of needles) {
             if (ignoreAnswer?.(needle)) {
                 continue;
             }

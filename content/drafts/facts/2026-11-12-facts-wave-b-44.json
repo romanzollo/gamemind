@@ -1,0 +1,314 @@
+{
+    "version": 1,
+    "note": "Первая партия «А ты знал?», волна B (ROADMAP 5.4b): 27 серий и 7 отдельных игр без фактов по facts:coverage на dev + 10 популярных игр, которые раньше получали только факт серии. Темы сверены с опубликованными вопросами (той же метки и всей базы).",
+    "facts": [
+        {
+            "key": "fact-batman-arkham-01",
+            "tag": "franchise:batman-arkham",
+            "ru": "Главных героя и злодея Arkham Asylum озвучили Кевин Конрой и Марк Хэмилл — те же актёры, что в мультсериале 1990-х.",
+            "en": "Arkham Asylum's hero and main villain are voiced by Kevin Conroy and Mark Hamill — the same actors as in the 1990s animated series.",
+            "source": "https://en.wikipedia.org/wiki/Batman:_Arkham_Asylum"
+        },
+        {
+            "key": "fact-dragon-age-01",
+            "tag": "franchise:dragon-age",
+            "ru": "Dragon Age: Origins анонсировали ещё в 2004 году, а вышла игра только в ноябре 2009-го.",
+            "en": "Dragon Age: Origins was announced back in 2004 and only came out in November 2009.",
+            "source": "https://en.wikipedia.org/wiki/Dragon_Age:_Origins"
+        },
+        {
+            "key": "fact-duke-nukem-01",
+            "tag": "franchise:duke-nukem",
+            "ru": "Дюк впервые появился в 1991 году — в двухмерном платформере Duke Nukem для DOS, задолго до трёхмерных частей.",
+            "en": "Duke first appeared in 1991 in Duke Nukem, a 2D platformer for DOS, long before the 3D games.",
+            "source": "https://en.wikipedia.org/wiki/Duke_Nukem_(video_game)"
+        },
+        {
+            "key": "fact-fable-01",
+            "tag": "franchise:fable",
+            "ru": "Питер Молиньё обещал, что в первой Fable посаженный жёлудь вырастет в дерево. В игре этого так и не появилось — обещание стало легендой.",
+            "en": "Peter Molyneux promised that in the first Fable an acorn you plant would grow into a tree. It never made it into the game and became a legend.",
+            "source": "https://en.wikipedia.org/wiki/Fable_(2004_video_game)"
+        },
+        {
+            "key": "fact-need-for-speed-01",
+            "tag": "franchise:need-for-speed",
+            "ru": "Первую Need for Speed 1994 года делали вместе с журналом Road & Track — он помог с реальными характеристиками машин.",
+            "en": "The first Need for Speed in 1994 was made with Road & Track magazine, which helped with real car specs.",
+            "source": "https://en.wikipedia.org/wiki/The_Need_for_Speed"
+        },
+        {
+            "key": "fact-red-dead-01",
+            "tag": "franchise:red-dead",
+            "ru": "Серия Red Dead началась с Red Dead Revolver: её делали для Capcom, проект заморозили, и Rockstar забрала его себе.",
+            "en": "The Red Dead series began with Red Dead Revolver: it was made for Capcom, got shelved, and Rockstar took it over.",
+            "source": "https://en.wikipedia.org/wiki/Red_Dead_Revolver"
+        },
+        {
+            "key": "fact-street-fighter-01",
+            "tag": "franchise:street-fighter",
+            "ru": "Комбо в Street Fighter II появились случайно: разработчики заметили, что удары можно «склеивать», и решили оставить эту ошибку.",
+            "en": "Combos in Street Fighter II happened by accident: the developers noticed attacks could be chained and decided to keep the bug.",
+            "source": "https://en.wikipedia.org/wiki/Street_Fighter_II"
+        },
+        {
+            "key": "fact-devil-may-cry-01",
+            "tag": "franchise:devil-may-cry",
+            "ru": "Жонглирование врагами в воздухе — фирменный приём Devil May Cry — придумали после бага в Onimusha, где враги подлетали от ударов.",
+            "en": "Juggling enemies in the air, Devil May Cry's signature move, came from a bug in Onimusha that sent enemies flying.",
+            "source": "https://en.wikipedia.org/wiki/Devil_May_Cry_(video_game)"
+        },
+        {
+            "key": "fact-final-fantasy-01",
+            "tag": "franchise:final-fantasy",
+            "ru": "По популярной версии, Final Fantasy так назвали потому, что Хиронобу Сакагути собирался уйти из индустрии, если игра провалится.",
+            "en": "The popular story goes that Final Fantasy got its name because Hironobu Sakaguchi planned to quit the industry if it flopped.",
+            "source": "https://en.wikipedia.org/wiki/Final_Fantasy_(video_game)"
+        },
+        {
+            "key": "fact-horizon-01",
+            "tag": "franchise:horizon",
+            "ru": "Главную героиню Horizon озвучила Эшли Бёрч, а лицо ей «одолжила» нидерландская актриса Ханна Хукстра.",
+            "en": "Horizon's heroine is voiced by Ashly Burch, while Dutch actress Hannah Hoekstra lent her face.",
+            "source": "https://en.wikipedia.org/wiki/Aloy"
+        },
+        {
+            "key": "fact-metal-gear-01",
+            "tag": "franchise:metal-gear",
+            "ru": "Первая Metal Gear 1987 года стала стелс-игрой из-за слабого железа MSX2: на экран не помещалось много врагов для перестрелок.",
+            "en": "The first Metal Gear in 1987 became a stealth game because the MSX2 was weak: it couldn't fit many enemies for shootouts.",
+            "source": "https://en.wikipedia.org/wiki/Metal_Gear_(video_game)"
+        },
+        {
+            "key": "fact-metroid-01",
+            "tag": "franchise:metroid",
+            "ru": "Название Metroid — смесь слов «метро» и «андроид»: подземные лабиринты плюс героиня в роботизированном скафандре.",
+            "en": "The name Metroid blends «metro» and «android»: underground mazes plus a heroine in a robotic suit.",
+            "source": "https://en.wikipedia.org/wiki/Metroid"
+        },
+        {
+            "key": "fact-halo-01",
+            "tag": "franchise:halo",
+            "ru": "Halo начинали как стратегию в реальном времени для Mac — шутером от первого лица она стала позже.",
+            "en": "Halo started out as a real-time strategy game for the Mac — it became a first-person shooter later.",
+            "source": "https://en.wikipedia.org/wiki/Halo:_Combat_Evolved"
+        },
+        {
+            "key": "fact-pokemon-01",
+            "tag": "franchise:pokemon",
+            "ru": "Pokémon — самая кассовая медиафраншиза в мире: игры, карточки, мультсериал и игрушки вместе принесли больше 100 миллиардов долларов.",
+            "en": "Pokémon is the highest-grossing media franchise in the world: games, cards, the anime and toys have made over 100 billion dollars.",
+            "source": "https://en.wikipedia.org/wiki/List_of_highest-grossing_media_franchises"
+        },
+        {
+            "key": "fact-sonic-01",
+            "tag": "franchise:sonic",
+            "ru": "Соник мог стать кроликом: среди ранних вариантов талисмана Sega был кролик, хватавший предметы ушами. Идея потом ушла в игру Ristar.",
+            "en": "Sonic could have been a rabbit: one early Sega mascot idea grabbed things with its ears. The concept later went into Ristar.",
+            "source": "https://en.wikipedia.org/wiki/Sonic_the_Hedgehog_(character)"
+        },
+        {
+            "key": "fact-starcraft-01",
+            "tag": "franchise:starcraft",
+            "ru": "Раннюю версию StarCraft на выставке 1996 года прозвали «Warcraft в космосе», и игру переделали почти с нуля.",
+            "en": "An early StarCraft build shown in 1996 was mocked as «Warcraft in space», and the game was rebuilt almost from scratch.",
+            "source": "https://en.wikipedia.org/wiki/StarCraft_(video_game)"
+        },
+        {
+            "key": "fact-alan-wake-01",
+            "tag": "franchise:alan-wake",
+            "ru": "Alan Wake анонсировали в 2005 году, а вышла игра в 2010-м: за это время её из открытого мира превратили в линейный триллер.",
+            "en": "Alan Wake was announced in 2005 and released in 2010: along the way it went from an open world to a linear thriller.",
+            "source": "https://en.wikipedia.org/wiki/Alan_Wake"
+        },
+        {
+            "key": "fact-dark-souls-01",
+            "tag": "franchise:dark-souls",
+            "ru": "Знаменитый слоган Prepare to Die придумали для рекламы Dark Souls на Западе — в самой игре этой фразы нет.",
+            "en": "The famous «Prepare to Die» slogan was made up for Dark Souls' Western marketing — the game itself never says it.",
+            "source": "https://en.wikipedia.org/wiki/Dark_Souls_(video_game)"
+        },
+        {
+            "key": "fact-donkey-kong-01",
+            "tag": "franchise:donkey-kong",
+            "ru": "Donkey Kong 1981 года — первая игра, которую Сигэру Миямото придумал как геймдизайнер: до этого он работал в Nintendo художником.",
+            "en": "1981's Donkey Kong was the first game Shigeru Miyamoto designed: before that he worked at Nintendo as an artist.",
+            "source": "https://en.wikipedia.org/wiki/Donkey_Kong_(1981_video_game)"
+        },
+        {
+            "key": "fact-mario-kart-01",
+            "tag": "franchise:mario-kart",
+            "ru": "Mario Kart 8 Deluxe — самая продаваемая игра на Nintendo Switch: её тираж больше 60 миллионов копий.",
+            "en": "Mario Kart 8 Deluxe is the best-selling game on Nintendo Switch, with more than 60 million copies sold.",
+            "source": "https://en.wikipedia.org/wiki/Mario_Kart_8"
+        },
+        {
+            "key": "fact-monster-hunter-01",
+            "tag": "franchise:monster-hunter",
+            "ru": "Monster Hunter: World — самая продаваемая игра в истории Capcom: её тираж больше 20 миллионов копий.",
+            "en": "Monster Hunter: World is the best-selling game in Capcom's history, with more than 20 million copies sold.",
+            "source": "https://en.wikipedia.org/wiki/Monster_Hunter:_World"
+        },
+        {
+            "key": "fact-persona-01",
+            "tag": "franchise:persona",
+            "ru": "Persona начиналась как ответвление серии Shin Megami Tensei: первая часть 1996 года на Западе называлась Revelations: Persona.",
+            "en": "Persona began as a Shin Megami Tensei spin-off: the first game in 1996 was called Revelations: Persona in the West.",
+            "source": "https://en.wikipedia.org/wiki/Revelations:_Persona"
+        },
+        {
+            "key": "fact-the-sims-01",
+            "tag": "franchise:the-sims",
+            "ru": "Автор The Sims задумал игру после пожара в Окленде в 1991 году: потеряв дом, он стал думать, из чего складывается жизнь человека.",
+            "en": "The Sims' creator came up with it after the 1991 Oakland fire: having lost his home, he started thinking about what a life is made of.",
+            "source": "https://en.wikipedia.org/wiki/The_Sims_(video_game)"
+        },
+        {
+            "key": "fact-warcraft-01",
+            "tag": "franchise:warcraft",
+            "ru": "Фильм «Варкрафт» 2016 года собрал больше 430 миллионов долларов и на тот момент стал самой кассовой экранизацией игры.",
+            "en": "The 2016 Warcraft film grossed over 430 million dollars and became the highest-grossing video game adaptation at the time.",
+            "source": "https://en.wikipedia.org/wiki/Warcraft_(film)"
+        },
+        {
+            "key": "fact-animal-crossing-01",
+            "tag": "franchise:animal-crossing",
+            "ru": "Animal Crossing: New Horizons вышла в марте 2020 года, в начале пандемии, и разошлась тиражом больше 40 миллионов копий.",
+            "en": "Animal Crossing: New Horizons came out in March 2020, as the pandemic began, and sold more than 40 million copies.",
+            "source": "https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons"
+        },
+        {
+            "key": "fact-crash-bandicoot-01",
+            "tag": "franchise:crash-bandicoot",
+            "ru": "Крэша задумывали как «своего» героя для PlayStation: у Sony тогда не было талисмана уровня Марио или Соника.",
+            "en": "Crash was meant to be PlayStation's own hero: Sony had no mascot to match Mario or Sonic at the time.",
+            "source": "https://en.wikipedia.org/wiki/Crash_Bandicoot_(character)"
+        },
+        {
+            "key": "fact-harry-potter-01",
+            "tag": "franchise:harry-potter",
+            "ru": "Hogwarts Legacy стала самой продаваемой игрой 2023 года в США — обогнав даже новые части больших серий.",
+            "en": "Hogwarts Legacy was the best-selling game of 2023 in the US, ahead of new entries in big franchises.",
+            "source": "https://en.wikipedia.org/wiki/Hogwarts_Legacy"
+        },
+        {
+            "key": "fact-fortnite-01",
+            "tag": "game:fortnite",
+            "ru": "Концерт Трэвиса Скотта в Fortnite в апреле 2020 года вживую посмотрели больше 12 миллионов игроков.",
+            "en": "Travis Scott's Fortnite concert in April 2020 was watched live by more than 12 million players.",
+            "source": "https://en.wikipedia.org/wiki/Astronomical_(Fortnite_event)"
+        },
+        {
+            "key": "fact-league-of-legends-01",
+            "tag": "game:league-of-legends",
+            "ru": "Финал чемпионата мира по League of Legends 2023 года одновременно смотрели больше 6 миллионов человек — без учёта Китая.",
+            "en": "The 2023 League of Legends World Championship final peaked at over 6 million concurrent viewers, not counting China.",
+            "source": "https://en.wikipedia.org/wiki/2023_League_of_Legends_World_Championship"
+        },
+        {
+            "key": "fact-outer-wilds-01",
+            "tag": "game:outer-wilds",
+            "ru": "Outer Wilds выросла из дипломного проекта Алекса Беачама в Университете Южной Калифорнии.",
+            "en": "Outer Wilds grew out of Alex Beachum's master's thesis project at the University of Southern California.",
+            "source": "https://en.wikipedia.org/wiki/Outer_Wilds"
+        },
+        {
+            "key": "fact-undertale-01",
+            "tag": "game:undertale",
+            "ru": "Почти всё в Undertale — код, сюжет и около сотни музыкальных треков — сделал один человек.",
+            "en": "Almost all of Undertale — the code, the story and around a hundred music tracks — was made by one person.",
+            "source": "https://en.wikipedia.org/wiki/Undertale"
+        },
+        {
+            "key": "fact-black-myth-wukong-01",
+            "tag": "game:black-myth-wukong",
+            "ru": "Black Myth: Wukong разошлась тиражом 10 миллионов копий всего за три дня после выхода.",
+            "en": "Black Myth: Wukong sold 10 million copies in just three days after release.",
+            "source": "https://en.wikipedia.org/wiki/Black_Myth:_Wukong"
+        },
+        {
+            "key": "fact-ghost-of-tsushima-01",
+            "tag": "game:ghost-of-tsushima",
+            "ru": "Режиссёров Ghost of Tsushima сделали почётными послами туризма того самого японского острова, где идёт действие игры.",
+            "en": "Ghost of Tsushima's directors were made honorary tourism ambassadors of the very Japanese island the game is set on.",
+            "source": "https://en.wikipedia.org/wiki/Ghost_of_Tsushima"
+        },
+        {
+            "key": "fact-hades-ii-01",
+            "tag": "game:hades-ii",
+            "ru": "Hades II — первое продолжение в истории своей студии: до него её авторы ни разу не делали сиквелов.",
+            "en": "Hades II is the first sequel in its studio's history: its makers had never made a follow-up before.",
+            "source": "https://en.wikipedia.org/wiki/Hades_II"
+        },
+        {
+            "key": "fact-the-last-of-us-game-01",
+            "tag": "game:the-last-of-us",
+            "ru": "Элли из The Last of Us сначала была похожа на Эллен Пейдж; после разговоров о сходстве её переделали, взяв за основу Эшли Джонсон.",
+            "en": "The Last of Us's Ellie first resembled Ellen Page; after talk of the likeness she was redesigned based on Ashley Johnson.",
+            "source": "https://en.wikipedia.org/wiki/Ellie_(The_Last_of_Us)"
+        },
+        {
+            "key": "fact-portal-game-01",
+            "tag": "game:portal",
+            "ru": "Portal не продавалась отдельно на старте: она вышла в сборнике The Orange Box 2007 года вместе с Half-Life 2 и Team Fortress 2.",
+            "en": "Portal wasn't sold on its own at launch: it came in 2007's The Orange Box together with Half-Life 2 and Team Fortress 2.",
+            "source": "https://en.wikipedia.org/wiki/The_Orange_Box"
+        },
+        {
+            "key": "fact-grand-theft-auto-san-andreas-01",
+            "tag": "game:grand-theft-auto-san-andreas",
+            "ru": "В коде GTA: San Andreas нашли вырезанную мини-игру Hot Coffee, и из-за скандала игре в США временно дали рейтинг «только для взрослых».",
+            "en": "Fans found the cut Hot Coffee minigame in GTA: San Andreas's code, and the scandal briefly got the game an Adults Only rating in the US.",
+            "source": "https://en.wikipedia.org/wiki/Hot_Coffee_mod"
+        },
+        {
+            "key": "fact-fallout-new-vegas-01",
+            "tag": "game:fallout-new-vegas",
+            "ru": "Fallout: New Vegas сделали всего за 18 месяцев — в студии Obsidian, где работали авторы первых Fallout.",
+            "en": "Fallout: New Vegas was made in just 18 months by Obsidian, home to people who worked on the original Fallout games.",
+            "source": "https://en.wikipedia.org/wiki/Fallout:_New_Vegas"
+        },
+        {
+            "key": "fact-zelda-breath-of-the-wild-01",
+            "tag": "game:zelda-breath-of-the-wild",
+            "ru": "Breath of the Wild вышла в один день с консолью Nintendo Switch — 3 марта 2017 года, а заодно и на Wii U.",
+            "en": "Breath of the Wild launched the same day as the Nintendo Switch, March 3, 2017, and on the Wii U as well.",
+            "source": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Breath_of_the_Wild"
+        },
+        {
+            "key": "fact-super-mario-bros-01",
+            "tag": "game:super-mario-bros",
+            "ru": "Super Mario Bros. 1985 года больше двадцати лет была самой продаваемой видеоигрой в мире — около 40 миллионов копий.",
+            "en": "1985's Super Mario Bros. was the world's best-selling video game for over twenty years, at about 40 million copies.",
+            "source": "https://en.wikipedia.org/wiki/Super_Mario_Bros."
+        },
+        {
+            "key": "fact-final-fantasy-vii-01",
+            "tag": "game:final-fantasy-vii",
+            "ru": "Ради Final Fantasy VII серия ушла с Nintendo на PlayStation: на картридж N64 не помещались видеоролики, а на CD — да.",
+            "en": "For Final Fantasy VII, the series left Nintendo for PlayStation: the N64 cartridge couldn't hold the cutscenes, but a CD could.",
+            "source": "https://en.wikipedia.org/wiki/Final_Fantasy_VII"
+        },
+        {
+            "key": "fact-half-life-game-01",
+            "tag": "game:half-life",
+            "ru": "Первый Half-Life 1998 года собрал больше 50 наград «Игра года».",
+            "en": "The original 1998 Half-Life won more than 50 Game of the Year awards.",
+            "source": "https://en.wikipedia.org/wiki/Half-Life_(video_game)"
+        },
+        {
+            "key": "fact-bioshock-infinite-01",
+            "tag": "game:bioshock-infinite",
+            "ru": "Летающий город из BioShock Infinite вдохновлён Всемирной выставкой 1893 года в Чикаго.",
+            "en": "BioShock Infinite's flying city was inspired by the 1893 World's Fair in Chicago.",
+            "source": "https://en.wikipedia.org/wiki/BioShock_Infinite"
+        },
+        {
+            "key": "fact-counter-strike-2-01",
+            "tag": "game:counter-strike-2",
+            "ru": "Counter-Strike 2 вышла как бесплатное обновление: в сентябре 2023 года она просто заменила CS:GO в Steam.",
+            "en": "Counter-Strike 2 arrived as a free update: in September 2023 it simply replaced CS:GO on Steam.",
+            "source": "https://en.wikipedia.org/wiki/Counter-Strike_2"
+        }
+    ]
+}
