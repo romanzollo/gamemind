@@ -28,6 +28,7 @@ import {
     getChallengeSetupDifficulty,
 } from '@/features/friend-challenge/lib/challenge-rules';
 import { getDictionary, isLocale } from '@/shared/i18n';
+import { OgAnswerGridMark } from '@/shared/ui/og-answer-grid-mark';
 
 export const alt = 'GameMind';
 export const size = { width: 1200, height: 630 };
@@ -128,14 +129,7 @@ export default async function ChallengeOpenGraphImage({
                         {labels.versusEyebrow.toUpperCase()}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                        <div
-                            style={{
-                                width: 8,
-                                height: 44,
-                                borderRadius: 4,
-                                background: COLORS.primary,
-                            }}
-                        />
+                        <OgAnswerGridMark size={44} />
                         <div style={{ fontFamily: 'Oswald', fontSize: 44 }}>GameMind</div>
                     </div>
                 </div>

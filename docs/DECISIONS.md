@@ -1512,7 +1512,7 @@ Important decision: generated questions should not go directly into live quizzes
 
 **Status (2026-07-22):** Design lock **in code**. **Wave A + Wave B closed on prod** (smoke OK). Status = **`ongoing`**. New UI = Prompt T-Feature + §7.
 
-**Interim brand mark (2026-08-20):** Not a locked logo. Favicon/Apple = rank chevrons (`src/app/icon.svg`, `apple-icon.png`). Header = transparent GM + primary bar (`GameMindMark`) — no charcoal rounded tile (AA fringe on light surface). Drafts in `docs/brand/` (see README). Replace via Taste §14 «Brand mark v2»; do not invent a second palette or gamepad/`?` marks.
+**Interim brand mark (2026-08-20):** *Superseded Nov 12, 2026 by «Brand mark: answer grid».* Not a locked logo. Favicon/Apple = rank chevrons (`src/app/icon.svg`, `apple-icon.png`). Header = transparent GM + primary bar (`GameMindMark`) — no charcoal rounded tile (AA fringe on light surface). Drafts in `docs/brand/` (see README). Replace via Taste §14 «Brand mark v2»; do not invent a second palette or gamepad/`?` marks.
 
 **Tooling:** Taste Skill (always for UI discipline); Google Stitch and Pencil.dev optional for comps/specs only. Cursor + this repo are the only production-code source. Never paste generated app code from external tools.
 
@@ -2917,3 +2917,23 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 - Counting challenge games in the rating — farmable with a second account.
 
 **Deploy order:** migration `20261111120000_friend_challenge` on prod (additive: one table, one nullable column, two indexes) → deploy. Running code does not read the new column.
+
+## Brand mark: answer grid (November 12, 2026)
+
+**Context:** ROADMAP 4.8. The header showed an interim «GM + green bar», the tab showed rank chevrons — two different marks, neither locked (ADR «Taste Skill Visual Identity», interim note of Aug 20). The owner compared three directions (GM monogram, rank chevrons, answer grid) and seven grid variations, then picked the original grid with soft corners (C-a).
+
+**Decision:** one mark everywhere — a 2×2 grid, three green cells and one red: the same ✓/✗ the player sees in the review, the friend challenge and the shared text (🟩🟥).
+
+| Place | Form |
+|------|------|
+| Header (`GameMindMark`) | No tile: cells 13/32, gap 2, radius 3; colours are the `primary` / `danger` tokens, so the mark follows the light / dark theme. A dark tile on a light surface leaves a grey fringe (the reason the old charcoal tile was dropped) |
+| Tab, iPhone, PWA (`src/app/icon.svg`) | Dark tile `#14181f`, radius 7, cells on a 4 / 10 / 4 grid in 32 units = whole pixels at 16 px (2 / 5 / 2); the sketch grid gave half-pixel gaps and a blurry tab. Same tile in both browser themes |
+| Raster set | `scripts/build-favicon.cjs`: `favicon.ico` 16/32/48, `apple-icon.png` 180 and `public/icons/icon-192/512.png` — square tile (the OS rounds it; iOS paints transparent corners black). Re-run after any change to `icon.svg` |
+| Manifest | `src/app/manifest.ts`: name, standalone, dark background, the 192/512 icons. No service worker, no offline — only a home-screen shortcut |
+| Open Graph | `OgAnswerGridMark` (divs — satori does not render the header SVG component) next to «GameMind» on the site card and the challenge card |
+
+**Wordle likeness:** accepted. The squares are already our share format; the wordmark sits next to the mark in the header and previews.
+
+**Prod smoke:** a step checks `/favicon.ico`, `/icon.svg`, `/apple-icon.png`, the manifest and a PWA icon return 200 with the right type.
+
+**Next:** 4.9 achievement icons speak the same language (cells, rarity colours).

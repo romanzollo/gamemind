@@ -19,6 +19,7 @@ import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 
 import { getDictionary, isLocale, locales } from '@/shared/i18n';
+import { OgAnswerGridMark } from '@/shared/ui/og-answer-grid-mark';
 
 export const alt = 'GameMind';
 export const size = { width: 1200, height: 630 };
@@ -82,14 +83,7 @@ export default async function OpenGraphImage({
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-                    <div
-                        style={{
-                            width: 12,
-                            height: 96,
-                            borderRadius: 6,
-                            background: '#3ecf8e',
-                        }}
-                    />
+                    <OgAnswerGridMark size={96} />
                     <div
                         style={{
                             fontFamily: 'Oswald',

@@ -1,49 +1,13 @@
-<!-- Interim favicon: rank chevrons (mark B). Not the locked brand. See game-mind-mark.tsx -->
+<!-- Знак GameMind «сетка ответов» (C-a): три верных, одна мимо — на тёмной плитке табло.
+     Сетка 4/10/4 в единицах 32 = ровные пиксели в 16 px (2/5/2): иначе вкладка мылит.
+     Плитка тёмная в обеих темах браузера: знак одинаково читается на светлой и тёмной вкладке.
+     Источник для favicon.ico / apple-icon / иконок PWA: node scripts/build-favicon.cjs.
+     Шапка рисует тот же знак без плитки: src/shared/ui/game-mind-mark.tsx.
+     Canon: docs/DECISIONS.md → Brand mark: answer grid. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-    <defs>
-        <clipPath id="mark">
-            <rect width="32" height="32" rx="5" />
-        </clipPath>
-    </defs>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            .bg {
-                fill: #1a212c;
-            }
-            .fg {
-                stroke: #e8ecf1;
-            }
-            .accent {
-                stroke: #3ecf8e;
-            }
-        }
-    </style>
-    <g clip-path="url(#mark)">
-        <rect class="bg" width="32" height="32" fill="#14181f" />
-        <g
-            fill="none"
-            stroke-linecap="square"
-            stroke-linejoin="miter"
-            stroke-miterlimit="2"
-        >
-            <path
-                class="fg"
-                stroke="#f7fffb"
-                stroke-width="2.4"
-                d="M9.2 13.1 16 8.2 22.8 13.1"
-            />
-            <path
-                class="accent"
-                stroke="#0b6e4f"
-                stroke-width="3.3"
-                d="M6.8 20.2 16 13.6 25.2 20.2"
-            />
-            <path
-                class="fg"
-                stroke="#f7fffb"
-                stroke-width="2.4"
-                d="M9.2 26.8 16 21.9 22.8 26.8"
-            />
-        </g>
-    </g>
+    <rect width="32" height="32" rx="7" fill="#14181f" />
+    <rect x="4" y="4" width="10" height="10" rx="2.5" fill="#3ecf8e" />
+    <rect x="18" y="4" width="10" height="10" rx="2.5" fill="#3ecf8e" />
+    <rect x="4" y="18" width="10" height="10" rx="2.5" fill="#3ecf8e" />
+    <rect x="18" y="18" width="10" height="10" rx="2.5" fill="#f47e84" />
 </svg>

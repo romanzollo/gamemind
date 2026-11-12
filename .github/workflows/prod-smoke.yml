@@ -78,6 +78,20 @@ jobs:
           echo "::error::www did not switch to $EXPECTED_SHA within 3 minutes"
           exit 1
 
+      - name: Brand icons are served
+        # Знак во вкладке, на iPhone и в манифесте (ADR Brand mark: answer grid).
+        # Без /favicon.ico запрос уходит в [locale] и рендерит 404 функцией.
+        run: |
+          check() {
+            type=$(curl -fsS -o /dev/null -w '%{content_type}' "$SMOKE_BASE_URL$1") || { echo "::error::$1 is not 200"; exit 1; }
+            case "$type" in "$2"*) echo "$1 → $type" ;; *) echo "::error::$1 served as $type"; exit 1 ;; esac
+          }
+          check /favicon.ico image/x-icon
+          check /icon.svg image/svg+xml
+          check /apple-icon.png image/png
+          check /manifest.webmanifest application/manifest+json
+          check /icons/icon-192.png image/png
+
       - name: Run smoke
         env:
           SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}

@@ -1,5 +1,10 @@
 /**
- * Сборка src/app/favicon.ico из src/app/icon.svg (16, 32, 48 px).
+ * Сборка иконок из src/app/icon.svg:
+ * - src/app/favicon.ico (16, 32, 48 px);
+ * - src/app/apple-icon.png (180 px) — иконка на экране iPhone;
+ * - public/icons/icon-192.png и icon-512.png — для манифеста (src/app/manifest.ts).
+ * Для apple / PWA плитка без скругления: система скругляет сама, а
+ * прозрачные углы iOS залил бы чёрным.
  *
  * Зачем: браузеры и поисковые роботы (Яндекс) сами запрашивают /favicon.ico.
  * Без файла запрос уходит в маршрут [locale] и серверная функция рендерит 404
@@ -19,6 +24,9 @@ const SIZES = [16, 32, 48];
 const root = path.resolve(__dirname, '..');
 const svgPath = path.join(root, 'src/app/icon.svg');
 const icoPath = path.join(root, 'src/app/favicon.ico');
+const applePath = path.join(root, 'src/app/apple-icon.png');
+const pwaDir = path.join(root, 'public/icons');
+const PWA_SIZES = [192, 512];
 
 async function renderPng(svg, size) {
     // density: рендерим векторно сразу в нужный размер, без даунскейла растра.
@@ -65,6 +73,24 @@ async function main() {
     console.log(
         `favicon.ico: ${SIZES.join('/')} px, ${ico.length} bytes → ${path.relative(root, icoPath)}`,
     );
+
+    // Квадратная плитка без скругления (rx="7" → 0) для apple и PWA.
+    const squareSvg = Buffer.from(
+        svg.toString('utf8').replace('rx="7"', 'rx="0"'),
+    );
+    if (squareSvg.equals(svg)) {
+        throw new Error('icon.svg: плитка с rx="7" не найдена — обнови скрипт');
+    }
+
+    fs.writeFileSync(applePath, await renderPng(squareSvg, 180));
+    console.log(`apple-icon.png: 180 px → ${path.relative(root, applePath)}`);
+
+    fs.mkdirSync(pwaDir, { recursive: true });
+    for (const size of PWA_SIZES) {
+        const out = path.join(pwaDir, `icon-${size}.png`);
+        fs.writeFileSync(out, await renderPng(squareSvg, size));
+        console.log(`icon-${size}.png → ${path.relative(root, out)}`);
+    }
 }
 
 main().catch((error) => {
