@@ -5,7 +5,8 @@
  * (Показать все / Свернуть секцию — как ачивки).
  * Шире — таблица целиком.
  * У каждой игры — чип режима (Классика, Блиц, Выживание, Челлендж дня,
- * Вызов) и подпись «сложность · тема / волна». «Верно» зелёным — только у
+ * Вызов) и подпись «сложность · тема / волна». Над списком — чипы-фильтр
+ * по режимам, которые есть среди загруженных игр (в браузере, без запроса). «Верно» зелёным — только у
  * идеальной партии: зелёный в дизайн-системе значит «верно».
  * Presentation only — без изменений scoring / snapshot.
  */
@@ -15,6 +16,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { getSessionDifficultyLabel } from '@/features/quiz/lib/session-difficulty-label';
+import { ChipRadioGroup } from '@/shared/ui/chip-radio-group';
 import { ProfileListDisclosureControl } from '@/features/profile/components/ProfileListDisclosureControl';
 import type { Dictionary } from '@/shared/i18n';
 import { EmptyState } from '@/shared/ui';
@@ -37,7 +39,20 @@ type ProfileResultHistoryProps = {
     >;
     /** Названия режимов — из словарей режимов (одно слово на весь сайт). */
     modeLabels: Record<ProfileGameMode, string>;
+    /** Чип «Все» фильтра. */
+    allLabel: string;
 };
+
+type ModeFilter = ProfileGameMode | 'all';
+
+/** Порядок чипов фильтра — как режимы на главной. */
+const MODE_ORDER: readonly ProfileGameMode[] = [
+    'classic',
+    'blitz',
+    'survival',
+    'daily',
+    'challenge',
+];
 
 function asDate(value: Date | string): Date {
     return value instanceof Date ? value : new Date(value);
@@ -100,24 +115,55 @@ const phoneRowClassName =
     'block px-3 py-3.5 motion-safe:transition-colors hover:bg-surface-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring';
 
 export function ProfileResultHistory({
-    entries,
+    entries: allEntries,
     locale,
     labels,
     difficultyLabels,
     modeLabels,
+    allLabel,
 }: ProfileResultHistoryProps) {
     const [showAllMobile, setShowAllMobile] = useState(false);
+    const [modeFilter, setModeFilter] = useState<ModeFilter>('all');
 
-    if (entries.length === 0) {
+    if (allEntries.length === 0) {
         return (
             <EmptyState className="mt-4" title={labels.historyEmpty} />
         );
     }
 
+    const presentModes = MODE_ORDER.filter((mode) =>
+        allEntries.some((entry) => entry.mode === mode),
+    );
+    const entries =
+        modeFilter === 'all'
+            ? allEntries
+            : allEntries.filter((entry) => entry.mode === modeFilter);
     const needsMobileFold = entries.length > MOBILE_PREVIEW_COUNT;
 
     return (
         <div>
+            {/* Фильтр нужен, только когда режимов больше одного. */}
+            {presentModes.length > 1 ? (
+                <div className="mb-3" data-testid="history-mode-filter">
+                    <ChipRadioGroup<ModeFilter>
+                        name="history-mode"
+                        legend={labels.historyMode}
+                        hideLegend
+                        value={modeFilter}
+                        onChange={(value) => {
+                            setModeFilter(value);
+                            setShowAllMobile(false);
+                        }}
+                        options={[
+                            { value: 'all', label: allLabel },
+                            ...presentModes.map((mode) => ({
+                                value: mode,
+                                label: modeLabels[mode],
+                            })),
+                        ]}
+                    />
+                </div>
+            ) : null}
             {/*
               Phone / узкий tablet (&lt;640px): scoreboard-stack + disclosure.
               640px+: таблица целиком.

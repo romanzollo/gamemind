@@ -24,6 +24,8 @@ type ChipRadioGroupProps<Value extends string> = {
     onChange: (value: Value) => void;
     /** id подсказки под группой (например, состав Смешанной). */
     describedBy?: string;
+    /** Подпись группы только для скринридера (фильтр, где смысл виден по чипам). */
+    hideLegend?: boolean;
 };
 
 export function ChipRadioGroup<Value extends string>({
@@ -33,13 +35,16 @@ export function ChipRadioGroup<Value extends string>({
     value,
     onChange,
     describedBy,
+    hideLegend = false,
 }: ChipRadioGroupProps<Value>) {
     return (
         <fieldset aria-describedby={describedBy}>
-            <legend className="text-sm font-medium text-foreground">
+            <legend
+                className={hideLegend ? 'sr-only' : 'text-sm font-medium text-foreground'}
+            >
                 {legend}
             </legend>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className={`flex flex-wrap gap-2 ${hideLegend ? '' : 'mt-2'}`}>
                 {options.map((option) => (
                     <label key={option.value} className="relative">
                         <input

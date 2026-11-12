@@ -52,12 +52,9 @@ export function SignInMethodsList({
     );
 
     return (
-        <div className="mt-4">
-            <h3 className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
-                {profile.signInMethodsTitle}
-            </h3>
+        <div>
 
-            <ul className="mt-3 rounded-lg border border-border bg-surface px-4 shadow-sm sm:px-5">
+            <ul>
                 <li className={rowClassName}>
                     <span className="text-sm text-foreground sm:text-base">
                         {profile.signInMethodPassword}

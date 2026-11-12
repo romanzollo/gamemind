@@ -2,7 +2,8 @@
  * Achievements на профиле: tile-сетка + illustration pack.
  *
  * Client: тап раскрывает description (паритет desktop title-hover).
- * Mobile: плотнее плитки, locked-first, превью N + «Показать все».
+ * Превью N плиток (телефон и ПК) + «Показать все»: сначала закрытые, ближе
+ * к открытию — раньше (подпись «Ближе всего», если прогресс уже есть).
  * Редкость: полоса слева + метка уровня; закрытая плитка — силуэт значка
  * и тот же уровень приглушённо, прогресс — цветом уровня.
  * Только что открытые (`highlightCodes` из `?unlocked=` по ссылке тоста):
@@ -15,7 +16,10 @@ import { useState, type CSSProperties } from 'react';
 
 import { AchievementMark } from '@/features/achievements/components/AchievementMark';
 import { ACHIEVEMENT_TIER_CLASS_NAMES } from '@/features/achievements/components/achievement-tier-styles';
-import { sortAchievementItemsForProfile } from '@/features/achievements/lib/sort-achievement-items';
+import {
+    achievementProgressRatio,
+    sortAchievementItemsForProfile,
+} from '@/features/achievements/lib/sort-achievement-items';
 import {
     ACHIEVEMENT_TIER,
     type AchievementCode,
@@ -25,8 +29,8 @@ import { ProfileListDisclosureControl } from '@/features/profile/components/Prof
 import type { Dictionary } from '@/shared/i18n';
 import { InlineAlert } from '@/shared/ui';
 
-/** Сколько бейджей видно на mobile до «Показать все». */
-const MOBILE_PREVIEW_COUNT = 6;
+/** Сколько бейджей видно до «Показать все» (две строки по две на ПК). */
+const PREVIEW_COUNT = 4;
 
 type ProfileAchievementsListProps = {
     /** null = Neon/read failed после catch-up. */
@@ -57,7 +61,7 @@ export function ProfileAchievementsList({
     const [expandedCode, setExpandedCode] = useState<AchievementCode | null>(
         null,
     );
-    const [showAllMobile, setShowAllMobile] = useState(false);
+    const [showAll, setShowAll] = useState(false);
 
     if (progress === null) {
         return (
@@ -71,10 +75,23 @@ export function ProfileAchievementsList({
         progress.items,
         highlightCodes,
     );
-    const needsMobileFold = sortedItems.length > MOBILE_PREVIEW_COUNT;
+    const needsFold = sortedItems.length > PREVIEW_COUNT;
+    // «Ближе всего» — только когда превью начинается с закрытого, к которому
+    // уже есть прогресс (у нового игрока все по нулям — подпись соврала бы).
+    const first = sortedItems[0];
+    const showCloseLabel =
+        needsFold &&
+        !showAll &&
+        first !== undefined &&
+        achievementProgressRatio(first) > 0;
 
     return (
         <div>
+            {showCloseLabel ? (
+                <p className="mb-2 font-mono text-2xs font-medium uppercase tracking-[0.14em] text-muted">
+                    {labels.closestTitle}
+                </p>
+            ) : null}
             <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2 sm:gap-2">
                 {sortedItems.map((item, index) => {
                     const copy = labels.items[item.code];
@@ -148,17 +165,13 @@ export function ProfileAchievementsList({
                         unlocked && highlightCodes.includes(item.code);
 
                     const isExpanded = expandedCode === item.code;
-                    const hideOnMobilePreview =
-                        needsMobileFold &&
-                        !showAllMobile &&
-                        index >= MOBILE_PREVIEW_COUNT;
+                    const hideInPreview =
+                        needsFold && !showAll && index >= PREVIEW_COUNT;
 
                     return (
                         <li
                             key={item.code}
-                            className={
-                                hideOnMobilePreview ? 'max-lg:hidden' : undefined
-                            }
+                            className={hideInPreview ? 'hidden' : undefined}
                         >
                             <button
                                 type="button"
@@ -275,13 +288,12 @@ export function ProfileAchievementsList({
                 })}
             </ul>
 
-            {needsMobileFold ? (
-                showAllMobile ? (
+            {needsFold ? (
+                showAll ? (
                     <ProfileListDisclosureControl
                         kind="collapse"
                         label={labels.collapseSection}
-                        onCollapse={() => setShowAllMobile(false)}
-                        className="lg:hidden"
+                        onCollapse={() => setShowAll(false)}
                     />
                 ) : (
                     <ProfileListDisclosureControl
@@ -290,8 +302,7 @@ export function ProfileAchievementsList({
                             '{count}',
                             String(sortedItems.length),
                         )}
-                        onExpand={() => setShowAllMobile(true)}
-                        className="lg:hidden"
+                        onExpand={() => setShowAll(true)}
                     />
                 )
             ) : null}

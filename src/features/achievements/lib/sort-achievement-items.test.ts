@@ -41,6 +41,22 @@ describe('sortAchievementItemsForProfile', () => {
         ]);
     });
 
+    it('orders locked ones by how close they are to unlocking', () => {
+        const withProgress: AchievementProgressItem[] = [
+            { ...item('QUIZZES_5', false), criteriaCurrent: 1, criteriaTarget: 5 },
+            { ...item('DAILY_COMPLETE', false), criteriaCurrent: 0, criteriaTarget: 1 },
+            { ...item('PERFECT_QUIZ', false), criteriaCurrent: 2, criteriaTarget: 3 },
+            item('FIRST_QUIZ', true),
+        ];
+
+        expect(codes(sortAchievementItemsForProfile(withProgress))).toEqual([
+            'PERFECT_QUIZ',
+            'QUIZZES_5',
+            'DAILY_COMPLETE',
+            'FIRST_QUIZ',
+        ]);
+    });
+
     it('moves highlighted (just unlocked) codes to the very top', () => {
         expect(
             codes(

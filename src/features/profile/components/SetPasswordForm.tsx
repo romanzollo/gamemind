@@ -39,17 +39,14 @@ export function SetPasswordForm({
     }, [state.success, dictionary.profile.setPasswordSuccess]);
 
     return (
-        <div className="mt-4">
-            <h3 className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
-                {dictionary.profile.changePasswordTitle}
-            </h3>
+        <div>
             <p className="mt-1 text-sm text-muted">
                 {dictionary.profile.setPasswordHint}
             </p>
 
             <form
                 action={formAction}
-                className="mt-3 space-y-4 rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
+                className="mt-3 space-y-4"
             >
                 <input type="hidden" name="locale" value={locale} />
 

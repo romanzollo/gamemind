@@ -250,6 +250,7 @@ export const enDictionary = {
         signInMethodPassword: 'Email and password',
         signInMethodConnected: 'Connected',
         signInMethodNotSet: 'Not set',
+        passwordSet: 'Set',
         signInMethodConnect: 'Connect',
         changeAvatarTitle: 'Avatar',
         avatarChoose: 'Choose photo',
@@ -722,6 +723,7 @@ export const enDictionary = {
     },
     achievements: {
         sectionTitle: 'Achievements',
+        closestTitle: 'Almost there',
         loadFailed: 'Achievements didn’t load. Refresh the page.',
         locked: 'Locked',
         unlockedOn: 'Unlocked {date}',

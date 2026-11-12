@@ -16,6 +16,7 @@ import { ChangePasswordForm } from '@/features/profile/components/ChangePassword
 import { ChangeUsernameForm } from '@/features/profile/components/ChangeUsernameForm';
 import { ProfileFoldSection } from '@/features/profile/components/ProfileFoldSection';
 import { ProfileResultHistory } from '@/features/profile/components/ProfileResultHistory';
+import { ProfileSettingsRow } from '@/features/profile/components/ProfileSettingsRow';
 import { ProfileSettingsSection } from '@/features/profile/components/ProfileSettingsSection';
 import { RatingProfileWeek } from '@/features/leaderboard/components/rating-profile-week';
 import { ProfileStatsSummary } from '@/features/profile/components/ProfileStatsSummary';
@@ -29,7 +30,8 @@ import {
 import type { ProfileStats } from '@/features/profile/types/profile-stats';
 import type { ProfileResultHistoryEntry } from '@/features/profile/types/result-history-entry';
 import { requireUser } from '@/lib/auth/guards';
-import { getDictionary, isLocale } from '@/shared/i18n';
+import { VK_ID_PROVIDER_ID } from '@/lib/auth/vk-id';
+import { getDictionary, isLocale, type Dictionary } from '@/shared/i18n';
 import {
     buttonClassName,
     InlineAlert,
@@ -61,6 +63,15 @@ const sectionHeadingClassName =
  * Mobile: ачивки и история — складки как настройки (не раздувают экран).
  * Settings в Client `<details>`, чтобы soft refresh не схлопывал блок.
  */
+/** «Почта, Яндекс ID» — подключённые входы для строки настроек. */
+function describeSignInMethods(methods: SignInMethods, dictionary: Dictionary): string {
+    const names: string[] = [];
+    if (methods.hasPassword) names.push(dictionary.profile.email);
+    if (methods.providers.includes('yandex')) names.push('Яндекс ID');
+    if (methods.providers.includes(VK_ID_PROVIDER_ID)) names.push('VK ID');
+    return names.join(', ');
+}
+
 export default async function ProfilePage({
     params,
     searchParams,
@@ -305,6 +316,7 @@ export default async function ProfilePage({
                                         daily: dictionary.dailyChallenge.title,
                                         challenge: dictionary.friendChallenge.versusEyebrow,
                                     }}
+                                    allLabel={dictionary.quiz.filterAll}
                                 />
                             </div>
                         )}
@@ -316,41 +328,85 @@ export default async function ProfilePage({
                     title={dictionary.profile.sectionSettings}
                     defaultOpen={!isGuest && Boolean(signInErrorMessage)}
                 >
-                    <ChangeUsernameForm
-                        locale={safeLocale}
-                        dictionary={dictionary}
-                        currentUsername={session.user.username}
-                    />
+                    {/*
+                      Строки «название — значение», форма по нажатию: настройки
+                      не растягивают страницу. Гостю — только имя и аватар.
+                    */}
+                    <div className="rounded-lg border border-border bg-surface shadow-sm">
+                        <ProfileSettingsRow
+                            title={dictionary.profile.changeUsernameTitle}
+                            value={session.user.username}
+                            testId="settings-username"
+                        >
+                            <ChangeUsernameForm
+                                locale={safeLocale}
+                                dictionary={dictionary}
+                                currentUsername={session.user.username}
+                            />
+                        </ProfileSettingsRow>
 
-                    <ChangeAvatarForm
-                        locale={safeLocale}
-                        dictionary={dictionary}
-                        currentImageUrl={session.user.image ?? null}
-                        avatarPattern={avatarPattern}
-                    />
+                        <ProfileSettingsRow
+                            title={dictionary.profile.changeAvatarTitle}
+                            value={
+                                <UserAvatar
+                                    src={session.user.image}
+                                    pattern={avatarPattern}
+                                    size="sm"
+                                    className="!h-6 !w-6"
+                                />
+                            }
+                            testId="settings-avatar"
+                        >
+                            <ChangeAvatarForm
+                                locale={safeLocale}
+                                dictionary={dictionary}
+                                currentImageUrl={session.user.image ?? null}
+                                avatarPattern={avatarPattern}
+                            />
+                        </ProfileSettingsRow>
 
-                    {isGuest ? null : signInMethods &&
-                      !signInMethods.hasPassword ? (
-                        <SetPasswordForm
-                            locale={safeLocale}
-                            dictionary={dictionary}
-                            emailRequired={signInMethods.email === null}
-                        />
-                    ) : (
-                        <ChangePasswordForm
-                            locale={safeLocale}
-                            dictionary={dictionary}
-                        />
-                    )}
+                        {isGuest ? null : (
+                            <ProfileSettingsRow
+                                title={dictionary.profile.changePasswordTitle}
+                                value={
+                                    signInMethods && !signInMethods.hasPassword
+                                        ? dictionary.profile.signInMethodNotSet
+                                        : dictionary.profile.passwordSet
+                                }
+                                testId="settings-password"
+                            >
+                                {signInMethods && !signInMethods.hasPassword ? (
+                                    <SetPasswordForm
+                                        locale={safeLocale}
+                                        dictionary={dictionary}
+                                        emailRequired={signInMethods.email === null}
+                                    />
+                                ) : (
+                                    <ChangePasswordForm
+                                        locale={safeLocale}
+                                        dictionary={dictionary}
+                                    />
+                                )}
+                            </ProfileSettingsRow>
+                        )}
 
-                    {signInMethods ? (
-                        <SignInMethodsList
-                            locale={safeLocale}
-                            dictionary={dictionary}
-                            methods={signInMethods}
-                            errorMessage={signInErrorMessage}
-                        />
-                    ) : null}
+                        {signInMethods ? (
+                            <ProfileSettingsRow
+                                title={dictionary.profile.signInMethodsTitle}
+                                value={describeSignInMethods(signInMethods, dictionary)}
+                                // Ошибка привязки входа видна сразу, без поиска.
+                                defaultOpen={Boolean(signInErrorMessage)}
+                                testId="settings-signin"
+                            >
+                                <SignInMethodsList
+                                    locale={safeLocale}
+                                    dictionary={dictionary}
+                                    methods={signInMethods}
+                                    errorMessage={signInErrorMessage}
+                                />
+                            </ProfileSettingsRow>
+                        ) : null}
+                    </div>
                 </ProfileSettingsSection>
             </div>
 

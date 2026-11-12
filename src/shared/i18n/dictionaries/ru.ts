@@ -253,6 +253,7 @@ export const ruDictionary: Dictionary = {
         signInMethodPassword: 'Почта и пароль',
         signInMethodConnected: 'Подключён',
         signInMethodNotSet: 'Не задан',
+        passwordSet: 'Задан',
         signInMethodConnect: 'Подключить',
         changeAvatarTitle: 'Аватар',
         avatarChoose: 'Выбрать фото',
@@ -739,6 +740,7 @@ export const ruDictionary: Dictionary = {
     },
     achievements: {
         sectionTitle: 'Достижения',
+        closestTitle: 'Ближе всего',
         loadFailed:
             'Достижения не загрузились. Обнови страницу.',
         locked: 'Ещё не открыто',

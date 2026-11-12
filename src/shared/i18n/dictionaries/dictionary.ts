@@ -310,6 +310,8 @@ export type Dictionary = {
         signInMethodPassword: string;
         signInMethodConnected: string;
         signInMethodNotSet: string;
+        /** Строка «Пароль» в настройках, когда пароль есть. */
+        passwordSet: string;
         signInMethodConnect: string;
         changeAvatarTitle: string;
         avatarChoose: string;
@@ -850,6 +852,8 @@ export type Dictionary = {
      */
     achievements: {
         sectionTitle: string;
+        /** Над превью: закрытые, ближе всего к открытию. */
+        closestTitle: string;
         loadFailed: string;
         locked: string;
         /** Шаблон с `{date}` — дата уже локализована в UI. */

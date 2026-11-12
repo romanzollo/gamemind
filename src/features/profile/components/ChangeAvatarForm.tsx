@@ -94,7 +94,6 @@ function AvatarPicker({
     return (
         <form
             action={onSubmit}
-            className="rounded-lg border border-border bg-surface p-4 shadow-sm sm:p-5"
             data-testid="avatar-form"
         >
             <input type="hidden" name="locale" value={locale} />
@@ -245,7 +244,7 @@ export function ChangeAvatarForm(props: ChangeAvatarFormProps) {
     }, [state.success, state.imageUrl, router, dictionary.profile.changeAvatarSuccess]);
 
     return (
-        <div className="mt-4">
+        <div>
             <AvatarPicker
                 key={currentImageUrl ?? ''}
                 {...props}
