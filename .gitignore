@@ -61,6 +61,9 @@ docs/PROJECT_CONTEXT.md
 /raw-quiz-audio/**
 !/raw-quiz-audio/README.md
 
+# «А ты знал?»: HTML-ревью партий фактов (`npm run facts:review`) — только локально.
+/content/drafts/facts/_review/
+
 # Local media uploads (STORAGE_PROVIDER=local-public) — do not commit runtime files
 /public/media/**
 !/public/media/.gitkeep

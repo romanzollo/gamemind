@@ -240,9 +240,38 @@ model Tag {
   topicCycles  UserTopicQuestionCycle[]
   /// Сессии, сыгранные с этой темой. Restrict: тему с историей не удалить.
   quizSessions QuizSession[]
+  /// Факты «А ты знал?» об этой игре или серии. Restrict: метку с фактами
+  /// не удалить (taxonomy:sync --prune упадёт, а не потеряет факты).
+  triviaFacts  TriviaFact[]
 
   @@unique([facetId, slug])
   @@index([parentId])
+}
+
+/// «А ты знал?» — короткий факт об игре или серии: плашка после ответа
+/// (режимы без таймера) и строка в разборе. На очки не влияет.
+/// Привязан к метке таксономии, а не к вопросу: один факт обслуживает все
+/// вопросы игры; домен берётся из метки (мультидомен без новых колонок).
+/// Пишут только скрипты `facts:*` (черновик → публикация), приложение читает.
+/// Canon: docs/DECISIONS.md → Did you know: trivia facts.
+model TriviaFact {
+  id          String    @id @default(cuid())
+  /// Ключ из партии (`fact-half-life-2-01`) — одинаков на dev и prod.
+  contentKey  String    @unique
+  /// Метка игры или серии: `games.game.portal`, `games.franchise.halo`.
+  tagId       String
+  textRu      String
+  textEn      String
+  /// Источник — для ревью и правок; игроку не показывается.
+  sourceUrl   String
+  /// NULL — черновик или снят с показа; в выдачу идут только опубликованные.
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tag Tag @relation(fields: [tagId], references: [id], onDelete: Restrict)
+
+  @@index([tagId])
 }
 
 /// Метка вопроса. Индекс (tagId, questionId) — под выборку «вопросы с меткой».

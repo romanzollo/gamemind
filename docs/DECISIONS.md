@@ -2954,3 +2954,46 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 | Removed | `features/achievements/illustrations` (old pack). Unlock flash and toast unchanged — they render `AchievementMark` |
 
 **New achievement:** add the code to the catalog and one entry to `ACHIEVEMENT_GLYPHS` (TypeScript requires it — the map is `Record<AchievementCode, …>`).
+
+## Did you know: trivia facts (November 12, 2026)
+
+**Context:** ROADMAP 5.4, the owner's idea of Nov 5, option (a): a short fact about the game from the question, shown after the answer. Entertainment only — no points, no rating. The owner picked it over «Guess the tune» (too little answer-second data yet) and the code room (5.5 stage 2). Coverage on dev (Nov 12, read-only): 998 of 1128 published questions carry a game tag, 613 a series tag, 27 neither; 401 games in all — a long tail (half the tagged questions sit on 88 games).
+
+**Decision:** facts are content in their own table, attached to a taxonomy tag (game or series), fetched after the answer is locked, never on the hot path.
+
+| Piece | Choice |
+|------|--------|
+| Where | Classic, Daily, Friend challenge: under the verdict in the answer sheet — the player stops there anyway until «Next». Blitz (sheet lives 0.8 s) and Survival (no wait): nothing during play. Review (all modes, Survival waves included — they share `/api/result/:id/review`): one «Did you know?» line under the question |
+| Storage | Table `TriviaFact`: `contentKey` UNIQUE (same on dev and prod, like `Question.contentKey`), `tagId` (FK → Tag, Restrict: a tag with facts cannot be pruned), `textRu`, `textEn`, `sourceUrl` (required), `publishedAt` (NULL = draft or hidden), timestamps; index on `tagId`. The domain comes from tag → facet → domain, so movies or football facts are rows, not code |
+| Attached to | A tag, not a question: one Witcher 3 fact serves all its questions; a series fact serves every game of the series. Facets allowed now: `game`, `franchise` |
+| Which fact | Candidates = published facts on the question's tags. Game facts first; series facts only when the game has none. Inside a level the pick is deterministic: `hash(sessionId, questionId)` over candidates sorted by `contentKey`, skipping facts already shown in this game. Same game → the sheet and the review show the same line; another game → likely another fact. No per-user memory (no writes) |
+| Sheet fetch | After a successful lock, non-timed modes only: `POST /api/quiz/:sessionId/fact` `{question, key, exclude}` (`exclude` = fact keys this game already showed, ≤ 20). The server opens the answer key (session-bound → questionId), then **one pooled SELECT**: the `QuizAnswer` row of this session and question, owned by the JWT user, joined to `QuestionTag` → `TriviaFact`. No locked answer → no fact: a fact about the game would reveal the answer to «which game is this?» before the tap. Reply `{fact: {key, text} \| null}`. «Next» never waits; any failure → the sheet stays as it is, no error shown. Abort on question change. Rate limit: in-memory preset `quizFact` (same size as `quizAnswer`) |
+| Review | `withTriviaFacts(items)` in the review route, the `withAudioCredits` pattern: one short pooled SELECT for the session's question ids, the same pick function in position order; failure → review without facts, not a 500 |
+| Source | Required for review and corrections; not shown to players (as with questions) |
+| Length | ≤ 180 characters per language (≈ 3 lines in the sheet on a 375 px phone): the sheet is sticky and must not cover the screen |
+
+**Content rules** (CONTENT_PIPELINE gets a facts section):
+
+- 1–2 sentences in our own words (never a copied encyclopedia line); development history, records, cut content, easter eggs, culture — not a mechanic that is or could be a question.
+- No plot spoilers: the fact is shown to people who have not played the game.
+- Must not give away another question: the review tool lists published questions on the same tag next to each fact and warns when a correct option's text (RU or EN) appears in the fact.
+- RU and EN both; a source link for every fact.
+
+**Pipeline:** `content/drafts/facts/*.json` (`{version: 1, facts: [{key, tag: "game:…" | "franchise:…", ru, en, source}]}`, tags checked against `content/taxonomy`) → validate (no DB) → HTML review (reads dev DB: neighbouring questions, spoiler warnings) → import as drafts (upsert by `contentKey`; text and source update, publication untouched) → publish by file. Writes are ordered autocommit statements, idempotent (Neon write path). Prod — on the owner's go-ahead only. A coverage script prints the share of published questions with at least one published fact — the next batch is picked from it. First batch: ~100 facts for the 40 most-asked games and 20 series ≈ 46% of questions (dev numbers).
+
+**Hot path:** untouched. Pick, create, play-load, lock-in, submit, clock and the result render read nothing new; the play DTO and the snapshot carry no facts. New load: one optional request per answer in non-timed modes after the lock, one extra SELECT in the review route — both soft-fail. Matrix after the UI step: Classic EASY 3, Classic MIXED, Blitz MIXED, Daily, Survival, friend challenge.
+
+**Not chosen:**
+
+- Facts in the play DTO or the snapshot — a hot-path change, and the game would reach the browser before the answer.
+- The fact in the lock reply — lengthens the lock, kept to one statement on purpose; it would also need a tag read per answer.
+- A git catalog instead of a table — cheaper (no migration, no import), but no draft on dev apart from prod, no FK to tags, no later «hide» in admin or per-fact stats. Questions live in the DB; facts are the same kind of content.
+- `Question.metadata` or a fact per question — the same fact copied over 16 questions of one game.
+- Facts only on the result screen — quieter, but the «huh, didn't know» lands best right after the answer.
+- A fact in the Blitz or Survival sheet — breaks the pace those modes are built on.
+
+**Later:** admin list with «hide»; an «Interesting» reaction to measure reading; option (b) — facts as «true or made up?» questions; more batches by coverage.
+
+**Deploy order:** migration on prod (additive: one table, one FK, one index) → deploy (no published facts → the UI shows nothing) → import and publish facts on prod on the owner's go-ahead → prod smoke (Classic 3 + Blitz MIX).
+
+**References:** Content taxonomy; Answer lock-in; Quiz answer leak — opaque play ids; Audio questions: AUDIO_GUESS (review extras); Question publication workflow; `docs/QUIZ_NEON_HOT_PATH.md`.

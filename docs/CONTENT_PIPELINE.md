@@ -464,3 +464,51 @@ ADR: `docs/DECISIONS.md` → Audio questions: AUDIO_GUESS. Clips never go to git
 **Do not publish** an AUDIO_GUESS question before ROADMAP 5.3d (listening window) ships — it would reach Blitz / Survival without the pause.
 
 Re-import after a timecode change rewrites the PROMPT asset URL (new hash); unchanged questions are skipped.
+
+## 12. Trivia facts «Did you know?» (Nov 2026)
+
+ADR: `docs/DECISIONS.md` → Did you know: trivia facts. A fact is a short line about a **game or a series** (a taxonomy tag), not about a question: one Witcher 3 fact serves all its questions. Shown after the answer in Classic / Daily / Friend challenge and in the review of every mode. No points.
+
+**Batch** — `content/drafts/facts/YYYY-MM-DD-facts-<theme>-<n>.json` (`examples/` = pipeline samples, dev only):
+
+```json
+{
+  "version": 1,
+  "note": "what the batch covers",
+  "facts": [
+    {
+      "key": "fact-half-life-2-01",
+      "tag": "game:half-life-2",
+      "ru": "Осенью 2003 года исходный код Half-Life 2 украли и выложили в сеть…",
+      "en": "In autumn 2003 the Half-Life 2 source code was stolen and leaked online…",
+      "source": "https://en.wikipedia.org/wiki/Half-Life_2"
+    }
+  ]
+}
+```
+
+Contract (Zod, `src/features/content/facts`): `key` = `fact-<slug>-NN`, unique for ever (same on dev and prod); `tag` = `game:<slug>` or `franchise:<slug>` from `content/taxonomy/games.json` (a new game goes into the catalog first, then `taxonomy:sync`); `ru` / `en` 30–180 characters (≈ 3 lines in the answer sheet on a 375 px phone), RU in Russian, EN without Cyrillic; `source` https. Unknown fields fail (typo guard).
+
+**Writing rules:**
+
+- 1–2 sentences in our own words — never a copied encyclopedia line.
+- Development history, records, cut content, easter eggs, culture. Not a mechanic that is (or would make) a question.
+- No plot spoilers: people who have not played see it.
+- Must not give away another question. `facts:review` lists the published questions on the same tag and flags a fact that contains a correct answer or a part of it (split at «—», «:», «;», commas, brackets). Game titles do not count — a fact names its game, and «which game is this frame from» cannot be guessed from it. Example caught by the check: «Stardew Valley was made by one person, Eric Barone» vs the question «How many people made Stardew Valley?».
+- Prefer the game's own fact; a series fact covers games of the series that have none.
+
+**Flow** (every write command prints a plan; `--apply` writes):
+
+| Step | Command | What it does |
+|------|---------|--------------|
+| 1 | `npm run facts:validate -- --file=<batch>` | contract + catalog tags, no DB |
+| 2 | `npm run facts:review -- --file=<batch>` | HTML for the owner in `content/drafts/facts/_review/` (gitignored): fact, EN, length, source, status in the DB, other facts on the tag, questions on the tag with answers, answer-hint warnings. Reads the dev DB |
+| 3 | owner reads, the file is fixed, step 2 again | — |
+| 4 | `npm run facts:import -- --file=<batch> --apply` | drafts on dev: upsert by `key`; text / source / tag update, publication untouched. Refuses when a tag is missing in the DB (run `taxonomy:sync`) |
+| 5 | `npm run facts:publish -- --file=<batch> [--keys=a,b] --apply` | after the owner's «публикуй»; refuses facts not imported or whose DB text differs from the file — publish takes exactly what was reviewed |
+| 6 | prod: steps 4–5 with `--target=prod` | owner's go-ahead only; `PROD_DATABASE_URL_UNPOOLED`, the endpoint is checked against the dev one |
+| 7 | `npm run facts:coverage [-- --top=40]` | share of published questions with a live fact; top games / series without facts = the next batch |
+
+**Hide a fact:** `npm run facts:unpublish -- --keys=fact-a,fact-b --apply` (add `--target=prod` on prod). **Fix a text:** edit the batch file, review, `facts:import --apply` (a live fact changes in place — the plan marks it `[live]`).
+
+Writes are single autocommit statements (Neon write path), idempotent: a repeated run reports «unchanged».

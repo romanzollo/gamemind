@@ -1,0 +1,34 @@
+{
+    "version": 1,
+    "note": "Проверочная партия конвейера фактов (5.4a): три факта игр и один факт серии. Только dev; войдёт в первую партию 5.4b после ревью владельца.",
+    "facts": [
+        {
+            "key": "fact-half-life-2-01",
+            "tag": "game:half-life-2",
+            "ru": "Осенью 2003 года исходный код Half-Life 2 украли и выложили в сеть — больше чем за год до выхода игры.",
+            "en": "In autumn 2003 the Half-Life 2 source code was stolen and leaked online — more than a year before the game came out.",
+            "source": "https://en.wikipedia.org/wiki/Half-Life_2"
+        },
+        {
+            "key": "fact-stardew-valley-01",
+            "tag": "game:stardew-valley",
+            "ru": "Главным образцом для Stardew Valley была серия Harvest Moon: автор хотел сделать фермерскую игру, которой ему самому не хватало.",
+            "en": "Stardew Valley's main model was the Harvest Moon series: its creator wanted to make the farming game he himself was missing.",
+            "source": "https://en.wikipedia.org/wiki/Stardew_Valley"
+        },
+        {
+            "key": "fact-the-witcher-3-01",
+            "tag": "game:the-witcher-3",
+            "ru": "Гвинт так полюбился игрокам «Ведьмака 3», что в 2018 году CD Projekt RED выпустила его отдельной игрой.",
+            "en": "Witcher 3 players liked Gwent so much that CD Projekt RED released it as a standalone game in 2018.",
+            "source": "https://en.wikipedia.org/wiki/Gwent:_The_Witcher_Card_Game"
+        },
+        {
+            "key": "fact-resident-evil-01",
+            "tag": "franchise:resident-evil",
+            "ru": "В Японии серия называется Biohazard: в США это имя нельзя было зарегистрировать — так уже назывались игра для DOS и музыкальная группа.",
+            "en": "In Japan the series is called Biohazard: the name couldn't be trademarked in the US, where a DOS game and a band already used it.",
+            "source": "https://en.wikipedia.org/wiki/Resident_Evil"
+        }
+    ]
+}
