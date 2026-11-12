@@ -2937,3 +2937,20 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 **Prod smoke:** a step checks `/favicon.ico`, `/icon.svg`, `/apple-icon.png`, the manifest and a PWA icon return 200 with the right type.
 
 **Next:** 4.9 achievement icons speak the same language (cells, rarity colours).
+
+## Achievement tokens (November 12, 2026)
+
+**Context:** ROADMAP 4.9. The 26 badges (2.2, «Quiz Arcade» illustration pack) were line drawings with their own plaque each; rarity showed only as colour and the tile stripe. After the brand mark (4.8) the owner compared «pixel cells» and «token with a rarity counter» and picked the token.
+
+**Decision:** one token for every achievement — `AchievementMark` draws it, `achievement-glyphs.tsx` holds only the glyph per code.
+
+| Piece | Choice |
+|------|--------|
+| Token | Rounded frame (32-grid, rx 6) in the tier colour with a 12 % fill; `currentColor` + `--tier-*` tokens, so both themes work without extra assets |
+| Rarity | Four cells at the bottom, lit = tier (1 bronze … 4 legend). Readable without colour (DESIGN.md rule 3) and speaks the brand mark's language |
+| Glyph by category | Games / points — the number (Oswald); accuracy — check, «90%»; Daily — calendar, a streak — flame with the day count; Blitz — stopwatch, bolt; difficulty — bars (2 of 3 medium, 3 of 3 hard); Survival — wave with a number. A repeat gets a «×N» corner mark |
+| Locked | Dashed frame, muted, rarity cells dimmed but visible («what is at stake») |
+| «×» | Drawn as two lines: the Oswald subset the site loads has no U+00D7 |
+| Removed | `features/achievements/illustrations` (old pack). Unlock flash and toast unchanged — they render `AchievementMark` |
+
+**New achievement:** add the code to the catalog and one entry to `ACHIEVEMENT_GLYPHS` (TypeScript requires it — the map is `Record<AchievementCode, …>`).
