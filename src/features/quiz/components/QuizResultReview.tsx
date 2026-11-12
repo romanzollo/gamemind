@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { QuestionAudio } from '@/features/quiz/components/QuestionAudio';
 import { formatTrackCredit } from '@/features/quiz/lib/format-track-credit';
 import { QuestionImage } from '@/features/quiz/components/QuestionImage';
+import { TriviaFactNote } from '@/features/quiz/components/TriviaFactNote';
 import {
     useQuizAudioClips,
     useQuizAudioPlayer,
@@ -230,6 +231,14 @@ export function QuizResultReview({
                                         </div>
                                     ) : null}
                                 </dl>
+
+                                {item.fact ? (
+                                    <TriviaFactNote
+                                        variant="review"
+                                        label={labels.didYouKnow}
+                                        text={item.fact.text}
+                                    />
+                                ) : null}
                             </li>
                         );
                     })}

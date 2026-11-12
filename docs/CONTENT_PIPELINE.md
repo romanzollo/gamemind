@@ -492,6 +492,8 @@ Contract (Zod, `src/features/content/facts`): `key` = `fact-<slug>-NN`, unique f
 **Writing rules:**
 
 - 1–2 sentences in our own words — never a copied encyclopedia line.
+- Hook first: the surprising part early, no dry lead-in («Gwent was so loved that…», not «In The Witcher 3 there is a card game…»). A restatement of a well-known fact is not a fact for us.
+- The source is not shown to players, but it is how we re-check a fact later: prefer a page that actually states it.
 - Development history, records, cut content, easter eggs, culture. Not a mechanic that is (or would make) a question.
 - No plot spoilers: people who have not played see it.
 - Must not give away another question. `facts:review` lists the published questions on the same tag and flags a fact that contains a correct answer or a part of it (split at «—», «:», «;», commas, brackets). Game titles do not count — a fact names its game, and «which game is this frame from» cannot be guessed from it. Example caught by the check: «Stardew Valley was made by one person, Eric Barone» vs the question «How many people made Stardew Valley?».

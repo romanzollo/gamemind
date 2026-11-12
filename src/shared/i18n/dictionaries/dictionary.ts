@@ -710,6 +710,8 @@ export type Dictionary = {
             skipped: string;
         };
         reviewTitle: string;
+        /** Метка факта «А ты знал?» в плашке ответа и в разборе. */
+        didYouKnow: string;
         yourAnswer: string;
         correctAnswer: string;
         statusCorrect: string;

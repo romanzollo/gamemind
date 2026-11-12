@@ -92,6 +92,8 @@
     --animate-achievement-glow: gm-achievement-glow 1.6s ease-out 300ms both;
     /* Кольцо вокруг цифры 3‑2‑1: убывает за секунду, на каждой цифре заново */
     --animate-countdown-ring: gm-countdown-ring 1s linear both;
+    /* Факт «А ты знал?» дорисовывается в плашке ответа после вердикта */
+    --animate-fact-in: gm-fact-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 :root,
@@ -371,6 +373,21 @@ html:has(dialog[open]) {
     }
     to {
         stroke-dashoffset: 100;
+    }
+}
+
+/*
+ * Факт в плашке ответа: приходит на ~0,3 с позже вердикта и мягко
+ * проявляется снизу. Не с opacity 0: в фоновой вкладке кадры стоят.
+ */
+@keyframes gm-fact-in {
+    0% {
+        opacity: 0.4;
+        transform: translateY(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

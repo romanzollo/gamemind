@@ -83,6 +83,11 @@ export type QuizAudioCredit = {
     performer?: string;
 };
 
+/** Источник факта игроку не отдаём — он только для ревью и правок. */
+export type QuizTriviaFact = {
+    text: string;
+};
+
 // тип для одной строки в списке результатов обзора
 export type QuizResultReviewItem = {
     questionId: string;
@@ -93,6 +98,8 @@ export type QuizResultReviewItem = {
     audioUrl?: string | null;
     /** AUDIO_GUESS: «трек · композитор · исполнитель» для разбора (подпись источника). */
     audioCredit?: QuizAudioCredit | null;
+    /** «А ты знал?»: факт об игре / серии на языке разбора. */
+    fact?: QuizTriviaFact | null;
     isCorrect: boolean;
     selectedOption: {
         id: string;

@@ -13,6 +13,9 @@
  * - Блиц 00:00 → auto-submit partial (`finishedByTimer`), как раньше.
  * - Сдача шлёт только сессию: очки сервер считает по зафиксированным ответам.
  * - После F5 игра продолжается с первого неотвеченного (`lockedAnswers`).
+ * - Classic / Daily: после записанного ответа — факт «А ты знал?» в плашке
+ *   (`useTriviaFacts`), отдельным запросом; «Дальше» его не ждёт. В Блице
+ *   фактов в плашке нет (ADR «Did you know: trivia facts»).
  * - AUDIO_GUESS: клипы партии скачиваются при открытии, клип играет сам при
  *   показе вопроса (общий `<audio>`, разблокированный первым тапом).
  *   Блиц: пока игрок на музыкальном вопросе, таймер стоит до окна
@@ -37,11 +40,13 @@ import {
 import { submitQuizAction } from '@/features/quiz/actions';
 import { QuestionAudio } from '@/features/quiz/components/QuestionAudio';
 import { QuestionImage } from '@/features/quiz/components/QuestionImage';
+import { TriviaFactNote } from '@/features/quiz/components/TriviaFactNote';
 import {
     useQuizAudioClips,
     useQuizAudioPlayer,
 } from '@/features/quiz/components/use-quiz-audio';
 import { usePreloadQuizImages } from '@/features/quiz/components/use-preload-quiz-images';
+import { useTriviaFacts } from '@/features/quiz/components/use-trivia-facts';
 import { isEnterAdvance } from '@/features/quiz/lib/enter-advance';
 import { getQuizErrorMessage } from '@/features/quiz/lib/get-quiz-error-message';
 import {
@@ -201,6 +206,12 @@ export function QuizSessionForm({
     const shownIndexRef = useRef(currentIndex);
     const headingId = useId();
 
+    const { facts, requestFact, cancelFact } = useTriviaFacts({
+        sessionId,
+        locale,
+        enabled: !isTimed,
+    });
+
     usePreloadQuizImages(questions.map((question) => question.imageUrl));
     const audioUrls = questions.map((item) =>
         item.type === 'AUDIO_GUESS' ? item.audioUrl : null,
@@ -239,6 +250,11 @@ export function QuizSessionForm({
             headingRef.current?.focus({ preventScroll: true });
         }
     }, [currentIndex]);
+
+    // Ушли к следующему вопросу раньше, чем пришёл факт, — он уже не нужен.
+    useEffect(() => {
+        cancelFact();
+    }, [cancelFact, currentIndex]);
 
     const question = questions[currentIndex];
     const outcome = question ? outcomes[question.id] : undefined;
@@ -375,6 +391,8 @@ export function QuizSessionForm({
                         ...previous,
                         [question.id]: tapAtMs,
                     }));
+                    // Ответ записан — теперь можно просить факт (без таймера).
+                    requestFact(question.id, question.answerKey);
 
                     if (isTimed) {
                         const timer = window.setTimeout(() => {
@@ -425,6 +443,7 @@ export function QuizSessionForm({
             outcome,
             pendingOptionId,
             question,
+            requestFact,
             sessionId,
             submit,
             timedExpired,
@@ -707,33 +726,45 @@ export function QuizSessionForm({
             <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-8 sm:px-8 sm:pb-[max(1rem,env(safe-area-inset-bottom))]">
                 {outcome ? (
                     <div
-                        role="status"
                         data-testid="quiz-feedback"
                         data-correct={outcome.isCorrect}
                         className={`mb-3 ${answerVerdictClassName(outcome.isCorrect).plate}`}
                     >
-                        <p
-                            className={
-                                answerVerdictClassName(outcome.isCorrect).title
-                            }
-                        >
-                            {outcome.isCorrect ? labels.correct : labels.wrong}
-                            {streak >= 3 ? (
-                                <span className="ml-2 text-sm font-medium text-foreground">
-                                    {labels.streak.replace(
-                                        '{count}',
-                                        String(streak),
-                                    )}
-                                </span>
-                            ) : null}
-                        </p>
-                        {!outcome.isCorrect && correctOptionText ? (
-                            <p className="mt-0.5 text-sm text-foreground">
-                                {labels.rightAnswer.replace(
-                                    '{answer}',
-                                    correctOptionText,
-                                )}
+                        {/* Диктор зачитывает только вердикт; факт ниже — вне status. */}
+                        <div role="status">
+                            <p
+                                className={
+                                    answerVerdictClassName(outcome.isCorrect)
+                                        .title
+                                }
+                            >
+                                {outcome.isCorrect
+                                    ? labels.correct
+                                    : labels.wrong}
+                                {streak >= 3 ? (
+                                    <span className="ml-2 text-sm font-medium text-foreground">
+                                        {labels.streak.replace(
+                                            '{count}',
+                                            String(streak),
+                                        )}
+                                    </span>
+                                ) : null}
                             </p>
+                            {!outcome.isCorrect && correctOptionText ? (
+                                <p className="mt-0.5 text-sm text-foreground">
+                                    {labels.rightAnswer.replace(
+                                        '{answer}',
+                                        correctOptionText,
+                                    )}
+                                </p>
+                            ) : null}
+                        </div>
+                        {!isTimed && facts[question.id] ? (
+                            <TriviaFactNote
+                                variant="sheet"
+                                label={dictionary.quiz.didYouKnow}
+                                text={facts[question.id].text}
+                            />
                         ) : null}
                     </div>
                 ) : null}

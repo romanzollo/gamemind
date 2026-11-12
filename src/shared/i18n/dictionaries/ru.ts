@@ -607,6 +607,7 @@ export const ruDictionary: Dictionary = {
             skipped: 'Клип не загрузился — этот вопрос пропускаем, без штрафа',
         },
         reviewTitle: 'Разбор ответов',
+        didYouKnow: 'А ты знал?',
         yourAnswer: 'Твой ответ',
         correctAnswer: 'Верный ответ',
         statusCorrect: 'Верно',

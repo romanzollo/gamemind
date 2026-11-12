@@ -591,6 +591,7 @@ export const enDictionary = {
             skipped: "The clip didn't load — skipping it, no penalty",
         },
         reviewTitle: 'Answer review',
+        didYouKnow: 'Did you know?',
         yourAnswer: 'Your answer',
         correctAnswer: 'Correct answer',
         statusCorrect: 'Correct',
