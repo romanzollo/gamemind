@@ -984,9 +984,9 @@ export const enDictionary = {
         pageTitle: 'For rights holders — GameMind',
     },
     privacy: {
-        footerLink: 'What we collect',
+        footerLink: 'What GameMind stores',
         eyebrow: 'Your data',
-        title: 'What we collect',
+        title: 'What GameMind stores',
         intro: 'The short version, no fine print: what GameMind stores about you and why.',
         sections: [
             {
@@ -999,17 +999,17 @@ export const enDictionary = {
             },
             {
                 title: 'How the site is used',
-                text: 'We count visits and the steps before a game: where you came from, whether you opened a mode, whether you tapped Share. We don’t store your IP address, browser details or any cookie for this. A visit ID lives only while the tab is open. It shows us where the game gets in the way, so we can fix it. If something breaks, a technical error report goes to our monitoring service — without your IP or personal details.',
+                text: 'GameMind counts visits and the steps before a game: where you came from, whether you opened a mode, whether you tapped Share. Your IP address, browser details and cookies aren’t stored for this. A visit ID lives only while the tab is open. This shows where the game gets in the way, so it can be fixed. If something breaks, a technical error report goes to a monitoring service — without your IP or personal details.',
             },
             {
-                title: 'What we don’t do',
-                text: 'We don’t sell your data or share it with advertisers. No third-party analytics, no ad trackers.',
+                title: 'What you won’t find here',
+                text: 'Your data isn’t sold or shared with advertisers. No third-party analytics, no ad trackers.',
             },
             {
                 title: 'Delete your account',
-                text: 'Email us and we’ll delete your account with all its games and stats.',
+                text: 'Send an email to the address below and your account will be deleted with all its games and stats.',
             },
         ],
-        pageTitle: 'What we collect — GameMind',
+        pageTitle: 'Your data — GameMind',
     },
 } satisfies Dictionary;
