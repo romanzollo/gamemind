@@ -12,6 +12,8 @@
  */
 
 import type { ShareTargets } from '@/features/quiz/lib/build-result-share';
+import type { AnalyticsShareWhat } from '@/shared/analytics/events';
+import { track } from '@/shared/analytics/track';
 import { buttonClassName } from '@/shared/ui/button';
 import { toastError, toastSuccess } from '@/shared/ui/toast';
 
@@ -20,6 +22,8 @@ type ShareActionsProps = {
     text: string;
     targets: ShareTargets;
     labels: { button: string; copied: string; copyFailed: string };
+    /** Для воронки 3.5: делятся результатом или ссылкой вызова. */
+    shareWhat: AnalyticsShareWhat;
     className?: string;
 };
 
@@ -44,8 +48,16 @@ const TARGET_LINKS = [
     { key: 'max', label: 'MAX' },
 ] as const;
 
-export function ShareActions({ text, targets, labels, className = '' }: ShareActionsProps) {
+export function ShareActions({
+    text,
+    targets,
+    labels,
+    shareWhat,
+    className = '',
+}: ShareActionsProps) {
     async function handleShare() {
+        track({ name: 'share_click', props: { what: shareWhat, via: 'button' } });
+
         const prefersSystemSheet =
             window.matchMedia('(pointer: coarse)').matches &&
             typeof navigator.share === 'function';
@@ -92,6 +104,12 @@ export function ShareActions({ text, targets, labels, className = '' }: ShareAct
                         href={targets[target.key]}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                            track({
+                                name: 'share_click',
+                                props: { what: shareWhat, via: target.key },
+                            })
+                        }
                         className="inline-flex h-9 items-center justify-center rounded-md border border-border bg-surface px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                     >
                         {target.label}

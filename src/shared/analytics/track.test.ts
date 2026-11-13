@@ -59,7 +59,7 @@ async function sentBodies() {
 describe('track', () => {
     it('batches events and sends them once after the delay', async () => {
         track({ name: 'mode_open', props: { mode: 'classic' } });
-        track({ name: 'share_click', props: {} });
+        track({ name: 'share_click', props: { what: 'result', via: 'button' } });
         expect(sent).toHaveLength(0);
 
         vi.advanceTimersByTime(1_000);
@@ -69,7 +69,7 @@ describe('track', () => {
         expect(bodies[0].v).toMatch(/^[0-9a-f]{24}$/);
         expect(bodies[0].e).toEqual([
             { n: 'mode_open', p: { mode: 'classic' } },
-            { n: 'share_click', p: {} },
+            { n: 'share_click', p: { what: 'result', via: 'button' } },
         ]);
     });
 
@@ -82,7 +82,7 @@ describe('track', () => {
 
     it('sends nothing from an opted-out browser', async () => {
         optOutOfAnalytics();
-        track({ name: 'share_click', props: {} });
+        track({ name: 'share_click', props: { what: 'result', via: 'button' } });
         vi.advanceTimersByTime(1_000);
         flushAnalytics();
         expect(await sentBodies()).toHaveLength(0);
@@ -90,7 +90,7 @@ describe('track', () => {
 
     it('flushes at once when the batch is full', async () => {
         for (let index = 0; index < 20; index += 1) {
-            track({ name: 'share_click', props: {} });
+            track({ name: 'share_click', props: { what: 'result', via: 'button' } });
         }
         const bodies = await sentBodies();
         expect(bodies).toHaveLength(1);

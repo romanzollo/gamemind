@@ -317,9 +317,14 @@ Prod smoke зелёный.
     (`src/shared/analytics`), 17 тестов. Проверено на dev: события ложатся,
     `signup` / `/quiz/[id]` / чужие поля / боты отсекаются. Событий в
     интерфейсе ещё нет — это 3.5b. **Прод: миграция до пуша.**
-  - ⬜ **3.5b — средний** (путь входа): события `visit`, `page_view`,
-    `demo_answer`, `mode_open`, `share_click`; серверное `signup` в регистрации
-    и OAuth; `mergeGuestInto` переносит события гостя.
+  - ✅ **3.5b — средний** (13 ноя, dev): `AnalyticsPageTracker` в layout
+    (`visit` с источником / `page_view`, браузер админа — «не считать»),
+    `mode_open` в шторке, `demo_answer` во вступлении, `share_click`
+    {result | challenge, кнопка | Telegram | VK | MAX}; серверные `signup`
+    (пароль — registerAction, Яндекс / VK — jwt `signUp`) и `guest_merged`;
+    `mergeGuestInto` переносит события гостя. Проверено на dev: визит →
+    демо → шторка → рейтинг → гость → регистрация (`signup`, `wasGuest`).
+    `guest_merged` и вход через Яндекс / VK вживую не проверены.
   - ⬜ **3.5c — средний:** `/admin/funnel` — шаги с %, гости / аккаунты,
     источники, D1 / D7 за 7 / 14 / 30 дней. Тексты — таблица на согласование.
   - ⬜ **3.5d — низкий:** страница «Что мы собираем» (RU/EN, тексты на

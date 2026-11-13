@@ -1,4 +1,8 @@
 import NextAuth from 'next-auth';
+import {
+    authMethodOf,
+    recordServerEvent,
+} from '@/entities/analytics-event/record-server-event';
 import { userRepository } from '@/entities/user/user.repository';
 import { awardAchievementsForUser } from '@/features/achievements/lib/award-achievements-for-user';
 import { authConfig } from './auth.config';
@@ -58,14 +62,20 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
          * сюда не попадает: там та же строка (id совпадает).
          */
         async jwt(params) {
-            const { user, trigger } = params;
+            const { user, trigger, account } = params;
 
             if (
                 user?.id &&
                 !user.isGuest &&
                 (trigger === 'signIn' || trigger === 'signUp')
             ) {
-                await claimPreviousGuest(user.id);
+                const merged = await claimPreviousGuest(user.id);
+                recordAuthFunnelEvent({
+                    userId: user.id,
+                    isNewAccount: trigger === 'signUp',
+                    merged,
+                    method: authMethodOf(account?.provider),
+                });
             }
 
             return authConfig.callbacks.jwt(params);
@@ -73,10 +83,38 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
     },
 });
 
-/** Перенос игр гостя, из-под сессии которого вошли в аккаунт userId. */
-async function claimPreviousGuest(userId: string): Promise<void> {
+/**
+ * Воронка 3.5: новый аккаунт через Яндекс / VK (`signup`) или гость вошёл в
+ * существующий аккаунт (`guest_merged`). Регистрацию по паролю пишет
+ * registerAction: Auth.js её как `signUp` не видит. Обычный вход в свой
+ * аккаунт — не событие.
+ */
+function recordAuthFunnelEvent(input: {
+    userId: string;
+    isNewAccount: boolean;
+    merged: boolean;
+    method: ReturnType<typeof authMethodOf>;
+}): void {
+    const { userId, isNewAccount, merged, method } = input;
+    if (!method) return;
+
+    if (isNewAccount) {
+        recordServerEvent(
+            { name: 'signup', props: { method, wasGuest: merged } },
+            userId,
+        );
+    } else if (merged) {
+        recordServerEvent({ name: 'guest_merged', props: { method } }, userId);
+    }
+}
+
+/**
+ * Перенос игр гостя, из-под сессии которого вошли в аккаунт userId.
+ * `true` — гость был и его данные перенесены.
+ */
+async function claimPreviousGuest(userId: string): Promise<boolean> {
     const previous = await auth();
-    if (!previous?.user.isGuest || previous.user.id === userId) return;
+    if (!previous?.user.isGuest || previous.user.id === userId) return false;
 
     const merged = await userRepository.mergeGuestInto(
         previous.user.id,
@@ -87,4 +125,6 @@ async function claimPreviousGuest(userId: string): Promise<void> {
     if (merged === 'merged') {
         await awardAchievementsForUser(userId);
     }
+
+    return merged === 'merged';
 }

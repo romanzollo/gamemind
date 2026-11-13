@@ -25,7 +25,7 @@ describe('parseBeaconBody', () => {
                     n: 'visit',
                     p: { route: '/', referrerHost: 't.me', ref: 'share' },
                 },
-                { n: 'share_click' },
+                { n: 'share_click', p: { what: 'result', via: 'button' } },
             ],
         });
 
@@ -37,7 +37,7 @@ describe('parseBeaconBody', () => {
                     name: 'visit',
                     props: { route: '/', referrerHost: 't.me', ref: 'share' },
                 },
-                { name: 'share_click', props: {} },
+                { name: 'share_click', props: { what: 'result', via: 'button' } },
             ],
         });
     });
@@ -59,12 +59,39 @@ describe('parseBeaconBody', () => {
         ]);
     });
 
+    it('accepts share clicks only with a known target', () => {
+        const parsed = parseBeaconBody({
+            v: VISIT,
+            e: [
+                { n: 'share_click', p: { what: 'challenge', via: 'telegram' } },
+                { n: 'share_click', p: { what: 'result', via: 'whatsapp' } },
+                { n: 'share_click', p: { what: 'profile', via: 'button' } },
+            ],
+        });
+
+        expect(parsed?.events).toEqual([
+            { name: 'share_click', props: { what: 'challenge', via: 'telegram' } },
+        ]);
+    });
+
+    it('refuses server-only events from the browser', () => {
+        const parsed = parseBeaconBody({
+            v: VISIT,
+            e: [
+                { n: 'signup', p: { method: 'password', wasGuest: false } },
+                { n: 'guest_merged', p: { method: 'vk' } },
+            ],
+        });
+
+        expect(parsed?.events).toEqual([]);
+    });
+
     it('rejects a body without a proper visit id or batch', () => {
         expect(parseBeaconBody(null)).toBeNull();
-        expect(parseBeaconBody({ v: 'short', e: [{ n: 'share_click' }] })).toBeNull();
+        expect(parseBeaconBody({ v: 'short', e: [{ n: 'share_click', p: { what: 'result', via: 'button' } }] })).toBeNull();
         expect(parseBeaconBody({ v: VISIT, e: [] })).toBeNull();
         expect(
-            parseBeaconBody({ v: VISIT, e: Array(21).fill({ n: 'share_click' }) }),
+            parseBeaconBody({ v: VISIT, e: Array(21).fill({ n: 'share_click', p: { what: 'result', via: 'button' } }) }),
         ).toBeNull();
     });
 });

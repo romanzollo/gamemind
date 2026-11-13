@@ -113,6 +113,7 @@ export function FriendChallengeInvite({
 
             {share ? (
                 <ShareActions
+                    shareWhat="challenge"
                     text={share.text}
                     targets={share.targets}
                     labels={{

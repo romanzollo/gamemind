@@ -36,6 +36,7 @@ export function ChallengeShareRow(props: {
 
     return (
         <ShareActions
+            shareWhat="challenge"
             text={share.text}
             targets={share.targets}
             labels={{

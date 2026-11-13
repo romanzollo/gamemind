@@ -9,6 +9,7 @@
 
 import { useId, useRef, type ReactNode } from 'react';
 
+import { track } from '@/shared/analytics/track';
 import { BottomSheet } from '@/shared/ui';
 
 /** Значок режима на плитке: у каждого своё лицо, цвет — один акцент. */
@@ -77,7 +78,11 @@ export function ModeSheetCard({
                 type="button"
                 aria-haspopup="dialog"
                 data-testid="mode-open"
-                onClick={() => sheetRef.current?.showModal()}
+                onClick={() => {
+                    sheetRef.current?.showModal();
+                    // Воронка 3.5: какой режим заинтересовал (glyph = режим).
+                    track({ name: 'mode_open', props: { mode: glyph } });
+                }}
                 className="flex w-full items-center gap-3 rounded-lg border border-border bg-surface px-4 py-3.5 text-left shadow-sm transition hover:bg-surface-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:px-5 sm:py-4"
             >
                 <ModeGlyphMark glyph={glyph} />

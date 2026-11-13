@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { AppSiteHeader } from '@/features/auth/components/AppSiteHeader';
 import { auth } from '@/lib/auth';
+import { AnalyticsPageTracker } from '@/shared/analytics/AnalyticsPageTracker';
 import { SITE_ORIGIN } from '@/shared/config/site';
 import { getDictionary, isLocale, locales, type Locale } from '@/shared/i18n';
 import { SiteFooter, SiteTabBar } from '@/shared/ui';
@@ -124,6 +125,8 @@ export default async function LocaleLayout({
                 />
                 {/* Ephemeral toasts (achievements / later form feedback). Client island. */}
                 <AppToaster theme={theme} />
+                {/* Воронка 3.5: visit / page_view; страницу игры не считает. */}
+                <AnalyticsPageTracker isAdmin={session?.user?.role === 'ADMIN'} />
             </body>
         </html>
     );

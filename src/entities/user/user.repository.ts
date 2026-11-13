@@ -751,6 +751,9 @@ export const userRepository = {
                 'QuizSession',
                 'QuizResult',
                 'AchievementOutbox',
+                // События воронки гостя переходят к аккаунту, иначе CASCADE
+                // удалил бы их вместе с гостем (ADR Funnel analytics).
+                'AnalyticsEvent',
             ]) {
                 await client.query(
                     `UPDATE "${table}" SET "userId" = $2 WHERE "userId" = $1`,

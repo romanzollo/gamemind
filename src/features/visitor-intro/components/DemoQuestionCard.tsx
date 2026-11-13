@@ -13,6 +13,7 @@ import { useId, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import type { DemoQuestionView } from '@/features/visitor-intro/lib/demo-questions';
+import { track } from '@/shared/analytics/track';
 import type { Dictionary } from '@/shared/i18n';
 import { buttonClassName } from '@/shared/ui';
 import {
@@ -96,7 +97,11 @@ export function DemoQuestionCard({
                         data-testid="demo-option"
                         disabled={answered}
                         aria-pressed={option.id === selectedOptionId}
-                        onClick={() => setSelectedOptionId(option.id)}
+                        onClick={() => {
+                            setSelectedOptionId(option.id);
+                            // Воронка 3.5: посетитель попробовал игру до входа.
+                            track({ name: 'demo_answer', props: {} });
+                        }}
                         className={answerOptionClassName(
                             toneFor(option.id),
                             answered,

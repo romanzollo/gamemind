@@ -14,6 +14,7 @@ import {
 } from '@/lib/auth/vk-id';
 
 import { registerSchema } from '@/features/auth/lib/validation';
+import { recordServerEvent } from '@/entities/analytics-event/record-server-event';
 import { userRepository } from '@/entities/user/user.repository';
 import type { AuthFormState } from '@/features/auth/types';
 import { loginSchema } from '@/features/auth/lib/validation';
@@ -100,12 +101,25 @@ export async function registerAction(
             return { errorCode: 'USERNAME_TAKEN' };
         }
 
+        let newUserId = current?.user.id ?? null;
         if (claim === 'not_guest') {
-            await userRepository.create({
+            const created = await userRepository.create({
                 username,
                 email,
                 passwordHash,
             });
+            newUserId = created.id;
+        }
+
+        // Воронка 3.5: новый аккаунт по паролю (из гостя — та же строка).
+        if (newUserId) {
+            recordServerEvent(
+                {
+                    name: 'signup',
+                    props: { method: 'password', wasGuest: claim === 'claimed' },
+                },
+                newUserId,
+            );
         }
     } catch (error) {
         console.error('Register failed:', error);

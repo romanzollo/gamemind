@@ -86,6 +86,7 @@ export function ShareResult({
 
     return (
         <ShareActions
+            shareWhat="result"
             text={share.text}
             targets={buildShareTargets(share)}
             labels={labels}

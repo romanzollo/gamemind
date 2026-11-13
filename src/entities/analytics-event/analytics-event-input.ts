@@ -17,6 +17,8 @@ import {
     ANALYTICS_MAX_BATCH,
     ANALYTICS_MODES,
     ANALYTICS_ROUTES,
+    ANALYTICS_SHARE_VIA,
+    ANALYTICS_SHARE_WHAT,
     ANALYTICS_VISIT_ID_PATTERN,
     type AnalyticsClientEvent,
 } from '@/shared/analytics/events';
@@ -51,7 +53,15 @@ const clientEventSchema = z.discriminatedUnion('n', [
         n: z.literal('mode_open'),
         p: z.object({ mode: z.enum(ANALYTICS_MODES) }).strip(),
     }),
-    z.object({ n: z.literal('share_click'), p: emptyProps.default({}) }),
+    z.object({
+        n: z.literal('share_click'),
+        p: z
+            .object({
+                what: z.enum(ANALYTICS_SHARE_WHAT),
+                via: z.enum(ANALYTICS_SHARE_VIA),
+            })
+            .strip(),
+    }),
 ]);
 
 const beaconSchema = z.object({

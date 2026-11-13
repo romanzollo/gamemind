@@ -34,6 +34,14 @@ export const ANALYTICS_ROUTES = [
 ] as const;
 export type AnalyticsRoute = (typeof ANALYTICS_ROUTES)[number];
 
+/** Чем делятся: результатом партии или ссылкой «Вызова другу». */
+export const ANALYTICS_SHARE_WHAT = ['result', 'challenge'] as const;
+export type AnalyticsShareWhat = (typeof ANALYTICS_SHARE_WHAT)[number];
+
+/** Куда: кнопка (системное меню / буфер) или прямая ссылка мессенджера. */
+export const ANALYTICS_SHARE_VIA = ['button', 'telegram', 'vk', 'max'] as const;
+export type AnalyticsShareVia = (typeof ANALYTICS_SHARE_VIA)[number];
+
 /** Событие, которое может прислать браузер. */
 export type AnalyticsClientEvent =
     | {
@@ -52,8 +60,11 @@ export type AnalyticsClientEvent =
     | { name: 'demo_answer'; props: Record<string, never> }
     /** Открыл шторку режима на главной. */
     | { name: 'mode_open'; props: { mode: AnalyticsMode } }
-    /** Нажал «Поделиться» на результате. */
-    | { name: 'share_click'; props: Record<string, never> };
+    /** Нажал «Поделиться» (кнопка или ссылка мессенджера). */
+    | {
+          name: 'share_click';
+          props: { what: AnalyticsShareWhat; via: AnalyticsShareVia };
+      };
 
 export type AnalyticsClientEventName = AnalyticsClientEvent['name'];
 
@@ -65,11 +76,26 @@ export const ANALYTICS_CLIENT_EVENT_NAMES = [
     'share_click',
 ] as const satisfies readonly AnalyticsClientEventName[];
 
+/** Как человек вошёл в аккаунт. */
+export type AnalyticsAuthMethod = 'password' | 'yandex' | 'vk';
+
 /**
  * События, которые пишет только сервер (браузер их прислать не может):
- * `signup` — гость или посетитель стал аккаунтом.
+ * - `signup` — создан новый аккаунт (`wasGuest` — из гостя, игры остались);
+ * - `guest_merged` — гость вошёл в уже существующий аккаунт, его игры
+ *   перенесены туда (сам гость удалён).
  */
-export type AnalyticsServerEventName = 'signup';
+export type AnalyticsServerEvent =
+    | {
+          name: 'signup';
+          props: { method: AnalyticsAuthMethod; wasGuest: boolean };
+      }
+    | { name: 'guest_merged'; props: { method: AnalyticsAuthMethod } };
+
+export type AnalyticsServerEventName = AnalyticsServerEvent['name'];
+
+/** visitId серверных событий: браузерный id визита серверу неизвестен. */
+export const ANALYTICS_SERVER_VISIT_ID = 'server';
 
 export type AnalyticsEventName =
     | AnalyticsClientEventName
