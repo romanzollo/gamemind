@@ -117,7 +117,11 @@ export default async function LocaleLayout({
                 <div id="main-content" tabIndex={-1}>
                     {children}
                 </div>
-                <SiteFooter locale={locale} labels={dictionary.rights} />
+                <SiteFooter
+                    locale={locale}
+                    labels={dictionary.rights}
+                    privacyLabel={dictionary.privacy.footerLink}
+                />
                 <SiteTabBar
                     locale={locale}
                     tabs={getSiteTabs(dictionary.nav, navUser !== null)}

@@ -1064,4 +1064,16 @@ export type Dictionary = {
         copied: string;
         pageTitle: string;
     };
+    /**
+     * «Что мы собираем» (`/privacy`, ROADMAP 3.5d): простое объяснение, какие
+     * данные хранит сайт. Не юридическая политика по 152-ФЗ — та отдельно.
+     */
+    privacy: {
+        footerLink: string;
+        eyebrow: string;
+        title: string;
+        intro: string;
+        sections: Array<{ title: string; text: string }>;
+        pageTitle: string;
+    };
 };

@@ -31,6 +31,7 @@ export const ANALYTICS_ROUTES = [
     '/leaderboard',
     '/profile',
     '/rights',
+    '/privacy',
 ] as const;
 export type AnalyticsRoute = (typeof ANALYTICS_ROUTES)[number];
 

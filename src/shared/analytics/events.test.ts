@@ -8,6 +8,7 @@ describe('toAnalyticsRoute', () => {
         expect(toAnalyticsRoute('/en/')).toBe('/');
         expect(toAnalyticsRoute('/ru/login')).toBe('/login');
         expect(toAnalyticsRoute('/en/leaderboard')).toBe('/leaderboard');
+        expect(toAnalyticsRoute('/en/privacy')).toBe('/privacy');
         expect(toAnalyticsRoute('/ru/challenge/abc123')).toBe('/challenge/[id]');
         expect(toAnalyticsRoute('/ru/result/cm123')).toBe('/result/[id]');
     });
