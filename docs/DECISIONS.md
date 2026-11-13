@@ -3000,3 +3000,42 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 **Deploy order:** migration on prod (additive: one table, one FK, one index) → deploy (no published facts → the UI shows nothing) → import and publish facts on prod on the owner's go-ahead → prod smoke (Classic 3 + Blitz MIX).
 
 **References:** Content taxonomy; Answer lock-in; Quiz answer leak — opaque play ids; Audio questions: AUDIO_GUESS (review extras); Question publication workflow; `docs/QUIZ_NEON_HOT_PATH.md`.
+
+## Funnel analytics: own events + existing tables (November 13, 2026)
+
+**Context:** ROADMAP 3.5. A read-only prod probe (Nov 12) showed 1–3 players a day over 14 days (mostly the owner) and 3 answers to 63 audio questions in 1.5 days. The bottleneck is players, not modes, so before investing in growth we need to know how many people visit, where from, and where they drop off. The roadmap line said «Yandex Metrika»; the research below changed it. The owner chose «own events» on Nov 13.
+
+**Decision:** a tiny first-party beacon for what happens **before** a game, plus read-time SQL over the tables we already have for everything **from the start on**. No third-party script, no cookie, no consent banner for analytics.
+
+| Piece | Choice |
+|------|--------|
+| Already in the DB (no new writes) | start = `QuizSession` (mode from `dailyChallengeId` / `timedEndsAt` / `survivalRunId` / `friendChallengeId`), first answer = `QuizAnswer` (lock-in in every mode), result = `QuizResult`, «play again» = the same user's next session ≤ 10 min after `completedAt` (whatever button), friend challenge = `FriendChallenge` + attempts, D1 / D7 = days of play per user (Moscow) |
+| New client events | `visit` (first page of a tab: route, referrer **host**, sanitized `ref` / `utm_source`), `page_view` (route template, never a URL with ids), `demo_answer` (visitor intro), `mode_open` {classic \| blitz \| survival}, `share_click`. Allow-list in code (union type), not a DB enum |
+| New server event | `signup` {method: password \| yandex \| vk, wasGuest}: today a guest → account switch is not stored (`isGuest` flips; claim-by-sign-in deletes the guest in `mergeGuestInto`). Written in `after()` on the auth path, never on the quiz path |
+| Storage | Table `AnalyticsEvent`: `name`, `visitId`, `userId` (FK → User, Cascade: deleting a user deletes their events), `props` JSONB (small, rare filters), `createdAt` (DB default, UTC); indexes on `createdAt`, `(name, createdAt)` and `userId` (cascade delete without a scan). Migration `20261113120000_analytics_event` `mergeGuestInto` moves the guest's events to the account in the same transaction as the games |
+| Transport | `navigator.sendBeacon` → `POST /api/e` (neutral name, like Sentry's `/api/m`, rarely on block lists). Handler: Zod allow-list, body ≤ 2 KB, ≤ 20 events per batch, bot/headless UA dropped, in-memory rate limit per IP (preset `analytics`, 200 batches / 15 min; no extra Neon hop), admin sessions dropped, `userId` from the JWT via `auth()` (no DB), INSERT on the pooled client in `after()` → 204 at once |
+| What we keep | No IP, no UA string, no full URL. Device class (mobile / desktop), 2-letter country from Vercel's `x-vercel-ip-country`, locale. `visitId` = random, `sessionStorage` (dies with the tab) — no persistent id for anonymous visitors, so anonymous rows do not single out a person; rows of signed-in players are tied to an account we already hold |
+| Not counted | `User.isTestAccount`, `role = ADMIN`, and any browser where an admin has signed in once (`localStorage` flag stops the beacon there). Bots: the beacon needs JS, plus the UA filter (prod smoke is headless and `isTestAccount`). Guests are a separate segment |
+| Retention | Events older than 180 days are deleted (~2 % of beacons in `after()`, the `RateLimitBucket` pattern) |
+| Report | `/admin/funnel` (requireAdmin, pooled read-only SQL): steps with counts and % of the previous step for 7 / 14 / 30 days, guests vs accounts, entry sources, D1 / D7 |
+
+**Hot path:** untouched. Start, play-load, lock-in, submit, clock and the result render write or read nothing new. No beacon on `/quiz/[sessionId]` at all and none on start buttons — those steps come from the DB. `QUIZ_NEON_HOT_PATH.md` needs no change.
+
+**Measured (Nov 12):** this machine exits via the US (`loc=US`), so RU checks went through check-host.net Moscow probes (datacenter, HTTP status only — they cannot see the residential ~14 KB cutoff). `mc.yandex.ru/metrika/tag.js` 200 in 0.05 s, 69.9 KB brotli / 208.7 KB raw; prod home today ≈ 268 KB compressed JS → Metrika ≈ +26 %. Umami Cloud answers via Cloudflare IPs (risk per «Media Storage And Upload»). Vercel docs: Web Analytics custom events are Pro/Enterprise only; Hobby runtime logs live 1 hour.
+
+**Not chosen:**
+
+- **Yandex Metrika now** — reachable from RU, free, data in Russia, Webvisor. But +70 KB brotli, and per RKN's letter of 26.06.2024 (as retold by lawyers) its data is personal data with the site owner as operator → a banner **before** loading, a policy and a separate consent (156-FZ, from 01.09.2025). The banner would sit on the very screen we want to measure; visitors who ignore it and ad-block users are invisible. Kept as an option for later (Webvisor, search phrases).
+- **Events into logs** — Vercel Hobby keeps runtime logs 1 hour; a drain needs Pro.
+- **Umami / Plausible Cloud** — data abroad, Umami behind Cloudflare, cannot join our users (test accounts, guests).
+- **Self-hosted Umami** — a second app (VPS in RU or Vercel + another DB) to update and secure, for 1–3 players a day.
+- **Vercel Web Analytics** — same-origin and cookieless, but custom events need Pro ($20/mo) and data sits in the US; page views alone cannot show the mode sheet.
+- **Server-side page logging** — counts bots and link previews; client beacons only fire with JS.
+
+**Risks:** a public endpoint invites spam (allow-list, size cap, rate limit, retention); small numbers — «where people drop off» needs 2–3 weeks of data; no Webvisor; our own reports to maintain. **Legal (not legal advice):** 23-FZ (from 01.07.2025) forbids collecting RU citizens' personal data in databases abroad; player accounts already live in Neon Frankfurt and the site has no privacy policy. Analytics neither creates nor fixes that — a separate task. Step 3.5d adds a short «what we collect» page.
+
+**Free extra (owner, no code):** Yandex Webmaster via a DNS TXT record at REG.RU gives search queries and impressions without any script.
+
+**Deploy order:** migration on prod (additive: one table, one FK, three indexes) **before** pushing code that writes to it; then prod smoke (Classic 3 + Blitz MIX).
+
+**References:** Russia-first infrastructure; Error monitoring: Sentry EU (tunnel, lazy SDK); Shared rate limit and favicon.ico; Accounts without a password (guest claim); Prod smoke after deploy (`isTestAccount`); Share result (`?ref=share`); Friend challenge.

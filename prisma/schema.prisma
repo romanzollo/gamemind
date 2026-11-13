@@ -94,6 +94,8 @@ model User {
   survivalRuns        SurvivalRun[]
   /// Вызовы другу, созданные игроком из своих партий Классики.
   friendChallenges    FriendChallenge[]
+  /// События воронки, пока игрок был в аккаунте (ROADMAP 3.5).
+  analyticsEvents     AnalyticsEvent[]
 }
 
 model Account {
@@ -133,6 +135,31 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+/// Событие воронки до игры (визит, страница, шторка режима…) — ROADMAP 3.5.
+/// Пишется только сырым SQL из src/entities/analytics-event (маячок /api/e).
+/// Путь от старта игры сюда не пишется: он уже есть в QuizSession / QuizAnswer /
+/// QuizResult. Без IP, User-Agent и полного URL; visitId живёт одну вкладку.
+/// Canon: docs/DECISIONS.md → Funnel analytics: own events + existing tables.
+model AnalyticsEvent {
+  id        BigInt   @id @default(autoincrement())
+  /// Имя из списка в коде (src/shared/analytics/events.ts), не enum БД:
+  /// новое событие не требует миграции.
+  name      String
+  /// Случайный id визита из sessionStorage вкладки.
+  visitId   String
+  /// NULL — посетитель без входа. Cascade: удалили игрока — удалили события.
+  userId    String?
+  /// Мелкие свойства события (маршрут, режим, источник, устройство, страна).
+  props     Json     @default("{}")
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([name, createdAt])
+  @@index([userId])
 }
 
 /// Общий счётчик rate limit (фиксированное окно) для всех инстансов Vercel.

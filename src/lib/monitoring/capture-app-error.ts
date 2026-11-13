@@ -28,6 +28,7 @@ export type AppErrorArea =
     | 'achievements'
     | 'auth'
     | 'rate-limit'
+    | 'analytics'
     | 'error-boundary'
     | 'monitoring-check';
 
