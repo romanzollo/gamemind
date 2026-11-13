@@ -341,6 +341,62 @@ export type Dictionary = {
         homeDescription: string;
         questionsCardDescription: string;
         usersCardDescription: string;
+        /**
+         * Отчёт воронки `/admin/funnel` (ROADMAP 3.5c). Плейсхолдеры `{…}`
+         * подставляет страница; режимы — те же названия, что в рейтинге.
+         */
+        funnel: {
+            cardTitle: string;
+            cardDescription: string;
+            title: string;
+            subtitle: string;
+            periodLabel: string;
+            /** «{days} дней» — 7 / 14 / 30, форма для всех трёх одна. */
+            periodDays: string;
+            visitsTitle: string;
+            visitsNewcomers: string;
+            visitsReturning: string;
+            visitsPercentHint: string;
+            visitsVisited: string;
+            visitsDemo: string;
+            visitsModeOpened: string;
+            visitsAuthPage: string;
+            visitsStarted: string;
+            visitsFinished: string;
+            visitsShared: string;
+            sourcesTitle: string;
+            sourcesSource: string;
+            sourcesVisits: string;
+            sourcesStarted: string;
+            sourceDirect: string;
+            gamesTitle: string;
+            gamesStarted: string;
+            gamesAnswered: string;
+            gamesFinished: string;
+            gamesTotal: string;
+            modes: {
+                classic: string;
+                blitz: string;
+                survival: string;
+                daily: string;
+                challenge: string;
+            };
+            players: string;
+            replay: string;
+            challenges: string;
+            signupsTitle: string;
+            signupsTotal: string;
+            signupsPassword: string;
+            signupsYandex: string;
+            signupsVk: string;
+            signupsGuestMerged: string;
+            retentionTitle: string;
+            retentionNewPlayers: string;
+            retentionNextDay: string;
+            retentionWeek: string;
+            empty: string;
+            loadFailed: string;
+        };
         /** Блок проверки мониторинга ошибок (Sentry) на хабе `/admin`. */
         monitoring: {
             title: string;

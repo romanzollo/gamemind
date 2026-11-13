@@ -201,6 +201,24 @@ export default async function AdminHomePage({ params }: AdminHomePageProps) {
                         {dictionary.admin.usersCardDescription}
                     </p>
                 </Link>
+
+                <Link
+                    href={localizedHref(safeLocale, '/admin/funnel')}
+                    className={cardClassName}
+                >
+                    <div className="flex items-baseline justify-between gap-3">
+                        <h2 className="font-display text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+                            {dictionary.admin.funnel.cardTitle}
+                        </h2>
+                        <span aria-hidden="true" className={cardChevronClassName}>
+                            →
+                        </span>
+                    </div>
+
+                    <p className={cardDescriptionClassName}>
+                        {dictionary.admin.funnel.cardDescription}
+                    </p>
+                </Link>
             </div>
 
             <AdminMonitoringCheck labels={dictionary.admin.monitoring} />
