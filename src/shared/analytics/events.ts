@@ -15,7 +15,7 @@
  */
 
 /** Режимы со шторкой настроек на главной. */
-export const ANALYTICS_MODES = ['classic', 'blitz', 'survival'] as const;
+export const ANALYTICS_MODES = ['classic', 'blitz', 'survival', 'room'] as const;
 export type AnalyticsMode = (typeof ANALYTICS_MODES)[number];
 
 /**
@@ -28,6 +28,8 @@ export const ANALYTICS_ROUTES = [
     '/register',
     '/challenge/[id]',
     '/result/[id]',
+    '/room',
+    '/room/[id]',
     '/leaderboard',
     '/profile',
     '/rights',
@@ -35,8 +37,8 @@ export const ANALYTICS_ROUTES = [
 ] as const;
 export type AnalyticsRoute = (typeof ANALYTICS_ROUTES)[number];
 
-/** Чем делятся: результатом партии или ссылкой «Вызова другу». */
-export const ANALYTICS_SHARE_WHAT = ['result', 'challenge'] as const;
+/** Чем делятся: результатом партии, ссылкой «Вызова другу» или комнатой. */
+export const ANALYTICS_SHARE_WHAT = ['result', 'challenge', 'room'] as const;
 export type AnalyticsShareWhat = (typeof ANALYTICS_SHARE_WHAT)[number];
 
 /** Куда: кнопка (системное меню / буфер) или прямая ссылка мессенджера. */
@@ -127,7 +129,7 @@ export function toAnalyticsRoute(pathname: string): AnalyticsRoute | null {
         return '/';
     }
 
-    if (first === 'challenge' || first === 'result') {
+    if (first === 'challenge' || first === 'result' || (first === 'room' && second)) {
         return second && rest.length === 0
             ? (`/${first}/[id]` as AnalyticsRoute)
             : null;

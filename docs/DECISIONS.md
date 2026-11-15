@@ -3039,3 +3039,52 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 **Deploy order:** migration on prod (additive: one table, one FK, three indexes) **before** pushing code that writes to it; then prod smoke (Classic 3 + Blitz MIX).
 
 **References:** Russia-first infrastructure; Error monitoring: Sentry EU (tunnel, lazy SDK); Shared rate limit and favicon.ico; Accounts without a password (guest claim); Prod smoke after deploy (`isTestAccount`); Share result (`?ref=share`); Friend challenge.
+
+## Quiz room: live game with a code (November 15, 2026)
+
+**Context:** ROADMAP 5.5 stage 2. A host opens a room, friends join by a short code from their phones, everyone gets the same question at the same moment, and a table follows every question. The owner asked for room settings (count, difficulty, topic, time) and for the experience of the best live quiz products, adapted to GameMind.
+
+**What we took from Kahoot / Quizizz (Wayground) / Jackbox:**
+
+| Practice | Where it comes from | Our take |
+|------|------|------|
+| Join by a short code, no app, no account | Jackbox (4 letters), Kahoot (PIN) | 4 characters from a 31-sign alphabet without look-alikes (no 0/O, 1/I/L) + a link `/room/{code}`. Guests can join |
+| Question first, answers a few seconds later | Kahoot question intro | Every question opens with an intro (text + picture, no options); the answer timer starts when the options appear. Everyone reads on equal terms, and the picture has time to load |
+| Speed points | Kahoot: `1000 × (1 − t / 2T)`, full 1000 under 0.5 s | The same formula: a correct answer earns 500–1000, a wrong or missing one 0. The host can switch speed off (Kahoot users ask for it): a correct answer = 1000 |
+| No streak bonus points | Kahoot added +100 per streak (cap 500), then dropped it after fairness complaints | Streak is shown on the reveal, it adds no points |
+| Early close when everyone answered | Kahoot (host-paced) | The question closes as soon as every connected player answered; later questions move up |
+| Leaderboard after every question, podium at the end | Kahoot, Quizizz | Reveal = right answer + how many picked each option + table with rank change; final = podium (top 3) + full table + my ✓/✗ |
+| Host settings in the lobby, kick | Kahoot settings, Among Us / Skribbl lobbies | Settings are edited in the lobby while people join; every player sees them; the host can remove a player before the start |
+| Friendly nicknames | Kahoot nickname generator | Each player has a room nickname: an account starts with its username, a guest with a generated game-themed nickname (re-roll); `guest_xxxxxx` never shows |
+| Cap on active players | Jackbox: 8 | 12 players |
+| Shared screen | Kahoot classic | Not used: questions and answers are on every phone (Kahoot «show questions on devices», Quizizz live). Works for a call or a chat as well as one room |
+
+**Decision:** the room lives in its own tables and its own routes. Classic / Blitz / Survival / Daily, `QuizSession`, submit, lock-in and the leaderboards are not touched.
+
+| Piece | Choice |
+|------|--------|
+| Tables | `Room` (code, host, settings, status, times), `RoomPlayer` (id = public handle, nickname, status, `lastSeenAt`), `RoomQuestion` (frozen question per position: small JSON payload RU+EN, the correct option key, `introAt` / `openAt` / `closeAt`), `RoomAnswer` (player, position, option key, correct, points, `answeredAt`). All room times are `TIMESTAMPTZ(3)`, written from JS `Date` (canon E: no SQL `NOW()` in clock math, no TZ-less timestamps) |
+| Real time | **Polling** `GET /api/room/{code}` on the site's own domain — nothing new to check from Russia. The client knows the schedule, so it asks at phase boundaries, every ~2 s in the lobby and ~1.5 s while answers are open (live «answered 3 of 5» and early close). Each answer carries `serverNow`; the client keeps an offset, timers follow server time |
+| Schedule | Set once at start: countdown 4 s → for each question intro (3–6 s by text length) → answer window (10 / 15 / 20 / 30 s) → reveal 7 s. Stored per question, so the server and every phone read the same times; the host does not press «next» and leaving does not stop the game |
+| Early close | The answer that completes the set (every active player seen in the last 12 s has answered) moves this question's `closeAt` to now + 0.6 s and shifts later questions by the saved time — one pooled statement. The question row is locked (`FOR UPDATE`) and `closeAt > new` is rechecked on the fresh row: several «last» answers arrive within milliseconds, and without the lock each shifted the schedule (dev, Nov 15: a 0.1 s reveal) |
+| Questions | Picked at **start**, not at creation, so lobby settings stay editable: published, active, not AUDIO_GUESS (sound on many phones at once and autoplay rules — later), by difficulty (MIX = equal thirds, shuffled) and topic (same pool rule as Play topics). Resolved with the existing bilingual `loadSnapshotBundleByQuestionIdsWithPgClient` on a pooled client. Each option gets a random per-room key; the correct key stays in its own column and never leaves the server before `closeAt` |
+| Fair play | A question's text and options are sent only from its `introAt` / `openAt`; the right option only after `closeAt`. Option order is shuffled per player (deterministic from room, player, position) — a neighbour's tap position tells nothing. Points are computed on the server from the receive time (taken before auth, canon E); grace 1.5 s for the network, elapsed time capped at the window |
+| Answer | `POST /api/room/{code}/answer {position, option}`: one pooled read (question times, key, player) → one `INSERT … ON CONFLICT DO NOTHING` (first answer wins) → early-close check. The reply says «accepted», not «right» |
+| Code uniqueness | `Room.code` is nullable `UNIQUE`. Creating a room takes a random code; if the holder is finished, closed or an abandoned lobby (> 2 h), its code is released (set NULL) and reused. A finished room keeps its code until then — its page shows the final table |
+| Who | Creating needs an account (guests join only — same line as Blitz / Survival). One open lobby per host: a new room closes the host's previous lobby. Joining only in the lobby; up to 12 active players |
+| Rating, achievements | None: a room with two own accounts would farm the board. Room games stay out of `QuizSession` / `QuizResult`, so no leaderboard query changes |
+| Guests merged into an account | Room rows are not moved (`RoomPlayer` cascades with the guest row): a room is a live event, not history |
+| Rate limits | Create: `quiz` preset. Poll: `roomPoll` (per user). Answer: `quizAnswer`. Host and player actions: `roomAction` |
+
+**Hot path:** untouched. Every room query is raw `pg` on `withPooledPgClient` (outside the Direct queue), payloads are ~1 KB per question (below the TOAST threshold), nothing reads `snapshotData`.
+
+**Cost:** about one small request per player every 1.5–2 s while a room is live; 8 players × 10 questions ≈ 1 500 requests — well inside Vercel Hobby. If rooms get popular, the next step is a push channel (own Centrifugo or a hosted service checked from Russia), not shorter polling.
+
+**Not chosen:**
+
+- A `QuizSession` per player (`roomId` like `friendChallengeId`): submit, lock-in and every leaderboard query would change, and the whole question set would reach the browser at start (read-ahead).
+- SSE: every open tab holds a function for the whole game (Hobby duration limits, GB-hours) for the same result as polling with a schedule.
+- A hosted realtime service (Pusher, Ably) or own WebSocket server now: a new dependency or a server to run, and a reachability check from Russia — premature for groups of friends.
+- Host-paced «next» (Kahoot classic): a closed host tab would freeze the room; the schedule plus early close keeps the pace without it.
+
+**Deploy order:** migration on prod (additive: four tables, two enums, FKs) → deploy. Running code does not read the new tables.

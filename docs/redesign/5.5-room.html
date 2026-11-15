@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Комната с кодом — макет</title>
+<!--
+  Макет шага 5.5 (ступень 2) «Комната с кодом»: девять экранов телефона в
+  стиле «табло» (docs/DESIGN.md) на токенах globals.css, обе темы, и таблица
+  текстов RU / EN на согласование (skill gamemind-copy).
+  Схема и правила игры — docs/DECISIONS.md → Quiz room.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root, [data-theme="light"] {
+    --background: #eef1f4; --foreground: #14181f; --muted: #566170; --border: #d3d9e1;
+    --surface: #ffffff; --surface-muted: #e8edf2; --surface-hover: #dfe5ec; --surface-raised: #ffffff;
+    --primary: #0b6e4f; --primary-foreground: #f7fffb;
+    --danger: #c62828; --danger-muted: #fdeceb; --success: #1b7a3d; --success-muted: #e6f5ec;
+    --warning: #9a5d06; --warning-muted: #fdf3e1; --info: #1f5f8b; --info-muted: #e2edf6;
+    --gold: #e8c547; --gold-fg: #2a2208; --silver: #c5ccd6; --silver-fg: #1e2430; --bronze: #c9894a; --bronze-fg: #2a1808;
+    --a1: #0b6e4f; --a2: #1f5f8b; --a3: #a16207; --a4: #9a5a24; --a5: #4b5563; --a6: #5b6b2a; --ink: #f3f7f6;
+    --shadow: 0 1px 3px rgb(20 24 31 / .09);
+  }
+  [data-theme="dark"] {
+    --background: #16191f; --foreground: #e8ecf1; --muted: #a3acb8; --border: #3a414d;
+    --surface: #20242c; --surface-muted: #292e37; --surface-hover: #30363f; --surface-raised: #2a2f39;
+    --primary: #3ecf8e; --primary-foreground: #06140d;
+    --danger: #f47e84; --danger-muted: #442326; --success: #62d390; --success-muted: #183825;
+    --warning: #e8bd55; --warning-muted: #352b12; --info: #88c0e2; --info-muted: #18344b;
+    --gold: #4a3f1a; --gold-fg: #f0d56a; --silver: #383f4a; --silver-fg: #d3dae3; --bronze: #4a3423; --bronze-fg: #e8b98a;
+    --a1: #1c5442; --a2: #1f4560; --a3: #5c4614; --a4: #5a3a22; --a5: #343c49; --a6: #444f22; --ink: #dfe7e4;
+    --shadow: 0 1px 2px rgb(0 0 0 / .35);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px 16px 64px; background: var(--background); color: var(--foreground);
+    font: 14px/1.45 'IBM Plex Sans', system-ui, sans-serif; }
+  .display { font-family: 'Oswald', system-ui, sans-serif; letter-spacing: -.01em; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
+  header.page { max-width: 1240px; margin: 0 auto 24px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+  header.page h1 { margin: 0; font-size: 28px; }
+  header.page p { margin: 4px 0 0; color: var(--muted); max-width: 72ch; }
+  button.theme { border: 1px solid var(--border); background: var(--surface); color: var(--foreground); border-radius: 8px; padding: 8px 14px; font: inherit; cursor: pointer; }
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; max-width: 1240px; margin: 0 auto; }
+  figure { margin: 0; }
+  figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
+  figcaption b { color: var(--foreground); display: block; font-size: 14px; }
+  .phone { height: 660px; overflow: hidden; background: var(--background); border: 1px solid var(--border); border-radius: 30px;
+    padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow); position: relative; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; height: 28px; }
+  .brand { display: flex; align-items: center; gap: 6px; font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 600; }
+  .mark { display: grid; grid-template-columns: 6px 6px; gap: 1px; }
+  .mark i { width: 6px; height: 6px; border-radius: 1.5px; background: var(--primary); } .mark i:last-child { background: var(--danger); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); }
+  .muted { color: var(--muted); }
+  .btn { display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 8px; font-weight: 600; border: 1px solid transparent; }
+  .btn.primary { background: var(--primary); color: var(--primary-foreground); }
+  .btn.secondary { background: var(--surface); border-color: var(--border); }
+  .btn.ghost { color: var(--muted); }
+  .btn.disabled { opacity: .5; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 13px; font-weight: 500; }
+  .chip.on { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+  .label { font-size: 12px; color: var(--muted); margin: 10px 0 6px; }
+  .code { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 700; font-size: 56px; letter-spacing: .14em; line-height: 1; }
+  .codebox { display: flex; gap: 6px; }
+  .codebox span { flex: 1; height: 52px; border: 2px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 26px; font-weight: 600; background: var(--surface); }
+  .codebox span.focus { border-color: var(--primary); }
+  .av { width: 34px; height: 34px; border-radius: 999px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--ink); font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 600; font-size: 14px; position: relative; }
+  .av.sm { width: 26px; height: 26px; font-size: 11px; }
+  .av .ok { position: absolute; right: -3px; bottom: -3px; width: 14px; height: 14px; border-radius: 999px; background: var(--success); color: var(--surface); font-size: 9px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--surface); }
+  .players { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .player { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; background: var(--surface-muted); min-width: 0; }
+  .player .name { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tag { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+  .tag.host { color: var(--primary); }
+  .x { margin-left: auto; color: var(--muted); font-size: 16px; line-height: 1; }
+  .toggle { width: 40px; height: 24px; border-radius: 999px; background: var(--primary); position: relative; flex-shrink: 0; }
+  .toggle::after { content: ''; position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; border-radius: 999px; background: var(--primary-foreground); }
+  .segs { display: flex; gap: 3px; }
+  .segs i { flex: 1; height: 4px; border-radius: 2px; background: var(--surface-muted); }
+  .segs i.done { background: var(--primary); } .segs i.bad { background: var(--danger); } .segs i.now { background: var(--foreground); }
+  .qimg { aspect-ratio: 16/9; border-radius: 10px; background:
+      linear-gradient(160deg, #4d5a66 0%, #8a9aa3 45%, #b9a77d 70%, #5c4b34 100%); position: relative; overflow: hidden; }
+  .qimg::after { content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(0 0 0 / .35)); }
+  .qtext { font-size: 17px; font-weight: 600; line-height: 1.35; }
+  .opt { min-height: 50px; border: 2px solid var(--border); background: var(--surface); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 15px; }
+  .opt.pending { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, var(--surface)); }
+  .opt.correct { border-color: var(--success); background: var(--success-muted); }
+  .opt.wrong { border-color: var(--danger); background: var(--danger-muted); }
+  .opt.dim { opacity: .6; }
+  .opt .count { margin-left: auto; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .opt .ic { font-weight: 700; }
+  .timer { display: flex; align-items: center; gap: 10px; }
+  .timer .bar { flex: 1; height: 6px; border-radius: 3px; background: var(--surface-muted); overflow: hidden; }
+  .timer .bar i { display: block; height: 100%; background: var(--primary); border-radius: 3px; }
+  .timer .sec { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 600; font-size: 24px; min-width: 2ch; text-align: right; }
+  .verdict { border-left: 4px solid var(--success); background: var(--success-muted); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .verdict .t { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 20px; font-weight: 600; color: var(--success); }
+  .verdict .pts { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 28px; font-weight: 700; color: var(--success); }
+  .standing { display: flex; align-items: center; gap: 8px; padding: 6px 4px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .standing:last-child { border-bottom: 0; }
+  .standing.me { background: color-mix(in srgb, var(--primary) 9%, transparent); border-radius: 6px; }
+  .standing .pl { font-family: 'IBM Plex Mono', ui-monospace, monospace; width: 18px; color: var(--muted); }
+  .standing .mv { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; width: 26px; }
+  .up { color: var(--success); } .down { color: var(--danger); }
+  .standing .sc { margin-left: auto; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 600; }
+  .standing .gain { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: var(--success); width: 42px; text-align: right; }
+  .podium { display: grid; grid-template-columns: 1fr 1.1fr 1fr; align-items: end; gap: 6px; }
+  .step { border-radius: 10px 10px 4px 4px; text-align: center; padding: 8px 4px; }
+  .step .n { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 26px; font-weight: 700; }
+  .step .nm { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .step .s { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; }
+  .g { background: var(--gold); color: var(--gold-fg); height: 128px; } .sv { background: var(--silver); color: var(--silver-fg); height: 100px; } .b { background: var(--bronze); color: var(--bronze-fg); height: 84px; }
+  .marks { display: flex; gap: 3px; flex-wrap: wrap; }
+  .marks i { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 10px; font-weight: 700; color: var(--surface); }
+  .marks .c { background: var(--success); } .marks .w { background: var(--danger); } .marks .m { background: var(--surface-muted); color: var(--muted); }
+  .count3 { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; }
+  .ring { width: 170px; height: 170px; border-radius: 999px; border: 8px solid var(--surface-muted); border-top-color: var(--primary); display: flex; align-items: center; justify-content: center; }
+  .ring span { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 92px; font-weight: 700; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface-raised); border-radius: 18px 18px 0 0; padding: 16px; box-shadow: 0 -10px 30px rgb(0 0 0 / .18); border-top: 1px solid var(--border); }
+  .dim-bg::after { content: ''; position: absolute; inset: 0; background: rgb(10 12 16 / .38); }
+  .note { font-size: 12px; color: var(--muted); }
+  .divider { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; margin: 12px 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .input { min-height: 44px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); padding: 0 12px; display: flex; align-items: center; justify-content: space-between; font-weight: 600; }
+  .alert { border-radius: 8px; padding: 8px 10px; font-size: 13px; background: var(--info-muted); color: var(--foreground); border-left: 3px solid var(--info); }
+  .spacer { flex: 1; }
+  .mode { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .glyph { width: 38px; height: 38px; border-radius: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  /* таблица текстов */
+  section.copy { max-width: 1240px; margin: 48px auto 0; }
+  section.copy h2 { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; margin: 0 0 6px; }
+  section.copy p { color: var(--muted); max-width: 80ch; margin: 0 0 16px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { background: var(--surface-muted); font-weight: 600; }
+  td.k { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: var(--muted); white-space: nowrap; }
+  tr.group td { background: var(--surface-muted); font-weight: 700; font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 15px; }
+  td.en { color: var(--muted); }
+  .wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="page">
+  <div>
+    <div class="eyebrow">ROADMAP 5.5 · ступень 2</div>
+    <h1 class="display">Комната с кодом — макет экранов</h1>
+    <p>Девять экранов телефона на токенах дизайн-системы (табло, бирюзовый акцент, Oswald + IBM Plex). Тексты — предложение; таблица RU / EN ниже. Переключатель темы — справа.</p>
+  </div>
+  <button class="theme" onclick="const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'">Светлая / тёмная</button>
+</header>
+
+<main class="board">
+
+  <!-- 1. Главная: карточка и шторка -->
+  <figure>
+    <div class="phone dim-bg">
+      <div class="topbar"><span class="brand"><span class="mark"><i></i><i></i><i></i><i></i></span>GameMind</span><span class="av sm" style="background:var(--a2)">Р</span></div>
+      <div class="card mode"><span class="glyph">▤</span><div><div class="display" style="font-size:18px;font-weight:600">Классика</div><div class="mono muted" style="font-size:12px">без таймера · 3–10 вопросов</div></div></div>
+      <div class="card mode"><span class="glyph">◷</span><div><div class="display" style="font-size:18px;font-weight:600">Блиц</div><div class="mono muted" style="font-size:12px">минута на всё</div></div></div>
+      <div class="card mode"><span class="glyph">⧗</span><div><div class="display" style="font-size:18px;font-weight:600">Выживание</div><div class="mono muted" style="font-size:12px">банк времени тает</div></div></div>
+      <div class="card mode"><span class="glyph">◎◎</span><div><div class="display" style="font-size:18px;font-weight:600">Комната</div><div class="mono muted" style="font-size:12px">2–12 игроков · вход по коду</div></div></div>
+      <div class="sheet" style="z-index:2">
+        <div class="display" style="font-size:22px;font-weight:600">Комната</div>
+        <p class="muted" style="margin:4px 0 2px">Играйте вместе: вопросы приходят всем сразу, каждый отвечает со своего телефона. После каждого вопроса — таблица.</p>
+        <p class="note" style="margin:0 0 12px">Игры в комнате не идут в рейтинг.</p>
+        <div class="btn primary">Создать комнату</div>
+        <div class="divider">или</div>
+        <div class="label" style="margin-top:0">Есть код от ведущего?</div>
+        <div class="row"><div class="codebox" style="flex:1"><span>K</span><span>7</span><span class="focus"></span><span></span></div></div>
+        <div class="btn secondary" style="margin-top:8px">Войти</div>
+      </div>
+    </div>
+    <figcaption><b>1. Главная → «Комната»</b>Четвёртая карточка режима. Шторка: создать или войти по коду (4 клетки, регистр не важен). Гостю вместо «Создать» — «Войди, чтобы создать комнату».</figcaption>
+  </figure>
+
+  <!-- 2. Вход по ссылке -->
+  <figure>
+    <div class="phone">
+      <div class="topbar"><span class="brand"><span class="mark"><i></i><i></i><i></i><i></i></span>GameMind</span></div>
+      <div class="card" style="text-align:center;padding:20px 14px">
+        <div class="eyebrow">Комната</div>
+        <div class="code" style="margin:8px 0 10px">K7QF</div>
+        <div class="row" style="justify-content:center"><span class="av" style="background:var(--a1)">Р</span><div style="text-align:left"><div style="font-weight:700">roman зовёт играть</div><div class="mono muted" style="font-size:12px">3 в комнате · 10 вопросов · Микс</div></div></div>
+      </div>
+      <div class="card">
+        <div class="label" style="margin-top:0">Твоё имя в игре</div>
+        <div class="input"><span>Хитрый Гоблин</span><span class="muted" title="Другое имя">⟳</span></div>
+        <div class="note" style="margin-top:6px">От 2 до 20 знаков. Его увидят все в комнате.</div>
+        <div class="btn primary" style="margin-top:12px">Войти в комнату</div>
+      </div>
+      <div class="alert">Нет аккаунта — не беда: «Играть без регистрации» — и ты в комнате.</div>
+      <div class="spacer"></div>
+      <div class="note" style="text-align:center">Ссылка вида game-mind.ru/room/K7QF</div>
+    </div>
+    <figcaption><b>2. Вход по ссылке или коду</b>Кто зовёт и что за игра — сверху. Гостю имя придумывается само («Хитрый Гоблин»), кнопка ⟳ — другое. Без сессии вместо формы — «Играть без регистрации» / «Войти».</figcaption>
+  </figure>
+
+  <!-- 3. Лобби ведущего -->
+  <figure>
+    <div class="phone">
+      <div class="card" style="text-align:center;padding:12px">
+        <div class="eyebrow">Код комнаты</div>
+        <div class="code" style="font-size:48px;margin:6px 0 10px">K7QF</div>
+        <div class="row"><div class="btn secondary" style="flex:1;min-height:38px;font-size:13px">Скопировать ссылку</div><div class="btn secondary" style="flex:1;min-height:38px;font-size:13px">Позвать</div></div>
+      </div>
+      <div class="card" style="padding:12px">
+        <div class="row" style="justify-content:space-between"><span class="eyebrow">Игроки</span><span class="mono muted" style="font-size:12px">4 / 12</span></div>
+        <div class="players" style="margin-top:8px">
+          <div class="player"><span class="av sm" style="background:var(--a1)">R</span><div style="min-width:0"><div class="name">roman</div><div class="tag host">ведущий · ты</div></div></div>
+          <div class="player"><span class="av sm" style="background:var(--a3)">А</span><div style="min-width:0"><div class="name">Аня</div></div><span class="x">×</span></div>
+          <div class="player"><span class="av sm" style="background:var(--a2)">Х</span><div style="min-width:0"><div class="name">Хитрый Гоблин</div></div><span class="x">×</span></div>
+          <div class="player"><span class="av sm" style="background:var(--a6)">D</span><div style="min-width:0"><div class="name">dimon</div></div><span class="x">×</span></div>
+        </div>
+      </div>
+      <div class="card" style="padding:12px">
+        <div class="eyebrow">Настройки</div>
+        <div class="label">Вопросов</div><div class="chips"><span class="chip">5</span><span class="chip on">10</span><span class="chip">15</span><span class="chip">20</span></div>
+        <div class="label">Сложность</div><div class="chips"><span class="chip">Лёгкая</span><span class="chip">Средняя</span><span class="chip">Сложная</span><span class="chip on">Микс</span></div>
+        <div class="label">Время на ответ</div><div class="chips"><span class="chip">10 с</span><span class="chip on">15 с</span><span class="chip">20 с</span><span class="chip">30 с</span></div>
+        <div class="label">Тема</div><div class="chips"><span class="chip on">Все вопросы</span><span class="chip">2020-е</span><span class="chip">Nintendo</span><span class="chip">…</span></div>
+        <div class="row" style="margin-top:10px;justify-content:space-between"><div><div style="font-weight:600;font-size:13px">Очки за скорость</div><div class="note">Быстрый верный ответ — до 1000, медленный — 500</div></div><span class="toggle"></span></div>
+      </div>
+      <div class="btn primary">Начать</div>
+    </div>
+    <figcaption><b>3. Лобби — ведущий</b>Крупный код (его диктуют вслух), «Позвать» — системное «Поделиться» / Telegram. Игроки появляются сами; × убирает игрока. Настройки меняются, пока ждём, все видят изменения. «Начать» серая, пока игрок один.</figcaption>
+  </figure>
+
+  <!-- 4. Лобби игрока -->
+  <figure>
+    <div class="phone">
+      <div class="card" style="text-align:center;padding:12px">
+        <div class="eyebrow">Код комнаты</div>
+        <div class="code" style="font-size:48px;margin:6px 0 4px">K7QF</div>
+        <div class="mono muted" style="font-size:12px">10 вопросов · Микс · 15 с на ответ</div>
+      </div>
+      <div class="card" style="padding:12px">
+        <div class="row" style="justify-content:space-between"><span class="eyebrow">Игроки</span><span class="mono muted" style="font-size:12px">4 / 12</span></div>
+        <div class="players" style="margin-top:8px">
+          <div class="player"><span class="av sm" style="background:var(--a1)">R</span><div style="min-width:0"><div class="name">roman</div><div class="tag host">ведущий</div></div></div>
+          <div class="player"><span class="av sm" style="background:var(--a3)">А</span><div style="min-width:0"><div class="name">Аня</div></div></div>
+          <div class="player" style="outline:2px solid var(--primary)"><span class="av sm" style="background:var(--a2)">Х</span><div style="min-width:0"><div class="name">Хитрый Гоблин</div><div class="tag">ты · изменить имя</div></div></div>
+          <div class="player"><span class="av sm" style="background:var(--a6)">D</span><div style="min-width:0"><div class="name">dimon</div></div></div>
+        </div>
+      </div>
+      <div class="card" style="text-align:center;padding:18px 12px">
+        <div class="display" style="font-size:20px;font-weight:600">Ждём, когда roman начнёт</div>
+        <div class="note" style="margin-top:4px">Вопросы придут всем одновременно. Отвечай со своего телефона: верный ответ быстрее — больше очков.</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="btn ghost">Выйти из комнаты</div>
+    </div>
+    <figcaption><b>4. Лобби — игрок</b>Настройки одной строкой, своё имя можно сменить до старта. Правило очков — сразу, чтобы никто не удивился в первом вопросе.</figcaption>
+  </figure>
+
+  <!-- 5. Отсчёт -->
+  <figure>
+    <div class="phone">
+      <div class="count3">
+        <div class="eyebrow">Игра начинается</div>
+        <div class="ring"><span>3</span></div>
+        <div class="mono muted">10 вопросов · 15 с на ответ</div>
+      </div>
+    </div>
+    <figcaption><b>5. Отсчёт 3-2-1</b>Пять секунд от старта: телефон узнаёт о старте со следующим опросом и всё равно успевает показать отсчёт целиком. Анимация — существующая <code>countdown-tick</code>.</figcaption>
+  </figure>
+
+  <!-- 6. Показ вопроса -->
+  <figure>
+    <div class="phone">
+      <div class="row" style="justify-content:space-between"><span class="eyebrow">Вопрос 3 из 10</span><span class="mono muted" style="font-size:12px">K7QF</span></div>
+      <div class="segs"><i class="done"></i><i class="bad"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="qimg"></div>
+      <div class="qtext">Где это в Red Dead Redemption 2?</div>
+      <div class="timer" style="margin-top:6px"><div class="bar"><i style="width:60%;background:var(--muted)"></i></div><span class="mono muted" style="font-size:12px">читаем</span></div>
+      <div class="opt dim" style="border-style:dashed"></div>
+      <div class="opt dim" style="border-style:dashed"></div>
+      <div class="opt dim" style="border-style:dashed"></div>
+      <div class="opt dim" style="border-style:dashed"></div>
+    </div>
+    <figcaption><b>6. Показ вопроса (3–6 с)</b>Сначала только вопрос и кадр: все читают на равных, картинка успевает загрузиться. Пустые места под варианты — чтобы экран не прыгал, когда они появятся.</figcaption>
+  </figure>
+
+  <!-- 7. Ответы -->
+  <figure>
+    <div class="phone">
+      <div class="row" style="justify-content:space-between"><span class="eyebrow">Вопрос 3 из 10</span><span class="mono muted" style="font-size:12px">Ответили 2 из 4</span></div>
+      <div class="segs"><i class="done"></i><i class="bad"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="qimg" style="aspect-ratio:16/8"></div>
+      <div class="qtext">Где это в Red Dead Redemption 2?</div>
+      <div class="timer"><div class="bar"><i style="width:55%"></i></div><span class="sec">8</span></div>
+      <div class="opt">Валентайн</div>
+      <div class="opt pending">Роудс</div>
+      <div class="opt dim">Строберри</div>
+      <div class="opt dim">Ван-Хорн</div>
+      <div class="row" style="justify-content:center;gap:6px;margin-top:2px">
+        <span class="av sm" style="background:var(--a1)">R<span class="ok">✓</span></span><span class="av sm" style="background:var(--a3)">А</span><span class="av sm" style="background:var(--a2)">Х<span class="ok">✓</span></span><span class="av sm" style="background:var(--a6)">D</span>
+      </div>
+      <div class="note" style="text-align:center">Ответ принят. Ждём остальных</div>
+    </div>
+    <figcaption><b>7. Ответы</b>Таймер — полоса и секунды. После нажатия выбор подсвечен, остальное приглушено, верный ответ пока не виден никому. Галочки на аватарах — кто уже ответил (без того, что ответил). Ответили все — вопрос закрывается сразу.</figcaption>
+  </figure>
+
+  <!-- 8. Разбор -->
+  <figure>
+    <div class="phone">
+      <div class="row" style="justify-content:space-between"><span class="eyebrow">Вопрос 3 из 10</span><span class="mono muted" style="font-size:12px">дальше — вопрос 4</span></div>
+      <div class="verdict"><div><div class="t">В точку!</div><div class="mono" style="font-size:12px;color:var(--success)">серия: 2 подряд</div></div><div class="pts">+870</div></div>
+      <div class="opt dim">Валентайн <span class="count">1</span></div>
+      <div class="opt correct"><span class="ic" style="color:var(--success)">✓</span>Роудс <span class="count">2</span></div>
+      <div class="opt dim">Строберри <span class="count">0</span></div>
+      <div class="opt dim">Ван-Хорн <span class="count">1</span></div>
+      <div class="card" style="padding:8px 10px">
+        <div class="eyebrow" style="margin-bottom:4px">Таблица</div>
+        <div class="standing"><span class="pl">1</span><span class="mv up">▲1</span><span class="av sm" style="background:var(--a3)">А</span>Аня<span class="gain">+910</span><span class="sc">2 650</span></div>
+        <div class="standing me"><span class="pl">2</span><span class="mv up">▲1</span><span class="av sm" style="background:var(--a2)">Х</span>Хитрый Гоблин<span class="gain">+870</span><span class="sc">2 480</span></div>
+        <div class="standing"><span class="pl">3</span><span class="mv down">▼2</span><span class="av sm" style="background:var(--a1)">R</span>roman<span class="gain"></span><span class="sc">1 960</span></div>
+        <div class="standing"><span class="pl">4</span><span class="mv muted">—</span><span class="av sm" style="background:var(--a6)">D</span>dimon<span class="gain"></span><span class="sc">900</span></div>
+      </div>
+    </div>
+    <figcaption><b>8. Разбор (7 с)</b>Вердикт словом и цветом, очки за вопрос, серия (без бонуса — только честь). На вариантах — сколько человек выбрали каждый. Таблица со стрелками мест и приростом; ты подсвечен. Промах: «Мимо» + «Верный ответ: …»; без ответа — «Не успел».</figcaption>
+  </figure>
+
+  <!-- 9. Итоги -->
+  <figure>
+    <div class="phone">
+      <div class="eyebrow">Итоги · K7QF</div>
+      <div class="display" style="font-size:24px;font-weight:600">Ты — 2-й из 4</div>
+      <div class="podium">
+        <div class="step sv"><div class="n">2</div><div class="nm">Хитрый Гоблин</div><div class="s">6 920</div></div>
+        <div class="step g"><div class="n">1</div><div class="nm">Аня</div><div class="s">7 310</div></div>
+        <div class="step b"><div class="n">3</div><div class="nm">roman</div><div class="s">5 400</div></div>
+      </div>
+      <div class="card" style="padding:8px 10px">
+        <div class="standing"><span class="pl">4</span><span class="av sm" style="background:var(--a6)">D</span>dimon<span class="mono muted" style="margin-left:auto;font-size:11px">4 из 10</span><span class="sc" style="margin-left:10px">3 100</span></div>
+      </div>
+      <div class="card" style="padding:10px">
+        <div class="eyebrow" style="margin-bottom:6px">Твои ответы · 8 из 10</div>
+        <div class="marks"><i class="c">✓</i><i class="w">✗</i><i class="c">✓</i><i class="c">✓</i><i class="c">✓</i><i class="m">–</i><i class="c">✓</i><i class="c">✓</i><i class="c">✓</i><i class="c">✓</i></div>
+      </div>
+      <div class="spacer"></div>
+      <div class="btn primary">Ещё раунд</div>
+      <div class="row"><div class="btn secondary" style="flex:1">Поделиться</div><div class="btn secondary" style="flex:1">На главную</div></div>
+      <div class="note" style="text-align:center">У игроков вместо «Ещё раунд»: «Ждём ведущего…» → «roman открыл новый раунд» + «Играть»</div>
+    </div>
+    <figcaption><b>9. Итоги</b>Подиум на медалях рейтинга (те же токены), ниже — остальные. Свои ответы — квадратами ✓ / ✗ / –. «Ещё раунд» у ведущего открывает новую комнату с теми же настройками; у остальных появляется кнопка входа в неё.</figcaption>
+  </figure>
+</main>
+
+<section class="copy">
+  <h2>Тексты RU / EN на согласование</h2>
+  <p>Новые строки словаря <code>room.*</code> и одна карточка режима на главной. Сложность и «Все вопросы» берём из существующих строк (<code>quiz.*</code>). Тон — ведущий шоу, на «ты», без пафоса.</p>
+  <div class="wrap">
+  <table>
+    <thead><tr><th>Ключ</th><th>RU</th><th>EN</th><th>Где</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="4">Главная и вход</td></tr>
+      <tr><td class="k">title</td><td>Комната</td><td class="en">Room</td><td>карточка, шторка</td></tr>
+      <tr><td class="k">summary</td><td>2–12 игроков · вход по коду</td><td class="en">2–12 players · join by code</td><td>строка на карточке</td></tr>
+      <tr><td class="k">description</td><td>Играйте вместе: вопросы приходят всем сразу, каждый отвечает со своего телефона. После каждого вопроса — таблица.</td><td class="en">Play together: everyone gets the same question at once and answers on their own phone. A leaderboard after every question.</td><td>шторка</td></tr>
+      <tr><td class="k">notRanked</td><td>Игры в комнате не идут в рейтинг.</td><td class="en">Room games don’t count toward the rating.</td><td>шторка</td></tr>
+      <tr><td class="k">create</td><td>Создать комнату</td><td class="en">Create a room</td><td>кнопка</td></tr>
+      <tr><td class="k">createNeedsAccount</td><td>Войди, чтобы создать комнату</td><td class="en">Sign in to create a room</td><td>гостю</td></tr>
+      <tr><td class="k">or</td><td>или</td><td class="en">or</td><td>разделитель</td></tr>
+      <tr><td class="k">haveCode</td><td>Есть код от ведущего?</td><td class="en">Got a code from the host?</td><td>шторка</td></tr>
+      <tr><td class="k">codeLabel</td><td>Код комнаты</td><td class="en">Room code</td><td>поле (для читалок), лобби</td></tr>
+      <tr><td class="k">join</td><td>Войти</td><td class="en">Join</td><td>кнопка у кода</td></tr>
+      <tr><td class="k">codeInvalid</td><td>В коде 4 знака: буквы и цифры. Проверь у ведущего.</td><td class="en">A code is 4 letters and digits. Check it with the host.</td><td>ошибка ввода</td></tr>
+      <tr class="group"><td colspan="4">Вход по ссылке</td></tr>
+      <tr><td class="k">invite</td><td>{name} зовёт играть</td><td class="en">{name} invites you to play</td><td>экран 2</td></tr>
+      <tr><td class="k">inviteFacts</td><td>{players} в комнате · {questions} · {difficulty}</td><td class="en">{players} in the room · {questions} · {difficulty}</td><td>экран 2</td></tr>
+      <tr><td class="k">nicknameLabel</td><td>Твоё имя в игре</td><td class="en">Your name in the game</td><td>поле</td></tr>
+      <tr><td class="k">nicknameHint</td><td>От 2 до 20 знаков. Его увидят все в комнате.</td><td class="en">2 to 20 characters. Everyone in the room will see it.</td><td>под полем</td></tr>
+      <tr><td class="k">nicknameReroll</td><td>Другое имя</td><td class="en">Another name</td><td>кнопка ⟳ (для читалок)</td></tr>
+      <tr><td class="k">nicknameInvalid</td><td>Имя — от 2 до 20 букв или цифр.</td><td class="en">Use 2 to 20 letters or digits.</td><td>ошибка</td></tr>
+      <tr><td class="k">enter</td><td>Войти в комнату</td><td class="en">Join the room</td><td>кнопка</td></tr>
+      <tr><td class="k">guestHint</td><td>Нет аккаунта — не беда: «Играть без регистрации» — и ты в комнате.</td><td class="en">No account? No problem — tap “Play without signing up” and you’re in.</td><td>без сессии</td></tr>
+      <tr><td class="k">signIn</td><td>У меня есть аккаунт</td><td class="en">I have an account</td><td>без сессии</td></tr>
+      <tr class="group"><td colspan="4">Лобби</td></tr>
+      <tr><td class="k">copyLink</td><td>Скопировать ссылку</td><td class="en">Copy link</td><td>кнопка</td></tr>
+      <tr><td class="k">linkCopied</td><td>Ссылка скопирована</td><td class="en">Link copied</td><td>тост</td></tr>
+      <tr><td class="k">invitePlayers</td><td>Позвать</td><td class="en">Invite</td><td>кнопка «Поделиться»</td></tr>
+      <tr><td class="k">shareText</td><td>Заходи в комнату GameMind — код {code}</td><td class="en">Join my GameMind room — code {code}</td><td>текст приглашения</td></tr>
+      <tr><td class="k">players</td><td>Игроки</td><td class="en">Players</td><td>заголовок</td></tr>
+      <tr><td class="k">hostTag / youTag</td><td>ведущий / ты</td><td class="en">host / you</td><td>метки у игрока</td></tr>
+      <tr><td class="k">rename</td><td>изменить имя</td><td class="en">change name</td><td>у своего имени</td></tr>
+      <tr><td class="k">kick</td><td>Убрать {name}</td><td class="en">Remove {name}</td><td>× (для читалок)</td></tr>
+      <tr><td class="k">settings</td><td>Настройки</td><td class="en">Settings</td><td>карточка</td></tr>
+      <tr><td class="k">questionCount</td><td>Вопросов</td><td class="en">Questions</td><td>чипы</td></tr>
+      <tr><td class="k">difficulty</td><td>Сложность</td><td class="en">Difficulty</td><td>чипы (подписи — существующие)</td></tr>
+      <tr><td class="k">answerTime</td><td>Время на ответ</td><td class="en">Time to answer</td><td>чипы</td></tr>
+      <tr><td class="k">seconds</td><td>{n} с</td><td class="en">{n}s</td><td>чип</td></tr>
+      <tr><td class="k">topic</td><td>Тема</td><td class="en">Topic</td><td>чипы</td></tr>
+      <tr><td class="k">speedScoring</td><td>Очки за скорость</td><td class="en">Speed bonus</td><td>переключатель</td></tr>
+      <tr><td class="k">speedScoringHint</td><td>Быстрый верный ответ — до 1000, медленный — 500</td><td class="en">Fast right answers earn up to 1000, slow ones 500</td><td>под переключателем</td></tr>
+      <tr><td class="k">speedScoringOffHint</td><td>Любой верный ответ — 1000</td><td class="en">Every right answer earns 1000</td><td>выключен</td></tr>
+      <tr><td class="k">settingsLine</td><td>{questions} · {difficulty} · {seconds} с на ответ</td><td class="en">{questions} · {difficulty} · {seconds}s per answer</td><td>игроку</td></tr>
+      <tr><td class="k">start</td><td>Начать</td><td class="en">Start</td><td>кнопка</td></tr>
+      <tr><td class="k">needMorePlayers</td><td>Нужен ещё хотя бы один игрок</td><td class="en">You need at least one more player</td><td>под серой «Начать»</td></tr>
+      <tr><td class="k">waitingForHost</td><td>Ждём, когда {name} начнёт</td><td class="en">Waiting for {name} to start</td><td>игроку</td></tr>
+      <tr><td class="k">rulesHint</td><td>Вопросы придут всем одновременно. Отвечай со своего телефона: верный ответ быстрее — больше очков.</td><td class="en">Everyone gets each question at the same time. Answer on your phone — the faster you’re right, the more you score.</td><td>игроку</td></tr>
+      <tr><td class="k">leave</td><td>Выйти из комнаты</td><td class="en">Leave the room</td><td>игроку</td></tr>
+      <tr><td class="k">close</td><td>Закрыть комнату</td><td class="en">Close the room</td><td>ведущему</td></tr>
+      <tr class="group"><td colspan="4">Игра</td></tr>
+      <tr><td class="k">starting</td><td>Игра начинается</td><td class="en">Game starting</td><td>отсчёт</td></tr>
+      <tr><td class="k">questionOf</td><td>Вопрос {n} из {total}</td><td class="en">Question {n} of {total}</td><td>шапка</td></tr>
+      <tr><td class="k">reading</td><td>читаем</td><td class="en">read it</td><td>полоса показа</td></tr>
+      <tr><td class="k">answered</td><td>Ответили {count} из {total}</td><td class="en">{count} of {total} answered</td><td>шапка</td></tr>
+      <tr><td class="k">answerAccepted</td><td>Ответ принят. Ждём остальных</td><td class="en">Locked in. Waiting for the others</td><td>после нажатия</td></tr>
+      <tr><td class="k">answerFailed</td><td>Ответ не дошёл. Нажми ещё раз</td><td class="en">Your answer didn’t go through. Tap again</td><td>сбой сети</td></tr>
+      <tr><td class="k">timeUp</td><td>Время вышло</td><td class="en">Time’s up</td><td>без ответа</td></tr>
+      <tr><td class="k">correct / wrong</td><td>В точку! / Мимо</td><td class="en">Spot on! / Not quite</td><td>существующие строки</td></tr>
+      <tr><td class="k">missed</td><td>Не успел</td><td class="en">Too slow</td><td>разбор без ответа</td></tr>
+      <tr><td class="k">correctAnswer</td><td>Верный ответ: {answer}</td><td class="en">Right answer: {answer}</td><td>разбор</td></tr>
+      <tr><td class="k">streak</td><td>серия: {n} подряд</td><td class="en">streak: {n} in a row</td><td>разбор</td></tr>
+      <tr><td class="k">leaderboard</td><td>Таблица</td><td class="en">Leaderboard</td><td>разбор</td></tr>
+      <tr><td class="k">nextQuestion / nextResults</td><td>дальше — вопрос {n} / дальше — итоги</td><td class="en">next: question {n} / next: results</td><td>шапка разбора</td></tr>
+      <tr><td class="k">reconnecting</td><td>Связь пропала — подключаемся снова…</td><td class="en">Connection lost — reconnecting…</td><td>плашка</td></tr>
+      <tr class="group"><td colspan="4">Итоги</td></tr>
+      <tr><td class="k">results</td><td>Итоги</td><td class="en">Results</td><td>надзаголовок</td></tr>
+      <tr><td class="k">place</td><td>Ты — {place}-й из {total}</td><td class="en">You placed {place} of {total}</td><td>заголовок</td></tr>
+      <tr><td class="k">winner</td><td>Победа за тобой!</td><td class="en">You win!</td><td>заголовок 1-го места</td></tr>
+      <tr><td class="k">correctOf</td><td>{correct} из {total}</td><td class="en">{correct} of {total}</td><td>строка таблицы</td></tr>
+      <tr><td class="k">yourAnswers</td><td>Твои ответы · {correct} из {total}</td><td class="en">Your answers · {correct} of {total}</td><td>отметки</td></tr>
+      <tr><td class="k">rematch</td><td>Ещё раунд</td><td class="en">Another round</td><td>ведущему</td></tr>
+      <tr><td class="k">waitingRematch</td><td>Ждём, позовёт ли {name} на ещё раунд</td><td class="en">Waiting to see if {name} starts another round</td><td>игроку</td></tr>
+      <tr><td class="k">rematchReady</td><td>{name} открыл новый раунд</td><td class="en">{name} opened a new round</td><td>игроку</td></tr>
+      <tr><td class="k">rematchJoin</td><td>Играть</td><td class="en">Play</td><td>кнопка</td></tr>
+      <tr><td class="k">share / home</td><td>Поделиться / На главную</td><td class="en">Share / Home</td><td>кнопки</td></tr>
+      <tr><td class="k">shareResult</td><td>Комната GameMind {code}: {place}-е место из {total}, {score} очков</td><td class="en">GameMind room {code}: {place} of {total}, {score} points</td><td>текст «Поделиться»</td></tr>
+      <tr class="group"><td colspan="4">Ошибки</td></tr>
+      <tr><td class="k">errors.notFound</td><td>Комнаты с таким кодом нет. Проверь код у ведущего.</td><td class="en">There’s no room with that code. Check it with the host.</td><td>вход</td></tr>
+      <tr><td class="k">errors.started</td><td>Игра уже идёт — новых игроков не пускают. Дождись следующего раунда.</td><td class="en">The game has already started. Wait for the next round.</td><td>вход</td></tr>
+      <tr><td class="k">errors.full</td><td>Мест нет: в комнате уже 12 игроков.</td><td class="en">The room is full: 12 players already.</td><td>вход</td></tr>
+      <tr><td class="k">errors.closed</td><td>Эта комната закрыта. Попроси ведущего открыть новую.</td><td class="en">This room is closed. Ask the host to open a new one.</td><td>вход, лобби</td></tr>
+      <tr><td class="k">errors.kicked</td><td>Ведущий убрал тебя из этой комнаты.</td><td class="en">The host removed you from this room.</td><td>вход, лобби</td></tr>
+      <tr><td class="k">errors.notEnoughQuestions</td><td>Под эти настройки мало вопросов. Смени тему или сложность.</td><td class="en">Not enough questions for these settings. Try another topic or difficulty.</td><td>старт</td></tr>
+      <tr><td class="k">errors.generic</td><td>Не получилось. Попробуй ещё раз через пару секунд.</td><td class="en">That didn’t work. Try again in a couple of seconds.</td><td>прочее</td></tr>
+      <tr class="group"><td colspan="4">Имена для гостей (прилагательное + существительное)</td></tr>
+      <tr><td class="k">nicknameWords.adjectives</td><td>Ловкий, Быстрый, Хитрый, Меткий, Храбрый, Тихий, Бодрый, Зоркий, Шустрый, Смелый, Упрямый, Везучий</td><td class="en">Swift, Sneaky, Lucky, Brave, Quiet, Sharp, Bold, Clever, Rapid, Steady, Wild, Silent</td><td>гостю при входе</td></tr>
+      <tr><td class="k">nicknameWords.nouns</td><td>Рыцарь, Маг, Лучник, Гоблин, Дракон, Пират, Ниндзя, Ронин, Бард, Следопыт, Механик, Призрак</td><td class="en">Knight, Mage, Archer, Goblin, Dragon, Pirate, Ninja, Ronin, Bard, Ranger, Rogue, Wizard</td><td>гостю при входе</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+</body>
+</html>

@@ -14,6 +14,8 @@ Four play modes share one session model (`QuizSession` + frozen `snapshotData` +
 | Daily | `dailyChallengeId` set | Moscow calendar day; `MEDIUM` × 10; one attempt; no cycle |
 | Survival | `survivalRunId` set; **`timedEndsAt` NULL** | Waves = N×session; time-bank T0=20 +4/−6; exclusion seen; board = best run `totalScore`. Canon: Survival Mode MVP |
 
+**Quiz room** (5.5 stage 2, ADR «Quiz room») is outside this model on purpose: own tables `Room` / `RoomPlayer` / `RoomQuestion` / `RoomAnswer`, own routes `/api/room/{code}` (poll, answer, host and player actions), all on pooled raw `pg`. Players poll the state on a schedule fixed at start (intro → answer → reveal per question, early close when everyone answered); the server sends a question only from its `introAt`, options from `openAt`, the right key after `closeAt`. Room games never write `QuizSession` / `QuizResult`, so the hot path and the leaderboards are untouched.
+
 Quiz pool = `Question.isActive = true` **and** `publicationStatus = PUBLISHED`.  
 `isActive` is archive/soft-hide; `publicationStatus` is draft → review → publish. They are orthogonal.
 

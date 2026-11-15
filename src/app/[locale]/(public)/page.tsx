@@ -5,6 +5,7 @@ import { DailyChallengeCta } from '@/features/daily-challenge/components/daily-c
 import { ContinueLastMode } from '@/features/quiz/components/ContinueLastMode';
 import { QuizSetupForm } from '@/features/quiz/components/QuizSetupForm';
 import { readMusicPreference } from '@/features/quiz/lib/music-preference';
+import { RoomModeCta } from '@/features/quiz-room/components/RoomModeCta';
 import {
     readModeSetupMemory,
     type ModeSetupMemory,
@@ -85,6 +86,7 @@ export default async function HomePage({ params }: HomePageProps) {
     const sessionUser = session?.user?.id
         ? { isGuest: session.user.isGuest === true }
         : null;
+    const canCreateRoom = sessionUser !== null && !sessionUser.isGuest;
     const cookieStore = await cookies();
     const setupMemory = readModeSetupMemory(
         (name) => cookieStore.get(name)?.value,
@@ -147,6 +149,14 @@ export default async function HomePage({ params }: HomePageProps) {
                             dictionary={dictionary}
                             initialDifficulty={setupMemory.survival.difficulty}
                             initialMusicEnabled={musicEnabled}
+                        />
+                    </div>
+
+                    <div id="mode-room" className="scroll-mt-24">
+                        <RoomModeCta
+                            locale={safeLocale}
+                            dictionary={dictionary}
+                            canCreate={canCreateRoom}
                         />
                     </div>
                 </div>

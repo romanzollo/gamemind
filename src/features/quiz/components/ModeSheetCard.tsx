@@ -13,7 +13,7 @@ import { track } from '@/shared/analytics/track';
 import { BottomSheet } from '@/shared/ui';
 
 /** Значок режима на плитке: у каждого своё лицо, цвет — один акцент. */
-export type ModeGlyph = 'classic' | 'blitz' | 'survival';
+export type ModeGlyph = 'classic' | 'blitz' | 'survival' | 'room';
 
 const GLYPH_PATHS: Record<ModeGlyph, readonly string[]> = {
     // Лист вопросов: без спешки, по порядку.
@@ -22,6 +22,8 @@ const GLYPH_PATHS: Record<ModeGlyph, readonly string[]> = {
     blitz: ['M12 20a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z', 'M12 13V9.5', 'M10 3h4', 'M18.5 6.5l1.5-1.5'],
     // Песочные часы: банк времени тает.
     survival: ['M7 3h10', 'M7 21h10', 'M8 3v2.5a4 4 0 0 0 8 0V3', 'M8 21v-2.5a4 4 0 0 1 8 0V21'],
+    // Двое за одним вопросом: игра в компании.
+    room: ['M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z', 'M3.5 19a5.5 5.5 0 0 1 11 0', 'M16 11a2.5 2.5 0 1 0 0-5', 'M17 14.2a4.6 4.6 0 0 1 3.5 4.8'],
 };
 
 function ModeGlyphMark({ glyph }: { glyph: ModeGlyph }) {

@@ -96,6 +96,10 @@ model User {
   friendChallenges    FriendChallenge[]
   /// События воронки, пока игрок был в аккаунте (ROADMAP 3.5).
   analyticsEvents     AnalyticsEvent[]
+  /// Комнаты, которые игрок открыл ведущим (5.5, ступень 2).
+  hostedRooms         Room[]
+  /// Участие в комнатах.
+  roomPlayers         RoomPlayer[]
 }
 
 model Account {
@@ -270,6 +274,8 @@ model Tag {
   /// Факты «А ты знал?» об этой игре или серии. Restrict: метку с фактами
   /// не удалить (taxonomy:sync --prune упадёт, а не потеряет факты).
   triviaFacts  TriviaFact[]
+  /// Комнаты с этой темой. SetNull: удаление метки не ломает комнату.
+  rooms        Room[]
 
   @@unique([facetId, slug])
   @@index([parentId])
@@ -674,4 +680,123 @@ model AnswerOptionTranslation {
 
   @@unique([optionId, locale])
   @@index([locale])
+}
+
+/// Комната (ROADMAP 5.5, ступень 2): живая викторина по коду.
+/// LOBBY — набор игроков и настройки; STARTING — ведущий нажал «Начать»,
+/// сервер собирает вопросы; PLAYING — идёт по расписанию; FINISHED — финал;
+/// CLOSED — лобби брошено или заменено новой комнатой ведущего.
+/// Canon: docs/DECISIONS.md → Quiz room.
+enum RoomStatus {
+  LOBBY
+  STARTING
+  PLAYING
+  FINISHED
+  CLOSED
+}
+
+/// ACTIVE — в игре; LEFT — вышел сам из лобби; KICKED — убрал ведущий
+/// (вернуться по коду нельзя).
+enum RoomPlayerStatus {
+  ACTIVE
+  LEFT
+  KICKED
+}
+
+/// Комната с кодом. Не связана с QuizSession: свои вопросы, ответы и очки,
+/// не идёт в рейтинг и достижения. Все времена — TIMESTAMPTZ из JS Date.
+model Room {
+  id            String              @id @default(cuid())
+  /// 4 знака без похожих (0/O, 1/I/L). NULL — код освобождён для новой
+  /// комнаты (закрытой, сыгранной или брошенной). Canon: DECISIONS → Quiz room.
+  code          String?             @unique
+  /// NULL — аккаунт ведущего удалён; идущая игра доигрывается по расписанию.
+  hostUserId    String?
+  status        RoomStatus          @default(LOBBY)
+  /// Настройки ведущего (меняются только в LOBBY).
+  questionCount Int                 @default(10)
+  /// SINGLE: сложность. MIXED: NULL.
+  difficulty    Difficulty?
+  poolKind      QuizSessionPoolKind @default(MIXED)
+  /// Тема игры (Tag с playOrder); NULL — весь банк.
+  topicTagId    String?
+  answerSeconds Int                 @default(15)
+  /// false — верный ответ всегда 1000, без учёта скорости.
+  speedScoring  Boolean             @default(true)
+  /// Момент начала отсчёта 3-2-1; расписание вопросов — в RoomQuestion.
+  startedAt     DateTime?           @db.Timestamptz(3)
+  finishedAt    DateTime?           @db.Timestamptz(3)
+  /// Код следующего раунда («Ещё раунд»): игроки финала видят приглашение.
+  nextRoomCode  String?
+  createdAt     DateTime            @default(now()) @db.Timestamptz(3)
+
+  host      User?          @relation(fields: [hostUserId], references: [id], onDelete: SetNull)
+  topicTag  Tag?           @relation(fields: [topicTagId], references: [id], onDelete: SetNull)
+  players   RoomPlayer[]
+  questions RoomQuestion[]
+
+  @@index([hostUserId, status])
+}
+
+/// Игрок комнаты. `id` — публичный идентификатор в ответах API (userId
+/// наружу не уходит).
+model RoomPlayer {
+  id         String           @id @default(cuid())
+  roomId     String
+  userId     String
+  /// Имя в комнате: 2–16 знаков, уникально в комнате без учёта регистра.
+  nickname   String
+  status     RoomPlayerStatus @default(ACTIVE)
+  joinedAt   DateTime         @default(now()) @db.Timestamptz(3)
+  /// Последний опрос состояния; «на связи» = не старше 12 с (досрочное
+  /// закрытие вопроса не ждёт ушедших). Пишется не чаще раза в 5 с.
+  lastSeenAt DateTime         @default(now()) @db.Timestamptz(3)
+
+  room    Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers RoomAnswer[]
+
+  @@unique([roomId, userId])
+  @@index([userId])
+}
+
+/// Замороженный вопрос комнаты. `payload` — тексты RU+EN, картинка и
+/// варианты со случайными ключами (~1 КБ, без TOAST). Верный ключ — только
+/// в `correctKey`, наружу до `closeAt` не уходит. `questionId` — без FK:
+/// удаление вопроса из банка не ломает сыгранную комнату.
+model RoomQuestion {
+  roomId     String
+  position   Int
+  questionId String
+  payload    Json
+  correctKey String
+  /// Показ вопроса без вариантов (чтение, загрузка картинки).
+  introAt    DateTime @db.Timestamptz(3)
+  /// Варианты на экране, пошёл таймер ответа.
+  openAt     DateTime @db.Timestamptz(3)
+  /// Конец приёма ответов; досрочное закрытие переносит его раньше.
+  closeAt    DateTime @db.Timestamptz(3)
+
+  room    Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  answers RoomAnswer[]
+
+  @@id([roomId, position])
+}
+
+/// Ответ игрока на вопрос комнаты: первый ответ побеждает (PK).
+/// Очки считает сервер по времени прихода запроса.
+model RoomAnswer {
+  roomId     String
+  position   Int
+  playerId   String
+  optionKey  String
+  isCorrect  Boolean
+  points     Int
+  answeredAt DateTime @db.Timestamptz(3)
+
+  question RoomQuestion @relation(fields: [roomId, position], references: [roomId, position], onDelete: Cascade)
+  player   RoomPlayer   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@id([roomId, position, playerId])
+  @@index([playerId])
 }

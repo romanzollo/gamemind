@@ -8,6 +8,14 @@ describe('readSafeNextPath', () => {
         expect(readSafeNextPath('/en/challenge/abcDEF123_-')).toBe('/en/challenge/abcDEF123_-');
     });
 
+    it('keeps a room page path', () => {
+        expect(readSafeNextPath('/ru/room/K7QF')).toBe('/ru/room/K7QF');
+        expect(readSafeNextPath('/en/room/AB23')).toBe('/en/room/AB23');
+        expect(readSafeNextPath('/ru/room/K0QF')).toBeNull();
+        expect(readSafeNextPath('/ru/room/k7qf')).toBeNull();
+        expect(readSafeNextPath('/ru/room/K7QFX')).toBeNull();
+    });
+
     it('drops anything else, including other hosts', () => {
         expect(readSafeNextPath('//evil.example/ru/challenge/abcDEF123_-')).toBeNull();
         expect(readSafeNextPath('https://evil.example')).toBeNull();
