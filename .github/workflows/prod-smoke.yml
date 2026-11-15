@@ -82,11 +82,18 @@ jobs:
         # Знак во вкладке, на iPhone и в манифесте (ADR Brand mark: answer grid).
         # Без /favicon.ico запрос уходит в [locale] и рендерит 404 функцией.
         run: |
+          # Остальные аргументы — допустимые типы (начало Content-Type).
           check() {
-            type=$(curl -fsS -o /dev/null -w '%{content_type}' "$SMOKE_BASE_URL$1") || { echo "::error::$1 is not 200"; exit 1; }
-            case "$type" in "$2"*) echo "$1 → $type" ;; *) echo "::error::$1 served as $type"; exit 1 ;; esac
+            path=$1; shift
+            type=$(curl -fsS -o /dev/null -w '%{content_type}' "$SMOKE_BASE_URL$path") || { echo "::error::$path is not 200"; exit 1; }
+            for want in "$@"; do
+              case "$type" in "$want"*) echo "$path → $type"; return 0 ;; esac
+            done
+            echo "::error::$path served as $type"; exit 1
           }
-          check /favicon.ico image/x-icon
+          # Vercel с ноября 2026 отдаёт .ico как image/vnd.microsoft.icon —
+          # оба типа означают одну и ту же иконку.
+          check /favicon.ico image/x-icon image/vnd.microsoft.icon
           check /icon.svg image/svg+xml
           check /apple-icon.png image/png
           check /manifest.webmanifest application/manifest+json
