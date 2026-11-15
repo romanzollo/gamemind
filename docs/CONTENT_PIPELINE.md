@@ -421,6 +421,8 @@ Admin hub Questions card is **2×2** (Aug 18): Active/Inactive = `Question.isAct
 
 **Nov 9 (batch 12):** five Sekiro boss questions (prefix img14, c5b14f2) on dev and prod. Prod: 1128 live (TEXT 668 + IMAGE 460).
 
+**Nov 15 (batch 13):** image batch 13 «places in cult games, part 3» (28 questions, 4/12/12, prefix img15, f5d5dbd). Frames from fan wikis, one owner-supplied (Castle Kaneda; swapped on dev before prod by dropping the manifest key, re-running `images:optimize` and repointing `QuestionAsset`). WebP + manifest committed and deployed first, then prod import → `taxonomy:sync` (prod plan = dev minus one dev-only test audio draft) → publish (quality gate, filtered by draftKey). Prod: 1156 live (TEXT 668 + IMAGE 488), audio not counted. Do not re-import.
+
 **Aug 18 (evening):** voice-pass stems on mechanics-12 / w2 / w3 — **UPDATE in place** local+prod (`scripts/voice-pass-mechanics-stems.cjs`). Same 60 UUIDs; options unchanged. Pool still **354**; DRAFT did not grow. Do not re-import those files. Stem rules: `QUESTION_I18N.md` §10.
 
 **Aug 18 (night):** mechanics TEXT wave 5 ×24 (`2026-08-18-text-mechanics-w5-24.json`) published both sides → TEXT **378** (126/126/126) + IMAGE **171** → admin ~**549**. Distractors: `QUESTION_I18N.md` §3 D. Do not re-import. Verify:
