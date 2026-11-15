@@ -9,6 +9,7 @@
  * Canon: docs/DECISIONS.md → Quiz room.
  */
 
+import type { RoomAward } from '@/features/quiz-room/lib/room-awards';
 import type { RoomQuestionTimes } from '@/features/quiz-room/lib/room-schedule';
 import type { RoomSettings } from '@/features/quiz-room/lib/room-rules';
 import type { RoomStanding } from '@/features/quiz-room/lib/room-scoring';
@@ -36,6 +37,8 @@ export type RoomRevealDto = {
     counts: Record<string, number>;
     myKey: string | null;
     myPoints: number;
+    /** Первый верный ответ на этот вопрос («быстрее всех»); null — верных нет. */
+    fastestPlayerId: string | null;
 };
 
 export type RoomCurrentQuestionDto = {
@@ -75,6 +78,19 @@ export type RoomStateDto = {
     myMarks: RoomMark[];
     /** «Ещё раунд»: код новой комнаты ведущего. */
     nextRoomCode: string | null;
+    /** Сколько игроков уже в новом раунде. */
+    nextRoomPlayers: number | null;
+    /** Награды раунда — только когда игра сыграна. */
+    awards: RoomAward[];
+};
+
+/** Вопрос, где игрок ошибся или не успел (разбор в итогах). */
+export type RoomReviewItemDto = {
+    position: number;
+    text: string;
+    imageUrl: string | null;
+    myAnswer: string | null;
+    rightAnswer: string;
 };
 
 export type RoomErrorCode =
@@ -96,4 +112,6 @@ export type RoomErrorCode =
 /** Состояние форм входа и создания (Server Actions). */
 export type RoomFormState = {
     errorCode?: RoomErrorCode;
+    /** Вход удался: клиент открывает комнату полной загрузкой страницы. */
+    roomUrl?: string;
 };

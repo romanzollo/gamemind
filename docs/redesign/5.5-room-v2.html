@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Комната — UX/UI v2</title>
+<!--
+  Комната v2 после первой живой игры: что меняем в лобби, вопросе, разборе и итогах, и новые тексты RU / EN.
+  База — макет v1 (5.5-room.html):
+  стиле «табло» (docs/DESIGN.md) на токенах globals.css, обе темы, и таблица
+  текстов RU / EN на согласование (skill gamemind-copy).
+  Схема и правила игры — docs/DECISIONS.md → Quiz room.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root, [data-theme="light"] {
+    --background: #eef1f4; --foreground: #14181f; --muted: #566170; --border: #d3d9e1;
+    --surface: #ffffff; --surface-muted: #e8edf2; --surface-hover: #dfe5ec; --surface-raised: #ffffff;
+    --primary: #0b6e4f; --primary-foreground: #f7fffb;
+    --danger: #c62828; --danger-muted: #fdeceb; --success: #1b7a3d; --success-muted: #e6f5ec;
+    --warning: #9a5d06; --warning-muted: #fdf3e1; --info: #1f5f8b; --info-muted: #e2edf6;
+    --gold: #e8c547; --gold-fg: #2a2208; --silver: #c5ccd6; --silver-fg: #1e2430; --bronze: #c9894a; --bronze-fg: #2a1808;
+    --a1: #0b6e4f; --a2: #1f5f8b; --a3: #a16207; --a4: #9a5a24; --a5: #4b5563; --a6: #5b6b2a; --ink: #f3f7f6;
+    --shadow: 0 1px 3px rgb(20 24 31 / .09);
+  }
+  [data-theme="dark"] {
+    --background: #16191f; --foreground: #e8ecf1; --muted: #a3acb8; --border: #3a414d;
+    --surface: #20242c; --surface-muted: #292e37; --surface-hover: #30363f; --surface-raised: #2a2f39;
+    --primary: #3ecf8e; --primary-foreground: #06140d;
+    --danger: #f47e84; --danger-muted: #442326; --success: #62d390; --success-muted: #183825;
+    --warning: #e8bd55; --warning-muted: #352b12; --info: #88c0e2; --info-muted: #18344b;
+    --gold: #4a3f1a; --gold-fg: #f0d56a; --silver: #383f4a; --silver-fg: #d3dae3; --bronze: #4a3423; --bronze-fg: #e8b98a;
+    --a1: #1c5442; --a2: #1f4560; --a3: #5c4614; --a4: #5a3a22; --a5: #343c49; --a6: #444f22; --ink: #dfe7e4;
+    --shadow: 0 1px 2px rgb(0 0 0 / .35);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px 16px 64px; background: var(--background); color: var(--foreground);
+    font: 14px/1.45 'IBM Plex Sans', system-ui, sans-serif; }
+  .display { font-family: 'Oswald', system-ui, sans-serif; letter-spacing: -.01em; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
+  header.page { max-width: 1240px; margin: 0 auto 24px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+  header.page h1 { margin: 0; font-size: 28px; }
+  header.page p { margin: 4px 0 0; color: var(--muted); max-width: 72ch; }
+  button.theme { border: 1px solid var(--border); background: var(--surface); color: var(--foreground); border-radius: 8px; padding: 8px 14px; font: inherit; cursor: pointer; }
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; max-width: 1240px; margin: 0 auto; }
+  figure { margin: 0; }
+  figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
+  figcaption b { color: var(--foreground); display: block; font-size: 14px; }
+  .phone { height: 660px; overflow: hidden; background: var(--background); border: 1px solid var(--border); border-radius: 30px;
+    padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow); position: relative; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; height: 28px; }
+  .brand { display: flex; align-items: center; gap: 6px; font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 600; }
+  .mark { display: grid; grid-template-columns: 6px 6px; gap: 1px; }
+  .mark i { width: 6px; height: 6px; border-radius: 1.5px; background: var(--primary); } .mark i:last-child { background: var(--danger); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; box-shadow: var(--shadow); }
+  .muted { color: var(--muted); }
+  .btn { display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 8px; font-weight: 600; border: 1px solid transparent; }
+  .btn.primary { background: var(--primary); color: var(--primary-foreground); }
+  .btn.secondary { background: var(--surface); border-color: var(--border); }
+  .btn.ghost { color: var(--muted); }
+  .btn.disabled { opacity: .5; }
+  .row { display: flex; align-items: center; gap: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 13px; font-weight: 500; }
+  .chip.on { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+  .label { font-size: 12px; color: var(--muted); margin: 10px 0 6px; }
+  .code { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 700; font-size: 56px; letter-spacing: .14em; line-height: 1; }
+  .codebox { display: flex; gap: 6px; }
+  .codebox span { flex: 1; height: 52px; border: 2px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 26px; font-weight: 600; background: var(--surface); }
+  .codebox span.focus { border-color: var(--primary); }
+  .av { width: 34px; height: 34px; border-radius: 999px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--ink); font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 600; font-size: 14px; position: relative; }
+  .av.sm { width: 26px; height: 26px; font-size: 11px; }
+  .av .ok { position: absolute; right: -3px; bottom: -3px; width: 14px; height: 14px; border-radius: 999px; background: var(--success); color: var(--surface); font-size: 9px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--surface); }
+  .players { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .player { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; background: var(--surface-muted); min-width: 0; }
+  .player .name { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tag { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+  .tag.host { color: var(--primary); }
+  .x { margin-left: auto; color: var(--muted); font-size: 16px; line-height: 1; }
+  .toggle { width: 40px; height: 24px; border-radius: 999px; background: var(--primary); position: relative; flex-shrink: 0; }
+  .toggle::after { content: ''; position: absolute; right: 3px; top: 3px; width: 18px; height: 18px; border-radius: 999px; background: var(--primary-foreground); }
+  .segs { display: flex; gap: 3px; }
+  .segs i { flex: 1; height: 4px; border-radius: 2px; background: var(--surface-muted); }
+  .segs i.done { background: var(--primary); } .segs i.bad { background: var(--danger); } .segs i.now { background: var(--foreground); }
+  .qimg { aspect-ratio: 16/9; border-radius: 10px; background:
+      linear-gradient(160deg, #4d5a66 0%, #8a9aa3 45%, #b9a77d 70%, #5c4b34 100%); position: relative; overflow: hidden; }
+  .qimg::after { content: ''; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(0 0 0 / .35)); }
+  .qtext { font-size: 17px; font-weight: 600; line-height: 1.35; }
+  .opt { min-height: 50px; border: 2px solid var(--border); background: var(--surface); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 15px; }
+  .opt.pending { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 10%, var(--surface)); }
+  .opt.correct { border-color: var(--success); background: var(--success-muted); }
+  .opt.wrong { border-color: var(--danger); background: var(--danger-muted); }
+  .opt.dim { opacity: .6; }
+  .opt .count { margin-left: auto; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .opt .ic { font-weight: 700; }
+  .timer { display: flex; align-items: center; gap: 10px; }
+  .timer .bar { flex: 1; height: 6px; border-radius: 3px; background: var(--surface-muted); overflow: hidden; }
+  .timer .bar i { display: block; height: 100%; background: var(--primary); border-radius: 3px; }
+  .timer .sec { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-weight: 600; font-size: 24px; min-width: 2ch; text-align: right; }
+  .verdict { border-left: 4px solid var(--success); background: var(--success-muted); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .verdict .t { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 20px; font-weight: 600; color: var(--success); }
+  .verdict .pts { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 28px; font-weight: 700; color: var(--success); }
+  .standing { display: flex; align-items: center; gap: 8px; padding: 6px 4px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .standing:last-child { border-bottom: 0; }
+  .standing.me { background: color-mix(in srgb, var(--primary) 9%, transparent); border-radius: 6px; }
+  .standing .pl { font-family: 'IBM Plex Mono', ui-monospace, monospace; width: 18px; color: var(--muted); }
+  .standing .mv { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; width: 26px; }
+  .up { color: var(--success); } .down { color: var(--danger); }
+  .standing .sc { margin-left: auto; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 600; }
+  .standing .gain { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: var(--success); width: 42px; text-align: right; }
+  .podium { display: grid; grid-template-columns: 1fr 1.1fr 1fr; align-items: end; gap: 6px; }
+  .step { border-radius: 10px 10px 4px 4px; text-align: center; padding: 8px 4px; }
+  .step .n { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 26px; font-weight: 700; }
+  .step .nm { font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .step .s { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; }
+  .g { background: var(--gold); color: var(--gold-fg); height: 128px; } .sv { background: var(--silver); color: var(--silver-fg); height: 100px; } .b { background: var(--bronze); color: var(--bronze-fg); height: 84px; }
+  .marks { display: flex; gap: 3px; flex-wrap: wrap; }
+  .marks i { width: 16px; height: 16px; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-style: normal; font-size: 10px; font-weight: 700; color: var(--surface); }
+  .marks .c { background: var(--success); } .marks .w { background: var(--danger); } .marks .m { background: var(--surface-muted); color: var(--muted); }
+  .count3 { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; }
+  .ring { width: 170px; height: 170px; border-radius: 999px; border: 8px solid var(--surface-muted); border-top-color: var(--primary); display: flex; align-items: center; justify-content: center; }
+  .ring span { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 92px; font-weight: 700; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface-raised); border-radius: 18px 18px 0 0; padding: 16px; box-shadow: 0 -10px 30px rgb(0 0 0 / .18); border-top: 1px solid var(--border); }
+  .dim-bg::after { content: ''; position: absolute; inset: 0; background: rgb(10 12 16 / .38); }
+  .note { font-size: 12px; color: var(--muted); }
+  .divider { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; margin: 12px 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .input { min-height: 44px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); padding: 0 12px; display: flex; align-items: center; justify-content: space-between; font-weight: 600; }
+  .alert { border-radius: 8px; padding: 8px 10px; font-size: 13px; background: var(--info-muted); color: var(--foreground); border-left: 3px solid var(--info); }
+  .spacer { flex: 1; }
+  .mode { display: flex; align-items: center; gap: 10px; padding: 12px 14px; }
+  .glyph { width: 38px; height: 38px; border-radius: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  /* таблица текстов */
+  section.copy { max-width: 1240px; margin: 48px auto 0; }
+  section.copy h2 { font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; margin: 0 0 6px; }
+  section.copy p { color: var(--muted); max-width: 80ch; margin: 0 0 16px; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13px; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { background: var(--surface-muted); font-weight: 600; }
+  td.k { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: var(--muted); white-space: nowrap; }
+  tr.group td { background: var(--surface-muted); font-weight: 700; font-family: 'Oswald', 'Arial Narrow', system-ui, sans-serif; font-size: 15px; }
+  td.en { color: var(--muted); }
+  .wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<style>
+  .badge { display:inline-flex; align-items:center; gap:4px; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:2px 8px; border-radius:999px; background:var(--surface-muted); color:var(--muted); }
+  .badge.hot { background: color-mix(in srgb, var(--warning) 16%, transparent); color: var(--warning); }
+  .letter { width:26px; height:26px; border-radius:6px; background:var(--surface-muted); color:var(--muted); font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .opt.pending .letter { background: var(--primary); color: var(--primary-foreground); }
+  .opt.correct .letter { background: var(--success); color: var(--surface); }
+  .opt.wrong .letter { background: var(--danger); color: var(--surface); }
+  .dist { position:relative; overflow:hidden; }
+  .dist .fill { position:absolute; inset:0 auto 0 0; background: color-mix(in srgb, var(--muted) 14%, transparent); }
+  .opt.correct.dist .fill { background: color-mix(in srgb, var(--success) 22%, transparent); }
+  .dist > *:not(.fill) { position:relative; }
+  .ringt { width:58px; height:58px; border-radius:999px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background: conic-gradient(var(--primary) 0 55%, var(--surface-muted) 55% 100%); }
+  .ringt span { width:46px; height:46px; border-radius:999px; background:var(--background); display:flex; align-items:center; justify-content:center; font-family:'Oswald',sans-serif; font-weight:700; font-size:22px; }
+  .ringt.urgent { background: conic-gradient(var(--danger) 0 18%, var(--surface-muted) 18% 100%); }
+  .ringt.urgent span { color: var(--danger); }
+  .slot { border:2px dashed var(--border); border-radius:8px; min-height:40px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:12px; }
+  .gap { border-radius:10px; padding:8px 12px; background: color-mix(in srgb, var(--primary) 10%, var(--surface)); border:1px solid color-mix(in srgb, var(--primary) 35%, transparent); display:flex; justify-content:space-between; align-items:center; font-size:13px; }
+  .award { display:flex; gap:10px; align-items:center; padding:8px 10px; border-radius:10px; background:var(--surface); border:1px solid var(--border); }
+  .award .ic { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); font-weight:700; flex-shrink:0; }
+  .award b { display:block; font-size:13px; }
+  .award small { color:var(--muted); font-size:11px; }
+  .review { border:1px solid var(--border); border-radius:10px; background:var(--surface); padding:8px 10px; font-size:12px; }
+  .review .q { font-weight:600; font-size:13px; }
+  .tag-new { font-family:'IBM Plex Mono',monospace; font-size:10px; color: var(--primary); text-transform:uppercase; letter-spacing:.1em; }
+  .move { animation: none; }
+  .sticky { position:absolute; left:0; right:0; bottom:0; padding:10px 14px 14px; background: linear-gradient(transparent, var(--background) 30%); }
+  .confetti { position:absolute; inset:0; pointer-events:none; background:
+      radial-gradient(circle at 12% 18%, var(--primary) 0 3px, transparent 4px),
+      radial-gradient(circle at 30% 8%, var(--gold) 0 3px, transparent 4px),
+      radial-gradient(circle at 55% 14%, var(--danger) 0 2px, transparent 3px),
+      radial-gradient(circle at 78% 6%, var(--info) 0 3px, transparent 4px),
+      radial-gradient(circle at 88% 20%, var(--primary) 0 2px, transparent 3px),
+      radial-gradient(circle at 44% 24%, var(--warning) 0 2px, transparent 3px); }
+  .ba { display:grid; grid-template-columns: 1fr; gap: 8px; }
+</style>
+
+<header class="page">
+  <div>
+    <div class="eyebrow">ROADMAP 5.5 · ступень 2 · v2</div>
+    <h1 class="display">Комната — UX/UI v2</h1>
+    <p>Что меняем после первой игры с друзьями. Цель: лобби в один экран, игра читается с одного взгляда, разбор и итоги дают эмоцию — и повод сыграть ещё. Метка <span class="tag-new">новое</span> — то, чего сейчас нет.</p>
+  </div>
+  <button class="theme" onclick="const r=document.documentElement;r.dataset.theme=r.dataset.theme==='dark'?'light':'dark'">Светлая / тёмная</button>
+</header>
+
+<main class="board">
+
+  <!-- L1 лобби ведущего -->
+  <figure>
+    <div class="phone">
+      <div class="card" style="text-align:center;padding:12px">
+        <div class="eyebrow">Код комнаты</div>
+        <div class="code" style="font-size:52px;margin:6px 0 2px">K7QF</div>
+        <div class="note">нажми на код — ссылка скопируется</div>
+        <div class="btn secondary" style="margin-top:10px">⇪ Позвать</div>
+      </div>
+      <div class="card" style="padding:12px">
+        <div class="row" style="justify-content:space-between"><span class="eyebrow">Игроки</span><span class="mono muted" style="font-size:12px">2 / 12</span></div>
+        <div class="players" style="margin-top:8px">
+          <div class="player"><span class="av sm" style="background:var(--a1)">R</span><div style="min-width:0"><div class="name">roman</div><div class="tag host">ведущий · ты</div></div></div>
+          <div class="player"><span class="av sm" style="background:var(--a3)">А</span><div style="min-width:0"><div class="name">Аня</div></div><span class="x">×</span></div>
+          <div class="slot">ждём игроков…</div>
+          <div class="slot">ждём игроков…</div>
+        </div>
+      </div>
+      <div class="card" style="padding:12px">
+        <div class="row" style="justify-content:space-between">
+          <div><div class="eyebrow">Настройки</div><div style="font-weight:600;margin-top:4px">10 вопросов · Смешанная · 15 с</div><div class="note">Все вопросы · очки за скорость</div></div>
+          <div class="btn secondary" style="min-height:36px;padding:0 12px;font-size:13px">Изменить</div>
+        </div>
+      </div>
+      <div class="sticky"><div class="btn primary">Начать · 2 игрока</div></div>
+    </div>
+    <figcaption><b>1. Лобби в один экран <span class="tag-new">новое</span></b>Настройки — одной строкой, чипы — в шторке «Изменить». Пустые места «ждём игроков…» показывают, что комната живая. Код копируется касанием, одна кнопка «Позвать». «Начать» закреплена внизу и говорит, сколько игроков.</figcaption>
+  </figure>
+
+  <!-- L2 шторка настроек -->
+  <figure>
+    <div class="phone dim-bg">
+      <div class="card" style="text-align:center;padding:12px"><div class="code" style="font-size:44px">K7QF</div></div>
+      <div class="sheet" style="z-index:2">
+        <div class="display" style="font-size:20px;font-weight:600">Настройки игры</div>
+        <div class="label">Вопросов</div><div class="chips"><span class="chip">5</span><span class="chip on">10</span><span class="chip">15</span><span class="chip">20</span></div>
+        <div class="label">Сложность</div><div class="chips"><span class="chip">Легко</span><span class="chip">Средне</span><span class="chip">Сложно</span><span class="chip on">Смешанная</span></div>
+        <div class="label">Время на ответ</div><div class="chips"><span class="chip">10 с</span><span class="chip on">15 с</span><span class="chip">20 с</span><span class="chip">30 с</span></div>
+        <div class="label">Тема</div><div class="chips"><span class="chip on">Все вопросы</span><span class="chip">2020-е</span><span class="chip">Nintendo</span><span class="chip">Ролевые</span></div>
+        <div class="row" style="margin-top:12px;justify-content:space-between"><div><div style="font-weight:600;font-size:13px">Очки за скорость</div><div class="note">Быстрый верный ответ — до 1000, медленный — 500</div></div><span class="toggle"></span></div>
+        <div class="btn primary" style="margin-top:12px">Готово</div>
+      </div>
+    </div>
+    <figcaption><b>2. Шторка настроек <span class="tag-new">новое</span></b>Та же шторка, что у Классики и Блица на главной: знакомое движение, лобби не прокручивается. Игроки видят изменения сразу, как и сейчас.</figcaption>
+  </figure>
+
+  <!-- Q ответы -->
+  <figure>
+    <div class="phone">
+      <div class="row" style="justify-content:space-between"><span class="eyebrow">Вопрос 3 из 10</span><span class="badge hot">серия 2</span></div>
+      <div class="segs"><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="qimg" style="aspect-ratio:16/8"></div>
+      <div class="row" style="gap:12px"><div class="qtext" style="flex:1">Где это в Red Dead Redemption 2?</div><div class="ringt urgent"><span>4</span></div></div>
+      <div class="opt"><span class="letter">A</span>Валентайн</div>
+      <div class="opt pending"><span class="letter">B</span>Роудс</div>
+      <div class="opt dim"><span class="letter">C</span>Строберри</div>
+      <div class="opt dim"><span class="letter">D</span>Ван-Хорн</div>
+      <div class="row" style="justify-content:center;gap:6px;margin-top:2px">
+        <span class="av sm" style="background:var(--a1)">R<span class="ok">✓</span></span><span class="av sm" style="background:var(--a3)">А</span><span class="av sm" style="background:var(--a2)">Х<span class="ok">✓</span></span><span class="av sm" style="background:var(--a6)">D</span>
+      </div>
+      <div class="note" style="text-align:center">Ответ принят. Ждём остальных</div>
+    </div>
+    <figcaption><b>3. Вопрос <span class="tag-new">новое</span></b>Буквы A–D: удобно сказать «я нажал B». Таймер — кольцо рядом с вопросом, последние 5 с — красное. Короткая вибрация на телефоне при ответе. Серия видна сразу, а не только в разборе.</figcaption>
+  </figure>
+
+  <!-- R разбор -->
+  <figure>
+    <div class="phone">
+      <div class="row" style="justify-content:space-between"><span class="eyebrow">Вопрос 3 из 10</span><span class="mono muted" style="font-size:12px">дальше — вопрос 4</span></div>
+      <div class="verdict"><div><div class="t">В точку!</div><div class="mono" style="font-size:12px;color:var(--success)">серия 3 · быстрее всех</div></div><div class="pts">+870</div></div>
+      <div class="opt dim dist"><span class="fill" style="width:25%"></span><span class="letter">A</span>Валентайн <span class="count">1</span></div>
+      <div class="opt correct dist"><span class="fill" style="width:50%"></span><span class="letter">B</span>Роудс <span class="count">2</span></div>
+      <div class="opt dim dist"><span class="fill" style="width:0%"></span><span class="letter">C</span>Строберри <span class="count">0</span></div>
+      <div class="opt dim dist"><span class="fill" style="width:25%"></span><span class="letter">D</span>Ван-Хорн <span class="count">1</span></div>
+      <div class="gap"><span>Ты <b>2-й</b> · до 1-го места</span><b class="mono">170 очков</b></div>
+      <div class="card" style="padding:8px 10px">
+        <div class="standing"><span class="pl">1</span><span class="mv up">▲1</span><span class="av sm" style="background:var(--a3)">А</span>Аня<span class="gain">+910</span><span class="sc">2 650</span></div>
+        <div class="standing me"><span class="pl">2</span><span class="mv up">▲1</span><span class="av sm" style="background:var(--a2)">Х</span>Хитрый Гоблин<span class="gain">+870</span><span class="sc">2 480</span></div>
+        <div class="standing"><span class="pl">3</span><span class="mv down">▼2</span><span class="av sm" style="background:var(--a1)">R</span>roman<span class="gain"></span><span class="sc">1 960</span></div>
+      </div>
+    </div>
+    <figcaption><b>4. Разбор — главный момент <span class="tag-new">новое</span></b>«+870» набегает счётчиком, строки таблицы плавно переезжают на новые места (как в Kahoot). Полоски на вариантах — кто что выбрал. Плашка «до 1-го места 170 очков» (лидеру — «отрыв 170») даёт цель на следующий вопрос. «Быстрее всех» — если ты ответил верно первым.</figcaption>
+  </figure>
+
+  <!-- F итоги -->
+  <figure>
+    <div class="phone" style="gap:8px">
+      <div class="confetti"></div>
+      <div class="eyebrow">Итоги · K7QF</div>
+      <div class="display" style="font-size:24px;font-weight:600">Победа за тобой!</div>
+      <div class="podium">
+        <div class="step sv"><div class="n">2</div><div class="nm">Аня</div><div class="s">6 920</div></div>
+        <div class="step g"><div class="n">1</div><div class="nm">Хитрый Гоблин</div><div class="s">7 310</div></div>
+        <div class="step b"><div class="n">3</div><div class="nm">roman</div><div class="s">5 400</div></div>
+      </div>
+      <div class="eyebrow" style="margin-top:4px">Награды раунда <span class="tag-new">новое</span></div>
+      <div class="award"><span class="ic">⚡</span><div><b>Самый быстрый · Аня</b><small>в среднем 2,1 с на верный ответ</small></div></div>
+      <div class="award"><span class="ic">◎</span><div><b>Снайпер · Хитрый Гоблин</b><small>9 верных из 10</small></div></div>
+      <div class="award"><span class="ic">▲</span><div><b>Рывок · roman</b><small>поднялся на 3 места за игру</small></div></div>
+      <div class="review"><div class="row" style="justify-content:space-between"><span class="q">Разбор: где ошибся</span><span class="muted">2 вопроса ›</span></div></div>
+      <div class="btn primary">Ещё раунд</div>
+    </div>
+    <figcaption><b>5. Итоги <span class="tag-new">новое</span></b>Подиум выезжает по очереди 3 → 2 → 1, победителю — конфетти (выключено при «меньше движения»). Награды дают титул не только победителю — повод остаться на ещё раунд. «Разбор» — вопросы, где ошибся, с верным ответом.</figcaption>
+  </figure>
+
+  <!-- RM ещё раунд -->
+  <figure>
+    <div class="phone">
+      <div class="eyebrow">Итоги · K7QF</div>
+      <div class="display" style="font-size:22px;font-weight:600">Ты — 3-й из 4</div>
+      <div class="card" style="padding:14px;border-color:color-mix(in srgb,var(--primary) 40%,var(--border))">
+        <div style="font-weight:600">roman открыл новый раунд</div>
+        <div class="note">10 вопросов · Смешанная · 15 с · уже 2 игрока</div>
+        <div class="btn primary" style="margin-top:10px">Играть как «Хитрый Гоблин»</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="btn secondary">Поделиться</div>
+      <div class="btn secondary">На главную</div>
+    </div>
+    <figcaption><b>6. Ещё раунд в одно касание <span class="tag-new">новое</span></b>Сейчас кнопка ведёт на форму имени — лишний шаг. Будет сразу вход в новую комнату с тем же именем. Ведущий тоже сразу в лобби.</figcaption>
+  </figure>
+</main>
+
+<section class="copy">
+  <h2>Что ещё не видно на картинках</h2>
+  <p>• Игроки появляются в лобби с коротким «прыжком», вышедший — исчезает плавно. • Ответ, не дошедший до сервера, повторяется сам 2 раза, прежде чем просить нажать ещё раз. • Пока данные разбора в пути, вариант подсвечен, а не «пустой». • Всё движение — через <code>motion-safe</code>, без звука и без эмодзи в интерфейсе (значки — SVG; на макете символы условные).</p>
+  <p>Отдельно, на ваше решение: <b>QR-код в лобби</b> — для игры в одной комнате (сканируют с экрана ведущего). Нужна небольшая библиотека генерации QR (новая зависимость, ~10 КБ) — без вашего «да» не добавляю.</p>
+
+  <h2 style="margin-top:28px">Новые тексты RU / EN</h2>
+  <div class="wrap">
+  <table>
+    <thead><tr><th>Ключ</th><th>RU</th><th>EN</th><th>Где</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="4">Лобби</td></tr>
+      <tr><td class="k">codeCopyHint</td><td>нажми на код — ссылка скопируется</td><td class="en">tap the code to copy the link</td><td>под кодом</td></tr>
+      <tr><td class="k">waitingSlot</td><td>ждём игроков…</td><td class="en">waiting for players…</td><td>пустые места</td></tr>
+      <tr><td class="k">editSettings</td><td>Изменить</td><td class="en">Change</td><td>карточка настроек</td></tr>
+      <tr><td class="k">settingsTitle</td><td>Настройки игры</td><td class="en">Game settings</td><td>шторка</td></tr>
+      <tr><td class="k">settingsDone</td><td>Готово</td><td class="en">Done</td><td>шторка</td></tr>
+      <tr><td class="k">speedOn / speedOff</td><td>очки за скорость / без очков за скорость</td><td class="en">speed bonus / no speed bonus</td><td>строка настроек</td></tr>
+      <tr><td class="k">startWithPlayers</td><td>Начать · {players}</td><td class="en">Start · {players}</td><td>кнопка</td></tr>
+      <tr class="group"><td colspan="4">Игра</td></tr>
+      <tr><td class="k">streakBadge</td><td>серия {n}</td><td class="en">streak {n}</td><td>шапка вопроса</td></tr>
+      <tr><td class="k">fastest</td><td>быстрее всех</td><td class="en">fastest</td><td>разбор</td></tr>
+      <tr><td class="k">gapToNext</td><td>Ты {place}-й · до {target}-го места</td><td class="en">You’re {place} · to reach {target}</td><td>плашка разбора</td></tr>
+      <tr><td class="k">leadBy</td><td>Ты лидер · отрыв</td><td class="en">You lead · ahead by</td><td>плашка разбора</td></tr>
+      <tr><td class="k">points</td><td>{n} очков (склонение)</td><td class="en">{n} points</td><td>плашка разбора</td></tr>
+      <tr class="group"><td colspan="4">Итоги</td></tr>
+      <tr><td class="k">awardsTitle</td><td>Награды раунда</td><td class="en">Round awards</td><td>итоги</td></tr>
+      <tr><td class="k">awardFastest</td><td>Самый быстрый · {name}</td><td class="en">Fastest · {name}</td><td>награда</td></tr>
+      <tr><td class="k">awardFastestHint</td><td>в среднем {seconds} с на верный ответ</td><td class="en">{seconds}s per right answer on average</td><td>награда</td></tr>
+      <tr><td class="k">awardSniper</td><td>Снайпер · {name}</td><td class="en">Sharpshooter · {name}</td><td>награда</td></tr>
+      <tr><td class="k">awardSniperHint</td><td>{correct} верных из {total}</td><td class="en">{correct} of {total} right</td><td>награда</td></tr>
+      <tr><td class="k">awardClimb</td><td>Рывок · {name}</td><td class="en">Big climb · {name}</td><td>награда</td></tr>
+      <tr><td class="k">awardClimbHint</td><td>поднялся на {n} мест(а) за игру (склонение)</td><td class="en">climbed {n} places during the game</td><td>награда</td></tr>
+      <tr><td class="k">reviewTitle</td><td>Разбор: где ошибся</td><td class="en">Review: what you missed</td><td>итоги</td></tr>
+      <tr><td class="k">reviewCount</td><td>{n} вопрос(а/ов) (склонение)</td><td class="en">{n} question(s)</td><td>итоги</td></tr>
+      <tr><td class="k">reviewYour / reviewRight</td><td>Твой ответ: {answer} / Верно: {answer}</td><td class="en">You said: {answer} / Right: {answer}</td><td>разбор</td></tr>
+      <tr><td class="k">reviewPerfect</td><td>Ни одной ошибки. Так держать!</td><td class="en">Not a single miss. Nice one!</td><td>разбор без ошибок</td></tr>
+      <tr><td class="k">rematchInfo</td><td>{settings} · уже {players}</td><td class="en">{settings} · {players} in</td><td>карточка нового раунда</td></tr>
+      <tr><td class="k">rematchJoinAs</td><td>Играть как «{name}»</td><td class="en">Play as “{name}”</td><td>кнопка</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+</body>
+</html>

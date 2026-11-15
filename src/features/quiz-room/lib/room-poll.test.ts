@@ -23,6 +23,8 @@ function state(patch: Partial<RoomStateDto>): RoomStateDto {
         standings: [],
         myMarks: [],
         nextRoomCode: null,
+        nextRoomPlayers: null,
+        awards: [],
         ...patch,
     };
 }

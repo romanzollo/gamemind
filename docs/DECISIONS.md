@@ -3076,6 +3076,17 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 | Guests merged into an account | Room rows are not moved (`RoomPlayer` cascades with the guest row): a room is a live event, not history |
 | Rate limits | Create: `quiz` preset. Poll: `roomPoll` (per user). Answer: `quizAnswer`. Host and player actions: `roomAction` |
 
+**v2 after the first live game (November 16, 2026):**
+
+| Piece | Choice |
+|------|--------|
+| Join | `joinRoomAction` no longer redirects: the form is on the same `/room/{code}` page, and a redirect to the same URL is a soft transition inside the action response. On prod a friend once stayed on «Секунду…» while already in the room. The action returns the URL and the client does a full page load |
+| Lobby | One screen: settings as one line + bottom sheet (the mode-sheet pattern), dashed «waiting for players» slots up to 4, the code copies the link on tap, one «Invite» button (Web Share / copy) — «Copy link» was a duplicate, sticky «Start · N players» |
+| Question | Letters A–D, ring timer (red and pulsing for the last 5 s), streak badge, short vibration on answer and verdict (where supported), 2 automatic retries of a failed answer before asking the player |
+| Reveal | Points count up, distribution bars per option, the table moves from previous to new places (absolute rows + transform), a goal line «you're 2nd · 170 points to 1st» / «you lead by …», «fastest» for the first correct answer (`reveal.fastestPlayerId`, server) |
+| Final | Podium rises 3 → 2 → 1, CSS confetti for the winner, round awards (fastest average correct time, most correct, biggest climb since question 1 — `computeRoomAwards`, server), «what you missed» review loaded once on demand (`GET /api/room/{code}/review`, finished rooms and members only), rematch in one tap with the same nickname and the new room's player count |
+| Motion | New tokens `animate-room-pop`, `animate-podium-rise`, `animate-confetti-fall`, `animate-timer-pulse`; all `motion-safe`, none starts from `opacity: 0` |
+
 **Hot path:** untouched. Every room query is raw `pg` on `withPooledPgClient` (outside the Direct queue), payloads are ~1 KB per question (below the TOAST threshold), nothing reads `snapshotData`.
 
 **Cost:** about one small request per player every 1.5–2 s while a room is live; 8 players × 10 questions ≈ 1 500 requests — well inside Vercel Hobby. If rooms get popular, the next step is a push channel (own Centrifugo or a hosted service checked from Russia), not shorter polling.

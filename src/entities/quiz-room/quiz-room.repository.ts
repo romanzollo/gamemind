@@ -105,6 +105,16 @@ export type RoomSnapshot = {
     answers: RoomAnswerRow[];
     /** Последний показанный вопрос (introAt <= now) и его payload. */
     current: { position: number; payload: RoomQuestionPayload } | null;
+    /** Сколько игроков уже в новом раунде («Ещё раунд»); null — его нет. */
+    nextRoomPlayers: number | null;
+};
+
+/** Вопрос, где игрок ошибся или не успел (разбор в итогах). */
+export type RoomReviewRow = {
+    position: number;
+    payload: RoomQuestionPayload;
+    correctKey: string;
+    myKey: string | null;
 };
 
 export type RoomSettingsWrite = {
@@ -690,6 +700,7 @@ export const quizRoomRepository = {
                     answers: RoomAnswerRow[] | null;
                     currentPosition: number | null;
                     currentPayload: RoomQuestionPayload | null;
+                    nextRoomPlayers: number | null;
                 }
             >(
                 `
@@ -767,7 +778,14 @@ export const quizRoomRepository = {
                             ) x
                         ) AS "answers",
                         cur."position" AS "currentPosition",
-                        cur."payload" AS "currentPayload"
+                        cur."payload" AS "currentPayload",
+                        (
+                            SELECT COUNT(*)::int
+                            FROM "Room" nr
+                            JOIN "RoomPlayer" np ON np."roomId" = nr."id"
+                            WHERE nr."code" = room."nextRoomCode"
+                              AND np."status" = 'ACTIVE'::"RoomPlayerStatus"
+                        ) AS "nextRoomPlayers"
                     FROM room
                     LEFT JOIN LATERAL (
                         SELECT q."position", q."payload"
@@ -797,6 +815,7 @@ export const quizRoomRepository = {
                 answers,
                 currentPosition,
                 currentPayload,
+                nextRoomPlayers,
                 ...roomColumns
             } = row;
             let room: RoomRow = roomColumns;
@@ -833,8 +852,42 @@ export const quizRoomRepository = {
                     currentPosition !== null && currentPayload
                         ? { position: currentPosition, payload: currentPayload }
                         : null,
+                nextRoomPlayers: room.nextRoomCode ? nextRoomPlayers : null,
             };
         });
+    },
+
+    /**
+     * Разбор для итогов: вопросы сыгранной комнаты, где игрок ошибся или не
+     * успел, с верным ключом. Только FINISHED и только участнику — до конца
+     * игры верные ответы закрыты. Payload всех вопросов — ~1 КБ на вопрос,
+     * читается один раз по кнопке, не в опросе.
+     */
+    async readReview(code: string, userId: string): Promise<RoomReviewRow[]> {
+        const result = await pooled('review', (client) =>
+            client.query<RoomReviewRow>(
+                `
+                    SELECT
+                        q."position",
+                        q."payload",
+                        q."correctKey",
+                        a."optionKey" AS "myKey"
+                    FROM "Room" r
+                    JOIN "RoomPlayer" p ON p."roomId" = r."id" AND p."userId" = $2
+                    JOIN "RoomQuestion" q ON q."roomId" = r."id"
+                    LEFT JOIN "RoomAnswer" a
+                        ON a."roomId" = r."id" AND a."position" = q."position" AND a."playerId" = p."id"
+                    WHERE
+                        r."code" = $1
+                        AND r."status" = 'FINISHED'::"RoomStatus"
+                        AND (a."isCorrect" IS NULL OR a."isCorrect" = false)
+                    ORDER BY q."position"
+                `,
+                [code, userId],
+            ),
+        );
+
+        return result.rows;
     },
 
     /**

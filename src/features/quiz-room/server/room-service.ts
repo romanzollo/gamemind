@@ -22,6 +22,7 @@ import {
     normalizeRoomNickname,
 } from '@/features/quiz-room/lib/room-nickname';
 import { orderOptionsForPlayer } from '@/features/quiz-room/lib/room-option-order';
+import { computeRoomAwards } from '@/features/quiz-room/lib/room-awards';
 import { pickRoomQuestionIds } from '@/features/quiz-room/lib/room-pick';
 import {
     DEFAULT_ROOM_SETTINGS,
@@ -48,6 +49,7 @@ import type {
     RoomErrorCode,
     RoomMark,
     RoomPlayerDto,
+    RoomReviewItemDto,
     RoomStateDto,
     RoomStatusDto,
 } from '@/features/quiz-room/types';
@@ -243,9 +245,17 @@ export async function readRoomState(input: {
             const myAnswer = ownAnswers.find((answer) => answer.playerId === meRow.id);
             const isOpen = now >= times.openAt;
             const counts: Record<string, number> = {};
+            let fastest: (typeof ownAnswers)[number] | null = null;
 
             for (const answer of ownAnswers) {
                 counts[answer.optionKey] = (counts[answer.optionKey] ?? 0) + 1;
+
+                if (
+                    answer.isCorrect &&
+                    (!fastest || answer.answeredAt.getTime() < fastest.answeredAt.getTime())
+                ) {
+                    fastest = answer;
+                }
             }
 
             current = {
@@ -271,6 +281,7 @@ export async function readRoomState(input: {
                               counts,
                               myKey: myAnswer?.optionKey ?? null,
                               myPoints: myAnswer?.points ?? 0,
+                              fastestPlayerId: fastest?.playerId ?? null,
                           }
                         : null,
             };
@@ -288,24 +299,56 @@ export async function readRoomState(input: {
         }
     }
 
+    const status = toStatusDto(room, now);
+    const playerIds = players.map((player) => player.id);
+
     return {
         serverNow: Date.now(),
         code: input.code,
-        status: toStatusDto(room, now),
+        status,
         isHost: Boolean(input.userId && room.hostUserId === input.userId),
         me: meRow ? { playerId: meRow.id, nickname: meRow.nickname } : null,
         settings: { ...settings, topicName: settings.topicId ? topicName : null },
         players,
         schedule,
         current,
-        standings: computeRoomStandings(
-            players.map((player) => player.id),
-            answers,
-            revealedCount,
-        ),
+        standings: computeRoomStandings(playerIds, answers, revealedCount),
         myMarks,
         nextRoomCode: room.nextRoomCode,
+        nextRoomPlayers: snapshot.nextRoomPlayers,
+        awards:
+            status === 'finished' || (status === 'playing' && revealedCount === schedule.length)
+                ? computeRoomAwards(playerIds, answers, schedule.length)
+                : [],
     };
+}
+
+/**
+ * Разбор для итогов: вопросы, где игрок ошибся или не успел, с верным
+ * ответом на его языке. Пусто — ошибок нет (или игра ещё не сыграна).
+ */
+export async function readRoomReview(input: {
+    code: string;
+    userId: string;
+    locale: Locale;
+}): Promise<RoomReviewItemDto[]> {
+    const rows = await quizRoomRepository.readReview(input.code, input.userId);
+    const pick = (text: { ru: string; en: string }) => text[input.locale] || text.ru;
+
+    return rows.map((row) => {
+        const option = (key: string | null) =>
+            row.payload.options.find((item) => item.key === key) ?? null;
+        const mine = option(row.myKey);
+        const right = option(row.correctKey);
+
+        return {
+            position: row.position,
+            text: pick(row.payload.text),
+            imageUrl: normalizeQuizImageUrl(row.payload.imageUrl),
+            myAnswer: mine ? pick(mine.text) : null,
+            rightAnswer: right ? pick(right.text) : '',
+        };
+    });
 }
 
 export type SubmitRoomAnswerResult =

@@ -11,7 +11,7 @@
  */
 
 import Link from 'next/link';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
 import { guestSignInAction } from '@/features/auth/actions';
 import { getAuthErrorMessage } from '@/features/auth/lib/get-auth-error-message';
@@ -72,9 +72,15 @@ export function RoomJoinForm({ locale, code, defaultNickname }: RoomJoinFormProp
     const [state, formAction] = useActionState(joinRoomAction, {});
     const [nickname, setNickname] = useState(defaultNickname);
     const errorMessage = roomErrorMessage(dictionary, state.errorCode);
+    const roomUrl = state.roomUrl;
+
+    useEffect(() => {
+        // Полная загрузка, а не мягкий переход: см. joinRoomAction.
+        if (roomUrl) window.location.assign(roomUrl);
+    }, [roomUrl]);
 
     return (
-        <form action={formAction} className="flex flex-col">
+        <form action={formAction} className="flex flex-col" aria-busy={roomUrl ? true : undefined}>
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="code" value={code} />
             <label htmlFor="room-nickname" className="text-sm font-medium text-foreground">
@@ -112,10 +118,11 @@ export function RoomJoinForm({ locale, code, defaultNickname }: RoomJoinFormProp
             </p>
             <SubmitButton
                 pendingLabel={dictionary.common.working}
+                disabled={Boolean(roomUrl)}
                 className="mt-4 w-full"
                 data-testid="room-join"
             >
-                {text.enter}
+                {roomUrl ? dictionary.common.working : text.enter}
             </SubmitButton>
             {errorMessage ? <InlineAlert className="mt-3">{errorMessage}</InlineAlert> : null}
         </form>
