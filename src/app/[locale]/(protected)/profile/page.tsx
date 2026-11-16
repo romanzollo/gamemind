@@ -20,6 +20,7 @@ import { ProfileSettingsRow } from '@/features/profile/components/ProfileSetting
 import { ProfileSettingsSection } from '@/features/profile/components/ProfileSettingsSection';
 import { RatingProfileWeek } from '@/features/leaderboard/components/rating-profile-week';
 import { ProfileStatsSummary } from '@/features/profile/components/ProfileStatsSummary';
+import { ProfileRoomsSection } from '@/features/quiz-room/components/ProfileRoomsSection';
 import { SetPasswordForm } from '@/features/profile/components/SetPasswordForm';
 import { SignInMethodsList } from '@/features/profile/components/SignInMethodsList';
 import {
@@ -322,6 +323,11 @@ export default async function ProfilePage({
                         )}
                     </ProfileFoldSection>
                 </div>
+
+                {/* Комнаты (5.5): свои цифры, награды, соперники — в Suspense. */}
+                <Suspense fallback={null}>
+                    <ProfileRoomsSection userId={session.user.id} dictionary={dictionary} />
+                </Suspense>
 
                 {/* Client details: open state переживает revalidate/refresh */}
                 <ProfileSettingsSection

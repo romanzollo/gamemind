@@ -75,9 +75,14 @@ export function dedupeRoomNickname(
     return nickname;
 }
 
+/** Сколько раз тянуть пару, если выпала слишком длинная (> 20 знаков). */
+const NICKNAME_DRAWS = 24;
+
 /**
  * Игровое имя для гостя: «прилагательное + существительное» из словаря
- * интерфейса (RU / EN). `random` — для тестов.
+ * интерфейса (RU / EN), с юмором и игровым сленгом («Лагающий Пельмень»).
+ * Пара длиннее лимита («Респаунящийся Квестодатель») пропускается — тянем
+ * другую. `random` — для тестов.
  */
 export function generateRoomNickname(
     words: { adjectives: readonly string[]; nouns: readonly string[] },
@@ -86,7 +91,16 @@ export function generateRoomNickname(
     const pick = (list: readonly string[]) =>
         list[Math.floor(random() * list.length)] ?? '';
 
-    const nickname = `${pick(words.adjectives)} ${pick(words.nouns)}`.trim();
+    for (let draw = 0; draw < NICKNAME_DRAWS; draw += 1) {
+        const nickname = normalizeRoomNickname(
+            `${pick(words.adjectives)} ${pick(words.nouns)}`.trim(),
+        );
 
-    return normalizeRoomNickname(nickname) ?? 'Player';
+        if (nickname) {
+            return nickname;
+        }
+    }
+
+    // Почти невозможно (все пары длинные) — хотя бы одно существительное.
+    return normalizeRoomNickname(pick(words.nouns)) ?? 'Player';
 }

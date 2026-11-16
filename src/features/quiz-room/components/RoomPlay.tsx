@@ -16,7 +16,7 @@
 import { useEffect, useState } from 'react';
 
 import { QuestionImage } from '@/features/quiz/components/QuestionImage';
-import { postRoom } from '@/features/quiz-room/components/use-room-state';
+import { postRoom, useRoomNow } from '@/features/quiz-room/components/use-room-state';
 import {
     EYEBROW_CLASS,
     formatRoomScore,
@@ -79,14 +79,13 @@ export function RoomCountdown({
     locale,
     state,
     endsAt,
-    now,
 }: {
     locale: Locale;
     state: RoomStateDto;
     endsAt: number;
-    now: number;
 }) {
     const dictionary = getDictionary(locale);
+    const now = useRoomNow();
     const seconds = Math.max(1, Math.ceil((endsAt - now) / 1000));
 
     return (
@@ -112,13 +111,12 @@ type RoomQuestionProps = {
     locale: Locale;
     state: RoomStateDto;
     phase: QuestionPhase;
-    now: number;
     refresh: () => void;
 };
 
 type AnswerPick = { position: number; key: string; failed: boolean };
 
-export function RoomQuestion({ locale, state, phase, now, refresh }: RoomQuestionProps) {
+export function RoomQuestion({ locale, state, phase, refresh }: RoomQuestionProps) {
     const dictionary = getDictionary(locale);
     const text = dictionary.room;
     const total = state.schedule.length;
@@ -221,7 +219,7 @@ export function RoomQuestion({ locale, state, phase, now, refresh }: RoomQuestio
                     <TimerRing
                         reading={phase.kind === 'intro'}
                         readingLabel={text.reading}
-                        remainingMs={phase.endsAt - now}
+                        endsAt={phase.endsAt}
                         totalMs={phase.kind === 'intro' ? times.openAt - times.introAt : answerMs}
                     />
                 ) : null}
@@ -336,14 +334,16 @@ export function RoomQuestion({ locale, state, phase, now, refresh }: RoomQuestio
 function TimerRing({
     reading,
     readingLabel,
-    remainingMs,
+    endsAt,
     totalMs,
 }: {
     reading: boolean;
     readingLabel: string;
-    remainingMs: number;
+    endsAt: number;
     totalMs: number;
 }) {
+    // Тикает только кольцо, не весь экран вопроса.
+    const remainingMs = endsAt - useRoomNow();
     const share = Math.max(0, Math.min(1, remainingMs / Math.max(totalMs, 1)));
     const seconds = Math.max(0, Math.ceil(remainingMs / 1000));
     const urgent = !reading && seconds <= URGENT_SECONDS;

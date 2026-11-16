@@ -22,6 +22,7 @@ import {
     roomDifficultyLabel,
     roomErrorMessage,
     roomQuestionsLabel,
+    roomSettingsLine,
 } from '@/features/quiz-room/lib/room-labels';
 import {
     generateRoomNickname,
@@ -41,13 +42,36 @@ type RoomPageProps = {
     params: Promise<{ locale: string; code: string }>;
 };
 
+/**
+ * Превью ссылки-приглашения: жирная строка Telegram — «{name} зовёт в
+ * комнату {code}», ниже — сколько уже внутри и настройки. Картинка —
+ * opengraph-image рядом. Комнаты нет — только заголовок вкладки.
+ */
 export async function generateMetadata({ params }: RoomPageProps): Promise<Metadata> {
-    const { locale, code } = await params;
-    const dictionary = getDictionary(isLocale(locale) ? locale : 'ru');
+    const { locale: rawLocale, code: rawCode } = await params;
+    const locale = isLocale(rawLocale) ? rawLocale : 'ru';
+    const dictionary = getDictionary(locale);
+    const text = dictionary.room;
+    const code = normalizeRoomCode(rawCode);
+    const pageTitle = fillRoomText(text.pageTitle, { code: code ?? '' });
+    const state = code ? await readRoomState({ code, userId: null, locale }).catch(() => null) : null;
+    const host = state?.players.find((player) => player.isHost);
+
+    if (!state || !host) {
+        return { title: pageTitle, robots: { index: false } };
+    }
+
+    const title = fillRoomText(text.ogInviteTitle, { name: host.nickname, code: state.code });
+    const description = fillRoomText(text.ogInviteDesc, {
+        players: formatPlural(locale, state.players.length, text.playersCount),
+        settings: roomSettingsLine(dictionary, locale, state.settings),
+    });
 
     return {
-        title: fillRoomText(dictionary.room.pageTitle, { code: normalizeRoomCode(code) ?? '' }),
+        title,
+        description,
         robots: { index: false },
+        openGraph: { title, description, siteName: 'GameMind', type: 'website' },
     };
 }
 

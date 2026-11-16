@@ -115,3 +115,21 @@ export type RoomFormState = {
     /** Вход удался: клиент открывает комнату полной загрузкой страницы. */
     roomUrl?: string;
 };
+
+/** Таблица компании и счёт встреч (итоги комнаты). */
+export type RoomLeagueDto = {
+    /** По победам; игроки текущей комнаты. */
+    league: Array<{ playerId: string; games: number; wins: number; podiums: number }>;
+    /** Со мной: мои победы и их — по месту в общих комнатах. */
+    headToHead: Array<{ playerId: string; myWins: number; theirWins: number }>;
+};
+
+/** Раздел «Комнаты» в профиле. */
+export type RoomProfileStatsDto = {
+    games: number;
+    wins: number;
+    podiums: number;
+    /** Вид награды → сколько раз получена. */
+    awards: Record<string, number>;
+    rivals: Array<{ nickname: string; games: number; myWins: number; theirWins: number }>;
+};

@@ -107,6 +107,53 @@ export type RoomSnapshot = {
     current: { position: number; payload: RoomQuestionPayload } | null;
     /** Сколько игроков уже в новом раунде («Ещё раунд»); null — его нет. */
     nextRoomPlayers: number | null;
+    /** Итоги комнаты уже записаны в RoomResult. */
+    resultsRecorded: boolean;
+};
+
+/** Строка RoomResult для записи (место, очки, награды — считает сервис). */
+export type RoomResultWrite = {
+    playerId: string;
+    userId: string;
+    rank: number;
+    score: number;
+    correctCount: number;
+    playersCount: number;
+    questionCount: number;
+    awards: string[];
+};
+
+/** Данные сыгранной комнаты для расчёта итогов (досчёт старых комнат). */
+export type RoomResultsInput = {
+    roomId: string;
+    answerSeconds: number;
+    finishedAt: Date;
+    players: Array<{ id: string; userId: string }>;
+    answers: RoomAnswerRow[];
+    openAt: Map<number, number>;
+};
+
+/** Таблица компании: игрок текущей комнаты и его общие с компанией игры. */
+export type RoomLeagueRow = {
+    playerId: string;
+    games: number;
+    wins: number;
+    podiums: number;
+};
+
+/** Счёт встреч со мной: кто выше финишировал в общих комнатах. */
+export type RoomHeadToHeadRow = {
+    playerId: string;
+    myWins: number;
+    theirWins: number;
+};
+
+export type RoomProfileStats = {
+    games: number;
+    wins: number;
+    podiums: number;
+    awards: Record<string, number>;
+    rivals: Array<{ nickname: string; games: number; myWins: number; theirWins: number }>;
 };
 
 /** Вопрос, где игрок ошибся или не успел (разбор в итогах). */
@@ -701,6 +748,7 @@ export const quizRoomRepository = {
                     currentPosition: number | null;
                     currentPayload: RoomQuestionPayload | null;
                     nextRoomPlayers: number | null;
+                    resultsRecorded: boolean;
                 }
             >(
                 `
@@ -785,7 +833,10 @@ export const quizRoomRepository = {
                             JOIN "RoomPlayer" np ON np."roomId" = nr."id"
                             WHERE nr."code" = room."nextRoomCode"
                               AND np."status" = 'ACTIVE'::"RoomPlayerStatus"
-                        ) AS "nextRoomPlayers"
+                        ) AS "nextRoomPlayers",
+                        EXISTS (
+                            SELECT 1 FROM "RoomResult" rr WHERE rr."roomId" = room."id"
+                        ) AS "resultsRecorded"
                     FROM room
                     LEFT JOIN LATERAL (
                         SELECT q."position", q."payload"
@@ -816,6 +867,7 @@ export const quizRoomRepository = {
                 currentPosition,
                 currentPayload,
                 nextRoomPlayers,
+                resultsRecorded,
                 ...roomColumns
             } = row;
             let room: RoomRow = roomColumns;
@@ -853,6 +905,7 @@ export const quizRoomRepository = {
                         ? { position: currentPosition, payload: currentPayload }
                         : null,
                 nextRoomPlayers: room.nextRoomCode ? nextRoomPlayers : null,
+                resultsRecorded,
             };
         });
     },
@@ -1033,6 +1086,229 @@ export const quizRoomRepository = {
             );
 
             return { kind: 'inserted' };
+        });
+    },
+
+    /**
+     * Итоги доигранной комнаты — один раз: повторная запись (два опроса
+     * одновременно, досчёт) ничего не меняет (ON CONFLICT DO NOTHING).
+     */
+    async insertResults(roomId: string, finishedAt: Date, rows: RoomResultWrite[]): Promise<number> {
+        if (rows.length === 0) return 0;
+
+        const result = await pooled('results.insert', (client) =>
+            client.query(
+                `
+                    INSERT INTO "RoomResult" (
+                        "playerId", "roomId", "userId", "rank", "score", "correctCount",
+                        "playersCount", "questionCount", "awards", "finishedAt"
+                    )
+                    SELECT
+                        row->>'playerId', $1, row->>'userId',
+                        (row->>'rank')::int, (row->>'score')::int, (row->>'correctCount')::int,
+                        (row->>'playersCount')::int, (row->>'questionCount')::int,
+                        ARRAY(SELECT jsonb_array_elements_text(row->'awards')),
+                        $2
+                    FROM jsonb_array_elements($3::jsonb) AS row
+                    ON CONFLICT ("playerId") DO NOTHING
+                `,
+                [roomId, finishedAt, JSON.stringify(rows)],
+            ),
+        );
+
+        return result.rowCount ?? 0;
+    },
+
+    /** Сыгранные комнаты без итогов (досчёт после миграции). */
+    async listRoomsMissingResults(limit: number): Promise<string[]> {
+        const result = await pooled('results.missing', (client) =>
+            client.query<{ id: string }>(
+                `
+                    SELECT r."id"
+                    FROM "Room" r
+                    WHERE r."status" = 'FINISHED'::"RoomStatus"
+                      AND NOT EXISTS (SELECT 1 FROM "RoomResult" rr WHERE rr."roomId" = r."id")
+                    ORDER BY r."finishedAt" ASC NULLS LAST
+                    LIMIT $1
+                `,
+                [limit],
+            ),
+        );
+
+        return result.rows.map((row) => row.id);
+    },
+
+    /** Всё для расчёта итогов одной сыгранной комнаты. */
+    async readResultsInput(roomId: string): Promise<RoomResultsInput | null> {
+        return pooled('results.input', async (client) => {
+            const room = await client.query<{ answerSeconds: number; finishedAt: Date | null }>(
+                `SELECT "answerSeconds", "finishedAt" FROM "Room" WHERE "id" = $1 AND "status" = 'FINISHED'::"RoomStatus"`,
+                [roomId],
+            );
+            const head = room.rows[0];
+
+            if (!head || !head.finishedAt) return null;
+
+            const players = await client.query<{ id: string; userId: string }>(
+                `
+                    SELECT "id", "userId" FROM "RoomPlayer"
+                    WHERE "roomId" = $1 AND "status" = 'ACTIVE'::"RoomPlayerStatus"
+                    ORDER BY "joinedAt", "id"
+                `,
+                [roomId],
+            );
+            const answers = await client.query<RoomAnswerRow>(
+                `
+                    SELECT "playerId", "position", "optionKey", "isCorrect", "points", "answeredAt"
+                    FROM "RoomAnswer" WHERE "roomId" = $1
+                `,
+                [roomId],
+            );
+            const questions = await client.query<{ position: number; openAt: Date }>(
+                `SELECT "position", "openAt" FROM "RoomQuestion" WHERE "roomId" = $1`,
+                [roomId],
+            );
+
+            return {
+                roomId,
+                answerSeconds: head.answerSeconds,
+                finishedAt: head.finishedAt,
+                players: players.rows,
+                answers: answers.rows,
+                openAt: new Map(questions.rows.map((row) => [row.position, row.openAt.getTime()])),
+            };
+        });
+    },
+
+    /**
+     * Таблица компании и счёт встреч для итогов комнаты `code`, одним
+     * соединением. «Компания» — активные игроки этой комнаты; считаются все
+     * сыгранные комнаты, где было хотя бы двое из них. Победа — 1-е место в
+     * той комнате. Счёт встреч — со мной: кто выше финишировал.
+     */
+    async readLeague(code: string, userId: string): Promise<{
+        league: RoomLeagueRow[];
+        headToHead: RoomHeadToHeadRow[];
+    } | null> {
+        return pooled('league', async (client) => {
+            const crew = await client.query<{ playerId: string; userId: string }>(
+                `
+                    SELECT p."id" AS "playerId", p."userId"
+                    FROM "Room" r
+                    JOIN "RoomPlayer" p ON p."roomId" = r."id" AND p."status" = 'ACTIVE'::"RoomPlayerStatus"
+                    WHERE r."code" = $1 AND r."status" = 'FINISHED'::"RoomStatus"
+                `,
+                [code],
+            );
+            const members = crew.rows;
+
+            if (!members.some((member) => member.userId === userId)) {
+                return null;
+            }
+
+            const userIds = members.map((member) => member.userId);
+            const playerOf = new Map(members.map((member) => [member.userId, member.playerId]));
+
+            const league = await client.query<{ userId: string; games: number; wins: number; podiums: number }>(
+                `
+                    WITH shared AS (
+                        SELECT rr."roomId"
+                        FROM "RoomResult" rr
+                        WHERE rr."userId" = ANY($1::text[])
+                        GROUP BY rr."roomId"
+                        HAVING COUNT(*) >= 2
+                    )
+                    SELECT
+                        rr."userId",
+                        COUNT(*)::int AS "games",
+                        COUNT(*) FILTER (WHERE rr."rank" = 1)::int AS "wins",
+                        COUNT(*) FILTER (WHERE rr."rank" <= 3)::int AS "podiums"
+                    FROM "RoomResult" rr
+                    JOIN shared s ON s."roomId" = rr."roomId"
+                    WHERE rr."userId" = ANY($1::text[])
+                    GROUP BY rr."userId"
+                `,
+                [userIds],
+            );
+            const headToHead = await client.query<{ userId: string; myWins: number; theirWins: number }>(
+                `
+                    SELECT
+                        o."userId",
+                        COUNT(*) FILTER (WHERE m."rank" < o."rank")::int AS "myWins",
+                        COUNT(*) FILTER (WHERE o."rank" < m."rank")::int AS "theirWins"
+                    FROM "RoomResult" m
+                    JOIN "RoomResult" o ON o."roomId" = m."roomId" AND o."userId" <> m."userId"
+                    WHERE m."userId" = $1 AND o."userId" = ANY($2::text[])
+                    GROUP BY o."userId"
+                `,
+                [userId, userIds],
+            );
+
+            return {
+                league: league.rows.map((row) => ({
+                    playerId: playerOf.get(row.userId)!,
+                    games: row.games,
+                    wins: row.wins,
+                    podiums: row.podiums,
+                })),
+                headToHead: headToHead.rows.map((row) => ({
+                    playerId: playerOf.get(row.userId)!,
+                    myWins: row.myWins,
+                    theirWins: row.theirWins,
+                })),
+            };
+        });
+    },
+
+    /** Раздел «Комнаты» в профиле: свои цифры, коллекция наград, соперники. */
+    async readProfileStats(userId: string): Promise<RoomProfileStats> {
+        return pooled('profile', async (client) => {
+            const totals = await client.query<{ games: number; wins: number; podiums: number }>(
+                `
+                    SELECT
+                        COUNT(*)::int AS "games",
+                        COUNT(*) FILTER (WHERE "rank" = 1)::int AS "wins",
+                        COUNT(*) FILTER (WHERE "rank" <= 3)::int AS "podiums"
+                    FROM "RoomResult" WHERE "userId" = $1
+                `,
+                [userId],
+            );
+            const awards = await client.query<{ award: string; n: number }>(
+                `
+                    SELECT award, COUNT(*)::int AS "n"
+                    FROM "RoomResult", unnest("awards") AS award
+                    WHERE "userId" = $1
+                    GROUP BY award
+                `,
+                [userId],
+            );
+            // Соперники — с кем чаще всего играли; имя — последнее в комнатах.
+            const rivals = await client.query<{ nickname: string; games: number; myWins: number; theirWins: number }>(
+                `
+                    SELECT
+                        (
+                            SELECT p."nickname" FROM "RoomPlayer" p
+                            WHERE p."userId" = o."userId"
+                            ORDER BY p."joinedAt" DESC LIMIT 1
+                        ) AS "nickname",
+                        COUNT(*)::int AS "games",
+                        COUNT(*) FILTER (WHERE m."rank" < o."rank")::int AS "myWins",
+                        COUNT(*) FILTER (WHERE o."rank" < m."rank")::int AS "theirWins"
+                    FROM "RoomResult" m
+                    JOIN "RoomResult" o ON o."roomId" = m."roomId" AND o."userId" <> m."userId"
+                    WHERE m."userId" = $1
+                    GROUP BY o."userId"
+                    ORDER BY COUNT(*) DESC, MAX(o."finishedAt") DESC
+                    LIMIT 3
+                `,
+                [userId],
+            );
+
+            return {
+                ...(totals.rows[0] ?? { games: 0, wins: 0, podiums: 0 }),
+                awards: Object.fromEntries(awards.rows.map((row) => [row.award, row.n])),
+                rivals: rivals.rows,
+            };
         });
     },
 

@@ -100,6 +100,8 @@ model User {
   hostedRooms         Room[]
   /// Участие в комнатах.
   roomPlayers         RoomPlayer[]
+  /// Итоги сыгранных комнат (таблица компании, счёт встреч, профиль).
+  roomResults         RoomResult[]
 }
 
 model Account {
@@ -734,6 +736,7 @@ model Room {
   topicTag  Tag?           @relation(fields: [topicTagId], references: [id], onDelete: SetNull)
   players   RoomPlayer[]
   questions RoomQuestion[]
+  results   RoomResult[]
 
   @@index([hostUserId, status])
 }
@@ -755,6 +758,7 @@ model RoomPlayer {
   room    Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
   user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   answers RoomAnswer[]
+  result  RoomResult?
 
   @@unique([roomId, userId])
   @@index([userId])
@@ -799,4 +803,32 @@ model RoomAnswer {
 
   @@id([roomId, position, playerId])
   @@index([playerId])
+}
+
+/// Итог игрока в сыгранной комнате: место, очки, награды. Пишется один раз,
+/// когда комната доиграна (первый опрос после конца, INSERT … ON CONFLICT DO
+/// NOTHING), и дальше не меняется. Отсюда — «Таблица компании», «Счёт
+/// встреч» и раздел «Комнаты» в профиле; в общий рейтинг не идёт.
+/// Canon: docs/DECISIONS.md → Quiz room (v3, рейтинг комнат).
+model RoomResult {
+  /// Тот же id, что у RoomPlayer: один итог на участие.
+  playerId      String   @id
+  roomId        String
+  userId        String
+  /// 1 — победа; равные очки и время делят место.
+  rank          Int
+  score         Int
+  correctCount  Int
+  playersCount  Int
+  questionCount Int
+  /// Виды наград раунда (fastest, sniper, … brave); обычно 0 или 1.
+  awards        String[]
+  finishedAt    DateTime @db.Timestamptz(3)
+
+  player RoomPlayer @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  room   Room       @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, finishedAt])
+  @@index([roomId])
 }

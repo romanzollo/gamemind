@@ -36,6 +36,7 @@ const STALE_GUEST_WHERE = `
     u."isGuest" = true
     AND u."createdAt" < NOW() - make_interval(days => $1)
     AND NOT EXISTS (SELECT 1 FROM "QuizSession" s WHERE s."userId" = u."id")
+    AND NOT EXISTS (SELECT 1 FROM "RoomResult" r WHERE r."userId" = u."id")
 `;
 
 async function main() {

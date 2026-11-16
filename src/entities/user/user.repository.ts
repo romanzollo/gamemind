@@ -761,6 +761,35 @@ export const userRepository = {
                 );
             }
 
+            // Комнаты (5.5): участие и итоги переходят к аккаунту — иначе
+            // CASCADE стёр бы историю гостя из «Таблицы компании» и профиля.
+            // Были в одной комнате оба — остаётся строка аккаунта.
+            await client.query(
+                `
+                    UPDATE "RoomPlayer" g
+                    SET "userId" = $2
+                    WHERE g."userId" = $1
+                      AND NOT EXISTS (
+                          SELECT 1 FROM "RoomPlayer" t
+                          WHERE t."userId" = $2 AND t."roomId" = g."roomId"
+                      )
+                `,
+                params,
+            );
+            await client.query(
+                `
+                    UPDATE "RoomResult" r
+                    SET "userId" = p."userId"
+                    FROM "RoomPlayer" p
+                    WHERE r."playerId" = p."id" AND r."userId" = $1 AND p."userId" = $2
+                `,
+                params,
+            );
+            await client.query(
+                `UPDATE "Room" SET "hostUserId" = $2 WHERE "hostUserId" = $1`,
+                params,
+            );
+
             await client.query(
                 `
                     UPDATE "UserAchievement" g

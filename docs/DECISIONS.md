@@ -3073,7 +3073,7 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 | Code uniqueness | `Room.code` is nullable `UNIQUE`. Creating a room takes a random code; if the holder is finished, closed or an abandoned lobby (> 2 h), its code is released (set NULL) and reused. A finished room keeps its code until then — its page shows the final table |
 | Who | Creating needs an account (guests join only — same line as Blitz / Survival). One open lobby per host: a new room closes the host's previous lobby. Joining only in the lobby; up to 12 active players |
 | Rating, achievements | None: a room with two own accounts would farm the board. Room games stay out of `QuizSession` / `QuizResult`, so no leaderboard query changes |
-| Guests merged into an account | Room rows are not moved (`RoomPlayer` cascades with the guest row): a room is a live event, not history |
+| Guests merged into an account | Since v3 rooms are history (crew table, profile): `mergeGuestInto` moves `RoomPlayer`, `RoomResult` and hosted rooms to the account (a room both played in keeps the account's row); `cleanup-guests` keeps guests with room results |
 | Rate limits | Create: `quiz` preset. Poll: `roomPoll` (per user). Answer: `quizAnswer`. Host and player actions: `roomAction` |
 
 **v2 after the first live game (November 16, 2026):**
@@ -3086,6 +3086,17 @@ After the change: the full smoke matrix of `QUIZ_NEON_HOT_PATH.md`, plus rows fo
 | Reveal | Points count up, distribution bars per option, the table moves from previous to new places (absolute rows + transform), a goal line «you're 2nd · 170 points to 1st» / «you lead by …», «fastest» for the first correct answer (`reveal.fastestPlayerId`, server) |
 | Final | Podium rises 3 → 2 → 1, CSS confetti for the winner, round awards (fastest average correct time, most correct, biggest climb since question 1 — `computeRoomAwards`, server), «what you missed» review loaded once on demand (`GET /api/room/{code}/review`, finished rooms and members only), rematch in one tap with the same nickname and the new room's player count |
 | Motion | New tokens `animate-room-pop`, `animate-podium-rise`, `animate-confetti-fall`, `animate-timer-pulse`; all `motion-safe`, none starts from `opacity: 0` |
+
+**v3 after the second live game (November 16, 2026):**
+
+| Piece | Choice |
+|------|--------|
+| Speed | The root ticked every 200 ms and re-rendered the whole room (podium, awards, share, confetti) — sluggish on PC and on the final screen. Now `useRoomPhase` re-renders at phase boundaries only, `useRoomNow` ticks inside the timers, and a poll answer equal to the last one (but `serverNow`) does not touch state |
+| Room rating (owner chose variant A) | Table `RoomResult` (migration `20261116120000_room_result`): rank, score, correct count and awards per player, written once when the room is finished (first poll after the end, `ON CONFLICT DO NOTHING`; old rooms — `scripts/backfill-room-results.ts`). **Crew table** on the final screen: the players of this room, counted over every finished room where at least two of them played (wins = 1st place there). **Head to head**: me vs each player, who finished higher in shared rooms. **Profile «Rooms»**: games, wins, podiums, win rate, award collection (missing ones grey), top rivals. A second account only beats itself, so nothing here is farmable; the global rating stays out of rooms (variant B — a weekly room board — later, when rooms are many; variant C — rooms in the main rating — rejected) |
+| Awards | Ten kinds (`computeRoomAwards`): fastest average, most correct, longest streak (≥ 3), only one who knew (solo), fastest single answer, right in the last quarter of the timer (clutch), most points in the last 3 questions (≥ 5 questions), biggest climb since question 1, first to tap (≥ 2), and «brave» for the lowest-ranked player left without one. One award per player, each to the best of those still without |
+| Final | ~6 s staging: 3rd → 2nd → «?» on the 1st step → winner (confetti for the winner) → a line about you (lead / «just 120 points short — one quick answer!» under 300 points / «… Rematch?») → awards one by one → crew table and head to head. Tap to skip; reduced motion shows everything at once. Host who lost sees «Get even · another round» |
+| Links | Invite text in short lines (code first) and its own Open Graph card (`/room/{code}/opengraph-image`: huge code, host, who is in, «+ a seat for you», CTA). Result share: place-dependent lines with answer squares, award and lead / gap, link to a public results page `/room/{code}/results` with its own card (podium) and «Start your own room». A separate URL because Telegram caches previews per URL. Emoji only in the shared text |
+| Guest names | 30 × 30 words with gamer humour («Лагающий Пельмень», «Nerfed Paladin»); pairs longer than 20 characters are skipped |
 
 **Hot path:** untouched. Every room query is raw `pg` on `withPooledPgClient` (outside the Direct queue), payloads are ~1 KB per question (below the TOAST threshold), nothing reads `snapshotData`.
 

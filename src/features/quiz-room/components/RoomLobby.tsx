@@ -36,6 +36,7 @@ import {
     normalizeRoomNickname,
     ROOM_NICKNAME_MAX_LENGTH,
 } from '@/features/quiz-room/lib/room-nickname';
+import { buildRoomInviteShare } from '@/features/quiz-room/lib/room-share';
 import type { RoomErrorCode, RoomStateDto } from '@/features/quiz-room/types';
 import { formatPlural, getDictionary, type Locale } from '@/shared/i18n';
 import { BottomSheet, Button, ChipRadioGroup, InlineAlert } from '@/shared/ui';
@@ -221,8 +222,16 @@ export function RoomLobby({ locale, state, refresh }: RoomLobbyProps) {
         }
     }
 
-    const inviteLine = fillRoomText(text.shareText, { code: state.code });
-    const shareText = `${inviteLine}\n${inviteUrl}`;
+    const invite = buildRoomInviteShare(
+        {
+            code: state.code,
+            hostName: host?.nickname ?? '',
+            settings: roomSettingsLine(dictionary, locale, state.settings),
+            players: formatPlural(locale, activeCount, text.playersCount),
+            url: inviteUrl,
+        },
+        { header: text.shareInviteHeader, host: text.shareInviteHost, players: text.shareInvitePlayers },
+    );
     const topicOptions = [
         { value: ALL_TOPICS, label: dictionary.quiz.topicAll },
         ...topics.map((topic) => ({
@@ -256,12 +265,8 @@ export function RoomLobby({ locale, state, refresh }: RoomLobbyProps) {
                 <p className="mt-1 text-xs text-muted">{text.codeCopyHint}</p>
                 {state.isHost ? (
                     <ShareActions
-                        text={shareText}
-                        targets={{
-                            telegram: `https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent(inviteLine)}`,
-                            vk: `https://vk.com/share.php?url=${encodeURIComponent(inviteUrl)}&title=${encodeURIComponent(inviteLine)}`,
-                            max: `https://max.ru/:share?text=${encodeURIComponent(shareText)}`,
-                        }}
+                        text={invite.text}
+                        targets={invite.targets}
                         labels={{
                             button: text.invitePlayers,
                             copied: text.linkCopied,

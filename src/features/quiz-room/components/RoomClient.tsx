@@ -3,6 +3,8 @@
 /**
  * Комната на телефоне участника: состояние с сервера (опрос по расписанию)
  * + фаза по серверным часам → нужный экран: лобби, отсчёт, вопрос, итоги.
+ * Экран перерисовывается только при новых данных или смене фазы; секунды
+ * тикают внутри самих таймеров (см. use-room-state).
  * До гидратации — каркас: таймеры зависят от часов клиента и разошлись бы
  * с серверной разметкой.
  * Canon: docs/DECISIONS.md → Quiz room.
@@ -13,8 +15,7 @@ import Link from 'next/link';
 import { RoomFinal } from '@/features/quiz-room/components/RoomFinal';
 import { RoomLobby } from '@/features/quiz-room/components/RoomLobby';
 import { RoomCountdown, RoomQuestion } from '@/features/quiz-room/components/RoomPlay';
-import { useRoomNow, useRoomState } from '@/features/quiz-room/components/use-room-state';
-import { getRoomPhase } from '@/features/quiz-room/lib/room-schedule';
+import { useRoomPhase, useRoomState } from '@/features/quiz-room/components/use-room-state';
 import type { RoomStateDto } from '@/features/quiz-room/types';
 import { getDictionary, type Locale } from '@/shared/i18n';
 import { buttonClassName, InlineAlert, Skeleton } from '@/shared/ui';
@@ -28,7 +29,7 @@ type RoomClientProps = {
 export function RoomClient({ locale, initialState }: RoomClientProps) {
     const hydrated = useHydrated();
     const { state, connectionLost, refresh } = useRoomState(initialState, locale);
-    const now = useRoomNow();
+    const phase = useRoomPhase(state.schedule);
     const dictionary = getDictionary(locale);
 
     if (!hydrated) {
@@ -51,15 +52,13 @@ export function RoomClient({ locale, initialState }: RoomClientProps) {
     } else if (state.status === 'lobby' || state.status === 'starting') {
         screen = <RoomLobby locale={locale} state={state} refresh={refresh} />;
     } else {
-        const phase = getRoomPhase(state.schedule, now);
-
         if (state.status === 'finished' || phase.kind === 'finished') {
             screen = <RoomFinal locale={locale} state={state} />;
         } else if (phase.kind === 'countdown') {
-            screen = <RoomCountdown locale={locale} state={state} endsAt={phase.endsAt} now={now} />;
+            screen = <RoomCountdown locale={locale} state={state} endsAt={phase.endsAt} />;
         } else {
             screen = (
-                <RoomQuestion locale={locale} state={state} phase={phase} now={now} refresh={refresh} />
+                <RoomQuestion locale={locale} state={state} phase={phase} refresh={refresh} />
             );
         }
     }

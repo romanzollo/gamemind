@@ -97,7 +97,7 @@
     /* Комната: игрок появился в лобби */
     --animate-room-pop: gm-room-pop 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
     /* Комната: ступень подиума выезжает (задержка — у каждой своя) */
-    --animate-podium-rise: gm-podium-rise 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    --animate-podium-rise: gm-podium-rise 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
     /* Комната: конфетти победителю — один проход сверху вниз */
     --animate-confetti-fall: gm-confetti-fall 2.6s cubic-bezier(0.3, 0.6, 0.6, 1) both;
     /* Комната: последние секунды таймера */

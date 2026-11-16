@@ -7,12 +7,23 @@
  * `refresh()` — спросить сразу (после своего действия: настройки, старт,
  * ответ). Часы — серверные (`serverNow`, общий синхронизатор `/api/time`).
  *
+ * Производительность: ответ опроса, совпавший с прошлым (кроме serverNow),
+ * не меняет состояние — экран не перерисовывается. Фаза (`useRoomPhase`)
+ * меняется только на границах расписания; 5 раз в секунду тикают лишь сами
+ * таймеры (`useRoomNow` внутри кольца и отсчёта). Раньше тикер стоял в
+ * корне и перерисовывал весь экран — на итогах и на ПК это подтормаживало.
+ *
  * Canon: docs/DECISIONS.md → Quiz room.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { nextRoomPollDelay } from '@/features/quiz-room/lib/room-poll';
+import {
+    getRoomPhase,
+    type RoomPhase,
+    type RoomQuestionTimes,
+} from '@/features/quiz-room/lib/room-schedule';
 import type { RoomStateDto } from '@/features/quiz-room/types';
 import type { Locale } from '@/shared/i18n';
 import { serverNow, useServerClockReady } from '@/shared/ui/server-clock';
@@ -25,6 +36,7 @@ export function useRoomState(initial: RoomStateDto, locale: Locale) {
     const [state, setState] = useState(initial);
     const [connectionLost, setConnectionLost] = useState(false);
     const stateRef = useRef(initial);
+    const signatureRef = useRef<string | null>(null);
     const refreshRef = useRef<() => void>(() => undefined);
     const code = initial.code;
 
@@ -67,10 +79,16 @@ export function useRoomState(initial: RoomStateDto, locale: Locale) {
                 }
 
                 const next = (await response.json()) as RoomStateDto;
+                // Тот же ответ, что в прошлый раз (кроме часов сервера) — не
+                // трогаем состояние, экран не перерисовывается.
+                const signature = JSON.stringify({ ...next, serverNow: 0 });
 
                 if (!cancelled) {
-                    stateRef.current = next;
-                    setState(next);
+                    if (signature !== signatureRef.current) {
+                        signatureRef.current = signature;
+                        stateRef.current = next;
+                        setState(next);
+                    }
                     failures = 0;
                     setConnectionLost(false);
                 }
@@ -111,7 +129,51 @@ export function useRoomState(initial: RoomStateDto, locale: Locale) {
     return { state, connectionLost, refresh };
 }
 
-/** «Сейчас» по серверным часам, обновляется 5 раз в секунду (таймеры). */
+function samePhase(left: RoomPhase, right: RoomPhase): boolean {
+    if (left.kind !== right.kind) return false;
+    if (left.kind === 'finished' || right.kind === 'finished') return true;
+
+    return (
+        left.endsAt === right.endsAt &&
+        ('position' in left ? left.position : -1) === ('position' in right ? right.position : -1)
+    );
+}
+
+/**
+ * Фаза игры по серверным часам. Обновляется таймером ровно на следующей
+ * границе (а не каждые 200 мс), при новом расписании (досрочное закрытие)
+ * и после синхронизации часов.
+ */
+export function useRoomPhase(schedule: readonly RoomQuestionTimes[]): RoomPhase {
+    const clockReady = useServerClockReady();
+    const [phase, setPhase] = useState<RoomPhase>(() => getRoomPhase(schedule, serverNow()));
+
+    useEffect(() => {
+        let timer: ReturnType<typeof setTimeout> | null = null;
+
+        const update = () => {
+            const now = serverNow();
+            const next = getRoomPhase(schedule, now);
+
+            setPhase((previous) => (samePhase(previous, next) ? previous : next));
+
+            if (next.kind !== 'finished') {
+                timer = setTimeout(update, Math.max(16, next.endsAt - now + 5));
+            }
+        };
+
+        // Не синхронно в эффекте: первый пересчёт — следующим тиком.
+        timer = setTimeout(update, 0);
+
+        return () => {
+            if (timer) clearTimeout(timer);
+        };
+    }, [schedule, clockReady]);
+
+    return phase;
+}
+
+/** «Сейчас» по серверным часам, 5 раз в секунду — только для таймеров. */
 export function useRoomNow(): number {
     useServerClockReady();
     const [now, setNow] = useState(() => serverNow());

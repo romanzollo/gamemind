@@ -24,6 +24,7 @@ import {
 import { orderOptionsForPlayer } from '@/features/quiz-room/lib/room-option-order';
 import { computeRoomAwards } from '@/features/quiz-room/lib/room-awards';
 import { pickRoomQuestionIds } from '@/features/quiz-room/lib/room-pick';
+import { buildRoomResultRows } from '@/features/quiz-room/lib/room-results';
 import {
     DEFAULT_ROOM_SETTINGS,
     parseRoomSettings,
@@ -48,7 +49,9 @@ import type {
     RoomCurrentQuestionDto,
     RoomErrorCode,
     RoomMark,
+    RoomLeagueDto,
     RoomPlayerDto,
+    RoomProfileStatsDto,
     RoomReviewItemDto,
     RoomStateDto,
     RoomStatusDto,
@@ -302,6 +305,25 @@ export async function readRoomState(input: {
     const status = toStatusDto(room, now);
     const playerIds = players.map((player) => player.id);
 
+    // Комната доиграна, итогов ещё нет — записываем один раз (лучшее усилие:
+    // сбой не мешает показать итоги, следующий опрос попробует снова).
+    if (status === 'finished' && !snapshot.resultsRecorded && room.finishedAt) {
+        await quizRoomRepository
+            .insertResults(
+                room.id,
+                room.finishedAt,
+                buildRoomResultRows({
+                    players: active.map((player) => ({ id: player.id, userId: player.userId })),
+                    answers,
+                    questionCount: schedule.length,
+                    answerMs: settings.answerSeconds * 1000,
+                }),
+            )
+            .catch((error: unknown) => {
+                console.warn('Room results write failed:', error instanceof Error ? error.message : error);
+            });
+    }
+
     return {
         serverNow: Date.now(),
         code: input.code,
@@ -318,7 +340,7 @@ export async function readRoomState(input: {
         nextRoomPlayers: snapshot.nextRoomPlayers,
         awards:
             status === 'finished' || (status === 'playing' && revealedCount === schedule.length)
-                ? computeRoomAwards(playerIds, answers, schedule.length)
+                ? computeRoomAwards(playerIds, answers, schedule.length, settings.answerSeconds * 1000)
                 : [],
     };
 }
@@ -650,4 +672,68 @@ export async function leaveRoom(input: { code: string; userId: string }): Promis
     await quizRoomRepository.leaveLobby(room.id, input.userId);
 
     return { ok: true };
+}
+
+/**
+ * Таблица компании и счёт встреч для итогов (по кнопке, не в опросе).
+ * null — комната не доиграна или зритель не из неё.
+ */
+export async function readRoomLeague(input: {
+    code: string;
+    userId: string;
+}): Promise<RoomLeagueDto | null> {
+    const data = await quizRoomRepository.readLeague(input.code, input.userId);
+
+    if (!data) {
+        return null;
+    }
+
+    const league = [...data.league].sort(
+        (left, right) =>
+            right.wins - left.wins ||
+            right.wins / Math.max(1, right.games) - left.wins / Math.max(1, left.games) ||
+            right.games - left.games,
+    );
+
+    return { league, headToHead: data.headToHead };
+}
+
+export async function readRoomProfileStats(userId: string): Promise<RoomProfileStatsDto> {
+    return quizRoomRepository.readProfileStats(userId);
+}
+
+/**
+ * Досчёт итогов уже сыгранных комнат (после миграции RoomResult):
+ * scripts/backfill-room-results.ts. Повторный запуск безопасен.
+ */
+export async function backfillRoomResults(limit = 200): Promise<{ rooms: number; rows: number }> {
+    const roomIds = await quizRoomRepository.listRoomsMissingResults(limit);
+    let rows = 0;
+
+    for (const roomId of roomIds) {
+        const input = await quizRoomRepository.readResultsInput(roomId);
+
+        if (!input || input.players.length === 0) continue;
+
+        const answers = input.answers.map((answer) => ({
+            playerId: answer.playerId,
+            position: answer.position,
+            isCorrect: answer.isCorrect,
+            points: answer.points,
+            elapsedMs: answer.answeredAt.getTime() - (input.openAt.get(answer.position) ?? 0),
+        }));
+
+        rows += await quizRoomRepository.insertResults(
+            roomId,
+            input.finishedAt,
+            buildRoomResultRows({
+                players: input.players,
+                answers,
+                questionCount: input.openAt.size,
+                answerMs: input.answerSeconds * 1000,
+            }),
+        );
+    }
+
+    return { rooms: roomIds.length, rows };
 }
