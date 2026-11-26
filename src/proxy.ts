@@ -11,6 +11,23 @@ const { auth } = NextAuth(authConfig);
 
 export const proxy = auth((request) => {
     const { auth: session, nextUrl } = request;
+    // Sentry Uptime стучится в GET главной круглосуточно. Главная
+    // force-dynamic и читает Neon (Daily CTA) — бот не давал compute уснуть
+    // (scale to zero после 5 мин тишины) и съедал 100 CU-hrs Free за полмесяца.
+    // Отвечаем ему здесь, без рендера и без БД: аптайм проверяет, что Vercel
+    // жив; ошибки БД у живых игроков Sentry ловит как обычно.
+    const userAgent = request.headers.get('user-agent') ?? '';
+
+    if (userAgent.includes('SentryUptimeBot')) {
+        return new NextResponse('ok', {
+            status: 200,
+            headers: {
+                'Cache-Control': 'no-store',
+                'X-Robots-Tag': 'noindex',
+            },
+        });
+    }
+
     const locale = getLocaleFromPathname(nextUrl.pathname);
 
     // Server Actions POST to the page URL. A plain NextResponse.redirect() here
